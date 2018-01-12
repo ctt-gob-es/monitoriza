@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<project
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
+	xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+	<modelVersion>4.0.0</modelVersion>
+	<parent>
+		<groupId>es.gob.monitoriza</groupId>
+		<artifactId>monitoriza-parent</artifactId>
+		<version>0.0.1-SNAPSHOT</version>
+	</parent>
+	<artifactId>monitoriza-afirma-status-app</artifactId>
+	<packaging>war</packaging>
+	<name>monitoriza-afirma-status-app</name>
+	<description>status servlet for @firma service</description>
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.j2html</groupId>
+			<artifactId>j2html</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>servlet-api</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+		</dependency>
+	</dependencies>
+	<build>
+		<finalName>monitoriza-afirma-status-app</finalName>
+		<resources>
+			<resource>
+				<directory>../</directory>
+				<includes>
+					<include>LICENSE.txt</include>
+				</includes>
+				<targetPath>${basedir}/target/monitoriza-afirma.status-app/META-INF</targetPath>
+			</resource>
+			<resource>
+				<directory>${basedir}/src/main/resources</directory>
+			</resource>
+		</resources>
+		<plugins>
+			<!-- Plugin para generar el war referente al módulo de spie. -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-war-plugin</artifactId>
+				<version>2.1.1</version>
+				<configuration>
+					<archive>
+						<manifestEntries>
+							<Built-By>${built.by}</Built-By>
+							<Built-Time>${timestamp}</Built-Time>
+							<Vendor>${project.organization.name}</Vendor>
+							<Project-Name>${monitoriza.project.name}</Project-Name>
+							<Monitoriza-Version>${monitoriza.version}</Monitoriza-Version>
+							<Artifact-Version>${project.version}</Artifact-Version>
+							<Dependencies>javax.servlet.api</Dependencies>
+						</manifestEntries>
+					</archive>
+					<finalName>${project.artifactId}</finalName>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
+</project>

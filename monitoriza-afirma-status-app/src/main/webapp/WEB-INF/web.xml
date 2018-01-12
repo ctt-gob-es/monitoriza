@@ -1,0 +1,13 @@
+<web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd" version="3.1">
+  <display-name>Archetype Created Web Application</display-name>
+  <servlet>
+    <description>Monitoriz@ @firma Status Servlet</description>
+    <display-name>AfirmaServicesStatus</display-name>
+    <servlet-name>AfirmaServicesStatus</servlet-name>
+    <servlet-class>es.gob.monitoriza.afirma.status.AfirmaServicesStatus</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>AfirmaServicesStatus</servlet-name>
+    <url-pattern>/afirmaServicesStatus</url-pattern>
+  </servlet-mapping>
+</web-app>
