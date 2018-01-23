@@ -12,19 +12,19 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.0, 11/01/2018.
+ * @version 1.1, 23/01/2018.
  */
 package es.gob.monitoriza.constant;
 
 /** 
  * <p>Interface that contains general constants.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.0, 11/01/2018.
+ * @version 1.1, 23/01/2018.
  */
 public interface GeneralConstants {
 	
 	/**
-	 * Constant attribute that represents the SPIE Logger name.
+	 * Constant attribute that represents the Monitoriza Logger name.
 	 */
 	public static final String LOGGER_NAME_MONITORIZA_LOG = "Monitoriza-Server";
 	
@@ -42,6 +42,11 @@ public interface GeneralConstants {
 	 * Constant that represents the dot character '.'.
 	 */	
 	public static final String DOT = ".";
+	
+	/**
+	 * Constant that represents the comma character ','.
+	 */
+	public static final String COMMA = ",";
 	
 	/**
 	 * Constant that represents SEPARATOR literal. 
@@ -111,5 +116,41 @@ public interface GeneralConstants {
 	 * are sent to @firma or ts@.
 	 */
 	public static final String FREQUENCY = "freq";
+
+	/**
+	 * Constant that represents the static property that indicates the mail issuer.
+	 */
+	public static final String MAIL_ATTRIBUTE_ISSUER = "mail.attribute.issuer";
+
+	/**
+	 * Constant that represents the static property that indicates the destination host.
+	 */	
+	public static final String MAIL_ATTRIBUTE_HOST = "mail.attribute.host";
+
+	/**
+	 * Constant that represents the static property that indicates the destination port.
+	 */		
+	public static final String MAIL_ATTRIBUTE_PORT = "mail.attribute.port";
+
+	/**
+	 * Constant that represents the static property that indicates if the server needs authentication.
+	 */		
+	public static final String MAIL_ATTRIBUTE_AUTHENTICATION = "mail.attribute.authentication";
+
+	/**
+	 * Constant that represents the static property that indicates the user of the authentication.
+	 */			
+	public static final String MAIL_ATTRIBUTE_USER = "mail.attribute.user";
+
+	/**
+	 * Constant that represents the static property that indicates the password of the authentication.
+	 */		
+	public static final String MAIL_ATTRIBUTE_PASSWORD = "mail.attribute.password";
+
+	/**
+	 * Constant that represents the string 'smtp'.
+	 */		
+	public static final String SMTP = "smtp";
+	
 
 }

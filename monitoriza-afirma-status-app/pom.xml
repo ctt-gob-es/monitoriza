@@ -32,6 +32,11 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 		</dependency>
+		<dependency>
+		    <groupId>com.sun.mail</groupId>
+		    <artifactId>javax.mail</artifactId>
+		    <version>1.5.5</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>monitoriza-afirma-status-app</finalName>
