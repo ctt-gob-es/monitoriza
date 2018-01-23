@@ -22,6 +22,7 @@
 		<java.1.8.version>1.8.0_121</java.1.8.version>
 		<java.home>${java.1.8.home}</java.home>
 		<java.version>${java.1.8.version}</java.version>
+		<plugin.javadoc.skip>true</plugin.javadoc.skip>
 	</properties>
 
 	<dependencyManagement>
