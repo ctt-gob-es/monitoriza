@@ -62,7 +62,8 @@ public class MonitorizaServletTask extends HttpServlet {
 		StaticServicesManager ssManager = new StaticServicesManager();
 
 		int timerIndex = 1;
-		String timerFreqProperty = StaticMonitorizaProperties.getProperty(GeneralConstants.MONITORIZA_TIMER + timerIndex + GeneralConstants.DOT + GeneralConstants.FREQUENCY);
+		String timerId = GeneralConstants.MONITORIZA_TIMER + timerIndex;
+		String timerFreqProperty = StaticMonitorizaProperties.getProperty( timerId + GeneralConstants.DOT + GeneralConstants.FREQUENCY);
 		Timer timer = null;
 		ExecuteTimer batchTimer = null;
 
@@ -70,9 +71,10 @@ public class MonitorizaServletTask extends HttpServlet {
 		while (timerFreqProperty != null) {
 
 			timer = new Timer();
-			timerFreqProperty = StaticMonitorizaProperties.getProperty(GeneralConstants.MONITORIZA_TIMER + timerIndex + GeneralConstants.DOT + GeneralConstants.FREQUENCY);
-			batchTimer = new ExecuteTimer(ssManager.getServicesByTimer(GeneralConstants.MONITORIZA_TIMER + timerIndex));
+			timerFreqProperty = StaticMonitorizaProperties.getProperty(timerId + GeneralConstants.DOT + GeneralConstants.FREQUENCY);
+			batchTimer = new ExecuteTimer(timerId, ssManager.getServicesByTimer(timerId));
 			timerIndex++;
+			timerId = GeneralConstants.MONITORIZA_TIMER + timerIndex;
 			timer.schedule(batchTimer, 0, Long.parseLong(timerFreqProperty));
 
 		}
@@ -90,12 +92,18 @@ public class MonitorizaServletTask extends HttpServlet {
 		 * Attribute that represents the list of services for the timer being executed. 
 		 */
 		private transient List<DTOService> serviciosDelTimer = new ArrayList<DTOService>();
+		
+		/**
+		 * Attribute that represents the timer being executed. 
+		 */
+		private transient String timerId;
 
 		/**
 		 * Constructor method for the class MonitorizaServletTask.java.
 		 * @param serviciosDelTimer 
 		 */
-		public ExecuteTimer(List<DTOService> serviciosDelTimer) {
+		public ExecuteTimer(final String timerId, final List<DTOService> serviciosDelTimer) {
+			this.timerId = timerId;
 			this.serviciosDelTimer = serviciosDelTimer;
 		}
 
@@ -108,7 +116,7 @@ public class MonitorizaServletTask extends HttpServlet {
 
 			try {
 
-				LOGGER.info(Language.getFormatResMonitoriza(LogMessages.INIT_SERVICE, new Object[ ] { }));
+				LOGGER.info(Language.getFormatResMonitoriza(LogMessages.INIT_SERVICE, new Object[] {timerId}));
 				RequestProcessor.startInvoker(StatusHolder.getInstance().getCurrenttatusHolder(), serviciosDelTimer);
 
 			} catch (InvokerException e) {

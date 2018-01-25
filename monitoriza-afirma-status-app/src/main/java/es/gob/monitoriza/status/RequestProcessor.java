@@ -59,12 +59,7 @@ public final class RequestProcessor {
 	 * Attribute that represents a instance of this class. 
 	 */
 	private static RequestProcessor instance;
-
-	/**
-	 * Attribute that represents if the process is running. 
-	 */
-	private static boolean isRunning;
-
+	
 	/**
 	 * Attribute that represents the path where the pairs are stored.
 	 */
@@ -81,7 +76,7 @@ public final class RequestProcessor {
 	 * Gets an instance of the class.
 	 * @return	A {@link RequestProcessor} object.
 	 */
-	public static RequestProcessor getInstance() {
+	public static synchronized RequestProcessor getInstance() {
 
 		if (instance == null) {
 			instance = new RequestProcessor();
@@ -98,7 +93,8 @@ public final class RequestProcessor {
 	 * @throws InvokerException if the path is not correct or the directories structure is not correct.
 	 */
 	public static void startInvoker(Map<String, String> statusHolder, List<DTOService> servicios) throws InvokerException {
-
+		
+		LOGGER.info(Language.getFormatResMonitoriza(LogMessages.PATH_DIRECTORY_REQUESTS, new Object[ ] { requestDirectory }));
 		// Recorremos los subdirectorios que separan las peticiones por
 		// servicio.
 		for (DTOService s: servicios) {
@@ -115,8 +111,9 @@ public final class RequestProcessor {
 	 * @throws InvokerException if the path is not correct or the directories structure is not correct.
 	 */
 	private static void sendSetRequests(DTOService service, Map<String, String> statusHolder) throws InvokerException {
-
-		LOGGER.info(Language.getFormatResMonitoriza(LogMessages.PATH_DIRECTORY_REQUESTS, new Object[ ] { requestDirectory }));
+		
+		Long tiempoTotal = null;
+		
 		File file = new File(requestDirectory);
 		// Comprobamos que la ruta proporcioanda es correcta.
 		if (!file.isDirectory()) {
@@ -129,7 +126,7 @@ public final class RequestProcessor {
 		// Si existe un directorio con el nombre del servicio, continuo...
 		if (serviceDir != null && serviceDir.exists() && serviceDir.isDirectory()) {
 
-			LOGGER.info(Language.getFormatResMonitoriza(LogMessages.STARTING_TO_SEND_STORED_REQUESTS, new Object[ ] { serviceDir.toPath().toString() }));
+			LOGGER.info(Language.getFormatResMonitoriza(LogMessages.STARTING_TO_SEND_STORED_REQUESTS, new Object[ ] { serviceDir.toPath().toString(), service.getWsdl()}));
 
 			// Enviamos las peticiones del grupo principal
 			File grupoPrincipal = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaProperties.getProperty(GeneralConstants.GRUPO_PRINCIPAL_PATH_DIRECTORY)));
@@ -142,7 +139,7 @@ public final class RequestProcessor {
 					if (request != null) {
 
 						LOGGER.info(Language.getFormatResMonitoriza(LogMessages.SENDING_REQUEST, new Object[ ] { request.getName() }));
-						String response = HttpSoapInvoker.sendRequest(request, service, statusHolder);
+						tiempoTotal = HttpSoapInvoker.sendRequest(request, service, statusHolder);
 
 					}
 				}
@@ -150,6 +147,17 @@ public final class RequestProcessor {
 			}
 
 		}
+	}
+	
+	/**
+	 * 
+	 * @param serviceName
+	 * @param tiempoTotal
+	 * @return
+	 */
+	private static String calcularEstadoDelServicio(String serviceName, Long tiempoTotal) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

@@ -12,14 +12,14 @@
  * <b>Project:</b><p>Autotester.</p>
  * <b>Date:</b><p> 09/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 11/1/2018.
+ * @version 1.2, 23/1/2018.
  */
 package es.gob.monitoriza.i18;
 
 /** 
  * <p>Interface that contains the keys to the log messages.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.0, 11/01/2018.
+ * @version 1.2, 23/01/2018.
  */
 public interface LogMessages {
 	
@@ -82,4 +82,9 @@ public interface LogMessages {
 	 * Message key declared in the 'messages.properties' file. 
 	 */			
 	String ERROR_PROPERTY_SERVICE = "errorPropertyService";
+
+	/**
+	 * Message key declared in the 'messages.properties' file. 
+	 */		
+	String ERROR_SENDING_MAIL = "errorSendingMail";
 }

@@ -24,7 +24,7 @@
 		</layout>
 	</appender>
 
-	<logger additivity="false" name="Spie-Server">
+	<logger additivity="false" name="Monitoriza-Server">
 		<appender-ref ref="MONITORIZA-FILE"/>
 	</logger>
 	

@@ -66,12 +66,12 @@ public class HttpSoapInvoker {
 	 * 
 	 * @param requestFile request file which contents the SOAP message.
 	 * @param serviceName name of the service to invoke. It's should match with the real name of the service since it will be inserted in the URL of invocation.
-	 * @return the response received from @Firma as a String.
+	 * @return the time...
 	 */
-	public static String sendRequest(final File requestFile, final DTOService service, final Map<String,String> statusHolder) {
+	public static Long sendRequest(final File requestFile, final DTOService service, final Map<String,String> statusHolder) {
 		// Obtenemos el contenido del fichero
 		String soapMsg = FileUtils.readFile(requestFile);
-		String response = null;
+		Long tiempoTotal = null;
 
 		try (InputStream is = new ByteArrayInputStream(soapMsg.getBytes());) {
 			// Obtenemos las propiedades de comunicación con @Firma
@@ -113,32 +113,20 @@ public class HttpSoapInvoker {
 												
 			LocalTime beforeCall = LocalTime.now();
 			
-			SOAPMessage soapResponse = connection.call(message, endpoint);
+			connection.call(message, endpoint);
 			
 			LocalTime afterCall = LocalTime.now();
 			
-			Long tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
-									
-			statusHolder.put(service.getServiceId(), calcularEstadoDelServicio(service.getServiceId(), tiempoTotal));
+			tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
 												
 		} catch (IOException | SOAPException e) {
 			LOGGER.error(Language.getResMonitoriza(LogMessages.ERROR_SENDING_SOAP_PETITION), e);
-			response = null;
+
 		} catch (IllegalArgumentException | SecurityException e) {
 			LOGGER.error(e.getMessage());
 		} 
-		return response;
-	}
-
-	/**
-	 * 
-	 * @param serviceName
-	 * @param tiempoTotal
-	 * @return
-	 */
-	private static String calcularEstadoDelServicio(String serviceName, Long tiempoTotal) {
-		// TODO Auto-generated method stub
-		return null;
+		
+		return tiempoTotal;
 	}
 
 }
