@@ -12,14 +12,14 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.1, 23/01/2018.
+ * @version 1.1, 25/01/2018.
  */
 package es.gob.monitoriza.constant;
 
 /** 
  * <p>Interface that contains general constants.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.1, 23/01/2018.
+ * @version 1.1, 25/01/2018.
  */
 public interface GeneralConstants {
 	
@@ -52,6 +52,16 @@ public interface GeneralConstants {
 	 * Constant that represents SEPARATOR literal. 
 	 */
 	public static final String SEPARATOR = "_";
+
+	/**
+	 * Constant that represents the En_dash character '-'.
+	 */
+	public static final String EN_DASH = "-";
+	
+	/**
+	 * Constant that represents the En_dash character with spaces ' - '.
+	 */
+	public static final String EN_DASH_WITH_SPACES = "-";
 	
 	/**
 	 * Constant that represents the colon character ':'.
@@ -62,6 +72,16 @@ public interface GeneralConstants {
 	 * Constant that represents the path separator character '//'.
 	 */
 	public static final String DOUBLE_PATH_SEPARATOR = "//";
+	
+	/**
+	 * Constant that represents the slash character '/'.
+	 */
+	public static final String SLASH = "/";
+
+	/**
+	 * Constant that represents the slash character '\n'.
+	 */
+	public static final String LINE_FEED = "\n";
 	
 	/**
 	 * Constant that represents the key of the static property which contents the root path of the directories to store @firma services requests.
@@ -152,5 +172,43 @@ public interface GeneralConstants {
 	 */		
 	public static final String SMTP = "smtp";
 	
+	/**
+	 * Constant that represents the string 'service'.
+	 */
+	public static final String SERVICE = "service";
 
+	/**
+	 * Constant that represents the string 'blockAlarmTime'.
+	 */
+	public static final String BLOCK_TIME_KEY = "blockAlarmTime";
+	
+	/**
+	 * Constant that represents the string 'mailAddress'.
+	 */
+	public static final String MAIL_ADDRESS = "mailAddress";
+	
+	/**
+	 * Constant that represents the string 'alarm'.
+	 */
+	public static final String ALARM = "alarm";
+
+	/**
+	 * Constant that represents the string 'subject'.
+	 */
+	public static final String SUBJECT = "subject";
+
+	/**
+	 * Constant that represents the string 'body'.
+	 */
+	public static final String BODY = "body";
+
+	/**
+	 * Constant that represents the string 'degenerated'.
+	 */
+	public static final String DEGENERATED = "degenetated";
+
+	/**
+	 * Constant that represents the string 'downed'.
+	 */
+	public static final String DOWNED = "downed";
 }

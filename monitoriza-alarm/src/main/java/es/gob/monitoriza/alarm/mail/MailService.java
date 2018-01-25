@@ -15,7 +15,7 @@
  * @author Gobierno de España.
  * @version 1.0, 23/01/2018.
  */
-package es.gob.monitoriza.mail;
+package es.gob.monitoriza.alarm.mail;
 
 import java.util.Calendar;
 import java.util.List;
@@ -326,8 +326,10 @@ public class MailService {
 
 		} catch (MessagingException e) {
 			LOGGER.error(Language.getResMonitoriza(LogMessages.ERROR_SENDING_MAIL),  e.getCause());
+			System.out.println("Correo enviando - Fail");
 			return false;
 		}
+		System.out.println("Correo enviando - OK");
 		return true;
 	}
 

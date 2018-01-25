@@ -8,6 +8,6 @@
 */
 
 /** 
- * Package that provides the exception classes for the monitoriz@ status application.
+ * Package that provides the alarm types for Monitoriz@. 
  */
-package es.gob.monitoriza.mail;
+package es.gob.monitoriza.alarm.types;
