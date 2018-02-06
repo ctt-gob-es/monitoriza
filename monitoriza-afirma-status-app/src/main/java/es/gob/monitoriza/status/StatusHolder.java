@@ -29,7 +29,7 @@ public final class StatusHolder {
 	/**
 	 * Attribute that represents the current map of statuses for services being processed. 
 	 */
-	private Map<String,String> currentstatusHolder;
+	private Map<String,String> currentStatusHolder;
 	
 	/**
 	 * Attribute that represents the instance for this class. 
@@ -40,7 +40,7 @@ public final class StatusHolder {
 	 * Constructor method for the class StatusHolder.java. 
 	 */
 	private StatusHolder() {
-		currentstatusHolder = new HashMap<String, String>();
+		currentStatusHolder = new HashMap<String, String>();
 	}
 	
 	/**
@@ -60,7 +60,7 @@ public final class StatusHolder {
 	 * @return {@link Map}.
 	 */
 	public Map<String, String> getCurrenttatusHolder() {
-		return currentstatusHolder;
+		return currentStatusHolder;
 	}
 
 	
@@ -69,7 +69,7 @@ public final class StatusHolder {
 	 * @param currentstatusHolder
 	 */
 	public void setCurrenttatusHolder(Map<String, String> currentstatusHolder) {
-		this.currentstatusHolder = currentstatusHolder;
+		this.currentStatusHolder = currentstatusHolder;
 	}
 	
 }

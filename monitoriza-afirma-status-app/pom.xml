@@ -32,10 +32,18 @@
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
 		</dependency>
+		<!-- Constructor de HTML. Licencia Apache 2 -->
+		<!-- https://github.com/tipsy/j2html/blob/master/LICENSE -->
 		<dependency>
-		    <groupId>com.sun.mail</groupId>
-		    <artifactId>javax.mail</artifactId>
-		    <version>1.5.5</version>
+			<groupId>com.j2html</groupId>
+			<artifactId>j2html</artifactId>
+			<version>1.2.0</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.httpcomponents</groupId>
+			<artifactId>httpclient</artifactId>
+			<version>4.5</version>
+			<scope>provided</scope>
 		</dependency>
 	</dependencies>
 	<build>
@@ -53,7 +61,6 @@
 			</resource>
 		</resources>
 		<plugins>
-			<!-- Plugin para generar el war referente al módulo de spie. -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-war-plugin</artifactId>

@@ -38,12 +38,28 @@ public class DTOService {
 	/**
 	 * Attribute that represents the timeout (milliseconds) for this service. 
 	 */
-	private String timeout;
+	private Long timeout;
+	
+	/**
+	 * Attribute that represents the name of the service. 
+	 */
+	private String wsdl;
+	
+	/**
+	 * Attribute that represents the threshold response time in milliseconds above which the service is considered degraded. 
+	 */
+	private Long degradedThreshold;
+	
+	/**
+	 * Attribute that represents the threshold percentage of lost requests (degraded or timed out)
+	 * above which is necessary to call the next confirmation group. 
+	 */
+	private String lostThreshold;
 	
 	/**
 	 * Attribute that represents . 
 	 */
-	private String wsdl;
+	private String directoryPath;
 	
 	/**
 	 * Constructor method for the class DTOService.java.
@@ -55,8 +71,8 @@ public class DTOService {
 
 	
 	/**
-	 * Gets the service identifier
-	 * @return String that represents the service identifier
+	 * Gets the value of the attribute {@link #serviceId} 
+	 * @return the value of the attribute {@link #serviceId}
 	 */
 	public String getServiceId() {
 		return serviceId;
@@ -64,8 +80,8 @@ public class DTOService {
 
 	
 	/**
-	 * Sets the service identifier
-	 * @param serviceId String with the service identifier to set.
+	 * Sets the value of the attribute {@link #serviceId} 
+	 * @param serviceId the value for the attribute {@link #serviceId} to set.
 	 */
 	public void setServiceId(final String serviceId) {
 		this.serviceId = serviceId;
@@ -73,8 +89,8 @@ public class DTOService {
 
 	
 	/**
-	 * Gets the timer identifier.
-	 * @return String that represents the timer identifier.
+	 * Gets the value of the attribute {@link #timerId}.
+	 * @return the value of the attribute {@link #timerId}.
 	 */
 	public String getTimerId() {
 		return timerId;
@@ -82,8 +98,8 @@ public class DTOService {
 
 	
 	/**
-	 * Sets the timer identifier.
-	 * @param timerId String with the timer identifier to set.
+	 * Sets the value of the attribute {@link #timerId}.
+	 * @param timerId the value for the attribute {@link #timerId} to set.
 	 */
 	public void setTimerId(final String timerId) {
 		this.timerId = timerId;
@@ -91,26 +107,26 @@ public class DTOService {
 
 	
 	/**
-	 * Gets the timeout for this service in milliseconds.
-	 * @return String that represents the timeout for this service in milliseconds.
+	 * Gets the value of the attribute {@link #timeout}.
+	 * @return the value of the attribute {@link #timerId}.
 	 */
-	public String getTimeout() {
+	public Long getTimeout() {
 		return timeout;
 	}
 
 	
 	/**
-	 * Sets the timeout for this service in milliseconds.
-	 * @param timeout String with the timeout to set in milliseconds.
+	 * Sets the value of the attribute {@link #timeout}.
+	 * @param timeout the value for the attribute {@link #timeout} to set.
 	 */
-	public void setTimeout(final String timeout) {
+	public void setTimeout(final Long timeout) {
 		this.timeout = timeout;
 	}
 			
 	
 	/**
-	 * Gets the wsdl name for http invocation.
-	 * @return String that represents the wsdl name
+	 * Gets the value of the attribute {@link #wsdl}.
+	 * @return the value of the attribute {@link #wsdl}.
 	 */
 	public String getWsdl() {
 		return wsdl;
@@ -118,11 +134,60 @@ public class DTOService {
 
 	
 	/**
-	 * Sets the wsdl name for this service.
-	 * @param wsdl String with the wsdl name to set
+	 * Sets the value of the attribute {@link #wsdl}.
+	 * @param wsdl the value for the attribute {@link #wsdl} to set.
 	 */
-	public void setWsdl(String wsdl) {
+	public void setWsdl(final String wsdl) {
 		this.wsdl = wsdl;
+	}
+		
+	/**
+	 * Gets the value of the attribute {@link #degradedThreshold}.
+	 * @return the value of the attribute {@link #degradedThreshold}.
+	 */
+	public Long getDegradedThreshold() {
+		return degradedThreshold;
+	}
+	
+	/**
+	 * Sets the value of the attribute {@link #degradedThreshold}.
+	 * @param degradedThreshold the value for the attribute {@link #degradedThreshold} to set.
+	 */
+	public void setDegradedThreshold(final Long degradedThreshold) {
+		this.degradedThreshold = degradedThreshold;
+	}
+			
+	/**
+	 * Gets the value of the attribute {@link #lostThreshold}.
+	 * @return the value of the attribute {@link #lostThreshold}.
+	 */
+	public String getLostThreshold() {
+		return lostThreshold;
+	}
+	
+	/**
+	 * Sets the value of the attribute {@link #lostThreshold}.
+	 * @param lostThreshold the value for the attribute {@link #lostThreshold} to set.
+	 */
+	public void setLostThreshold(final String lostThreshold) {
+		this.lostThreshold = lostThreshold;
+	}
+	
+	
+	/**
+	 * Gets the value of the attribute {@link #directoryPath}.
+	 * @return the value of the attribute {@link #directoryPath}.
+	 */
+	public String getDirectoryPath() {
+		return directoryPath;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #directoryPath}.
+	 * @param directoryPath the value for the attribute {@link #directoryPath} to set.
+	 */
+	public void setDirectoryPath(final String directoryPath) {
+		this.directoryPath = directoryPath;
 	}
 
 

@@ -26,6 +26,7 @@ import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.Logger;
 
+import es.gob.monitoriza.configuration.ServicesManager;
 import es.gob.monitoriza.configuration.impl.StaticServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.dto.DTOService;
@@ -59,7 +60,7 @@ public class MonitorizaServletTask extends HttpServlet {
 	 */
 	public void init() throws ServletException {
 
-		StaticServicesManager ssManager = new StaticServicesManager();
+		ServicesManager ssManager = new StaticServicesManager();
 
 		int timerIndex = 1;
 		String timerId = GeneralConstants.MONITORIZA_TIMER + timerIndex;
@@ -117,7 +118,8 @@ public class MonitorizaServletTask extends HttpServlet {
 			try {
 
 				LOGGER.info(Language.getFormatResMonitoriza(LogMessages.INIT_SERVICE, new Object[] {timerId}));
-				RequestProcessor.startInvoker(StatusHolder.getInstance().getCurrenttatusHolder(), serviciosDelTimer);
+				
+				RequestProcessor.getInstance().startInvoker(StatusHolder.getInstance().getCurrenttatusHolder(), serviciosDelTimer);
 
 			} catch (InvokerException e) {
 				LOGGER.error(e.getMessage());

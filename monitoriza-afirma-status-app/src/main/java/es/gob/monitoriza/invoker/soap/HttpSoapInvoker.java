@@ -31,7 +31,6 @@ import java.net.URLConnection;
 import java.net.URLStreamHandler;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
-import java.util.Map;
 
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
@@ -42,15 +41,17 @@ import javax.xml.soap.SOAPMessage;
 
 import org.apache.log4j.Logger;
 
+import es.gob.monitoriza.configuration.ConnectionManager;
+import es.gob.monitoriza.configuration.impl.StaticConnectionManager;
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.dto.DTOConnection;
 import es.gob.monitoriza.dto.DTOService;
 import es.gob.monitoriza.i18.Language;
 import es.gob.monitoriza.i18.LogMessages;
 import es.gob.monitoriza.util.FileUtils;
-import es.gob.monitoriza.util.StaticMonitorizaProperties;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that performs the request of a service via HTTP SOAP.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 22 ene. 2018.
  */
@@ -68,19 +69,27 @@ public class HttpSoapInvoker {
 	 * @param serviceName name of the service to invoke. It's should match with the real name of the service since it will be inserted in the URL of invocation.
 	 * @return the time...
 	 */
-	public static Long sendRequest(final File requestFile, final DTOService service, final Map<String,String> statusHolder) {
+	public static Long sendRequest(final File requestFile, final DTOService service) {
 		// Obtenemos el contenido del fichero
 		String soapMsg = FileUtils.readFile(requestFile);
 		Long tiempoTotal = null;
 
 		try (InputStream is = new ByteArrayInputStream(soapMsg.getBytes());) {
-			// Obtenemos las propiedades de comunicación con @Firma
-			String secureMode = Boolean.valueOf(StaticMonitorizaProperties.getProperty(GeneralConstants.AFIRMA_CONNECTION_SECURE_MODE)) ? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP;
-			String ip = StaticMonitorizaProperties.getProperty(GeneralConstants.AFIRMA_CONNECTION_IP);
-			String port = StaticMonitorizaProperties.getProperty(GeneralConstants.AFIRMA_CONNECTION_PORT);
-			String servicePath = StaticMonitorizaProperties.getProperty(GeneralConstants.AFIRMA_CONNECTION_SERVICE_PATH);
+			
+			ConnectionManager connManager = new StaticConnectionManager();
+			DTOConnection connection = null;
 			String wsdlServiceName = service.getWsdl();
-			String base = secureMode + GeneralConstants.COLON + GeneralConstants.DOUBLE_PATH_SEPARATOR + ip + GeneralConstants.COLON + port;
+			String base = null;
+			
+			if (service.getServiceId().contains("timestamp")) {
+				// Obtenemos las propiedades de comunicación con TS@
+				connection = connManager.getTsaConnection();
+			} else {
+				// Obtenemos las propiedades de comunicación con @Firma
+				connection = connManager.getAfirmaConnection();
+			}
+			
+			base = connection.getSecureMode() + GeneralConstants.COLON + GeneralConstants.DOUBLE_PATH_SEPARATOR + connection.getHost() + GeneralConstants.COLON + connection.getPort() + GeneralConstants.DOUBLE_PATH_SEPARATOR + connection.getServiceContext();
 
 			// Creamos el Mime SoapAction necesario para enviar la petición
 			MimeHeaders mhs = new MimeHeaders();
@@ -94,26 +103,26 @@ public class HttpSoapInvoker {
 			//URL endpoint = new URL(url);
 			// Creamos el objeto de conexión y realizamos la llamada
 			SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
-			SOAPConnection connection = soapConnectionFactory.createConnection();
+			SOAPConnection soapConnection = soapConnectionFactory.createConnection();
 			
 			// Establecemos el timeout de la conexión y de la lectura
 			
-			URL endpoint = new URL(new URL(base), servicePath + wsdlServiceName, new URLStreamHandler() {
+			URL endpoint = new URL(new URL(base), wsdlServiceName, new URLStreamHandler() {
 
 				@Override
 				protected URLConnection openConnection(URL url) throws IOException {
 					URL target = new URL(url.toString());
 					URLConnection connection = target.openConnection();
 					// Connection settings
-					connection.setConnectTimeout(Integer.parseInt(service.getTimeout()));
-					connection.setReadTimeout(Integer.parseInt(service.getTimeout()));
+					connection.setConnectTimeout(service.getTimeout().intValue());
+					connection.setReadTimeout(service.getTimeout().intValue());
 					return (connection);
 				}
 			});
 												
 			LocalTime beforeCall = LocalTime.now();
 			
-			connection.call(message, endpoint);
+			soapConnection.call(message, endpoint);
 			
 			LocalTime afterCall = LocalTime.now();
 			

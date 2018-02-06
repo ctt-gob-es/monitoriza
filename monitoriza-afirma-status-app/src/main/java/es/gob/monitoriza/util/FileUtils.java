@@ -17,11 +17,13 @@
 package es.gob.monitoriza.util;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.nio.file.Files;
 
 import org.apache.log4j.Logger;
 
@@ -45,7 +47,7 @@ public final class FileUtils {
 	 * Constructor method for the class FileUtils.java.
 	 */
 	private FileUtils() {
-	}	
+	}
 
 	/**
 	 * method that read a file line by line fiven a file object.
@@ -97,6 +99,28 @@ public final class FileUtils {
 		return res.toString();
 	}
 
-	
+	public static byte[ ] fileToByteArray(File file) {
+
+		byte[ ] raw;
+		byte[ ] result;
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		
+		try {
+			raw = Files.readAllBytes(file.toPath());
+			
+			for (byte b: raw) {
+				if (b != 10 && b != 13) {
+					baos.write(b);
+				}
+			}
+			
+		} catch (IOException e) {
+			LOGGER.error(Language.getResMonitoriza(LogMessages.ERROR_READING_FILE), e);
+		}
+
+		result = baos.toByteArray();
+
+		return result;
+	}
 
 }

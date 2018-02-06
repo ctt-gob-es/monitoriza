@@ -26,13 +26,13 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map.Entry;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import java.util.Set;
-
 import es.gob.monitoriza.configuration.ServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.dto.DTOService;
 import es.gob.monitoriza.i18.Language;
 import es.gob.monitoriza.i18.LogMessages;
@@ -59,11 +59,21 @@ public class StaticServicesManager implements ServicesManager {
 	 * Attribute that represents the key suffix for the service timeout property. 
 	 */
 	private static final String SERVICE_TIMEOUT_PROPERTY = "timeout";
-
+	
 	/**
 	 * Attribute that represents the key suffix for the service wsdl property. 
 	 */
 	private static final String SERVICE_WSDL_PROPERTY = "wsdl";
+
+	/**
+	 * Attribute that represents the key suffix for the service wsdl property. 
+	 */
+	private static final String SERVICE_DEGRADED_THRESHOLD_PROPERTY = "degradedthreshold";
+	
+	/**
+	 * Attribute that represents the key suffix for the service wsdl property. 
+	 */
+	private static final String SERVICE_LOST_THRESHOLD_PROPERTY = "lostthreshold";
 
 	/**
 	 * {@inheritDoc}
@@ -71,6 +81,8 @@ public class StaticServicesManager implements ServicesManager {
 	 */
 	@Override
 	public List<DTOService> getServices() {
+		
+		boolean addService;
 
 		List<DTOService> services = new ArrayList<DTOService>();
 
@@ -79,11 +91,14 @@ public class StaticServicesManager implements ServicesManager {
 		Iterator<Entry<Object, Object>> itProp = allProperties.iterator();
 
 		DTOService service = null;
-
+		
+		String basePath = StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY);
+		
 		while (itProp.hasNext()) {
 
 			Entry<Object, Object> pair = (Entry<Object, Object>) itProp.next();
 			String key = (String) pair.getKey();
+			addService = Boolean.TRUE;
 
 			if (key.startsWith("service")) {
 
@@ -98,24 +113,39 @@ public class StaticServicesManager implements ServicesManager {
 						if (keyArray[2].equals(SERVICE_TIMER_PROPERTY)) {
 							services.get(services.indexOf(new DTOService(serviceId))).setTimerId((String) pair.getValue());
 						} else if (keyArray[2].equals(SERVICE_TIMEOUT_PROPERTY)) {
-							services.get(services.indexOf(new DTOService(serviceId))).setTimeout((String) pair.getValue());
+							services.get(services.indexOf(new DTOService(serviceId))).setTimeout(Long.parseLong((String)pair.getValue()));
 						} else if (keyArray[2].equals(SERVICE_WSDL_PROPERTY)) {
 							services.get(services.indexOf(new DTOService(serviceId))).setWsdl((String) pair.getValue());
-						}
+						} else if (keyArray[2].equals(SERVICE_DEGRADED_THRESHOLD_PROPERTY)) {
+							services.get(services.indexOf(new DTOService(serviceId))).setDegradedThreshold(Long.parseLong((String) pair.getValue()));
+						} else if (keyArray[2].equals(SERVICE_LOST_THRESHOLD_PROPERTY)) {
+							services.get(services.indexOf(new DTOService(serviceId))).setLostThreshold((String) pair.getValue());
+						} 
+												
 					} else {
 
 						service = new DTOService(serviceId);
 						if (keyArray[2].equals(SERVICE_TIMER_PROPERTY)) {
 							service.setTimerId((String) pair.getValue());
-
 						} else if (keyArray[2].equals(SERVICE_TIMEOUT_PROPERTY)) {
-							service.setTimeout((String) pair.getValue());
+							service.setTimeout(Long.parseLong((String)pair.getValue()));
 						} else if (keyArray[2].equals(SERVICE_WSDL_PROPERTY)) {
 							service.setWsdl((String) pair.getValue());
+						} else if (keyArray[2].equals(SERVICE_DEGRADED_THRESHOLD_PROPERTY)) {
+							service.setDegradedThreshold(Long.parseLong((String) pair.getValue()));
+						} else if (keyArray[2].equals(SERVICE_LOST_THRESHOLD_PROPERTY)) {
+							service.setLostThreshold((String) pair.getValue());
+						} else {
+							addService = Boolean.FALSE;
 						}
-
-						services.add(service);
+						
+						if (addService) {
+							service.setDirectoryPath(basePath.concat(serviceId));
+							services.add(service);
+						}
 					}
+					
+					
 
 				} catch (ArrayIndexOutOfBoundsException e) {
 					LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_PROPERTY_SERVICE, new Object[ ] { key }));

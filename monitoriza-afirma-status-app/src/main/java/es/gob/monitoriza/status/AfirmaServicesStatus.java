@@ -29,6 +29,10 @@
  */
 package es.gob.monitoriza.status;
 
+import java.io.BufferedOutputStream;
+import java.io.DataOutputStream;
+import java.io.OutputStream;
+
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -37,12 +41,14 @@ import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18.Language;
+import es.gob.monitoriza.response.ResponseErrorConnection;
+import es.gob.monitoriza.response.ResponseMonitoriza;
 
 
 /** 
  * <p>Class that gets the average response times for @firma services.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.0, 21 dic. 2017.
+ * @version 1.0, 05 feb. 2018.
  */
 public class AfirmaServicesStatus extends HttpServlet {
 
@@ -75,7 +81,43 @@ public class AfirmaServicesStatus extends HttpServlet {
 	 */
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
 			
+		byte[ ] responseBytes = null;
+		OutputStream os = null;
+		DataOutputStream out = null;
+		
+		try {
 			
+			os = response.getOutputStream();
+			out = new DataOutputStream(new BufferedOutputStream(os));
+			
+			response.setContentType("text/html");
+			response.addHeader("Server:", "Servidor Monitoriz@");
+			
+			response.setStatus(HttpServletResponse.SC_OK);
+			response.setContentType("text/html");
+			
+			responseBytes = ResponseMonitoriza.render().getBytes();
+			response.setContentLength(responseBytes.length);
+			
+			out.write(responseBytes);
+			out.flush();
+			
+		} catch(Exception e) {
+			
+			try {
+				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+				responseBytes = ResponseErrorConnection.render().getBytes();
+				response.setContentLength(responseBytes.length);
+				out.write(responseBytes);
+				out.flush();
+				LOGGER.error(Language.getFormatResMonitoriza("", new Object[ ] { request.getRemoteAddr() }), e);
+			} catch (Exception e1) {
+				// No se hace nada...
+			}
+			
+		} finally {
+			
+		}
 	
 	}
 	

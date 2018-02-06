@@ -21,7 +21,7 @@ package es.gob.monitoriza.constant;
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 16/01/2018.
  */
-public interface ServiceStatus {
+public interface ServiceStatusConstants {
 	
 	/**
 	 * Attribute that represents the value for the CORRECTO status. 
