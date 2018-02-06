@@ -12,14 +12,14 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * <b>Date:</b><p> 09/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 25/1/2018.
+ * @version 1.3, 06/02/2018.
  */
 package es.gob.monitoriza.i18;
 
 /** 
  * <p>Interface that contains the keys to the log monitoriza.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.2, 25/01/2018.
+ * @version 1.3, 06/02/2018.
  */
 public interface LogMessages {
 	
@@ -178,3 +178,4 @@ public interface LogMessages {
 	 */
 	String ERROR_MALFORMED_URL_RFC3161 = "errorMalformedUrlRfc3161";
 }
+

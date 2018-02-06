@@ -12,14 +12,14 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.1, 25/01/2018.
+ * @version 1.2, 25/01/2018.
  */
 package es.gob.monitoriza.constant;
 
 /** 
  * <p>Interface that contains general constants.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.1, 25/01/2018.
+ * @version 1.2, 25/01/2018.
  */
 public interface GeneralConstants {
 	
@@ -156,3 +156,4 @@ public interface GeneralConstants {
 	 */
 	public static final String DOWNED = "downed";
 }
+

@@ -25,6 +25,11 @@
 		<plugin.javadoc.skip>true</plugin.javadoc.skip>
 	</properties>
 
+	<modules>
+		<module>monitoriza-afirma-status-app</module>
+		<module>monitoriza-alarm</module>
+	</modules>
+
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
@@ -85,12 +90,12 @@
 					<debug>${maven.compiler.debug}</debug>
 					<debuglevel>lines,vars,source</debuglevel>
 					<compilerArgs>
-					  <arg>-XDignore.symbol.file</arg>
-					  <arg>-Djava.endorsed.dirs=${project.build.directory}/endorsed</arg>
+						<arg>-XDignore.symbol.file</arg>
+						<arg>-Djava.endorsed.dirs=${project.build.directory}/endorsed</arg>
 					</compilerArgs>
 				</configuration>
 			</plugin>
-			<!-- Plugin para generar las fuentes --> 
+			<!-- Plugin para generar las fuentes -->
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-source-plugin</artifactId>
@@ -114,14 +119,14 @@
 				<version>2.9</version>
 				<configuration>
 					<skip>${plugin.javadoc.skip}</skip>
-				</configuration>				
+				</configuration>
 				<executions>
-					<execution>					
+					<execution>
 						<id>attach-javadocs</id>
 						<goals>
-							<goal>jar</goal>							
+							<goal>jar</goal>
 						</goals>
-					</execution>					
+					</execution>
 				</executions>
 			</plugin>
 			<plugin>
@@ -129,7 +134,7 @@
 				<artifactId>maven-site-plugin</artifactId>
 				<version>3.6</version>
 				<configuration>
-			  		<locales>es,en</locales>
+					<locales>es,en</locales>
 				</configuration>
 			</plugin>
 		</plugins>
@@ -160,7 +165,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore/>
+										<ignore />
 									</action>
 								</pluginExecution>
 							</pluginExecutions>
@@ -216,49 +221,20 @@
 		</pluginRepository>
 	</pluginRepositories>
 	<!-- **************************************************************** -->
-	
+
 	<!-- **************************************************************** -->
 	<!-- CONFIGURACIÓN REPOSITORIOS MAVEN: ARTIFACTORY RED SARA -->
-	<!-- Se debe habilitar en el settings.xml de Maven la configuración de servers con
-	     usuario y password para los id MINHAP-central y MINHAP-snapshots -->
-	<!-- <repositories>
-		<repository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>MINHAP-central</id>
-			<name>libs-release</name>
-			<url>https://artefactos.scae.redsara.es/artifactory/libs-release</url>
-		</repository>
-		<repository>
-			<snapshots />
-			<id>MINHAP-snapshots</id>
-			<name>libs-snapshot</name>
-			<url>https://artefactos.scae.redsara.es/artifactory/libs-snapshot</url>
-		</repository>
-	</repositories>
-	<pluginRepositories>
-		<pluginRepository>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-			<id>MINHAP-central</id>
-			<name>plugins-release</name>
-			<url>https://artefactos.scae.redsara.es/artifactory/plugins-release</url>
-			<releases>
-				<enabled>true</enabled>
-				<updatePolicy>always</updatePolicy>
-			</releases>
-		</pluginRepository>
-		<pluginRepository>
-			<snapshots />
-			<id>MINHAP-snapshots</id>
-			<name>plugins-snapshot</name>
-			<url>https://artefactos.scae.redsara.es/artifactory/plugins-snapshot</url>
-		</pluginRepository>
-	</pluginRepositories> -->
+	<!-- Se debe habilitar en el settings.xml de Maven la configuración de servers 
+		con usuario y password para los id MINHAP-central y MINHAP-snapshots -->
+	<!-- <repositories> <repository> <snapshots> <enabled>false</enabled> </snapshots> 
+		<id>MINHAP-central</id> <name>libs-release</name> <url>https://artefactos.scae.redsara.es/artifactory/libs-release</url> 
+		</repository> <repository> <snapshots /> <id>MINHAP-snapshots</id> <name>libs-snapshot</name> 
+		<url>https://artefactos.scae.redsara.es/artifactory/libs-snapshot</url> </repository> 
+		</repositories> <pluginRepositories> <pluginRepository> <snapshots> <enabled>false</enabled> 
+		</snapshots> <id>MINHAP-central</id> <name>plugins-release</name> <url>https://artefactos.scae.redsara.es/artifactory/plugins-release</url> 
+		<releases> <enabled>true</enabled> <updatePolicy>always</updatePolicy> </releases> 
+		</pluginRepository> <pluginRepository> <snapshots /> <id>MINHAP-snapshots</id> 
+		<name>plugins-snapshot</name> <url>https://artefactos.scae.redsara.es/artifactory/plugins-snapshot</url> 
+		</pluginRepository> </pluginRepositories> -->
 	<!-- **************************************************************** -->
-	<modules>
-		<module>monitoriza-afirma-status-app</module>
-	</modules>
 </project>

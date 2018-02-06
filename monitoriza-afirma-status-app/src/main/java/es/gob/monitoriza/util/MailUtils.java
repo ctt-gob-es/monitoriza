@@ -13,19 +13,22 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>23/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 23/01/2018.
+ * @version 1.1, 25/01/2018.
  */
 package es.gob.monitoriza.util;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
+import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.ServiceStatus;
+
 import java.util.Set;
 
 /** 
  * <p>Utilities class that contains necessary method for every class related with mails.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 23/01/2018.
+ * @version 1.1, 25/01/2018.
  */
 public final class MailUtils {
 
@@ -73,5 +76,34 @@ public final class MailUtils {
 			}
 		}
 		return res;
+	}
+
+	/**
+	 * Method that get the list of email addressees for a given service.
+	 * 
+	 * @param serviceIdentifier Name of the service associated to the alarm.
+	 * @return a list with the mails addressees.
+	 */
+	public static List<String> getListAddresseesForAlarm(String[ ] serviceIdentifier) {
+		List<String> res = new ArrayList<String>();
+		if (serviceIdentifier != null && serviceIdentifier.length == 2) {
+			String serviceName = serviceIdentifier[0];
+			String serviceStatus = serviceIdentifier[1];
+			String addrKey = null;
+			if (serviceStatus.equals(ServiceStatus.DEGRADADO)) {
+				addrKey = GeneralConstants.SERVICE + GeneralConstants.DOT + serviceName.toLowerCase() + GeneralConstants.DOT + GeneralConstants.DEGENERATED + GeneralConstants.DOT + GeneralConstants.MAIL_ADDRESS;
+			} else if (serviceStatus.equals(ServiceStatus.CAIDO)) {
+				addrKey = GeneralConstants.SERVICE + GeneralConstants.DOT + serviceName.toLowerCase() + GeneralConstants.DOT + GeneralConstants.DOWNED + GeneralConstants.DOT + GeneralConstants.MAIL_ADDRESS;
+			} else {
+				return null;
+			}
+			String addrValues = StaticMonitorizaProperties.getProperty(addrKey);
+			String[ ] values = addrValues.split(GeneralConstants.SLASH);
+			for (String value: values) {
+				res.add(StaticMonitorizaProperties.getProperty(value));
+			}
+			return res;
+		}
+		return null;
 	}
 }
