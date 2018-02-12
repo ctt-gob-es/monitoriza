@@ -1,5 +1,4 @@
 /* 
-/* 
 * Este fichero forma parte de la plataforma de @firma. 
 * La plataforma de @firma es de libre distribución cuyo código fuente puede ser consultado
 * y descargado desde http://forja-ctt.administracionelectronica.gob.es
@@ -15,16 +14,17 @@
  * @author Gobierno de España.
  * @version 1.0, 24/01/2018.
  */
-package org.monitoriza.alarm;
+package es.gob.monitoriza.alarm;
 
 import java.util.List;
 
 import es.gob.monitoriza.alarm.types.Alarm;
-import es.gob.monitoriza.constant.AfirmaServiceNames;
-import es.gob.monitoriza.constant.ServiceStatus;
+import es.gob.monitoriza.constant.ServiceStatusConstants;
 import es.gob.monitoriza.exception.AlarmException;
-import es.gob.monitoriza.i18.LogMessages;
-import es.gob.monitoriza.util.GeneralUtils;
+import es.gob.monitoriza.i18n.LogMessages;
+import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.utilidades.GeneralUtils;
+import es.gob.monitoriza.utilidades.StaticServicesManager;
 
 /** 
  * <p>Class that manages the alarms system of Monitoriz@.</p>
@@ -34,11 +34,11 @@ import es.gob.monitoriza.util.GeneralUtils;
 public class AlarmManager {
 
 	static {
-		STATUS = GeneralUtils.getValuesOfConstants(ServiceStatus.class, null);
-		SERVICES_NAME = GeneralUtils.getValuesOfConstants(AfirmaServiceNames.class, null);
+		STATUS = GeneralUtils.getValuesOfConstants(ServiceStatusConstants.class, null);
+		SERVICES = StaticServicesManager.getServices();
 	}
 	private static final List<String> STATUS;
-	private static final List<String> SERVICES_NAME;
+	private static final List<DTOService> SERVICES;
 
 	/**
 	 * Method that received a service name and a service status and it throws a new alarm.
@@ -55,7 +55,7 @@ public class AlarmManager {
 		if (!STATUS.contains(serviceStatus)) {
 			throw new AlarmException(LogMessages.ERROR_SERVICE_STATUS_NOT_MATCH);
 		}
-		if (!SERVICES_NAME.contains(serviceName)) {
+		if (!SERVICES.contains(new DTOService(serviceName))) {
 			throw new AlarmException(LogMessages.ERROR_SERVICE_NAME_NOT_MATCH);
 		}
 		// Creamos una nueva alarma.

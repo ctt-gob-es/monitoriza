@@ -1,16 +1,10 @@
 /* 
-// Copyright (C) 2018, Gobierno de España
-// This program is licensed and may be used, modified and redistributed under the terms
-// of the European Public License (EUPL), either version 1.1 or (at your
-// option) any later version as soon as they are approved by the European Commission.
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-// or implied. See the License for the specific language governing permissions and
-// more details.
-// You should have received a copy of the EUPL1.1 license
-// along with this program; if not, you may find it at
-// http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+* Este fichero forma parte de la plataforma de @firma. 
+* La plataforma de @firma es de libre distribución cuyo código fuente puede ser consultado
+* y descargado desde http://forja-ctt.administracionelectronica.gob.es
+*
+* Copyright 2018 Gobierno de España
+*/
 
 /** 
  * <b>File:</b><p>es.gob.monitoriza.invoker.ocps.OcspInvoker.java.</p>
@@ -28,17 +22,16 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
-import java.util.Map;
 
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
-import es.gob.monitoriza.dto.DTOService;
-import es.gob.monitoriza.i18.Language;
-import es.gob.monitoriza.i18.LogMessages;
-import es.gob.monitoriza.util.FileUtils;
-import es.gob.monitoriza.util.StaticMonitorizaProperties;
+import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.i18n.LogMessages;
+import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.utilidades.FileUtils;
+import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that performs the request of a OCSP service.</p>
@@ -102,8 +95,6 @@ public class OcspInvoker {
     			tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
 			}
 
-			return tiempoTotal;
-
 		} catch (java.net.SocketTimeoutException e) {
 			
 			LOGGER.error(Language.getResMonitoriza(LogMessages.ERROR_SENDING_OCSP_PETITION), e);
@@ -114,7 +105,7 @@ public class OcspInvoker {
 
 		}
 
-		return null;
+		return tiempoTotal;
 	}
 
 }

@@ -1,16 +1,10 @@
 /* 
-// Copyright (C) 2018, Gobierno de España
-// This program is licensed and may be used, modified and redistributed under the terms
-// of the European Public License (EUPL), either version 1.1 or (at your
-// option) any later version as soon as they are approved by the European Commission.
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-// or implied. See the License for the specific language governing permissions and
-// more details.
-// You should have received a copy of the EUPL1.1 license
-// along with this program; if not, you may find it at
-// http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+* Este fichero forma parte de la plataforma de @firma. 
+* La plataforma de @firma es de libre distribución cuyo código fuente puede ser consultado
+* y descargado desde http://forja-ctt.administracionelectronica.gob.es
+*
+* Copyright 2018 Gobierno de España
+*/
 
 /** 
  * <b>File:</b><p>es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker.java.</p>
@@ -37,6 +31,8 @@ import java.security.PrivateKey;
 import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
+import java.time.LocalTime;
+import java.time.temporal.ChronoField;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
@@ -52,13 +48,13 @@ import es.gob.monitoriza.configuration.ConnectionManager;
 import es.gob.monitoriza.configuration.impl.StaticConnectionManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
-import es.gob.monitoriza.dto.DTOService;
 import es.gob.monitoriza.exception.InvokerException;
-import es.gob.monitoriza.i18.Language;
-import es.gob.monitoriza.i18.LogMessages;
-import es.gob.monitoriza.util.FileUtils;
-import es.gob.monitoriza.util.StaticMonitorizaProperties;
-import es.gob.monitoriza.util.UtilsResource;
+import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.i18n.LogMessages;
+import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.utilidades.FileUtils;
+import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.UtilsResource;
 
 /** 
  * <p>Class that manages and performs the request of a service via RFC3161.</p>
@@ -81,6 +77,8 @@ public class Rfc3161Invoker {
 	 */
 	public static Long sendRequest(final File requestFile, final DTOService service) throws InvokerException {
 		LOGGER.debug(Language.getResMonitoriza(LogMessages.INIT_RFC3161));
+		
+		Long tiempoTotal = null;
 		String msgError = null;
 		OutputStream out = null;
 		
@@ -174,23 +172,22 @@ public class Rfc3161Invoker {
 			tsaConnection.setAllowUserInteraction(false);
 			tsaConnection.setRequestProperty("Content-Transfer-Encoding", "binary");
 
+			LocalTime beforeCall = LocalTime.now();
 			out = tsaConnection.getOutputStream();
+						
 			out.write(request);
 			out.close();
-		
-			return null;
+			LocalTime afterCall = LocalTime.now();
+			tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
+					
 			
-		} catch (IOException e) {
-			// Si se produce esta excepción es debido a problema de comunicación
-			// con la TS@ por lo que informamos del error a nivel de log y
-			// devolvemos un valor nulo
+		} catch (IOException | NoSuchAlgorithmException  | KeyStoreException | UnrecoverableKeyException | KeyManagementException | CertificateException e) {
 			LOGGER.error(msgError, e);
-			return null;
-		} catch (NoSuchAlgorithmException  | KeyStoreException | UnrecoverableKeyException | KeyManagementException | CertificateException e) {
-			throw new InvokerException(msgError, e);
 		} finally {
 			UtilsResource.safeCloseOutputStream(out);
 		}
+		
+		return tiempoTotal;
 	}
 		
 	/**

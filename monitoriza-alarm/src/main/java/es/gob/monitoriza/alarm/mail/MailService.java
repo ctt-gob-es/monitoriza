@@ -31,10 +31,11 @@ import javax.mail.internet.MimeMessage;
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.i18.Language;
-import es.gob.monitoriza.i18.LogMessages;
-import es.gob.monitoriza.util.MailUtils;
-import es.gob.monitoriza.util.StaticMonitorizaProperties;
+import es.gob.monitoriza.constant.StaticConstants;
+import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.i18n.LogMessages;
+import es.gob.monitoriza.utilidades.MailUtils;
+import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that manages the mail service.</p>
@@ -273,14 +274,14 @@ public class MailService {
 	 */
 	private void loadStaticParam() {
 		List<String> addresees = MailUtils.getListAddressees();
-		String issuer = StaticMonitorizaProperties.getProperty(GeneralConstants.MAIL_ATTRIBUTE_ISSUER);
-		String host = StaticMonitorizaProperties.getProperty(GeneralConstants.MAIL_ATTRIBUTE_HOST);
-		String portString = StaticMonitorizaProperties.getProperty(GeneralConstants.MAIL_ATTRIBUTE_PORT);
+		String issuer = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_ISSUER);
+		String host = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_HOST);
+		String portString = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_PORT);
 		int port = Integer.valueOf(portString);
-		String authString = StaticMonitorizaProperties.getProperty(GeneralConstants.MAIL_ATTRIBUTE_AUTHENTICATION);
+		String authString = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_AUTHENTICATION);
 		boolean authentication = Boolean.valueOf(authString);
-		String user = StaticMonitorizaProperties.getProperty(GeneralConstants.MAIL_ATTRIBUTE_USER);
-		String password = StaticMonitorizaProperties.getProperty(GeneralConstants.MAIL_ATTRIBUTE_PASSWORD);
+		String user = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_USER);
+		String password = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_PASSWORD);
 		new MailService(addresees, issuer, host, port, authentication, user, password, null, null);
 	}
 
@@ -290,13 +291,15 @@ public class MailService {
 	 */
 	public boolean send() {
 		Properties props = new Properties();
-		props.put(GeneralConstants.MAIL_ATTRIBUTE_HOST, getHost());
-		props.put(GeneralConstants.MAIL_ATTRIBUTE_PORT, getPort());
-		props.put(GeneralConstants.MAIL_ATTRIBUTE_AUTHENTICATION, isAuthentication());
+		props.put(StaticConstants.MAIL_ATTRIBUTE_HOST, getHost());
+		props.put(StaticConstants.MAIL_ATTRIBUTE_PORT, getPort());
+		props.put(StaticConstants.MAIL_ATTRIBUTE_AUTHENTICATION, isAuthentication());
+		props.put("mail.smtp.timeout", 10000);
 		Session session = Session.getInstance(props);
 		try {
 			// Creamos el mensaje
 			Message msg = new MimeMessage(session);
+			
 			msg.setFrom(new InternetAddress(getIssuer()));
 
 			// Modificamos los destinatarios
@@ -325,11 +328,10 @@ public class MailService {
 			transport.close();
 
 		} catch (MessagingException e) {
-			LOGGER.error(Language.getResMonitoriza(LogMessages.ERROR_SENDING_MAIL),  e.getCause());
-			System.out.println("Correo enviando - Fail");
+			LOGGER.error(Language.getResMonitoriza(LogMessages.ERROR_SENDING_MAIL), e.getCause());
 			return false;
 		}
-		System.out.println("Correo enviando - OK");
+		
 		return true;
 	}
 

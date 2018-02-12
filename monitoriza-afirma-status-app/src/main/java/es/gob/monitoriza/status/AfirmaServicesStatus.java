@@ -40,7 +40,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.i18.Language;
+import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.response.ResponseErrorConnection;
 import es.gob.monitoriza.response.ResponseMonitoriza;
 
@@ -87,6 +87,10 @@ public class AfirmaServicesStatus extends HttpServlet {
 		
 		try {
 			
+			// Procesamos la petición, obteniendo el posible parámetro
+			// para filtrar la plataforma
+			final String platformFilter = request.getParameter(GeneralConstants.OPERATION_CODE_PLATFORM_FILTER);
+			
 			os = response.getOutputStream();
 			out = new DataOutputStream(new BufferedOutputStream(os));
 			
@@ -96,7 +100,7 @@ public class AfirmaServicesStatus extends HttpServlet {
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.setContentType("text/html");
 			
-			responseBytes = ResponseMonitoriza.render().getBytes();
+			responseBytes = ResponseMonitoriza.render(platformFilter).getBytes();
 			response.setContentLength(responseBytes.length);
 			
 			out.write(responseBytes);

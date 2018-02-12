@@ -36,17 +36,19 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import es.gob.monitoriza.alarm.AlarmManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.ServiceStatusConstants;
 import es.gob.monitoriza.constant.StaticConstants;
-import es.gob.monitoriza.dto.DTOService;
+import es.gob.monitoriza.exception.AlarmException;
 import es.gob.monitoriza.exception.InvokerException;
-import es.gob.monitoriza.i18.Language;
-import es.gob.monitoriza.i18.LogMessages;
+import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.invoker.ocps.OcspInvoker;
 import es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker;
 import es.gob.monitoriza.invoker.soap.HttpSoapInvoker;
-import es.gob.monitoriza.util.StaticMonitorizaProperties;
+import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that gets the average response times for @firma services.</p>
@@ -169,8 +171,7 @@ public final class RequestProcessor {
 						if (isServiceRequestLost(service, tiempoTotal)) {
 							totalRequestsLost++;
 							// En otro caso, se añade el tiempo de la request al
-							// total para hacer la
-							// media a posteriori.
+							// total para hacer la media a posteriori.
 						} else {
 							totalTimes += tiempoTotal;
 						}
@@ -219,10 +220,14 @@ public final class RequestProcessor {
 	}
 
 	/**
-	 * 
-	 * @param serviceName
-	 * @param tiempoTotal
-	 * @return
+	 * Method that gets the status of a service from its resulting execution average time and throws an alarm
+	 * if the status is not OK.
+	 * @param serviceName Object with the configuration attributes for this service.
+	 * @param tiempoMedio Long that represents the resulting average time for executing a batch of requests for this service.
+	 * @return String that represents the status of the service:
+	 * 			- CORRECTO
+	 * 			- DEGRADADO
+	 * 			- CAIDO
 	 */
 	private String calcularEstadoDelServicio(final DTOService service, final Long tiempoMedio) {
 
@@ -234,6 +239,15 @@ public final class RequestProcessor {
 			estado = ServiceStatusConstants.DEGRADADO;
 		} else {
 			estado = ServiceStatusConstants.CAIDO;
+		}
+		
+		// Se comprueba si es necesario lanzar alarma
+		if (!estado.equals(ServiceStatusConstants.CORRECTO)) {
+			try {
+				AlarmManager.throwNewAlarm(service.getServiceId(), estado);
+			} catch (AlarmException e) {
+				LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_THROWING_ALARM, new Object [] {service.getServiceId(), estado}),e);
+			}
 		}
 		
 		return estado;

@@ -1,12 +1,9 @@
 /* 
-* Este fichero forma parte de la plataforma TS@. 
-* La plataforma TS@ es de libre distribución cuyo código fuente puede ser consultado
+* Este fichero forma parte de la plataforma de @firma. 
+* La plataforma de @firma es de libre distribución cuyo código fuente puede ser consultado
 * y descargado desde http://forja-ctt.administracionelectronica.gob.es
 *
-* Copyright 2017 Gobierno de España
-* Este fichero se distribuye bajo las licencias EUPL versión 1.1  y GPL versión 3, o superiores, según las
-* condiciones que figuran en el fichero 'LICENSE.txt' que se acompaña.  Si se   distribuyera este 
-* fichero individualmente, deben incluirse aquí las condiciones expresadas allí.
+* Copyright 2018 Gobierno de España
 */
 
 /** 
@@ -39,7 +36,7 @@ import j2html.tags.Tag;
  */
 public class ResponseErrorConnection {
 
-	public static String ERROR_MESSAGE = "AN ERROR OCCURRED IN THE SERVICE INVOCATION. CHECK LOG.";
+	public static final String ERROR_MESSAGE = "AN ERROR OCCURRED IN THE SERVICE INVOCATION. CHECK LOG.";
 
 	/**
 	 * Constructor method for the class ResponseErrorConnection.java. 

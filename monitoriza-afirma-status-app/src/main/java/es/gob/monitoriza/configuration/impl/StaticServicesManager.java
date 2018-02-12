@@ -1,16 +1,10 @@
 /* 
-// Copyright (C) 2018, Gobierno de España
-// This program is licensed and may be used, modified and redistributed under the terms
-// of the European Public License (EUPL), either version 1.1 or (at your
-// option) any later version as soon as they are approved by the European Commission.
-// Unless required by applicable law or agreed to in writing, software
-// distributed under the License is distributed on an "AS IS" BASIS,
-// WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
-// or implied. See the License for the specific language governing permissions and
-// more details.
-// You should have received a copy of the EUPL1.1 license
-// along with this program; if not, you may find it at
-// http://joinup.ec.europa.eu/software/page/eupl/licence-eupl
+* Este fichero forma parte de la plataforma de @firma. 
+* La plataforma de @firma es de libre distribución cuyo código fuente puede ser consultado
+* y descargado desde http://forja-ctt.administracionelectronica.gob.es
+*
+* Copyright 2018 Gobierno de España
+*/
 
 /** 
  * <b>File:</b><p>es.gob.monitoriza.configuration.impl.StaticServicesManage.java.</p>
@@ -30,20 +24,19 @@ import java.util.Set;
 
 import org.apache.log4j.Logger;
 
-import es.gob.monitoriza.configuration.ServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
-import es.gob.monitoriza.dto.DTOService;
-import es.gob.monitoriza.i18.Language;
-import es.gob.monitoriza.i18.LogMessages;
-import es.gob.monitoriza.util.StaticMonitorizaProperties;
+import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.i18n.LogMessages;
+import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that manages the configuration of the @firma/ts@ services from static properties file.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 19/01/2018.
  */
-public class StaticServicesManager implements ServicesManager {
+public class StaticServicesManager {
 
 	/**
 	 * Attribute that represents the object that manages the log of the class.
@@ -76,11 +69,10 @@ public class StaticServicesManager implements ServicesManager {
 	private static final String SERVICE_LOST_THRESHOLD_PROPERTY = "lostthreshold";
 
 	/**
-	 * {@inheritDoc}
-	 * @see es.gob.monitoriza.configuration.ServicesManager#getServices()
+	 * Method that gets the services configuration from persistence (database or static properties file)
+	 * @return
 	 */
-	@Override
-	public List<DTOService> getServices() {
+	public static List<DTOService> getServices() {
 		
 		boolean addService;
 
@@ -140,7 +132,14 @@ public class StaticServicesManager implements ServicesManager {
 						}
 						
 						if (addService) {
-							service.setDirectoryPath(basePath.concat(serviceId));
+							service.setDirectoryPath(basePath.concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(serviceId));
+							
+							if (serviceId.contains(GeneralConstants.RFC3161_SERVICE) || serviceId.contains(GeneralConstants.TIMESTAMP_SERVICE)) {
+								service.setAfirmaService(Boolean.FALSE);
+							} else {
+								service.setAfirmaService(Boolean.TRUE);
+							}
+							
 							services.add(service);
 						}
 					}
@@ -159,11 +158,11 @@ public class StaticServicesManager implements ServicesManager {
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * @see es.gob.monitoriza.configuration.ServicesManager#getServicesByTimer(java.lang.String)
+	 * Method that gets the services  from persistence (database or static properties file)
+	 * @param timerId The Identifier of the timer configured in the service
+	 * @return List with the service configuration which its timer matches with the parameter timerId
 	 */
-	@Override
-	public List<DTOService> getServicesByTimer(final String timerId) {
+	public static List<DTOService> getServicesByTimer(final String timerId) {
 
 		final List<DTOService> servicesTimer = new ArrayList<DTOService>();
 

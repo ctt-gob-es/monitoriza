@@ -26,16 +26,15 @@ import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.Logger;
 
-import es.gob.monitoriza.configuration.ServicesManager;
 import es.gob.monitoriza.configuration.impl.StaticServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.dto.DTOService;
 import es.gob.monitoriza.exception.InvokerException;
-import es.gob.monitoriza.i18.Language;
-import es.gob.monitoriza.i18.LogMessages;
+import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.i18n.LogMessages;
+import es.gob.monitoriza.persistence.configuration.dto.DTOService;
 import es.gob.monitoriza.status.RequestProcessor;
 import es.gob.monitoriza.status.StatusHolder;
-import es.gob.monitoriza.util.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that contains .</p>
@@ -59,9 +58,7 @@ public class MonitorizaServletTask extends HttpServlet {
 	 * @see javax.servlet.GenericServlet#init()
 	 */
 	public void init() throws ServletException {
-
-		ServicesManager ssManager = new StaticServicesManager();
-
+		
 		int timerIndex = 1;
 		String timerId = GeneralConstants.MONITORIZA_TIMER + timerIndex;
 		String timerFreqProperty = StaticMonitorizaProperties.getProperty( timerId + GeneralConstants.DOT + GeneralConstants.FREQUENCY);
@@ -72,11 +69,11 @@ public class MonitorizaServletTask extends HttpServlet {
 		while (timerFreqProperty != null) {
 
 			timer = new Timer();
-			timerFreqProperty = StaticMonitorizaProperties.getProperty(timerId + GeneralConstants.DOT + GeneralConstants.FREQUENCY);
-			batchTimer = new ExecuteTimer(timerId, ssManager.getServicesByTimer(timerId));
+			batchTimer = new ExecuteTimer(timerId, StaticServicesManager.getServicesByTimer(timerId));
 			timerIndex++;
 			timerId = GeneralConstants.MONITORIZA_TIMER + timerIndex;
 			timer.schedule(batchTimer, 0, Long.parseLong(timerFreqProperty));
+			timerFreqProperty = StaticMonitorizaProperties.getProperty(timerId + GeneralConstants.DOT + GeneralConstants.FREQUENCY);
 
 		}
 

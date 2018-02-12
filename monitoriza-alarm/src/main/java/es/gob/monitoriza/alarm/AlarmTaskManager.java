@@ -1,5 +1,4 @@
 /* 
-/* 
 * Este fichero forma parte de la plataforma de @firma. 
 * La plataforma de @firma es de libre distribución cuyo código fuente puede ser consultado
 * y descargado desde http://forja-ctt.administracionelectronica.gob.es
@@ -15,7 +14,7 @@
  * @author Gobierno de España.
  * @version 1.0, 24/01/2018.
  */
-package org.monitoriza.alarm;
+package es.gob.monitoriza.alarm;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -24,7 +23,7 @@ import java.util.Map;
 
 import es.gob.monitoriza.alarm.types.Alarm;
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.util.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that defines the methods in charge of send alarms or store it according to the defined block time.</p>

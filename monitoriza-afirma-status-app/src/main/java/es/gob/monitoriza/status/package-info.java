@@ -5,6 +5,7 @@
 *
 * Copyright 2018 Gobierno de España
 */
+
 /**
  * Package that provides the class which manages the access to the properties files used for generating messages.
  */
