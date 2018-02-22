@@ -1,10 +1,17 @@
-/* 
-* Este fichero forma parte de la plataforma de @firma. 
-* La plataforma de @firma es de libre distribución cuyo código fuente puede ser consultado
-* y descargado desde http://forja-ctt.administracionelectronica.gob.es
-*
-* Copyright 2018 Gobierno de España
-*/
+/*******************************************************************************
+ * Copyright (C) 2018 MINHAFP, Gobierno de España
+ * This program is licensed and may be used, modified and redistributed under the  terms
+ * of the European Public License (EUPL), either version 1.1 or (at your option)
+ * any later version as soon as they are approved by the European Commission.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and
+ * more details.
+ * You should have received a copy of the EUPL1.1 license
+ * along with this program; if not, you may find it at
+ * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
+ ******************************************************************************/
 
 /**
  * <b>File:</b>
@@ -13,7 +20,7 @@
  * </p>
  * <b>Description:</b>
  * <p>
- * Class that gets the average response times for @firma services.
+ * Class that calculates the status for the @firma/ts@ services.
  * </p>
  * <b>Project:</b>
  * <p>
@@ -51,7 +58,7 @@ import es.gob.monitoriza.persistence.configuration.dto.DTOService;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
- * <p>Class that gets the average response times for @firma services.</p>
+ * <p>Class that calculates the status for the @firma/ts@ services.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * @version 1.0, 15/01/2018.
  */
@@ -72,6 +79,9 @@ public final class RequestProcessor {
 	 */
 	private static String requestDirectory = StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY);
 	
+	/**
+	 * Attribute that represents . 
+	 */
 	private static Map<String,Boolean> requestsRunning = new HashMap<String, Boolean>();
 
 	/**
@@ -101,7 +111,7 @@ public final class RequestProcessor {
 	 * @param responsesDir Path where the responses will be stored.
 	 * @throws InvokerException if the path is not correct or the directories structure is not correct.
 	 */
-	public void startInvoker(Map<String, String> statusHolder, List<DTOService> servicios) throws InvokerException {
+	public void startInvoker(Map<String, String> statusHolder, List<DTOService> servicios) {
 
 		LOGGER.info(Language.getFormatResMonitoriza(LogMessages.PATH_DIRECTORY_REQUESTS, new Object[ ] { requestDirectory }));
 		// Recorremos los subdirectorios que separan las peticiones por
@@ -109,7 +119,12 @@ public final class RequestProcessor {
 		for (DTOService s: servicios) {
 
 			if (requestsRunning.get(s.getServiceId()) == null || !requestsRunning.get(s.getServiceId())) {	
-				processRequests(s, statusHolder);
+				try {
+					processRequests(s, statusHolder);
+				} catch (InvokerException e) {
+					requestsRunning.put(s.getServiceId(), Boolean.FALSE);
+					LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_PROCESSING_SERVICE, new Object [] {s.getServiceId()}),e);
+				}
 			}
 		}
 	}
@@ -121,7 +136,7 @@ public final class RequestProcessor {
 	 * @param responsesDir Directory where store the responses.
 	 * @throws InvokerException if the path is not correct or the directories structure is not correct.
 	 */
-	private void processRequests(DTOService service, Map<String, String> statusHolder) throws InvokerException {
+	private void processRequests(final DTOService service, final Map<String, String> statusHolder) throws InvokerException {
 		
 		requestsRunning.put(service.getServiceId(), Boolean.TRUE);
 
@@ -145,73 +160,80 @@ public final class RequestProcessor {
 			// Enviamos las peticiones del grupo principal
 			grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaProperties.getProperty(StaticConstants.GRUPO_PRINCIPAL_PATH_DIRECTORY)));
 
-			// Se procesa el grupo...
-			if (grupoAProcesar != null && grupoAProcesar.exists() && grupoAProcesar.listFiles() != null && necesarioConfirmar) {
-
-				for (File request: grupoAProcesar.listFiles()) {
-					// Vamos recorriendo los ficheros, y si es una petición,
-					// la enviamos a @Firma o TS@
-					if (request != null) {
-
-						LOGGER.info(Language.getFormatResMonitoriza(LogMessages.SENDING_REQUEST, new Object[ ] { request.getName() }));
-
-						if (service.getServiceId().equals(GeneralConstants.OCSP_SERVICE)) {
-							tiempoTotal = OcspInvoker.sendRequest(request, service);
-						} else if (service.getServiceId().equals(GeneralConstants.RFC3161_SERVICE)){
-							tiempoTotal = Rfc3161Invoker.sendRequest(request, service);
-						} else {
-							tiempoTotal = HttpSoapInvoker.sendRequest(request, service);
-						} 
-
-						totalRequests++;
-
-						// Si no ha podido calcularse el tiempo de la request o
-						// se considera perdida,
-						// se aumenta el nº de requests perdidas.
-						if (isServiceRequestLost(service, tiempoTotal)) {
-							totalRequestsLost++;
-							// En otro caso, se añade el tiempo de la request al
-							// total para hacer la media a posteriori.
-						} else {
-							totalTimes += tiempoTotal;
-						}
-					}
-
-				}
-
-				// Calcular el tiempo medio acumulado si hay algún tiempo
-				// disponible...
-				if (totalRequests != totalRequestsLost) {
-					tiempoMedio = tiempoTotal / (totalRequests - totalRequestsLost);
-				}
-				// Calcular % de perdidas para el grupo principal
-				perdidas = Math.round((totalRequestsLost / totalRequests) * 100);
-
-				// Si se cumplen las condiciones, se obtiene el posible próximo
-				// grupo de confirmación...
-				if (perdidas > Integer.parseInt(service.getLostThreshold()) || tiempoMedio > service.getTimeout()) {
-					necesarioConfirmar = Boolean.TRUE;
-					grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaProperties.getProperty(StaticConstants.GRUPO_CONFIRMACION_PATH_DIRECTORY)) + groupIndex);
-					groupIndex++;
-					
-					// TODO Al ser necesario procesar el siguiente grupo de confirmación,
-					// dormimos el hilo para simular la espera...
-					try {
-						Thread.sleep(Long.parseLong(StaticMonitorizaProperties.getProperty(StaticConstants.CONFIRMATION_WAIT_TIME)));
-					} catch (InterruptedException e) {
-						LOGGER.info(Language.getFormatResMonitoriza(LogMessages.CONFIRMATION_WAIT_INTERRUPTED, new Object[ ] { service.getServiceId() }));
-					}
-				} else {
-					necesarioConfirmar = Boolean.FALSE;
-				}
-
-			}
+			do {
+			
+        			// Se procesa el grupo...
+        			if (grupoAProcesar != null && grupoAProcesar.exists() && grupoAProcesar.listFiles() != null) {
+        
+        				for (File request: grupoAProcesar.listFiles()) {
+        					// Vamos recorriendo los ficheros, y si es una petición,
+        					// la enviamos a @Firma o TS@
+        					if (request != null) {
+        
+        						LOGGER.info(Language.getFormatResMonitoriza(LogMessages.SENDING_REQUEST, new Object[ ] { request.getName() }));
+        
+        						if (service.getServiceId().equals(GeneralConstants.OCSP_SERVICE)) {
+        							tiempoTotal = OcspInvoker.sendRequest(request, service);
+        						} else if (service.getServiceId().equals(GeneralConstants.RFC3161_SERVICE)){
+        							tiempoTotal = Rfc3161Invoker.sendRequest(request, service);
+        						} else {
+        							tiempoTotal = HttpSoapInvoker.sendRequest(request, service);
+        						} 
+        
+        						totalRequests++;
+        
+        						// Si no ha podido calcularse el tiempo de la request o
+        						// se considera perdida,
+        						// se aumenta el nº de requests perdidas.
+        						if (isServiceRequestLost(service, tiempoTotal)) {
+        							totalRequestsLost++;
+        							// En otro caso, se añade el tiempo de la request al
+        							// total para hacer la media a posteriori.
+        						} else {
+        							totalTimes += tiempoTotal;
+        						}
+        					}
+        
+        				}
+        
+        				// Calcular el tiempo medio acumulado si hay algún tiempo
+        				// disponible...
+        				if (totalRequests != totalRequestsLost) {
+        					tiempoMedio = totalTimes / (totalRequests - totalRequestsLost);
+        				}
+        				// Calcular % de perdidas para el grupo principal
+        				perdidas = Math.round((float)(totalRequestsLost / totalRequests) * 100);
+        				        
+        				// Si se cumplen las condiciones, se obtiene el posible próximo
+        				// grupo de confirmación...
+        				if (perdidas > Integer.parseInt(service.getLostThreshold()) || tiempoMedio > service.getDegradedThreshold()) {
+        					necesarioConfirmar = Boolean.TRUE;
+        					grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaProperties.getProperty(StaticConstants.GRUPO_CONFIRMACION_PATH_DIRECTORY)) + groupIndex);
+        					groupIndex++;
+        					
+        					// TODO Al ser necesario procesar el siguiente grupo de confirmación,
+        					// dormimos el hilo para simular la espera...
+        					try {
+        						Thread.sleep(Long.parseLong(StaticMonitorizaProperties.getProperty(StaticConstants.CONFIRMATION_WAIT_TIME)));
+        					} catch (InterruptedException e) {
+        						LOGGER.info(Language.getFormatResMonitoriza(LogMessages.CONFIRMATION_WAIT_INTERRUPTED, new Object[ ] { service.getServiceId() }));
+        					}
+        				} else {
+        					necesarioConfirmar = Boolean.FALSE;
+        				}
+        
+        			} else {
+        				// Si no existe el grupo, no es necesario (ni posible) confirmar
+        				necesarioConfirmar = Boolean.FALSE;
+        			}
+        			
+			} while (necesarioConfirmar);
 
 			// Si se ha obtenido una respuesta definitiva (no perdida) o no hay
 			// más grupos de confirmación,
 			// pasamos a calcular el estado del servicio con los datos
 			// obtenidos.
-			statusHolder.put(service.getServiceId(), calcularEstadoDelServicio(service, tiempoMedio));
+			statusHolder.put(service.getServiceId(), calcularEstadoDelServicio(service, tiempoMedio, perdidas));
 
 		}
 		
@@ -229,7 +251,7 @@ public final class RequestProcessor {
 	 * 			- DEGRADADO
 	 * 			- CAIDO
 	 */
-	private String calcularEstadoDelServicio(final DTOService service, final Long tiempoMedio) {
+	private String calcularEstadoDelServicio(final DTOService service, final Long tiempoMedio, final Integer perdidas) {
 
 		String estado = null;
 		
@@ -237,14 +259,14 @@ public final class RequestProcessor {
 			estado = ServiceStatusConstants.CORRECTO;
 		} else if (tiempoMedio != null && tiempoMedio > service.getDegradedThreshold()) {
 			estado = ServiceStatusConstants.DEGRADADO;
-		} else {
+		} else if (tiempoMedio == null || perdidas > Integer.parseInt(service.getLostThreshold())){
 			estado = ServiceStatusConstants.CAIDO;
 		}
 		
 		// Se comprueba si es necesario lanzar alarma
 		if (!estado.equals(ServiceStatusConstants.CORRECTO)) {
 			try {
-				AlarmManager.throwNewAlarm(service.getServiceId(), estado);
+				AlarmManager.throwNewAlarm(service.getServiceId(), estado, tiempoMedio);
 			} catch (AlarmException e) {
 				LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_THROWING_ALARM, new Object [] {service.getServiceId(), estado}),e);
 			}
@@ -254,10 +276,10 @@ public final class RequestProcessor {
 	}
 
 	/**
-	 * 
-	 * @param service
-	 * @param tiempoTotal
-	 * @return
+	 * Method that gets a boolean that indicates if the request for a service is considered lost.
+	 * @param service DTOService that contains configuration data for the service.
+	 * @param tiempoTotal Time in milliseconds that has taken to complete the service request.
+	 * @return true if the request is considered lost, false if the request is in time.
 	 */
 	private boolean isServiceRequestLost(final DTOService service, final Long tiempoTotal) {
 		
@@ -269,6 +291,8 @@ public final class RequestProcessor {
 		
 		return resultado;
 	}
+	
+	
 	
 	
 

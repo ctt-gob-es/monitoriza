@@ -1,14 +1,22 @@
-/* 
-* Este fichero forma parte de la plataforma de @firma. 
-* La plataforma de @firma es de libre distribución cuyo código fuente puede ser consultado
-* y descargado desde http://forja-ctt.administracionelectronica.gob.es
-*
-* Copyright 2018 Gobierno de España
-*/
+/*******************************************************************************
+ * Copyright (C) 2018 MINHAFP, Gobierno de España
+ * This program is licensed and may be used, modified and redistributed under the  terms
+ * of the European Public License (EUPL), either version 1.1 or (at your option)
+ * any later version as soon as they are approved by the European Commission.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and
+ * more details.
+ * You should have received a copy of the EUPL1.1 license
+ * along with this program; if not, you may find it at
+ * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
+ ******************************************************************************/
 
 /** 
  * <b>File:</b><p>es.gob.monitoriza.MonitorizaServletTask.java.</p>
- * <b>Description:</b><p> Interface that contains general constants.</p>
+ * <b>Description:</b>
+ * <p>Class that initializes the timers for processing the batch of requests for each service.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
@@ -28,16 +36,15 @@ import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.configuration.impl.StaticServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.DTOService;
-import es.gob.monitoriza.status.RequestProcessor;
 import es.gob.monitoriza.status.StatusHolder;
+import es.gob.monitoriza.status.thread.RequestLauncher;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
- * <p>Class that contains .</p>
+ * <p>Class that initializes the timers for processing the batch of requests for each service.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * @version 1.0, 15/01/2018.
  */
@@ -58,14 +65,15 @@ public class MonitorizaServletTask extends HttpServlet {
 	 * @see javax.servlet.GenericServlet#init()
 	 */
 	public void init() throws ServletException {
-		
+
 		int timerIndex = 1;
 		String timerId = GeneralConstants.MONITORIZA_TIMER + timerIndex;
-		String timerFreqProperty = StaticMonitorizaProperties.getProperty( timerId + GeneralConstants.DOT + GeneralConstants.FREQUENCY);
+		String timerFreqProperty = StaticMonitorizaProperties.getProperty(timerId + GeneralConstants.DOT + GeneralConstants.FREQUENCY);
 		Timer timer = null;
 		ExecuteTimer batchTimer = null;
 
-		// Se programan los timers dados de alta en el archivo de propiedades estático: timer1, timer2,...
+		// Se programan los timers dados de alta en el archivo de propiedades
+		// estático: timer1, timer2,...
 		while (timerFreqProperty != null) {
 
 			timer = new Timer();
@@ -90,7 +98,7 @@ public class MonitorizaServletTask extends HttpServlet {
 		 * Attribute that represents the list of services for the timer being executed. 
 		 */
 		private transient List<DTOService> serviciosDelTimer = new ArrayList<DTOService>();
-		
+
 		/**
 		 * Attribute that represents the timer being executed. 
 		 */
@@ -98,7 +106,8 @@ public class MonitorizaServletTask extends HttpServlet {
 
 		/**
 		 * Constructor method for the class MonitorizaServletTask.java.
-		 * @param serviciosDelTimer 
+		 * @param timerId String that represents the identifier of the timer being executed
+		 * @param serviciosDelTimer List<DTOService> that contains the services associated to the timer
 		 */
 		public ExecuteTimer(final String timerId, final List<DTOService> serviciosDelTimer) {
 			this.timerId = timerId;
@@ -112,15 +121,13 @@ public class MonitorizaServletTask extends HttpServlet {
 		@Override
 		public void run() {
 
-			try {
+			LOGGER.info(Language.getFormatResMonitoriza(LogMessages.INIT_SERVICE, new Object[ ] { timerId }));
 
-				LOGGER.info(Language.getFormatResMonitoriza(LogMessages.INIT_SERVICE, new Object[] {timerId}));
-				
-				RequestProcessor.getInstance().startInvoker(StatusHolder.getInstance().getCurrenttatusHolder(), serviciosDelTimer);
-
-			} catch (InvokerException e) {
-				LOGGER.error(e.getMessage());
-			}
+			//RequestProcessor.getInstance().startInvoker(StatusHolder.getInstance().getCurrenttatusHolder(), serviciosDelTimer);
+			
+			RequestLauncher rlt = new RequestLauncher();
+			
+			rlt.startInvoker(StatusHolder.getInstance().getCurrenttatusHolder(), serviciosDelTimer);
 
 		}
 

@@ -1,10 +1,17 @@
-/* 
-* Este fichero forma parte de la plataforma de @firma. 
-* La plataforma de @firma es de libre distribución cuyo código fuente puede ser consultado
-* y descargado desde http://forja-ctt.administracionelectronica.gob.es
-*
-* Copyright 2018 Gobierno de España
-*/
+/*******************************************************************************
+ * Copyright (C) 2018 MINHAFP, Gobierno de España
+ * This program is licensed and may be used, modified and redistributed under the  terms
+ * of the European Public License (EUPL), either version 1.1 or (at your option)
+ * any later version as soon as they are approved by the European Commission.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and
+ * more details.
+ * You should have received a copy of the EUPL1.1 license
+ * along with this program; if not, you may find it at
+ * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
+ ******************************************************************************/
 
 /**
  * <b>File:</b>
@@ -13,7 +20,7 @@
  * </p>
  * <b>Description:</b>
  * <p>
- * Class that gets the average response times for @firma services.
+ * Class that gets the status for the @firma/ts@ services through servlet call.
  * </p>
  * <b>Project:</b>
  * <p>
@@ -41,12 +48,13 @@ import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.response.ResponseErrorConnection;
 import es.gob.monitoriza.response.ResponseMonitoriza;
 
 
 /** 
- * <p>Class that gets the average response times for @firma services.</p>
+ * <p>Class that gets the status for the @firma/ts@ services through servlet call</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * @version 1.0, 05 feb. 2018.
  */
@@ -71,7 +79,7 @@ public class AfirmaServicesStatus extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "");
 			response.flushBuffer();
 		} catch (Exception e) {
-			LOGGER.error(Language.getFormatResMonitoriza("", new Object[ ] { request.getRemoteAddr() }), e);
+			LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_SERVLET_POST, new Object[ ] { request.getRemoteAddr() }), e);
 		}
 	}
 
@@ -114,7 +122,7 @@ public class AfirmaServicesStatus extends HttpServlet {
 				response.setContentLength(responseBytes.length);
 				out.write(responseBytes);
 				out.flush();
-				LOGGER.error(Language.getFormatResMonitoriza("", new Object[ ] { request.getRemoteAddr() }), e);
+				LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_SERVLET_REQUEST, new Object[ ] { request.getRemoteAddr() }), e);
 			} catch (Exception e1) {
 				// No se hace nada...
 			}

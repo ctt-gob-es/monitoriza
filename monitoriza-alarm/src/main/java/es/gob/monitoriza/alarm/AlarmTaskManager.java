@@ -1,13 +1,20 @@
-/* 
-* Este fichero forma parte de la plataforma de @firma. 
-* La plataforma de @firma es de libre distribución cuyo código fuente puede ser consultado
-* y descargado desde http://forja-ctt.administracionelectronica.gob.es
-*
-* Copyright 2018 Gobierno de España
-*/
+/*******************************************************************************
+ * Copyright (C) 2018 MINHAFP, Gobierno de España
+ * This program is licensed and may be used, modified and redistributed under the  terms
+ * of the European Public License (EUPL), either version 1.1 or (at your option)
+ * any later version as soon as they are approved by the European Commission.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and
+ * more details.
+ * You should have received a copy of the EUPL1.1 license
+ * along with this program; if not, you may find it at
+ * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
+ ******************************************************************************/
 
 /** 
- * <b>File:</b><p>org.monitoriza.alarm.AlarmTaskManager.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.alarm.AlarmTaskManager.java.</p>
  * <b>Description:</b><p> Class that defines the methods in charge of send alarms or store it according to the defined block time.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
@@ -51,26 +58,26 @@ public class AlarmTaskManager {
 		if (alarm != null) {
 			String serviceName = alarm.getServiceName();
 			String serviceStatus = alarm.getServiceStatus();
-			String AlarmIdentifier = serviceName+ GeneralConstants.SEPARATOR + serviceStatus;
+			String AlarmIdentifier = serviceName + GeneralConstants.SEPARATOR + serviceStatus;
 			String[] serviceIdentifier = new String[]{serviceName, serviceStatus};
 			// Si el tipo de servicio no esta bloqueado...
 			if (!blockedAlarms.contains(AlarmIdentifier)) {
 				// Comprobamos que no haya ninguna alarma pendiente de ser
 				// enviada para el servicio seleccionado. En caso de haberla, la
 				// recuperamos.
-				List<Alarm> alarmsToSent = new ArrayList<Alarm>();
+				List<Alarm> alarmsToSend = new ArrayList<Alarm>();
 				if (alarmStack.containsKey(AlarmIdentifier)) {
 					// Obtenemos la lista de alarmas almacenadas para el servicio concreto.
-					alarmsToSent = alarmStack.get(AlarmIdentifier);
+					alarmsToSend = alarmStack.get(AlarmIdentifier);
 					// Vaciamos la pila referente al servicio.
 					removeAlarmStack(AlarmIdentifier);
 				}
-				alarmsToSent.add(alarm);
+				alarmsToSend.add(alarm);
 				// Recuperamos el tiempo de bloqueo del tipo de alarma
 				// seleccionado.
 				long blockAlarmTime = getBlockTimeForService(serviceName);
 				// Enviamos la alarma.
-				AlarmTaskScheduler.sendAlarm(alarmsToSent);
+				AlarmTaskScheduler.sendAlarm(alarmsToSend);
 				// Bloqueamos la alarma para que no se vuelva a enviar otra del
 				// mismo tipo hasta pasado el tiempo de bloqueo.
 				blockedAlarms.add(AlarmIdentifier);

@@ -1,24 +1,30 @@
-/* 
-* Este fichero forma parte de la plataforma de @firma. 
-* La plataforma de @firma es de libre distribución cuyo código fuente puede ser consultado
-* y descargado desde http://forja-ctt.administracionelectronica.gob.es
-*
-* Copyright 2018 Gobierno de España
-*/
+/*******************************************************************************
+ * Copyright (C) 2018 MINHAFP, Gobierno de España
+ * This program is licensed and may be used, modified and redistributed under the  terms
+ * of the European Public License (EUPL), either version 1.1 or (at your option)
+ * any later version as soon as they are approved by the European Commission.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and
+ * more details.
+ * You should have received a copy of the EUPL1.1 license
+ * along with this program; if not, you may find it at
+ * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
+ ******************************************************************************/
 
 /**
  * <b>File:</b>
  * <p>
- * es.gob.afirma.spie.response.impl.ResponseSPIE.java.
+ * es.gob.monitoriza.response.ResponseMonitoriza.java.
  * </p>
  * <b>Description:</b>
  * <p>
- * Class that builds the global HTML response for the result of SPIE test.
+ * Class that builds the global HTML response for the Monitoriz@ servlet call.
  * </p>
  * <b>Project:</b>
  * <p>
- * Horizontal platform of validation services of multiPKI certificates and
- * electronic signature.
+ * Application for monitoring services of @firma suite systems.
  * </p>
  * <b>Date:</b>
  * <p>
@@ -26,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.0, 20/09/2017.
+ * @version 1.0, 05/02/2018.
  */
 package es.gob.monitoriza.response;
 
@@ -48,10 +54,11 @@ import java.util.Map;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.status.StatusHolder;
+import es.gob.monitoriza.utilidades.GeneralUtils;
 import j2html.tags.Tag;
 
 /**
- * <p>Class that builds the global HTML response for the result of SPIE test.</p>
+ * <p>Class that builds the global HTML response for the Monitoriz@ servlet call.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 05/02/2018.
  */
@@ -168,7 +175,7 @@ public class ResponseMonitoriza {
     			tdGroup = new LinkedList<>();
     			tdGroup.add(td(entry.getKey()));
     			tdGroup.add(td(entry.getValue()));
-    			tdGroup.add(td(getSystemName(entry.getKey())));
+    			tdGroup.add(td(GeneralUtils.getSystemName(entry.getKey())));
     			rows.add(tr().with(tdGroup));
 			}
 		}
@@ -188,9 +195,9 @@ public class ResponseMonitoriza {
 		
 		if (platformFilter == null) {
 			resultado = Boolean.TRUE;
-		} else if (platformFilter.equals(GeneralConstants.PLATFORM_TSA) && (serviceId.contains(GeneralConstants.RFC3161_SERVICE) || serviceId.contains(GeneralConstants.TIMESTAMP_SERVICE))) {
+		} else if (platformFilter.equals(GeneralConstants.PARAMETER_TSA) && (serviceId.contains(GeneralConstants.RFC3161_SERVICE) || serviceId.contains(GeneralConstants.TIMESTAMP_SERVICE))) {
 			resultado = Boolean.TRUE;
-		} else if (platformFilter.equals(GeneralConstants.PLATFORM_AFIRMA) && !serviceId.contains(GeneralConstants.RFC3161_SERVICE) && !serviceId.contains(GeneralConstants.TIMESTAMP_SERVICE)) {
+		} else if (platformFilter.equals(GeneralConstants.PARAMETER_AFIRMA) && !serviceId.contains(GeneralConstants.RFC3161_SERVICE) && !serviceId.contains(GeneralConstants.TIMESTAMP_SERVICE)) {
 			resultado = Boolean.TRUE;
 		} else {
 			resultado = Boolean.FALSE;
@@ -199,22 +206,6 @@ public class ResponseMonitoriza {
 		return resultado;
 	}
 	
-	/**
-	 * 
-	 * @param serviceId
-	 * @return
-	 */
-	private static String getSystemName(final String serviceId) {
-		
-		String nombreSistema;
-		
-		if (serviceId.contains(GeneralConstants.RFC3161_SERVICE) || serviceId.contains(GeneralConstants.TIMESTAMP_SERVICE)) {
-			nombreSistema = GeneralConstants.PLATFORM_TSA;
-		} else {
-			nombreSistema = GeneralConstants.PLATFORM_AFIRMA;
-		}
-		
-		return nombreSistema;
-	}
+	
 		
 }

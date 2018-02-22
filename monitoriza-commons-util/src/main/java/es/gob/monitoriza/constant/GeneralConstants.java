@@ -1,10 +1,18 @@
-/* 
-* Este fichero forma parte de la plataforma de @firma. 
-* La plataforma de @firma es de libre distribución cuyo código fuente puede ser consultado
-* y descargado desde http://forja-ctt.administracionelectronica.gob.es
-*
-* Copyright 2018 Gobierno de España
-*/
+/*******************************************************************************
+ * Copyright (C) 2018 MINHAFP, Gobierno de España
+ * This program is licensed and may be used, modified and redistributed under the  terms
+ * of the European Public License (EUPL), either version 1.1 or (at your option)
+ * any later version as soon as they are approved by the European Commission.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and
+ * more details.
+ * You should have received a copy of the EUPL1.1 license
+ * along with this program; if not, you may find it at
+ * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
+ ******************************************************************************/
+
 /** 
  * <b>File:</b><p>es.gob.monitoriza.constant.GeneralConstants.java.</p>
  * <b>Description:</b><p> Interface that contains general constants.</p>
@@ -48,6 +56,11 @@ public interface GeneralConstants {
 	public static final String COMMA = ",";
 	
 	/**
+	 * Constant that represents a blank space. 
+	 */
+	public static final String BLANK = " ";
+	
+	/**
 	 * Constant that represents SEPARATOR literal. 
 	 */
 	public static final String SEPARATOR = "_";
@@ -60,7 +73,7 @@ public interface GeneralConstants {
 	/**
 	 * Constant that represents the En_dash character with spaces ' - '.
 	 */
-	public static final String EN_DASH_WITH_SPACES = "-";
+	public static final String EN_DASH_WITH_SPACES = " - ";
 	
 	/**
 	 * Constant that represents the colon character ':'.
@@ -113,7 +126,6 @@ public interface GeneralConstants {
 	 */
 	public static final String TRUST_MANAGER_FACTORY_SUN_X509 = "SunX509";
 	
-
 	/**
 	 * Constant that represents the string 'smtp'.
 	 */		
@@ -168,11 +180,21 @@ public interface GeneralConstants {
 	/**
 	 * Attribute that represents the string for identifying the @firma platform. 
 	 */
-	public static final String PLATFORM_AFIRMA = "afirma";
+	public static final String PLATFORM_AFIRMA = "@Firma";
 	
 	/**
 	 * Attribute that represents the string for identifying the ts@ platform. 
 	 */
-	public static final String PLATFORM_TSA = "tsa";
+	public static final String PLATFORM_TSA = "TS@";
+	
+	/**
+	 * Attribute that represents the string for identifying the @firma filter parameter on calling the status servlet. 
+	 */
+	public static final String PARAMETER_AFIRMA = "afirma";
+	
+	/**
+	 * Attribute that represents the string for identifying the ts@ filter paramenter on callin the status servlet. 
+	 */
+	public static final String PARAMETER_TSA = "tsa";
 }
 

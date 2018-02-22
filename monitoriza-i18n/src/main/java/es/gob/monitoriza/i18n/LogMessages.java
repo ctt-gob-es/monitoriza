@@ -1,13 +1,20 @@
-/* 
-* Este fichero forma parte de la plataforma de @firma. 
-* La plataforma de @firma es de libre distribución cuyo código fuente puede ser consultado
-* y descargado desde http://forja-ctt.administracionelectronica.gob.es
-*
-* Copyright 2018 Gobierno de España
-*/
+/*******************************************************************************
+ * Copyright (C) 2018 MINHAFP, Gobierno de España
+ * This program is licensed and may be used, modified and redistributed under the  terms
+ * of the European Public License (EUPL), either version 1.1 or (at your option)
+ * any later version as soon as they are approved by the European Commission.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and
+ * more details.
+ * You should have received a copy of the EUPL1.1 license
+ * along with this program; if not, you may find it at
+ * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
+ ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.i18.LogMessagesConstants.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.i18n.LogMessages.java.</p>
  * <b>Description:</b><p> Interface that contains the keys to the log monitoriza.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * <b>Date:</b><p> 09/01/2018.</p>
@@ -46,7 +53,17 @@ public interface LogMessages {
 	/**
 	 * Message key declared in the 'monitoriza.properties' file. 
 	 */	
+	String REQUEST_THREAD_WAIT = "requestThreadWait";
+	
+	/**
+	 * Message key declared in the 'monitoriza.properties' file. 
+	 */	
 	String CONFIRMATION_WAIT_INTERRUPTED = "waitInterrupted";
+	
+	/**
+	 * Message key declared in the 'monitoriza.properties' file. 
+	 */	
+	String CONFIRMATION_REQUIRED = "confirmationRequired";
 	
 	/**
 	 * Message key declared in the 'monitoriza.properties' file.
@@ -112,11 +129,41 @@ public interface LogMessages {
 	 * Message key declared in the 'messages.properties' file. 
 	 */		
 	String ERROR_SERVICE_NAME_NOT_MATCH = "errorServiceNameNotMatch";
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	String ERROR_PROCESSING_SERVICE = "errorProcessingService";			
+	
+	/**
+	 * Message key declared in the 'messages.properties' file. 
+	 */
+	String SUBJECT_MAIL_MONITORIZA = "subjectMailMonitoriza";
+	
+	/**
+	 * Message key declared in the 'messages.properties' file. 
+	 */	
+	String BODY_MAIL_ALARM_DEGRADED = "bodyMailAlarmDegraded" ;
+	
+	/**
+	 * Message key declared in the 'messages.properties' file. 
+	 */	
+	String BODY_MAIL_ALARM_LOST = "bodyMailAlarmLost" ;
 
 	/**
 	 * Message key declared in the 'messages.properties' file. 
 	 */
 	String SUMMARY_ALARM_SUBJECT_MAIL = "summaryAlarmSubjectMail";
+	
+	/**
+	 * Message key declared in the 'messages.properties' file. 
+	 */
+	String BODY_MAIL_SUMMARY_ROW_DEGRADED = "bodyMailSummaryRowDegraded";
+	
+	/**
+	 * Message key declared in the 'messages.properties' file. 
+	 */
+	String BODY_MAIL_SUMMARY_ROW_LOST = "bodyMailSummaryRowLost";	
 
 	/**
 	 * Message key declared in the 'messages.properties' file. 
@@ -182,5 +229,15 @@ public interface LogMessages {
 	 * Message key declared in the 'monitoriza.properties' file.
 	 */
 	String ERROR_THROWING_ALARM = "errorThrowingAlarm";
+	
+	/**
+	 * Message key declared in the 'monitoriza.properties' file.
+	 */
+	String ERROR_SERVLET_POST = "errorServletPost";
+	
+	/**
+	 * Message key declared in the 'monitoriza.properties' file.
+	 */
+	String ERROR_SERVLET_REQUEST = "errorServletRequest";
 }
 

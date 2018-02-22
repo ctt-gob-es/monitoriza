@@ -1,14 +1,20 @@
-/* 
-/* 
-* Este fichero forma parte de la plataforma de @firma. 
-* La plataforma de @firma es de libre distribución cuyo código fuente puede ser consultado
-* y descargado desde http://forja-ctt.administracionelectronica.gob.es
-*
-* Copyright 2018 Gobierno de España
-*/
+/*******************************************************************************
+ * Copyright (C) 2018 MINHAFP, Gobierno de España
+ * This program is licensed and may be used, modified and redistributed under the  terms
+ * of the European Public License (EUPL), either version 1.1 or (at your option)
+ * any later version as soon as they are approved by the European Commission.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and
+ * more details.
+ * You should have received a copy of the EUPL1.1 license
+ * along with this program; if not, you may find it at
+ * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
+ ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.mailService.mailService.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.alarm.mail.mailService.java.</p>
  * <b>Description:</b><p> Class that manages the mail service.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>23/01/2018.</p>
@@ -291,10 +297,16 @@ public class MailService {
 	 */
 	public boolean send() {
 		Properties props = new Properties();
-		props.put(StaticConstants.MAIL_ATTRIBUTE_HOST, getHost());
-		props.put(StaticConstants.MAIL_ATTRIBUTE_PORT, getPort());
-		props.put(StaticConstants.MAIL_ATTRIBUTE_AUTHENTICATION, isAuthentication());
-		props.put("mail.smtp.timeout", 10000);
+		//props.put(StaticConstants.MAIL_ATTRIBUTE_HOST, getHost());
+//		props.put(StaticConstants.MAIL_ATTRIBUTE_PORT, getPort());
+//		props.put(StaticConstants.MAIL_ATTRIBUTE_AUTHENTICATION, isAuthentication());
+//		props.put("mail.smtp.timeout", 10000);
+		
+		//props.put("mail.transport.protocol", "smtp");
+        props.put("mail.smtp.port", 587);
+        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.auth", "true"); 		
+		
 		Session session = Session.getInstance(props);
 		try {
 			// Creamos el mensaje
