@@ -169,7 +169,7 @@ public final class RequestProcessorThread implements Runnable {
 						// Si se cumplen las condiciones, se obtiene el posible
 						// próximo grupo de confirmación...
 						if (perdidas > Integer.parseInt(service.getLostThreshold()) || tiempoMedio > service.getDegradedThreshold()) {
-							LOGGER.info(Language.getFormatResMonitoriza(LogMessages.CONFIRMATION_REQUIRED, new Object[ ] { service.getWsdl(), perdidas, tiempoMedio }));
+							LOGGER.info(Language.getFormatResMonitoriza(LogMessages.CONFIRMATION_REQUIRED, new Object[ ] { service.getWsdl(), perdidas, tiempoMedio == null ? "N/A": tiempoMedio }));
 							necesarioConfirmar = Boolean.TRUE;
 							grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaProperties.getProperty(StaticConstants.GRUPO_CONFIRMACION_PATH_DIRECTORY)) + groupIndex);
 							groupIndex++;

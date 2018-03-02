@@ -131,7 +131,7 @@ public class HttpSoapInvoker {
 			tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
 												
 		} catch (IOException | SOAPException e) {
-			LOGGER.error(Language.getResMonitoriza(LogMessages.ERROR_SENDING_SOAP_PETITION), e);
+			LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_SENDING_SOAP_PETITION, new Object[ ] { service.isAfirmaService()?GeneralConstants.PLATFORM_AFIRMA:GeneralConstants.PLATFORM_TSA}), e);
 
 		} catch (IllegalArgumentException | SecurityException e) {
 			LOGGER.error(e.getMessage());

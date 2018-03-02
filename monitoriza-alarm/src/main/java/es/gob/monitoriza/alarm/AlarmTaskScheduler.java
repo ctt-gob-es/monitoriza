@@ -192,7 +192,7 @@ public class AlarmTaskScheduler {
 		};
 		
 		scheduler.scheduleAtFixedRate(sender, blockAlarmTime, blockAlarmTime, TimeUnit.MILLISECONDS);
-		
+				
 		//scheduler.schedule(sender, blockAlarmTime, TimeUnit.MILLISECONDS);
 	}
 

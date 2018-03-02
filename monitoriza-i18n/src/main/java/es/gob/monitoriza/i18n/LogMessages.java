@@ -131,7 +131,7 @@ public interface LogMessages {
 	String ERROR_SERVICE_NAME_NOT_MATCH = "errorServiceNameNotMatch";
 	
 	/**
-	 * Attribute that represents . 
+	 * Message key declared in the 'messages.properties' file. 
 	 */
 	String ERROR_PROCESSING_SERVICE = "errorProcessingService";			
 	
@@ -143,7 +143,7 @@ public interface LogMessages {
 	/**
 	 * Message key declared in the 'messages.properties' file. 
 	 */	
-	String BODY_MAIL_ALARM_DEGRADED = "bodyMailAlarmDegraded" ;
+	String BODY_MAIL_ALARM_DEGRADED = "bodyMailAlarmDegraded";
 	
 	/**
 	 * Message key declared in the 'messages.properties' file. 
@@ -239,5 +239,10 @@ public interface LogMessages {
 	 * Message key declared in the 'monitoriza.properties' file.
 	 */
 	String ERROR_SERVLET_REQUEST = "errorServletRequest";
+	
+	/**
+	 * Message key declared in the 'monitoriza.properties' file.
+	 */
+	String ERROR_FORMAT_THREAD_POOL_SIZE = "errorFormatThreadPoolSize";
 }
 

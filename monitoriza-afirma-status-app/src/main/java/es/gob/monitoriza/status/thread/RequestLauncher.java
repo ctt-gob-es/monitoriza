@@ -67,8 +67,20 @@ public class RequestLauncher {
 	public void startInvoker(final Map<String, String> statusHolder, final List<DTOService> servicios) {
 
 		LOGGER.info(Language.getFormatResMonitoriza(LogMessages.PATH_DIRECTORY_REQUESTS, new Object[ ] { requestDirectory }));
-
-		ExecutorService executor = Executors.newFixedThreadPool(servicios.size());
+				
+		Integer threads = null;
+		
+		try {
+			threads = Integer.parseInt(StaticMonitorizaProperties.getProperty(StaticConstants.REQUEST_THREAD_POOL_SIZE));
+		} catch (NumberFormatException e) {
+			LOGGER.info(Language.getFormatResMonitoriza(LogMessages.ERROR_FORMAT_THREAD_POOL_SIZE, new Object[ ] { requestDirectory }));
+		}
+		
+		if (threads == null || threads <= 0) {
+			threads = Runtime.getRuntime().availableProcessors();
+		}
+								
+		ExecutorService executor = Executors.newFixedThreadPool(threads);
 
 		// Recorremos los subdirectorios que separan las peticiones por
 		// servicio.

@@ -198,6 +198,11 @@ public interface StaticConstants {
 	 */
 	public static final String RFC3161_HTTPS_CERTIFICATE_TYPE = "rfc3161.https.certificate.type";
 	
+	/**
+	 * Constants that represents the static property that indicates the size of the thread pool for launching requests. 
+	 */
+	public static final String REQUEST_THREAD_POOL_SIZE = "requestThreadPoolSize";
+	
 	
 	
 }
