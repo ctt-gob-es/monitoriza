@@ -297,15 +297,9 @@ public class MailService {
 	 */
 	public boolean send() {
 		Properties props = new Properties();
-		//props.put(StaticConstants.MAIL_ATTRIBUTE_HOST, getHost());
-//		props.put(StaticConstants.MAIL_ATTRIBUTE_PORT, getPort());
-//		props.put(StaticConstants.MAIL_ATTRIBUTE_AUTHENTICATION, isAuthentication());
-//		props.put("mail.smtp.timeout", 10000);
-		
-		//props.put("mail.transport.protocol", "smtp");
-        props.put("mail.smtp.port", 587);
+        props.put("mail.smtp.port", getPort());
         props.put("mail.smtp.starttls.enable", "true");
-        props.put("mail.smtp.auth", "true"); 		
+        props.put("mail.smtp.auth", "true");
 		
 		Session session = Session.getInstance(props);
 		try {
