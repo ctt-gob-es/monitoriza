@@ -29,9 +29,9 @@ import es.gob.monitoriza.alarm.types.Alarm;
 import es.gob.monitoriza.constant.ServiceStatusConstants;
 import es.gob.monitoriza.exception.AlarmException;
 import es.gob.monitoriza.i18n.LogMessages;
-import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
+import es.gob.monitoriza.persistence.configuration.staticconfig.StaticServicesManager;
 import es.gob.monitoriza.utilidades.GeneralUtils;
-import es.gob.monitoriza.utilidades.StaticServicesManager;
 
 /** 
  * <p>Class that manages the alarms system of Monitoriz@.</p>
@@ -45,7 +45,7 @@ public class AlarmManager {
 		SERVICES = StaticServicesManager.getServices();
 	}
 	private static final List<String> STATUS;
-	private static final List<DTOService> SERVICES;
+	private static final List<ServiceDTO> SERVICES;
 
 	/**
 	 * Method that received a service name and a service status and it throws a new alarm.
@@ -62,7 +62,7 @@ public class AlarmManager {
 		if (!STATUS.contains(serviceStatus)) {
 			throw new AlarmException(LogMessages.ERROR_SERVICE_STATUS_NOT_MATCH);
 		}
-		if (!SERVICES.contains(new DTOService(serviceName))) {
+		if (!SERVICES.contains(new ServiceDTO(serviceName))) {
 			throw new AlarmException(LogMessages.ERROR_SERVICE_NAME_NOT_MATCH);
 		}
 		// Creamos una nueva alarma.

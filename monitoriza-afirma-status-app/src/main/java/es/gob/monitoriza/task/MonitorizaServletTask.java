@@ -38,7 +38,7 @@ import es.gob.monitoriza.configuration.impl.StaticServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
-import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.status.StatusHolder;
 import es.gob.monitoriza.status.thread.RequestLauncher;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
@@ -97,7 +97,7 @@ public class MonitorizaServletTask extends HttpServlet {
 		/**
 		 * Attribute that represents the list of services for the timer being executed. 
 		 */
-		private transient List<DTOService> serviciosDelTimer = new ArrayList<DTOService>();
+		private transient List<ServiceDTO> serviciosDelTimer = new ArrayList<ServiceDTO>();
 
 		/**
 		 * Attribute that represents the timer being executed. 
@@ -109,7 +109,7 @@ public class MonitorizaServletTask extends HttpServlet {
 		 * @param timerId String that represents the identifier of the timer being executed
 		 * @param serviciosDelTimer List<DTOService> that contains the services associated to the timer
 		 */
-		public ExecuteTimer(final String timerId, final List<DTOService> serviciosDelTimer) {
+		public ExecuteTimer(final String timerId, final List<ServiceDTO> serviciosDelTimer) {
 			this.timerId = timerId;
 			this.serviciosDelTimer = serviciosDelTimer;
 		}

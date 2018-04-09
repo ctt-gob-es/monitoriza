@@ -25,11 +25,11 @@ package es.gob.monitoriza.persistence.configuration.dto;
 
 
 /** 
- * <p>Class for transferring platforms connection data from persistence.</p>
+ * <p>Data transfer object that encapsulates the information of a connection configuration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 30 ene. 2018.
  */
-public class DTOConnection {
+public class ConnectionDTO {
 	
 	/**
 	 * Attribute that represents the protocol conection mode HTTP or HTTPS. 
@@ -46,6 +46,9 @@ public class DTOConnection {
 	 */
 	private String port;
 	
+	/**
+	 * Attribute that represents the port for the RFC3161 service. 
+	 */
 	private String rfc3161Port;
 	
 	/**
@@ -62,7 +65,6 @@ public class DTOConnection {
 	 * Attribute that represents the context for the RFC3161 service. 
 	 */
 	private String rfc3161Context;
-
 	
 	/**
 	 * Gets the value of the attribute {@link #secureMode} 

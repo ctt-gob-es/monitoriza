@@ -10,7 +10,6 @@
 	</parent>
 	<artifactId>monitoriza-commons-util</artifactId>
 	<name>monitoriza-commons-util</name>
-	<url>http://maven.apache.org</url>
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
@@ -30,10 +29,6 @@
 			<artifactId>monitoriza-i18n</artifactId>
 			<version>${project.version}</version>
 		</dependency>
-		<dependency>
-			<groupId>es.gob.monitoriza</groupId>
-			<artifactId>monitoriza-persistence</artifactId>
-			<version>${project.version}</version>
-		</dependency>
+		
 	</dependencies>
 </project>

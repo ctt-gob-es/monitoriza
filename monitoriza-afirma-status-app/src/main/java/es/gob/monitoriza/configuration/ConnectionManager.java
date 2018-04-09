@@ -30,7 +30,7 @@
  */
 package es.gob.monitoriza.configuration;
 
-import es.gob.monitoriza.persistence.configuration.dto.DTOConnection;
+import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
 
 /** 
  * <p>Interface that provides methods for retrieve connection information from persistence.</p>
@@ -43,12 +43,12 @@ public interface ConnectionManager {
 	 * Gets connection parameters for @Firma platform from persistence.
 	 * @return {@link #DTOConnection} containing connection parameters for @Firma platform.
 	 */
-	DTOConnection getAfirmaConnection();
+	ConnectionDTO getAfirmaConnection();
 	
 	/**
 	 * Gets connection parameters for TS@ platform from persistence.
 	 * @return {@link #DTOConnection} containing connection parameters for TS@ platform.
 	 */
-	DTOConnection getTsaConnection();
+	ConnectionDTO getTsaConnection();
 
 }

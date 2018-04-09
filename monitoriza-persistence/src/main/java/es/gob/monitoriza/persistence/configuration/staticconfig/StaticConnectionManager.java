@@ -22,11 +22,12 @@
  * @author Gobierno de España.
  * @version 1.0, 30 ene. 2018.
  */
-package es.gob.monitoriza.utilidades;
+package es.gob.monitoriza.persistence.configuration.staticconfig;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
-import es.gob.monitoriza.persistence.configuration.dto.DTOConnection;
+import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
+import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 
 /** 
@@ -41,9 +42,9 @@ public class StaticConnectionManager {
 	 * @see es.gob.monitoriza.configuration.ConnectionManager#getAfirmaConnection()
 	 */
 	
-	public DTOConnection getAfirmaConnection() {
+	public ConnectionDTO getAfirmaConnection() {
 		
-		final DTOConnection aFirmaConnection = new DTOConnection();
+		final ConnectionDTO aFirmaConnection = new ConnectionDTO();
 		
 		aFirmaConnection.setSecureMode(Boolean.valueOf(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_SECURE_MODE)) ? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP);
 		aFirmaConnection.setHost(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_HOST));
@@ -59,9 +60,9 @@ public class StaticConnectionManager {
 	 * @see es.gob.monitoriza.configuration.ConnectionManager#getTsaConnection()
 	 */
 	
-	public DTOConnection getTsaConnection() {
+	public ConnectionDTO getTsaConnection() {
 
-		final DTOConnection tsaConnection = new DTOConnection();
+		final ConnectionDTO tsaConnection = new ConnectionDTO();
 		
 		tsaConnection.setSecureMode(Boolean.valueOf(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_SECURE_MODE)) ? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP);
 		tsaConnection.setHost(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_HOST));

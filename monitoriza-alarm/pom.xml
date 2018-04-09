@@ -33,17 +33,14 @@
 		<dependency>
 			<groupId>es.gob.monitoriza</groupId>
 			<artifactId>monitoriza-commons-util</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.gob.monitoriza</groupId>
 			<artifactId>monitoriza-i18n</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.gob.monitoriza</groupId>
 			<artifactId>monitoriza-persistence</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 	<build> 

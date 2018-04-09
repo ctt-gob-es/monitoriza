@@ -36,7 +36,7 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
-import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.utilidades.FileUtils;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
@@ -60,7 +60,7 @@ public class OcspInvoker {
 	 * @return Long that represents the time in milliseconds that has taken to complete the request.
 	 * If there is some configuration or communication problem, this value will be null.
 	 */
-	public static Long sendRequest(final File requestFile, final DTOService service) {
+	public static Long sendRequest(final File requestFile, final ServiceDTO service) {
 		
 		Long tiempoTotal = null;
 		byte[ ] requestByte = FileUtils.fileToByteArray(requestFile);

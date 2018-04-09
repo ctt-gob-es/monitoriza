@@ -1,0 +1,57 @@
+      <div class="sidebar">
+        <div class="sidebar-inner">
+          <!-- ### $Sidebar Header ### -->
+          <div class="sidebar-logo">
+            <div class="peers ai-c fxw-nw">
+              <div class="peer peer-greed">
+                <a class="sidebar-link td-n" th:href="@{/inicio}">
+                  <div class="peers ai-c fxw-nw">
+                    <div class="peer">
+                      <div class="logo">
+                        <img th:src="@{images/chart_logo.png}"
+						alt="Monitoriz@ Logo" />
+                      </div>
+                    </div>
+                    <div class="peer peer-greed">
+                      <h5 class="lh-1 mB-0 logo-text" th:text="#{monitoriza.title}"></h5>
+                    </div>
+                  </div>
+                </a>
+              </div>
+              <div class="peer">
+                <div class="mobile-toggle sidebar-toggle">
+                  <a href="" class="td-n">
+                    <i class="ti-arrow-circle-left"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- ### $Sidebar Menu ### -->
+          <form id="formMenu" class="form-sidebar"> 
+      	   	<ul class="sidebar-menu scrollable pos-r">
+	            <li class="nav-item mT-30 active">
+	              <a class="sidebar-link" th:href="@{/inicio}">
+	                <span class="icon-holder">
+	                  <i class="c-blue-500 ti-home"></i>
+	                </span>
+	                <span class="title" th:text="#{menu.inicio}"></span>
+	              </a>
+	            </li>
+	            <li class="nav-item">
+	              <a id="aUserAdmin" class='sidebar-link' href="#">
+	                <span class="icon-holder">
+	                  <i class="c-brown-500 ti-user"></i>
+	                </span>
+	                <span class="title" th:text="#{menu.admin.user}"></span>
+	                 <script th:inline="javascript">
+	                 	var action = /*[[@{/useradmin}]]*/;
+	                 	$('#aUserAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', action, 'optionReplacement', 'GET', null, true); return false;});
+	                </script>
+	              </a>
+	            </li>
+	          </ul>
+          </form>
+        </div>
+      </div>

@@ -1,0 +1,59 @@
+<form name="altEditor-form" role="form" id="userForm" th:object="${userform}" th:action="@{/saveuser}" method="post">
+					
+			<input type='hidden' class='primarykey' id="idUserMonitoriza" th:field="*{idUserMonitoriza}">
+			
+			<div class="form-group">
+				
+					<label for="name" class="col-form-label" th:text="#{form.user.name}"></label>
+					<script th:inline="javascript">
+						/*<![CDATA[*/
+						    var message = /*[[#{form.user.name.pattern}]]*/ 'default';
+						/*]]>*/
+					</script>
+					<input onblur="validate(this,message);" type="text" id="name" th:field="*{name}" style="overflow:hidden" class="form-control" required pattern=".{3,15}" />
+					<div id="invalid-name" class="invalid-feedback" ></div>
+				
+				<div style="clear:both;"/>
+			</div>
+			
+			<div class="form-group">
+				
+					<label for="surnames" class="col-form-label" th:text="#{form.user.surnames}"></label>
+				
+					<input type="text" id="surnames" th:field="*{surnames}" style="overflow:hidden" class="form-control" required pattern=".{3,30}"/>
+					<div id="invalid-surnames" class="invalid-feedback" ></div>
+				
+				<div style="clear:both;"/>
+			</div>
+			
+			<div class="form-group">
+				
+					<label for="login" class="col-form-label" th:text="#{form.user.login}"></label>
+				
+					<input type="text" id="login" th:field="*{login}" style="overflow:hidden" class="form-control" required pattern=".{5,30}"/>
+					<div id="invalid-login" class="invalid-feedback" ></div>
+				
+				<div style="clear:both;"/>
+			</div>
+			
+			<div class="form-group">
+				
+					<label for="password" class="col-form-label" th:text="#{form.user.password}"></label>
+				
+					<input autocomplete="new-password" type="password" id="password" th:field="*{password}" style="overflow:hidden" class="form-control" required pattern=".{7,30}"/>
+					<div id="invalid-password" class="invalid-feedback" ></div>
+				
+				<div style="clear:both;"/>
+			</div>
+			
+			<div class="form-group">
+				
+					<label for="email" class="col-form-label" th:text="#{form.user.email}"></label>
+				
+					<input type="email" id="email" th:field="*{email}" style="overflow:hidden" class="form-control" required/>
+					<div id="invalid-email" class="invalid-feedback" ></div>
+				
+				<div style="clear:both;"/>
+			</div>
+							
+</form>

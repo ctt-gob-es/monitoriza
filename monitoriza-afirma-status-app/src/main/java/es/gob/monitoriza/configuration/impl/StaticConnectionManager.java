@@ -26,7 +26,7 @@ package es.gob.monitoriza.configuration.impl;
 import es.gob.monitoriza.configuration.ConnectionManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
-import es.gob.monitoriza.persistence.configuration.dto.DTOConnection;
+import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 
@@ -42,9 +42,9 @@ public class StaticConnectionManager implements ConnectionManager {
 	 * @see es.gob.monitoriza.configuration.ConnectionManager#getAfirmaConnection()
 	 */
 	@Override
-	public DTOConnection getAfirmaConnection() {
+	public ConnectionDTO getAfirmaConnection() {
 		
-		final DTOConnection aFirmaConnection = new DTOConnection();
+		final ConnectionDTO aFirmaConnection = new ConnectionDTO();
 		
 		aFirmaConnection.setSecureMode(Boolean.valueOf(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_SECURE_MODE)) ? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP);
 		aFirmaConnection.setHost(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_HOST));
@@ -60,9 +60,9 @@ public class StaticConnectionManager implements ConnectionManager {
 	 * @see es.gob.monitoriza.configuration.ConnectionManager#getTsaConnection()
 	 */
 	@Override
-	public DTOConnection getTsaConnection() {
+	public ConnectionDTO getTsaConnection() {
 
-		final DTOConnection tsaConnection = new DTOConnection();
+		final ConnectionDTO tsaConnection = new ConnectionDTO();
 		
 		tsaConnection.setSecureMode(Boolean.valueOf(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_SECURE_MODE)) ? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP);
 		tsaConnection.setHost(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_HOST));

@@ -26,11 +26,11 @@ package es.gob.monitoriza.persistence.configuration.dto;
 import java.util.Objects;
 
 /** 
- * <p>Class for transferring service data from persistence.</p>
+ * <p>Data transfer object that encapsulates the information for service configuration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 22 ene. 2018.
  */
-public class DTOService {
+public class ServiceDTO {
 	
 	/**
 	 * Attribute that represents the service identifier. 
@@ -77,7 +77,7 @@ public class DTOService {
 	 * Constructor method for the class DTOService.java.
 	 * @param serviceId 
 	 */
-	public DTOService(final String serviceId) {
+	public ServiceDTO(final String serviceId) {
 		this.serviceId = serviceId;
 	}
 	
@@ -227,10 +227,10 @@ public class DTOService {
         if (o == this) {
         	return true;
         }
-        if (!(o instanceof DTOService)) {
+        if (!(o instanceof ServiceDTO)) {
             return false;
         }
-        DTOService service = (DTOService) o;
+        ServiceDTO service = (ServiceDTO) o;
         
         return serviceId.equals(service.getServiceId());
     }

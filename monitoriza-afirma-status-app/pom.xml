@@ -20,11 +20,6 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-			<groupId>com.j2html</groupId>
-			<artifactId>j2html</artifactId>
-			<version>1.2.0</version>
-		</dependency>
-		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 		</dependency>
@@ -49,22 +44,18 @@
 		<dependency>
 			<groupId>es.gob.monitoriza</groupId>
 			<artifactId>monitoriza-commons-util</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.gob.monitoriza</groupId>
 			<artifactId>monitoriza-i18n</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.gob.monitoriza</groupId>
 			<artifactId>monitoriza-alarm</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>es.gob.monitoriza</groupId>
 			<artifactId>monitoriza-persistence</artifactId>
-			<version>${project.version}</version>
 		</dependency>
 	</dependencies>
 	<build>

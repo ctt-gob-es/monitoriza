@@ -110,7 +110,8 @@ setlocal
 
 set "JAVA_HOME=C:\Java_64\jdk1.8.0_131"
 set "JAVA_OPTS=%JAVA_OPTS% -Dmonitoriza.properties.path=%CATALINA_HOME%/conf/staticMonitorizaConfig.properties"
-set "JAVA_OPTS=%JAVA_OPTS% -Dlog4j.configuration=file:/%CATALINA_HOME%/conf/monitoriza-log4j.xml"
+set "JAVA_OPTS=%JAVA_OPTS% -Dlog4j.configuration=file:/%CATALINA_HOME%/conf/monitoriza-log4j.xm -Dspring.config.location=%CATALINA_HOME%/conf/application.properties"
+
 
 rem Suppress Terminate batch job on CTRL+C
 if not ""%1"" == ""run"" goto mainEntry

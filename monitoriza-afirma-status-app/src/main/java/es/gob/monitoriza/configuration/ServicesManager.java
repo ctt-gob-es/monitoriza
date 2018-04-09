@@ -32,7 +32,7 @@ package es.gob.monitoriza.configuration;
 
 import java.util.List;
 
-import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 
 /** 
  * <p>Interface that provides the methods for managing the configuration of the @firma/ts@ services.</p>
@@ -45,13 +45,13 @@ public interface ServicesManager {
 	 * Method that gets the services configuration from persistence (database or static properties file)
 	 * @return
 	 */
-	List<DTOService> getServices();
+	List<ServiceDTO> getServices();
 	
 	/**
 	 * Method that gets the services  from persistence (database or static properties file)
 	 * @param timerId The Identifier of the timer configured in the service
 	 * @return List with the service configuration which its timer matches with the parameter timerId
 	 */
-	List<DTOService> getServicesByTimer(String timerId);
+	List<ServiceDTO> getServicesByTimer(String timerId);
 
 }

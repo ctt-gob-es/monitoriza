@@ -36,7 +36,7 @@ import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
-import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.status.RunningServices;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
@@ -64,7 +64,7 @@ public class RequestLauncher {
 	 * @param responsesDir Path where the responses will be stored.
 	 * @throws InvokerException if the path is not correct or the directories structure is not correct.
 	 */
-	public void startInvoker(final Map<String, String> statusHolder, final List<DTOService> servicios) {
+	public void startInvoker(final Map<String, String> statusHolder, final List<ServiceDTO> servicios) {
 
 		LOGGER.info(Language.getFormatResMonitoriza(LogMessages.PATH_DIRECTORY_REQUESTS, new Object[ ] { requestDirectory }));
 				
@@ -84,7 +84,7 @@ public class RequestLauncher {
 
 		// Recorremos los subdirectorios que separan las peticiones por
 		// servicio.
-		for (DTOService s: servicios) {
+		for (ServiceDTO s: servicios) {
 
 			RunningServices.getInstance();
 			

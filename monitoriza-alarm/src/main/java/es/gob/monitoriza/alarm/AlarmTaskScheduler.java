@@ -39,11 +39,11 @@ import es.gob.monitoriza.constant.ServiceStatusConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
-import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
+import es.gob.monitoriza.persistence.configuration.staticconfig.StaticServicesManager;
 import es.gob.monitoriza.utilidades.GeneralUtils;
 import es.gob.monitoriza.utilidades.MailUtils;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
-import es.gob.monitoriza.utilidades.StaticServicesManager;
 
 /** 
  * <p>Class that represents the scheduler for the tasks object.</p>
@@ -116,7 +116,7 @@ public class AlarmTaskScheduler {
 	 */
 	private static String generateBody(final Alarm alarm) {
 				
-		final DTOService service = StaticServicesManager.getServiceById(alarm.getServiceName().toLowerCase());
+		final ServiceDTO service = StaticServicesManager.getServiceById(alarm.getServiceName().toLowerCase());
 		final String systemService = GeneralUtils.getSystemName(alarm.getServiceName().toLowerCase()).concat(GeneralConstants.EN_DASH_WITH_SPACES).concat(service.getWsdl());
 		final String tiempoMedioServicio =  service != null? service.getDegradedThreshold().toString():null;
 		
@@ -143,7 +143,7 @@ public class AlarmTaskScheduler {
 	 */
 	private static String generateBodyRow(final Alarm alarm) {
 				
-		final DTOService service = StaticServicesManager.getServiceById(alarm.getServiceName().toLowerCase());
+		final ServiceDTO service = StaticServicesManager.getServiceById(alarm.getServiceName().toLowerCase());
 		final String tiempoMedioServicio =  service != null? service.getDegradedThreshold().toString():null;
 		
 		String body = null;
@@ -185,15 +185,15 @@ public class AlarmTaskScheduler {
 					// Vaciamos la pila de alarmas
 					AlarmTaskManager.removeAlarmStack(serviceIdentifier);
 				}
-				//scheduler.shutdown();
+				scheduler.shutdown();
 				
 				LOGGER.info("pool shutdown");
 			}
 		};
 		
-		scheduler.scheduleAtFixedRate(sender, blockAlarmTime, blockAlarmTime, TimeUnit.MILLISECONDS);
+		//scheduler.scheduleAtFixedRate(sender, blockAlarmTime, blockAlarmTime, TimeUnit.MILLISECONDS);
 				
-		//scheduler.schedule(sender, blockAlarmTime, TimeUnit.MILLISECONDS);
+		scheduler.schedule(sender, blockAlarmTime, TimeUnit.MILLISECONDS);
 	}
 
 	public static void main(String[ ] args) {
@@ -209,7 +209,7 @@ public class AlarmTaskScheduler {
 	 */
 	private static String generateSummaryBody(List<Alarm> alarmsToSent) {
 		StringBuilder body = new StringBuilder();
-		final DTOService service = StaticServicesManager.getServiceById(alarmsToSent.get(0).getServiceName().toLowerCase());
+		final ServiceDTO service = StaticServicesManager.getServiceById(alarmsToSent.get(0).getServiceName().toLowerCase());
 		final String systemService = GeneralUtils.getSystemName(alarmsToSent.get(0).getServiceName().toLowerCase()).concat(GeneralConstants.EN_DASH_WITH_SPACES).concat(service.getWsdl());
 		body.append(Language.getFormatResMonitoriza(LogMessages.BODY_MAIL_SUMMARY, new Object[]{alarmsToSent.size(), systemService, alarmsToSent.get(0).getServiceStatus().toUpperCase()}));
 		for(Alarm alarm : alarmsToSent){

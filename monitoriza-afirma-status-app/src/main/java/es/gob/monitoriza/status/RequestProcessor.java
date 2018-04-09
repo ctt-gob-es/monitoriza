@@ -54,7 +54,7 @@ import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.invoker.ocps.OcspInvoker;
 import es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker;
 import es.gob.monitoriza.invoker.soap.HttpSoapInvoker;
-import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
@@ -111,12 +111,12 @@ public final class RequestProcessor {
 	 * @param responsesDir Path where the responses will be stored.
 	 * @throws InvokerException if the path is not correct or the directories structure is not correct.
 	 */
-	public void startInvoker(Map<String, String> statusHolder, List<DTOService> servicios) {
+	public void startInvoker(Map<String, String> statusHolder, List<ServiceDTO> servicios) {
 
 		LOGGER.info(Language.getFormatResMonitoriza(LogMessages.PATH_DIRECTORY_REQUESTS, new Object[ ] { requestDirectory }));
 		// Recorremos los subdirectorios que separan las peticiones por
 		// servicio.
-		for (DTOService s: servicios) {
+		for (ServiceDTO s: servicios) {
 
 			if (requestsRunning.get(s.getServiceId()) == null || !requestsRunning.get(s.getServiceId())) {	
 				try {
@@ -136,7 +136,7 @@ public final class RequestProcessor {
 	 * @param responsesDir Directory where store the responses.
 	 * @throws InvokerException if the path is not correct or the directories structure is not correct.
 	 */
-	private void processRequests(final DTOService service, final Map<String, String> statusHolder) throws InvokerException {
+	private void processRequests(final ServiceDTO service, final Map<String, String> statusHolder) throws InvokerException {
 		
 		requestsRunning.put(service.getServiceId(), Boolean.TRUE);
 
@@ -251,7 +251,7 @@ public final class RequestProcessor {
 	 * 			- DEGRADADO
 	 * 			- CAIDO
 	 */
-	private String calcularEstadoDelServicio(final DTOService service, final Long tiempoMedio, final Integer perdidas) {
+	private String calcularEstadoDelServicio(final ServiceDTO service, final Long tiempoMedio, final Integer perdidas) {
 
 		String estado = null;
 		
@@ -281,7 +281,7 @@ public final class RequestProcessor {
 	 * @param tiempoTotal Time in milliseconds that has taken to complete the service request.
 	 * @return true if the request is considered lost, false if the request is in time.
 	 */
-	private boolean isServiceRequestLost(final DTOService service, final Long tiempoTotal) {
+	private boolean isServiceRequestLost(final ServiceDTO service, final Long tiempoTotal) {
 		
 		boolean resultado = Boolean.FALSE;
 		

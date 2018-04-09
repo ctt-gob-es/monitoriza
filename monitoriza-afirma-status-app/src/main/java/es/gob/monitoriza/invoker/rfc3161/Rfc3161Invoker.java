@@ -58,7 +58,7 @@ import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
-import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.utilidades.FileUtils;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 import es.gob.monitoriza.utilidades.UtilsResource;
@@ -83,7 +83,7 @@ public class Rfc3161Invoker {
 	 * If there is some configuration or communication problem, this value will be null.
 	 * @throws InvokerException If the method fails.
 	 */
-	public static Long sendRequest(final File requestFile, final DTOService service) throws InvokerException {
+	public static Long sendRequest(final File requestFile, final ServiceDTO service) throws InvokerException {
 		LOGGER.debug(Language.getResMonitoriza(LogMessages.INIT_RFC3161));
 		
 		Long tiempoTotal = null;

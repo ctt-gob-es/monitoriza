@@ -52,7 +52,7 @@ import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.invoker.ocps.OcspInvoker;
 import es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker;
 import es.gob.monitoriza.invoker.soap.HttpSoapInvoker;
-import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.status.RunningServices;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
@@ -71,7 +71,7 @@ public final class RequestProcessorThread implements Runnable {
 	/**
 	 * Attribute that represents the Object that holds the configuration for the service being processed in this thread. 
 	 */
-	private DTOService service;
+	private ServiceDTO service;
 
 	/**
 	 * Attribute that represents the reference to the Map where the status of each service are stored. 
@@ -83,7 +83,7 @@ public final class RequestProcessorThread implements Runnable {
 	 * @param service DTOService that represents the service being processed in this thread.
 	 * @param statusHolder Reference to the Map that holds the current status for the processed services. 
 	 */
-	public RequestProcessorThread(final DTOService service, final Map<String, String> statusHolder) {
+	public RequestProcessorThread(final ServiceDTO service, final Map<String, String> statusHolder) {
 
 		this.service = service;
 		this.statusHolder = statusHolder;
@@ -224,7 +224,7 @@ public final class RequestProcessorThread implements Runnable {
 	 * 			- DEGRADADO
 	 * 			- CAIDO
 	 */
-	private String calcularEstadoDelServicio(final DTOService service, final Long tiempoMedio, final Integer perdidas) {
+	private String calcularEstadoDelServicio(final ServiceDTO service, final Long tiempoMedio, final Integer perdidas) {
 
 		String estado = null;
 		boolean sendAlarm = Boolean.parseBoolean(StaticMonitorizaProperties.getProperty(StaticConstants.ALARM_ACTIVE));
@@ -255,7 +255,7 @@ public final class RequestProcessorThread implements Runnable {
 	 * @param tiempoTotal Time in milliseconds that has taken to complete the service request.
 	 * @return true if the request is considered lost, false if the request is in time.
 	 */
-	private boolean isServiceRequestLost(final DTOService service, final Long tiempoTotal) {
+	private boolean isServiceRequestLost(final ServiceDTO service, final Long tiempoTotal) {
 
 		boolean resultado = Boolean.FALSE;
 
@@ -268,9 +268,9 @@ public final class RequestProcessorThread implements Runnable {
 
 	/**
 	 * Gets the {@link service}.
-	 * @return {@link DTOService}.
+	 * @return {@link ServiceDTO}.
 	 */
-	public DTOService getService() {
+	public ServiceDTO getService() {
 		return service;
 	}
 
@@ -278,7 +278,7 @@ public final class RequestProcessorThread implements Runnable {
 	 * Sets the {@link service}.
 	 * @param service
 	 */
-	public void setService(DTOService service) {
+	public void setService(ServiceDTO service) {
 		this.service = service;
 	}
 

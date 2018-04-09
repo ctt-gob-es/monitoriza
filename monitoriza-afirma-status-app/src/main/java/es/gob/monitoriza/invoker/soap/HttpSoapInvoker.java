@@ -47,8 +47,8 @@ import es.gob.monitoriza.configuration.impl.StaticConnectionManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
-import es.gob.monitoriza.persistence.configuration.dto.DTOConnection;
-import es.gob.monitoriza.persistence.configuration.dto.DTOService;
+import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.utilidades.FileUtils;
 
 /** 
@@ -71,7 +71,7 @@ public class HttpSoapInvoker {
 	 * @return Long that represents the time in milliseconds that has taken to complete the request.
 	 * If there is some configuration or communication problem, this value will be null.
 	 */
-	public static Long sendRequest(final File requestFile, final DTOService service) {
+	public static Long sendRequest(final File requestFile, final ServiceDTO service) {
 		// Obtenemos el contenido del fichero
 		String soapMsg = FileUtils.readFile(requestFile);
 		Long tiempoTotal = null;
@@ -79,7 +79,7 @@ public class HttpSoapInvoker {
 		try (InputStream is = new ByteArrayInputStream(soapMsg.getBytes());) {
 			
 			ConnectionManager connManager = new StaticConnectionManager();
-			DTOConnection connection = null;
+			ConnectionDTO connection = null;
 			String wsdlServiceName = service.getWsdl();
 			String base = null;
 			

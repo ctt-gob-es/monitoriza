@@ -36,6 +36,11 @@ public interface GeneralConstants {
 	public static final String LOGGER_NAME_MONITORIZA_LOG = "Monitoriza-Server";
 	
 	/**
+	 * Constant attribute that represents the Monitoriza Web Logger name.
+	 */
+	public static final String LOGGER_NAME_MONITORIZA_WEB_LOG = "Monitoriza-Web";
+	
+	/**
 	 * Constant attribute that represents HTTP secure mode.
 	 */
 	public static final String SECUREMODE_HTTP = "http";

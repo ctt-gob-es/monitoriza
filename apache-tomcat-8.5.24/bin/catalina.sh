@@ -109,7 +109,7 @@
 
 JAVA_HOME="C:\Java_64\jdk1.8.0_131"
 JAVA_OPTS="$JAVA_OPTS -Dmonitoriza.properties.path=%CATALINA_HOME%/conf/staticMonitorizaConfig.properties"
-JAVA_OPTS="$JAVA_OPTS -Dlog4j.configuration=file:/%CATALINA_HOME%/conf/monitoriza-log4j.xml"
+JAVA_OPTS="$JAVA_OPTS -Dlog4j.configuration=file:/%CATALINA_HOME%/conf/monitoriza-log4j.xml -Dspring.config.location=%CATALINA_HOME%/conf/application.properties"
 
 -Djava.security.policy=="$CATALINA_BASE"/conf/catalina.policy \
 
