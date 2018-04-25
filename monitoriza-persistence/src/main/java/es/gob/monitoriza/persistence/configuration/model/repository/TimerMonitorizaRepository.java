@@ -15,21 +15,31 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.entity.PlatformTsa.java.</p>
- * <b>Description:</b><p> .</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.repository.TimerMonitorizaRepository.java.</p>
+ * <b>Description:</b><p>Interface that provides CRUD functionality for the TimerMonitoriza entity.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>9 abr. 2018.</p>
+ * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 9 abr. 2018.
+ * @version 1.0, 20 abr. 2018.
  */
-package es.gob.monitoriza.persistence.configuration.model.entity;
+package es.gob.monitoriza.persistence.configuration.model.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 
 /** 
- * <p>Class .</p>
+ * <p>Interface that provides CRUD functionality for the TimerMonitoriza entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 9 abr. 2018.
+ * @version 1.0, 20 abr. 2018.
  */
-public class PlatformTsa {
+public interface TimerMonitorizaRepository extends JpaRepository<TimerMonitoriza, Long> {
+	
+	/**
+	  * Method that obtains from the persistence a timer identified by its primary key. 
+	 * @param id String that represents the primary key of the service in the persistence.
+	 * @return Object that represents a service from the persistence. 
+	 */
+	TimerMonitoriza findByIdTimer(Long id);
 
 }

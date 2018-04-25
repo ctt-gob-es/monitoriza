@@ -31,22 +31,34 @@ $(document).ready(function() {
         .children('li.open')
         .removeClass('open');
 
+//      $this
+//        .parent()
+//        .children('.dropdown-menu')
+//        .slideDown(200, () => {
+//          $this.parent().addClass('open');
+//        });
+      
       $this
-        .parent()
-        .children('.dropdown-menu')
-        .slideDown(200, () => {
-          $this.parent().addClass('open');
-        });
+      .parent()
+      .children('.dropdown-menu')
+      .slideDown(200, function() {
+        $this.parent().addClass('open');
+      });
+      
     }
   });
 
   // Sidebar Activity Class
   const sidebarLinks = $('.sidebar').find('.sidebar-link');
 
+//  sidebarLinks
+//    .each((index, el) => {
+//      $(el).removeClass('active');
+//    })
   sidebarLinks
-    .each((index, el) => {
-      $(el).removeClass('active');
-    })
+  .each(function(index, el) {
+    $(el).removeClass('active');
+  })
     .filter(function () {
       const href = $(this).attr('href');
       const pattern = href[0] === '/' ? href.substr(1) : href;
@@ -79,7 +91,7 @@ $(document).ready(function() {
   
   $('#sidebar-toggle').click(function(e){
 	    e.preventDefault();
-	    setTimeout(() => {
+	    setTimeout(function() {
 	      window.dispatchEvent(window.EVENT);
 	    }, 300);
 	  });

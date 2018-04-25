@@ -101,6 +101,11 @@ public interface GeneralConstants {
 	public static final String LINE_FEED = "\n";
 	
 	/**
+	 * Attribute that represents the service identifier for SOAP services. 
+	 */
+	public static final String SOAP_SERVICE = "soap";
+	
+	/**
 	 * Attribute that represents the service identifier for OCSP services. 
 	 */
 	public static final String OCSP_SERVICE = "ocsp";

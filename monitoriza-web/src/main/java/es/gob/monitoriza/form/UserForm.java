@@ -53,7 +53,7 @@ public class UserForm {
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input in the form. 
 	 */
-	private String idUserMonitoriza = "";
+	private Long idUserMonitoriza = null;
 	
 	/**
 	 * Attribute that represents the value of the input name of the user in the form. 
@@ -94,7 +94,7 @@ public class UserForm {
 	 * Gets the value of the attribute {@link #idUserMonitoriza}.
 	 * @return the value of the attribute {@link #idUserMonitoriza}.
 	 */
-	public String getIdUserMonitoriza() {
+	public Long getIdUserMonitoriza() {
 		return idUserMonitoriza;
 	}
 
@@ -102,7 +102,7 @@ public class UserForm {
 	 * Gets the value of the attribute {@link #idUserMonitoriza}.
 	 * @return the value of the attribute {@link #idUserMonitoriza}.
 	 */
-	public void setIdUserMonitoriza(String idUserMonitoriza) {
+	public void setIdUserMonitoriza(Long idUserMonitoriza) {
 		this.idUserMonitoriza = idUserMonitoriza;
 	}
 

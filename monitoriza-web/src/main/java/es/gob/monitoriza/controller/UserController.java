@@ -24,27 +24,18 @@
  */
 package es.gob.monitoriza.controller;
 
-import javax.validation.Valid;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.form.UserForm;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 import es.gob.monitoriza.service.IUserMonitorizaService;
-import es.gob.monitoriza.utilidades.NumberConstants;
 
 /** 
  * <p>Class that manages the requests related to the Users administration.</p>
@@ -57,7 +48,7 @@ public class UserController {
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_WEB_LOG);
 	
 	/**
 	 * Attribute that represents the service object for accessing the repository. 
@@ -82,7 +73,7 @@ public class UserController {
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "add", method = RequestMethod.POST)
+	@RequestMapping(value = "adduser", method = RequestMethod.POST)
     public String addUser(Model model){
 		model.addAttribute("userform", new UserForm());
 		return "modal/userForm";
@@ -95,7 +86,7 @@ public class UserController {
      * @param model Holder object for model attributes.
      * @return String that represents the name of the view to forward.
      */
-    @RequestMapping(value = "edit", method = RequestMethod.POST)
+    @RequestMapping(value = "edituser", method = RequestMethod.POST)
     public String editUser(@RequestParam("id") Long userId, Model model){
     	UserMonitoriza user = userService.getUserMonitorizaById(userId);
     	UserForm userForm = new UserForm();

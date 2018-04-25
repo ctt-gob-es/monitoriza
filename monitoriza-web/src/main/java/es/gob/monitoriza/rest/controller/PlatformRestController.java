@@ -15,12 +15,12 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.controller.UserRestController.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.rest.controller.PlatformAfirmaRestController.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>21 mar. 2018.</p>
+ * <b>Date:</b><p>10 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 21 mar. 2018.
+ * @version 1.0, 10 abr. 2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -34,7 +34,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -46,39 +45,30 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.form.UserForm;
-import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
+import es.gob.monitoriza.form.AfirmaForm;
+import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
+import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
-import es.gob.monitoriza.service.IUserMonitorizaService;
-import es.gob.monitoriza.utilidades.NumberConstants;
-import es.gob.monitoriza.validator.UserValidator;
+import es.gob.monitoriza.service.IPlatformService;
 
 /** 
- * <p>Class that manages the REST requests related to the Users administration and JSON communication.</p>
+ * <p>Class that manages the REST requests related to the Platforms administration and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 21 mar. 2018.
+ * @version 1.0, 10 abr. 2018.
  */
 @RestController
-public class UserRestController {
+public class PlatformRestController {
 	
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
-	
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_WEB_LOG);
+		
 	/**
 	 * Attribute that represents the service object for accessing the repository. 
 	 */
 	@Autowired
-	private IUserMonitorizaService userService; 
-	
-	@Autowired
-	private UserValidator userValidator;
-	
-//	@InitBinder("userForm")
-//    public void setupBinder(WebDataBinder binder) {
-//        binder.addValidators(userValidator);
-//    }
+	private IPlatformService platformService; 
 	
 	/**
 	 * Method that maps the list users web requests to the controller and forwards the list of users
@@ -87,9 +77,10 @@ public class UserRestController {
 	 * @return String that represents the name of the view to forward.
 	 */
 	@JsonView(DataTablesOutput.View.class)
-	@RequestMapping(path="/usersdatatable", method=RequestMethod.GET)
-    public DataTablesOutput<UserMonitoriza> users(@Valid DataTablesInput input){
-		return (DataTablesOutput<UserMonitoriza>) userService.findAll(input);
+	@RequestMapping(path="/afirmadatatable", method=RequestMethod.GET)
+    public DataTablesOutput<PlatformMonitoriza> users(@Valid DataTablesInput input){
+		
+		return (DataTablesOutput<PlatformMonitoriza>) platformService.findAllAfirma(input);
 				   	
     }
 	
@@ -101,9 +92,10 @@ public class UserRestController {
      * @return String that represents the name of the view to redirect.
      */
 	@JsonView(DataTablesOutput.View.class)
-    @RequestMapping(path = "/deleteuser", method = RequestMethod.POST)
+    @RequestMapping(path = "/deletafirma", method = RequestMethod.POST)
     public String deleteUser(@RequestParam("id") Long userId, @RequestParam("index") String index) {
-    	userService.deleteUserMonitoriza(userId);
+    	
+    	platformService.deletePlatform(userId);
     	
         return index;
     }    
@@ -112,38 +104,32 @@ public class UserRestController {
      * Method that maps the save user web request to the controller and saves it in the persistence.
      * @param userForm Object that represents the backing user form.
      * @param bindingResult Object that represents the form validation result. 
-     * @return {@link DataTablesOutput<UserMonitoriza>} 
+     * @return {@link DataTablesOutput<PlatformMonitoriza>} 
      */
-    @RequestMapping(value="/saveuser", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(value="/saveafirma", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @JsonView(DataTablesOutput.View.class)
-    public @ResponseBody DataTablesOutput<UserMonitoriza> save(@Validated(OrderedValidation.class) @RequestBody UserForm userForm) {
+    public @ResponseBody DataTablesOutput<PlatformMonitoriza> save(@Validated(OrderedValidation.class) @RequestBody AfirmaForm afirmaForm) {
 
-		DataTablesOutput<UserMonitoriza> dtOutput = new DataTablesOutput<>();
-		UserMonitoriza newUser = null;
+		DataTablesOutput<PlatformMonitoriza> dtOutput = new DataTablesOutput<>();
+		PlatformMonitoriza newAfirma = null;
+		
+		newAfirma = new PlatformMonitoriza();
+		newAfirma.setHost(afirmaForm.getHost());
+		newAfirma.setName(afirmaForm.getName());
+		newAfirma.setOcspContext(afirmaForm.getOcspContext());
+		newAfirma.setPort(afirmaForm.getPort());
+		newAfirma.setServiceContext(afirmaForm.getServiceContext());
+		CPlatformType afirmaType = new CPlatformType();
+		afirmaType.setIdPlatformType(IPlatformService.ID_PLATFORM_TYPE_AFIRMA);
+		newAfirma.setPlatformType(afirmaType);		
 
-		String pwd = userForm.getPassword();
-		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
-		String hashPwd = bc.encode(pwd);
-
-		newUser = new UserMonitoriza();
-		newUser.setPassword(hashPwd);
-		newUser.setLogin(userForm.getLogin());
-		newUser.setAttemptsNumber(NumberConstants.NUM0);
-		newUser.setEmail(userForm.getEmail());
-		newUser.setIsBlocked(Boolean.FALSE);
-		newUser.setLastAccess(null);
-		newUser.setLastIpAccess(null);
-		newUser.setName(userForm.getName());
-		newUser.setSurnames(userForm.getSurnames());
-
-		UserMonitoriza user = userService.saveUserMonitoriza(newUser);
-		List<UserMonitoriza> listNewUser = new ArrayList<UserMonitoriza>();
-		listNewUser.add(user);
-		dtOutput.setData(listNewUser);
+		PlatformMonitoriza afirma = platformService.savePlatform(newAfirma);
+		List<PlatformMonitoriza> listNewAfirma = new ArrayList<PlatformMonitoriza>();
+		listNewAfirma.add(afirma);
+		dtOutput.setData(listNewAfirma);
 
 		return dtOutput;
 
     }
-		
 
 }

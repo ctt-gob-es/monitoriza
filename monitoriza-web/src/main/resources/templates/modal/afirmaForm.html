@@ -1,0 +1,59 @@
+<form name="altEditor-form" role="form" id="afirmaForm" th:object="${afirmaform}" th:action="@{/saveafirma}" method="post">
+					
+			<input type='hidden' class='primarykey' id="idPlatformAfirma" th:field="*{idPlatformAfirma}">
+			
+			<div class="form-group-modal">
+				
+					<label for="name" class="col-form-label" th:text="#{form.platform.afirma.name}"></label>
+					<script th:inline="javascript">
+						/*<![CDATA[*/
+						    var message = /*[[#{form.user.name.pattern}]]*/ 'default';
+						/*]]>*/
+					</script>
+					<input onblur="validate(this,message);" type="text" id="name" th:field="*{name}" style="overflow:hidden" class="form-control" required pattern=".{3,30}" />
+					<div id="invalid-name" class="invalid-feedback" ></div>
+				
+				<div style="clear:both;"/>
+			</div>
+			
+			<div class="form-group-modal">
+				
+					<label for="host" class="col-form-label" th:text="#{form.platform.afirma.host}"></label>
+				
+					<input type="text" id="host" th:field="*{host}" style="overflow:hidden" class="form-control" required pattern=".{3,30}"/>
+					<div id="invalid-host" class="invalid-feedback" ></div>
+				
+				<div style="clear:both;"/>
+			</div>
+			
+			<div class="form-group-modal">
+				
+					<label for="port" class="col-form-label" th:text="#{form.platform.afirma.port}"></label>
+				
+					<input type="text" id="port" th:field="*{port}" style="overflow:hidden" class="form-control" required pattern=".{1,5}"/>
+					<div id="invalid-port" class="invalid-feedback" ></div>
+				
+				<div style="clear:both;"/>
+			</div>
+			
+			<div class="form-group-modal">
+				
+					<label for="servicecontext" class="col-form-label" th:text="#{form.platform.afirma.servicecontext}"></label>
+				
+					<input type="text" id="serviceContext" th:field="*{serviceContext}" style="overflow:hidden" class="form-control" required pattern=".{7,50}"/>
+					<div id="invalid-servicecontext" class="invalid-feedback" ></div>
+				
+				<div style="clear:both;"/>
+			</div>
+			
+			<div class="form-group-modal">
+				
+					<label for="ocspcontext" class="col-form-label" th:text="#{form.platform.afirma.ocspcontext}"></label>
+				
+					<input type="text" id="ocspContext" th:field="*{ocspContext}" style="overflow:hidden" class="form-control" required pattern=".{7,50}"/>
+					<div id="invalid-ocspservice" class="invalid-feedback" ></div>
+				
+				<div style="clear:both;"/>
+			</div>
+							
+</form>

@@ -12,13 +12,21 @@ $(document).ready(function() {
   EVENT.initUIEvent('resize', true, false, window, 0);
 
 
-  window.addEventListener('load', () => {
-    /**
-     * Trigger window resize event after page load
-     * for recalculation of masonry layout.
-     */
-    window.dispatchEvent(EVENT);
-  });
+//  window.addEventListener('load', () => {
+//    /**
+//     * Trigger window resize event after page load
+//     * for recalculation of masonry layout.
+//     */
+//    window.dispatchEvent(EVENT);
+//  });
+  
+  window.addEventListener('load', function(){
+	    /**
+	     * Trigger window resize event after page load
+	     * for recalculation of masonry layout.
+	     */
+	    window.dispatchEvent(EVENT);
+	  });
 
   // ------------------------------------------------------
   // @External Links
@@ -36,7 +44,14 @@ $(document).ready(function() {
   // ------------------------------------------------------
 
   // Trigger resize on any element click
-  document.addEventListener('click', () => {
-    window.dispatchEvent(window.EVENT);
-  });
+//  document.addEventListener('click', () => {
+//    window.dispatchEvent(window.EVENT);
+//  });
+  
+  document.addEventListener('click', function(){
+	    window.dispatchEvent(window.EVENT);
+	  });  
+  
+  
+  
 } );

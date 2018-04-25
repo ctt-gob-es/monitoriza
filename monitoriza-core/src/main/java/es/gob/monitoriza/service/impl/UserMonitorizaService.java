@@ -24,7 +24,6 @@
 package es.gob.monitoriza.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
@@ -66,21 +65,11 @@ public class UserMonitorizaService implements IUserMonitorizaService {
 
 	/**
 	 * {@inheritDoc}
-	 * @see es.gob.monitoriza.service.IUserMonitorizaService#addUserMonitoriza(es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza)
+	 * @see es.gob.monitoriza.service.IUserMonitorizaService#saveUserMonitoriza(es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza)
 	 */
 	@Override
-	public UserMonitoriza addUserMonitoriza(UserMonitoriza user) {
+	public UserMonitoriza saveUserMonitoriza(UserMonitoriza user) {
 		return repository.save(user);
-		
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @see es.gob.monitoriza.service.IUserMonitorizaService#updateUserMonitoriza(es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza)
-	 */
-	@Override
-	public void updateUserMonitoriza(UserMonitoriza user) {
-		repository.save(user);
 		
 	}
 
@@ -110,16 +99,6 @@ public class UserMonitorizaService implements IUserMonitorizaService {
 	@Override
 	public UserMonitoriza getUserMonitorizaByLogin(String login) {
 		return repository.findByLogin(login);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @see es.gob.monitoriza.service.IUserMonitorizaService#getAllSorted(org.springframework.data.domain.Sort)
-	 */
-	@Override
-	public Iterable<UserMonitoriza> getAllSorted(Sort sort) {
-		
-		return repository.findAll(sort);
 	}
 
 	/**

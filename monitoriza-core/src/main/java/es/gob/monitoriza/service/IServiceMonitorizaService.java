@@ -1,3 +1,4 @@
+/* 
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,64 +15,58 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.service.IUserMonitorizaService.java.</p>
- * <b>Description:</b><p> .</p>
-  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
- * <b>Date:</b><p>6 mar. 2018.</p>
+ * <b>File:</b><p>es.gob.monitoriza.service.IServiceMonitorizaService.java.</p>
+ * <b>Description:</b><p>Interface that provides communication with the operations of the persistence layer.</p>
+  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 6 mar. 2018.
+ * @version 1.0, 20 abr. 2018.
  */
 package es.gob.monitoriza.service;
 
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 6 mar. 2018.
+ * @version 1.0, 20 abr. 2018.
  */
-public interface IUserMonitorizaService {
+public interface IServiceMonitorizaService {
 	
 	/**
-	 * Method that obtains an user by its identifier.
-	 * @param userId The user identifier.
-	 * @return {@link UserMonitoriza}
+	 * Method that obtains the configuration for service by its identifier.
+	 * @param userId The platform identifier.
+	 * @return {@link PlatformAfirma}
 	 */
-	UserMonitoriza getUserMonitorizaById(Long userId);
-	
-	/**
-	 * Method that obtains an user by its login.
-	 * @param userId The user login.
-	 * @return {@link UserMonitoriza}
-	 */
-	UserMonitoriza getUserMonitorizaByLogin(String login);
-	
-	/**
-	 * Method that stores a user in the persistence.
-	 * @param user a {@link UserMonitoriza} with the information of the user.
-	 * @return {@link UserMonitoriza} The user. 
-	 */
-	UserMonitoriza saveUserMonitoriza(UserMonitoriza user);
+	ServiceMonitoriza getServiceMonitorizaById(Long serviceId);
 			
 	/**
-	 * Method that deletes a user in the persistence.
-	 * @param userId {@link Integer} that represents the user identifier to delete.
+	 * Method that stores a service in the persistence.
+	 * @param user a {@link ServiceMonitoriza} with the information of the service.
+	 * @return {@link ServiceMonitoriza} The service. 
 	 */
-	void deleteUserMonitoriza(Long userId);
+	ServiceMonitoriza saveServiceMonitoriza(ServiceMonitoriza service);
+			
+	/**
+	 * Method that deletes a service in the persistence.
+	 * @param serviceId {@link Integer} that represents the user identifier to delete.
+	 */
+	void deleteServiceMonitoriza(Long serviceId);
 	
 	/**
-	 * Method that gets all the users from the persistence.
-	 * @return a {@link Iterable<UserMonitoriza>} with the information of all users.
+	 * Method that gets all the service from the persistence.
+	 * @return a {@link Iterable<ServiceMonitoriza>} with the information of all services.
 	 */
-	Iterable<UserMonitoriza> getAllUserMonitoriza();
+	Iterable<ServiceMonitoriza> getAllServiceMonitoriza();
 		
 	/**
 	 * 
 	 * @param input
 	 * @return
 	 */
-	DataTablesOutput<UserMonitoriza> findAll(DataTablesInput input);
+	DataTablesOutput<ServiceMonitoriza> findAll(DataTablesInput input);
+
 }

@@ -1513,9 +1513,13 @@ select.form-control-lg:not([size]):not([multiple]), .input-group-lg > select.for
 .input-group-lg > .input-group-append > select.btn:not([size]):not([multiple]) {
   height: calc(2.640625rem + 2px); }
 
-.form-group {
+.form-group-modal {
   margin-bottom: 1rem;
   all: initial; }
+  
+  .form-group {
+  margin-bottom: 1rem;
+ }
 
 .form-text {
   display: block;

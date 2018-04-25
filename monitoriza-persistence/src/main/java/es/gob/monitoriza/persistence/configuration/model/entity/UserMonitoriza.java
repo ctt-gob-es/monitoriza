@@ -26,9 +26,10 @@ import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.SequenceGenerator;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
@@ -114,8 +115,16 @@ public class UserMonitoriza implements Serializable {
 	// because Hibernate JPA needs not final access methods.
 	@Id
 	@Column(name = "ID_USER_MONITORIZA", unique = true, nullable = false, precision = NumberConstants.NUM19)
-	@GeneratedValue(generator="sq_user_monitoriza")
-	@SequenceGenerator(name="sq_user_monitoriza",sequenceName="SQ_USER_MONITORIZA", allocationSize=1)
+	@GeneratedValue(generator = "sq_user_monitoriza")
+	@GenericGenerator(
+	                  name = "sq_user_monitoriza",
+	                  strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
+	                  parameters = {
+	                          @Parameter(name = "sequence_name", value = "SQ_USER_MONITORIZA"),
+	                          @Parameter(name = "initial_value", value = "1"),
+	                          @Parameter(name = "increment_size", value = "1")
+	                  }
+	          )
 	@JsonView(DataTablesOutput.View.class)
 	public Long getIdUserMonitoriza() {
 		// CHECKSTYLE:ON

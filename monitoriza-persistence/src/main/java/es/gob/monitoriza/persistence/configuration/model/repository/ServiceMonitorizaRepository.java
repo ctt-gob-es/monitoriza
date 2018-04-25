@@ -15,40 +15,31 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.dao.impl.UserMonitorizaRepository.java.</p>
- * <b>Description:</b><p>Interface that provides CRUD functionality for the UserMonitoriza entity.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.repository.ServiceMonitorizaRepository.java.</p>
+ * <b>Description:</b><p>Interface that provides CRUD functionality for the ServiceMonitoriza entity.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>7 mar. 2018.</p>
+ * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 7 mar. 2018.
+ * @version 1.0, 20 abr. 2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 
 /** 
- * <p>Interface that provides CRUD functionality for the UserMonitoriza entity.</p>
+ * <p>Interface that provides CRUD functionality for the ServiceMonitoriza entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 7 mar. 2018.
+ * @version 1.0, 20 abr. 2018.
  */
-@Repository
-public interface UserMonitorizaRepository extends JpaRepository<UserMonitoriza, Long> {
+public interface ServiceMonitorizaRepository extends JpaRepository<ServiceMonitoriza, Long> {
 	
 	/**
-	 * Method that obtains from the persistence a user identified by its login. 
-	 * @param login String that represents the username used to log in.
-	 * @return Object that represents a user from the persistence. 
+	  * Method that obtains from the persistence a service identified by its primary key. 
+	 * @param id String that represents the primary key of the service in the persistence.
+	 * @return Object that represents a service from the persistence. 
 	 */
-	UserMonitoriza findByLogin(String login);
-	
-	/**
-	  * Method that obtains from the persistence a user identified by its primary key. 
-	 * @param id String that represents the primary key of the user in the persistence.
-	 * @return Object that represents a user from the persistence. 
-	 */
-	UserMonitoriza findByIdUserMonitoriza(Long id);
-	
+	ServiceMonitoriza findByIdService(Long id);
+
 }

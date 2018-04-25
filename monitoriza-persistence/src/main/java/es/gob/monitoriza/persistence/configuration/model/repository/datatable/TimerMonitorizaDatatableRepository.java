@@ -15,63 +15,25 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.entity.PlatformAfirma.java.</p>
- * <b>Description:</b><p> .</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.repository.datatable.TimerMonitorizaDatatableRepository.java.</p>
+ * <b>Description:</b><p>Interface that provides CRUD functionality for the TimerMonitoriza entity and DataTables.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>9 abr. 2018.</p>
+ * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 9 abr. 2018.
+ * @version 1.0, 20 abr. 2018.
  */
-package es.gob.monitoriza.persistence.configuration.model.entity;
+package es.gob.monitoriza.persistence.configuration.model.repository.datatable;
 
-import java.io.Serializable;
+import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 
-import javax.persistence.Entity;
-import javax.persistence.Table;
+import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
+
 
 /** 
- * <p>Class .</p>
+ * <p>Interface that provides CRUD functionality for the TimerMonitoriza entity and DataTables.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 9 abr. 2018.
+ * @version 1.0, 20 abr. 2018.
  */
-@Entity
-@Table(name = "PLATFORM_AFIRMA")
-public class PlatformAfirma implements Serializable {
+public interface TimerMonitorizaDatatableRepository extends DataTablesRepository<TimerMonitoriza, Long> {
 
-	/**
-	 * Attribute that represents . 
-	 */
-	private static final long serialVersionUID = -5686817672445961068L;
-	
-	/**
-	 * Attribute that represents the object ID.
-	 */
-	private Long idPlatformAfirma;
-		
-	/**
-	 * Attribute that represents . 
-	 */
-	private String name;
-	
-	/**
-	 * Attribute that represents . 
-	 */
-	private String host;
-	
-	/**
-	 * Attribute that represents . 
-	 */
-	private String port;
-	
-	/**
-	 * Attribute that represents . 
-	 */
-	private String serviceContext;
-	
-	/**
-	 * Attribute that represents . 
-	 */
-	private String ocspContext;
-	
-	
 }
