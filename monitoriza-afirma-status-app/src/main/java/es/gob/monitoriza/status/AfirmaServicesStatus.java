@@ -103,11 +103,11 @@ public class AfirmaServicesStatus extends HttpServlet {
 			out = new DataOutputStream(new BufferedOutputStream(os));
 			
 			response.setContentType("text/html");
+			response.setCharacterEncoding("UTF-8");
 			response.addHeader("Server:", "Servidor Monitoriz@");
 			
 			response.setStatus(HttpServletResponse.SC_OK);
-			response.setContentType("text/html");
-			
+						
 			responseBytes = ResponseMonitoriza.render(platformFilter).getBytes();
 			response.setContentLength(responseBytes.length);
 			
