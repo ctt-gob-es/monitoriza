@@ -18,8 +18,9 @@
 		<built.by>@Firma Team</built.by>
 		<monitoriza.version>${project.version}</monitoriza.version>
 		<monitoriza.project.name>Monitoriz@</monitoriza.project.name>
-		<java.1.8.home>C:\Java_64\jdk1.8.0_131</java.1.8.home>
-		<java.1.8.version>1.8.0_121</java.1.8.version>
+		<!-- <java.1.8.home>C:\Java_64\jdk1.8.0_131</java.1.8.home> -->
+		<java.1.8.home>/opt/jenkins/tools/java/jdk1.8.0_131</java.1.8.home>
+		<java.1.8.version>1.8.0_131</java.1.8.version>
 		<java.home>${java.1.8.home}</java.home>
 		<java.version>${java.1.8.version}</java.version>
 		<spring.version>2.0.0.RELEASE</spring.version>
