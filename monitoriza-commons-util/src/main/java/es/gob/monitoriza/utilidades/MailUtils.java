@@ -103,10 +103,13 @@ public final class MailUtils {
 			} else {
 				return null;
 			}
-			String addrValues = StaticMonitorizaProperties.getProperty(addrKey);
-			String[ ] values = addrValues.split(GeneralConstants.SLASH);
+			// Obtengo la propiedad con la lista de destinatarios
+			String addrValue = StaticMonitorizaProperties.getProperty(addrKey);
+			// Obtengo la lista de destinatarios para la propiedad configurada (separadas por /)
+			String addresses = StaticMonitorizaProperties.getProperty(addrValue);
+			String[ ] values = addresses.split(GeneralConstants.SLASH);
 			for (String value: values) {
-				res.add(StaticMonitorizaProperties.getProperty(value));
+				res.add(value);
 			}
 			return res;
 		}

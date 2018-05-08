@@ -79,6 +79,11 @@ public class MailService {
 	 * It indicates if the email need authentication or not.
 	 */
 	private boolean authentication;
+	
+	/**
+	 * Attribute that the communication with the mail server is ciphered
+	 */
+	private boolean tls;
 
 	/**
 	 * User for the authentication.
@@ -171,13 +176,29 @@ public class MailService {
 	public boolean isAuthentication() {
 		return authentication;
 	}
-
+	
 	/**
 	 * Sets the value of the attribute {@link #authentication}.
 	 * @param authenticationParam The value for the attribute {@link #authentication}.
 	 */
 	public void setAuthentication(boolean authenticationParam) {
 		this.authentication = authenticationParam;
+	}
+	
+	/**
+	 * Gets the value of the attribute {@link #tls}.
+	 * @return the value of the attribute {@link #tls}.
+	 */
+	public boolean isTls() {
+		return tls;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #tls}.
+	 * @param authenticationParam The value for the attribute {@link #tls}.
+	 */
+	public void setTls(boolean tls) {
+		this.tls = tls;
 	}
 
 	/**
@@ -263,16 +284,17 @@ public class MailService {
 	 * @param subjectParam Subject of the email.
 	 * @param bodyMsgParam Body of the email.
 	 */
-	public MailService(List<String> addresseesParam, String issuerParam, String hostParam, int portParam, boolean authenticationParam, String userParam, String passwordParam, String subjectParam, String bodyMsgParam) {
+	public MailService(List<String> addresseesParam, String issuerParam, String hostParam, int portParam, boolean authenticationParam, boolean tlsParam, String userParam, String passwordParam, String subjectParam, String bodyMsgParam) {
 		setAddressees(addresseesParam);
 		setIssuer(issuerParam);
 		setHost(hostParam);
 		setPort(portParam);
 		setAuthentication(authenticationParam);
+		setTls(tlsParam);
 		setUser(userParam);
 		setPassword(passwordParam);
 		setSubject(subjectParam);
-		setBodyMsg(bodyMsgParam);
+		setBodyMsg(bodyMsgParam);		
 	}
 
 	/**
@@ -285,10 +307,12 @@ public class MailService {
 		String portString = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_PORT);
 		int port = Integer.valueOf(portString);
 		String authString = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_AUTHENTICATION);
+		String tlsString = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_TLS);
 		boolean authentication = Boolean.valueOf(authString);
+		boolean tls = Boolean.valueOf(tlsString);
 		String user = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_USER);
 		String password = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_PASSWORD);
-		new MailService(addresees, issuer, host, port, authentication, user, password, null, null);
+		new MailService(addresees, issuer, host, port, authentication, tls, user, password, null, null);
 	}
 
 	/**
@@ -298,7 +322,7 @@ public class MailService {
 	public boolean send() {
 		Properties props = new Properties();
         props.put("mail.smtp.port", getPort());
-        props.put("mail.smtp.starttls.enable", "true");
+        props.put("mail.smtp.starttls.enable", isTls());
         props.put("mail.smtp.auth", "true");
 		
 		Session session = Session.getInstance(props);
