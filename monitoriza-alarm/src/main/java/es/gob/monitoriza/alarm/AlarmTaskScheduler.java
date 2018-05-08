@@ -74,6 +74,7 @@ public class AlarmTaskScheduler {
 			String host = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_HOST);
 			String port = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_PORT);
 			String authentication = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_AUTHENTICATION);
+			String tls = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_TLS);
 			String user = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_USER);
 			String password = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_PASSWORD);
 			String subject;
@@ -86,7 +87,7 @@ public class AlarmTaskScheduler {
 				body = generateSummaryBody(alarmsToSend);
 			}
 			destinations = MailUtils.getListAddresseesForAlarm(serviceIdentifier);
-			MailService ms = new MailService(destinations, issuer, host, Integer.valueOf(port), Boolean.valueOf(authentication), user, password, subject.toString(), body.toString());
+			MailService ms = new MailService(destinations, issuer, host, Integer.valueOf(port), Boolean.valueOf(authentication), Boolean.valueOf(tls), user, password, subject.toString(), body.toString());
 			
 			LOGGER.info("Mensaje enviado: \nSubject: "+ subject+"\nBody: "+ body +"\nNúmero de alarmas: " + alarmsToSend.size());
 						
@@ -174,24 +175,21 @@ public class AlarmTaskScheduler {
 
 			public void run() {
 				List<Alarm> alarms = AlarmTaskManager.getAlarmStack(serviceIdentifier);
-				// Si trascurrido el tiempo de bloqueo, no hay ninguna alarma
-				// por enviar, quitamos el bloqueo.
-				if (alarms == null || alarms.size() <= 0) {
-					AlarmTaskManager.removeBlockedAlarm(serviceIdentifier);
-				} else {
-					// Si existen alarmas almacenadas para su envío, las
-					// enviamos.
-					sendAlarm(alarms);
-					// Vaciamos la pila de alarmas
-					AlarmTaskManager.removeAlarmStack(serviceIdentifier);
-				}
-				scheduler.shutdown();
 				
-				LOGGER.info("pool shutdown");
+				// Al haber transcurrido el tiempo de bloqueo, desbloqueamos este tipo de alarma
+				AlarmTaskManager.removeBlockedAlarm(serviceIdentifier);
+				// Si existen alarmas almacenadas para su envío, las
+				// enviamos.
+				LOGGER.info(Language.getFormatResMonitoriza(LogMessages.SUMMARY_ALARM_SENT, new Object [] {serviceIdentifier}));
+				sendAlarm(alarms);
+				// Vaciamos la pila de alarmas
+				AlarmTaskManager.removeAlarmStack(serviceIdentifier);
+				
+				scheduler.shutdown();
+								
+				LOGGER.info(Language.getFormatResMonitoriza(LogMessages.BLOCKED_ALARM_END, new Object [] {serviceIdentifier}));
 			}
 		};
-		
-		//scheduler.scheduleAtFixedRate(sender, blockAlarmTime, blockAlarmTime, TimeUnit.MILLISECONDS);
 				
 		scheduler.schedule(sender, blockAlarmTime, TimeUnit.MILLISECONDS);
 	}
