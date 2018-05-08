@@ -21,14 +21,27 @@
  * @author Gobierno de España.
  * @version 1.0, 25 ene. 2018.
  */
-package es.gob.monitoriza.invoker.ocps;
+package es.gob.monitoriza.invoker.ocsp;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
+import java.net.URLStreamHandler;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
+
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.log4j.Logger;
 
@@ -60,21 +73,60 @@ public class OcspInvoker {
 	 * @return Long that represents the time in milliseconds that has taken to complete the request.
 	 * If there is some configuration or communication problem, this value will be null.
 	 */
-	public static Long sendRequest(final File requestFile, final ServiceDTO service) {
+	public static Long sendRequest(final File requestFile, final ServiceDTO service, final KeyStore ssl) {
 		
 		Long tiempoTotal = null;
 		byte[ ] requestByte = FileUtils.fileToByteArray(requestFile);
 
 		String secureMode = Boolean.valueOf(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_SECURE_MODE)) ? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP;
 		String ip = StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_HOST);
-		String port = StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_PORT);
+		String port = Boolean.valueOf(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_SECURE_MODE)) ? StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_HTTPS_PORT) : StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_PORT);
 		String ocspPath = StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_OCSP_PATH);
 		String base = secureMode + GeneralConstants.COLON + GeneralConstants.DOUBLE_PATH_SEPARATOR + ip + GeneralConstants.COLON + port;
 
 		try {
 
-			URL endpoint = new URL(new URL(base), ocspPath);
+			
+			// Establecemos el timeout de la conexión y de la lectura
+			
+			URL endpoint = new URL(new URL(base), ocspPath, new URLStreamHandler() {
 
+				@Override
+				protected URLConnection openConnection(URL url) throws IOException {
+					URL target = new URL(url.toString());
+					URLConnection connection = target.openConnection();
+
+					if (connection instanceof HttpsURLConnection) {
+
+						String msgError = Language.getResMonitoriza(LogMessages.ERROR_CONTEXT_RFC3161);
+
+						try {
+
+							TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+							SSLContext ctx = SSLContext.getInstance("SSL");
+							tmf.init(ssl);
+							ctx.init(null, tmf.getTrustManagers(), null);
+							SSLSocketFactory factory = ctx.getSocketFactory();
+							((HttpsURLConnection) connection).setSSLSocketFactory(factory);
+
+						} catch (NoSuchAlgorithmException | KeyStoreException
+								| KeyManagementException e) {
+
+							LOGGER.error(msgError, e);
+
+						}
+
+						((HttpsURLConnection) connection).setHostnameVerifier(new NameVerifier());
+
+					}
+										
+					return (connection);
+				}
+
+			});
+			
+			LOGGER.info(Language.getFormatResMonitoriza(LogMessages.LOG_ENDPOINT, new Object[ ] { requestFile, endpoint}));
+			
 			HttpURLConnection con = (HttpURLConnection) endpoint.openConnection();
 			con.setDoOutput(true);
 			con.setDoInput(true);
@@ -98,7 +150,7 @@ public class OcspInvoker {
 			}
 			else {
     			// Lectura...
-    			con.getContent();
+				con.getContent();
     			LocalTime afterCall = LocalTime.now();
     			tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
 			}
@@ -110,6 +162,22 @@ public class OcspInvoker {
 		}
 
 		return tiempoTotal;
+	}
+	
+	/**
+	 * <p>Private class that allows to verify the host of the HTTPS service.</p>
+	 * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+	 * @version 1.0, 02/05/2018.
+	 */
+	private static class NameVerifier implements HostnameVerifier {
+
+		/**
+		 * {@inheritDoc}
+		 * @see javax.net.ssl.HostnameVerifier#verify(java.lang.String, javax.net.ssl.SSLSession)
+		 */
+		public boolean verify(final String hostname, final SSLSession session) {
+			return true;
+		}
 	}
 
 }

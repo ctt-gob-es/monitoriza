@@ -51,14 +51,14 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.log4j.Logger;
 
-import es.gob.monitoriza.configuration.ConnectionManager;
-import es.gob.monitoriza.configuration.impl.StaticConnectionManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
+import es.gob.monitoriza.persistence.configuration.staticconfig.ConnectionManager;
+import es.gob.monitoriza.persistence.configuration.staticconfig.StaticConnectionManager;
 import es.gob.monitoriza.utilidades.FileUtils;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 import es.gob.monitoriza.utilidades.UtilsResource;
@@ -76,6 +76,28 @@ public class Rfc3161Invoker {
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 	
 	/**
+	 * Constant that represents the 'SSL' protocol. 
+	 */
+	private static final String SSL_PROTOCOL = "SSL";
+			
+	/**
+	 * Constant that represents the type for the client authentication keystore. 
+	 */
+	private static final String KEYSTORE_TYPE_PKCS12 = "PKCS12";
+	
+	/**
+	 * Constant that represents the password for the client authentication keystore. 
+	 */
+	private static final String CLIENT_AUTH_KEYSTORE_PASSWORD = "12345";
+	
+	/**
+	 * Constructor method for the class Rfc3161Invoker.java. 
+	 */
+	private Rfc3161Invoker(){
+		
+	}
+	
+	/**
 	 * Method that invokes the TS@ RFC 3161 - HTTPS service to obtain an ASN.1 timestamp.
 	 * @param requestFile File that contains the RFC3161 request.
 	 * @param service DTOService that contains the configuration data for the service.
@@ -83,7 +105,7 @@ public class Rfc3161Invoker {
 	 * If there is some configuration or communication problem, this value will be null.
 	 * @throws InvokerException If the method fails.
 	 */
-	public static Long sendRequest(final File requestFile, final ServiceDTO service) throws InvokerException {
+	public static Long sendRequest(final File requestFile, final ServiceDTO service, final KeyStore ssl) throws InvokerException {
 		LOGGER.debug(Language.getResMonitoriza(LogMessages.INIT_RFC3161));
 		
 		Long tiempoTotal = null;
@@ -91,18 +113,19 @@ public class Rfc3161Invoker {
 		OutputStream out = null;
 		
 		try {
-			// Accedemos al almacén de confianza TSA - SSL
-			msgError = Language.getResMonitoriza(LogMessages.ERROR_ACCESS_CERTIFICATE_SSL);
+			// Accedemos al almacén de confianza SSL
+//			msgError = Language.getResMonitoriza(LogMessages.ERROR_ACCESS_CERTIFICATE_SSL);
+//						
+//			KeyStore cer = KeyStore.getInstance(StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTSTORE_TYPE));
+//			InputStream readStream = new FileInputStream(StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTTORE_PATH));
+//			cer.load(readStream, StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTTORE_PASSWORD).toCharArray());
+//			readStream.close();	
 						
-			KeyStore cer = KeyStore.getInstance(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_SSL_TRUSTSTORE_TYPE));
-			InputStream readStream = new FileInputStream(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_SSL_TRUSTTORE_PATH));
-			cer.load(readStream, StaticMonitorizaProperties.getProperty(StaticConstants.TSA_SSL_TRUSTTORE_PASSWORD).toCharArray());
-			readStream.close();	
-						
-			TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-			tmf.init(cer);
+			TrustManagerFactory tmf = TrustManagerFactory.getInstance(GeneralConstants.TRUST_MANAGER_FACTORY_SUN_X509);
+			
+			tmf.init(ssl);
 
-			SSLContext ctx = SSLContext.getInstance("SSL");
+			SSLContext ctx = SSLContext.getInstance(SSL_PROTOCOL);
 
 			// Obtenemos el indicador para saber si es necesaria la
 			// autenticación del cliente
@@ -143,8 +166,8 @@ public class Rfc3161Invoker {
 					// certificado
 					// a usar para la autenticación cliente
 					msgError = Language.getResMonitoriza(LogMessages.ERROR_CONTEXT_RFC3161);
-					String keystoreType = "PKCS12";
-					String keystorePass = "12345";
+					String keystoreType = KEYSTORE_TYPE_PKCS12;
+					String keystorePass = CLIENT_AUTH_KEYSTORE_PASSWORD;
 					KeyStore ks = KeyStore.getInstance(keystoreType);
 					ks.load(null, keystorePass.toCharArray());
 					ks.setKeyEntry(certificateAlias, pk, keystorePass.toCharArray(), certificateChain);

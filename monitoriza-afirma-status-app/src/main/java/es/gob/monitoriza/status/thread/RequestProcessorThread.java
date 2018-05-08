@@ -37,6 +37,13 @@
 package es.gob.monitoriza.status.thread;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -49,7 +56,7 @@ import es.gob.monitoriza.exception.AlarmException;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
-import es.gob.monitoriza.invoker.ocps.OcspInvoker;
+import es.gob.monitoriza.invoker.ocsp.OcspInvoker;
 import es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker;
 import es.gob.monitoriza.invoker.soap.HttpSoapInvoker;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
@@ -60,6 +67,16 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * @version 1.0, 19/02/2018.
+ */
+/** 
+ * <p>Class .</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.0, 27 abr. 2018.
+ */
+/** 
+ * <p>Class .</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.0, 27 abr. 2018.
  */
 public final class RequestProcessorThread implements Runnable {
 
@@ -77,6 +94,11 @@ public final class RequestProcessorThread implements Runnable {
 	 * Attribute that represents the reference to the Map where the status of each service are stored. 
 	 */
 	private Map<String, String> statusHolder;
+		
+	/**
+	 * Attribute that represents . 
+	 */
+	private static KeyStore ssl = loadSslTruststore();
 
 	/**
 	 * Private constructor method for the class RequestProcessor.java. 
@@ -133,11 +155,11 @@ public final class RequestProcessorThread implements Runnable {
 								LOGGER.info(Language.getFormatResMonitoriza(LogMessages.SENDING_REQUEST, new Object[ ] { request.getName() }));
 
 								if (service.getServiceId().equals(GeneralConstants.OCSP_SERVICE)) {
-									tiempoTotal = OcspInvoker.sendRequest(request, service);
+									tiempoTotal = OcspInvoker.sendRequest(request, service, ssl);
 								} else if (service.getServiceId().equals(GeneralConstants.RFC3161_SERVICE)) {
-									tiempoTotal = Rfc3161Invoker.sendRequest(request, service);
+									tiempoTotal = Rfc3161Invoker.sendRequest(request, service, ssl);
 								} else {
-									tiempoTotal = HttpSoapInvoker.sendRequest(request, service);
+									tiempoTotal = HttpSoapInvoker.sendRequest(request, service, ssl);
 								}
 
 								totalRequests++;
@@ -296,6 +318,30 @@ public final class RequestProcessorThread implements Runnable {
 	 */
 	public void setStatusHolder(Map<String, String> statusHolder) {
 		this.statusHolder = statusHolder;
+	}
+	
+	/**
+	 * 
+	 * @return
+	 */
+	private static KeyStore loadSslTruststore() {
+
+		String msgError = null;
+		KeyStore cer = null;
+
+		try (InputStream readStream = new FileInputStream(StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTTORE_PATH));) {
+			// Accedemos al almacén de confianza SSL
+			msgError = Language.getResMonitoriza(LogMessages.ERROR_ACCESS_CERTIFICATE_SSL);
+			cer = KeyStore.getInstance(StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTSTORE_TYPE));
+
+			cer.load(readStream, StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTTORE_PASSWORD).toCharArray());
+
+		} catch (IOException | KeyStoreException | CertificateException
+				| NoSuchAlgorithmException ex) {
+			LOGGER.error(msgError, ex);
+		}
+
+		return cer;
 	}
 
 }

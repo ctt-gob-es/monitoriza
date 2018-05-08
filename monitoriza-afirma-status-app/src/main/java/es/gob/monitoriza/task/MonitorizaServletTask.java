@@ -34,11 +34,11 @@ import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.Logger;
 
-import es.gob.monitoriza.configuration.impl.StaticServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
+import es.gob.monitoriza.persistence.configuration.staticconfig.StaticServicesManager;
 import es.gob.monitoriza.status.StatusHolder;
 import es.gob.monitoriza.status.thread.RequestLauncher;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;

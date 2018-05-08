@@ -30,9 +30,19 @@ import java.io.InputStream;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLStreamHandler;
+import java.security.KeyManagementException;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
 
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
 import javax.xml.soap.MessageFactory;
 import javax.xml.soap.MimeHeaders;
 import javax.xml.soap.SOAPConnection;
@@ -42,13 +52,13 @@ import javax.xml.soap.SOAPMessage;
 
 import org.apache.log4j.Logger;
 
-import es.gob.monitoriza.configuration.ConnectionManager;
-import es.gob.monitoriza.configuration.impl.StaticConnectionManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
+import es.gob.monitoriza.persistence.configuration.staticconfig.ConnectionManager;
+import es.gob.monitoriza.persistence.configuration.staticconfig.StaticConnectionManager;
 import es.gob.monitoriza.utilidades.FileUtils;
 
 /** 
@@ -71,27 +81,17 @@ public class HttpSoapInvoker {
 	 * @return Long that represents the time in milliseconds that has taken to complete the request.
 	 * If there is some configuration or communication problem, this value will be null.
 	 */
-	public static Long sendRequest(final File requestFile, final ServiceDTO service) {
+	public static Long sendRequest(final File requestFile, final ServiceDTO service, final KeyStore ssl) {
 		// Obtenemos el contenido del fichero
 		String soapMsg = FileUtils.readFile(requestFile);
 		Long tiempoTotal = null;
-
+		
 		try (InputStream is = new ByteArrayInputStream(soapMsg.getBytes());) {
-			
-			ConnectionManager connManager = new StaticConnectionManager();
-			ConnectionDTO connection = null;
+					
 			String wsdlServiceName = service.getWsdl();
 			String base = null;
-			
-			if (service.getServiceId().contains("timestamp")) {
-				// Obtenemos las propiedades de comunicación con TS@
-				connection = connManager.getTsaConnection();
-			} else {
-				// Obtenemos las propiedades de comunicación con @Firma
-				connection = connManager.getAfirmaConnection();
-			}
-			
-			base = connection.getSecureMode() + GeneralConstants.COLON + GeneralConstants.DOUBLE_PATH_SEPARATOR + connection.getHost() + GeneralConstants.COLON + connection.getPort() + connection.getServiceContext();
+						
+			base = getBaseUrl(service);
 
 			// Creamos el Mime SoapAction necesario para enviar la petición
 			MimeHeaders mhs = new MimeHeaders();
@@ -107,7 +107,7 @@ public class HttpSoapInvoker {
 			SOAPConnectionFactory soapConnectionFactory = SOAPConnectionFactory.newInstance();
 			SOAPConnection soapConnection = soapConnectionFactory.createConnection();
 			
-			// Establecemos el timeout de la conexión y de la lectura
+			// Establecemos las propiedades de la conexión
 			
 			URL endpoint = new URL(new URL(base), wsdlServiceName, new URLStreamHandler() {
 
@@ -115,13 +115,42 @@ public class HttpSoapInvoker {
 				protected URLConnection openConnection(URL url) throws IOException {
 					URL target = new URL(url.toString());
 					URLConnection connection = target.openConnection();
+					
+					if (connection instanceof HttpsURLConnection) {
+						
+						String msgError = Language.getResMonitoriza(LogMessages.ERROR_CONTEXT_RFC3161);
+						
+						try {
+							
+							TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+							SSLContext ctx = SSLContext.getInstance("SSL");
+							tmf.init(ssl);
+							ctx.init(null, tmf.getTrustManagers(), null);
+							SSLSocketFactory factory = ctx.getSocketFactory();
+							((HttpsURLConnection) connection).setSSLSocketFactory(factory);
+
+						} catch (NoSuchAlgorithmException
+								| KeyStoreException
+								| KeyManagementException e) {
+							
+							LOGGER.error(msgError, e);
+
+						}
+						
+						((HttpsURLConnection)connection).setHostnameVerifier(new NameVerifier());
+						
+					}
 					// Connection settings
 					connection.setConnectTimeout(service.getTimeout().intValue());
 					connection.setReadTimeout(service.getTimeout().intValue());
+					
 					return (connection);
 				}
+				
 			});
-												
+			
+			LOGGER.info(Language.getFormatResMonitoriza(LogMessages.LOG_ENDPOINT, new Object[ ] { requestFile, endpoint}));
+			
 			LocalTime beforeCall = LocalTime.now();
 			
 			soapConnection.call(message, endpoint);
@@ -138,6 +167,47 @@ public class HttpSoapInvoker {
 		} 
 		
 		return tiempoTotal;
+	}
+	
+	private static String getBaseUrl(ServiceDTO service) {
+		
+		ConnectionManager connManager = new StaticConnectionManager();
+		
+		ConnectionDTO connection = null;
+		
+		if (service.getServiceId().contains("timestamp")) {
+			// Obtenemos las propiedades de comunicación con TS@
+			connection = connManager.getTsaConnection();
+		} else {
+			// Obtenemos las propiedades de comunicación con @Firma
+			connection = connManager.getAfirmaConnection();
+		}
+			
+		String port = connection.getSecureMode()? connection.getSecurePort():connection.getPort();
+		String protocol = connection.getSecureMode()? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP;
+		
+		StringBuilder baseUrl = new StringBuilder();
+		
+		baseUrl.append(protocol).append(GeneralConstants.COLON).append(GeneralConstants.DOUBLE_PATH_SEPARATOR).append(connection.getHost()).append(GeneralConstants.COLON).append(port).append(connection.getServiceContext());
+		
+		return baseUrl.toString();
+		
+	}
+	
+	/**
+	 * <p>Private class that allows to verify the host of the HTTPS service.</p>
+	 * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+	 * @version 1.0, 30/04/2018.
+	 */
+	private static class NameVerifier implements HostnameVerifier {
+
+		/**
+		 * {@inheritDoc}
+		 * @see javax.net.ssl.HostnameVerifier#verify(java.lang.String, javax.net.ssl.SSLSession)
+		 */
+		public boolean verify(final String hostname, final SSLSession session) {
+			return true;
+		}
 	}
 
 }

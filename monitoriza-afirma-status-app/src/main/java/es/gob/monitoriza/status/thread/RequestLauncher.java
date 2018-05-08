@@ -56,7 +56,7 @@ public class RequestLauncher {
 	 * Attribute that represents the path where the pairs are stored.
 	 */
 	private static String requestDirectory = StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY);
-
+		
 	/**
 	 * Method that performs the invocation of service by service name.
 	 * 
@@ -69,7 +69,7 @@ public class RequestLauncher {
 		LOGGER.info(Language.getFormatResMonitoriza(LogMessages.PATH_DIRECTORY_REQUESTS, new Object[ ] { requestDirectory }));
 				
 		Integer threads = null;
-		
+				
 		try {
 			threads = Integer.parseInt(StaticMonitorizaProperties.getProperty(StaticConstants.REQUEST_THREAD_POOL_SIZE));
 		} catch (NumberFormatException e) {
@@ -98,5 +98,5 @@ public class RequestLauncher {
 
 		executor.shutdown();
 	}
-
+		
 }

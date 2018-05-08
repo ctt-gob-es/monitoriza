@@ -14,6 +14,6 @@
  ******************************************************************************/
 
 /**
- * Package that provides the implementation class for managing the configuration from the static property file.
+ * Package that provides the class which manages OCPS connections.
  */
-package es.gob.monitoriza.configuration.impl;
+package es.gob.monitoriza.invoker.ocsp;

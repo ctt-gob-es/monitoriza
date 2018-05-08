@@ -37,6 +37,13 @@
 package es.gob.monitoriza.status;
 
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +58,7 @@ import es.gob.monitoriza.exception.AlarmException;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
-import es.gob.monitoriza.invoker.ocps.OcspInvoker;
+import es.gob.monitoriza.invoker.ocsp.OcspInvoker;
 import es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker;
 import es.gob.monitoriza.invoker.soap.HttpSoapInvoker;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
@@ -83,6 +90,11 @@ public final class RequestProcessor {
 	 * Attribute that represents . 
 	 */
 	private static Map<String,Boolean> requestsRunning = new HashMap<String, Boolean>();
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	private static KeyStore ssl = loadSslTruststore();
 
 	/**
 	 * Private constructor method for the class RequestProcessor.java. 
@@ -173,11 +185,11 @@ public final class RequestProcessor {
         						LOGGER.info(Language.getFormatResMonitoriza(LogMessages.SENDING_REQUEST, new Object[ ] { request.getName() }));
         
         						if (service.getServiceId().equals(GeneralConstants.OCSP_SERVICE)) {
-        							tiempoTotal = OcspInvoker.sendRequest(request, service);
+        							tiempoTotal = OcspInvoker.sendRequest(request, service, ssl);
         						} else if (service.getServiceId().equals(GeneralConstants.RFC3161_SERVICE)){
-        							tiempoTotal = Rfc3161Invoker.sendRequest(request, service);
+        							tiempoTotal = Rfc3161Invoker.sendRequest(request, service, ssl);
         						} else {
-        							tiempoTotal = HttpSoapInvoker.sendRequest(request, service);
+        							tiempoTotal = HttpSoapInvoker.sendRequest(request, service, ssl);
         						} 
         
         						totalRequests++;
@@ -211,7 +223,7 @@ public final class RequestProcessor {
         					grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaProperties.getProperty(StaticConstants.GRUPO_CONFIRMACION_PATH_DIRECTORY)) + groupIndex);
         					groupIndex++;
         					
-        					// TODO Al ser necesario procesar el siguiente grupo de confirmación,
+        					// Al ser necesario procesar el siguiente grupo de confirmación,
         					// dormimos el hilo para simular la espera...
         					try {
         						Thread.sleep(Long.parseLong(StaticMonitorizaProperties.getProperty(StaticConstants.CONFIRMATION_WAIT_TIME)));
@@ -293,7 +305,29 @@ public final class RequestProcessor {
 	}
 	
 	
-	
+	/**
+	 * Loads the SSL keystore to memory.
+	 * @return KeyStore that contains the SSL certificate.
+	 */
+	private static KeyStore loadSslTruststore() {
+
+		String msgError = null;
+		KeyStore cer = null;
+
+		try (InputStream readStream = new FileInputStream(StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTTORE_PATH));) {
+			// Accedemos al almacén de confianza SSL
+			msgError = Language.getResMonitoriza(LogMessages.ERROR_ACCESS_CERTIFICATE_SSL);
+			cer = KeyStore.getInstance(StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTSTORE_TYPE));
+
+			cer.load(readStream, StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTTORE_PASSWORD).toCharArray());
+
+		} catch (IOException | KeyStoreException | CertificateException
+				| NoSuchAlgorithmException ex) {
+			LOGGER.error(msgError, ex);
+		}
+
+		return cer;
+	}
 	
 
 }
