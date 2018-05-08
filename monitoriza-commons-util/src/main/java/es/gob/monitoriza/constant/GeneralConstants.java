@@ -182,7 +182,7 @@ public interface GeneralConstants {
 	public static final String DOWNED = "downed";
 	
 	/**
-	 * Attribute that represents the name of the parameter that reveives the response servlet
+	 * Attribute that represents the name of the parameter that receives the response servlet
 	 * for filtering the results by platform (@Firma or TS@). 
 	 */
 	public static final String OPERATION_CODE_PLATFORM_FILTER = "platform";

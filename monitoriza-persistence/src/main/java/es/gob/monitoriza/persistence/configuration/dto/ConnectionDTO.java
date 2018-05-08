@@ -34,8 +34,8 @@ public class ConnectionDTO {
 	/**
 	 * Attribute that represents the protocol conection mode HTTP or HTTPS. 
 	 */
-	private String secureMode;
-	
+	private Boolean secureMode;
+		
 	/**
 	 * Attribute that represents the host for connecting to the platform. 
 	 */
@@ -45,6 +45,11 @@ public class ConnectionDTO {
 	 * Attribute that represents the port for connecting the platform. 
 	 */
 	private String port;
+	
+	/**
+	 * Attribute that represents the port for connecting the platform in secure mode. 
+	 */
+	private String securePort;
 	
 	/**
 	 * Attribute that represents the port for the RFC3161 service. 
@@ -70,7 +75,7 @@ public class ConnectionDTO {
 	 * Gets the value of the attribute {@link #secureMode} 
 	 * @return the value of the attribute {@link #secureMode}
 	 */
-	public String getSecureMode() {
+	public Boolean getSecureMode() {
 		return secureMode;
 	}
 
@@ -79,7 +84,7 @@ public class ConnectionDTO {
 	 * Sets the value of the attribute {@link #secureMode} 
 	 * @param serviceId the value for the attribute {@link #secureMode} to set.
 	 */
-	public void setSecureMode(String secureMode) {
+	public void setSecureMode(Boolean secureMode) {
 		this.secureMode = secureMode;
 	}
 
@@ -118,8 +123,23 @@ public class ConnectionDTO {
 	public void setPort(String port) {
 		this.port = port;
 	}
-
 	
+	/**
+	 * Gets the value of the attribute {@link #securePort} 
+	 * @return the value of the attribute {@link #securePort}
+	 */
+	public String getSecurePort() {
+		return securePort;
+	}
+	
+	/**
+	 * Sets the value of the attribute {@link #securePort} 
+	 * @param serviceId the value for the attribute {@link #securePort} to set.
+	 */
+	public void setSecurePort(String securePort) {
+		this.securePort = securePort;
+	}
+
 	/**
 	 * Gets the value of the attribute {@link #serviceContext} 
 	 * @return the value of the attribute {@link #serviceContext}

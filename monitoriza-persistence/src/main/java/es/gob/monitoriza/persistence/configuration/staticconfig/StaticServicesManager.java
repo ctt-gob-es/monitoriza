@@ -140,7 +140,14 @@ public class StaticServicesManager {
 						}
 						
 						if (addService) {
-							service.setDirectoryPath(basePath.concat(serviceId));
+							service.setDirectoryPath(basePath.concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(serviceId));
+							
+							if (serviceId.contains(GeneralConstants.RFC3161_SERVICE) || serviceId.contains(GeneralConstants.TIMESTAMP_SERVICE)) {
+								service.setAfirmaService(Boolean.FALSE);
+							} else {
+								service.setAfirmaService(Boolean.TRUE);
+							}
+							
 							services.add(service);
 						}
 					}

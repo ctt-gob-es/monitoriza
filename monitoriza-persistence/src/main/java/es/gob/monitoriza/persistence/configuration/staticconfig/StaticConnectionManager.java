@@ -24,7 +24,6 @@
  */
 package es.gob.monitoriza.persistence.configuration.staticconfig;
 
-import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
@@ -35,7 +34,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 30 ene. 2018.
  */
-public class StaticConnectionManager {
+public class StaticConnectionManager implements ConnectionManager {
 		
 	/**
 	 * {@inheritDoc}
@@ -46,9 +45,10 @@ public class StaticConnectionManager {
 		
 		final ConnectionDTO aFirmaConnection = new ConnectionDTO();
 		
-		aFirmaConnection.setSecureMode(Boolean.valueOf(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_SECURE_MODE)) ? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP);
+		aFirmaConnection.setSecureMode(Boolean.valueOf(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_SECURE_MODE)));
 		aFirmaConnection.setHost(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_HOST));
 		aFirmaConnection.setPort(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_PORT));
+		aFirmaConnection.setSecurePort(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_HTTPS_PORT));
 		aFirmaConnection.setServiceContext(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_SERVICE_PATH));
 		aFirmaConnection.setOcspContext(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_OCSP_PATH));
 		
@@ -64,9 +64,10 @@ public class StaticConnectionManager {
 
 		final ConnectionDTO tsaConnection = new ConnectionDTO();
 		
-		tsaConnection.setSecureMode(Boolean.valueOf(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_SECURE_MODE)) ? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP);
+		tsaConnection.setSecureMode(Boolean.valueOf(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_SECURE_MODE)));
 		tsaConnection.setHost(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_HOST));
 		tsaConnection.setPort(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_PORT));
+		tsaConnection.setSecurePort(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_HTTPS_PORT));
 		tsaConnection.setRfc3161Port(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_RFC3161_PORT));
 		tsaConnection.setServiceContext(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_SERVICE_PATH));
 		tsaConnection.setRfc3161Context(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_RFC3161_CONTEXT));

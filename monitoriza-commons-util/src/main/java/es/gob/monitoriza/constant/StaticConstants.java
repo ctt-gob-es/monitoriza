@@ -77,6 +77,11 @@ public interface StaticConstants {
 	 * Constant that represents the static property that indicates the port that the server @Firma has available.
 	 */
 	public static final String AFIRMA_CONNECTION_PORT = "afirma.connection.port";
+	
+	/**
+	 * Constant that represents the static property that indicates the port that the server @Firma has available.
+	 */
+	public static final String AFIRMA_HTTPS_PORT = "afirma.https.port";
 
 	/**
 	 * Constant that represents the static property that indicates the URL path of the services.
@@ -104,6 +109,11 @@ public interface StaticConstants {
 	public static final String TSA_CONNECTION_PORT = "tsa.connection.port";
 	
 	/**
+	 * Attribute that represents the static property that indicates the TS@ connection port. 
+	 */
+	public static final String TSA_HTTPS_PORT = "tsa.https.port";
+	
+	/**
 	 * Constant that represents the static property that indicates the URL path of the services.
 	 */
 	public static final String TSA_CONNECTION_SERVICE_PATH = "tsa.connection.service.path";
@@ -119,19 +129,24 @@ public interface StaticConstants {
 	public static final String TSA_CONNECTION_RFC3161_PORT = "tsa.connection.rfc3161.port";
 	
 	/**
-	 *	Constant that represents the static property that indicates the path to the TSA - SSL truststore.
+	 *	Constant that represents the static property that indicates if the communication with platforms must be secured.
 	 */
-	public static final String TSA_SSL_TRUSTTORE_PATH = "tsa.ssl.truststore.path";
+	public static final String SSL_ACTIVE = "ssl.active";
 	
 	/**
-	 * Constant that represents the static property that indicates the type of the TSA - SSL truststore.
+	 *	Constant that represents the static property that indicates the path to the SSL truststore.
 	 */
-	public static final String TSA_SSL_TRUSTSTORE_TYPE = "tsa.ssl.truststore.type";
+	public static final String SSL_TRUSTTORE_PATH = "ssl.truststore.path";
 	
 	/**
-	 *	Constant that represents the static property that indicates the password for the TSA - SSL truststore.
+	 * Constant that represents the static property that indicates the type of the SSL truststore.
 	 */
-	public static final String TSA_SSL_TRUSTTORE_PASSWORD = "tsa.ssl.truststore.password";
+	public static final String SSL_TRUSTSTORE_TYPE = "ssl.truststore.type";
+	
+	/**
+	 *	Constant that represents the static property that indicates the password for the SSL truststore.
+	 */
+	public static final String SSL_TRUSTTORE_PASSWORD = "ssl.truststore.password";
 	
 	/**
 	 * Constant that represents the static property that indicates if monitoriz@ uses alarms (true or false)
@@ -157,6 +172,11 @@ public interface StaticConstants {
 	 * Constant that represents the static property that indicates if the server needs authentication.
 	 */		
 	public static final String MAIL_ATTRIBUTE_AUTHENTICATION = "mail.attribute.authentication";
+	
+	/**
+	 * Constant that represents the static property that indicates if the server needs tls.
+	 */		
+	public static final String MAIL_ATTRIBUTE_TLS = "mail.attribute.tls";
 
 	/**
 	 * Constant that represents the static property that indicates the user of the authentication.

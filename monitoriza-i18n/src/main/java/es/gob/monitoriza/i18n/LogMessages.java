@@ -133,7 +133,12 @@ public interface LogMessages {
 	/**
 	 * Message key declared in the 'messages.properties' file. 
 	 */
-	String ERROR_PROCESSING_SERVICE = "errorProcessingService";			
+	String ERROR_PROCESSING_SERVICE = "errorProcessingService";
+	
+	/**
+	 * Message key declared in the 'messages.properties' file. 
+	 */
+	String LOG_ENDPOINT = "logEndpoint";
 	
 	/**
 	 * Message key declared in the 'messages.properties' file. 
@@ -169,6 +174,16 @@ public interface LogMessages {
 	 * Message key declared in the 'messages.properties' file. 
 	 */
 	String BODY_MAIL_SUMMARY = "bodyMailSummary";
+	
+	/**
+	 * Message key declared in the 'messages.properties' file. 
+	 */
+	String SUMMARY_ALARM_SENT = "summaryAlarmSent";
+	
+	/**
+	 * Message key declared in the 'messages.properties' file. 
+	 */
+	String BLOCKED_ALARM_END = "blockedAlarmEnd";
 	
 	/**
 	 * Message key declared in the 'monitoriza.properties' file. 
