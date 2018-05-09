@@ -40,7 +40,7 @@ public class AfirmaForm {
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input in the form. 
 	 */
-	private Long idPlatformAfirma = null;
+	private Long idPlatform;
 	
 	/**
 	 * Attribute that represents the value of the input name of the user in the form. 
@@ -78,21 +78,21 @@ public class AfirmaForm {
     private String ocspContext = "";
 			
 	/**
-	 * Gets the value of the attribute {@link #idPlatformAfirma}.
-	 * @return the value of the attribute {@link #idPlatformAfirma}.
+	 * Gets the value of the attribute {@link #idPlatform}.
+	 * @return the value of the attribute {@link #idPlatform}.
 	 */	
-	public Long getIdPlatformAfirma() {
-		return idPlatformAfirma;
+	public Long getIdPlatform() {
+		return idPlatform;
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #idPlatformAfirma}.
-	 * @return the value of the attribute {@link #idPlatformAfirma}.
+	 * Gets the value of the attribute {@link #idPlatform}.
+	 * @return the value of the attribute {@link #idPlatform}.
 	 */
-	public void setIdPlatformAfirma(Long idPlatformAfirma) {
-		this.idPlatformAfirma = idPlatformAfirma;
+	public void setIdPlatform(Long idPlatform) {
+		this.idPlatform = idPlatform;
 	}
-
+	
 	/**
 	 * Gets the value of the attribute {@link #host}.
 	 * @return the value of the attribute {@link #host}.

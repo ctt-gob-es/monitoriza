@@ -111,19 +111,24 @@ public class PlatformRestController {
     public @ResponseBody DataTablesOutput<PlatformMonitoriza> save(@Validated(OrderedValidation.class) @RequestBody AfirmaForm afirmaForm) {
 
 		DataTablesOutput<PlatformMonitoriza> dtOutput = new DataTablesOutput<>();
-		PlatformMonitoriza newAfirma = null;
+		PlatformMonitoriza platformAfirma = null;
 		
-		newAfirma = new PlatformMonitoriza();
-		newAfirma.setHost(afirmaForm.getHost());
-		newAfirma.setName(afirmaForm.getName());
-		newAfirma.setOcspContext(afirmaForm.getOcspContext());
-		newAfirma.setPort(afirmaForm.getPort());
-		newAfirma.setServiceContext(afirmaForm.getServiceContext());
+		if (afirmaForm.getIdPlatform() != null) {
+			platformAfirma = platformService.getPlatformById(afirmaForm.getIdPlatform());
+		} else {
+			platformAfirma = new PlatformMonitoriza();
+		}
+		
+		platformAfirma.setHost(afirmaForm.getHost());
+		platformAfirma.setName(afirmaForm.getName());
+		platformAfirma.setOcspContext(afirmaForm.getOcspContext());
+		platformAfirma.setPort(afirmaForm.getPort());
+		platformAfirma.setServiceContext(afirmaForm.getServiceContext());
 		CPlatformType afirmaType = new CPlatformType();
 		afirmaType.setIdPlatformType(IPlatformService.ID_PLATFORM_TYPE_AFIRMA);
-		newAfirma.setPlatformType(afirmaType);		
+		platformAfirma.setPlatformType(afirmaType);		
 
-		PlatformMonitoriza afirma = platformService.savePlatform(newAfirma);
+		PlatformMonitoriza afirma = platformService.savePlatform(platformAfirma);
 		List<PlatformMonitoriza> listNewAfirma = new ArrayList<PlatformMonitoriza>();
 		listNewAfirma.add(afirma);
 		dtOutput.setData(listNewAfirma);

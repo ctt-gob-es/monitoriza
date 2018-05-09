@@ -91,7 +91,7 @@ public class PlatformController {
     	AfirmaForm afirmaForm = new AfirmaForm();
     	
     	afirmaForm.setHost(afirma.getHost());
-    	afirmaForm.setIdPlatformAfirma(afirmaId);
+    	afirmaForm.setIdPlatform(afirmaId);
     	afirmaForm.setName(afirma.getName());
     	afirmaForm.setOcspContext(afirma.getOcspContext());
     	afirmaForm.setServiceContext(afirma.getServiceContext());
