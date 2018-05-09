@@ -119,24 +119,30 @@ public class UserRestController {
     public @ResponseBody DataTablesOutput<UserMonitoriza> save(@Validated(OrderedValidation.class) @RequestBody UserForm userForm) {
 
 		DataTablesOutput<UserMonitoriza> dtOutput = new DataTablesOutput<>();
-		UserMonitoriza newUser = null;
+		UserMonitoriza userMonitoriza = null;
+		
+		if (userForm.getIdUserMonitoriza() != null) {
+			userMonitoriza = userService.getUserMonitorizaById(userForm.getIdUserMonitoriza());
+		} else {
+			userMonitoriza = new UserMonitoriza();
+		}
 
 		String pwd = userForm.getPassword();
 		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 		String hashPwd = bc.encode(pwd);
 
-		newUser = new UserMonitoriza();
-		newUser.setPassword(hashPwd);
-		newUser.setLogin(userForm.getLogin());
-		newUser.setAttemptsNumber(NumberConstants.NUM0);
-		newUser.setEmail(userForm.getEmail());
-		newUser.setIsBlocked(Boolean.FALSE);
-		newUser.setLastAccess(null);
-		newUser.setLastIpAccess(null);
-		newUser.setName(userForm.getName());
-		newUser.setSurnames(userForm.getSurnames());
+		userMonitoriza = new UserMonitoriza();
+		userMonitoriza.setPassword(hashPwd);
+		userMonitoriza.setLogin(userForm.getLogin());
+		userMonitoriza.setAttemptsNumber(NumberConstants.NUM0);
+		userMonitoriza.setEmail(userForm.getEmail());
+		userMonitoriza.setIsBlocked(Boolean.FALSE);
+		userMonitoriza.setLastAccess(null);
+		userMonitoriza.setLastIpAccess(null);
+		userMonitoriza.setName(userForm.getName());
+		userMonitoriza.setSurnames(userForm.getSurnames());
 
-		UserMonitoriza user = userService.saveUserMonitoriza(newUser);
+		UserMonitoriza user = userService.saveUserMonitoriza(userMonitoriza);
 		List<UserMonitoriza> listNewUser = new ArrayList<UserMonitoriza>();
 		listNewUser.add(user);
 		dtOutput.setData(listNewUser);
