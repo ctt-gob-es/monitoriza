@@ -37,6 +37,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.form.ServiceForm;
+import es.gob.monitoriza.form.TimerForm;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.service.IPlatformService;
 
@@ -75,6 +76,7 @@ public class ServiceController {
 		platforms.addAll(plataforms);
 		
 		model.addAttribute("serviceform", new ServiceForm());
+		model.addAttribute("timerform", new TimerForm());
 		model.addAttribute("platforms", platforms);
 		model.addAttribute("serviceTypes", serviceTypes);
 				

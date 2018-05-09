@@ -22,7 +22,7 @@
 						</div>
 					</div>
 					<div class="form-row">
-						<div id ="serviceTypesContainer" class="form-group col-md-3">
+						<div id ="serviceTypesContainer" class="form-group col-md-2">
 							<label for="serviceTypes" th:text="#{form.service.servicetype}"></label>
 							<select id="serviceTypes" class="form-control" th:field="*{serviceType}">
 								<option selected="selected" value="-1" th:text="#{form.service.select.servicetype}"></option>
@@ -32,7 +32,7 @@
 								</option>
 							</select>
 						</div>
-						<div class="form-group col-md-5">
+						<div class="form-group col-md-6">
 							<label for="endpoint" th:text="#{form.service.endpoint}"></label>
 							<input type="text" class="form-control" id="endpoint" readonly>
 						</div>
@@ -72,17 +72,19 @@
 		<div class="bgc-white p-20 bd">
 			<h6 class="c-grey-900">Nuevo timer</h6>
 			<div class="mT-30">
-				<form id="serviceForm">
+				<form id="timerForm" th:object="${timerform}" th:action="@{/savetimer}" method="post">
+					<input type='hidden' class='primarykey' id="idTimer" th:field="*{idTimer}">
 					<div class="form-row">
 						<div class="form-group col-md-6">
 							<label for="name" th:text="#{form.timer.name}"></label>
-							<input type="text" class="form-control" id="name">
+							<input type="text" class="form-control" id="nameTimer" th:field="*{name}">
 						</div>
 						<div class="form-group col-md-6">
 							<label for="frequency" th:text="#{form.timer.frequency}"></label>
-							<input type="text" class="form-control" id="frequency">
+							<input type="text" class="form-control" id="frequency" th:field="*{frequency}">
 						</div>
 					</div>
+					<button id="timerBtn" type="submit" class="btn btn-primary">Guardar</button>
 				</form>
 			</div>
 		</div>
@@ -136,7 +138,7 @@
 <script th:inline="javascript">
 
 $(document).ready(function() {
-	
+		
 	// Carga los tipos de servicio al seleccionar una plataforma
 	var urlLoadServiceTypes = /*[[@{/loadservicetype}]]*/;
 	var selectServiceTypeText = /*[[#{form.service.select.servicetype}]]*/;
@@ -331,14 +333,56 @@ $(document).ready(function() {
 		});
 	
 	var gettimers = /*[[@{/timersdatatable}]]*/;
+	var actionDelete = /*[[@{/deleteAfirma}]]*/;
 	var tblTimer = $('#timerTable').DataTable({
 		dom: 'Bfrtip',
 	    select: 'single',
 	    responsive: true,
 	    
 	    altEditor: true,
-	    buttons: [{extend: 'selected',text: 'Editar',name: 'editPageForm'}, {extend: 'selected',text: 'Eliminar',name: 'delete'}],
-	
+	    buttons: [{extend: 'selected',text: 'Editar',name: 'editPageForm',
+	    			action: function ( e, dt, node, config ) {
+	    				// Para el action 'Editar' obtenemos los valores de la fila seleccioanda
+	    				// directamente y los copiamos al formulario
+	    				for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({
+	    	                id: o.context[0].aoColumns[e].mData,
+	    	            	title: o.context[0].aoColumns[e].sTitle                
+	    	            });
+	    				var d = dt.rows({
+	                        selected: !0
+	                    })
+	                    var idTimer = d.data()[0][a[0].id]
+	    				var nameTimer = d.data()[0][a[1].id]
+	    				var freqTimer = d.data()[0][a[2].id]
+	    				
+	    				$("#idTimer").val(idTimer);
+	    				$("#nameTimer").val(nameTimer);
+	    				$("#frequency").val(freqTimer);
+	    				
+	    				}
+	    		  },
+	       		  {extend: 'selected', text: 'Eliminar', name: 'delete',
+	    				action: function ( e, dt, node, config ) {	
+	    					// Para el action 'Eliminar' obtenemos los valores de la fila seleccioanda
+		    				// y mostramos un modal de confirmación antes de ir a servidor para eliminar
+	    					for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({
+	    		            	id: o.context[0].aoColumns[e].mData,
+	    		                title: o.context[0].aoColumns[e].sTitle
+	    		            });
+	    		            var d = o.rows({
+	    		                    selected: !0
+	    		            })
+	    		            l = "";
+	    		            l += "<form name='altEditor-form' role='form'>", l += "<input type='hidden' class='primarykey' id='" + a[0].id + "' name='" + a[0].title + "' placeholder='" + a[0].title + "' value='" + d.data()[0][a[0].id] + "'>";
+	    		            l += "<p>¿Está seguro de que quiere eliminar el timer " + d.data()[0][a[1].id] + "?</p>";
+	    		            l += "</form>", t("#altEditor-modal").on("show.bs.modal", function() {
+	    		                t("#altEditor-modal").find(".modal-title").html("Eliminar"), t("#altEditor-modal").find(".modal-body").html("<pre class='modal-pre'>" + l + "</pre>"), t("#altEditor-modal").find(".modal-footer").html("<button type='button' data-content='remove' class='btn btn-default' data-dismiss='modal'>Cerrar</button><button type='button' data-content='remove' class='btn btn-danger' id='deleteRowBtn'>Eliminar</button>")
+	    		            }), t("#altEditor-modal").modal("show"), t("#altEditor-modal input.primarykey+div input").focus()
+	       		  
+	       		  		}
+	       		  }	
+	    		],
+	       		  	
 	    "iTotalRecords": "totalElements",
         "iTotalDisplayRecords": "numberOfElements",
         "pageLength": 5,
@@ -370,14 +414,30 @@ $(document).ready(function() {
 	        ]
 	});
 	
-	//Probar!!
-	/* tblService.s.dt.button("editPageForm:name") && (this.s.dt.button("editPageForm:name").action(function(t, a, e, d) {
-        a.rows({
-            selected: !0
-        }).count();
-        alert("Hola!");
-    }) */
+	// Control del botón para guardar un timer
+	$( "#timerBtn" ).click(function( event ) {
+		  event.preventDefault();
 
+		  var formData = JSON.stringify($("#timerForm").serializeJSON());
+		  var url = /*[[@{/savetimer}]]*/;
+		  
+		  loading();
+		  
+		  $.ajax({
+			  type: "POST",
+			  url: url,
+			  data: formData,
+			  success: function(data){
+				  
+				  $("#timerForm")[0].reset();
+				  hide();
+				  tblTimer.row.add($(data.data)).draw(false);
+				  
+			  },
+			  dataType: "json",
+			  contentType : "application/json"
+			});
+		});
 });	
 
 </script>

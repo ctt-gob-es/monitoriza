@@ -35,17 +35,24 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.form.TimerForm;
+import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
+import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IPlatformService;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
 import es.gob.monitoriza.service.ITimerMonitorizaService;
@@ -162,6 +169,37 @@ public class ServiceRestController {
 				
 								
         return Collections.singletonMap("response", baseEndpoint.toString());
+    }
+	
+	/**
+     * Method that maps the save timer web request to the controller and saves it in the persistence.
+     * @param timerForm Object that represents the backing timer form.
+     * @param bindingResult Object that represents the form validation result. 
+     * @return {@link DataTablesOutput<TimerMonitoriza>} 
+     */
+    @RequestMapping(value="/savetimer", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @JsonView(DataTablesOutput.View.class)
+    public @ResponseBody DataTablesOutput<TimerMonitoriza> save(@Validated(OrderedValidation.class) @RequestBody TimerForm timerForm) {
+
+		DataTablesOutput<TimerMonitoriza> dtOutput = new DataTablesOutput<>();
+		TimerMonitoriza timerMonitoriza = null;
+		
+		if (timerForm.getIdTimer() != null) {
+			timerMonitoriza = timerService.getTimerMonitorizaById(timerForm.getIdTimer());
+		} else {
+			timerMonitoriza = new TimerMonitoriza();
+		}
+		
+		timerMonitoriza.setFrequency(timerForm.getFrequency());
+		timerMonitoriza.setName(timerForm.getName());
+
+		TimerMonitoriza timer = timerService.saveTimerMonitoriza(timerMonitoriza);
+		List<TimerMonitoriza> listNewTimer = new ArrayList<TimerMonitoriza>();
+		listNewTimer.add(timer);
+		dtOutput.setData(listNewTimer);
+
+		return dtOutput;
+
     }
 
 }
