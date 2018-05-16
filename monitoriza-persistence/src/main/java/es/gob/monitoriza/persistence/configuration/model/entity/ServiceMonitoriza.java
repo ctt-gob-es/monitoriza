@@ -113,7 +113,7 @@ public class ServiceMonitoriza implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	@Id
-	@Column(name = "ID_SERVICE_MONITORIZA", unique = true, nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "ID_SERVICE", unique = true, nullable = false, precision = NumberConstants.NUM19)
 	@GeneratedValue(generator = "sq_service_monitoriza")
 	@GenericGenerator(
 	                  name = "sq_service_monitoriza",

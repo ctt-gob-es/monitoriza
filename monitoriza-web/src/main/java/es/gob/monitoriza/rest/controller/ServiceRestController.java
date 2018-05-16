@@ -47,6 +47,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.form.ServiceForm;
 import es.gob.monitoriza.form.TimerForm;
 import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
@@ -98,7 +99,6 @@ public class ServiceRestController {
 	@RequestMapping(path="/servicesdatatable", method=RequestMethod.GET)
     public DataTablesOutput<ServiceMonitoriza> services(@Valid DataTablesInput input){
 		return (DataTablesOutput<ServiceMonitoriza>) serviceService.findAll(input);
-				   	
     }
 	
 	/**
@@ -111,7 +111,6 @@ public class ServiceRestController {
 	@RequestMapping(path="/timersdatatable", method=RequestMethod.GET)
     public DataTablesOutput<TimerMonitoriza> timers(@Valid DataTablesInput input){
 		return (DataTablesOutput<TimerMonitoriza>) timerService.findAll(input);
-				   	
     }
 	
 	/**
@@ -179,7 +178,7 @@ public class ServiceRestController {
      */
     @RequestMapping(value="/savetimer", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     @JsonView(DataTablesOutput.View.class)
-    public @ResponseBody DataTablesOutput<TimerMonitoriza> save(@Validated(OrderedValidation.class) @RequestBody TimerForm timerForm) {
+    public @ResponseBody DataTablesOutput<TimerMonitoriza> saveTimer(@Validated(OrderedValidation.class) @RequestBody TimerForm timerForm) {
 
 		DataTablesOutput<TimerMonitoriza> dtOutput = new DataTablesOutput<>();
 		TimerMonitoriza timerMonitoriza = null;
@@ -200,6 +199,54 @@ public class ServiceRestController {
 
 		return dtOutput;
 
+    }
+    
+    @RequestMapping(path = "/saveservice", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @JsonView(DataTablesOutput.View.class)
+    public @ResponseBody DataTablesOutput<ServiceMonitoriza> saveService(@Validated(OrderedValidation.class) @RequestBody ServiceForm serviceForm) {
+
+		DataTablesOutput<ServiceMonitoriza> dtOutput = new DataTablesOutput<>();
+		ServiceMonitoriza serviceMonitoriza = null;
+		
+		if (serviceForm.getIdService() != null) {
+			serviceMonitoriza = serviceService.getServiceMonitorizaById(serviceForm.getIdService());
+		} else {
+			serviceMonitoriza = new ServiceMonitoriza();
+		}
+		
+//		serviceMonitoriza.setAlarm(serviceForm.getAlarm());
+		serviceMonitoriza.setDegradedThreshold(serviceForm.getDegradedThreshold());
+		serviceMonitoriza.setLostThreshold(serviceForm.getLostThreshold());
+		serviceMonitoriza.setName(serviceForm.getName());
+		serviceMonitoriza.setNameWsdl(serviceForm.getNameWsdl());
+		
+		serviceMonitoriza.setPlatform(platformService.getPlatformById(serviceForm.getPlatform()));
+		serviceMonitoriza.setTimeout(serviceForm.getTimeout());
+		serviceMonitoriza.setTimer(timerService.getTimerMonitorizaById(serviceForm.getTimer()));
+		
+		ServiceMonitoriza service = serviceService.saveServiceMonitoriza(serviceMonitoriza);
+		List<ServiceMonitoriza> listNewService = new ArrayList<ServiceMonitoriza>();
+		listNewService.add(service);
+		dtOutput.setData(listNewService);
+
+		return dtOutput;
+
+    }
+    
+    @JsonView(DataTablesOutput.View.class)
+    @RequestMapping(path = "/deletetimer", method = RequestMethod.POST)
+    public String deleteTimer(@RequestParam("id") Long timerId, @RequestParam("index") String index) {
+    	timerService.deleteTimerMonitoriza(timerId);
+    	
+        return index;
+    }
+    
+    @JsonView(DataTablesOutput.View.class)
+    @RequestMapping(path = "/deleteservice", method = RequestMethod.POST)
+    public String deleteservice(@RequestParam("id") Long idService, @RequestParam("index") String index) {
+		serviceService.deleteServiceMonitoriza(idService);
+    	
+        return index;
     }
 
 }
