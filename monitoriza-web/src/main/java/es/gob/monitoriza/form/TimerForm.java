@@ -53,8 +53,7 @@ public class TimerForm {
 	/**
 	 * Attribute that represents. 
 	 */
-	@NotBlank(groups=CheckItFirst.class, message="{form.valid.timer.frequency.notempty}")
-	@NotNull
+	@NotNull(message="{form.valid.timer.frequency.notempty}")
 	private Long frequency;
 
 	/**

@@ -28,20 +28,27 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -49,7 +56,6 @@ import com.fasterxml.jackson.annotation.JsonView;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.form.ServiceForm;
 import es.gob.monitoriza.form.TimerForm;
-import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
@@ -58,195 +64,237 @@ import es.gob.monitoriza.service.IPlatformService;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
 import es.gob.monitoriza.service.ITimerMonitorizaService;
 
-/** 
- * <p>Class that manages the REST requests related to the Services administration and JSON communication.</p>
- * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+/**
+ * <p>
+ * Class that manages the REST requests related to the Services administration
+ * and JSON communication.
+ * </p>
+ * <b>Project:</b>
+ * <p>
+ * Application for monitoring services of @firma suite systems.
+ * </p>
+ * 
  * @version 1.0, 20 abr. 2018.
  */
 @RestController
+// @RequestMapping("/service")
 public class ServiceRestController {
-	
+
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_WEB_LOG);
-	
+
 	/**
-	 * Attribute that represents the service object for accessing the repository. 
+	 * Attribute that represents the service object for accessing the
+	 * repository.
 	 */
 	@Autowired
 	private IServiceMonitorizaService serviceService;
-	
+
 	/**
-	 * Attribute that represents the service object for accessing the repository. 
+	 * Attribute that represents the service object for accessing the
+	 * repository.
 	 */
 	@Autowired
 	private ITimerMonitorizaService timerService;
-	
+
 	/**
-	 * Attribute that represents the service object for accessing the repository. 
+	 * Attribute that represents the service object for accessing the
+	 * repository.
 	 */
 	@Autowired
 	private IPlatformService platformService;
-			
+
 	/**
-	 * Method that maps the list users web requests to the controller and forwards the list of services
-	 * to the view.  
-	 * @param input Holder object for datatable attributes.
+	 * Method that maps the list users web requests to the controller and
+	 * forwards the list of services to the view.
+	 * 
+	 * @param input
+	 *            Holder object for datatable attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
 	@JsonView(DataTablesOutput.View.class)
-	@RequestMapping(path="/servicesdatatable", method=RequestMethod.GET)
-    public DataTablesOutput<ServiceMonitoriza> services(@Valid DataTablesInput input){
+	@RequestMapping(path = "/servicesdatatable", method = RequestMethod.GET)
+	public DataTablesOutput<ServiceMonitoriza> services(@Valid DataTablesInput input) {
 		return (DataTablesOutput<ServiceMonitoriza>) serviceService.findAll(input);
-    }
-	
+	}
+
 	/**
-	 * Method that maps the list users web requests to the controller and forwards the list of timees
-	 * to the view.  
-	 * @param input Holder object for datatable attributes.
+	 * Method that maps the list users web requests to the controller and
+	 * forwards the list of timees to the view.
+	 * 
+	 * @param input
+	 *            Holder object for datatable attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
 	@JsonView(DataTablesOutput.View.class)
-	@RequestMapping(path="/timersdatatable", method=RequestMethod.GET)
-    public DataTablesOutput<TimerMonitoriza> timers(@Valid DataTablesInput input){
+	@RequestMapping(path = "/timersdatatable", method = RequestMethod.GET)
+	public DataTablesOutput<TimerMonitoriza> timers(@Valid DataTablesInput input) {
 		return (DataTablesOutput<TimerMonitoriza>) timerService.findAll(input);
-    }
-	
+	}
+
 	/**
-	 * Method that maps the request to get the service types for the selected platform type.
-	 * to the view.  
-	 * @param model Holder object for model attributes.
+	 * Method that maps the request to get the service types for the selected
+	 * platform type. to the view.
+	 * 
+	 * @param model
+	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(path= "/loadservicetype", method=RequestMethod.GET)
-    public List<String> loadservicetype(@RequestParam("idPlatform") Long idPlatform){
-		
+	@RequestMapping(path = "/loadservicetype", method = RequestMethod.GET)
+	public List<String> loadservicetype(@RequestParam("idPlatform") Long idPlatform) {
+
 		PlatformMonitoriza platform = platformService.getPlatformById(idPlatform);
 		List<String> serviceTypes = new ArrayList<String>();
-		
-		if (platform != null && platform.getPlatformType().getIdPlatformType().equals(IPlatformService.ID_PLATFORM_TYPE_AFIRMA)) {
-			
+
+		if (platform != null
+				&& platform.getPlatformType().getIdPlatformType().equals(IPlatformService.ID_PLATFORM_TYPE_AFIRMA)) {
+
 			serviceTypes.add(GeneralConstants.SOAP_SERVICE.toUpperCase());
 			serviceTypes.add(GeneralConstants.OCSP_SERVICE.toUpperCase());
-			
-		} else if (platform != null && platform.getPlatformType().getIdPlatformType().equals(IPlatformService.ID_PLATFORM_TYPE_TSA)) {
-			
+
+		} else if (platform != null
+				&& platform.getPlatformType().getIdPlatformType().equals(IPlatformService.ID_PLATFORM_TYPE_TSA)) {
+
 			serviceTypes.add(GeneralConstants.SOAP_SERVICE.toUpperCase());
 			serviceTypes.add(GeneralConstants.RFC3161_SERVICE.toUpperCase());
-		} 
-								
-        return serviceTypes;
-    }
-	
+		}
+
+		return serviceTypes;
+	}
+
 	/**
-	 * Method that maps the request to get the service types for the selected platform type.
-	 * to the view.  
-	 * @param model Holder object for model attributes.
+	 * Method that maps the request to get the service types for the selected
+	 * platform type. to the view.
+	 * 
+	 * @param model
+	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(path= "/loadbaseendpoint", method=RequestMethod.GET)
-    public Map<String,String> loadbaseendpoint(@RequestParam("idPlatform") Long idPlatform, @RequestParam("serviceType") String serviceType){
-		
+	@RequestMapping(path = "/loadbaseendpoint", method = RequestMethod.GET)
+	public Map<String, String> loadbaseendpoint(@RequestParam("idPlatform") Long idPlatform,
+			@RequestParam("serviceType") String serviceType) {
+
 		PlatformMonitoriza platform = platformService.getPlatformById(idPlatform);
 		StringBuilder baseEndpoint = new StringBuilder();
-		baseEndpoint.append("http://").append(platform.getHost()).append(GeneralConstants.COLON).append(platform.getPort());
-		
-		switch (serviceType.toLowerCase()) {
-			case GeneralConstants.SOAP_SERVICE:
-				baseEndpoint.append(platform.getServiceContext());
-				break;
-			case GeneralConstants.OCSP_SERVICE:
-				baseEndpoint.append(platform.getOcspContext());
-				break;
-			case GeneralConstants.RFC3161_SERVICE:
-				baseEndpoint.append(platform.getRfc3161Context());
-				break;
-			default:
-				break;
-		}
-				
-								
-        return Collections.singletonMap("response", baseEndpoint.toString());
-    }
-	
-	/**
-     * Method that maps the save timer web request to the controller and saves it in the persistence.
-     * @param timerForm Object that represents the backing timer form.
-     * @param bindingResult Object that represents the form validation result. 
-     * @return {@link DataTablesOutput<TimerMonitoriza>} 
-     */
-    @RequestMapping(value="/savetimer", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @JsonView(DataTablesOutput.View.class)
-    public @ResponseBody DataTablesOutput<TimerMonitoriza> saveTimer(@Validated(OrderedValidation.class) @RequestBody TimerForm timerForm) {
+		baseEndpoint.append("http://").append(platform.getHost()).append(GeneralConstants.COLON)
+				.append(platform.getPort());
 
+		switch (serviceType.toLowerCase()) {
+		case GeneralConstants.SOAP_SERVICE:
+			baseEndpoint.append(platform.getServiceContext());
+			break;
+		case GeneralConstants.OCSP_SERVICE:
+			baseEndpoint.append(platform.getOcspContext());
+			break;
+		case GeneralConstants.RFC3161_SERVICE:
+			baseEndpoint.append(platform.getRfc3161Context());
+			break;
+		default:
+			break;
+		}
+
+		return Collections.singletonMap("response", baseEndpoint.toString());
+	}
+
+	/**
+	 * Method that maps the save timer web request to the controller and saves
+	 * it in the persistence.
+	 * 
+	 * @param timerForm
+	 *            Object that represents the backing timer form.
+	 * @param bindingResult
+	 *            Object that represents the form validation result.
+	 * @return {@link DataTablesOutput<TimerMonitoriza>}
+	 */
+	@RequestMapping(value = "/savetimer", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@JsonView(DataTablesOutput.View.class)
+	public @ResponseBody DataTablesOutput<TimerMonitoriza> saveTimer(
+			@Validated(OrderedValidation.class) @RequestBody TimerForm timerForm, BindingResult bindingResult) {
 		DataTablesOutput<TimerMonitoriza> dtOutput = new DataTablesOutput<>();
 		TimerMonitoriza timerMonitoriza = null;
-		
-		if (timerForm.getIdTimer() != null) {
-			timerMonitoriza = timerService.getTimerMonitorizaById(timerForm.getIdTimer());
-		} else {
-			timerMonitoriza = new TimerMonitoriza();
-		}
-		
-		timerMonitoriza.setFrequency(timerForm.getFrequency());
-		timerMonitoriza.setName(timerForm.getName());
-
-		TimerMonitoriza timer = timerService.saveTimerMonitoriza(timerMonitoriza);
 		List<TimerMonitoriza> listNewTimer = new ArrayList<TimerMonitoriza>();
-		listNewTimer.add(timer);
+
+		try {
+			if (timerForm.getIdTimer() != null) {
+				timerMonitoriza = timerService.getTimerMonitorizaById(timerForm.getIdTimer());
+			} else {
+				timerMonitoriza = new TimerMonitoriza();
+			}
+
+			timerMonitoriza.setFrequency(timerForm.getFrequency());
+			timerMonitoriza.setName(timerForm.getName());
+			TimerMonitoriza timer = timerService.saveTimerMonitoriza(timerMonitoriza);
+			
+			listNewTimer.add(timer);
+		}catch(Exception e) {
+			listNewTimer = StreamSupport.stream(timerService.getAllTimerMonitoriza().spliterator(), false).collect(Collectors.toList());
+			throw e;
+		}
 		dtOutput.setData(listNewTimer);
 
 		return dtOutput;
+	}
 
-    }
-    
-    @RequestMapping(path = "/saveservice", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @JsonView(DataTablesOutput.View.class)
-    public @ResponseBody DataTablesOutput<ServiceMonitoriza> saveService(@Validated(OrderedValidation.class) @RequestBody ServiceForm serviceForm) {
-
+	@RequestMapping(path = "/saveservice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@JsonView(DataTablesOutput.View.class)
+	public @ResponseBody DataTablesOutput<ServiceMonitoriza> saveService(
+			@Validated(OrderedValidation.class) @RequestBody ServiceForm serviceForm) {
 		DataTablesOutput<ServiceMonitoriza> dtOutput = new DataTablesOutput<>();
 		ServiceMonitoriza serviceMonitoriza = null;
-		
-		if (serviceForm.getIdService() != null) {
-			serviceMonitoriza = serviceService.getServiceMonitorizaById(serviceForm.getIdService());
-		} else {
-			serviceMonitoriza = new ServiceMonitoriza();
-		}
-		
-//		serviceMonitoriza.setAlarm(serviceForm.getAlarm());
-		serviceMonitoriza.setDegradedThreshold(serviceForm.getDegradedThreshold());
-		serviceMonitoriza.setLostThreshold(serviceForm.getLostThreshold());
-		serviceMonitoriza.setName(serviceForm.getName());
-		serviceMonitoriza.setNameWsdl(serviceForm.getNameWsdl());
-		
-		serviceMonitoriza.setPlatform(platformService.getPlatformById(serviceForm.getPlatform()));
-		serviceMonitoriza.setTimeout(serviceForm.getTimeout());
-		serviceMonitoriza.setTimer(timerService.getTimerMonitorizaById(serviceForm.getTimer()));
-		
-		ServiceMonitoriza service = serviceService.saveServiceMonitoriza(serviceMonitoriza);
 		List<ServiceMonitoriza> listNewService = new ArrayList<ServiceMonitoriza>();
-		listNewService.add(service);
+
+		try {
+			if (serviceForm.getIdService() != null) {
+				serviceMonitoriza = serviceService.getServiceMonitorizaById(serviceForm.getIdService());
+			} else {
+				serviceMonitoriza = new ServiceMonitoriza();
+			}
+
+			// serviceMonitoriza.setAlarm(serviceForm.getAlarm());
+			serviceMonitoriza.setDegradedThreshold(serviceForm.getDegradedThreshold());
+			serviceMonitoriza.setLostThreshold(serviceForm.getLostThreshold());
+			serviceMonitoriza.setName(serviceForm.getName());
+			serviceMonitoriza.setNameWsdl(serviceForm.getNameWsdl());
+
+			serviceMonitoriza.setPlatform(platformService.getPlatformById(serviceForm.getPlatform()));
+			serviceMonitoriza.setTimeout(serviceForm.getTimeout());
+			serviceMonitoriza.setTimer(timerService.getTimerMonitorizaById(serviceForm.getTimer()));
+			serviceMonitoriza.setServiceType(serviceForm.getServiceType());
+
+			ServiceMonitoriza service = serviceService.saveServiceMonitoriza(serviceMonitoriza);
+			listNewService.add(service);
+		}catch(Exception e) {
+			listNewService = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false).collect(Collectors.toList());
+			throw e;
+		}
 		dtOutput.setData(listNewService);
 
 		return dtOutput;
+	}
 
-    }
-    
-    @JsonView(DataTablesOutput.View.class)
-    @RequestMapping(path = "/deletetimer", method = RequestMethod.POST)
-    public String deleteTimer(@RequestParam("id") Long timerId, @RequestParam("index") String index) {
-    	timerService.deleteTimerMonitoriza(timerId);
-    	
-        return index;
-    }
-    
-    @JsonView(DataTablesOutput.View.class)
-    @RequestMapping(path = "/deleteservice", method = RequestMethod.POST)
-    public String deleteservice(@RequestParam("id") Long idService, @RequestParam("index") String index) {
-		serviceService.deleteServiceMonitoriza(idService);
-    	
-        return index;
-    }
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(path = "/deletetimer", method = RequestMethod.POST)
+	public String deleteTimer(@RequestParam("id") Long timerId, @RequestParam("index") String index) {
+		try {
+			timerService.deleteTimerMonitoriza(timerId);
+		}catch(Exception e) {
+			index = "-1";
+		}
+		return index;
+	}
+
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(path = "/deleteservice", method = RequestMethod.POST)
+	public String deleteservice(@RequestParam("id") Long idService, @RequestParam("index") String index) {
+		try {
+			serviceService.deleteServiceMonitoriza(idService);
+		}catch(EmptyResultDataAccessException e) {
+			index = "-1";
+			throw e;
+		}
+		return index;
+	}
 
 }

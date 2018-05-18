@@ -55,8 +55,7 @@ public class ServiceForm {
 	 * Attribute that represents the time interval in milliseconds that must pass
 	 * before the request for this service is cancelled. 
 	 */
-	@NotBlank(groups=CheckItFirst.class, message="{form.valid.service.timeout.notempty}")
-	@Min(0)
+	@NotNull(message="{form.valid.service.timeout.notempty}")
 	private Long timeout;
 	
 	/**
@@ -70,37 +69,32 @@ public class ServiceForm {
 	 * Attribute that represents the average time in milliseconds that a service 
 	 * request must take to be considered degraded. 
 	 */
-	@NotBlank(groups=CheckItFirst.class, message="{form.valid.service.degradedThreshold.notempty}")
-	@Min(0)
+	@NotNull(message="{form.valid.service.degradedThreshold.notempty}")
 	private Long degradedThreshold;
 	
 	/**
 	 * Attribute that represents the average time in milliseconds that a service 
 	 * request must take to be considered lost. 
 	 */
-	@NotBlank(groups=CheckItFirst.class, message="{form.valid.service.lostThreshold.notempty}")
-	@Min(0)
+	@NotNull(message="{form.valid.service.lostThreshold.notempty}")
 	private Long lostThreshold;
 	
 	/**
 	 * Attribute that represents the timer configured to this service. 
 	 */
-	@NotBlank(groups=CheckItFirst.class, message="{form.valid.service.timer.notempty}")
-	@NotNull
+	@NotNull(message="{form.valid.service.timer.notempty}")
 	private Long timer;
 	
 	/**
 	 * Attribute that represents the alarm configured to this service. 
 	 */
-//	@NotBlank(groups=CheckItFirst.class, message="{form.valid.service.alarm.notempty}")
-//	@NotNull
+//	@NotNull(message="{form.valid.service.timeout.notempty}")
 //	private Long alarm;
 	
 	/**
 	 * Attribute that represents the platform that could be configured to this service. 
 	 */
-	@NotBlank(groups=CheckItFirst.class, message="{form.valid.service.platform.notempty}")
-	@NotNull
+	@NotNull(message="{form.valid.service.platform.notempty}")
 	private Long platform;
 	
 	/**

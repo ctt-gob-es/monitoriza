@@ -24,10 +24,14 @@
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.ServiceMonitorizaRepository;
@@ -41,6 +45,7 @@ import es.gob.monitoriza.service.IServiceMonitorizaService;
  * @version 1.0, 20 abr. 2018.
  */
 @Service
+@Transactional
 public class ServiceMonitorizaService implements IServiceMonitorizaService {
 	
 	/**
@@ -80,8 +85,20 @@ public class ServiceMonitorizaService implements IServiceMonitorizaService {
 	 * @see es.gob.monitoriza.service.IServiceMonitorizaService#deleteServiceMonitoriza(java.lang.Long)
 	 */
 	@Override
+	@Transactional(noRollbackFor=EmptyResultDataAccessException.class)
 	public void deleteServiceMonitoriza(Long serviceId) {
-		repository.deleteById(serviceId);
+		if(repository.existsById(serviceId)) {
+			System.out.println("KAKAKAKAKAKAKA "+serviceId);
+			try        
+			{
+			    Thread.sleep(1000);
+			} 
+			catch(InterruptedException ex) 
+			{
+			    Thread.currentThread().interrupt();
+			}
+			repository.deleteById(serviceId);
+		}
 
 	}
 

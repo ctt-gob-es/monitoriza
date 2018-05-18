@@ -105,6 +105,8 @@ public class ServiceMonitoriza implements Serializable {
 	 * Attribute that represents the @firma platform that could be configured to this service. 
 	 */
 	private PlatformMonitoriza platform;
+	
+	private String serviceType;
 		
 	/**
 	 * Gets the value of the attribute {@link #idService}.
@@ -255,6 +257,7 @@ public class ServiceMonitoriza implements Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_TIMER_SERVICE", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public TimerMonitoriza getTimer() {
@@ -299,6 +302,7 @@ public class ServiceMonitoriza implements Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_PLATFORM_SERVICE", nullable = true)
+	@JsonView(DataTablesOutput.View.class)
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public PlatformMonitoriza getPlatform() {
@@ -313,6 +317,16 @@ public class ServiceMonitoriza implements Serializable {
 	// because Hibernate JPA needs not final access methods.
 	public void setPlatform(PlatformMonitoriza platform) {
 		this.platform = platform;
+	}
+
+	@Column(name = "SERVICE_TYPE", nullable = false, length = NumberConstants.NUM100, unique = false)
+	@JsonView(DataTablesOutput.View.class)
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(String serviceType) {
+		this.serviceType = serviceType;
 	}
 
 			
