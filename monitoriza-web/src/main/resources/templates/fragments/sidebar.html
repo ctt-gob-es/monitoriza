@@ -90,7 +90,7 @@
 				<li class="nav-item">
 	              <a id="aServiceAdmin" class='sidebar-link' href="#">
 	                <span class="icon-holder">
-	                  <i class="c-green-500 ti-panel"></i>
+	                  <i class="c-red-500 ti-panel"></i>
 	                </span>
 	                <span class="title" th:text="#{menu.admin.service}"></span>
 	                 <script th:inline="javascript">
@@ -99,6 +99,42 @@
 	                </script>
 	              </a>
 	            </li>
+	            <li class="nav-item dropdown">
+	              <a id="aKeystoreAdmin" class="dropdown-toggle" href="javascript:void(0);">
+	                <span class="icon-holder">
+	                  <i class="c-yellow-500 ti-key"></i>
+	                </span>
+	                <span class="title" th:text="#{menu.admin.keystore}">
+	                  <span class="arrow"> <i class="ti-angle-right" />
+	                </span>
+	              </a> 
+				   <ul class="dropdown-menu">
+						<li>
+							<a id="aSslAdmin" class='sidebar-link' href="#">
+								<span class="icon-holder"> 
+									<i class="c-purple-500 ti-pin"></i>
+								</span>
+							    <span class="title" th:text="#{menu.admin.keystore.ssl}"></span>
+								<script th:inline="javascript">
+		                 			var actionSsl = /*[[@{/ssladmin}]]*/;
+		                 			$('#aSslAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionSsl, 'optionReplacement', 'GET', null, true); return false;});
+		               			</script>
+	               			</a>
+	               		</li>
+						<li>
+							<a id="aAuthAdmin" class='sidebar-link' href="#">
+								<span class="icon-holder"> 
+									<i class="c-blue-500 ti-unlock"></i>
+								</span>
+							    <span class="title" th:text="#{menu.admin.keystore.auth}"></span>
+								<script th:inline="javascript">
+		                 			var actionAuth = /*[[@{/authadmin}]]*/;
+		                 			$('#aTsaAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionAuth, 'optionReplacement', 'GET', null, true); return false;});
+		               			</script>
+		               		</a>
+	               		</li>
+				   </ul>
+				</li>
 	          </ul>
           </form>
         </div>
