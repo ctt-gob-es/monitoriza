@@ -152,8 +152,8 @@ public class ServiceMonitoriza implements Serializable {
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #idService}.
-	 * @param isBlockedParam The value for the attribute {@link #idService}.
+	 * Sets the value of the attribute {@link #name}.
+	 * @param isBlockedParam The value for the attribute {@link #name}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
@@ -174,8 +174,8 @@ public class ServiceMonitoriza implements Serializable {
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #idService}.
-	 * @param isBlockedParam The value for the attribute {@link #idService}.
+	 * Sets the value of the attribute {@link #timeout}.
+	 * @param isBlockedParam The value for the attribute {@link #timeout}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
@@ -314,7 +314,5 @@ public class ServiceMonitoriza implements Serializable {
 	public void setPlatform(PlatformMonitoriza platform) {
 		this.platform = platform;
 	}
-
-			
 
 }
