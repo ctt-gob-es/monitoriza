@@ -182,8 +182,8 @@ public class AlarmMonitoriza implements Serializable {
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #blockedTime}.
-	 * @param isBlockedParam The value for the attribute {@link #blockedTime}.
+	 * Sets the value of the attribute {@link #emails}.
+	 * @param isBlockedParam The value for the attribute {@link #emails}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
