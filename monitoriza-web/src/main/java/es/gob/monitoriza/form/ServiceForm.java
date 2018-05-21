@@ -24,9 +24,13 @@
  */
 package es.gob.monitoriza.form;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import es.gob.monitoriza.rest.exception.CheckItFirst;
+import es.gob.monitoriza.rest.exception.ThenCheckIt;
 
 /** 
  * <p>Class that represents the backing form for adding/editing a service.</p>
@@ -43,49 +47,61 @@ public class ServiceForm {
 	/**
 	 * Attribute that represents the name of the service. 
 	 */
+	@NotBlank(groups=CheckItFirst.class, message="{form.valid.service.name.notempty}")
+	@Size(min=1, max=30, groups=ThenCheckIt.class)
 	private String name;
 	
 	/**
 	 * Attribute that represents the time interval in milliseconds that must pass
 	 * before the request for this service is cancelled. 
 	 */
+	@NotNull(message="{form.valid.service.timeout.notempty}")
 	private Long timeout;
 	
 	/**
 	 * Attribute that represents the name of the service in the WSDL endpoint path. 
 	 */
+	@NotBlank(groups=CheckItFirst.class, message="{form.valid.service.nameWsdl.notempty}")
+	@Size(min=1, max=30, groups=ThenCheckIt.class)
 	private String nameWsdl;
 	
 	/**
 	 * Attribute that represents the average time in milliseconds that a service 
 	 * request must take to be considered degraded. 
 	 */
+	@NotNull(message="{form.valid.service.degradedThreshold.notempty}")
 	private Long degradedThreshold;
 	
 	/**
 	 * Attribute that represents the average time in milliseconds that a service 
 	 * request must take to be considered lost. 
 	 */
+	@NotNull(message="{form.valid.service.lostThreshold.notempty}")
 	private Long lostThreshold;
 	
 	/**
 	 * Attribute that represents the timer configured to this service. 
 	 */
-	private TimerMonitoriza timer;
+	@NotNull(message="{form.valid.service.timer.notempty}")
+	private Long timer;
 	
 	/**
 	 * Attribute that represents the alarm configured to this service. 
 	 */
-	private AlarmMonitoriza alarm;
+//	@NotNull(message="{form.valid.service.timeout.notempty}")
+//	private Long alarm;
 	
 	/**
 	 * Attribute that represents the platform that could be configured to this service. 
 	 */
-	private PlatformMonitoriza platform;
+	@NotNull(message="{form.valid.service.platform.notempty}")
+	private Long platform;
 	
 	/**
 	 * Attribute that represents the type of service selected. 
 	 */
+	@NotBlank(groups=CheckItFirst.class, message="{form.valid.service.serviceType.notempty}")
+	@Size(min=1, max=30, groups=ThenCheckIt.class)
 	private String serviceType;
 			
 	
@@ -147,37 +163,27 @@ public class ServiceForm {
 	public void setLostThreshold(Long lostThreshold) {
 		this.lostThreshold = lostThreshold;
 	}
-
 	
-	public TimerMonitoriza getTimer() {
+	public Long getTimer() {
 		return timer;
 	}
 
-	
-	public void setTimer(TimerMonitoriza timer) {
+
+	public void setTimer(Long timer) {
 		this.timer = timer;
 	}
 
-	
-	public AlarmMonitoriza getAlarm() {
-		return alarm;
-	}
 
-	
-	public void setAlarm(AlarmMonitoriza alarm) {
-		this.alarm = alarm;
-	}
-
-	
-	public PlatformMonitoriza getPlatform() {
+	public Long getPlatform() {
 		return platform;
 	}
 
-	
-	public void setPlatform(PlatformMonitoriza platform) {
+
+	public void setPlatform(Long platform) {
 		this.platform = platform;
 	}
-	
+
+
 	/**
 	 * 
 	 * @return

@@ -94,7 +94,7 @@ $(document).ready(function() {
 		                
 		                $('#userForm *').filter(':input').each(function(){
 		            	    		            	    
-		            	    if(!$(this).checkValidity())
+		                	if(!$(this)[0].checkValidity())
 		            	    {
 		            	  	 $("#invalid-" + $(this).attr('id')).html();
 		            	  	 $("#" + $(this).attr('id')).addClass("is-invalid");

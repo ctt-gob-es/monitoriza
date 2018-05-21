@@ -24,6 +24,13 @@
  */
 package es.gob.monitoriza.form;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+
+import es.gob.monitoriza.rest.exception.CheckItFirst;
+import es.gob.monitoriza.rest.exception.ThenCheckIt;
+
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
@@ -39,11 +46,14 @@ public class TimerForm {
 	/**
 	 * Attribute that represents the name of the timer. 
 	 */
+	@NotBlank(groups=CheckItFirst.class, message="{form.valid.timer.name.notempty}")
+	@Size(min=1, max=30, groups=ThenCheckIt.class)
 	private String name;
 	
 	/**
 	 * Attribute that represents. 
 	 */
+	@NotNull(message="{form.valid.timer.frequency.notempty}")
 	private Long frequency;
 
 	/**

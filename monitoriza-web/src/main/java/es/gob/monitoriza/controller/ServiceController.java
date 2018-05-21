@@ -39,7 +39,11 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.form.ServiceForm;
 import es.gob.monitoriza.form.TimerForm;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.service.IPlatformService;
+import es.gob.monitoriza.service.IServiceMonitorizaService;
+import es.gob.monitoriza.service.ITimerMonitorizaService;
 
 /** 
  * <p>Class .</p>
@@ -59,6 +63,12 @@ public class ServiceController {
 	 */
 	@Autowired
 	private IPlatformService platformService;
+	
+	@Autowired
+	private ITimerMonitorizaService timerService;
+	
+	@Autowired
+	private IServiceMonitorizaService serviceService;
 				
 	/**
 	 * Method that maps the list users web requests to the controller and forwards the list of users
@@ -68,17 +78,23 @@ public class ServiceController {
 	 */
 	@RequestMapping(value = "serviceadmin")
     public String serviceadmin(Model model){
-		
-		List<PlatformMonitoriza> platforms = new ArrayList<PlatformMonitoriza>();
 		List<String> serviceTypes = new ArrayList<String>();
-				
-		List<PlatformMonitoriza> plataforms = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false).collect(Collectors.toList());
-		platforms.addAll(plataforms);
+		List<PlatformMonitoriza> platforms = new ArrayList<PlatformMonitoriza>();
+		List<TimerMonitoriza> timers = new ArrayList<TimerMonitoriza>();
+		List<ServiceMonitoriza> services = new ArrayList<ServiceMonitoriza>();
+		ServiceForm serviceForm = new ServiceForm();
+		TimerForm timerForm = new TimerForm();
 		
-		model.addAttribute("serviceform", new ServiceForm());
-		model.addAttribute("timerform", new TimerForm());
+		platforms = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false).collect(Collectors.toList());
+		timers = StreamSupport.stream(timerService.getAllTimerMonitoriza().spliterator(), false).collect(Collectors.toList());
+		services = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false).collect(Collectors.toList());
+		
+		model.addAttribute("serviceform", serviceForm);
+		model.addAttribute("timerform", timerForm);
 		model.addAttribute("platforms", platforms);
 		model.addAttribute("serviceTypes", serviceTypes);
+		model.addAttribute("timers", timers);
+		model.addAttribute("services", services);
 				
         return "fragments/serviceadmin.html";
     }

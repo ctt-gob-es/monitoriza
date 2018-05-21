@@ -105,3 +105,11 @@
   content:"*";
   font-weight:bold;
 }
+
+.has-error {
+  color: #a94442;
+  border-color: #a94442;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
+  -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
+  background-color: #f2dede;
+}
