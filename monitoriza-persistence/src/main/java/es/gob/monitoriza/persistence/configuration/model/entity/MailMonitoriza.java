@@ -45,10 +45,16 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.utilidades.NumberConstants;
 
-
-/** 
- * <p>Class that maps the <i>MAIL_MONITORIZA</i> database table as a Plain Old Java Object.</p>
- * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+/**
+ * <p>
+ * Class that maps the <i>MAIL_MONITORIZA</i> database table as a Plain Old Java
+ * Object.
+ * </p>
+ * <b>Project:</b>
+ * <p>
+ * Application for monitoring services of @firma suite systems.
+ * </p>
+ * 
  * @version 1.0, 9 abr. 2018.
  */
 @Entity
@@ -56,27 +62,33 @@ import es.gob.monitoriza.utilidades.NumberConstants;
 public class MailMonitoriza implements Serializable {
 
 	/**
-	 * Class serial version. 
+	 * Class serial version.
 	 */
 	private static final long serialVersionUID = 9090589742672624291L;
-	
+
 	/**
 	 * Attribute that represents the object ID.
 	 */
 	private Long idMail;
-	
+
 	/**
-	 * Attribute that represents a valid email address. 
+	 * Attribute that represents a valid email address.
 	 */
 	private String emailAddress;
-	
+
 	/**
-	 * Attribute that represents the alarms using this mail. 
+	 * Attribute that represents the alarms using this mail.
 	 */
-	private Set<AlarmMonitoriza> alarms;
+	private Set<AlarmMonitoriza> alarmDegraded;
+
+	/**
+	 * Attribute that represents the alarms using this mail.
+	 */
+	private Set<AlarmMonitoriza> alarmDown;
 
 	/**
 	 * Gets the value of the attribute {@link #idMail}.
+	 * 
 	 * @return the value of the attribute {@link #idMail}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
@@ -84,15 +96,9 @@ public class MailMonitoriza implements Serializable {
 	@Id
 	@Column(name = "ID_MAIL", unique = true, nullable = false, precision = NumberConstants.NUM19)
 	@GeneratedValue(generator = "sq_mail_monitoriza")
-	@GenericGenerator(
-	                  name = "sq_mail_monitoriza",
-	                  strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-	                  parameters = {
-	                          @Parameter(name = "sequence_name", value = "SQ_MAIL_MONITORIZA"),
-	                          @Parameter(name = "initial_value", value = "1"),
-	                          @Parameter(name = "increment_size", value = "1")
-	                  }
-	          )
+	@GenericGenerator(name = "sq_mail_monitoriza", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = {
+			@Parameter(name = "sequence_name", value = "SQ_MAIL_MONITORIZA"),
+			@Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
 	@JsonView(DataTablesOutput.View.class)
 	public Long getIdMail() {
 		return idMail;
@@ -100,7 +106,9 @@ public class MailMonitoriza implements Serializable {
 
 	/**
 	 * Sets the value of the attribute {@link #idMail}.
-	 * @param isBlockedParam The value for the attribute {@link #idMail}.
+	 * 
+	 * @param isBlockedParam
+	 *            The value for the attribute {@link #idMail}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
@@ -110,6 +118,7 @@ public class MailMonitoriza implements Serializable {
 
 	/**
 	 * Gets the value of the attribute {@link #emailAddress}.
+	 * 
 	 * @return the value of the attribute {@link #emailAddress}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
@@ -122,7 +131,9 @@ public class MailMonitoriza implements Serializable {
 
 	/**
 	 * Sets the value of the attribute {@link #emailAddress}.
-	 * @param isBlockedParam The value for the attribute {@link #emailAddress}.
+	 * 
+	 * @param isBlockedParam
+	 *            The value for the attribute {@link #emailAddress}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
@@ -132,28 +143,37 @@ public class MailMonitoriza implements Serializable {
 
 	/**
 	 * Gets the value of the attribute {@link #emailAddress}.
+	 * 
 	 * @return the value of the attribute {@link #emailAddress}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(
-	           name="R_ALARM_MAIL",
-	           joinColumns=@JoinColumn(name="ID_MAIL", referencedColumnName="ID_MAIL", nullable = false), 
-	           inverseJoinColumns=@JoinColumn(name="ID_ALARM", referencedColumnName="ID_ALARM", nullable = false))
-	public Set<AlarmMonitoriza> getAlarms() {
-		return alarms;
+	@JoinTable(name = "R_ALARM_MAIL_DEGRADED", joinColumns = @JoinColumn(name = "ID_MAIL", referencedColumnName = "ID_MAIL", nullable = false), inverseJoinColumns = @JoinColumn(name = "ID_ALARM", referencedColumnName = "ID_ALARM", nullable = false))
+	public Set<AlarmMonitoriza> getAlarmDegraded() {
+		return alarmDegraded;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #alarms}.
-	 * @param isBlockedParam The value for the attribute {@link #alarms}.
+	 * @param alarmDegraded
+	 *            the alarmDegraded to set
 	 */
-	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
-	// because Hibernate JPA needs not final access methods.
-	public void setAlarms(Set<AlarmMonitoriza> alarms) {
-		this.alarms = alarms;
+	public void setAlarmDegraded(Set<AlarmMonitoriza> alarmDegraded) {
+		this.alarmDegraded = alarmDegraded;
 	}
-		
+
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "R_ALARM_MAIL_DOWN", joinColumns = @JoinColumn(name = "ID_MAIL", referencedColumnName = "ID_MAIL", nullable = false), inverseJoinColumns = @JoinColumn(name = "ID_ALARM", referencedColumnName = "ID_ALARM", nullable = false))
+	public Set<AlarmMonitoriza> getAlarmDown() {
+		return alarmDown;
+	}
+
+	/**
+	 * @param alarmDown
+	 *            the alarmDown to set
+	 */
+	public void setAlarmDown(Set<AlarmMonitoriza> alarmDown) {
+		this.alarmDown = alarmDown;
+	}
 
 }

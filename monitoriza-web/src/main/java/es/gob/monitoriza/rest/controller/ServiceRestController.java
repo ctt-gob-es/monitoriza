@@ -77,7 +77,6 @@ import es.gob.monitoriza.service.ITimerMonitorizaService;
  * @version 1.0, 20 abr. 2018.
  */
 @RestController
-// @RequestMapping("/service")
 public class ServiceRestController {
 
 	/**
