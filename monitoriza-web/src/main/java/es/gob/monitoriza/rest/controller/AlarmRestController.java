@@ -34,11 +34,14 @@ import java.util.stream.StreamSupport;
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.ObjectError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -54,11 +57,9 @@ import es.gob.monitoriza.form.AlarmForm;
 import es.gob.monitoriza.form.MailForm;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IAlarmMonitorizaService;
 import es.gob.monitoriza.service.IMailMonitorizaService;
-import es.gob.monitoriza.service.IPlatformService;
 
 /**
  * <p>
@@ -109,20 +110,6 @@ public class AlarmRestController {
 	public DataTablesOutput<AlarmMonitoriza> alarms(@Valid DataTablesInput input) {
 		return (DataTablesOutput<AlarmMonitoriza>) alarmService.findAll(input);
 	}
-
-//	@RequestMapping(path = "/emailsdegraded", method = RequestMethod.GET)
-//	public List<Long> emailsDegraded(@RequestParam("id") Long idAlarm) {
-//		List<Long> result = new ArrayList<Long>();
-//		Set<MailMonitoriza> mails = new HashSet<MailMonitoriza>();
-//		AlarmMonitoriza alarmMonitoriza = alarmService.getAlarmMonitorizaById(idAlarm); 
-//		mails = alarmMonitoriza.getEmailsDegraded();
-//		
-//		for (MailMonitoriza mm: mails) {
-//			result.add(mm.getIdMail());
-//		}
-//
-//		return result;
-//	}
 	
 	@RequestMapping(path = "/emails", method = RequestMethod.GET)
 	public List<Long> emails(@RequestParam("id") Long idAlarm, @RequestParam("type") int type) {
@@ -165,21 +152,31 @@ public class AlarmRestController {
 		MailMonitoriza mailMonitoriza = null;
 		List<MailMonitoriza> listNewMail = new ArrayList<MailMonitoriza>();
 
-		try {
-			if (mailForm.getIdMail() != null) {
-				mailMonitoriza = mailService.getMailMonitorizaById(mailForm.getIdMail());
-			} else {
-				mailMonitoriza = new MailMonitoriza();
-			}
-
-			mailMonitoriza.setEmailAddress(mailForm.getEmailAddress());
-			MailMonitoriza mail = mailService.saveMailMonitoriza(mailMonitoriza);
-
-			listNewMail.add(mail);
-		} catch (Exception e) {
+		if (bindingResult.hasErrors()) {
 			listNewMail = StreamSupport.stream(mailService.getAllMailMonitoriza().spliterator(), false)
 					.collect(Collectors.toList());
-			throw e;
+			JSONObject json = new JSONObject();
+			for (FieldError o: bindingResult.getFieldErrors()) {
+				json.put(o.getField() + "_span", o.getDefaultMessage());
+			}
+			dtOutput.setError(json.toString());
+		} else {
+			try {
+				if (mailForm.getIdMail() != null) {
+					mailMonitoriza = mailService.getMailMonitorizaById(mailForm.getIdMail());
+				} else {
+					mailMonitoriza = new MailMonitoriza();
+				}
+	
+				mailMonitoriza.setEmailAddress(mailForm.getEmailAddress());
+				MailMonitoriza mail = mailService.saveMailMonitoriza(mailMonitoriza);
+	
+				listNewMail.add(mail);
+			} catch (Exception e) {
+				listNewMail = StreamSupport.stream(mailService.getAllMailMonitoriza().spliterator(), false)
+						.collect(Collectors.toList());
+				throw e;
+			}
 		}
 		dtOutput.setData(listNewMail);
 
@@ -194,34 +191,43 @@ public class AlarmRestController {
 		AlarmMonitoriza alarmMonitoriza = null;
 		List<AlarmMonitoriza> listNewAlarm = new ArrayList<AlarmMonitoriza>();
 		
-
-		try {
-			if (alarmForm.getIdAlarm() != null) {
-				alarmMonitoriza = alarmService.getAlarmMonitorizaById(alarmForm.getIdAlarm());
-			} else {
-				alarmMonitoriza = new AlarmMonitoriza();
-			}
-
-			alarmMonitoriza.setName(alarmForm.getName());
-			alarmMonitoriza.setBlockedTime(alarmForm.getBlockedTime());
-			Set<MailMonitoriza> mailsDegraded = mailService.splitMails(alarmForm.getDegradedConcat());
-			alarmMonitoriza.setEmailsDegraded(mailsDegraded);
-			Set<MailMonitoriza> mailsDown = mailService.splitMails(alarmForm.getDownConcat());
-			alarmMonitoriza.setEmailsDown(mailsDown);
-			AlarmMonitoriza alarm = alarmService.saveAlarmMonitoriza(alarmMonitoriza);
-
-			for(MailMonitoriza mm: mailsDegraded) {
-				mailService.saveMailMonitoriza(mm);
-			}
-			for(MailMonitoriza mm2: mailsDown) {
-				mailService.saveMailMonitoriza(mm2);
-			}
-			
-			listNewAlarm.add(alarm);
-		} catch (Exception e) {
+		if (bindingResult.hasErrors()) {
 			listNewAlarm = StreamSupport.stream(alarmService.getAllAlarmMonitoriza().spliterator(), false)
 					.collect(Collectors.toList());
-			throw e;
+			JSONObject json = new JSONObject();
+			for (FieldError o: bindingResult.getFieldErrors()) {
+				json.put(o.getField() + "_span", o.getDefaultMessage());
+			}
+			dtOutput.setError(json.toString());
+		} else {
+			try {
+				if (alarmForm.getIdAlarm() != null) {
+					alarmMonitoriza = alarmService.getAlarmMonitorizaById(alarmForm.getIdAlarm());
+				} else {
+					alarmMonitoriza = new AlarmMonitoriza();
+				}
+	
+				alarmMonitoriza.setName(alarmForm.getName());
+				alarmMonitoriza.setBlockedTime(alarmForm.getBlockedTime());
+				Set<MailMonitoriza> mailsDegraded = mailService.splitMails(alarmForm.getDegradedConcat());
+				alarmMonitoriza.setEmailsDegraded(mailsDegraded);
+				Set<MailMonitoriza> mailsDown = mailService.splitMails(alarmForm.getDownConcat());
+				alarmMonitoriza.setEmailsDown(mailsDown);
+				AlarmMonitoriza alarm = alarmService.saveAlarmMonitoriza(alarmMonitoriza);
+	
+				for(MailMonitoriza mm: mailsDegraded) {
+					mailService.saveMailMonitoriza(mm);
+				}
+				for(MailMonitoriza mm2: mailsDown) {
+					mailService.saveMailMonitoriza(mm2);
+				}
+				
+				listNewAlarm.add(alarm);
+			} catch (Exception e) {
+				listNewAlarm = StreamSupport.stream(alarmService.getAllAlarmMonitoriza().spliterator(), false)
+						.collect(Collectors.toList());
+				throw e;
+			}
 		}
 		dtOutput.setData(listNewAlarm);
 

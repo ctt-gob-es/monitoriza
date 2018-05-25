@@ -48,7 +48,6 @@ public class AlarmForm {
 	 * Attribute that represents the value of the primary key as a hidden input
 	 * in the form.
 	 */
-	@NotNull(message="{form.valid.alarm.idAlarm.notempty}")
 	private Long idAlarm;
 
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.alarm.name.notempty}")
@@ -58,20 +57,12 @@ public class AlarmForm {
 	@NotNull(message="{form.valid.alarm.blockedTime.notempty}")
 	private Long blockedTime;
 
-	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.alarm.degradedConcat.notempty}")
-	@Size(min = 3, max = 254, groups = ThenCheckIt.class)
 	private String degradedConcat;
 
-	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.alarm.downConcat.notempty}")
-	@Size(min = 3, max = 254, groups = ThenCheckIt.class)
 	private String downConcat;
 
-	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.alarm.emailsDegraded.notempty}")
-	@Size(min = 3, max = 254, groups = ThenCheckIt.class)
 	private String emailsDegraded;
 
-	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.alarm.emailsDown.notempty}")
-	@Size(min = 3, max = 254, groups = ThenCheckIt.class)
 	private String emailsDown;
 
 	/**

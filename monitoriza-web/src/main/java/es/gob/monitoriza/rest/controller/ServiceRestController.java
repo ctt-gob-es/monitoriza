@@ -34,6 +34,7 @@ import java.util.stream.StreamSupport;
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -41,6 +42,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -60,6 +62,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitori
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
+import es.gob.monitoriza.service.IAlarmMonitorizaService;
 import es.gob.monitoriza.service.IPlatformService;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
 import es.gob.monitoriza.service.ITimerMonitorizaService;
@@ -104,6 +107,9 @@ public class ServiceRestController {
 	 */
 	@Autowired
 	private IPlatformService platformService;
+	
+	@Autowired
+	private IAlarmMonitorizaService alarmService;
 
 	/**
 	 * Method that maps the list users web requests to the controller and
@@ -215,21 +221,32 @@ public class ServiceRestController {
 		TimerMonitoriza timerMonitoriza = null;
 		List<TimerMonitoriza> listNewTimer = new ArrayList<TimerMonitoriza>();
 
-		try {
-			if (timerForm.getIdTimer() != null) {
-				timerMonitoriza = timerService.getTimerMonitorizaById(timerForm.getIdTimer());
-			} else {
-				timerMonitoriza = new TimerMonitoriza();
+		if (bindingResult.hasErrors()) {
+			listNewTimer = StreamSupport.stream(timerService.getAllTimerMonitoriza().spliterator(), false)
+					.collect(Collectors.toList());
+			JSONObject json = new JSONObject();
+			for (FieldError o : bindingResult.getFieldErrors()) {
+				json.put(o.getField() + "_span", o.getDefaultMessage());
 			}
+			dtOutput.setError(json.toString());
+		} else {
+			try {
+				if (timerForm.getIdTimer() != null) {
+					timerMonitoriza = timerService.getTimerMonitorizaById(timerForm.getIdTimer());
+				} else {
+					timerMonitoriza = new TimerMonitoriza();
+				}
 
-			timerMonitoriza.setFrequency(timerForm.getFrequency());
-			timerMonitoriza.setName(timerForm.getName());
-			TimerMonitoriza timer = timerService.saveTimerMonitoriza(timerMonitoriza);
-			
-			listNewTimer.add(timer);
-		}catch(Exception e) {
-			listNewTimer = StreamSupport.stream(timerService.getAllTimerMonitoriza().spliterator(), false).collect(Collectors.toList());
-			throw e;
+				timerMonitoriza.setFrequency(timerForm.getFrequency());
+				timerMonitoriza.setName(timerForm.getName());
+				TimerMonitoriza timer = timerService.saveTimerMonitoriza(timerMonitoriza);
+
+				listNewTimer.add(timer);
+			} catch (Exception e) {
+				listNewTimer = StreamSupport.stream(timerService.getAllTimerMonitoriza().spliterator(), false)
+						.collect(Collectors.toList());
+				throw e;
+			}
 		}
 		dtOutput.setData(listNewTimer);
 
@@ -239,34 +256,44 @@ public class ServiceRestController {
 	@RequestMapping(path = "/saveservice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
 	public @ResponseBody DataTablesOutput<ServiceMonitoriza> saveService(
-			@Validated(OrderedValidation.class) @RequestBody ServiceForm serviceForm) {
+			@Validated(OrderedValidation.class) @RequestBody ServiceForm serviceForm, BindingResult bindingResult) {
 		DataTablesOutput<ServiceMonitoriza> dtOutput = new DataTablesOutput<>();
 		ServiceMonitoriza serviceMonitoriza = null;
 		List<ServiceMonitoriza> listNewService = new ArrayList<ServiceMonitoriza>();
 
-		try {
-			if (serviceForm.getIdService() != null) {
-				serviceMonitoriza = serviceService.getServiceMonitorizaById(serviceForm.getIdService());
-			} else {
-				serviceMonitoriza = new ServiceMonitoriza();
+		if (bindingResult.hasErrors()) {
+			listNewService = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false)
+					.collect(Collectors.toList());
+			JSONObject json = new JSONObject();
+			for (FieldError o : bindingResult.getFieldErrors()) {
+				json.put(o.getField() + "_span", o.getDefaultMessage());
 			}
+			dtOutput.setError(json.toString());
+		} else {
+			try {
+				if (serviceForm.getIdService() != null) {
+					serviceMonitoriza = serviceService.getServiceMonitorizaById(serviceForm.getIdService());
+				} else {
+					serviceMonitoriza = new ServiceMonitoriza();
+				}
+	
+				serviceMonitoriza.setDegradedThreshold(serviceForm.getDegradedThreshold());
+				serviceMonitoriza.setLostThreshold(serviceForm.getLostThreshold());
+				serviceMonitoriza.setName(serviceForm.getName());
+				serviceMonitoriza.setNameWsdl(serviceForm.getNameWsdl());
+				serviceMonitoriza.setAlarm(alarmService.getAlarmMonitorizaById(serviceForm.getAlarm()));
+				serviceMonitoriza.setPlatform(platformService.getPlatformById(serviceForm.getPlatform()));
+				serviceMonitoriza.setTimeout(serviceForm.getTimeout());
+				serviceMonitoriza.setTimer(timerService.getTimerMonitorizaById(serviceForm.getTimer()));
+				serviceMonitoriza.setServiceType(serviceForm.getServiceType());
 
-			// serviceMonitoriza.setAlarm(serviceForm.getAlarm());
-			serviceMonitoriza.setDegradedThreshold(serviceForm.getDegradedThreshold());
-			serviceMonitoriza.setLostThreshold(serviceForm.getLostThreshold());
-			serviceMonitoriza.setName(serviceForm.getName());
-			serviceMonitoriza.setNameWsdl(serviceForm.getNameWsdl());
-
-			serviceMonitoriza.setPlatform(platformService.getPlatformById(serviceForm.getPlatform()));
-			serviceMonitoriza.setTimeout(serviceForm.getTimeout());
-			serviceMonitoriza.setTimer(timerService.getTimerMonitorizaById(serviceForm.getTimer()));
-			serviceMonitoriza.setServiceType(serviceForm.getServiceType());
-
-			ServiceMonitoriza service = serviceService.saveServiceMonitoriza(serviceMonitoriza);
-			listNewService.add(service);
-		}catch(Exception e) {
-			listNewService = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false).collect(Collectors.toList());
-			throw e;
+				ServiceMonitoriza service = serviceService.saveServiceMonitoriza(serviceMonitoriza);
+				listNewService.add(service);
+			} catch (Exception e) {
+				listNewService = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false)
+						.collect(Collectors.toList());
+				throw e;
+			}
 		}
 		dtOutput.setData(listNewService);
 
@@ -278,7 +305,7 @@ public class ServiceRestController {
 	public String deleteTimer(@RequestParam("id") Long timerId, @RequestParam("index") String index) {
 		try {
 			timerService.deleteTimerMonitoriza(timerId);
-		}catch(Exception e) {
+		} catch (Exception e) {
 			index = "-1";
 		}
 		return index;
@@ -289,7 +316,7 @@ public class ServiceRestController {
 	public String deleteservice(@RequestParam("id") Long idService, @RequestParam("index") String index) {
 		try {
 			serviceService.deleteServiceMonitoriza(idService);
-		}catch(EmptyResultDataAccessException e) {
+		} catch (EmptyResultDataAccessException e) {
 			index = "-1";
 			throw e;
 		}

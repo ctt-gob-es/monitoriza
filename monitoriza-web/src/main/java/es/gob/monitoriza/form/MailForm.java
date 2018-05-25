@@ -48,7 +48,6 @@ public class MailForm {
 	 * Attribute that represents the value of the primary key as a hidden input
 	 * in the form.
 	 */
-	@NotNull(message="{form.valid.mail.idMail.notempty}")
 	private Long idMail;
 
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.mail.emailAddress.notempty}")

@@ -94,8 +94,8 @@ public class ServiceForm {
 	/**
 	 * Attribute that represents the alarm configured to this service.
 	 */
-	// @NotNull(message="{form.valid.service.timeout.notempty}")
-	// private Long alarm;
+	 @NotNull(message="{form.valid.service.alarm.notempty}")
+	 private Long alarm;
 
 	/**
 	 * Attribute that represents the platform that could be configured to this
@@ -190,5 +190,21 @@ public class ServiceForm {
 	public void setServiceType(String serviceType) {
 		this.serviceType = serviceType;
 	}
+
+	/**
+	 * @return the alarm
+	 */
+	public Long getAlarm() {
+		return alarm;
+	}
+
+	/**
+	 * @param alarm the alarm to set
+	 */
+	public void setAlarm(Long alarm) {
+		this.alarm = alarm;
+	}
+	
+	
 
 }

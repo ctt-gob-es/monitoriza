@@ -15,14 +15,16 @@
 						th:field="*{downConcat}">
 					
 					<div class="form-row">
-						<div class="form-group col-md-12"><label for="name"
-							th:text="#{form.alarm.name}"></label> <input type="text"
-							class="form-control" id="name" th:field="*{name}" required>
+						<div class="form-group col-md-12">
+							<label for="name" th:text="#{form.alarm.name}"></label> <span id="name_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
+							<input type="text" class="form-control" id="name" th:field="*{name}" required>
 						</div>
+						
 					</div>
 					<div class="form-row">
 						<div class="form-group col-md-12"><label for="blockedTime"
-							th:text="#{form.alarm.blockedTime}"></label> <input type="number"
+							th:text="#{form.alarm.blockedTime}"></label> <span id="blockedTime_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
+							<input type="number"
 							step="1" class="form-control" id="blockedTime"
 							th:field="*{blockedTime}" required></div>
 					</div>
@@ -377,6 +379,23 @@ $(document).ready(function() {
 			  data: formData,
 			  success: function(data){
 				  
+				  var errores = JSON.parse(data.error);
+				  
+				  if (data.error != null){
+					  jQuery.each(errores, function(i, val) {
+					  	$('#alarmForm *').filter('span').each(function(){
+							if (i == $(this).attr('id')){
+								$("#" + i).text(val);
+							}
+						});
+					  });
+				  }else{
+					  $("#mailForm")[0].reset();
+					  $('#mailForm *').filter('span').each(function(){
+							$(this).text('');
+						});
+				  }
+				  
 				  $('#emailsDegraded').append($('<option>', {
 					  value: $(data.data).idMail,
 					  text: $(data.data).emailAddress
@@ -387,17 +406,16 @@ $(document).ready(function() {
 					  text: $(data.data).emailAddress
 				  }));
 				  
-				  $("#mailForm")[0].reset();
 				  hide();
 				  tblMail.row.add($(data.data)).draw(false);
 				  
-				   $('#mailForm *').filter(':input').each(function(){
-					 $("#" + $(this).attr('id')).removeClass("has-error");
-				   });
-				   
-				   if ($('#errorModalMail').length > 0){
-					 $('#errorModalMail').remove();
-				   }
+				  $('#mailForm *').filter(':input').each(function(){
+					  $("#" + $(this).attr('id')).removeClass("has-error");
+				  });
+				  
+				  if ($('#errorModalMail').length > 0){
+					  $('#errorModalMail').remove();
+				  }
 				  
 			  },
 			  error:function(){
@@ -412,7 +430,7 @@ $(document).ready(function() {
 	  
 	  $( "#alarmBtn" ).click(function( event ) {
 		  event.preventDefault();
-		  debugger;
+		  
 		  var numDegraded =  $("#emailsDegraded").select2('data').length;
 		  var numDown =  $("#emailsDown").select2('data').length;
 		  var newEmailDegraded = "";
@@ -453,12 +471,14 @@ $(document).ready(function() {
 	      	  });
 			  
 			  if ($("#emailsDegraded").select2('data').length == 0){
+				  $('#errorModalAlarm2').remove();
 				  $('#alarmForm').append('<div id="errorModalAlarm2" class="alert alert-danger" role="alert"><strong>Debe introducir al menos un correo degradado.</strong></div>');
 			  }else{
 				  $('#errorModalAlarm2').remove();
 			  }
 			  
 			  if ($("#emailsDown").select2('data').length == 0){
+				  $('#errorModalAlarm3').remove();
 				  $('#alarmForm').append('<div id="errorModalAlarm3" class="alert alert-danger" role="alert"><strong>Debe introducir al menos un correo caida.</strong></div>');
 			  }else{
 				  $('#errorModalAlarm3').remove();
@@ -469,9 +489,24 @@ $(document).ready(function() {
 				  type: "POST",
 				  url: url,
 				  data: formData,
-				  success: function(data){
-					  $("#alarmForm")[0].reset();
-					  $("#alarmForm select").select2().val('').change();
+				  success: function(data, error){
+					  var errores = JSON.parse(data.error);
+					  
+					  if (data.error != null){
+						  jQuery.each(errores, function(i, val) {
+						  	$('#alarmForm *').filter('span').each(function(){
+								if (i == $(this).attr('id')){
+									$("#" + i).text(val);
+								}
+							});
+						  });
+					  }else{
+						  $("#alarmForm")[0].reset();
+						  $("#alarmForm select").select2().val('').change();
+						  $('#alarmForm *').filter('span').each(function(){
+								$(this).text('');
+							});
+					  }
 					  
 					  hide();
 					  tblAlarm.row.add($(data.data)).draw(false);

@@ -47,7 +47,7 @@ public class TimerForm {
 	 * Attribute that represents the name of the timer. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.timer.name.notempty}")
-	@Size(min=1, max=30, groups=ThenCheckIt.class)
+	@Size(min=5, max=30, groups=ThenCheckIt.class)
 	private String name;
 	
 	/**
