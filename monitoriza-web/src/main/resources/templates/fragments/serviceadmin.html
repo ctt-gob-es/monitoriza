@@ -10,7 +10,7 @@
 						th:field="*{idService}">
 					<div class="form-row">
 						<div class="form-group col-md-6"><label for="nameService"
-							th:text="#{form.service.name}"></label> <input type="text"
+							th:text="#{form.service.name}"></label> <span id="nameService_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> <input type="text"
 							class="form-control" id="nameService" th:field="*{name}" required>
 					</div>
 						<div class="form-group col-md-6"><label for="platform"
@@ -38,13 +38,13 @@
 						<div class="form-group col-md-6"><label for="endpoint"
 							th:text="#{form.service.endpoint}"></label> <input type="text"
 							class="form-control" id="endpoint" readonly required></div>
-						<div class="form-group col-md-4"><label for="nameWsdl">&nbsp;</label>
+						<div class="form-group col-md-4"><label for="nameWsdl">&nbsp;</label> <span id="nameWsdl_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 							<input type="text" class="form-control" id="nameWsdl"
 							th:field="*{nameWsdl}" required></div>
 					</div>
 					<div class="form-row">
 						<div class="form-group col-md-6"><label for="timeout"
-							th:text="#{form.service.timeout}"></label> <input type="number"
+							th:text="#{form.service.timeout}"></label> <span id="timeout_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> <input type="number"
 							step="1" class="form-control" id="timeout" th:field="*{timeout}"
 							required></div>
 						<div class="form-group col-md-6"><label for="timer"
@@ -59,13 +59,25 @@
 					</div>
 					<div class="form-row">
 						<div class="form-group col-md-6"><label for="uDegraded"
-							th:text="#{form.service.udegraded}"></label> <input type="number"
+							th:text="#{form.service.udegraded}"></label> <span id="uDegraded_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> <input type="number"
 							step="1" class="form-control" id="uDegraded"
 							th:field="*{degradedThreshold}" required></div>
 						<div class="form-group col-md-6"><label for="uLost"
-							th:text="#{form.service.ulost}"></label> <input type="number"
+							th:text="#{form.service.ulost}"></label> <span id="uLost_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> <input type="number"
 							step="1" class="form-control" id="uLost"
 							th:field="*{lostThreshold}" required></div>
+					</div>
+					
+					<div class="form-row">
+						<div class="form-group col-md-6"><label for="alarm"
+							th:text="#{form.service.alarm}"></label> <select id="alarm"
+							class="form-control" th:field="*{alarm}" required>
+								<option selected="selected" value="-1"
+									th:text="#{form.service.select.alarm}"></option>
+								<option th:each="p: ${alarms}" th:value="${p.idAlarm}"
+									th:text="${p.name}">
+								</option>
+						</select></div>
 					</div>
 					<button id="serviceBtn" type="submit" class="btn btn-primary">Guardar</button>
 				</form>
@@ -82,12 +94,12 @@
 					<input type='hidden' class='primarykey' id="idTimer"
 						th:field="*{idTimer}">
 					<div class="form-row">
-						<div class="form-group col-md-6"><label for="name"
-							th:text="#{form.timer.name}"></label> <input type="text"
+						<div class="form-group col-md-6"><label for="nameTimer"
+							th:text="#{form.timer.name}"></label> <span id="nameTimer_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> <input type="text"
 							class="form-control" id="nameTimer" th:field="*{name}" required>
 					</div>
 						<div class="form-group col-md-6"><label for="frequency"
-							th:text="#{form.timer.frequency}"></label> <input type="number"
+							th:text="#{form.timer.frequency}"></label> <span id="frequency_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> <input type="number"
 							class="form-control" id="frequency" th:field="*{frequency}"
 							required></div>
 					</div>
@@ -129,6 +141,8 @@
 						<th th:text="#{table.service.udegraded}"></th>
 						<th th:text="#{table.service.ulost}"></th>
 						<th th:text="#{table.service.serviceType}"></th>
+						<th></th>
+						<th th:text="#{table.service.alarm}"></th>
 					</tr>
 				</thead>
 			</table>
@@ -244,6 +258,7 @@ $(document).ready(function() {
                 var degradedThreshold = d.data()[0][a[8].id]
                 var lostThreshold = d.data()[0][a[9].id]
                 var serviceTypes = d.data()[0][a[10].id]
+				var idAlarm = d.data()[0].alarm.idAlarm
 				
                 $("#idService").val(idService);
                 $("#nameService").val(nameService);
@@ -254,6 +269,7 @@ $(document).ready(function() {
                 $("#timer").val(idTimer);
                 $("#uDegraded").val(degradedThreshold);
                 $("#uLost").val(lostThreshold);
+                $("#alarm").val(idAlarm);
                 
 			}
 	    }, {extend: 'selected',text: 'Eliminar',name: 'delete'}],
@@ -294,7 +310,10 @@ $(document).ready(function() {
 	        { "data": "timer.name"},
 	        { "data": "degradedThreshold"},
 	        { "data": "lostThreshold"},
-	        { "data": "serviceType" }
+	        { "data": "serviceType" },
+	        { "data": "alarm.idAlarm",
+	          "visible": false},
+	        { "data": "alarm.name"}
 	        ]
 		}).on('crudaction', function(e, accion, idService, data, rowindex){
 		    // e          Evento Jquery
@@ -473,13 +492,28 @@ $(document).ready(function() {
 			  url: url,
 			  data: formData,
 			  success: function(data){
+				  var errores = JSON.parse(data.error);
+				  
+				  if (data.error != null){
+					  jQuery.each(errores, function(i, val) {
+					  	$('#timerForm *').filter('span').each(function(){
+							if (i == $(this).attr('id')){
+								$("#" + i).text(val);
+							}
+						});
+					  });
+				  }else{
+					  $("#timerForm")[0].reset();
+					  $('#timerForm *').filter('span').each(function(){
+							$(this).text('');
+						});
+				  }
 				  
 				  $('#timer').append($('<option>', {
 					    value: $(data.data).idTimer,
 					    text: $(data.data).name
 					}));
 				  
-				  $("#timerForm")[0].reset();
 				  hide();
 				  tblTimer.row.add($(data.data)).draw(false);
 				  
@@ -526,21 +560,31 @@ $(document).ready(function() {
       	  });
 		  
 		  if ($('#platform option:selected').val() == "-1"){
+			$('#platform').removeClass("has-error");
 			$('#platform').addClass("has-error");
 		  }else{
 			$('#platform').removeClass("has-error");
 		  }
 		  
 		  if ($('#serviceTypes option:selected').val() == "-1"){
-			$('#serviceTypes').addClass("has-error");
+		  	$('#serviceTypes').removeClass("has-error");	
+		  	$('#serviceTypes').addClass("has-error");
 		  }else{
 			$('#serviceTypes').removeClass("has-error");
 		  }
 		  
 		  if ($('#timer option:selected').val() == "-1"){
+			$('#timer').removeClass("has-error");
 			$('#timer').addClass("has-error");
 		  }else{
 			$('#timer').removeClass("has-error");
+		  }
+		  
+		  if ($('#alarm option:selected').val() == "-1"){
+			$('#alarm').removeClass("has-error");
+			$('#alarm').addClass("has-error");
+		  }else{
+			$('#alarm').removeClass("has-error");
 		  }
 		  
 	  } else{
@@ -549,8 +593,23 @@ $(document).ready(function() {
 			  url: url,
 			  data: formData,
 			  success: function(data){
+				  var errores = JSON.parse(data.error);
 				  
-				  $("#serviceForm")[0].reset();
+				  if (data.error != null){
+					  jQuery.each(errores, function(i, val) {
+					  	$('#serviceForm *').filter('span').each(function(){
+							if (i == $(this).attr('id')){
+								$("#" + i).text(val);
+							}
+						});
+					  });
+				  }else{
+					  $("#serviceForm")[0].reset();
+					  $('#serviceForm *').filter('span').each(function(){
+							$(this).text('');
+						});
+				  }
+				  
 				  hide();
 				  tblService.row.add($(data.data)).draw(false);
 				  
@@ -561,6 +620,7 @@ $(document).ready(function() {
 				  $('#platform').removeClass("has-error");
 				  $('#serviceTypes').removeClass("has-error");
 				  $('#timer').removeClass("has-error");
+				  $('#alarm').removeClass("has-error");
 				  
 				  if ($('#errorModalService').length > 0){
 					 $('#errorModalService').remove();

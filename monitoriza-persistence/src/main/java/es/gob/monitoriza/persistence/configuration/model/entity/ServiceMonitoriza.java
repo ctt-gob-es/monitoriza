@@ -280,6 +280,7 @@ public class ServiceMonitoriza implements Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_ALARM_SERVICE", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public AlarmMonitoriza getAlarm() {

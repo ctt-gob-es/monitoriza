@@ -38,65 +38,86 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.form.ServiceForm;
 import es.gob.monitoriza.form.TimerForm;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
+import es.gob.monitoriza.service.IAlarmMonitorizaService;
 import es.gob.monitoriza.service.IPlatformService;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
 import es.gob.monitoriza.service.ITimerMonitorizaService;
 
-/** 
- * <p>Class .</p>
- * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+/**
+ * <p>
+ * Class .
+ * </p>
+ * <b>Project:</b>
+ * <p>
+ * Application for monitoring services of @firma suite systems.
+ * </p>
+ * 
  * @version 1.0, 19 abr. 2018.
  */
 @Controller
 public class ServiceController {
-	
+
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_WEB_LOG);
-	
+
 	/**
-	 * Attribute that represents the service object for accessing the repository. 
+	 * Attribute that represents the service object for accessing the
+	 * repository.
 	 */
 	@Autowired
 	private IPlatformService platformService;
-	
+
 	@Autowired
 	private ITimerMonitorizaService timerService;
-	
+
 	@Autowired
 	private IServiceMonitorizaService serviceService;
-				
+
+	@Autowired
+	private IAlarmMonitorizaService alarmService;
+
 	/**
-	 * Method that maps the list users web requests to the controller and forwards the list of users
-	 * to the view.  
-	 * @param model Holder object for model attributes.
+	 * Method that maps the list users web requests to the controller and
+	 * forwards the list of users to the view.
+	 * 
+	 * @param model
+	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
 	@RequestMapping(value = "serviceadmin")
-    public String serviceadmin(Model model){
+	public String serviceadmin(Model model) {
 		List<String> serviceTypes = new ArrayList<String>();
 		List<PlatformMonitoriza> platforms = new ArrayList<PlatformMonitoriza>();
 		List<TimerMonitoriza> timers = new ArrayList<TimerMonitoriza>();
 		List<ServiceMonitoriza> services = new ArrayList<ServiceMonitoriza>();
+		List<AlarmMonitoriza> alarms = new ArrayList<AlarmMonitoriza>();
 		ServiceForm serviceForm = new ServiceForm();
 		TimerForm timerForm = new TimerForm();
-		
-		platforms = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false).collect(Collectors.toList());
-		timers = StreamSupport.stream(timerService.getAllTimerMonitoriza().spliterator(), false).collect(Collectors.toList());
-		services = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false).collect(Collectors.toList());
-		
+
+		platforms = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
+				.collect(Collectors.toList());
+		timers = StreamSupport.stream(timerService.getAllTimerMonitoriza().spliterator(), false)
+				.collect(Collectors.toList());
+		services = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false)
+				.collect(Collectors.toList());
+		alarms = StreamSupport.stream(alarmService.getAllAlarmMonitoriza().spliterator(), false)
+				.collect(Collectors.toList());
+
 		model.addAttribute("serviceform", serviceForm);
 		model.addAttribute("timerform", timerForm);
 		model.addAttribute("platforms", platforms);
+		model.addAttribute("alarms", alarms);
 		model.addAttribute("serviceTypes", serviceTypes);
 		model.addAttribute("timers", timers);
 		model.addAttribute("services", services);
-				
-        return "fragments/serviceadmin.html";
-    }
-		
+
+		return "fragments/serviceadmin.html";
+	}
+
 }
