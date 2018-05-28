@@ -66,6 +66,11 @@ public interface GeneralConstants {
 	public static final String BLANK = " ";
 	
 	/**
+	 * Constant that represents an empty string. 
+	 */
+	public static final String EMPTY_STRING = "";
+	
+	/**
 	 * Constant that represents SEPARATOR literal. 
 	 */
 	public static final String SEPARATOR = "_";

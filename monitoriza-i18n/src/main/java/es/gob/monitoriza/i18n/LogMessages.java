@@ -259,5 +259,25 @@ public interface LogMessages {
 	 * Message key declared in the 'monitoriza.properties' file.
 	 */
 	String ERROR_FORMAT_THREAD_POOL_SIZE = "errorFormatThreadPoolSize";
+	
+	/**
+	 * Message key declared in the 'monitoriza.properties' file.
+	 */
+	String ERROR_NOT_BLANK_ALIAS = "errorNotBlankAlias";
+	
+	/**
+	 * i18n Token to show message when a system certificate has been added succesfully.
+	 */
+	String ERROR_SPECIAL_CHAR_ALIAS = "errorSpecialCharAlias";
+	
+	/**
+	 * i18n Token to show message when a system certificate has been added succesfully.
+	 */
+	String SYS_CERT_ADDED = "modKeyAddSysCert";
+	
+	/**
+	 * i18n Token to show error when exception occurs while reading given keystore.
+	 */
+	String ERROR_ADDING_SYS_CERTS = "errorAddingSysCert";
 }
 
