@@ -106,11 +106,14 @@
   font-weight:bold;
 }
 
+<<<<<<< HEAD
 /* Personalización del botón 'browse file' */
 .custom-file-input ~ .custom-file-label::after {
     content: "Elegir";
 }
 
+=======
+>>>>>>> f5d6d93f20bcdda29891f2cd6b827f265fcd31d2
 .has-error {
   color: #a94442;
   border-color: #a94442;

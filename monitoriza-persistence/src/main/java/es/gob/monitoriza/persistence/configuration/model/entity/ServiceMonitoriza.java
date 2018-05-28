@@ -105,6 +105,8 @@ public class ServiceMonitoriza implements Serializable {
 	 * Attribute that represents the @firma platform that could be configured to this service. 
 	 */
 	private PlatformMonitoriza platform;
+	
+	private String serviceType;
 		
 	/**
 	 * Gets the value of the attribute {@link #idService}.
@@ -113,7 +115,7 @@ public class ServiceMonitoriza implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	@Id
-	@Column(name = "ID_SERVICE_MONITORIZA", unique = true, nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "ID_SERVICE", unique = true, nullable = false, precision = NumberConstants.NUM19)
 	@GeneratedValue(generator = "sq_service_monitoriza")
 	@GenericGenerator(
 	                  name = "sq_service_monitoriza",
@@ -255,6 +257,7 @@ public class ServiceMonitoriza implements Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_TIMER_SERVICE", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public TimerMonitoriza getTimer() {
@@ -277,6 +280,7 @@ public class ServiceMonitoriza implements Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_ALARM_SERVICE", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public AlarmMonitoriza getAlarm() {
@@ -299,6 +303,7 @@ public class ServiceMonitoriza implements Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "ID_PLATFORM_SERVICE", nullable = true)
+	@JsonView(DataTablesOutput.View.class)
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public PlatformMonitoriza getPlatform() {
@@ -314,5 +319,17 @@ public class ServiceMonitoriza implements Serializable {
 	public void setPlatform(PlatformMonitoriza platform) {
 		this.platform = platform;
 	}
+
+	@Column(name = "SERVICE_TYPE", nullable = false, length = NumberConstants.NUM100, unique = false)
+	@JsonView(DataTablesOutput.View.class)
+	public String getServiceType() {
+		return serviceType;
+	}
+
+	public void setServiceType(String serviceType) {
+		this.serviceType = serviceType;
+	}
+
+			
 
 }

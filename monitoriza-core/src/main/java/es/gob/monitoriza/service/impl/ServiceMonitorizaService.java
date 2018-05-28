@@ -25,83 +25,106 @@
 package es.gob.monitoriza.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.ServiceMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.ServiceMonitorizaDatatableRepository;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
 
-
-/** 
- * <p>Class that implements the communication with the operations of the persistence layer for ServiceMonitoriza.</p>
- * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+/**
+ * <p>
+ * Class that implements the communication with the operations of the
+ * persistence layer for ServiceMonitoriza.
+ * </p>
+ * <b>Project:</b>
+ * <p>
+ * Application for monitoring services of @firma suite systems.
+ * </p>
+ * 
  * @version 1.0, 20 abr. 2018.
  */
 @Service
+@Transactional
 public class ServiceMonitorizaService implements IServiceMonitorizaService {
-	
+
 	/**
-	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 * Attribute that represents the injected interface that provides CRUD
+	 * operations for the persistence.
 	 */
 	@Autowired
-    private ServiceMonitorizaRepository repository; 
-	
+	private ServiceMonitorizaRepository repository;
+
 	/**
-	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 * Attribute that represents the injected interface that provides CRUD
+	 * operations for the persistence.
 	 */
 	@Autowired
-    private ServiceMonitorizaDatatableRepository dtRepository; 
+	private ServiceMonitorizaDatatableRepository dtRepository;
 
 	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see es.gob.monitoriza.service.IServiceMonitorizaService#getServiceMonitorizaById(java.lang.Long)
 	 */
 	@Override
 	public ServiceMonitoriza getServiceMonitorizaById(Long serviceId) {
-		
+
 		return repository.findByIdService(serviceId);
 	}
 
 	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see es.gob.monitoriza.service.IServiceMonitorizaService#saveServiceMonitoriza(es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza)
 	 */
 	@Override
 	public ServiceMonitoriza saveServiceMonitoriza(ServiceMonitoriza service) {
-		
+
 		return repository.save(service);
 	}
 
 	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see es.gob.monitoriza.service.IServiceMonitorizaService#deleteServiceMonitoriza(java.lang.Long)
 	 */
 	@Override
+	@Transactional(noRollbackFor = EmptyResultDataAccessException.class)
 	public void deleteServiceMonitoriza(Long serviceId) {
-		repository.deleteById(serviceId);
-
+		if (serviceId != null) {
+			try {
+				ServiceMonitoriza entity = repository.findByIdService(serviceId);
+				repository.delete(entity);
+			} catch (Exception e) {
+				throw e;
+			}
+		}
 	}
 
 	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see es.gob.monitoriza.service.IServiceMonitorizaService#getAllServiceMonitoriza()
 	 */
 	@Override
 	public Iterable<ServiceMonitoriza> getAllServiceMonitoriza() {
-		
+
 		return repository.findAll();
 	}
 
 	/**
 	 * {@inheritDoc}
+	 * 
 	 * @see es.gob.monitoriza.service.IServiceMonitorizaService#findAll(org.springframework.data.jpa.datatables.mapping.DataTablesInput)
 	 */
 	@Override
 	public DataTablesOutput<ServiceMonitoriza> findAll(DataTablesInput input) {
-		
+
 		return dtRepository.findAll(input);
 	}
 
