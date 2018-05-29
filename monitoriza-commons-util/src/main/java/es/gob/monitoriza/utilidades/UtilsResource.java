@@ -45,6 +45,20 @@ public final class UtilsResource {
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 	
 	/**
+	 * To free resources, this method sets the length of the input {@link StringBuilder} to
+	 * zero and then trim it.
+	 * @param sb String builder to clean. If it is <code>null</code>, this method do nothing.
+	 */
+	public static void cleanStringBuilder(StringBuilder sb) {
+
+		if (sb != null) {
+			sb.setLength(0);
+			sb.trimToSize();
+		}
+
+	}
+	
+	/**
 	 * Method that handles the closing of a {@link OutputStream} resource.
 	 * @param os Parameter that represents a {@link OutputStream} resource.
 	 */

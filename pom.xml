@@ -18,8 +18,13 @@
 		<built.by>@Firma Team</built.by>
 		<monitoriza.version>${project.version}</monitoriza.version>
 		<monitoriza.project.name>Monitoriz@</monitoriza.project.name>
+<<<<<<< HEAD
+		<java.1.8.home>C:\Java_64\jdk1.8.0_131</java.1.8.home>
+		<!-- <java.1.8.home>/opt/jenkins/tools/java/jdk1.8.0_131</java.1.8.home> -->
+=======
 		<!-- <java.1.8.home>C:\Java_64\jdk1.8.0_131</java.1.8.home> -->
 		<java.1.8.home>C:\Trabajo\Software\Java\jdk1.8.0_161</java.1.8.home>
+>>>>>>> f5d6d93f20bcdda29891f2cd6b827f265fcd31d2
 		<java.1.8.version>1.8.0_131</java.1.8.version>
 		<java.home>${java.1.8.home}</java.home>
 		<java.version>${java.1.8.version}</java.version>

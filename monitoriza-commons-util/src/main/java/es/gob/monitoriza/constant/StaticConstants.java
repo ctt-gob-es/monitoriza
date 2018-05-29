@@ -223,6 +223,11 @@ public interface StaticConstants {
 	 */
 	public static final String REQUEST_THREAD_POOL_SIZE = "requestThreadPoolSize";
 	
+	/**
+	 * Constant attribute that represents name for property <code>character.special</code>.
+	 */
+	public static final String LIST_CHARACTER_SPECIAL = "character.special";
+	
 	
 	
 }

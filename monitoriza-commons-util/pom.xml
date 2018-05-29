@@ -25,6 +25,16 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.11</version>
+		</dependency>
+		<dependency>
+		    <groupId>org.bouncycastle</groupId>
+		    <artifactId>bcprov-jdk16</artifactId>
+		    <version>1.46</version>
+		</dependency>
+		<dependency>
 			<groupId>es.gob.monitoriza</groupId>
 			<artifactId>monitoriza-i18n</artifactId>
 			<version>${project.version}</version>

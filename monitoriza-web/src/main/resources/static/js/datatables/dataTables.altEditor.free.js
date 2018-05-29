@@ -165,8 +165,7 @@
                 title: o.context[0].aoColumns[e].sTitle
             });
             var d = "";
-            
-            
+                        
             var addTemplate = o.context[0].oAjaxData.addTemplate;
             var formId = o.context[0].oAjaxData.formId;
             

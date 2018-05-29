@@ -56,8 +56,8 @@ public final class Language {
 	/**
 	 * Attribute that represents the list of messages.
 	 */
-	private static ResourceBundle msgReports;
-
+	private static ResourceBundle monitoriza;
+	
 	/**
 	 * Attribute that represents the locale specified in the configuration.
 	 */
@@ -77,11 +77,13 @@ public final class Language {
 	 * Attribute that represents the location of file that contains the messages of system. 
 	 */
 	private static final String CONTENT_LANGUAGE_PATH = "messages.monitoriza";
+	
 
 	static {
 		currentLocale = new Locale(ResourceBundle.getBundle(FILE_PROP_NAME).getString(LANGUAGE_ATT));
 
-		msgReports = ResourceBundle.getBundle(CONTENT_LANGUAGE_PATH, currentLocale);
+		monitoriza = ResourceBundle.getBundle(CONTENT_LANGUAGE_PATH, currentLocale);
+				
 	}
 
 	/**
@@ -91,7 +93,7 @@ public final class Language {
 	 * @return String with the message well-formed.
 	 */
 	public static String getFormatResMonitoriza(String key, Object[ ] values) {
-		return new MessageFormat(msgReports.getString(key), currentLocale).format(values);
+		return new MessageFormat(monitoriza.getString(key), currentLocale).format(values);
 	}
 
 	/**
@@ -100,7 +102,7 @@ public final class Language {
 	 * @return String with the message.
 	 */
 	public static String getResMonitoriza(String key) {
-		return msgReports.getString(key);
+		return monitoriza.getString(key);
 	}
-
+	
 }
