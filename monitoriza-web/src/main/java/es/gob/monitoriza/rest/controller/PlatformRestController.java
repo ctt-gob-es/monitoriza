@@ -26,14 +26,19 @@ package es.gob.monitoriza.rest.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,90 +56,127 @@ import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitori
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IPlatformService;
 
-/** 
- * <p>Class that manages the REST requests related to the Platforms administration and JSON communication.</p>
- * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+/**
+ * <p>
+ * Class that manages the REST requests related to the Platforms administration
+ * and JSON communication.
+ * </p>
+ * <b>Project:</b>
+ * <p>
+ * Application for monitoring services of @firma suite systems.
+ * </p>
+ * 
  * @version 1.0, 10 abr. 2018.
  */
 @RestController
 public class PlatformRestController {
-	
+
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_WEB_LOG);
-		
+
 	/**
-	 * Attribute that represents the service object for accessing the repository. 
+	 * Attribute that represents the service object for accessing the
+	 * repository.
 	 */
 	@Autowired
-	private IPlatformService platformService; 
-	
+	private IPlatformService platformService;
+
 	/**
-	 * Method that maps the list users web requests to the controller and forwards the list of users
-	 * to the view.  
-	 * @param input Holder object for datatable attributes.
+	 * Method that maps the list users web requests to the controller and
+	 * forwards the list of users to the view.
+	 * 
+	 * @param input
+	 *            Holder object for datatable attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
 	@JsonView(DataTablesOutput.View.class)
-	@RequestMapping(path="/afirmadatatable", method=RequestMethod.GET)
-    public DataTablesOutput<PlatformMonitoriza> users(@Valid DataTablesInput input){
-		
-		return (DataTablesOutput<PlatformMonitoriza>) platformService.findAllAfirma(input);
-				   	
-    }
-	
-	/**
-     * Method that maps the delete user request from datatable to the controller and performs the delete
-     * of the user identified by its id.
-     * @param userId Identifier of the user to be deleted.
-     * @param index Row index of the datatable.
-     * @return String that represents the name of the view to redirect.
-     */
-	@JsonView(DataTablesOutput.View.class)
-    @RequestMapping(path = "/deletafirma", method = RequestMethod.POST)
-    public String deleteUser(@RequestParam("id") Long userId, @RequestParam("index") String index) {
-    	
-    	platformService.deletePlatform(userId);
-    	
-        return index;
-    }    
-	    
-	/**
-     * Method that maps the save user web request to the controller and saves it in the persistence.
-     * @param userForm Object that represents the backing user form.
-     * @param bindingResult Object that represents the form validation result. 
-     * @return {@link DataTablesOutput<PlatformMonitoriza>} 
-     */
-    @RequestMapping(value="/saveafirma", method=RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    @JsonView(DataTablesOutput.View.class)
-    public @ResponseBody DataTablesOutput<PlatformMonitoriza> save(@Validated(OrderedValidation.class) @RequestBody AfirmaForm afirmaForm) {
+	@RequestMapping(path = "/afirmadatatable", method = RequestMethod.GET)
+	public DataTablesOutput<PlatformMonitoriza> users(@Valid DataTablesInput input) {
 
+		return (DataTablesOutput<PlatformMonitoriza>) platformService.findAllAfirma(input);
+
+	}
+
+	/**
+	 * Method that maps the delete user request from datatable to the controller
+	 * and performs the delete of the user identified by its id.
+	 * 
+	 * @param userId
+	 *            Identifier of the user to be deleted.
+	 * @param index
+	 *            Row index of the datatable.
+	 * @return String that represents the name of the view to redirect.
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(path = "/deleteafirma", method = RequestMethod.POST)
+	public String deleteUser(@RequestParam("id") Long userId, @RequestParam("index") String index) {
+		try {
+			platformService.deletePlatform(userId);
+		} catch (Exception e) {
+			index = "-1";
+		}
+		return index;
+	}
+
+	/**
+	 * Method that maps the save user web request to the controller and saves it
+	 * in the persistence.
+	 * 
+	 * @param userForm
+	 *            Object that represents the backing user form.
+	 * @param bindingResult
+	 *            Object that represents the form validation result.
+	 * @return {@link DataTablesOutput<PlatformMonitoriza>}
+	 */
+	@RequestMapping(value = "/saveafirma", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@JsonView(DataTablesOutput.View.class)
+	public @ResponseBody DataTablesOutput<PlatformMonitoriza> save(
+			@Validated(OrderedValidation.class) @RequestBody AfirmaForm afirmaForm, BindingResult bindingResult) {
 		DataTablesOutput<PlatformMonitoriza> dtOutput = new DataTablesOutput<>();
 		PlatformMonitoriza platformAfirma = null;
+		List<PlatformMonitoriza> listNewAfirma = new ArrayList<PlatformMonitoriza>();
 		
-		if (afirmaForm.getIdPlatform() != null) {
-			platformAfirma = platformService.getPlatformById(afirmaForm.getIdPlatform());
+		if (bindingResult.hasErrors()) {
+			listNewAfirma = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
+					.collect(Collectors.toList());
+			JSONObject json = new JSONObject();
+			for (FieldError o : bindingResult.getFieldErrors()) {
+				json.put(o.getField() + "_span", o.getDefaultMessage());
+			}
+			dtOutput.setError(json.toString());
 		} else {
-			platformAfirma = new PlatformMonitoriza();
+			try {
+				if (afirmaForm.getIdPlatform() != null) {
+					platformAfirma = platformService.getPlatformById(afirmaForm.getIdPlatform());
+				} else {
+					platformAfirma = new PlatformMonitoriza();
+				}
+		
+				platformAfirma.setHost(afirmaForm.getHost());
+				platformAfirma.setName(afirmaForm.getName());
+				platformAfirma.setOcspContext(afirmaForm.getOcspContext());
+				platformAfirma.setPort(afirmaForm.getPort());
+				platformAfirma.setServiceContext(afirmaForm.getServiceContext());
+				CPlatformType afirmaType = new CPlatformType();
+				afirmaType.setIdPlatformType(IPlatformService.ID_PLATFORM_TYPE_AFIRMA);
+				platformAfirma.setPlatformType(afirmaType);
+		
+				PlatformMonitoriza afirma = platformService.savePlatform(platformAfirma);
+				
+				listNewAfirma.add(afirma);
+			}catch(Exception e) {
+				listNewAfirma = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
+						.collect(Collectors.toList());
+				throw e;
+			}
 		}
 		
-		platformAfirma.setHost(afirmaForm.getHost());
-		platformAfirma.setName(afirmaForm.getName());
-		platformAfirma.setOcspContext(afirmaForm.getOcspContext());
-		platformAfirma.setPort(afirmaForm.getPort());
-		platformAfirma.setServiceContext(afirmaForm.getServiceContext());
-		CPlatformType afirmaType = new CPlatformType();
-		afirmaType.setIdPlatformType(IPlatformService.ID_PLATFORM_TYPE_AFIRMA);
-		platformAfirma.setPlatformType(afirmaType);		
-
-		PlatformMonitoriza afirma = platformService.savePlatform(platformAfirma);
-		List<PlatformMonitoriza> listNewAfirma = new ArrayList<PlatformMonitoriza>();
-		listNewAfirma.add(afirma);
 		dtOutput.setData(listNewAfirma);
 
 		return dtOutput;
 
-    }
+	}
 
 }

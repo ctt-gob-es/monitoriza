@@ -7,10 +7,10 @@
 					<label for="name" class="col-form-label" th:text="#{form.user.name}"></label>
 					<script th:inline="javascript">
 						/*<![CDATA[*/
-						    var message = /*[[#{form.user.name.pattern}]]*/ 'default';
+						    var messageName = /*[[#{form.user.name.pattern}]]*/ 'default';
 						/*]]>*/
 					</script>
-					<input onblur="validate(this,message);" type="text" id="name" th:field="*{name}" style="overflow:hidden" class="form-control" required pattern=".{3,15}" />
+					<input onblur="validate(this,messageName);" type="text" id="name" th:field="*{name}" style="overflow:hidden" class="form-control" required pattern=".{3,15}" />
 					<div id="invalid-name" class="invalid-feedback" ></div>
 				
 				<div style="clear:both;"/>
@@ -19,8 +19,12 @@
 			<div class="form-group-modal">
 				
 					<label for="surnames" class="col-form-label" th:text="#{form.user.surnames}"></label>
-				
-					<input type="text" id="surnames" th:field="*{surnames}" style="overflow:hidden" class="form-control" required pattern=".{3,30}"/>
+					<script th:inline="javascript">
+						/*<![CDATA[*/
+						    var messageSurname = /*[[#{form.user.surnames.pattern}]]*/ 'default';
+						/*]]>*/
+					</script>
+					<input onblur="validate(this,messageSurname);" type="text" id="surnames" th:field="*{surnames}" style="overflow:hidden" class="form-control" required pattern=".{3,30}"/>
 					<div id="invalid-surnames" class="invalid-feedback" ></div>
 				
 				<div style="clear:both;"/>
@@ -29,8 +33,12 @@
 			<div class="form-group-modal">
 				
 					<label for="login" class="col-form-label" th:text="#{form.user.login}"></label>
-				
-					<input type="text" id="login" th:field="*{login}" style="overflow:hidden" class="form-control" required pattern=".{5,30}"/>
+					<script th:inline="javascript">
+						/*<![CDATA[*/
+						    var messageLogin = /*[[#{form.user.login.pattern}]]*/ 'default';
+						/*]]>*/
+					</script>
+					<input onblur="validate(this,messageLogin);" type="text" id="login" th:field="*{login}" style="overflow:hidden" class="form-control" required pattern=".{5,30}"/>
 					<div id="invalid-login" class="invalid-feedback" ></div>
 				
 				<div style="clear:both;"/>
@@ -39,8 +47,12 @@
 			<div class="form-group-modal">
 				
 					<label for="password" class="col-form-label" th:text="#{form.user.password}"></label>
-				
-					<input autocomplete="new-password" type="password" id="password" th:field="*{password}" style="overflow:hidden" class="form-control" required pattern=".{7,30}"/>
+					<script th:inline="javascript">
+						/*<![CDATA[*/
+						    var messagePassword = /*[[#{form.user.password.pattern}]]*/ 'default';
+						/*]]>*/
+					</script>
+					<input onblur="validate(this,messagePassword);" autocomplete="new-password" type="password" id="password" th:field="*{password}" style="overflow:hidden" class="form-control" pattern=".{7,30}"/>
 					<div id="invalid-password" class="invalid-feedback" ></div>
 				
 				<div style="clear:both;"/>
@@ -48,12 +60,58 @@
 			
 			<div class="form-group-modal">
 				
-					<label for="email" class="col-form-label" th:text="#{form.user.email}"></label>
+					<label for="confirmPassword" class="col-form-label" th:text="#{form.user.confirmPassword}"></label>
+					<input onblur="validatePassword();" type="password" id="confirmPassword" th:field="*{confirmPassword}" style="overflow:hidden" class="form-control" pattern=".{7,30}"/>
+					<div id="invalid-confirmPassword" class="invalid-modal" ></div>
 				
-					<input type="email" id="email" th:field="*{email}" style="overflow:hidden" class="form-control" required/>
+				<div style="clear:both;"/>
+			</div>
+			
+			<div class="form-group-modal">
+				
+					<label for="email" class="col-form-label" th:text="#{form.user.email}"></label>
+					<script th:inline="javascript">
+						/*<![CDATA[*/
+						    var messageEmail = /*[[#{form.user.email.pattern}]]*/ 'default';
+						/*]]>*/
+					</script>
+					<input onblur="validate(this,messageEmail);" type="email" id="email" th:field="*{email}" style="overflow:hidden" class="form-control" required/>
 					<div id="invalid-email" class="invalid-feedback" ></div>
 				
 				<div style="clear:both;"/>
 			</div>
 							
 </form>
+
+<script th:inline="javascript">
+
+	$(document).ready(function() {
+		var action = /*[[${action}]]*/;
+		
+		if (action == 'edit'){
+			$('#password').removeAttr('required');
+			$('#confirmPassword').removeAttr('required');
+		} else if (action == 'add'){
+			$('#password').prop('required',true);
+			$('#confirmPassword').prop('required',true);
+		} else{
+			$('#password').prop('required',true);
+			$('#confirmPassword').prop('required',true);
+		}
+		
+	});
+	
+	function validateConfirmPassword(){
+		
+		var messageConfirmPassword = /*[[#{form.user.confirmPassword.pattern}]]*/ 'default';
+		if ($('#password').val() != $('#confirmPassword').val()){
+			$('#invalid-confirmPassword').html(messageConfirmPassword);
+			$('#invalid-confirmPassword').addClass("invalid-modal");
+		}else{
+			$('#invalid-confirmPassword').html('');
+			$('#invalid-confirmPassword').removeClass("invalid-modal");
+		}
+		
+	}
+
+</script>

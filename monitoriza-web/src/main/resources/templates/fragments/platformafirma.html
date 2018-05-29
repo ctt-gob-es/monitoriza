@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container-fluid" id="tablePlatform">
 	<h4 class="c-grey-900 mT-10 mB-30" th:text="#{platform.afirma.admin.title}"></h4>
 	<div class="row">
 		<div class="col-md-12">
@@ -27,7 +27,6 @@
 $(document).ready(function() {
 	var actionSave = /*[[@{/saveafirma}]]*/;
 	var actionDelete = /*[[@{/deleteafirma}]]*/;
-	var actionSave = /*[[@{/saveafirma}]]*/;
 	var getafirmas = /*[[@{/afirmadatatable}]]*/;
 	var editTemplate = /*[[@{/editafirma}]]*/;
 	var addTemplate = /*[[@{/addafirma}]]*/;
@@ -137,29 +136,69 @@ $(document).ready(function() {
 		        	$('#afirmaForm').addClass('was-validated');
 		            break;
 		        case 'edit':
-		            $.ajax(actionSave, {
-		            	dataType : 'json',
-		                contentType:'application/json',
-		                data: JSON.stringify(data),
-		                type:'POST',
-		                success: function(data){
-		                   
-		                	// Se oculta la capa 'cargando...'
-		                	hide();
-		                    tbl.row(data.rowindex).data(data.data).draw();
-		                    
-		                    $('#altEditor-modal .modal-body .alert').remove();
-		                    $('#altEditor-modal').modal('hide');
-		                },
-		                error:function(){}
-		            });
-		            break;
+		        	if ($('#afirmaForm')[0].checkValidity() === false) {
+		        		// Se oculta la capa 'cargando...'
+		        		hide();
+		                event.stopPropagation();
+		                
+		                $('#afirmaForm *').filter(':input').each(function(){
+		            	    		            	    
+		            	    if(!$(this).checkValidity())
+		            	    {
+		            	  	 $("#invalid-" + $(this).attr('id')).html();
+		            	  	 $("#" + $(this).attr('id')).addClass("is-invalid");
+		            	    } else {
+		            	  	 $("#" + $(this).attr('id')).removeClass("is-invalid");
+		            	    }
+		            	    
+		            	});
+		                
+		                // Esto es necesario para forzar que se muestren mensajes de validación de cliente
+		                $('<input type="submit">').hide().appendTo($('#afirmaForm')).click().remove();
+		            } else {
+		            	$.ajax(actionSave, {
+			            	dataType : 'json',
+			            	contentType:'application/json',
+			                data : JSON.stringify(data),
+			                type:'POST',
+			                success: function(data){
+			                  
+			            		// Se oculta la capa 'cargando...'
+			            		hide();
+			                    tbl.row.add($(data.data)).draw(false);
+			                    		                    
+			                    $('#altEditor-modal .modal-body .alert').remove();
+			                    $('#altEditor-modal').modal('hide');
+			                    		                    
+			                },
+			                error:function(data){
+			                	
+			                	// Se oculta la capa 'cargando...'
+			                	hide();
+			                	// Se eliminan los posibles errores anteriores...
+			                	clearValidationResult('afirmaForm');
+			                	// Se obtiene el JSON de los campos con errores de validación
+			                	// y se modifican los estilos/añaden mensajes
+			                	var validation = $(data)["0"].responseJSON;
+			                	drawValidationResult(validation.fieldErrors);
+			              
+			                }
+			            });
+		            }
+		        	$('#afirmaForm').addClass('was-validated');
+	            	break;
 		        case 'delete':
 		            $.ajax(actionDelete,{
 		            	data:$.param({'id':idPlatform, 'index':rowindex}),
 		                type:'POST',
 		                success: function(data){
 		                    
+		                	if (data == "-1" && $('#errorPlatform').length == 0){
+		                		$('#tablePlatform').append('<div id="errorPlatform" class="alert alert-danger" role="alert"><strong>La plataforma est&aacute; siendo utilizada!</strong></div>');
+		                	}else{
+								$('#errorPlatform').remove();
+							}
+		                	
 		                	// Se oculta la capa 'cargando...'
 		                	hide();
 		                    tbl.row(data.index).remove().draw();
