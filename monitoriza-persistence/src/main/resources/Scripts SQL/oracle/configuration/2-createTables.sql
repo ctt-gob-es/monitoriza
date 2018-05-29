@@ -95,7 +95,11 @@ CREATE TABLE "SERVICE_MONITORIZA" (
 	"ID_TIMER_SERVICE" Number(19,0) NOT NULL,
 	"ID_ALARM_SERVICE" Number(19,0) NOT NULL,
 	"ID_PLATFORM_SERVICE" Number(19,0),
+<<<<<<< HEAD
 	"SERVICE_TYPE" VARCHAR2(100 BYTE) NOT NULL
+=======
+	"SERVICE_TYPE" Varchar2(100) NOT NULL
+>>>>>>> ccd0c109d062de63ebfbcdb0af600ff313e67d99
 )
 TABLESPACE MONIT_CONFIGURACION_TABLESPACE INITRANS 1 MAXTRANS 255 NOCACHE;
 ALTER TABLE "SERVICE_MONITORIZA" ADD CONSTRAINT "ID_SERVICE" PRIMARY KEY ("ID_SERVICE");
@@ -109,8 +113,12 @@ COMMENT ON COLUMN "SERVICE_MONITORIZA"."DEGRADED_THRESHOLD" IS 'Valor que repres
 COMMENT ON COLUMN "SERVICE_MONITORIZA"."LOST_THRESHOLD" IS 'Valor que representa el tiempo máximo en milisegundos que pueden tardar de media las peticiones a este servicio antes de que sea considerado "perdido".';
 COMMENT ON COLUMN "SERVICE_MONITORIZA"."ID_TIMER_SERVICE" IS 'Identificador del timer asociad a este servicio.';
 COMMENT ON COLUMN "SERVICE_MONITORIZA"."ID_ALARM_SERVICE" IS 'Identificador de la alarma asociada a este servicio.';
+<<<<<<< HEAD
 COMMENT ON COLUMN "SERVICE_MONITORIZA"."ID_PLATFORM_SERVICE" IS 'Identificador de la plataforma asociada a este servicio.';
 COMMENT ON COLUMN "SERVICE_MONITORIZA"."SERVICE_TYPE" IS 'Tipo del servicio.';
+=======
+COMMENT ON COLUMN "SERVICE_MONITORIZA"."SERVICE_TYPE" IS 'Valor del tipo de servicio.';
+>>>>>>> ccd0c109d062de63ebfbcdb0af600ff313e67d99
 
 
 -- Table ALARM_MONITORIZA
