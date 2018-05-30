@@ -24,6 +24,8 @@
  */
 package es.gob.monitoriza.form;
 
+import java.sql.Time;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -110,6 +112,12 @@ public class ServiceForm {
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.service.serviceType.notempty}")
 	@Size(min = 1, max = 30, groups = ThenCheckIt.class)
 	private String serviceType;
+	
+	private Time timeoutTime;
+	
+	private Time degradedThresholdTime;
+	
+	private Time lostThresholdTime;
 
 	public Long getIdService() {
 		return idService;
@@ -204,7 +212,47 @@ public class ServiceForm {
 	public void setAlarm(Long alarm) {
 		this.alarm = alarm;
 	}
-	
-	
+
+	/**
+	 * @return the timeoutTime
+	 */
+	public Time getTimeoutTime() {
+		return timeoutTime;
+	}
+
+	/**
+	 * @param timeoutTime the timeoutTime to set
+	 */
+	public void setTimeoutTime(Time timeoutTime) {
+		this.timeoutTime = timeoutTime;
+	}
+
+	/**
+	 * @return the degradedThresholdTime
+	 */
+	public Time getDegradedThresholdTime() {
+		return degradedThresholdTime;
+	}
+
+	/**
+	 * @param degradedThresholdTime the degradedThresholdTime to set
+	 */
+	public void setDegradedThresholdTime(Time degradedThresholdTime) {
+		this.degradedThresholdTime = degradedThresholdTime;
+	}
+
+	/**
+	 * @return the lostThresholdTime
+	 */
+	public Time getLostThresholdTime() {
+		return lostThresholdTime;
+	}
+
+	/**
+	 * @param lostThresholdTime the lostThresholdTime to set
+	 */
+	public void setLostThresholdTime(Time lostThresholdTime) {
+		this.lostThresholdTime = lostThresholdTime;
+	}
 
 }

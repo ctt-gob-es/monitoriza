@@ -24,40 +24,48 @@
  */
 package es.gob.monitoriza.form;
 
+import java.sql.Time;
+import java.util.Date;
+
 import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import es.gob.monitoriza.rest.exception.CheckItFirst;
 import es.gob.monitoriza.rest.exception.ThenCheckIt;
 
-/** 
- * <p>Class .</p>
- * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+/**
+ * <p>
+ * Class .
+ * </p>
+ * <b>Project:</b>
+ * <p>
+ * Application for monitoring services of @firma suite systems.
+ * </p>
+ * 
  * @version 1.0, 8 may. 2018.
  */
 public class TimerForm {
 
 	/**
-	 * Attribute that represents the value of the primary key as a hidden input in the form. 
+	 * Attribute that represents the value of the primary key as a hidden input
+	 * in the form.
 	 */
 	private Long idTimer;
-	
+
 	/**
-	 * Attribute that represents the name of the timer. 
+	 * Attribute that represents the name of the timer.
 	 */
-	@NotBlank(groups=CheckItFirst.class, message="{form.valid.timer.name.notempty}")
-	@Size(min=5, max=30, groups=ThenCheckIt.class)
+	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.timer.name.notempty}")
+	@Size(min = 5, max = 30, groups = ThenCheckIt.class)
 	private String name;
-	
-	/**
-	 * Attribute that represents. 
-	 */
-	@NotNull(message="{form.valid.timer.frequency.notempty}")
+
 	private Long frequency;
+
+	private Time frequencyTime;
 
 	/**
 	 * Gets the value of the attribute {@link #idTimer}.
+	 * 
 	 * @return the value of the attribute {@link #idTimer}.
 	 */
 	public Long getIdTimer() {
@@ -66,7 +74,9 @@ public class TimerForm {
 
 	/**
 	 * Sets the value of the attribute {@link #idTimer}.
-	 * @param isBlockedParam The value for the attribute {@link #idTimer}.
+	 * 
+	 * @param isBlockedParam
+	 *            The value for the attribute {@link #idTimer}.
 	 */
 	public void setIdTimer(Long idTimer) {
 		this.idTimer = idTimer;
@@ -74,6 +84,7 @@ public class TimerForm {
 
 	/**
 	 * Gets the value of the attribute {@link #name}.
+	 * 
 	 * @return the value of the attribute {@link #name}.
 	 */
 	public String getName() {
@@ -82,7 +93,9 @@ public class TimerForm {
 
 	/**
 	 * Sets the value of the attribute {@link #name}.
-	 * @param isBlockedParam The value for the attribute {@link #name}.
+	 * 
+	 * @param isBlockedParam
+	 *            The value for the attribute {@link #name}.
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -90,6 +103,7 @@ public class TimerForm {
 
 	/**
 	 * Gets the value of the attribute {@link #frequency}.
+	 * 
 	 * @return the value of the attribute {@link #frequency}.
 	 */
 	public Long getFrequency() {
@@ -98,9 +112,27 @@ public class TimerForm {
 
 	/**
 	 * Sets the value of the attribute {@link #frequency}.
-	 * @param isBlockedParam The value for the attribute {@link #frequency}.
+	 * 
+	 * @param isBlockedParam
+	 *            The value for the attribute {@link #frequency}.
 	 */
 	public void setFrequency(Long frequency) {
 		this.frequency = frequency;
 	}
+
+	/**
+	 * @return the frequencyTime
+	 */
+	public Time getFrequencyTime() {
+		return frequencyTime;
+	}
+
+	/**
+	 * @param frequencyTime
+	 *            the frequencyTime to set
+	 */
+	public void setFrequencyTime(Time frequencyTime) {
+		this.frequencyTime = frequencyTime;
+	}
+
 }

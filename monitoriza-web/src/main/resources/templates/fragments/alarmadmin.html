@@ -50,6 +50,7 @@
 					</div>
 					
 					<button id="alarmBtn" type="submit" class="btn btn-primary">Guardar</button>
+					<button id="cleanBtn" class="btn btn-primary" onclick="cleanForm('#alarmForm');">Limpiar formulario</button>
 				</form>
 			</div>
 		</div>
@@ -82,6 +83,7 @@
 							required></div>
 					</div>
 					<button id="mailBtn" type="submit" class="btn btn-primary">Guardar</button>
+					<button id="cleanBtn" class="btn btn-primary" onclick="cleanForm('#mailForm');">Limpiar formulario</button>
 				</form>
 			</div>
 		</div>
@@ -307,7 +309,7 @@ $(document).ready(function() {
 		        case 'delete':
 		        	var type = $('form[name="altEditor-form"] input').attr('id');
 		        	if (type == 'idAlarm'){
-		        		$.ajax(actionDeleteMail,{
+		        		$.ajax(actionDeleteAlarm,{
 			            	data:$.param({'id':idAlarm, 'index':rowindex}),
 			                type:'POST',
 			                success: function(data){
@@ -332,7 +334,7 @@ $(document).ready(function() {
 			                	
 			                	// Se oculta la capa 'cargando...'
 			                	hide();
-			                    tblMail.row(data.index).remove().draw();
+			                    tblAlarm.row(data.index).remove().draw();
 			                    
 			                    $('#altEditor-modal .modal-body .alert').remove();
 			                    $('#altEditor-modal').modal('hide');
@@ -502,10 +504,11 @@ $(document).ready(function() {
 						  });
 					  }else{
 						  $("#alarmForm")[0].reset();
-						  $("#alarmForm select").select2().val('').change();
+						  
 						  $('#alarmForm *').filter('span').each(function(){
 								$(this).text('');
 							});
+						$("#alarmForm select").select2().val('').change();
 					  }
 					  
 					  hide();
@@ -538,5 +541,19 @@ $(document).ready(function() {
 	});
 		
 });
+
+function cleanForm(f){
+	
+	$(f + ' *').filter(':input').each(function(){
+		$(this).val('');
+	});
+	
+	$(f + ' *').filter('span').each(function(){
+		$(this).text('');
+	});
+	
+	$(f + " select").select2().val('').change();
+
+}
 
 </script>
