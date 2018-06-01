@@ -37,10 +37,13 @@ public class SslForm {
 	
 	private String alias;
 	
+	private String issuer;
+	
+	private String subject;
+	
 	private MultipartFile file;
 	
 	private byte[] certBytes;
-
 	
 	public Long getIdSystemCertificate() {
 		return idSystemCertificate;
@@ -57,7 +60,26 @@ public class SslForm {
 	public void setAlias(String alias) {
 		this.alias = alias;
 	}
+		
+	
+	public String getIssuer() {
+		return issuer;
+	}
 
+	
+	public void setIssuer(String issuer) {
+		this.issuer = issuer;
+	}
+
+	
+	public String getSubject() {
+		return subject;
+	}
+
+	
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
 
 	public MultipartFile getFile() {
 		return file;

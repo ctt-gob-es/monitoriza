@@ -34,8 +34,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitori
 import es.gob.monitoriza.persistence.configuration.model.repository.CPlatformTypeRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.PlatformRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.PlatformDatatableRepository;
-import es.gob.monitoriza.persistence.configuration.model.specification.PlatformSpecification;
-import es.gob.monitoriza.persistence.configuration.model.specification.SearchCriteria;
+import es.gob.monitoriza.persistence.configuration.model.specification.CPlatformTypeSpecification;
 import es.gob.monitoriza.service.IPlatformService;
 
 
@@ -125,17 +124,17 @@ public class PlatformService implements IPlatformService {
 
 	/**
 	 * {@inheritDoc}
-	 * @see es.gob.monitoriza.service.IPlatformService#findAllBySpec(org.springframework.data.jpa.datatables.mapping.DataTablesInput, es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza)
+	 * @see es.gob.monitoriza.service.IPlatformService#findAllAfirma(org.springframework.data.jpa.datatables.mapping.DataTablesInput, es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza)
 	 */
 	@Override
 	public DataTablesOutput<PlatformMonitoriza> findAllAfirma(DataTablesInput input) {
 				
 		CPlatformType platformType = new CPlatformType();
 		platformType.setIdPlatformType(ID_PLATFORM_TYPE_AFIRMA);
-		PlatformSpecification spec = 
-			      new PlatformSpecification(new SearchCriteria("platformType", "=", platformType));
+		CPlatformTypeSpecification byPlatformType = new CPlatformTypeSpecification(platformType);
 		
-		return dtRepository.findAll(input, spec);
+		return dtRepository.findAll(input, byPlatformType);
+				
 	}
 
 }

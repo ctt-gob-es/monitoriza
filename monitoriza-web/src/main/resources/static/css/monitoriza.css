@@ -106,18 +106,25 @@
   font-weight:bold;
 }
 
-<<<<<<< HEAD
-/* PersonalizaciÃ³n del botÃ³n 'browse file' */
+
+/* Personalización del botón 'browse file' */
 .custom-file-input ~ .custom-file-label::after {
     content: "Elegir";
 }
 
-=======
->>>>>>> f5d6d93f20bcdda29891f2cd6b827f265fcd31d2
+/* Visualización de errores */
 .has-error {
   color: #a94442;
   border-color: #a94442;
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075);
   -webkit-box-shadow: inset 0 1px 1px rgba(0, 0, 0, .075), 0 0 6px #ce8483;
   background-color: #f2dede;
+}
+
+.invalid-modal {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 80%;
+    color: #f44336;
 }

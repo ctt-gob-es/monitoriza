@@ -94,6 +94,11 @@ public class PlatformMonitoriza implements Serializable {
 	private String rfc3161Context;
 	
 	/**
+	 * Attribute that represents the port path for the RFC3161 service of ts@. 
+	 */
+	private String rfc3161Port;
+	
+	/**
 	 * Attribute that represents the type of platform. 
 	 */
 	private CPlatformType platformType;
@@ -274,6 +279,28 @@ public class PlatformMonitoriza implements Serializable {
 	// because Hibernate JPA needs not final access methods.
 	public void setRfc3161Context(String rfc3161Context) {
 		this.rfc3161Context = rfc3161Context;
+	}
+	
+	/**
+	 * Gets the value of the attribute {@link #rfc3161Port}.
+	 * @return the value of the attribute {@link #rfc3161Port}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@Column(name = "RFC3161_PORT", nullable = true, length = NumberConstants.NUM100, unique = true)
+	@JsonView(DataTablesOutput.View.class)	
+	public String getRfc3161Port() {
+		return rfc3161Port;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #rfc3161Port}.
+	 * @param isBlockedParam The value for the attribute {@link #rfc3161Port}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setRfc3161Port(String rfc3161Port) {
+		this.rfc3161Port = rfc3161Port;
 	}
 
 	/**

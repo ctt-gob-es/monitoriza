@@ -28,7 +28,6 @@
 $(document).ready(function() {
 	var actionSave = /*[[@{/saveuser}]]*/;
 	var actionDelete = /*[[@{/deleteuser}]]*/;
-	var actionSave = /*[[@{/saveuser}]]*/;
 	var getusers = /*[[@{/usersdatatable}]]*/;
 	var editTemplate = /*[[@{/edituser}]]*/;
 	var addTemplate = /*[[@{/adduser}]]*/;
@@ -104,57 +103,111 @@ $(document).ready(function() {
 		            	    
 		            	});
 		                
-		                // Esto es necesario para forzar que se muestren mensajes de validación de cliente
+		                // Esto es necesario para forzar que se muestren mensajes de validaci�n de cliente
 		                $('<input type="submit">').hide().appendTo($('#userForm')).click().remove();
 		            } else {
-		            	$.ajax(actionSave, {
-			            	dataType : 'json',
-			            	contentType:'application/json',
-			                data : JSON.stringify(data),
-			                type:'POST',
-			                success: function(data){
-			                  
-			            		// Se oculta la capa 'cargando...'
-			            		hide();
-			                    tbl.row.add($(data.data)).draw(false);
-			                    		                    
-			                    $('#altEditor-modal .modal-body .alert').remove();
-			                    $('#altEditor-modal').modal('hide');
-			                    		                    
-			                },
-			                error:function(data){
-			                	
-			                	// Se oculta la capa 'cargando...'
-			                	hide();
-			                	// Se eliminan los posibles errores anteriores...
-			                	clearValidationResult('userForm');
-			                	// Se obtiene el JSON de los campos con errores de validación
-			                	// y se modifican los estilos/añaden mensajes
-			                	var validation = $(data)["0"].responseJSON;
-			                	drawValidationResult(validation.fieldErrors);
-			              
-			                }
-			            });
+		            	if ($('#password').val() != $('#confirmPassword').val()){
+		            		$('#userForm').append('<div id="errorModalUser3" class="alert alert-danger" role="alert"><strong>El campo Confirmar contrase&ntilde;a es obligatorio y debe coincidir con el campo Contrase&ntilde;a.</strong></div>');
+		            	}else{
+		            		$.ajax(actionSave, {
+				            	dataType : 'json',
+				            	contentType:'application/json',
+				                data : JSON.stringify(data),
+				                type:'POST',
+				                success: function(data){
+				                	var errores = JSON.parse(data.error);
+				  				  	
+				  				  	if (data.error != null){
+										$('#userForm').append('<div id="errorModalUser2" class="alert alert-danger" role="alert"><strong>'+ errores["password_span"] +'</strong></div>');
+				  				  	}else{
+					  				  	tbl.row.add($(data.data)).draw(false);
+		    		                    
+					                    $('#altEditor-modal .modal-body .alert').remove();
+					                    $('#altEditor-modal').modal('hide');
+										
+										if ($('#errorModalUser').length > 0){
+											$('#errorModalUser').remove();
+										}
+										if ($('#errorModalUser2').length > 0){
+											$('#errorModalUser2').remove();
+										}
+										if ($('#errorModalUser3').length > 0){
+											$('#errorModalUser3').remove();
+										}
+				  				  	}
+									
+				            		// Se oculta la capa 'cargando...'
+				            		hide();
+				                    
+				                },
+				                error:function(data){
+				                	hide();
+				                	$('#userForm').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>Hay un usuario con el mismo login!</strong></div>');
+				                }
+				            });
+		            	}
 		            }
 		        	$('#userForm').addClass('was-validated');
 		            break;
 		        case 'edit':
-		            $.ajax(actionSave, {
-		            	dataType : 'json',
-		                contentType:'application/json',
-		                data: JSON.stringify(data),
-		                type:'POST',
-		                success: function(data){
-		                   
-		                	// Se oculta la capa 'cargando...'
-		                	hide();
-		                    tbl.row(data.rowindex).data(data.data).draw();
-		                    
-		                    $('#altEditor-modal .modal-body .alert').remove();
-		                    $('#altEditor-modal').modal('hide');
-		                },
-		                error:function(){}
-		            });
+		        	if ($('#userForm')[0].checkValidity() === false) {
+		        		// Se oculta la capa 'cargando...'
+		        		hide();
+		                event.stopPropagation();
+		                
+		                $('#userForm *').filter(':input').each(function(){
+		            	    		            	    
+		                	if(!$(this)[0].checkValidity())
+		            	    {
+		            	  	 $("#invalid-" + $(this).attr('id')).html();
+		            	  	 $("#" + $(this).attr('id')).addClass("is-invalid");
+		            	    } else {
+		            	  	 $("#" + $(this).attr('id')).removeClass("is-invalid");
+		            	    }
+		            	    
+		            	});
+		                
+		                // Esto es necesario para forzar que se muestren mensajes de validaci�n de cliente
+		                $('<input type="submit">').hide().appendTo($('#userForm')).click().remove();
+		            } else {
+		            	if ($('#password').val() != $('#confirmPassword').val()){
+		            		$('#userForm').append('<div id="errorModalUser3" class="alert alert-danger" role="alert"><strong>El campo Confirmar contrase&ntilde;a es obligatorio y debe coincidir con el campo Contrase&ntilde;a.</strong></div>');
+		            	}else{
+			            	var formData = JSON.stringify($("#userForm").serializeJSON());
+			            	
+			            	$.ajax(actionSave, {
+				            	dataType : 'json',
+				            	contentType:'application/json',
+				                data : formData,
+				                type:'POST',
+				                success: function(data){
+				                  
+				            		// Se oculta la capa 'cargando...'
+				            		hide();
+				                    tbl.row.add($(data.data)).draw(false);
+				                    		                    
+				                    $('#altEditor-modal .modal-body .alert').remove();
+				                    $('#altEditor-modal').modal('hide');
+				                    
+				                    if ($('#errorModalUser').length > 0){
+				   						$('#errorModalUser').remove();
+				   				    }
+				                    if ($('#errorModalUser2').length > 0){
+				   						$('#errorModalUser2').remove();
+				   				    }
+				                    if ($('#errorModalUser3').length > 0){
+				   						$('#errorModalUser3').remove();
+				   				    }
+				                    
+				                },
+				                error:function(data){
+				                	hide();
+				                	$('#userForm').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>Hay un usuario con el mismo login!</strong></div>');
+				                }
+				            });
+		            	}
+		            }
+		        	$('#userForm').addClass('was-validated');
 		            break;
 		        case 'delete':
 		            $.ajax(actionDelete,{
@@ -174,7 +227,7 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acción "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acci�n "'+accion+'" no autorizada!</strong></div>');
 		            break;
 		    }
 		});

@@ -29,9 +29,13 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
+import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.repository.SystemCertificateRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.SystemCertificateDatatableRepository;
+import es.gob.monitoriza.persistence.configuration.model.specification.CPlatformTypeSpecification;
+import es.gob.monitoriza.persistence.configuration.model.specification.KeystoreSpecification;
 import es.gob.monitoriza.service.ISystemCertificateService;
 
 
@@ -114,6 +118,36 @@ public class SystemCertificateService implements ISystemCertificateService {
 	public DataTablesOutput<SystemCertificate> findAll(DataTablesInput input) {
 		
 		return dtRepository.findAll(input);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.ISystemCertificateService#findAllSsl(org.springframework.data.jpa.datatables.mapping.DataTablesInput, es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate)
+	 */
+	@Override
+	public DataTablesOutput<SystemCertificate> findAllSsl(DataTablesInput input) {
+				
+		Keystore keystoreSsl = new Keystore();
+		keystoreSsl.setIdKeystore(Keystore.ID_TRUSTSTORE_SSL);
+		KeystoreSpecification byKeystoreSsl = new KeystoreSpecification(keystoreSsl);
+		
+		return dtRepository.findAll(input, byKeystoreSsl);
+		
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.ISystemCertificateService#findAllAuth(org.springframework.data.jpa.datatables.mapping.DataTablesInput, es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate)
+	 */
+	@Override
+	public DataTablesOutput<SystemCertificate> findAllAuth(DataTablesInput input) {
+				
+		Keystore keystoreAuth = new Keystore();
+		keystoreAuth.setIdKeystore(Keystore.ID_AUTHCLIENT_RFC3161);
+		KeystoreSpecification byKeystoreAuth = new KeystoreSpecification(keystoreAuth);
+		
+		return dtRepository.findAll(input, byKeystoreAuth);
+		
 	}
 
 }

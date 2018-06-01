@@ -26,6 +26,7 @@ import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.CertificateExpiredException;
@@ -39,13 +40,11 @@ import javax.crypto.spec.SecretKeySpec;
 
 import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.utils.CryptographyValidationUtils;
 import es.gob.monitoriza.i18n.LanguageWeb;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
-import es.gob.monitoriza.service.IKeystoreService;
 
 /**
  * <p>Class that manages all the operations related with JCE, JCEKS and PKCS#12 keystores.</p>
@@ -58,22 +57,21 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 * Attribute that represents the Padding algorithm for the AES cipher. 
 	 */
 	private static final String AES_PADDING_ALGORITHM = "AES/ECB/PKCS5Padding";
-	
-	/**
-	 * Attribute that represents the service object for accessing the repository. 
-	 */
-	@Autowired
-	private IKeystoreService keystoreService;
-	
+		
 	/**
 	 * Attribute that represents the AES algorithm name. 
 	 */
 	private static final String AES_ALGORITHM = "AES";
 	
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents the password for the system keystores. 
 	 */
 	private static final String AES_PASSWORD = "ABCDEFGHIJKLMNOP";
+			
+	/**
+	 * Constant attribute that represents the name of the property <code>logSK014</code> belonging to the file core/general_xx_YY.properties.
+	 */
+	private static final String LOG_SK016 = "logSK016";
 	
 	/**
 	 * Constant attribute that represents the name of the property <code>logSK014</code> belonging to the file core/general_xx_YY.properties.
@@ -145,10 +143,10 @@ public class KeystoreFacade implements IKeystoreFacade {
 
 	/**
 	 * {@inheritDoc}
-	 * @see es.gob.afirma.cryptography.keystore.IKeystoreFacade#storeAlias(java.lang.String, java.security.cert.Certificate, java.security.Key)
+	 * @see es.gob.afirma.cryptography.keystore.IKeystoreFacade#storeCertificate(java.lang.String, java.security.cert.Certificate, java.security.Key)
 	 */
 	@Override
-	public final Keystore storeAlias(String alias, Certificate certificate, Key key) throws CryptographyException {
+	public final Keystore storeCertificate(String alias, Certificate certificate, Key key) throws CryptographyException {
 		LOGGER.info(LanguageWeb.getResWebMonitoriza(LOG_SK001));
 		try {
 			// Comprobamos que el certificado no sea nulo
@@ -184,6 +182,37 @@ public class KeystoreFacade implements IKeystoreFacade {
 			throw new CryptographyException(errorMsg, e);
 		} catch (KeyStoreException e) {
 			String errorMsg = LanguageWeb.getFormatResWebMonitoriza(LOG_SK009, new Object[ ] { alias, LanguageWeb.getResWebMonitoriza(keystore.getTokenName()) });
+			LOGGER.error(errorMsg, e);
+			throw new CryptographyException(errorMsg, e);
+		} finally {
+			LOGGER.info(LanguageWeb.getResWebMonitoriza(LOG_SK002));
+		}
+		// Devolvemos los datos en caché actualizados del almacén de claves
+		return keystore;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.crypto.keystore.IKeystoreFacade#updateCertificate(java.lang.String, java.lang.String, java.security.cert.Certificate, java.security.Key)
+	 */
+	@Override
+	public Keystore updateCertificate(String oldEntryAlias, String newEntryAlias) throws CryptographyException {
+		LOGGER.info(LanguageWeb.getResWebMonitoriza(LOG_SK001));
+		try {
+			
+			// Comprobamos que el alias no sea nulo
+			CryptographyValidationUtils.checkIsNotNull(newEntryAlias, LanguageWeb.getResWebMonitoriza(LOG_SK004));
+									
+			// Actualizamos el almacén de claves físicamente. Si la clave es
+			// nula, sólo se insertará el certificado.
+			LOGGER.debug(LanguageWeb.getFormatResWebMonitoriza(LOG_SK007, new Object[ ] { newEntryAlias, keystore.getTokenName() }));
+			updateEntryToKeystore(oldEntryAlias, newEntryAlias);
+		} catch (KeyStoreException e) {
+			String errorMsg = LanguageWeb.getFormatResWebMonitoriza(LOG_SK009, new Object[ ] { newEntryAlias, LanguageWeb.getResWebMonitoriza(keystore.getTokenName()) });
+			LOGGER.error(errorMsg, e);
+			throw new CryptographyException(errorMsg, e);
+		} catch (UnrecoverableKeyException | NoSuchAlgorithmException e) {
+			String errorMsg = LanguageWeb.getFormatResWebMonitoriza(LOG_SK016, new Object[ ] { oldEntryAlias, newEntryAlias, LanguageWeb.getResWebMonitoriza(keystore.getTokenName()) });
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		} finally {
@@ -231,6 +260,53 @@ public class KeystoreFacade implements IKeystoreFacade {
 		
 		keystore.setKeystore(baos.toByteArray());		
 	}
+	
+	/**
+	 * Method that updates an alias entry inside of a keystore.
+	 * @param alias Parameter that represents the alias of the entry to store.
+	 * @param cert Parameter that represents the certificate associated to the new entry.
+	 * @param key Parameter that represents the private key associated to the new entry.
+	 * @throws KeyStoreException If there is some error inserting the entry into the keystore.
+	 * @throws CryptographyException If there is some error decrypting the password of the keystore.
+	 */
+	private Keystore updateEntryToKeystore(String oldEntryAlias, String newEntryAlias) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CryptographyException {
+		char[ ] entryPass = new String(getKeystoreDecodedPassword()).toCharArray();
+		// Cargamos el keystore SSL desde la persistencia
+		KeyStore ks = KeyStore.getInstance(keystore.getKeystoreType());
+		ByteArrayInputStream bais = new ByteArrayInputStream(keystore.getKeystore());
+		try {
+			ks.load(bais, new String(getKeystoreDecodedPassword()).toCharArray());
+		} catch (NoSuchAlgorithmException | CertificateException
+				| IOException e) {
+			LOGGER.error("Error cargando el keystore", e);
+		}
+
+		if (ks.containsAlias(oldEntryAlias)) {
+			if (ks.isCertificateEntry(oldEntryAlias)) {
+				Certificate cert = ks.getCertificate(oldEntryAlias);
+				ks.deleteEntry(oldEntryAlias);
+				ks.setCertificateEntry(newEntryAlias, cert);
+			} else if (ks.isKeyEntry(oldEntryAlias)) {
+				Key key = ks.getKey(oldEntryAlias, entryPass);
+				Certificate[ ] certChain = ks.getCertificateChain(oldEntryAlias);
+				ks.deleteEntry(oldEntryAlias);
+				ks.setKeyEntry(newEntryAlias, key, entryPass, certChain);
+			}
+		}
+		
+		// Establecemos el nuevo valor del almacén SSL
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		try {
+			ks.store(baos, entryPass);
+		} catch (NoSuchAlgorithmException | CertificateException
+				| IOException e) {
+			LOGGER.error("Error modificando el keystore", e);
+		}
+				
+		keystore.setKeystore(baos.toByteArray());
+		
+		return keystore;
+	}
 		
 	/**
 	 * Method that obtains the decoded password of the keystore represented by {@link #keystore}.
@@ -250,5 +326,42 @@ public class KeystoreFacade implements IKeystoreFacade {
 			throw new CryptographyException(errorMsg, e);
 		}
 	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.crypto.keystore.IKeystoreFacade#deleteCertificate(java.lang.String)
+	 */
+	@Override
+	public Keystore deleteCertificate(String alias) throws CryptographyException {
+
+		char[ ] entryPass = new String(getKeystoreDecodedPassword()).toCharArray();
+
+		// Cargamos el keystore SSL desde la persistencia
+		ByteArrayInputStream bais = new ByteArrayInputStream(keystore.getKeystore());
+		try {
+			KeyStore ks = KeyStore.getInstance(keystore.getKeystoreType());
+			ks.load(bais, new String(getKeystoreDecodedPassword()).toCharArray());
+
+			if (ks.containsAlias(alias)) {
+				// Si existe la entrada, la elimino
+				ks.deleteEntry(alias);
+			}
+
+			ByteArrayOutputStream baos = new ByteArrayOutputStream();
+
+			ks.store(baos, entryPass);
+			keystore.setKeystore(baos.toByteArray());
+		} catch (NoSuchAlgorithmException | CertificateException | IOException
+				| KeyStoreException e) {
+			String errorMsg = LanguageWeb.getFormatResWebMonitoriza(LOG_SK009, new Object[ ] { alias, LanguageWeb.getResWebMonitoriza(keystore.getTokenName()) });
+			LOGGER.error(errorMsg, e);
+			throw new CryptographyException(errorMsg, e);
+		} finally {
+			LOGGER.info(LanguageWeb.getResWebMonitoriza(LOG_SK002));
+		}
+
+		return keystore;
+	}
+
 	
 }

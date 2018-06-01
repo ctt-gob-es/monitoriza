@@ -24,6 +24,7 @@
  */
 package es.gob.monitoriza.persistence.configuration.model.repository.datatable;
 
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
@@ -34,5 +35,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitori
  * @version 1.0, 9 abr. 2018.
  */
 public interface PlatformDatatableRepository extends DataTablesRepository<PlatformMonitoriza, Long> {
+	
+	DataTablesOutput<PlatformMonitoriza> findByPlatformTypeIdPlatformType(Long idPlatformType);
 
 }

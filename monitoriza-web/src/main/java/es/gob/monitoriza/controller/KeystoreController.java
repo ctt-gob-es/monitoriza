@@ -39,6 +39,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.form.SslForm;
+import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.service.ISystemCertificateService;
 
 /** 
@@ -68,9 +69,21 @@ public class KeystoreController {
 	 * @return String that represents the name of the view to forward.
 	 */
 	@RequestMapping(value = "ssladmin")
-    public String keystoreadmin(Model model){
+    public String keystoressladmin(Model model){
 						
         return "fragments/ssladmin.html";
+    }
+	
+	/**
+	 * Method that maps the list keystore web requests to the controller and forwards the list of keystores
+	 * to the view.  
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "authadmin")
+    public String keystoreauthadmin(Model model){
+						
+        return "fragments/authadmin.html";
     }
 	
 	/**
@@ -106,6 +119,27 @@ public class KeystoreController {
         
 		return "modal/sslForm.html";
 
+    }
+	
+	/**
+     * Method that maps the edit ssl certificate web request to the controller and loads the ssl certificate to the
+     * backing form.
+     * @param sslId Identifier of the certificate to be edited.
+     * @param model Holder object for model attributes.
+     * @return String that represents the name of the view to forward.
+     */
+    @RequestMapping(value = "editssl", method = RequestMethod.POST)
+    public String editSsl(@RequestParam("id") Long sslId, Model model){
+    	SystemCertificate sslCert = sysCertService.getSystemCertificateById(sslId);
+    	SslForm sslForm = new SslForm();
+    	
+    	sslForm.setAlias(sslCert.getAlias());
+    	sslForm.setIssuer(sslCert.getIssuer());
+    	sslForm.setSubject(sslCert.getSubject());
+    	sslForm.setIdSystemCertificate(sslId);
+ 
+    	model.addAttribute("sslform", sslForm);
+        return "modal/sslEditForm";
     }
 	
 }

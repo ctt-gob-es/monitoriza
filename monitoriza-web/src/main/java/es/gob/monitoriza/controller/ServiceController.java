@@ -68,17 +68,29 @@ public class ServiceController {
 
 	/**
 	 * Attribute that represents the service object for accessing the
-	 * repository.
+	 * platform repository.
 	 */
 	@Autowired
 	private IPlatformService platformService;
 
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * platform timer.
+	 */
 	@Autowired
 	private ITimerMonitorizaService timerService;
 
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * service repository.
+	 */
 	@Autowired
 	private IServiceMonitorizaService serviceService;
 
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * alarm repository.
+	 */
 	@Autowired
 	private IAlarmMonitorizaService alarmService;
 

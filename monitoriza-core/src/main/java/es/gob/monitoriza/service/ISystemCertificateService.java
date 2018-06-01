@@ -75,4 +75,18 @@ public interface ISystemCertificateService {
 	 * @return
 	 */
 	DataTablesOutput<SystemCertificate> findAll(DataTablesInput input);
+	
+	/**
+	 * 
+	 * @param input
+	 * @return
+	 */
+	DataTablesOutput<SystemCertificate> findAllSsl(DataTablesInput input);
+	
+	/**
+	 * 
+	 * @param input
+	 * @return
+	 */
+	DataTablesOutput<SystemCertificate> findAllAuth(DataTablesInput input);
 }

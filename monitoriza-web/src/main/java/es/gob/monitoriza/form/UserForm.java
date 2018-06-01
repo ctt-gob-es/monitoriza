@@ -25,24 +25,14 @@
 package es.gob.monitoriza.form;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import es.gob.monitoriza.constraints.FieldMatch;
 import es.gob.monitoriza.rest.exception.CheckItFirst;
 import es.gob.monitoriza.rest.exception.ThenCheckIt;
 
-/** 
- * <p>Interface that represents the group of validations that must be executed in first place.</p>
- * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 4 abr. 2018.
- */
-interface First{}
-/** 
- * <p>Interface that represents the group of validations that must be executed after first place.</p>
- * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 4 abr. 2018.
- */
-interface Rest{}
-
+@FieldMatch(first = "password", second = "confirmPassword", message = "{form.valid.user.password.confirm}")
 /** 
  * <p>Class that represents the backing form for adding/editing a user.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
@@ -81,7 +71,15 @@ public class UserForm {
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.user.password.notempty}")
     @Size(min=7, max=30, groups=ThenCheckIt.class)
+	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message="{form.valid.user.password.noPattern}", groups=ThenCheckIt.class)
     private String password = "";
+	
+	/**
+	 * Attribute that represents the value of the input password of the user in the form. 
+	 */
+	@NotBlank(groups=CheckItFirst.class, message="{form.valid.user.confirmPassword.notempty}")
+    @Size(min=7, max=30, groups=ThenCheckIt.class)
+    private String confirmPassword = "";
 		
 	/**
 	 * Attribute that represents the value of the input email of the user in the form. 
@@ -185,5 +183,20 @@ public class UserForm {
 	public void setEmail(String email) {
 		this.email = email;
 	}
+
+	/**
+	 * @return the confirmPassword
+	 */
+	public String getConfirmPassword() {
+		return confirmPassword;
+	}
+
+	/**
+	 * @param confirmPassword the confirmPassword to set
+	 */
+	public void setConfirmPassword(String confirmPassword) {
+		this.confirmPassword = confirmPassword;
+	}
 		
+	
 }

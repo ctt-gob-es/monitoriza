@@ -106,6 +106,9 @@ public class ServiceMonitoriza implements Serializable {
 	 */
 	private PlatformMonitoriza platform;
 	
+	/**
+	 * Attribute that represents the type of service. 
+	 */
 	private String serviceType;
 		
 	/**
@@ -326,6 +329,12 @@ public class ServiceMonitoriza implements Serializable {
 		return serviceType;
 	}
 
+	/**
+	 * Sets the value of the attribute {@link #serviceType}.
+	 * @param isBlockedParam The value for the attribute {@link #serviceType}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
 	public void setServiceType(String serviceType) {
 		this.serviceType = serviceType;
 	}

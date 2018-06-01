@@ -41,7 +41,24 @@ public interface IKeystoreFacade {
 	 * @return the updated keystore cache object representation.
 	 * @throws CryptographyException If the method fails.
 	 */
-	Keystore storeAlias(String alias, Certificate certificate, Key key) throws CryptographyException;
-
+	Keystore storeCertificate(String alias, Certificate certificate, Key key) throws CryptographyException;
+	
+	/**
+	 * Method that updates an entry into a keystore.
+	 * @param oldEntryAlias Parameter that represents the old alias of the entry.
+	 * @param newEntryAlias Parameter that represents the new alias of the entry.
+	 * @return the updated keystore cache object representation.
+	 * @throws CryptographyException If the method fails.
+	 */
+	Keystore updateCertificate(String oldEntryAlias, String newEntryAlias) throws CryptographyException;
+	
+	/**
+	 * Method that deletes a certificate entry from a keystore
+	 * @param alias Parameter that represents the alias of the entry.
+	 * @return the updated keystore cache object representation.
+	 * @throws CryptographyException
+	 */
+	Keystore deleteCertificate(String alias) throws CryptographyException;
+	
 	
 }

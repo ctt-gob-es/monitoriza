@@ -25,6 +25,7 @@
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 
@@ -34,7 +35,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitori
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 10 abr. 2018.
  */
-public interface PlatformRepository extends JpaRepository<PlatformMonitoriza, Long> {
+public interface PlatformRepository extends JpaRepository<PlatformMonitoriza, Long>, JpaSpecificationExecutor<PlatformMonitoriza> {
 	
 	/**
 	  * Method that obtains from the persistence a @firma platform identified by its primary key. 
@@ -42,5 +43,6 @@ public interface PlatformRepository extends JpaRepository<PlatformMonitoriza, Lo
 	 * @return Object that represents a @firma platform from the persistence. 
 	 */
 	PlatformMonitoriza findByIdPlatform(Long id);
+	
 
 }
