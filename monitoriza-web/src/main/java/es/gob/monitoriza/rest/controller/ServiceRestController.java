@@ -223,7 +223,7 @@ public class ServiceRestController {
 					.collect(Collectors.toList());
 			JSONObject json = new JSONObject();
 			for (FieldError o : bindingResult.getFieldErrors()) {
-				json.put(o.getField() + "_span", o.getDefaultMessage());
+				json.put(o.getField() + "Timer_span", o.getDefaultMessage());
 			}
 			dtOutput.setError(json.toString());
 		} else {

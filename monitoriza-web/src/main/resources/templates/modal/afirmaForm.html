@@ -80,13 +80,13 @@
 	
 	function validateOCSP(){
 		
-		var messageOCSP = /*[[#{form.platform.ocspcontext.pattern}]]*/ 'default';
+		var messageOCSP = /*[[#{form.platform.ocspContext.pattern}]]*/ 'default';
 		if ($('#ocspContext').val() == '' || ($('#ocspContext').val().length > 50 || $('#ocspContext').val().length < 7)){
-			$('#invalid-ocspContext').html(messageOCSP);
-			$('#invalid-ocspContext').addClass("invalid-modal");
+			$('#invalid-ocspservice').html(messageOCSP);
+			$('#invalid-ocspservice').addClass("invalid-modal");
 		}else{
-			$('#invalid-ocspContext').html('');
-			$('#invalid-ocspContext').removeClass("invalid-modal");
+			$('#invalid-ocspservice').html('');
+			$('#invalid-ocspservice').removeClass("invalid-modal");
 		}
 	}
 

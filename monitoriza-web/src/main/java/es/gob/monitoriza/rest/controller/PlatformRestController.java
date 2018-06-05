@@ -143,7 +143,7 @@ public class PlatformRestController {
 					.collect(Collectors.toList());
 			JSONObject json = new JSONObject();
 			for (FieldError o : bindingResult.getFieldErrors()) {
-				json.put(o.getField() + "_span", o.getDefaultMessage());
+				json.put("invalid-" + o.getField(), o.getDefaultMessage());
 			}
 			dtOutput.setError(json.toString());
 		} else {

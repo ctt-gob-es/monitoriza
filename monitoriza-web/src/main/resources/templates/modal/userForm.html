@@ -52,7 +52,7 @@
 						    var messagePassword = /*[[#{form.user.password.pattern}]]*/ 'default';
 						/*]]>*/
 					</script>
-					<input onblur="validate(this,messagePassword);" autocomplete="new-password" type="password" id="password" th:field="*{password}" style="overflow:hidden" class="form-control" pattern=".{7,30}"/>
+					<input onblur="validate(this,messagePassword);" name="password" type="password" id="password" th:field="*{password}" class="form-control" pattern=".{7,30}" required />
 					<div id="invalid-password" class="invalid-feedback" ></div>
 				
 				<div style="clear:both;"/>
@@ -61,7 +61,7 @@
 			<div class="form-group-modal">
 				
 					<label for="confirmPassword" class="col-form-label" th:text="#{form.user.confirmPassword}"></label>
-					<input onblur="validatePassword();" type="password" id="confirmPassword" th:field="*{confirmPassword}" style="overflow:hidden" class="form-control" pattern=".{7,30}"/>
+					<input onblur="validateConfirmPassword();" type="password" name="confirmPassword" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" pattern=".{7,30}" required />
 					<div id="invalid-confirmPassword" class="invalid-modal" ></div>
 				
 				<div style="clear:both;"/>
@@ -85,33 +85,25 @@
 
 <script th:inline="javascript">
 
-	$(document).ready(function() {
-		var action = /*[[${action}]]*/;
-		
-		if (action == 'edit'){
-			$('#password').removeAttr('required');
-			$('#confirmPassword').removeAttr('required');
-		} else if (action == 'add'){
-			$('#password').prop('required',true);
-			$('#confirmPassword').prop('required',true);
-		} else{
-			$('#password').prop('required',true);
-			$('#confirmPassword').prop('required',true);
-		}
-		
-	});
+function validateConfirmPassword(){
+	debugger;
+	var pass = $('#passwordAdd').val();
+    var repass = $('#confirmPasswordAdd').val();
+	var messageConfirmPassword = /*[[#{form.user.confirmPassword.pattern}]]*/ 'default';
 	
-	function validateConfirmPassword(){
-		
-		var messageConfirmPassword = /*[[#{form.user.confirmPassword.pattern}]]*/ 'default';
-		if ($('#password').val() != $('#confirmPassword').val()){
-			$('#invalid-confirmPassword').html(messageConfirmPassword);
-			$('#invalid-confirmPassword').addClass("invalid-modal");
-		}else{
-			$('#invalid-confirmPassword').html('');
-			$('#invalid-confirmPassword').removeClass("invalid-modal");
-		}
-		
-	}
+	if(($('input[name=password]').val().length == 0) || ($('input[name=confirmPassword]').val().length == 0)){
+		$('#invalid-confirmPassword').html(messageConfirmPassword);
+		$('#invalid-confirmPassword').addClass("invalid-modal");
+    }
+    else if (pass != repass) {
+    	$('#invalid-confirmPassword').html(messageConfirmPassword);
+		$('#invalid-confirmPassword').addClass("invalid-modal");
+    }
+    else {
+    	$('#invalid-confirmPassword').html('');
+		$('#invalid-confirmPassword').removeClass("invalid-modal");
+    }
+	
+}
 
 </script>

@@ -34,6 +34,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.form.UserForm;
+import es.gob.monitoriza.form.UserFormEdit;
+import es.gob.monitoriza.form.UserFormPassword;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 import es.gob.monitoriza.service.IUserMonitorizaService;
 
@@ -73,6 +75,8 @@ public class UserController {
 	 */
 	@RequestMapping(value = "useradmin")
 	public String index(Model model) {
+		model.addAttribute("userFormPassword", new UserFormPassword());
+		model.addAttribute("userformEdit", new UserFormEdit());
 		return "fragments/useradmin.html";
 	}
 
@@ -101,21 +105,21 @@ public class UserController {
 	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "edituser", method = RequestMethod.POST)
-	public String editUser(@RequestParam("id") Long userId, Model model) {
-		UserMonitoriza user = userService.getUserMonitorizaById(userId);
-		UserForm userForm = new UserForm();
-		userForm.setPassword(user.getPassword());
-		userForm.setIdUserMonitoriza(user.getIdUserMonitoriza());
-		userForm.setLogin(user.getLogin());
-		userForm.setEmail(user.getEmail());
-		userForm.setName(user.getName());
-		userForm.setSurnames(user.getSurnames());
-		
-		model.addAttribute("userform", userForm);
-		model.addAttribute("action", "edit");
-		
-		return "modal/userForm";
-	}
+//	@RequestMapping(value = "edituser", method = RequestMethod.POST)
+//	public String editUser(@RequestParam("id") Long userId, Model model) {
+//		UserMonitoriza user = userService.getUserMonitorizaById(userId);
+//		UserFormEdit userFormEdit = new UserFormEdit();
+//		
+//		userFormEdit.setIdUserMonitoriza(user.getIdUserMonitoriza());
+//		userFormEdit.setLogin(user.getLogin());
+//		userFormEdit.setEmail(user.getEmail());
+//		userFormEdit.setName(user.getName());
+//		userFormEdit.setSurnames(user.getSurnames());
+//		
+//		model.addAttribute("userformEdit", userFormEdit);
+//		model.addAttribute("action", "edit");
+//		
+//		return "modal/userForm";
+//	}
 
 }

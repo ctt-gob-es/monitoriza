@@ -313,22 +313,22 @@ public class KeystoreRestController {
 	 *            Row index of the datatable.
 	 * @return String that represents the name of the view to redirect.
 	 */
-	@JsonView(DataTablesOutput.View.class)
-	@RequestMapping(path = "/deletessl", method = RequestMethod.POST)
-	public String deleteSsl(@RequestParam("id") Long systemCertificateId, @RequestParam("index") String index) {
-		try {
-			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_TRUSTSTORE_SSL));
-			SystemCertificate cert = sysCertService.getSystemCertificateById(systemCertificateId);
-			
-			Keystore ko = keyStoreFacade.deleteCertificate(cert.getAlias());
-			
-			keystoreService.saveKeystore(ko);
-			sysCertService.deleteSystemCertificate(systemCertificateId);
-					
-			
-		} catch (Exception e) {
-			index = "-1";
-		}
-		return index;
-	}      
+//	@JsonView(DataTablesOutput.View.class)
+//	@RequestMapping(path = "/deletessl", method = RequestMethod.POST)
+//	public String deleteSsl(@RequestParam("id") Long systemCertificateId, @RequestParam("index") String index) {
+//		try {
+//			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_TRUSTSTORE_SSL));
+//			SystemCertificate cert = sysCertService.getSystemCertificateById(systemCertificateId);
+//			
+//			Keystore ko = keyStoreFacade.deleteCertificate(cert.getAlias());
+//			
+//			keystoreService.saveKeystore(ko);
+//			sysCertService.deleteSystemCertificate(systemCertificateId);
+//					
+//			
+//		} catch (Exception e) {
+//			index = "-1";
+//		}
+//		return index;
+//	}      
 }

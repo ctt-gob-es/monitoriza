@@ -22,10 +22,130 @@
 		</div>
 	</div>
 </div>
-<div id="modalEditUser"></div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalEdit">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Editar registro</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form name="altEditor-form" role="form" id="userFormEdit" th:object="${userformEdit}" th:action="@{/saveuseredit}" method="post">
+					<input type='hidden' class='primarykey' id="idUserMonitorizaEdit" th:field="*{idUserMonitorizaEdit}">
+					
+					<div class="form-group-modal">
+						
+							<label for="name" class="col-form-label" th:text="#{form.user.name}"></label>
+							<script th:inline="javascript">
+								/*<![CDATA[*/
+								    var messageName = /*[[#{form.user.name.pattern}]]*/ 'default';
+								/*]]>*/
+							</script>
+							<input onblur="validate(this,messageName);" type="text" id="name" th:field="*{name}" style="overflow:hidden" class="form-control" required pattern=".{3,15}" />
+							<div id="invalid-name" class="invalid-feedback" ></div>
+						
+						<div style="clear:both;"/>
+					</div>
+					
+					<div class="form-group-modal">
+						
+							<label for="surnames" class="col-form-label" th:text="#{form.user.surnames}"></label>
+							<script th:inline="javascript">
+								/*<![CDATA[*/
+								    var messageSurname = /*[[#{form.user.surnames.pattern}]]*/ 'default';
+								/*]]>*/
+							</script>
+							<input onblur="validate(this,messageSurname);" type="text" id="surnames" th:field="*{surnames}" style="overflow:hidden" class="form-control" required pattern=".{3,30}"/>
+							<div id="invalid-surnames" class="invalid-feedback" ></div>
+						
+						<div style="clear:both;"/>
+					</div>
+					
+					<div class="form-group-modal">
+						
+							<label for="login" class="col-form-label" th:text="#{form.user.login}"></label>
+							<script th:inline="javascript">
+								/*<![CDATA[*/
+								    var messageLogin = /*[[#{form.user.login.pattern}]]*/ 'default';
+								/*]]>*/
+							</script>
+							<input onblur="validate(this,messageLogin);" type="text" id="login" th:field="*{login}" style="overflow:hidden" class="form-control" required pattern=".{5,30}"/>
+							<div id="invalid-login" class="invalid-feedback" ></div>
+						
+						<div style="clear:both;"/>
+					</div>
+					
+					<div class="form-group-modal">
+						
+							<label for="email" class="col-form-label" th:text="#{form.user.email}"></label>
+							<script th:inline="javascript">
+								/*<![CDATA[*/
+								    var messageEmail = /*[[#{form.user.email.pattern}]]*/ 'default';
+								/*]]>*/
+							</script>
+							<input onblur="validate(this,messageEmail);" type="email" id="email" th:field="*{email}" style="overflow:hidden" class="form-control" required/>
+							<div id="invalid-email" class="invalid-feedback" ></div>
+						
+						<div style="clear:both;"/>
+					</div>
+				</form>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				<button type="submit" id="editBtn" class="btn btn-primary">Guardar cambios</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="modalPassword">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title">Cambiar contrase&ntilde;a</h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form role="form" id="userFormPassword" th:object="${userFormPassword}" th:action="@{/saveuserpassword}" method="post">
+					
+					<input type='hidden' class='primarykey' id="idUserMonitorizaPass" th:field="*{idUserMonitorizaPass}">
+					
+					<div class="form-group-modal">
+						<label for="oldPassword" class="col-form-label" th:text="#{form.user.oldPassword}"></label>
+						<span id="oldPassword_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
+						<input type="password" id="oldPassword" th:field="*{oldPassword}" class="form-control" />
+					</div>
+					
+					<div class="form-group-modal">
+						<label for="password" class="col-form-label" th:text="#{form.user.password}"></label>
+						<span id="password_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
+						<input type="password" id="password" th:field="*{password}" class="form-control" />
+					</div>
+					
+					<div class="form-group-modal">
+						<label for="confirmPassword" class="col-form-label" th:text="#{form.user.confirmPassword}"></label>
+						<span id="confirmPassword_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
+						<input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" />
+					</div>
+				</form>
+
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				<button type="submit" id="passwordBtn" class="btn btn-primary">Guardar cambios</button>
+			</div>
+		</div>
+	</div>
+</div>
 
 <script th:inline="javascript">
 $(document).ready(function() {
+	
 	var actionSave = /*[[@{/saveuser}]]*/;
 	var actionDelete = /*[[@{/deleteuser}]]*/;
 	var getusers = /*[[@{/usersdatatable}]]*/;
@@ -35,10 +155,56 @@ $(document).ready(function() {
 		dom: 'Bfrtip',
 	    select: 'single',
 	    responsive: true,
-	    
 	    altEditor: true,
-	    buttons: [{text: 'Agregar',name: 'add'}, {extend: 'selected',text: 'Editar',name: 'edit'}, {extend: 'selected',text: 'Eliminar',name: 'delete'}],
-	
+	    buttons: [{text: 'Agregar',name: 'add'}, 
+	    		  {extend: 'selected',text: 'Editar',name: 'editt',
+	    			  action: function ( e, dt, node, config ) {
+					  
+						$('#modalEdit').modal('show');
+	    				  
+	    				  for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({
+							id: o.context[0].aoColumns[e].mData,
+							title: o.context[0].aoColumns[e].sTitle                
+						  });
+						  
+						  var d = dt.rows({
+	                        selected: !0
+						  });
+							
+						  var idUserMonitorizaEdit = d.data()[0][a[0].id];
+						  var name = d.data()[0][a[1].id];
+						  var surnames = d.data()[0][a[2].id];
+						  var login = d.data()[0][a[3].id];
+						  var email = d.data()[0][a[5].id];
+						  
+						  $("#idUserMonitorizaEdit").val(idUserMonitorizaEdit);
+						  $("#name").val(name);
+						  $("#surnames").val(surnames);
+						  $("#login").val(login);
+						  $("#email").val(email);
+						  
+						  
+	    			  }
+	    		  }, 
+	    		  {extend: 'selected',text: 'Eliminar',name: 'delete'}, 
+	    		  {extend: 'selected',text: 'Cambiar password',name: 'changePassword',
+	    			  action: function ( e, dt, node, config ) {
+	    				  $('#modalPassword').modal('show');
+						  
+						  for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({
+							id: o.context[0].aoColumns[e].mData,
+							title: o.context[0].aoColumns[e].sTitle                
+						  });
+						  
+						  var d = dt.rows({
+	                        selected: !0
+						  });
+							
+						  var idUserMonitorizaPass = d.data()[0][a[0].id];
+						  $("#idUserMonitorizaPass").val(idUserMonitorizaPass);
+	    	                
+	    				}
+					}],
 	    "iTotalRecords": "totalElements",
         "iTotalDisplayRecords": "numberOfElements",
 	    
@@ -50,10 +216,9 @@ $(document).ready(function() {
 	        "data": function (data) {
 	        	// Datos a pasar al modal
 	            data.formId = "userForm";
-	            data.editTemplate = editTemplate;
 	            data.addTemplate = addTemplate;
 	        }
-	        },
+	    },
 	    "language": {
 	        "url": "js/datatables/i18n/spanish.json",
 	        select: {
@@ -106,8 +271,9 @@ $(document).ready(function() {
 		                // Esto es necesario para forzar que se muestren mensajes de validación de cliente
 		                $('<input type="submit">').hide().appendTo($('#userForm')).click().remove();
 		            } else {
-		            	if ($('#password').val() != $('#confirmPassword').val()){
+		            	if ($('#passwordAdd').val() != $('#confirmPasswordAdd').val()){
 		            		$('#userForm').append('<div id="errorModalUser3" class="alert alert-danger" role="alert"><strong>El campo Confirmar contrase&ntilde;a es obligatorio y debe coincidir con el campo Contrase&ntilde;a.</strong></div>');
+		            		hide();
 		            	}else{
 		            		$.ajax(actionSave, {
 				            	dataType : 'json',
@@ -149,69 +315,9 @@ $(document).ready(function() {
 		            }
 		        	$('#userForm').addClass('was-validated');
 		            break;
-		        case 'edit':
-		        	if ($('#userForm')[0].checkValidity() === false) {
-		        		// Se oculta la capa 'cargando...'
-		        		hide();
-		                event.stopPropagation();
-		                
-		                $('#userForm *').filter(':input').each(function(){
-		            	    		            	    
-		                	if(!$(this)[0].checkValidity())
-		            	    {
-		            	  	 $("#invalid-" + $(this).attr('id')).html();
-		            	  	 $("#" + $(this).attr('id')).addClass("is-invalid");
-		            	    } else {
-		            	  	 $("#" + $(this).attr('id')).removeClass("is-invalid");
-		            	    }
-		            	    
-		            	});
-		                
-		                // Esto es necesario para forzar que se muestren mensajes de validación de cliente
-		                $('<input type="submit">').hide().appendTo($('#userForm')).click().remove();
-		            } else {
-		            	if ($('#password').val() != $('#confirmPassword').val()){
-		            		$('#userForm').append('<div id="errorModalUser3" class="alert alert-danger" role="alert"><strong>El campo Confirmar contrase&ntilde;a es obligatorio y debe coincidir con el campo Contrase&ntilde;a.</strong></div>');
-		            	}else{
-			            	var formData = JSON.stringify($("#userForm").serializeJSON());
-			            	
-			            	$.ajax(actionSave, {
-				            	dataType : 'json',
-				            	contentType:'application/json',
-				                data : formData,
-				                type:'POST',
-				                success: function(data){
-				                  
-				            		// Se oculta la capa 'cargando...'
-				            		hide();
-				                    tbl.row.add($(data.data)).draw(false);
-				                    		                    
-				                    $('#altEditor-modal .modal-body .alert').remove();
-				                    $('#altEditor-modal').modal('hide');
-				                    
-				                    if ($('#errorModalUser').length > 0){
-				   						$('#errorModalUser').remove();
-				   				    }
-				                    if ($('#errorModalUser2').length > 0){
-				   						$('#errorModalUser2').remove();
-				   				    }
-				                    if ($('#errorModalUser3').length > 0){
-				   						$('#errorModalUser3').remove();
-				   				    }
-				                    
-				                },
-				                error:function(data){
-				                	hide();
-				                	$('#userForm').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>Hay un usuario con el mismo login!</strong></div>');
-				                }
-				            });
-		            	}
-		            }
-		        	$('#userForm').addClass('was-validated');
-		            break;
 		        case 'delete':
 		            $.ajax(actionDelete,{
-		            	data:$.param({'id':idUserMonitoriza, 'index':rowindex}),
+		            	data:$.param({'id':data.idUserMonitoriza, 'index':rowindex}),
 		                type:'POST',
 		                success: function(data){
 		                    
@@ -231,6 +337,88 @@ $(document).ready(function() {
 		            break;
 		    }
 		});
+		
+	$( "#passwordBtn" ).click(function( event ) {
+	  event.preventDefault();
+		
+	  var formData = JSON.stringify($("#userFormPassword").serializeJSON());
+	  var url = /*[[@{/saveuserpassword}]]*/;
+	  
+	  loading();
+	  
+	  $.ajax({
+		  type: "POST",
+		  url: url,
+		  data: formData,
+		  success: function(data){
+			hide();
+			
+			switch(data){
+			case 0:
+				$('#errorModalUser').remove();
+				$('#modalPassword').modal('hide');
+				break;
+			case -1:
+				$('#errorModalUser').remove();
+				$('#userFormPassword').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>La contrase\u00F1a anterior debe de coincidir!</strong></div>');
+				break;
+			case -2:
+				$('#errorModalUser').remove();
+				$('#userFormPassword').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>Error inesperado, int\u00E9ntelo mas tarde!</strong></div>');
+				break;
+			default:
+				if (data != null){
+					jQuery.each(data, function(i, val) {
+						$('#userFormPassword *').filter('span').each(function(){
+							if (i == $(this).attr('id')){
+								$("#" + i).text(val);
+							}
+						});
+					});
+				}
+			}
+		  },
+		  error:function(){
+			  hide();
+			  $('#userFormPassword').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>Error inesperado, int\u00E9ntelo mas tarde!</strong></div>');
+		  },
+		  dataType: "json",
+		  contentType : "application/json"
+		});
+	});
+	
+	$( "#editBtn" ).click(function( event ) {
+		  event.preventDefault();
+			
+		  var formData = JSON.stringify($("#userFormEdit").serializeJSON());
+		  var url = /*[[@{/saveuseredit}]]*/;
+		  
+		  loading();
+		  
+		  $.ajax({
+			  type: "POST",
+			  url: url,
+			  data: formData,
+			  success: function(data){
+				hide();
+				
+				tbl.row.add($(data.data)).draw(false);
+				
+				if ($('#errorModalEdit').length > 0){
+					$('#errorModalEdit').remove();
+				}
+				
+				$('#modalEdit').modal('hide');
+				
+			  },
+			  error:function(){
+				  hide();
+				  $('#userFormEdit').append('<div id="errorModalEdit" class="alert alert-danger" role="alert"><strong>Error inesperado, int\u00E9ntelo mas tarde!</strong></div>');
+			  },
+			  dataType: "json",
+			  contentType : "application/json"
+		});
+	});
 });	
 
 </script>
