@@ -25,6 +25,7 @@
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 
@@ -33,7 +34,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificat
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 16 may. 2018.
  */
-public interface SystemCertificateRepository extends JpaRepository<SystemCertificate, Long> {
+public interface SystemCertificateRepository extends JpaRepository<SystemCertificate, Long>, JpaSpecificationExecutor<SystemCertificate> {
 	
 	/**
 	  * Method that obtains from the persistence a @firma platform identified by its primary key. 

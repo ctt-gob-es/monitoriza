@@ -38,7 +38,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.form.SslForm;
+import es.gob.monitoriza.form.CertificateForm;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.service.ISystemCertificateService;
 
@@ -95,9 +95,21 @@ public class KeystoreController {
 	@RequestMapping(value = "addssl")
     public String addSsl(Model model){
 		
-		model.addAttribute("sslform", new SslForm());
+		model.addAttribute("sslform", new CertificateForm());
 						
         return "modal/sslForm.html";
+    }
+	
+	/**
+	 * Method that maps the add keystore web requests to the controller and forwards to the form
+	 * to the view.  
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "addauth")
+    public String addAuth(){
+			
+        return "modal/authForm.html";
     }
 	
 	/**
@@ -110,7 +122,7 @@ public class KeystoreController {
     @RequestMapping(value="loadssl", method=RequestMethod.POST)
     public String loadssl(@RequestParam("file") MultipartFile file, Model model) throws IOException {
     		
-		SslForm sslForm = new SslForm();
+		CertificateForm sslForm = new CertificateForm();
 		
 		sslForm.setCertBytes(file.getBytes());
 		sslForm.setFile(file);
@@ -131,7 +143,7 @@ public class KeystoreController {
     @RequestMapping(value = "editssl", method = RequestMethod.POST)
     public String editSsl(@RequestParam("id") Long sslId, Model model){
     	SystemCertificate sslCert = sysCertService.getSystemCertificateById(sslId);
-    	SslForm sslForm = new SslForm();
+    	CertificateForm sslForm = new CertificateForm();
     	
     	sslForm.setAlias(sslCert.getAlias());
     	sslForm.setIssuer(sslCert.getIssuer());

@@ -1,15 +1,17 @@
 <form name="altEditor-form" role="form" id="sslForm" th:object="${sslform}" th:action="@{/savessl}" method="post" enctype="multipart/form-data">
 					
 			<input type='hidden' class='primarykey' id="idSystemCertificate" th:field="*{idSystemCertificate}">
-								
-			<!-- <input type='hidden' id="certBytes" th:field="*{certBytes}"> -->
-			
+									
 			<div class="form-group-modal">
 				
-					<label for="name" class="col-form-label" th:text="#{form.ssl.alias}"></label>
-					
-					<input type="text" id="alias" th:field="*{alias}" style="overflow:hidden" class="form-control" required pattern=".{3,15}" />
-					<div id="invalid-name" class="invalid-feedback"></div>
+					<label for="alias" class="col-form-label" th:text="#{form.ssl.alias}"></label>
+					<script th:inline="javascript">
+						/*<![CDATA[*/
+						    var messageName = /*[[#{form.valid.keystore.alias.pattern}]]*/ 'default';
+						/*]]>*/
+					</script>
+					<input onblur="validate(this,messageName);" type="text" id="alias" th:field="*{alias}" style="overflow:hidden" class="form-control" required pattern=".{3,15}" />
+					<div id="invalid-alias" class="invalid-feedback"></div>
 				
 				<div style="clear:both;"/>
 			</div>

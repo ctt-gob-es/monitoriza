@@ -51,10 +51,12 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.form.AfirmaForm;
+import es.gob.monitoriza.form.TsaForm;
 import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IPlatformService;
+import es.gob.monitoriza.service.ISystemCertificateService;
 
 /**
  * <p>
@@ -82,6 +84,13 @@ public class PlatformRestController {
 	 */
 	@Autowired
 	private IPlatformService platformService;
+	
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private ISystemCertificateService sysCertService;
 
 	/**
 	 * Method that maps the list users web requests to the controller and
@@ -93,9 +102,25 @@ public class PlatformRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/afirmadatatable", method = RequestMethod.GET)
-	public DataTablesOutput<PlatformMonitoriza> users(@Valid DataTablesInput input) {
+	public DataTablesOutput<PlatformMonitoriza> dtAfirma(@Valid DataTablesInput input) {
 
 		return (DataTablesOutput<PlatformMonitoriza>) platformService.findAllAfirma(input);
+
+	}
+	
+	/**
+	 * Method that maps the list users web requests to the controller and
+	 * forwards the list of users to the view.
+	 * 
+	 * @param input
+	 *            Holder object for datatable attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(path = "/tsadatatable", method = RequestMethod.GET)
+	public DataTablesOutput<PlatformMonitoriza> dtTsa(@Valid DataTablesInput input) {
+
+		return (DataTablesOutput<PlatformMonitoriza>) platformService.findAllTsa(input);
 
 	}
 
@@ -110,10 +135,11 @@ public class PlatformRestController {
 	 * @return String that represents the name of the view to redirect.
 	 */
 	@JsonView(DataTablesOutput.View.class)
-	@RequestMapping(path = "/deleteafirma", method = RequestMethod.POST)
-	public String deleteAfirma(@RequestParam("id") Long userId, @RequestParam("index") String index) {
+	@RequestMapping(path = "/deleteplatform", method = RequestMethod.POST)
+	public String deleteAfirma(@RequestParam("id") Long platformId, @RequestParam("index") String index) {
 		try {
-			platformService.deletePlatform(userId);
+			PlatformMonitoriza platform = platformService.getPlatformById(platformId);
+			platformService.deletePlatform(platform);
 		} catch (Exception e) {
 			index = "-1";
 		}
@@ -132,7 +158,7 @@ public class PlatformRestController {
 	 */
 	@RequestMapping(value = "/saveafirma", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
-	public @ResponseBody DataTablesOutput<PlatformMonitoriza> save(
+	public @ResponseBody DataTablesOutput<PlatformMonitoriza> saveAfirma(
 			@Validated(OrderedValidation.class) @RequestBody AfirmaForm afirmaForm, BindingResult bindingResult) {
 		DataTablesOutput<PlatformMonitoriza> dtOutput = new DataTablesOutput<>();
 		PlatformMonitoriza platformAfirma = null;
@@ -166,6 +192,68 @@ public class PlatformRestController {
 				PlatformMonitoriza afirma = platformService.savePlatform(platformAfirma);
 				
 				listNewAfirma.add(afirma);
+			}catch(Exception e) {
+				listNewAfirma = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
+						.collect(Collectors.toList());
+				throw e;
+			}
+		}
+		
+		dtOutput.setData(listNewAfirma);
+
+		return dtOutput;
+
+	}
+	
+	/**
+	 * Method that maps the save user web request to the controller and saves it
+	 * in the persistence.
+	 * 
+	 * @param userForm
+	 *            Object that represents the backing user form.
+	 * @param bindingResult
+	 *            Object that represents the form validation result.
+	 * @return {@link DataTablesOutput<PlatformMonitoriza>}
+	 */
+	@RequestMapping(value = "/savetsa", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@JsonView(DataTablesOutput.View.class)
+	public @ResponseBody DataTablesOutput<PlatformMonitoriza> saveTsa(
+			@Validated(OrderedValidation.class) @RequestBody TsaForm tsaForm, BindingResult bindingResult) {
+		DataTablesOutput<PlatformMonitoriza> dtOutput = new DataTablesOutput<>();
+		PlatformMonitoriza platformTsa = null;
+		List<PlatformMonitoriza> listNewAfirma = new ArrayList<PlatformMonitoriza>();
+		
+		if (bindingResult.hasErrors()) {
+			listNewAfirma = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
+					.collect(Collectors.toList());
+			JSONObject json = new JSONObject();
+			for (FieldError o : bindingResult.getFieldErrors()) {
+				json.put(o.getField() + "_span", o.getDefaultMessage());
+			}
+			dtOutput.setError(json.toString());
+		} else {
+			try {
+				if (tsaForm.getIdPlatform() != null) {
+					platformTsa = platformService.getPlatformById(tsaForm.getIdPlatform());
+				} else {
+					platformTsa = new PlatformMonitoriza();
+				}
+		
+				platformTsa.setHost(tsaForm.getHost());
+				platformTsa.setName(tsaForm.getName());
+				platformTsa.setOcspContext(tsaForm.getRfc3161Context());
+				platformTsa.setPort(tsaForm.getPort());
+				platformTsa.setServiceContext(tsaForm.getServiceContext());
+				CPlatformType afirmaType = new CPlatformType();
+				afirmaType.setIdPlatformType(IPlatformService.ID_PLATFORM_TYPE_TSA);
+				platformTsa.setPlatformType(afirmaType);
+				platformTsa.setRfc3161Context(tsaForm.getRfc3161Port());
+				platformTsa.setRfc3161Port(tsaForm.getRfc3161Port());
+				platformTsa.setRfc3161Certificate(sysCertService.getSystemCertificateById(tsaForm.getRfc3161Certificate()));
+		
+				PlatformMonitoriza tsa = platformService.savePlatform(platformTsa);
+				
+				listNewAfirma.add(tsa);
 			}catch(Exception e) {
 				listNewAfirma = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
 						.collect(Collectors.toList());

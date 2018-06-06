@@ -33,6 +33,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -102,6 +103,11 @@ public class PlatformMonitoriza implements Serializable {
 	 * Attribute that represents the type of platform. 
 	 */
 	private CPlatformType platformType;
+	
+	/**
+	 * Attribute that represents the certificate for the RFC3161 authentication. 
+	 */
+	private SystemCertificate rfc3161Certificate;
 	
 	/**
 	 * Gets the value of the attribute {@link #idPlatform}.
@@ -311,6 +317,7 @@ public class PlatformMonitoriza implements Serializable {
 	// because Hibernate JPA needs not final access methods.
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ID_PLATFORM_TYPE", nullable = false)
+	@JsonView(DataTablesOutput.View.class)	
 	public CPlatformType getPlatformType() {
 		return platformType;
 	}
@@ -324,6 +331,32 @@ public class PlatformMonitoriza implements Serializable {
 	public void setPlatformType(CPlatformType platformType) {
 		this.platformType = platformType;
 	}
+
+	/**
+	 * Gets the value of the attribute {@link #rfc3161Certificate}.
+	 * @return the value of the attribute {@link #rfc3161Certificate}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "RFC3161_AUTH_CERTIFICATE", nullable = false)
+	@JsonView(DataTablesOutput.View.class)	
+	public SystemCertificate getRfc3161Certificate() {
+		// CHECKSTYLE:On
+		return rfc3161Certificate;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #rfc3161Certificate}.
+	 * @param rfc3161Certificate The value for the attribute {@link #rfc3161Certificate}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setRfc3161Certificate(SystemCertificate rfc3161Certificate) {
+		this.rfc3161Certificate = rfc3161Certificate;
+	}
+	
+	
 	
 
 }

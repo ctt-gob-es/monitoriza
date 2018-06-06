@@ -150,4 +150,32 @@ public class SystemCertificateService implements ISystemCertificateService {
 		
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.ISystemCertificateService#getAllSsl()
+	 */
+	@Override
+	public Iterable<SystemCertificate> getAllSsl() {
+		
+		Keystore keystoreSsl = new Keystore();
+		keystoreSsl.setIdKeystore(Keystore.ID_TRUSTSTORE_SSL);
+		KeystoreSpecification byKeystoreSsl = new KeystoreSpecification(keystoreSsl);
+		
+		return repository.findAll(byKeystoreSsl);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.ISystemCertificateService#getAllAuth()
+	 */
+	@Override
+	public Iterable<SystemCertificate> getAllAuth() {
+		
+		Keystore keystoreAuth = new Keystore();
+		keystoreAuth.setIdKeystore(Keystore.ID_AUTHCLIENT_RFC3161);
+		KeystoreSpecification byKeystoreAuth = new KeystoreSpecification(keystoreAuth);
+		
+		return repository.findAll(byKeystoreAuth);
+	}
+
 }

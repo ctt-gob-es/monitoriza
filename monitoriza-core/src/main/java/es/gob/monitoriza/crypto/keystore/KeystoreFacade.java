@@ -34,6 +34,8 @@ import java.security.cert.CertificateFactory;
 import java.security.cert.CertificateNotYetValidException;
 import java.security.cert.X509Certificate;
 import java.util.Calendar;
+import java.util.Collections;
+import java.util.List;
 
 import javax.crypto.Cipher;
 import javax.crypto.spec.SecretKeySpec;
@@ -52,6 +54,21 @@ import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
  * @version 1.2, 23/02/2017.
  */
 public class KeystoreFacade implements IKeystoreFacade {
+	
+	/**
+	 * Attribute that represents a p12 key store file extension.
+	 */
+	private static final String P12_KEYSTORE_EXTENSION = "p12";
+
+	/**
+	 * Attribute that represents a pfx key store file extension.
+	 */
+	private static final String PFX_KEYSTORE_EXTENSION = "pfx";
+	
+	/**
+	 * Attribute that represents the PKCS#12 keystore type.
+	 */
+	private static final String PKCS12 = "PKCS12";
 
 	/**
 	 * Attribute that represents the Padding algorithm for the AES cipher. 
@@ -235,8 +252,8 @@ public class KeystoreFacade implements IKeystoreFacade {
 		
 		// Cargamos el keystore SSL desde la persistencia
 		KeyStore ks = KeyStore.getInstance(keystore.getKeystoreType());
-		ByteArrayInputStream bais = new ByteArrayInputStream(keystore.getKeystore());
-		try {
+	
+		try (ByteArrayInputStream bais = new ByteArrayInputStream(keystore.getKeystore());) {
 			ks.load(bais, new String(getKeystoreDecodedPassword()).toCharArray());
 		} catch (NoSuchAlgorithmException | CertificateException
 				| IOException e) {
@@ -250,15 +267,14 @@ public class KeystoreFacade implements IKeystoreFacade {
 		}
 		
 		// Establecemos el nuevo valor del almacén SSL
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
 			ks.store(baos, new String(getKeystoreDecodedPassword()).toCharArray());
+			keystore.setKeystore(baos.toByteArray());		
 		} catch (NoSuchAlgorithmException | CertificateException
 				| IOException e) {
 			LOGGER.error("Error modificando el keystore", e);
 		}
-		
-		keystore.setKeystore(baos.toByteArray());		
+			
 	}
 	
 	/**
@@ -273,8 +289,8 @@ public class KeystoreFacade implements IKeystoreFacade {
 		char[ ] entryPass = new String(getKeystoreDecodedPassword()).toCharArray();
 		// Cargamos el keystore SSL desde la persistencia
 		KeyStore ks = KeyStore.getInstance(keystore.getKeystoreType());
-		ByteArrayInputStream bais = new ByteArrayInputStream(keystore.getKeystore());
-		try {
+		
+		try (ByteArrayInputStream bais = new ByteArrayInputStream(keystore.getKeystore());) {
 			ks.load(bais, new String(getKeystoreDecodedPassword()).toCharArray());
 		} catch (NoSuchAlgorithmException | CertificateException
 				| IOException e) {
@@ -295,15 +311,13 @@ public class KeystoreFacade implements IKeystoreFacade {
 		}
 		
 		// Establecemos el nuevo valor del almacén SSL
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		try {
+		try (ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
 			ks.store(baos, entryPass);
+			keystore.setKeystore(baos.toByteArray());
 		} catch (NoSuchAlgorithmException | CertificateException
 				| IOException e) {
 			LOGGER.error("Error modificando el keystore", e);
 		}
-				
-		keystore.setKeystore(baos.toByteArray());
 		
 		return keystore;
 	}
@@ -337,8 +351,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 		char[ ] entryPass = new String(getKeystoreDecodedPassword()).toCharArray();
 
 		// Cargamos el keystore SSL desde la persistencia
-		ByteArrayInputStream bais = new ByteArrayInputStream(keystore.getKeystore());
-		try {
+		try (ByteArrayInputStream bais = new ByteArrayInputStream(keystore.getKeystore());) {
 			KeyStore ks = KeyStore.getInstance(keystore.getKeystoreType());
 			ks.load(bais, new String(getKeystoreDecodedPassword()).toCharArray());
 
@@ -362,6 +375,55 @@ public class KeystoreFacade implements IKeystoreFacade {
 
 		return keystore;
 	}
-
+	
+	/**
+	 * Method that obtains a {@link KeyStore}.
+	 * @param keyStoreData Parameter that represents the input stream from which the keystore is loaded.
+	 * @param keyStoreType Parameter tat represents the keystore type.
+	 * @param keyStorePass Parameter tat represents the keystore password.
+	 * @return a {@link KeyStore}.
+	 * @throws KeyStoreException If the metod fails.
+	 * @throws NoSuchAlgorithmException If the metod fails.
+	 * @throws CertificateException If the metod fails.
+	 * @throws IOException If the metod fails.
+	 */
+	public static KeyStore getKeystore(byte[ ] keyStoreData, String keyStoreType, String keyStorePass) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException {
+		KeyStore ks = KeyStore.getInstance(keyStoreType);
+		
+		try (ByteArrayInputStream bais = new ByteArrayInputStream(keyStoreData);) {
+			ks.load(bais, keyStorePass.toCharArray());
+			return ks;
+		} 
+	}
+	
+	/**
+	 * Calculates keystore type.
+	 * 
+	 * @return string with keystore type.
+	 */
+	public String getKeystoreType(final String nameFile) {
+		String keyStoreType = null;
+		
+		if (nameFile.endsWith(P12_KEYSTORE_EXTENSION) || nameFile.endsWith(PFX_KEYSTORE_EXTENSION)) {
+			keyStoreType = PKCS12;
+		}
+		return keyStoreType;
+	}
+	
+	/**
+	 * Lists all certificates alias includes in this keystore.
+	 * 
+	 * @param ks KeyStore from which extract the aliases.
+	 * @return all certificates alias includes in this keystore. If the keystore is <code>null</code>,
+	 * then returns <code>null</code>;
+	 * @throws KeyStoreException In case of some error extracting the aliases from the keystore.
+	 */
+	public List<String> listAllAliases(KeyStore ks) throws KeyStoreException {
+		List<String> result = null;
+		if (ks != null) {
+			result = Collections.list(ks.aliases());
+		}
+		return result;
+	}
 	
 }

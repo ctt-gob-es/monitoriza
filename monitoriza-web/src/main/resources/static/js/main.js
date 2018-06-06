@@ -141,7 +141,7 @@ function loadIntoAjax(formTarget, url, idTarget, type, funcion, doLoad) {
 	var data = null;
 
 	if (isNaN(doLoad) || doLoad) {
-		/* se anyade la capa "cargando" */
+		/* se añade la capa "cargando" */
 		loading();
 	}
 
@@ -179,6 +179,36 @@ function loadIntoAjax(formTarget, url, idTarget, type, funcion, doLoad) {
 	});
 
 	return false;
+}
+
+function ajaxCall(action, data, contentType, formId) {
+	$.ajax(actionSave, {
+		data : formData,
+    	contentType: false,
+        type:'POST',
+        success: function(data){
+          
+    		// Se oculta la capa 'cargando...'
+    		hide();
+            tbl.row.add($(data.data)).draw(false);
+            		                    
+            $('#altEditor-modal .modal-body .alert').remove();
+            $('#altEditor-modal').modal('hide');
+            		                    
+        },
+        error:function(data){
+        	
+        	// Se oculta la capa 'cargando...'
+        	hide();
+        	// Se eliminan los posibles errores anteriores...
+        	clearValidationResult('sslForm');
+        	// Se obtiene el JSON de los campos con errores de validación
+        	// y se modifican los estilos/añaden mensajes
+        	var validation = $(data)["0"].responseJSON;
+        	drawValidationResult(validation.fieldErrors);
+      
+        }
+    });
 }
 
 function openModal(idModal) {

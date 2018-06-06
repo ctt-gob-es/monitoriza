@@ -90,7 +90,7 @@ $(document).ready(function() {
 		                
 		                $('#sslForm *').filter(':input').each(function(){
 		            	    		            	    
-		            	    if(!$(this).checkValidity())
+		            	    if(!$('#sslForm')[0].checkValidity())
 		            	    {
 		            	  	 $("#invalid-" + $(this).attr('id')).html();
 		            	  	 $("#" + $(this).attr('id')).addClass("is-invalid");

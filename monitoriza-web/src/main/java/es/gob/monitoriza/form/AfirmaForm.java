@@ -31,7 +31,7 @@ import es.gob.monitoriza.rest.exception.CheckItFirst;
 import es.gob.monitoriza.rest.exception.ThenCheckIt;
 
 /** 
- * <p>Class that represents the backing form for adding/editing a user.</p>
+ * <p>Class that represents the backing form for adding/editing a @firma platform.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 8 mar. 2018.
  */
@@ -45,35 +45,35 @@ public class AfirmaForm {
 	/**
 	 * Attribute that represents the value of the input name of the user in the form. 
 	 */
-	@NotBlank(groups=CheckItFirst.class, message="{form.valid.afirma.name.notempty}")
+	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.name.notempty}")
     @Size(min=1, max=30, groups=ThenCheckIt.class)
     private String name = "";
 
 	/**
 	 * Attribute that represents the value of the input surnames of the user in the form. 
 	 */
-	@NotBlank(groups=CheckItFirst.class, message="{form.valid.afirma.host.notempty}")
+	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.host.notempty}")
     @Size(min=1, max=30, groups=ThenCheckIt.class)
     private String host = "";
 	
 	/**
 	 * Attribute that represents the value of the input username of the user in the form. 
 	 */
-	@NotBlank(groups=CheckItFirst.class, message="{form.valid.afirma.port.notempty}")
+	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.port.notempty}")
     @Size(min=1, max=5, groups=ThenCheckIt.class)
     private String port = "";
 
 	/**
 	 * Attribute that represents the value of the input password of the user in the form. 
 	 */
-	@NotBlank(groups=CheckItFirst.class, message="{form.valid.afirma.servicecontext.notempty}")
+	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.servicecontext.notempty}")
     @Size(min=1, max=50, groups=ThenCheckIt.class)
     private String serviceContext = "";
 		
 	/**
 	 * Attribute that represents the value of the input email of the user in the form. 
 	 */
-	@NotBlank(groups=CheckItFirst.class, message="{form.valid.afirma.ocspcontext.notempty}")
+	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.ocspcontext.notempty}")
     @Size(min=1, max=50, groups=ThenCheckIt.class)
     private String ocspContext = "";
 			
@@ -86,7 +86,7 @@ public class AfirmaForm {
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #idPlatform}.
+	 * Sets the value of the attribute {@link #idPlatform}.
 	 * @return the value of the attribute {@link #idPlatform}.
 	 */
 	public void setIdPlatform(Long idPlatform) {

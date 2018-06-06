@@ -21,7 +21,10 @@
 package es.gob.monitoriza.crypto.keystore;
 
 import java.security.Key;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
 import java.security.cert.Certificate;
+import java.util.List;
 
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
@@ -59,6 +62,21 @@ public interface IKeystoreFacade {
 	 * @throws CryptographyException
 	 */
 	Keystore deleteCertificate(String alias) throws CryptographyException;
+	
+	/**
+	 * Method that gets the keystore type given a file name.
+	 * @param nameFile The keystore file name
+	 * @return String that represents the keystore type.
+	 */
+	String getKeystoreType(final String nameFile);
+	
+	/**
+	 * Method that lists the aliases of the certificates stored in the given keystore.
+	 * @param ks The keystore whose aliases are listed.
+	 * @return List<String> that represents the list of aliases of the given Keystore 
+	 * @throws KeyStoreException
+	 */
+	List<String> listAllAliases(KeyStore ks) throws KeyStoreException;
 	
 	
 }

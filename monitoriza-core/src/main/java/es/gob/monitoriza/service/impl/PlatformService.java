@@ -87,8 +87,8 @@ public class PlatformService implements IPlatformService {
 	 * @see es.gob.monitoriza.service.IPlatformService#deleteUserMonitoriza(java.lang.Long)
 	 */
 	@Override
-	public void deletePlatform(Long afirmaId) {
-		repository.deleteById(afirmaId);
+	public void deletePlatform(PlatformMonitoriza platform) {
+		repository.delete(platform);
 
 	}
 
@@ -124,7 +124,7 @@ public class PlatformService implements IPlatformService {
 
 	/**
 	 * {@inheritDoc}
-	 * @see es.gob.monitoriza.service.IPlatformService#findAllAfirma(org.springframework.data.jpa.datatables.mapping.DataTablesInput, es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza)
+	 * @see es.gob.monitoriza.service.IPlatformService#findAllAfirma(org.springframework.data.jpa.datatables.mapping.DataTablesInput)
 	 */
 	@Override
 	public DataTablesOutput<PlatformMonitoriza> findAllAfirma(DataTablesInput input) {
@@ -135,6 +135,29 @@ public class PlatformService implements IPlatformService {
 		
 		return dtRepository.findAll(input, byPlatformType);
 				
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IPlatformService#findAllTsa(org.springframework.data.jpa.datatables.mapping.DataTablesInput)
+	 */
+	@Override
+	public DataTablesOutput<PlatformMonitoriza> findAllTsa(DataTablesInput input) {
+		CPlatformType platformType = new CPlatformType();
+		platformType.setIdPlatformType(ID_PLATFORM_TYPE_TSA);
+		CPlatformTypeSpecification byPlatformType = new CPlatformTypeSpecification(platformType);
+		
+		return dtRepository.findAll(input, byPlatformType);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IPlatformService#deletePlatformById(java.lang.Long)
+	 */
+	@Override
+	public void deletePlatformById(Long afirmaId) {
+		repository.deleteById(afirmaId);
+		
 	}
 
 }

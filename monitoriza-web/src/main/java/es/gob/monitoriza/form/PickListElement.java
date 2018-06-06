@@ -15,89 +15,88 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.form.SslForm.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.form.PickListElement.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>17 may. 2018.</p>
+ * <b>Date:</b><p>1 jun. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 17 may. 2018.
+ * @version 1.0, 1 jun. 2018.
  */
 package es.gob.monitoriza.form;
 
-import org.springframework.web.multipart.MultipartFile;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that represents an element of the picklist view component.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 17 may. 2018.
+ * @version 1.0, 1 jun. 2018.
  */
-public class SslForm {
-
-	private Long idSystemCertificate;
+public class PickListElement {
 	
-	private String alias;
+	/**
+	 * Attribute that represents the picklist element identifier. 
+	 */
+	private String id;
 	
-	private String issuer;
+	/**
+	 * Attribute that represents the picklist element text. 
+	 */
+	private String text;
 	
-	private String subject;
-	
-	private MultipartFile file;
-	
-	private byte[] certBytes;
-	
-	public Long getIdSystemCertificate() {
-		return idSystemCertificate;
-	}
-	
-	public void setIdSystemCertificate(Long idSystemCertificate) {
-		this.idSystemCertificate = idSystemCertificate;
-	}
-	
-	public String getAlias() {
-		return alias;
-	}
-	
-	public void setAlias(String alias) {
-		this.alias = alias;
-	}
+	/**
+	 * Constructor method for the class PickListElement.java. 
+	 */
+	public PickListElement() {
 		
-	
-	public String getIssuer() {
-		return issuer;
+	}
+				
+	/**
+	 * Constructor method for the class PickListElement.java.
+	 * @param id
+	 * @param text 
+	 */
+	public PickListElement(String id, String text) {
+		super();
+		this.id = id;
+		this.text = text;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	public String getId() {
+		return id;
 	}
 
 	
-	public void setIssuer(String issuer) {
-		this.issuer = issuer;
+	/**
+	 * 
+	 * @param id
+	 */
+	public void setId(String id) {
+		this.id = id;
+	}
+
+	/**
+	 * 
+	 * @return
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	public String getText() {
+		return text;
 	}
 
 	
-	public String getSubject() {
-		return subject;
+	/**
+	 * 
+	 * @param text
+	 */
+	public void setText(String text) {
+		this.text = text;
 	}
-
 	
-	public void setSubject(String subject) {
-		this.subject = subject;
-	}
-
-	public MultipartFile getFile() {
-		return file;
-	}
-
-	
-	public void setFile(MultipartFile sslCertificate) {
-		this.file = sslCertificate;
-	}
-
-	
-	public byte[ ] getCertBytes() {
-		return certBytes;
-	}
-
-	
-	public void setCertBytes(byte[ ] certBytes) {
-		this.certBytes = certBytes;
-	}
-		
 }

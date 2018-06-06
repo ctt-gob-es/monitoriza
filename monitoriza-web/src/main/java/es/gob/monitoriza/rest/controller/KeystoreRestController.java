@@ -25,19 +25,30 @@
 package es.gob.monitoriza.rest.controller;
 
 import java.io.IOException;
+import java.security.Key;
 import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.Certificate;
+import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -53,7 +64,8 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
-import es.gob.monitoriza.form.SslForm;
+import es.gob.monitoriza.form.PickListElement;
+import es.gob.monitoriza.form.CertificateForm;
 import es.gob.monitoriza.i18n.LanguageWeb;
 import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
@@ -75,6 +87,21 @@ public class KeystoreRestController {
 	 * Attribute that represents the object that manages the log of the class.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_WEB_LOG);
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	private static final String FIELD_ALIAS = "alias";
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	private static final String FIELD_FILE = "file";
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	private static final String FIELD_AUTH_PASSWORD = "authkeystorepass";
 			
 	/**
 	 * Attribute that represents the service object for accessing the repository. 
@@ -88,6 +115,12 @@ public class KeystoreRestController {
 	private KeyStore ksFromDataToAdd = null;
 	
 	/**
+	 * Attribute that represents the password for the loaded keystore. 
+	 */
+	private String ksPassword;
+	
+	
+	/**
 	 * Attribute that represents the service object for accessing the repository. 
 	 */
 	@Autowired
@@ -98,6 +131,8 @@ public class KeystoreRestController {
 	 */
 	@Autowired
 	private ISystemCertificateService certificateService; 
+	
+	
 	
 	/**
 	 * Method that maps the list users web requests to the controller and forwards the list of users
@@ -136,23 +171,33 @@ public class KeystoreRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/savessl", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody DataTablesOutput<SystemCertificate> saveSsl(@RequestParam("file") MultipartFile file, @RequestParam("alias") String alias) throws IOException {
+    public @ResponseBody DataTablesOutput<SystemCertificate> saveSsl(@RequestParam(FIELD_FILE) MultipartFile file, @RequestParam(FIELD_ALIAS) String alias) throws IOException {
     	
 		DataTablesOutput<SystemCertificate> dtOutput = new DataTablesOutput<>();
 		
 		boolean error = false;
 		byte[] certBytes = null;
+		JSONObject json = new JSONObject();
+		List<SystemCertificate> listSystemCertificate = new ArrayList<SystemCertificate>();
 		
 		// Comprobamos que se ha indicado el alias sin espacios ni caracteres
 		// especiales.
 		if (alias != null && alias.length() != alias.trim().length()) {
 			
 			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_NOT_BLANK_ALIAS, new Object [] {alias}));
+			json.put(FIELD_ALIAS + "_span", "El campo alias no puede tener espacios blancos");
 			error = true;
 		}
 		
-		if (file == null) {
-			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_NOT_BLANK_ALIAS, new Object [] {alias}));
+		if (alias == null) {
+						
+			json.put(FIELD_ALIAS + "_span", "El campo alias es obligatorio");
+			error = true;
+		}
+		
+		if (file == null || file.getSize() == 0) {
+			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_NOT_NULL_FILE_CERT, new Object [] {alias}));
+			json.put(FIELD_FILE + "_span", "Es obligatorio seleccionar un archivo de certifiado");
 			error = true;
 		} else {
 			certBytes = file.getBytes();
@@ -171,6 +216,7 @@ public class KeystoreRestController {
 		
 		if (res.length() > 0) {
 			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_SPECIAL_CHAR_ALIAS, new Object [] {alias}));
+			json.put(FIELD_FILE + "_span", "El formato del campo alias es incorrecto");
 			error = true;
 		}
 						
@@ -204,8 +250,7 @@ public class KeystoreRestController {
 								
 				// Añade el certificado a la persistencia
 				sysCertService.saveSystemCertificate(sysCert);
-				
-				List<SystemCertificate> listSystemCertificate = new ArrayList<SystemCertificate>();
+								
 				listSystemCertificate.add(sysCert);
 				dtOutput.setData(listSystemCertificate);
 				
@@ -213,12 +258,19 @@ public class KeystoreRestController {
 				LOGGER.info(LanguageWeb.getFormatResWebMonitoriza(LogMessages.SYS_CERT_ADDED, new Object [] {alias}));
 				
 			} catch (Exception e) {
-								
+				listSystemCertificate = StreamSupport.stream(sysCertService.getAllSystemCertificate().spliterator(), false)
+						.collect(Collectors.toList());				
 				LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_ADDING_SYS_CERTS, new Object [] {alias}),e);
 			
 			} 
+		} else {
+			listSystemCertificate = StreamSupport.stream(sysCertService.getAllSystemCertificate().spliterator(), false)
+					.collect(Collectors.toList());
+			
+			dtOutput.setError(json.toString());
 		}
 
+		dtOutput.setData(listSystemCertificate);
 		return dtOutput;
 
     }
@@ -231,12 +283,61 @@ public class KeystoreRestController {
      */
 	@JsonView(DataTablesOutput.View.class)
 	@ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/loadauth", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<PickListElement> loadauth(@RequestParam(FIELD_FILE) MultipartFile file, @RequestParam(FIELD_AUTH_PASSWORD) String password) throws IOException {
+    			
+		byte[] ksBytes = null;
+		List<PickListElement> listAliases = new ArrayList<>();
+				
+		ksBytes = file.getBytes();
+		
+		try {
+			
+			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161));
+			
+			ksFromDataToAdd = KeystoreFacade.getKeystore(ksBytes, keyStoreFacade.getKeystoreType(file.getOriginalFilename()), password);
+			ksPassword = password;
+						
+			for (String alias : keyStoreFacade.listAllAliases(ksFromDataToAdd)) {
+				listAliases.add(new PickListElement(alias, alias));
+			}
+			
+		} catch (KeyStoreException | NoSuchAlgorithmException
+				| CertificateException e) {
+			LOGGER.equals(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_LISTING_ALIASES, new Object [] {file.getOriginalFilename()}));
+		}
+				
+		return listAliases;
+		
+    }
+	
+	
+	/**
+     * Method that maps the save ssl certificate web request to the controller and saves it in the persistence.
+     * @param file 
+     * @param sslForm Object that represents the backing user form. 
+     * @return 
+     */
+	@JsonView(DataTablesOutput.View.class)
+	@ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/updatessl", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public @ResponseBody DataTablesOutput<SystemCertificate> updateSsl(@RequestBody SslForm sslForm) throws IOException {
+    public @ResponseBody DataTablesOutput<SystemCertificate> updateSsl(@RequestBody CertificateForm sslForm, BindingResult bindingResult) throws IOException {
     	
 		DataTablesOutput<SystemCertificate> dtOutput = new DataTablesOutput<>();
 		
 		boolean error = false;
+		
+		List<SystemCertificate> listSystemCertificate = new ArrayList<SystemCertificate>();
+		
+		if (bindingResult.hasErrors()) {
+			listSystemCertificate = StreamSupport.stream(sysCertService.getAllSystemCertificate().spliterator(), false)
+					.collect(Collectors.toList());
+			JSONObject json = new JSONObject();
+			for (FieldError o : bindingResult.getFieldErrors()) {
+				json.put(o.getField() + "_span", o.getDefaultMessage());
+			}
+			dtOutput.setError(json.toString());
+		}
 				
 		// Comprobamos que se ha indicado el alias sin espacios ni caracteres
 		// especiales.
@@ -285,7 +386,7 @@ public class KeystoreRestController {
 				// Añade el certificado a la persistencia
 				sysCertService.saveSystemCertificate(sysCert);
 				
-				List<SystemCertificate> listSystemCertificate = new ArrayList<SystemCertificate>();
+				
 				listSystemCertificate.add(sysCert);
 				dtOutput.setData(listSystemCertificate);
 				
@@ -293,12 +394,14 @@ public class KeystoreRestController {
 				LOGGER.info(LanguageWeb.getFormatResWebMonitoriza(LogMessages.SYS_CERT_ADDED, new Object [] {sslForm.getAlias()}));
 				
 			} catch (Exception e) {
-								
+				listSystemCertificate = StreamSupport.stream(sysCertService.getAllSystemCertificate().spliterator(), false)
+						.collect(Collectors.toList());		
 				LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_ADDING_SYS_CERTS, new Object [] {sslForm.getAlias()}),e);
 			
 			} 
 		}
 
+		dtOutput.setData(listSystemCertificate);
 		return dtOutput;
 
     }
@@ -330,5 +433,81 @@ public class KeystoreRestController {
 			index = "-1";
 		}
 		return index;
-	}      
+	}
+	
+	/**
+     * Method that maps the save ssl certificate web request to the controller and saves it in the persistence.
+     * @param file 
+     * @param sslForm Object that represents the backing user form. 
+     * @return 
+     */
+	@JsonView(DataTablesOutput.View.class)
+	@ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/saveauth", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody DataTablesOutput<SystemCertificate> saveAuth(@RequestBody List<PickListElement> aliases) throws IOException {
+    	
+		DataTablesOutput<SystemCertificate> dtOutput = new DataTablesOutput<>();
+		
+		try {
+			
+			if (aliases != null && !aliases.isEmpty()) {
+			
+        			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161)); 
+        			char[ ] password = ksPassword.toCharArray();	
+        			
+        			Iterator<PickListElement> aliasIt = aliases.iterator();
+					String alias;
+					Key key;
+					Certificate cert;
+					Keystore ko = null;
+					SystemCertificate sysCert = new SystemCertificate();
+					List<SystemCertificate> listSystemCertificate = new ArrayList<SystemCertificate>();
+					while (aliasIt.hasNext()) {
+						alias = aliasIt.next().getId();
+						key = ksFromDataToAdd.getKey(alias, password);
+						cert = ksFromDataToAdd.getCertificate(alias);
+						String serialNumber = null;
+						String issuer = null;
+						String subject = null;
+						if (cert != null) {
+							X509Certificate x509Cert = UtilsCertificate.getCertificate(cert.getEncoded());
+							serialNumber = x509Cert.getSerialNumber().toString();
+							issuer = UtilsCertificate.getCertificateIssuerId(x509Cert);
+							subject = UtilsCertificate.getCertificateId(x509Cert);
+						}
+						
+						// Valida el certificado y lo añade al almacén truststore
+	        			// ssl del sistema
+	        			ko = keyStoreFacade.storeCertificate(alias, cert, null);
+	        			// Modificamos el keystore correspondiente, añadiendo el certificado
+	        			keystoreService.saveKeystore(ko);
+	        			
+	        			sysCert.setAlias(alias);
+	        			sysCert.setIssuer(issuer);
+	        			sysCert.setSubject(subject);
+	        			sysCert.setKeystore(ko);
+	        			sysCert.setKey(true);
+	        			
+	        			// Añade el certificado a la persistencia
+	        			sysCertService.saveSystemCertificate(sysCert);
+	        			listSystemCertificate.add(sysCert);
+	        			
+	        			// Importación correcta
+	        			LOGGER.info(LanguageWeb.getFormatResWebMonitoriza(LogMessages.KEY_PAIR_ADDED, new Object [] {alias}));
+					}
+        	
+        			dtOutput.setData(listSystemCertificate);
+        			
+			}
+			
+		} catch (Exception e) {
+							
+			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_ADDING_KEY_PAIR, new Object [] {aliases}),e);
+		
+		}
+
+		return dtOutput;
+
+    }
+	
 }
