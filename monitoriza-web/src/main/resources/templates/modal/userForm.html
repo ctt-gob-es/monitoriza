@@ -52,7 +52,7 @@
 						    var messagePassword = /*[[#{form.user.password.pattern}]]*/ 'default';
 						/*]]>*/
 					</script>
-					<input onblur="validate(this,messagePassword);" name="password" type="password" id="password" th:field="*{password}" class="form-control" pattern=".{7,30}" required />
+					<input onblur="validate(this,messagePassword);" name="password" type="password" id="passwordAdd" th:field="*{password}" class="form-control" pattern=".{7,30}" required />
 					<div id="invalid-password" class="invalid-feedback" ></div>
 				
 				<div style="clear:both;"/>
@@ -61,7 +61,7 @@
 			<div class="form-group-modal">
 				
 					<label for="confirmPassword" class="col-form-label" th:text="#{form.user.confirmPassword}"></label>
-					<input onblur="validateConfirmPassword();" type="password" name="confirmPassword" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" pattern=".{7,30}" required />
+					<input onblur="validateConfirmPassword();" type="password" name="confirmPassword" id="confirmPasswordAdd" th:field="*{confirmPassword}" class="form-control" pattern=".{7,30}" required />
 					<div id="invalid-confirmPassword" class="invalid-modal" ></div>
 				
 				<div style="clear:both;"/>
@@ -86,7 +86,7 @@
 <script th:inline="javascript">
 
 function validateConfirmPassword(){
-	debugger;
+	
 	var pass = $('#passwordAdd').val();
     var repass = $('#confirmPasswordAdd').val();
 	var messageConfirmPassword = /*[[#{form.user.confirmPassword.pattern}]]*/ 'default';

@@ -130,7 +130,7 @@
 					<div class="form-group-modal">
 						<label for="confirmPassword" class="col-form-label" th:text="#{form.user.confirmPassword}"></label>
 						<span id="confirmPassword_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
-						<input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" />
+						<input onblur="validateConfirmPassword();" type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" />
 					</div>
 				</form>
 
