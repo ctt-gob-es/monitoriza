@@ -37,9 +37,5 @@
 			<groupId>es.gob.monitoriza</groupId>
 			<artifactId>monitoriza-i18n</artifactId>
 		</dependency>
-		<dependency>
-			<groupId>es.gob.monitoriza</groupId>
-			<artifactId>monitoriza-commons-util</artifactId>
-		</dependency>
 	</dependencies>
 </project>
