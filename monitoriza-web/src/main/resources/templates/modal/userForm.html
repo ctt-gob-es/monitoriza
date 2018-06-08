@@ -91,7 +91,7 @@ function validateConfirmPassword(){
     var repass = $('#confirmPasswordAdd').val();
 	var messageConfirmPassword = /*[[#{form.user.confirmPassword.pattern}]]*/ 'default';
 	
-	if(($('input[name=password]').val().length == 0) || ($('input[name=confirmPassword]').val().length == 0)){
+	if(($('#passwordAdd').val().length == 0) || ($('#confirmPasswordAdd').val().length == 0)){
 		$('#invalid-confirmPassword').html(messageConfirmPassword);
 		$('#invalid-confirmPassword').addClass("invalid-modal");
     }

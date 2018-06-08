@@ -289,6 +289,7 @@ public class ServiceRestController {
 			} catch (Exception e) {
 				listNewService = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false)
 						.collect(Collectors.toList());
+				dtOutput.setError("-1");
 				throw e;
 			}
 		}

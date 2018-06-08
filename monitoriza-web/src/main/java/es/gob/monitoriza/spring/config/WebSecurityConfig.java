@@ -81,7 +81,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         	.disable()			//Disable CSRF
         .sessionManagement()
 	        .sessionFixation().migrateSession()
-	    	.invalidSessionUrl("/invalidSession.html")
 	    	.maximumSessions(1)
 	    	.maxSessionsPreventsLogin(false)
 	    	.expiredUrl("/login.html"); 
