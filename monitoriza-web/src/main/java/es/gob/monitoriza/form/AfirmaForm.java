@@ -25,6 +25,7 @@
 package es.gob.monitoriza.form;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import es.gob.monitoriza.rest.exception.CheckItFirst;
@@ -57,11 +58,23 @@ public class AfirmaForm {
     private String host = "";
 	
 	/**
-	 * Attribute that represents the value of the input username of the user in the form. 
+	 * Attribute that represents the value of the input port of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.port.notempty}")
     @Size(min=1, max=5, groups=ThenCheckIt.class)
     private String port = "";
+	
+	/**
+	 * Attribute that represents the value of the input isSecure of the user in the form. 
+	 */
+	@NotNull(groups=CheckItFirst.class, message="{form.valid.platform.secure.notnull}")
+    private Boolean isSecure = false;
+	
+	/**
+	 * Attribute that represents the value of the input httpsPort of the user in the form. 
+	 */
+	@Size(min=0, max=5, groups=ThenCheckIt.class)
+    private String httpsPort = "";
 
 	/**
 	 * Attribute that represents the value of the input password of the user in the form. 
@@ -119,12 +132,44 @@ public class AfirmaForm {
 
 	/**
 	 * Sets the value of the attribute {@link #port}.
-	 * @param password the value for the attribute {@link #port} to set.
+	 * @param port the value for the attribute {@link #port} to set.
 	 */
 	public void setPort(String port) {
 		this.port = port;
 	}
 	
+	/**
+	 * Gets the value of the attribute {@link #isSecure}.
+	 * @return the value of the attribute {@link #isSecure}.
+	 */
+	public Boolean getIsSecure() {
+		return isSecure;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #isSecure}.
+	 * @param isSecure the value for the attribute {@link #isSecure} to set.
+	 */
+	public void setIsSecure(Boolean isSecure) {
+		this.isSecure = isSecure;
+	}
+	
+	/**
+	 * Gets the value of the attribute {@link #httpsPort}.
+	 * @return the value of the attribute {@link #httpsPort}.
+	 */	
+	public String getHttpsPort() {
+		return httpsPort;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #httpsPort}.
+	 * @param httpsPort the value for the attribute {@link #httpsPort} to set.
+	 */
+	public void setHttpsPort(String httpsPort) {
+		this.httpsPort = httpsPort;
+	}
+
 	/**
 	 * Gets the value of the attribute {@link #name}.
 	 * @return the value of the attribute {@link #name}.

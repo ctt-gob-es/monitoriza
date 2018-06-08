@@ -26,10 +26,10 @@
 $(document).ready(function() {
 	var actionSave = /*[[@{/saveauth}]]*/;
 	var actionUpdate = /*[[@{/updateauth}]]*/;
-	var actionDelete = /*[[@{/deletessl}]]*/;
+	var actionDelete = /*[[@{/deleteauth}]]*/;
 	var actionLoad = /*[[@{/loadauth}]]*/;
 	var getauths = /*[[@{/authdatatable}]]*/;
-	var editTemplate = /*[[@{/editssl}]]*/;
+	var editTemplate = /*[[@{/editcert}]]*/;
 	var addTemplate = /*[[@{/addauth}]]*/;
 	
 	var tbl = $('#authTable').DataTable({
@@ -116,8 +116,8 @@ $(document).ready(function() {
 			            		// Se oculta la capa 'cargando...'
 			            		hide();
 			                    //tbl.row.add($(data.data)).draw(false);
-			                    $(".modal-pre").html('');
-			            		var pick = $(".modal-pre").pickList({data: data});
+			                    $(".modal-body").html('');
+			            		var pick = $(".modal-body").pickList({data: data});
 			                    $("#addRowBtn").click(function () {
 			                       console.log(pick.getValues());
 			                      	// Se envían los alias de los certificados a añadir al
@@ -174,12 +174,12 @@ $(document).ready(function() {
 		        	$('#authForm').addClass('was-validated');
 		            break;
 		        case 'edit':
-		        	if ($('#authForm')[0].checkValidity() === false) {
+		        	if ($('#certForm')[0].checkValidity() === false) {
 		        		// Se oculta la capa 'cargando...'
 		        		hide();
 		                event.stopPropagation();
 		                
-		                $('#authForm *').filter(':input').each(function(){
+		                $('#certForm *').filter(':input').each(function(){
 		            	    		            	    
 		            	    if(!$(this).checkValidity())
 		            	    {
@@ -192,7 +192,7 @@ $(document).ready(function() {
 		            	});
 		                
 		                // Esto es necesario para forzar que se muestren mensajes de validación de cliente
-		                $('<input type="submit">').hide().appendTo($('#authForm')).click().remove();
+		                $('<input type="submit">').hide().appendTo($('#certForm')).click().remove();
 		            } else {
 		            	$.ajax(actionUpdate, {
 			            	dataType : 'json',
@@ -214,7 +214,7 @@ $(document).ready(function() {
 			                	// Se oculta la capa 'cargando...'
 			                	hide();
 			                	// Se eliminan los posibles errores anteriores...
-			                	clearValidationResult('authForm');
+			                	clearValidationResult('certForm');
 			                	// Se obtiene el JSON de los campos con errores de validación
 			                	// y se modifican los estilos/añaden mensajes
 			                	var validation = $(data)["0"].responseJSON;

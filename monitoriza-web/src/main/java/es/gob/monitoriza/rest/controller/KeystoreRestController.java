@@ -427,8 +427,35 @@ public class KeystoreRestController {
 			
 			keystoreService.saveKeystore(ko);
 			sysCertService.deleteSystemCertificate(systemCertificateId);
-					
+							
+		} catch (Exception e) {
+			index = "-1";
+		}
+		return index;
+	}
+	
+	/**
+	 * Method that maps the delete ssl certificate request from datatable to the controller
+	 * and performs the delete of the user identified by its id.
+	 * 
+	 * @param userId
+	 *            Identifier of the ssl certificate to be deleted.
+	 * @param index
+	 *            Row index of the datatable.
+	 * @return String that represents the name of the view to redirect.
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(path = "/deleteauth", method = RequestMethod.POST)
+	public String deleteAuth(@RequestParam("id") Long systemCertificateId, @RequestParam("index") String index) {
+		try {
+			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161));
+			SystemCertificate cert = sysCertService.getSystemCertificateById(systemCertificateId);
 			
+			Keystore ko = keyStoreFacade.deleteCertificate(cert.getAlias());
+			
+			keystoreService.saveKeystore(ko);
+			sysCertService.deleteSystemCertificate(systemCertificateId);
+							
 		} catch (Exception e) {
 			index = "-1";
 		}
@@ -478,7 +505,7 @@ public class KeystoreRestController {
 						
 						// Valida el certificado y lo añade al almacén truststore
 	        			// ssl del sistema
-	        			ko = keyStoreFacade.storeCertificate(alias, cert, null);
+	        			ko = keyStoreFacade.storeCertificate(alias, cert, key);
 	        			// Modificamos el keystore correspondiente, añadiendo el certificado
 	        			keystoreService.saveKeystore(ko);
 	        			
@@ -506,6 +533,99 @@ public class KeystoreRestController {
 		
 		}
 
+		return dtOutput;
+
+    }
+	
+	/**
+     * Method that maps the save authentication RFC3161 certificate web request to the controller and saves it in the persistence.
+     * @param file 
+     * @param sslForm Object that represents the backing user form. 
+     * @return 
+     */
+	@JsonView(DataTablesOutput.View.class)
+	@ResponseStatus(HttpStatus.OK)
+    @RequestMapping(value = "/updateauth", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody DataTablesOutput<SystemCertificate> updateAuth(@RequestBody CertificateForm authForm, BindingResult bindingResult) throws IOException {
+    	
+		DataTablesOutput<SystemCertificate> dtOutput = new DataTablesOutput<>();
+		
+		boolean error = false;
+		
+		List<SystemCertificate> listSystemCertificate = new ArrayList<SystemCertificate>();
+		
+		if (bindingResult.hasErrors()) {
+			listSystemCertificate = StreamSupport.stream(sysCertService.getAllSystemCertificate().spliterator(), false)
+					.collect(Collectors.toList());
+			JSONObject json = new JSONObject();
+			for (FieldError o : bindingResult.getFieldErrors()) {
+				json.put(o.getField() + "_span", o.getDefaultMessage());
+			}
+			dtOutput.setError(json.toString());
+		}
+				
+		// Comprobamos que se ha indicado el alias sin espacios ni caracteres
+		// especiales.
+		if (authForm.getAlias() != null && authForm.getAlias().length() != authForm.getAlias().trim().length()) {
+			
+			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_NOT_BLANK_ALIAS, new Object [] {authForm.getAlias()}));
+			error = true;
+		}
+				
+		String listChar = StaticMonitorizaProperties.getProperty(StaticConstants.LIST_CHARACTER_SPECIAL);
+		String[ ] characters = listChar.split(",");
+		String res = GeneralConstants.EMPTY_STRING;
+		for (int i = 0; i < characters.length; i++) {
+			int esta = authForm.getAlias().indexOf(characters[i]);
+			if (esta >= 0) {
+				char special = authForm.getAlias().charAt(esta);
+				res += special + GeneralConstants.BLANK;
+			}
+		}
+		
+		if (res.length() > 0) {
+			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_SPECIAL_CHAR_ALIAS, new Object [] {authForm.getAlias()}));
+			error = true;
+		}
+						
+		if (!error) {
+						
+			try {
+				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161)); 
+								
+				SystemCertificate oldCert = sysCertService.getSystemCertificateById(authForm.getIdSystemCertificate());
+				// Acualiza el alias del certificado
+				Keystore ko = keyStoreFacade.updateCertificate(oldCert.getAlias(), authForm.getAlias());
+										
+				// Modificamos el keystore correspondiente, añadiendo el certificado
+				keystoreService.saveKeystore(ko);
+				
+				SystemCertificate sysCert = new SystemCertificate();
+				sysCert.setIdSystemCertificate(authForm.getIdSystemCertificate());
+				sysCert.setAlias(authForm.getAlias());
+				sysCert.setIssuer(authForm.getIssuer());
+				sysCert.setSubject(authForm.getSubject());
+				sysCert.setKeystore(ko);
+				sysCert.setKey(true);
+								
+				// Añade el certificado a la persistencia
+				sysCertService.saveSystemCertificate(sysCert);				
+				
+				listSystemCertificate.add(sysCert);
+				dtOutput.setData(listSystemCertificate);
+				
+				// Importación correcta
+				LOGGER.info(LanguageWeb.getFormatResWebMonitoriza(LogMessages.SYS_CERT_ADDED, new Object [] {authForm.getAlias()}));
+				
+			} catch (Exception e) {
+				listSystemCertificate = StreamSupport.stream(sysCertService.getAllSystemCertificate().spliterator(), false)
+						.collect(Collectors.toList());		
+				LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_ADDING_SYS_CERTS, new Object [] {authForm.getAlias()}),e);
+			
+			} 
+		}
+
+		dtOutput.setData(listSystemCertificate);
 		return dtOutput;
 
     }

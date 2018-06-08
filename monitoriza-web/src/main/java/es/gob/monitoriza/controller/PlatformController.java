@@ -110,7 +110,7 @@ public class PlatformController {
 	@RequestMapping(value = "addtsa", method = RequestMethod.POST)
     public String addTsa(Model model){
 		
-		List<SystemCertificate> listCertificates = StreamSupport.stream(sysCertService.getAllSsl().spliterator(), false)
+		List<SystemCertificate> listCertificates = StreamSupport.stream(sysCertService.getAllAuth().spliterator(), false)
 				.collect(Collectors.toList());				
 		
 		model.addAttribute("tsaform", new TsaForm());

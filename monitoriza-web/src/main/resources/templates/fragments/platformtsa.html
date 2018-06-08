@@ -13,6 +13,8 @@
 							<th th:text="#{table.platform.tsa.name}"></th>
 							<th th:text="#{table.platform.tsa.host}"></th>
 							<th th:text="#{table.platform.tsa.port}"></th>
+							<th></th>
+							<th th:text="#{table.platform.afirma.httpsport}"></th>
 							<th th:text="#{table.platform.tsa.servicecontext}"></th>
 							<th th:text="#{table.platform.tsa.rfc3161context}"></th>
 							<th></th>
@@ -70,6 +72,10 @@ $(document).ready(function() {
 	        { "data": "name" },
 	        { "data": "host" },
 	        { "data": "port" },
+	        { "data": "isSecure",
+		      "visible": false,
+		      "name": "isSecure"},
+		    { "data": "httpsPort"},
 	        { "data": "serviceContext"},
 	        { "data": "rfc3161Context" },
 	        { "data": "rfc3161Certificate.idSystemCertificate",

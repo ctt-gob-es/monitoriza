@@ -548,7 +548,9 @@ $(document).ready(function() {
 			  },
 			  error:function(){
 				  hide();
-				  $('#timerForm').append('<div id="errorModalTimer" class="alert alert-danger" role="alert"><strong>Hay un Timer con el mismo nombre!</strong></div>');
+				  if ($('#errorModalTimer').length == 0){
+				  	$('#timerForm').append('<div id="errorModalTimer" class="alert alert-danger" role="alert"><strong>Hay un Timer con el mismo nombre!</strong></div>');
+				  }
 			  },
 			  dataType: "json",
 			  contentType : "application/json"
@@ -653,7 +655,9 @@ $(document).ready(function() {
 			  },
 			  error:function(){
 				  hide();
-				  $('#serviceForm').append('<div id="errorModalService" class="alert alert-danger" role="alert"><strong>Hay un Servicio con el mismo nombre!</strong></div>');
+				  if ($('#errorModalService').length == 0){
+				  	$('#serviceForm').append('<div id="errorModalService" class="alert alert-danger" role="alert"><strong>Hay un Servicio con el mismo nombre!</strong></div>');
+				  }
 			  },
 			  dataType: "json",
 			  contentType : "application/json"

@@ -169,7 +169,7 @@ public class PlatformRestController {
 					.collect(Collectors.toList());
 			JSONObject json = new JSONObject();
 			for (FieldError o : bindingResult.getFieldErrors()) {
-				json.put(o.getField() + "_span", o.getDefaultMessage());
+				json.put("invalid-" + o.getField(), o.getDefaultMessage());
 			}
 			dtOutput.setError(json.toString());
 		} else {
@@ -184,6 +184,8 @@ public class PlatformRestController {
 				platformAfirma.setName(afirmaForm.getName());
 				platformAfirma.setOcspContext(afirmaForm.getOcspContext());
 				platformAfirma.setPort(afirmaForm.getPort());
+				platformAfirma.setIsSecure(afirmaForm.getIsSecure());
+				platformAfirma.setHttpsPort(afirmaForm.getHttpsPort());
 				platformAfirma.setServiceContext(afirmaForm.getServiceContext());
 				CPlatformType afirmaType = new CPlatformType();
 				afirmaType.setIdPlatformType(IPlatformService.ID_PLATFORM_TYPE_AFIRMA);
@@ -243,6 +245,8 @@ public class PlatformRestController {
 				platformTsa.setName(tsaForm.getName());
 				platformTsa.setOcspContext(tsaForm.getRfc3161Context());
 				platformTsa.setPort(tsaForm.getPort());
+				platformTsa.setIsSecure(tsaForm.getIsSecure());
+				platformTsa.setHttpsPort(tsaForm.getHttpsPort());
 				platformTsa.setServiceContext(tsaForm.getServiceContext());
 				CPlatformType afirmaType = new CPlatformType();
 				afirmaType.setIdPlatformType(IPlatformService.ID_PLATFORM_TYPE_TSA);

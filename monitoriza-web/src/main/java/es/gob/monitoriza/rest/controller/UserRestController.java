@@ -52,6 +52,8 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.form.UserForm;
+import es.gob.monitoriza.form.UserFormEdit;
+import es.gob.monitoriza.form.UserFormPassword;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IUserMonitorizaService;
@@ -190,6 +192,91 @@ public class UserRestController {
 
 		return dtOutput;
 
+	}
+	
+	@RequestMapping(value = "/saveuseredit", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@JsonView(DataTablesOutput.View.class)
+	public @ResponseBody DataTablesOutput<UserMonitoriza> saveEdit(
+			@Validated(OrderedValidation.class) @RequestBody UserFormEdit userForm, BindingResult bindingResult) {
+		DataTablesOutput<UserMonitoriza> dtOutput = new DataTablesOutput<>();
+		UserMonitoriza userMonitoriza = null;
+		List<UserMonitoriza> listNewUser = new ArrayList<UserMonitoriza>();
+
+		if (bindingResult.hasErrors()) {
+			listNewUser = StreamSupport.stream(userService.getAllUserMonitoriza().spliterator(), false)
+					.collect(Collectors.toList());
+			JSONObject json = new JSONObject();
+			for (FieldError o : bindingResult.getFieldErrors()) {
+				json.put(o.getField() + "_span", o.getDefaultMessage());
+			}
+			dtOutput.setError(json.toString());
+		} else {
+			try {
+				if (userForm.getIdUserMonitorizaEdit() != null) {
+					userMonitoriza = userService.getUserMonitorizaById(userForm.getIdUserMonitorizaEdit());
+				} else {
+					userMonitoriza = new UserMonitoriza();
+				}
+				userMonitoriza.setLogin(userForm.getLogin());
+				userMonitoriza.setAttemptsNumber(NumberConstants.NUM0);
+				userMonitoriza.setEmail(userForm.getEmail());
+				userMonitoriza.setIsBlocked(Boolean.FALSE);
+				userMonitoriza.setLastAccess(null);
+				userMonitoriza.setLastIpAccess(null);
+				userMonitoriza.setName(userForm.getName());
+				userMonitoriza.setSurnames(userForm.getSurnames());
+
+				UserMonitoriza user = userService.saveUserMonitoriza(userMonitoriza);
+
+				listNewUser.add(user);
+			} catch (Exception e) {
+				listNewUser = StreamSupport.stream(userService.getAllUserMonitoriza().spliterator(), false)
+						.collect(Collectors.toList());
+				throw e;
+			}
+		}
+
+		dtOutput.setData(listNewUser);
+
+		return dtOutput;
+
+	}
+	
+	@RequestMapping(value = "/saveuserpassword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public String savePassword(
+			@Validated(OrderedValidation.class) @RequestBody UserFormPassword userFormPassword, BindingResult bindingResult) {
+		String result = "";
+		UserMonitoriza userMonitoriza = userService.getUserMonitorizaById(userFormPassword.getIdUserMonitorizaPass());
+		
+		if (bindingResult.hasErrors()) {
+			JSONObject json = new JSONObject();
+			for (FieldError o : bindingResult.getFieldErrors()) {
+				json.put(o.getField() + "_span", o.getDefaultMessage());
+			}
+			result = json.toString();
+		} else {
+			String oldPwd = userFormPassword.getOldPassword();
+			String pwd = userFormPassword.getPassword();
+			
+			BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+			String hashPwd = bc.encode(pwd);
+			
+			try {
+				if (bc.matches(oldPwd, userMonitoriza.getPassword())) {
+					userMonitoriza.setPassword(hashPwd);
+					
+					userService.saveUserMonitoriza(userMonitoriza);
+					result = "0";
+				}else {
+					result = "-1";
+				}
+			}catch(Exception e) {
+				result = "-2";
+				throw e;
+			}
+		}
+		
+		return result;
 	}
 
 }

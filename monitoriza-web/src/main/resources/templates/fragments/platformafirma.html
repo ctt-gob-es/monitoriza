@@ -13,6 +13,8 @@
 							<th th:text="#{table.platform.afirma.name}"></th>
 							<th th:text="#{table.platform.afirma.host}"></th>
 							<th th:text="#{table.platform.afirma.port}"></th>
+							<th></th>
+							<th th:text="#{table.platform.afirma.httpsport}"></th>
 							<th th:text="#{table.platform.afirma.servicecontext}"></th>
 							<th th:text="#{table.platform.afirma.ocspcontext}"></th>
 						</tr>
@@ -25,6 +27,7 @@
 
 <script th:inline="javascript">
 $(document).ready(function() {
+				
 	var actionSave = /*[[@{/saveafirma}]]*/;
 	var actionDelete = /*[[@{/deleteplatform}]]*/;
 	var getafirmas = /*[[@{/afirmadatatable}]]*/;
@@ -68,6 +71,10 @@ $(document).ready(function() {
 	        { "data": "name" },
 	        { "data": "host" },
 	        { "data": "port" },
+	        { "data": "isSecure",
+	          "visible": false,
+	          "name": "isSecure"},
+	        { "data": "httpsPort"},
 	        { "data": "serviceContext"},
 	        { "data": "ocspContext" }
 	        ]
@@ -101,7 +108,7 @@ $(document).ready(function() {
 		            	    
 		            	});
 		                
-		                // Esto es necesario para forzar que se muestren mensajes de validación de cliente
+		                // Esto es necesario para forzar que se muestren mensajes de validacion de cliente
 		                $('<input type="submit">').hide().appendTo($('#afirmaForm')).click().remove();
 		            } else {
 		            	$.ajax(actionSave, {
@@ -111,25 +118,35 @@ $(document).ready(function() {
 			                type:'POST',
 			                success: function(data){
 			                  
+								var errores = JSON.parse(data.error);
+								
+								if (data.error != null){
+									  jQuery.each(errores, function(i, val) {
+										$('#afirmaForm *').filter('.invalid-modal').each(function(){
+											debugger;
+											if (i == $(this).attr('id')){
+												$("#" + i).text(val);
+											}
+										});
+									  });
+								  }else{
+									tbl.row.add($(data.data)).draw(false);
+									
+									$('#altEditor-modal .modal-body .alert').remove();
+				                    $('#altEditor-modal').modal('hide');
+								  }
+			                	
 			            		// Se oculta la capa 'cargando...'
 			            		hide();
-			                    tbl.row.add($(data.data)).draw(false);
-			                    		                    
-			                    $('#altEditor-modal .modal-body .alert').remove();
-			                    $('#altEditor-modal').modal('hide');
-			                    		                    
+			                    
+			                    if ($('#errorModalPlatform').length > 0){
+									$('#errorModalPlatform').remove();
+								}
+			                    
 			                },
 			                error:function(data){
-			                	
-			                	// Se oculta la capa 'cargando...'
 			                	hide();
-			                	// Se eliminan los posibles errores anteriores...
-			                	clearValidationResult('afirmaForm');
-			                	// Se obtiene el JSON de los campos con errores de validación
-			                	// y se modifican los estilos/añaden mensajes
-			                	var validation = $(data)["0"].responseJSON;
-			                	drawValidationResult(validation.fieldErrors);
-			              
+			                	$('#afirmaForm').append('<div id="errorModalPlatform" class="alert alert-danger" role="alert"><strong>Hay una plataforma con el mismo nombre!</strong></div>');
 			                }
 			            });
 		            }
@@ -169,19 +186,14 @@ $(document).ready(function() {
 			                    		                    
 			                    $('#altEditor-modal .modal-body .alert').remove();
 			                    $('#altEditor-modal').modal('hide');
-			                    		                    
+			                    
+			                    if ($('#errorModalPlatform').length > 0){
+									$('#errorModalPlatform').remove();
+								}
 			                },
 			                error:function(data){
-			                	
-			                	// Se oculta la capa 'cargando...'
 			                	hide();
-			                	// Se eliminan los posibles errores anteriores...
-			                	clearValidationResult('afirmaForm');
-			                	// Se obtiene el JSON de los campos con errores de validación
-			                	// y se modifican los estilos/añaden mensajes
-			                	var validation = $(data)["0"].responseJSON;
-			                	drawValidationResult(validation.fieldErrors);
-			              
+			                	$('#afirmaForm').append('<div id="errorModalPlatform" class="alert alert-danger" role="alert"><strong>Hay una plataforma con el mismo nombre!</strong></div>');
 			                }
 			            });
 		            }

@@ -286,7 +286,8 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 * @throws CryptographyException If there is some error decrypting the password of the keystore.
 	 */
 	private Keystore updateEntryToKeystore(String oldEntryAlias, String newEntryAlias) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CryptographyException {
-		char[ ] entryPass = new String(getKeystoreDecodedPassword()).toCharArray();
+		//char[ ] entryPass = new String(getKeystoreDecodedPassword()).toCharArray();
+		char[] entryPass = AES_PASSWORD.toCharArray();
 		// Cargamos el keystore SSL desde la persistencia
 		KeyStore ks = KeyStore.getInstance(keystore.getKeystoreType());
 		
@@ -332,7 +333,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 			SecretKeySpec key = new SecretKeySpec(AES_PASSWORD.getBytes(), AES_ALGORITHM);
 			Cipher cipher = Cipher.getInstance(AES_PADDING_ALGORITHM);
 			cipher.init(Cipher.DECRYPT_MODE, key);
-			
+					
 			return cipher.doFinal(Base64.decodeBase64(keystore.getPassword()));
 		} catch (Exception e) {
 			String errorMsg = LanguageWeb.getFormatResWebMonitoriza(LOG_SK014, new Object[ ] { keystore.getTokenName() });
