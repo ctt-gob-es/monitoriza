@@ -130,7 +130,7 @@
 					<div class="form-group-modal">
 						<label for="confirmPassword" class="col-form-label" th:text="#{form.user.confirmPassword}"></label>
 						<span id="confirmPassword_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
-						<input type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" />
+						<input onblur="validateConfirmPassword();" type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" />
 					</div>
 				</form>
 
@@ -275,10 +275,14 @@ $(document).ready(function() {
 		            		$('#userForm').append('<div id="errorModalUser3" class="alert alert-danger" role="alert"><strong>El campo Confirmar contrase&ntilde;a es obligatorio y debe coincidir con el campo Contrase&ntilde;a.</strong></div>');
 		            		hide();
 		            	}else{
+		            		
+		            		$("#userForm input")[4].value = $('#passwordAdd').val();
+		            		$("#userForm input")[5].value = $('#confirmPasswordAdd').val();
+		            		
 		            		$.ajax(actionSave, {
 				            	dataType : 'json',
 				            	contentType:'application/json',
-				                data : JSON.stringify(data),
+				                data : JSON.stringify($("#userForm").serializeJSON()),
 				                type:'POST',
 				                success: function(data){
 				                	var errores = JSON.parse(data.error);
@@ -308,6 +312,7 @@ $(document).ready(function() {
 				                },
 				                error:function(data){
 				                	hide();
+				                	$('#errorModalUser').remove();
 				                	$('#userForm').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>Hay un usuario con el mismo login!</strong></div>');
 				                }
 				            });
@@ -380,6 +385,7 @@ $(document).ready(function() {
 		  },
 		  error:function(){
 			  hide();
+			  $('#errorModalUser').remove();
 			  $('#userFormPassword').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>Error inesperado, int\u00E9ntelo mas tarde!</strong></div>');
 		  },
 		  dataType: "json",
@@ -413,6 +419,7 @@ $(document).ready(function() {
 			  },
 			  error:function(){
 				  hide();
+				  $('#errorModalEdit').remove();
 				  $('#userFormEdit').append('<div id="errorModalEdit" class="alert alert-danger" role="alert"><strong>Error inesperado, int\u00E9ntelo mas tarde!</strong></div>');
 			  },
 			  dataType: "json",

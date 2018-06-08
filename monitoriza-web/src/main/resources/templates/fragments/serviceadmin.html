@@ -28,8 +28,15 @@
 						</select></div>
 					</div>
 					<div class="form-row">
-						<div id="serviceTypesContainer" class="form-group col-md-2">
+						<div class="col-md-4">
 							<label for="serviceTypes" th:text="#{form.service.servicetype}"></label>
+						</div>
+						<div class="col-md-8">
+							<label for="endpoint" th:text="#{form.service.endpoint}"></label> 
+						</div>
+					</div>
+					<div class="form-row">
+						<div id="serviceTypesContainer" class="form-group col-md-3">
 							<select id="serviceTypes" class="form-control"
 							th:field="*{serviceType}" required>
 								<option selected="selected" value="-1"
@@ -40,11 +47,9 @@
 							</select>
 						</div>
 						<div class="form-group col-md-6">
-							<label for="endpoint" th:text="#{form.service.endpoint}"></label> 
-							<input type="text" class="form-control" id="endpoint" readonly required>
+							<input type="text" class="form-control" alt id="endpoint" readonly required>
 						</div>
-						<div class="form-group col-md-4">
-							<label for="nameWsdl">&nbsp;</label> 
+						<div class="form-group col-md-3">
 							<span id="nameWsdl_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 							<input type="text" class="form-control" id="nameWsdl" th:field="*{nameWsdl}" required>
 						</div>
@@ -653,10 +658,16 @@ $(document).ready(function() {
 				   }
 				  
 			  },
-			  error:function(){
+			  error:function(data){
 				  hide();
-				  if ($('#errorModalService').length == 0){
-				  	$('#serviceForm').append('<div id="errorModalService" class="alert alert-danger" role="alert"><strong>Hay un Servicio con el mismo nombre!</strong></div>');
+				  if (data.error == "-1"){
+					  if ($('#errorModalService').length == 0){
+					  	$('#serviceForm').append('<div id="errorModalService" class="alert alert-danger" role="alert"><strong>Hay un Servicio con el mismo nombre!</strong></div>');
+					  }
+				  }else{
+					  if ($('#errorModalService').length == 0){
+					  	$('#serviceForm').append('<div id="errorModalService" class="alert alert-danger" role="alert"><strong>Error inesperado, int\u00E9ntelo mas tarde!</strong></div>');
+					  }
 				  }
 			  },
 			  dataType: "json",
@@ -686,15 +697,21 @@ function cleanForm(f){
 function timeToMillisecond(id){
 
 	var numValue =  $(id)[0].value;
-	var splitValue = numValue.split(':');
-	var finalValue = 0;
-	if (splitValue.length == 2){
-		finalValue = (+splitValue[0]) * 60 * 60 + (+splitValue[1]) * 60;
-	} else if (splitValue.length == 3){
-		finalValue = (+splitValue[0]) * 60 * 60 + (+splitValue[1]) * 60 + (+splitValue[2]);
-	}
+	
+	if (id.includes(":")){
+		var splitValue = numValue.split(':');
+		var finalValue = 0;
+		if (splitValue.length == 2){
+			finalValue = (+splitValue[0]) * 60 * 60 + (+splitValue[1]) * 60;
+		} else if (splitValue.length == 3){
+			finalValue = (+splitValue[0]) * 60 * 60 + (+splitValue[1]) * 60 + (+splitValue[2]);
+		}
 
-	finalValue = finalValue * 1000;
+		finalValue = finalValue * 1000;
+	}else{
+		finalValue = numValue;
+	}
+	
 	
 	return finalValue;
 }

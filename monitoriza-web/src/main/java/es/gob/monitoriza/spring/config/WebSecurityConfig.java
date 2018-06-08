@@ -57,13 +57,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         
       http
-        .authorizeRequests().antMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/fonts/icons/themify/**", "/fonts/fontawesome/**", "/less/**").permitAll() // Enable css, images and js when logged out
-        
-          .and()
         .authorizeRequests()
-          .antMatchers("/", "add", "delete/{id}", "edit/{id}", "save", "users")
+        	.antMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/fonts/icons/themify/**", "/fonts/fontawesome/**", "/less/**")
+        	.permitAll() // Enable css, images and js when logged out
+        	.and()
+        .authorizeRequests()
+          	.antMatchers("/", "add", "delete/{id}", "edit/{id}", "save", "users")
             .permitAll()
-            .anyRequest().authenticated()
+            .anyRequest()
+            .authenticated()
             .and()
         .formLogin()
             .loginPage("/")
@@ -74,8 +76,14 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .permitAll()
             .and()
         .httpBasic()
-            .and()
-        .csrf().disable(); //Disable CSRF
+        	.and()
+        .csrf()
+        	.disable()			//Disable CSRF
+        .sessionManagement()
+	        .sessionFixation().migrateSession()
+	    	.maximumSessions(1)
+	    	.maxSessionsPreventsLogin(false)
+	    	.expiredUrl("/login.html"); 
 
     }
        

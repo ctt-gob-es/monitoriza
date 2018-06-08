@@ -58,7 +58,6 @@ import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IUserMonitorizaService;
 import es.gob.monitoriza.utilidades.NumberConstants;
-import es.gob.monitoriza.validator.UserValidator;
 
 /**
  * <p>
@@ -86,14 +85,6 @@ public class UserRestController {
 	 */
 	@Autowired
 	private IUserMonitorizaService userService;
-
-	@Autowired
-	private UserValidator userValidator;
-
-	// @InitBinder("userForm")
-	// public void setupBinder(WebDataBinder binder) {
-	// binder.addValidators(userValidator);
-	// }
 
 	/**
 	 * Method that maps the list users web requests to the controller and
@@ -161,14 +152,14 @@ public class UserRestController {
 				} else {
 					userMonitoriza = new UserMonitoriza();
 				}
-				if (!"".equals(userForm.getPassword())){
+				if (!"".equals(userForm.getPassword())) {
 					String pwd = userForm.getPassword();
 					BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 					String hashPwd = bc.encode(pwd);
 
 					userMonitoriza.setPassword(hashPwd);
 				}
-				
+
 				userMonitoriza.setLogin(userForm.getLogin());
 				userMonitoriza.setAttemptsNumber(NumberConstants.NUM0);
 				userMonitoriza.setEmail(userForm.getEmail());
@@ -193,7 +184,7 @@ public class UserRestController {
 		return dtOutput;
 
 	}
-	
+
 	@RequestMapping(value = "/saveuseredit", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
 	public @ResponseBody DataTablesOutput<UserMonitoriza> saveEdit(
@@ -241,13 +232,13 @@ public class UserRestController {
 		return dtOutput;
 
 	}
-	
+
 	@RequestMapping(value = "/saveuserpassword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public String savePassword(
-			@Validated(OrderedValidation.class) @RequestBody UserFormPassword userFormPassword, BindingResult bindingResult) {
+	public String savePassword(@Validated(OrderedValidation.class) @RequestBody UserFormPassword userFormPassword,
+			BindingResult bindingResult) {
 		String result = "";
 		UserMonitoriza userMonitoriza = userService.getUserMonitorizaById(userFormPassword.getIdUserMonitorizaPass());
-		
+
 		if (bindingResult.hasErrors()) {
 			JSONObject json = new JSONObject();
 			for (FieldError o : bindingResult.getFieldErrors()) {
@@ -257,25 +248,65 @@ public class UserRestController {
 		} else {
 			String oldPwd = userFormPassword.getOldPassword();
 			String pwd = userFormPassword.getPassword();
-			
+
 			BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
 			String hashPwd = bc.encode(pwd);
-			
+
 			try {
 				if (bc.matches(oldPwd, userMonitoriza.getPassword())) {
 					userMonitoriza.setPassword(hashPwd);
-					
+
 					userService.saveUserMonitoriza(userMonitoriza);
 					result = "0";
-				}else {
+				} else {
 					result = "-1";
 				}
-			}catch(Exception e) {
+			} catch (Exception e) {
 				result = "-2";
 				throw e;
 			}
 		}
-		
+
+		return result;
+	}
+
+	@RequestMapping(value = "/menueditsave", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public String saveEditMenu(@Validated(OrderedValidation.class) @RequestBody UserFormEdit userForm,
+			BindingResult bindingResult) {
+		UserMonitoriza userMonitoriza = null;
+		String result = "";
+
+		if (bindingResult.hasErrors()) {
+			JSONObject json = new JSONObject();
+			for (FieldError o : bindingResult.getFieldErrors()) {
+				json.put(o.getField() + "_span", o.getDefaultMessage());
+			}
+			result = json.toString();
+		} else {
+			try {
+				if (userForm.getIdUserMonitorizaEdit() != null) {
+					userMonitoriza = userService.getUserMonitorizaById(userForm.getIdUserMonitorizaEdit());
+				} else {
+					userMonitoriza = new UserMonitoriza();
+				}
+				userMonitoriza.setLogin(userForm.getLogin());
+				userMonitoriza.setAttemptsNumber(NumberConstants.NUM0);
+				userMonitoriza.setEmail(userForm.getEmail());
+				userMonitoriza.setIsBlocked(Boolean.FALSE);
+				userMonitoriza.setLastAccess(null);
+				userMonitoriza.setLastIpAccess(null);
+				userMonitoriza.setName(userForm.getName());
+				userMonitoriza.setSurnames(userForm.getSurnames());
+
+				userService.saveUserMonitoriza(userMonitoriza);
+
+				result = "0";
+			} catch (Exception e) {
+				result = "-1";
+				throw e;
+			}
+		}
+
 		return result;
 	}
 

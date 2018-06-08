@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" 
+      xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <title>Session page</title>
+        <meta charset="utf-8" />
+        <link type="text/css" rel="stylesheet" th:href="@{css/bootstrap.min.css}"/>
+    </head>
+      
+    <body> 
+		<div class="container" >    		
+    		<div class="row">    			
+				<h3 class="alert alert-danger">Sesión caducada</h3>
+			</div>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-5">
+					<a class="btn btn-primary btn-lg btn-block" th:href="@{/login.html}">login</a>
+				</div>										
+			</div>  	
+     	</div>
+    </body>
+</html>

@@ -95,31 +95,30 @@ public class UserController {
 		return "modal/userForm";
 	}
 
-	/**
-	 * Method that maps the edit user web request to the controller and loads
-	 * the user to the backing form.
-	 * 
-	 * @param userId
-	 *            Identifier of the user to be edited.
-	 * @param model
-	 *            Holder object for model attributes.
-	 * @return String that represents the name of the view to forward.
-	 */
-//	@RequestMapping(value = "edituser", method = RequestMethod.POST)
-//	public String editUser(@RequestParam("id") Long userId, Model model) {
-//		UserMonitoriza user = userService.getUserMonitorizaById(userId);
-//		UserFormEdit userFormEdit = new UserFormEdit();
-//		
-//		userFormEdit.setIdUserMonitoriza(user.getIdUserMonitoriza());
-//		userFormEdit.setLogin(user.getLogin());
-//		userFormEdit.setEmail(user.getEmail());
-//		userFormEdit.setName(user.getName());
-//		userFormEdit.setSurnames(user.getSurnames());
-//		
-//		model.addAttribute("userformEdit", userFormEdit);
-//		model.addAttribute("action", "edit");
-//		
-//		return "modal/userForm";
-//	}
+	@RequestMapping(value = "menupass")
+	public String menuEdit(@RequestParam("username") String username, Model model) {
+		UserMonitoriza userMonitoriza = userService.getUserMonitorizaByLogin(username);
+		UserFormPassword userFormPassword = new UserFormPassword();
+
+		userFormPassword.setIdUserMonitorizaPass(userMonitoriza.getIdUserMonitoriza());
+
+		model.addAttribute("userFormPassword", userFormPassword);
+		return "modal/userFormPass.html";
+	}
+
+	@RequestMapping(value = "menuedit")
+	public String menuPass(@RequestParam("username") String username, Model model) {
+		UserMonitoriza userMonitoriza = userService.getUserMonitorizaByLogin(username);
+		UserFormEdit userFormEdit = new UserFormEdit();
+
+		userFormEdit.setIdUserMonitorizaEdit(userMonitoriza.getIdUserMonitoriza());
+		userFormEdit.setName(userMonitoriza.getName());
+		userFormEdit.setSurnames(userMonitoriza.getSurnames());
+		userFormEdit.setEmail(userMonitoriza.getEmail());
+		userFormEdit.setLogin(userMonitoriza.getLogin());
+
+		model.addAttribute("userformEdit", userFormEdit);
+		return "modal/userFormEdit.html";
+	}
 
 }
