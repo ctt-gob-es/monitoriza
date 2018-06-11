@@ -116,7 +116,6 @@ COMMENT ON COLUMN "SERVICE_MONITORIZA"."SERVICE_TYPE" IS 'Tipo del servicio.';
 CREATE TABLE "ALARM_MONITORIZA" (
 	"ID_ALARM" Number(19,0) NOT NULL,
 	"NAME" Varchar2(100) NOT NULL,
-	"SCOPE" Varchar2(10) NOT NULL,
 	"BLOCKED_TIME" Number(19,0) NOT NULL
 )
 TABLESPACE MONIT_CONFIGURACION_TABLESPACE INITRANS 1 MAXTRANS 255 NOCACHE;
@@ -125,13 +124,12 @@ ALTER TABLE "ALARM_MONITORIZA" ADD CONSTRAINT "ALARM_NAME_UNIQUE" UNIQUE ("NAME"
 COMMENT ON TABLE "ALARM_MONITORIZA" IS 'Tabla que almacena la información relativa a las alarmas de monitoriz@.';
 COMMENT ON COLUMN "ALARM_MONITORIZA"."ID_ALARM" IS 'Identificador de la tabla.';
 COMMENT ON COLUMN "ALARM_MONITORIZA"."NAME" IS 'Valor que representa el nombre único de la alarma.';
-COMMENT ON COLUMN "ALARM_MONITORIZA"."SCOPE" IS 'Valor que representa el ámbito de la alarma: degradado, caído, ambos.';
 COMMENT ON COLUMN "ALARM_MONITORIZA"."BLOCKED_TIME" IS 'Valor que representa el tiempo en milisegundos que se bloquean las alarmas de este tipo antes de lanzar un resumen.';
 
 -- Table MAIL_MONITORIZA
 CREATE TABLE "MAIL_MONITORIZA" (
 	"ID_MAIL" Number(19,0) NOT NULL,
-	"EMAIL_ADDRESS" Varchar2(10) NOT NULL,
+	"EMAIL_ADDRESS" Varchar2(150) NOT NULL,
 	--"ID_ALARM_MAIL" Number(19,0) NOT NULL
 )
 TABLESPACE MONIT_CONFIGURACION_TABLESPACE INITRANS 1 MAXTRANS 255 NOCACHE;
