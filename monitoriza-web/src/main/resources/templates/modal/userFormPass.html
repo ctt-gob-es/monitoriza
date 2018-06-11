@@ -12,19 +12,19 @@
 					
 					<input type='hidden' class='primarykey' id="idUserMonitorizaPass" th:field="*{idUserMonitorizaPass}">
 					
-					<div class="form-group-modal">
+					<div class="form-group">
 						<label for="oldPassword" class="col-form-label" th:text="#{form.user.oldPassword}"></label>
 						<span id="oldPassword_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 						<input type="password" id="oldPassword" th:field="*{oldPassword}" class="form-control" />
 					</div>
 					
-					<div class="form-group-modal">
+					<div class="form-group">
 						<label for="password" class="col-form-label" th:text="#{form.user.password}"></label>
 						<span id="password_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 						<input type="password" id="password" th:field="*{password}" class="form-control" />
 					</div>
 					
-					<div class="form-group-modal">
+					<div class="form-group">
 						<label for="confirmPassword" class="col-form-label" th:text="#{form.user.confirmPassword}"></label>
 						<span id="confirmPassword_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 						<input onblur="validateConfirmPassword();" type="password" id="confirmPassword" th:field="*{confirmPassword}" class="form-control" />

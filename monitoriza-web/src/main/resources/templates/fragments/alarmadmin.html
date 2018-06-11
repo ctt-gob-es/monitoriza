@@ -108,7 +108,7 @@ $(document).ready(function() {
 	
 	$('.select2').select2();
 	
-	// Gestión de las datatables
+	// Gestiï¿½n de las datatables
 	var actionSaveMail = /*[[@{/savemail}]]*/;
 	var actionEmails = /*[[@{/emails}]]*/;
 	var actionDeleteMail = /*[[@{/deletemail}]]*/;
@@ -212,7 +212,7 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acción "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acciï¿½n "'+accion+'" no autorizada!</strong></div>');
 		            break;
 		    }
 		});
@@ -348,12 +348,12 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acción "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acciï¿½n "'+accion+'" no autorizada!</strong></div>');
 		            break;
 		    }
 		});
 	
-	// Control del botón para guardar un correo
+	// Control del botï¿½n para guardar un correo
 	$( "#mailBtn" ).click(function( event ) {
 	  event.preventDefault();
 
@@ -553,6 +553,8 @@ function cleanForm(f){
 	});
 	
 	$(f + " select").select2().val('').change();
+	
+	$(f).find(".alert").remove();
 
 }
 

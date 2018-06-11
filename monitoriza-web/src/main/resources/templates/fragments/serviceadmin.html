@@ -76,7 +76,7 @@
 						<div class="form-group col-md-6">
 							<label for="uLostTime" th:text="#{form.service.ulost}"></label> 
 							<span id="uLost_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
-							<input type="time" step="1" class="form-control" id="uLostTime" th:field="*{lostThresholdTime}" required>
+							<input type="text" step="1" class="form-control" id="uLostTime" th:field="*{lostThresholdTime}" required>
 						</div>
 					</div>
 					
@@ -242,7 +242,7 @@ $(document).ready(function() {
 	            });
 	        });
 
-	// Gestión de las datatables
+	// Gestiï¿½n de las datatables
 	
 	var actionSaveService = /*[[@{/saveservice}]]*/;
 	var actionDeleteService = /*[[@{/deleteservice}]]*/;
@@ -278,8 +278,7 @@ $(document).ready(function() {
 				
 				var timeoutTime = millisecondToTime(timeoutValue);
 				var degradedThresholdTime = millisecondToTime(degradedThresholdValue);
-				var lostThresholdTime = millisecondToTime(lostThresholdValue);
-				
+								
                 $("#idService").val(idService);
                 $("#nameService").val(nameService);
                 $("#timeoutTime").val(timeoutTime);
@@ -288,7 +287,7 @@ $(document).ready(function() {
 				typeServiceChange(idPlatform, serviceTypes);
                 $("#timer").val(idTimer);
                 $("#uDegradedTime").val(degradedThresholdTime);
-                $("#uLostTime").val(lostThresholdTime);
+                $("#uLostTime").val(lostThresholdValue);
                 $("#alarm").val(idAlarm);
                 
 			}
@@ -377,7 +376,7 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acción "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acciï¿½n "'+accion+'" no autorizada!</strong></div>');
 		            break;
 		    }
 		});
@@ -483,12 +482,12 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acción "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acciï¿½n "'+accion+'" no autorizada!</strong></div>');
 		            break;
 		    }
 		});
 	
-	// Control del botón para guardar un timer
+	// Control del botï¿½n para guardar un timer
 	$( "#timerBtn" ).click(function( event ) {
 	  event.preventDefault();
 
@@ -564,7 +563,7 @@ $(document).ready(function() {
 	  
 	});
 	
-	// Control del botón para guardar un timer
+	// Control del botï¿½n para guardar un timer
 	$( "#serviceBtn" ).click(function( event ) {
 	  event.preventDefault();
 	  

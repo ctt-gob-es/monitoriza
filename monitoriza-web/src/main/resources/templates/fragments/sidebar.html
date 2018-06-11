@@ -62,9 +62,6 @@
 				   <ul class="dropdown-menu">
 						<li>
 							<a id="aAfirmaAdmin" class='sidebar-link' href="#">
-								<span class="icon-holder"> 
-									<i class="c-orange-500 ti-pencil-alt"></i>
-								</span>
 							    <span class="title" th:text="#{menu.admin.platform.afirma}"></span>
 								<script th:inline="javascript">
 		                 			var actionAfirma = /*[[@{/platformafirma}]]*/;
@@ -74,9 +71,6 @@
 	               		</li>
 						<li>
 							<a id="aTsaAdmin" class='sidebar-link' href="#">
-								<span class="icon-holder"> 
-									<i class="c-orange-500 ti-time"></i>
-								</span>
 							    <span class="title" th:text="#{menu.admin.platform.tsa}"></span>
 								<script th:inline="javascript">
 		                 			var actionTsa = /*[[@{/platformtsa}]]*/;
@@ -89,7 +83,7 @@
 				<li class="nav-item">
 	              <a id="aServiceAdmin" class='sidebar-link' href="#">
 	                <span class="icon-holder">
-	                  <i class="c-red-500 ti-panel"></i>
+	                  <i class="c-green-500 ti-panel"></i>
 	                </span>
 	                <span class="title" th:text="#{menu.admin.service}"></span>
 	                 <script th:inline="javascript">
@@ -101,7 +95,7 @@
 	            <li class="nav-item dropdown">
 	              <a id="aKeystoreAdmin" class="dropdown-toggle" href="javascript:void(0);">
 	                <span class="icon-holder">
-	                  <i class="c-yellow-500 ti-key"></i>
+	                  <i class="c-brown-500 ti-key"></i>
 	                </span>
 	                <span class="title" th:text="#{menu.admin.keystore}"></span>
 	                <span class="arrow"><i class="ti-angle-right"></i></span>
@@ -109,10 +103,7 @@
 				   <ul class="dropdown-menu">
 						<li>
 							<a id="aSslAdmin" class='sidebar-link' href="#">
-								<span class="icon-holder"> 
-									<i class="c-purple-500 ti-pin"></i>
-								</span>
-							    <span class="title" th:text="#{menu.admin.keystore.ssl}"></span>
+								<span class="title" th:text="#{menu.admin.keystore.ssl}"></span>
 								<script th:inline="javascript">
 		                 			var actionSsl = /*[[@{/ssladmin}]]*/;
 		                 			$('#aSslAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionSsl, 'optionReplacement', 'GET', null, true); return false;});
@@ -121,9 +112,6 @@
 	               		</li>
 						<li>
 							<a id="aAuthAdmin" class='sidebar-link' href="#">
-								<span class="icon-holder"> 
-									<i class="c-blue-500 ti-unlock"></i>
-								</span>
 							    <span class="title" th:text="#{menu.admin.keystore.auth}"></span>
 								<script th:inline="javascript">
 		                 			var actionAuth = /*[[@{/authadmin}]]*/;
@@ -136,7 +124,7 @@
 				<li class="nav-item">
 	              <a id="aAlarmAdmin" class='sidebar-link' href="#">
 	                <span class="icon-holder">
-	                  <i class="c-green-500 ti-alarm-clock"></i>
+	                  <i class="c-red-500 ti-alarm-clock"></i>
 	                </span>
 	                <span class="title" th:text="#{menu.admin.alarm}"></span>
 	                 <script th:inline="javascript">
