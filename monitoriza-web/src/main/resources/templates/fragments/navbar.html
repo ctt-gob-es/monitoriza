@@ -37,7 +37,12 @@
 	      						success : function(data) {
 	      							hide();
 	      							$("body").append(data);
-	      							$('#modalEdit').modal('show');
+
+	      							$('#modalEdit').modal({
+	      		                    	backdrop: 'static',
+	      		                        keyboard: true, 
+	      		                        show: true
+	      		                	});
 	      						},
 	      						error : function() {}
 	      					});
@@ -68,7 +73,12 @@
 	      						success : function(data) {
 	      							hide();
 	      							$("body").append(data);
-	      							$('#modalPassword').modal('show');
+
+	      							$('#modalPassword').modal({
+	      		                    	backdrop: 'static',
+	      		                        keyboard: true, 
+	      		                        show: true
+	      		                	});
 	      						},
 	      						error : function() {}
 	      					});

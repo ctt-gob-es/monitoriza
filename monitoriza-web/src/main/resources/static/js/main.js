@@ -281,3 +281,8 @@ function cleanValidationResult(formId) {
 	    $(this).removeClass("is-invalid");
 	});
 }
+
+function closeButton(btnId){
+	$('#' + btnId).modal('hide');
+	$('#' + btnId).remove();
+}

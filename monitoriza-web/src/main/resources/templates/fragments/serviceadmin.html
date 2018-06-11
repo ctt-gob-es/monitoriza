@@ -698,7 +698,7 @@ function timeToMillisecond(id){
 
 	var numValue =  $(id)[0].value;
 	
-	if (id.includes(":")){
+	if (numValue.indexOf(':') != -1){
 		var splitValue = numValue.split(':');
 		var finalValue = 0;
 		if (splitValue.length == 2){
