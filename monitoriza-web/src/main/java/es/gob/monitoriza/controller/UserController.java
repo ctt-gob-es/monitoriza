@@ -96,7 +96,7 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "menupass")
-	public String menuEdit(@RequestParam("username") String username, Model model) {
+	public String menuPass(@RequestParam("username") String username, Model model) {
 		UserMonitoriza userMonitoriza = userService.getUserMonitorizaByLogin(username);
 		UserFormPassword userFormPassword = new UserFormPassword();
 
@@ -107,15 +107,15 @@ public class UserController {
 	}
 
 	@RequestMapping(value = "menuedit")
-	public String menuPass(@RequestParam("username") String username, Model model) {
+	public String menuEdit(@RequestParam("username") String username, Model model) {
 		UserMonitoriza userMonitoriza = userService.getUserMonitorizaByLogin(username);
 		UserFormEdit userFormEdit = new UserFormEdit();
 
 		userFormEdit.setIdUserMonitorizaEdit(userMonitoriza.getIdUserMonitoriza());
-		userFormEdit.setName(userMonitoriza.getName());
-		userFormEdit.setSurnames(userMonitoriza.getSurnames());
-		userFormEdit.setEmail(userMonitoriza.getEmail());
-		userFormEdit.setLogin(userMonitoriza.getLogin());
+		userFormEdit.setNameEdit(userMonitoriza.getName());
+		userFormEdit.setSurnamesEdit(userMonitoriza.getSurnames());
+		userFormEdit.setEmailEdit(userMonitoriza.getEmail());
+		userFormEdit.setLoginEdit(userMonitoriza.getLogin());
 
 		model.addAttribute("userformEdit", userFormEdit);
 		return "modal/userFormEdit.html";

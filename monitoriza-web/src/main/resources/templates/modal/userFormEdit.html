@@ -13,13 +13,13 @@
 					
 					<div class="form-group-modal">
 						
-							<label for="name" class="col-form-label" th:text="#{form.user.name}"></label>
+							<label for="nameEdit" class="col-form-label" th:text="#{form.user.name}"></label>
 							<script th:inline="javascript">
 								/*<![CDATA[*/
 								    var messageName = /*[[#{form.user.name.pattern}]]*/ 'default';
 								/*]]>*/
 							</script>
-							<input onblur="validate(this,messageName);" type="text" id="name" th:field="*{name}" style="overflow:hidden" class="form-control" required pattern=".{3,15}" />
+							<input onblur="validate(this,messageName);" type="text" id="nameEdit" th:field="*{nameEdit}" style="overflow:hidden" class="form-control" required pattern=".{3,15}" />
 							<div id="invalid-name" class="invalid-feedback" ></div>
 						
 						<div style="clear:both;"/>
@@ -27,13 +27,13 @@
 					
 					<div class="form-group-modal">
 						
-							<label for="surnames" class="col-form-label" th:text="#{form.user.surnames}"></label>
+							<label for="surnamesEdit" class="col-form-label" th:text="#{form.user.surnames}"></label>
 							<script th:inline="javascript">
 								/*<![CDATA[*/
 								    var messageSurname = /*[[#{form.user.surnames.pattern}]]*/ 'default';
 								/*]]>*/
 							</script>
-							<input onblur="validate(this,messageSurname);" type="text" id="surnames" th:field="*{surnames}" style="overflow:hidden" class="form-control" required pattern=".{3,30}"/>
+							<input onblur="validate(this,messageSurname);" type="text" id="surnamesEdit" th:field="*{surnamesEdit}" style="overflow:hidden" class="form-control" required pattern=".{3,30}"/>
 							<div id="invalid-surnames" class="invalid-feedback" ></div>
 						
 						<div style="clear:both;"/>
@@ -41,13 +41,13 @@
 					
 					<div class="form-group-modal">
 						
-							<label for="login" class="col-form-label" th:text="#{form.user.login}"></label>
+							<label for="loginEdit" class="col-form-label" th:text="#{form.user.login}"></label>
 							<script th:inline="javascript">
 								/*<![CDATA[*/
 								    var messageLogin = /*[[#{form.user.login.pattern}]]*/ 'default';
 								/*]]>*/
 							</script>
-							<input onblur="validate(this,messageLogin);" type="text" id="login" th:field="*{login}" style="overflow:hidden" class="form-control" required pattern=".{5,30}"/>
+							<input onblur="validate(this,messageLogin);" type="text" id="loginEdit" th:field="*{loginEdit}" style="overflow:hidden" class="form-control" required pattern=".{5,30}"/>
 							<div id="invalid-login" class="invalid-feedback" ></div>
 						
 						<div style="clear:both;"/>
@@ -55,13 +55,13 @@
 					
 					<div class="form-group-modal">
 						
-							<label for="email" class="col-form-label" th:text="#{form.user.email}"></label>
+							<label for="emailEdit" class="col-form-label" th:text="#{form.user.email}"></label>
 							<script th:inline="javascript">
 								/*<![CDATA[*/
 								    var messageEmail = /*[[#{form.user.email.pattern}]]*/ 'default';
 								/*]]>*/
 							</script>
-							<input onblur="validate(this,messageEmail);" type="email" id="email" th:field="*{email}" style="overflow:hidden" class="form-control" required/>
+							<input onblur="validate(this,messageEmail);" type="email" id="emailEdit" th:field="*{emailEdit}" style="overflow:hidden" class="form-control" required/>
 							<div id="invalid-email" class="invalid-feedback" ></div>
 						
 						<div style="clear:both;"/>
@@ -97,6 +97,7 @@
 				}
 				
 				$('#modalEdit').modal('hide');
+				$('#modalEdit').remove();
 				
 			  },
 			  error:function(){
