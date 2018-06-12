@@ -1,8 +1,8 @@
-<form name="altEditor-form" role="form" id="sslForm" th:object="${sslform}" th:action="@{/updatessl}" method="post">
+<form name="altEditor-form" role="form" id="certForm" th:object="${certform}" th:action="@{/updatessl}" method="post">
 					
 			<input type='hidden' class='primarykey' id="idSystemCertificate" th:field="*{idSystemCertificate}">
 			
-			<div class="form-group-modal">
+			<div class="form-group">
 				
 					<label for="name" class="col-form-label" th:text="#{form.ssl.alias}"></label>
 					
@@ -12,7 +12,7 @@
 				<div style="clear:both;"/>
 			</div>
 			
-			<div class="form-group-modal">
+			<div class="form-group">
 
 				<label for="name" class="col-form-label" th:text="#{form.ssl.subject}"></label>
 					
@@ -22,7 +22,7 @@
 				<div style="clear:both;"/>
 			</div>
 			
-			<div class="form-group-modal">
+			<div class="form-group">
 
 				<label for="name" class="col-form-label" th:text="#{form.ssl.issuer}"></label>
 					

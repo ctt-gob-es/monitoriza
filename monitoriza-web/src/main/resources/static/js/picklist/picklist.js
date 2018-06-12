@@ -58,10 +58,10 @@
                  "	 <select class='form-control pickListSelect pickData' multiple></select>" +
                  " </div>" +
                  " <div class='col-sm-2 pickListButtons'>" +
-                 "	<button  class='pAdd btn btn-primary btn-sm'>" + opts.add + "</button>" +
-                 "      <button  class='pAddAll btn btn-primary btn-sm'>" + opts.addAll + "</button>" +
-                 "	<button  class='pRemove btn btn-primary btn-sm'>" + opts.remove + "</button>" +
-                 "	<button  class='pRemoveAll btn btn-primary btn-sm'>" + opts.removeAll + "</button>" +
+                 "	<div class='pAdd icon-holder'><i class='c-blue ti-angle-right'></i></div>" +
+                 "  <div class='pAddAll icon-holder'><i class='c-blue ti-angle-double-right'></i></div>" +
+                 "	<div class='pRemove icon-holder'><i class='c-blue ti-angle-left'></i></div>" +
+                 "	<div class='pRemoveAll icon-holder'><i class='c-blue ti-angle-double-left'></i></div>" +
                  " </div>" +
                  " <div class='col-sm-5'>" +
                  "    <select class='form-control pickListSelect pickListResult' multiple></select>" +
@@ -73,7 +73,7 @@
          this.fill();
          this.controll();
       };
-
+ 
       this.init();
       return this;
    };

@@ -2,7 +2,7 @@
 					
 	<input type='hidden' class='primarykey' id="idPlatform" th:field="*{idPlatform}">
 	
-	<div class="form-group-modal">
+	<div class="form-group">
 		
 			<label for="name" class="col-form-label" th:text="#{form.platform.afirma.name}"></label>
 			<script th:inline="javascript">
@@ -16,7 +16,7 @@
 		<div style="clear:both;"/>
 	</div>
 	
-	<div class="form-group-modal">
+	<div class="form-group">
 		
 			<label for="host" class="col-form-label" th:text="#{form.platform.afirma.host}"></label>
 			<script th:inline="javascript">
@@ -30,7 +30,7 @@
 		<div style="clear:both;"/>
 	</div>
 	
-	<div class="form-group-modal">
+	<div class="form-group">
 		
 			<label for="port" class="col-form-label" th:text="#{form.platform.afirma.port}"></label>
 			<script th:inline="javascript">
@@ -44,7 +44,30 @@
 		<div style="clear:both;"/>
 	</div>
 	
-	<div class="form-group-modal">
+	<div class="form-row">
+		<div class="form-group col-md-6">
+			<div class="checkbox checkbox-circle checkbox-info peers ai-c cb-center">
+				<input type="checkbox" id="isSecure" name="isSecure" class="peer">
+					<label for="isSecure" class="peers peer-greed js-sb ai-c">
+						<span class="peer peer-greed" th:text="#{form.platform.afirma.issecure}"></span>
+					</label>
+			</div>
+		</div>	
+		<div class="form-group col-md-6">
+			<label for="httpsPort" class="col-form-label" th:text="#{form.platform.afirma.httpsport}"></label>
+			<script th:inline="javascript">
+				/*<![CDATA[*/
+				    var messagePort = /*[[#{form.platform.port.pattern}]]*/ 'default';
+				/*]]>*/
+			</script>
+			<input readonly onblur="validate(this,messagePort);" type="text" id="httpsPort" th:field="*{httpsPort}" style="overflow:hidden" class="form-control" required pattern=".{0,5}"/>
+			<div id="invalid-port" class="invalid-feedback" ></div>
+		
+			<div style="clear:both;"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
 		
 			<label for="servicecontext" class="col-form-label" th:text="#{form.platform.afirma.servicecontext}"></label>
 			<input onblur="validateSOAP();" type="text" id="serviceContext" th:field="*{serviceContext}" style="overflow:hidden" class="form-control" />
@@ -53,7 +76,7 @@
 		<div style="clear:both;"/>
 	</div>
 	
-	<div class="form-group-modal">
+	<div class="form-group">
 		
 			<label for="ocspcontext" class="col-form-label" th:text="#{form.platform.afirma.ocspcontext}"></label>
 			<input onblur="validateOCSP();" type="text" id="ocspContext" th:field="*{ocspContext}" style="overflow:hidden" class="form-control" />
@@ -65,6 +88,32 @@
 </form>
 
 <script th:inline="javascript">
+
+	$(document).ready(function () {
+		
+		// Inicialización con valor correcto del checkbox 
+		if ($("#isSecure").is(":checked")) {
+        	$("#isSecure").attr('value', 'true');
+        } else {
+        	$("#isSecure").attr('value', 'false');
+        	$('#httpsPort').attr('value', '');
+        }
+			
+	    $("#isSecure").change(function () {
+	        if ($(this).is(":checked")) {
+	        	$(this).attr('value', 'true');
+	            $('#httpsPort').removeAttr("readonly");
+				$('#httpsPort').attr('required', true);
+	        }
+	        else {
+	        	$(this).attr('value', 'false');
+	            $('#httpsPort').attr('readonly', true);
+	            $('#httpsPort').val('');
+				$('#httpsPort').attr('required', false);
+	        }
+	    });
+	    
+	});
 	
 	function validateSOAP(){
 		

@@ -37,6 +37,7 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -52,7 +53,11 @@ import es.gob.monitoriza.utilidades.NumberConstants;
 @Table(name = "PLATFORM_MONITORIZA")
 public class PlatformMonitoriza implements Serializable {
 		
-
+	/**
+	 * Constant attribute that represents the string <i>"yes_no"</i>.
+	 */
+	private static final String CONS_YES_NO = "yes_no";
+	
 	/**
 	 * Class serial version. 
 	 */
@@ -79,6 +84,16 @@ public class PlatformMonitoriza implements Serializable {
 	private String port;
 	
 	/**
+	 * Attribute that indicates whether the access to the platform is through secured connection (https).
+	 */
+	private Boolean isSecure;
+	
+	/**
+	 * Attribute that represents the HTTPS port string for connections to the platform. 
+	 */
+	private String httpsPort;
+	
+	/**
 	 * Attribute that represents the context path for SOAP services. 
 	 */
 	private String serviceContext;
@@ -102,6 +117,11 @@ public class PlatformMonitoriza implements Serializable {
 	 * Attribute that represents the type of platform. 
 	 */
 	private CPlatformType platformType;
+	
+	/**
+	 * Attribute that represents the certificate for the RFC3161 authentication. 
+	 */
+	private SystemCertificate rfc3161Certificate;
 	
 	/**
 	 * Gets the value of the attribute {@link #idPlatform}.
@@ -216,7 +236,7 @@ public class PlatformMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	@Column(name = "PORT", nullable = false, length = NumberConstants.NUM100, unique = true)
+	@Column(name = "PORT", nullable = false, length = NumberConstants.NUM100)
 	@JsonView(DataTablesOutput.View.class)
 	public String getPort() {
 		return port;
@@ -224,15 +244,59 @@ public class PlatformMonitoriza implements Serializable {
 
 	/**
 	 * Sets the value of the attribute {@link #port}.
-	 * @param isBlockedParam The value for the attribute {@link #port}.
+	 * @param port The value for the attribute {@link #port}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setPort(String port) {
 		this.port = port;
 	}
-		
+			
+	/**
+	 * Gets the value of the attribute {@link #isSecure}.
+	 * @return the value of the attribute {@link #isSecure}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@Column(name = "IS_SECURE", nullable = false, precision = 1)
+	@Type(type = CONS_YES_NO)
+	@JsonView(DataTablesOutput.View.class)
+	public Boolean getIsSecure() {
+		return isSecure;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #isSecure}.
+	 * @param isSecure The value for the attribute {@link #isSecure}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setIsSecure(Boolean isSecure) {
+		this.isSecure = isSecure;
+	}
 	
+	/**
+	 * Gets the value of the attribute {@link #httpsPort}.
+	 * @return the value of the attribute {@link #httpsPort}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@Column(name = "HTTPS_PORT", nullable = true, length = NumberConstants.NUM100)
+	@JsonView(DataTablesOutput.View.class)	
+	public String getHttpsPort() {
+		return httpsPort;
+	}
+	
+	/**
+	 * Sets the value of the attribute {@link #httpsPort}.
+	 * @param httpsPort The value for the attribute {@link #httpsPort}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setHttpsPort(String httpsPort) {
+		this.httpsPort = httpsPort;
+	}
+
 	/**
 	 * Gets the value of the attribute {@link #serviceContext}.
 	 * @return the value of the attribute {@link #serviceContext}.
@@ -245,7 +309,6 @@ public class PlatformMonitoriza implements Serializable {
 		// CHECKSTYLE:ON
 		return serviceContext;
 	}
-
 	
 	/**
 	 * Sets the value of the attribute {@link #serviceContext}.
@@ -311,6 +374,7 @@ public class PlatformMonitoriza implements Serializable {
 	// because Hibernate JPA needs not final access methods.
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ID_PLATFORM_TYPE", nullable = false)
+	@JsonView(DataTablesOutput.View.class)	
 	public CPlatformType getPlatformType() {
 		return platformType;
 	}
@@ -324,6 +388,32 @@ public class PlatformMonitoriza implements Serializable {
 	public void setPlatformType(CPlatformType platformType) {
 		this.platformType = platformType;
 	}
+
+	/**
+	 * Gets the value of the attribute {@link #rfc3161Certificate}.
+	 * @return the value of the attribute {@link #rfc3161Certificate}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "RFC3161_AUTH_CERTIFICATE", nullable = false)
+	@JsonView(DataTablesOutput.View.class)	
+	public SystemCertificate getRfc3161Certificate() {
+		// CHECKSTYLE:On
+		return rfc3161Certificate;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #rfc3161Certificate}.
+	 * @param rfc3161Certificate The value for the attribute {@link #rfc3161Certificate}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setRfc3161Certificate(SystemCertificate rfc3161Certificate) {
+		this.rfc3161Certificate = rfc3161Certificate;
+	}
+	
+	
 	
 
 }

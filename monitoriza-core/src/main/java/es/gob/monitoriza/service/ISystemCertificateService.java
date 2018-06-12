@@ -64,29 +64,41 @@ public interface ISystemCertificateService {
 	void deleteSystemCertificate(Long certId);
 	
 	/**
-	 * Method that gets all the users from the persistence.
+	 * Method that gets all the certificates from the persistence.
 	 * @return a {@link Iterable<SystemCertificate>} with the information of all certificates.
 	 */
 	Iterable<SystemCertificate> getAllSystemCertificate();
+	
+	/**
+	 * Method that gets all the ssl certificates from the persistence.
+	 * @return a {@link Iterable<SystemCertificate>} with the information of all certificates.
+	 */
+	Iterable<SystemCertificate> getAllSsl();
+	
+	/**
+	 * Method that gets all the RFC3161 authentication certificates from the persistence.
+	 * @return a {@link Iterable<SystemCertificate>} with the information of all certificates.
+	 */
+	Iterable<SystemCertificate> getAllAuth();
 		
 	/**
-	 * 
-	 * @param input
-	 * @return
+	 * Method that gets all certificates
+	 * @param input Datatable filter parameter
+	 * @return DataTablesOutput<SystemCertificate>
 	 */
 	DataTablesOutput<SystemCertificate> findAll(DataTablesInput input);
 	
 	/**
-	 * 
-	 * @param input
-	 * @return
+	 * Method that gets all SSL certificates
+	 * @param input Datatable filter parameter
+	 * @return DataTablesOutput<SystemCertificate>
 	 */
 	DataTablesOutput<SystemCertificate> findAllSsl(DataTablesInput input);
 	
 	/**
-	 * 
-	 * @param input
-	 * @return
+	 * Method that gets all RFC3161 authentication certificates
+	 * @param input Datatable filter parameter
+	 * @return DataTablesOutput<SystemCertificate>
 	 */
 	DataTablesOutput<SystemCertificate> findAllAuth(DataTablesInput input);
 }

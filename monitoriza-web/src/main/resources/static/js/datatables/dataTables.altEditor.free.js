@@ -123,7 +123,7 @@
                 a = this.s.dt,
                 e = {},
                 d = t('form[name="altEditor-form"] input.primarykey').attr("name");
-            t('form[name="altEditor-form"] input').each(function(o) {
+            t('form[name="altEditor-form"] input, select').each(function(o) {
                 e[t(this).attr("id")] = t(this).val()
             }), t("#altEditor-modal .modal-body .alert").remove();
             var l = a.row({
@@ -196,7 +196,7 @@
             var o = this,
                 a = (this.s.dt, {}),
                 e = t('form[name="altEditor-form"] input.primarykey').attr("name");
-            t('form[name="altEditor-form"] input').each(function(o) {
+            t('form[name="altEditor-form"] input, select').each(function(o) {
                 a[t(this).attr("id")] = t(this).val()
             }), t("#altEditor-modal .modal-body .alert").remove(), t(o.s.dt.context[0].nTable).trigger("crudaction", ["add", e, a, null])
         },

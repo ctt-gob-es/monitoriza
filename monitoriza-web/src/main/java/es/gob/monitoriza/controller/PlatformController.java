@@ -24,6 +24,10 @@
  */
 package es.gob.monitoriza.controller;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -34,8 +38,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.form.AfirmaForm;
+import es.gob.monitoriza.form.TsaForm;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.service.IPlatformService;
+import es.gob.monitoriza.service.ISystemCertificateService;
 
 /** 
  * <p>Class .</p>
@@ -55,6 +62,12 @@ public class PlatformController {
 	 */
 	@Autowired
 	private IPlatformService platformService; 
+	
+	/**
+	 * Attribute that represents the service object for accessing the repository. 
+	 */
+	@Autowired
+	private ISystemCertificateService sysCertService;
 		
 	/**
 	 * Method that maps the list users web requests to the controller and forwards the list of users
@@ -63,8 +76,19 @@ public class PlatformController {
 	 * @return String that represents the name of the view to forward.
 	 */
 	@RequestMapping(value = "platformafirma")
-    public String index(Model model){
+    public String platformAfirma(Model model){
         return "fragments/platformafirma.html";
+    }
+	
+	/**
+	 * Method that maps the list users web requests to the controller and forwards the list of users
+	 * to the view.  
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "platformtsa")
+    public String platformTsa(Model model){
+        return "fragments/platformtsa.html";
     }
 	
 	/**
@@ -76,6 +100,22 @@ public class PlatformController {
     public String addAfirma(Model model){
 		model.addAttribute("afirmaform", new AfirmaForm());
 		return "modal/afirmaForm";
+    }	
+	
+	/**
+	 * Method that maps the add tsa platform web request to the controller and sets the backing form. 
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "addtsa", method = RequestMethod.POST)
+    public String addTsa(Model model){
+		
+		List<SystemCertificate> listCertificates = StreamSupport.stream(sysCertService.getAllAuth().spliterator(), false)
+				.collect(Collectors.toList());				
+		
+		model.addAttribute("tsaform", new TsaForm());
+		model.addAttribute("authcerts", listCertificates);
+		return "modal/tsaForm";
     }	
 
     /**
@@ -99,6 +139,28 @@ public class PlatformController {
 
     	model.addAttribute("afirmaform", afirmaForm);
         return "modal/afirmaForm";
+    }
+    
+    /**
+     * Method that maps the edit tsa platform web request to the controller and loads the tsa platform to the
+     * backing form.
+     * @param afirmaId Identifier of the ts@ platform to be edited.
+     * @param model Holder object for model attributes.
+     * @return String that represents the name of the view to forward.
+     */
+    @RequestMapping(value = "editatsa", method = RequestMethod.POST)
+    public String editTsa(@RequestParam("id") Long tsaId, Model model){
+    	PlatformMonitoriza tsa = platformService.getPlatformById(tsaId);
+    	TsaForm tsaForm = new TsaForm();
+    	
+    	tsaForm.setHost(tsa.getHost());
+    	tsaForm.setIdPlatform(tsaId);
+    	tsaForm.setName(tsa.getName());
+    	tsaForm.setServiceContext(tsa.getServiceContext());
+    	tsaForm.setPort(tsa.getPort());
+
+    	model.addAttribute("tsaform", tsaForm);
+        return "modal/tsaForm";
     }
 
 }

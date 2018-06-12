@@ -13,6 +13,8 @@
 							<th th:text="#{table.platform.afirma.name}"></th>
 							<th th:text="#{table.platform.afirma.host}"></th>
 							<th th:text="#{table.platform.afirma.port}"></th>
+							<th></th>
+							<th th:text="#{table.platform.afirma.httpsport}"></th>
 							<th th:text="#{table.platform.afirma.servicecontext}"></th>
 							<th th:text="#{table.platform.afirma.ocspcontext}"></th>
 						</tr>
@@ -25,8 +27,9 @@
 
 <script th:inline="javascript">
 $(document).ready(function() {
+				
 	var actionSave = /*[[@{/saveafirma}]]*/;
-	var actionDelete = /*[[@{/deleteafirma}]]*/;
+	var actionDelete = /*[[@{/deleteplatform}]]*/;
 	var getafirmas = /*[[@{/afirmadatatable}]]*/;
 	var editTemplate = /*[[@{/editafirma}]]*/;
 	var addTemplate = /*[[@{/addafirma}]]*/;
@@ -68,6 +71,10 @@ $(document).ready(function() {
 	        { "data": "name" },
 	        { "data": "host" },
 	        { "data": "port" },
+	        { "data": "isSecure",
+	          "visible": false,
+	          "name": "isSecure"},
+	        { "data": "httpsPort"},
 	        { "data": "serviceContext"},
 	        { "data": "ocspContext" }
 	        ]

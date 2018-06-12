@@ -266,6 +266,11 @@ public interface LogMessages {
 	String ERROR_NOT_BLANK_ALIAS = "errorNotBlankAlias";
 	
 	/**
+	 * Message key declared in the 'monitoriza.properties' file.
+	 */
+	String ERROR_NOT_NULL_FILE_CERT = "errorNotNullFileCert";
+	
+	/**
 	 * i18n Token to show message when a system certificate has been added succesfully.
 	 */
 	String ERROR_SPECIAL_CHAR_ALIAS = "errorSpecialCharAlias";
@@ -276,8 +281,23 @@ public interface LogMessages {
 	String SYS_CERT_ADDED = "modKeyAddSysCert";
 	
 	/**
+	 * i18n Token to show message when a key pair has been added succesfully.
+	 */
+	String KEY_PAIR_ADDED = "modKeyAddKeyPair";
+	
+	/**
+	 * i18n Token to show error when exception occurs while adding given key pair.
+	 */
+	public static final String ERROR_ADDING_KEY_PAIR = "errorAddingKeyPair";
+	
+	/**
 	 * i18n Token to show error when exception occurs while reading given keystore.
 	 */
 	String ERROR_ADDING_SYS_CERTS = "errorAddingSysCert";
+	
+	/**
+	 * i18n Token to show error when exception occurs while listing the aliases from a keystore.
+	 */
+	String ERROR_LISTING_ALIASES = "errorListingAliases";
 }
 

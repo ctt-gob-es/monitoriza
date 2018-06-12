@@ -72,7 +72,13 @@ public interface IPlatformService {
 	 * Method that deletes a @firma configuration in the persistence.
 	 * @param afirmaId {@link Integer} that represents the user identifier to delete.
 	 */
-	void deletePlatform(Long afirmaId);
+	void deletePlatformById(Long afirmaId);
+	
+	/**
+	 * Method that deletes a @firma configuration in the persistence.
+	 * @param platform {@link PlatformMonitoriza} that represents the platform to delete.
+	 */
+	void deletePlatform(PlatformMonitoriza platform);
 	
 	/**
 	 * Method that gets all the @firma platform configuration from the persistence.
@@ -88,10 +94,17 @@ public interface IPlatformService {
 	DataTablesOutput<PlatformMonitoriza> findAll(DataTablesInput input);
 	
 	/**
-	 * Method that returns a list of platforms to be showed in DataTable
+	 * Method that returns a list of @firma platforms to be showed in DataTable
 	 * @param input DataTableInput with filtering, paging and sorting configuration.
 	 * @return A set of DataTable rows that matches the query.
 	 */
 	DataTablesOutput<PlatformMonitoriza> findAllAfirma(DataTablesInput input);
+	
+	/**
+	 * Method that returns a list of ts@ platforms to be showed in DataTable
+	 * @param input DataTableInput with filtering, paging and sorting configuration.
+	 * @return A set of DataTable rows that matches the query.
+	 */
+	DataTablesOutput<PlatformMonitoriza> findAllTsa(DataTablesInput input);
 
 }
