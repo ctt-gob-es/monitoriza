@@ -254,7 +254,9 @@ public class KeystoreFacade implements IKeystoreFacade {
 		KeyStore ks = KeyStore.getInstance(keystore.getKeystoreType());
 	
 		try (ByteArrayInputStream bais = new ByteArrayInputStream(keystore.getKeystore());) {
-			ks.load(bais, new String(getKeystoreDecodedPassword()).toCharArray());
+			//ks.load(bais, new String(getKeystoreDecodedPassword()).toCharArray());
+			ks.load(bais, AES_PASSWORD.toCharArray());
+			
 		} catch (NoSuchAlgorithmException | CertificateException
 				| IOException e) {
 			LOGGER.error("Error cargando el keystore", e);
@@ -268,7 +270,9 @@ public class KeystoreFacade implements IKeystoreFacade {
 		
 		// Establecemos el nuevo valor del almacén SSL
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
-			ks.store(baos, new String(getKeystoreDecodedPassword()).toCharArray());
+			//ks.store(baos, new String(getKeystoreDecodedPassword()).toCharArray());
+			ks.store(baos, AES_PASSWORD.toCharArray());
+			
 			keystore.setKeystore(baos.toByteArray());		
 		} catch (NoSuchAlgorithmException | CertificateException
 				| IOException e) {

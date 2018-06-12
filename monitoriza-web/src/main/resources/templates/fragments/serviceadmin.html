@@ -8,10 +8,6 @@
 				
 					<input type='hidden' class='primarykey' id="idService" th:field="*{idService}">
 					
-					<input type='hidden' id="timeout" th:field="*{timeout}">
-					<input type='hidden' id="uDegraded" th:field="*{degradedThreshold}">
-					<input type='hidden' id="lostThreshold" th:field="*{lostThreshold}">
-					
 					<div class="form-row">
 						<div class="form-group col-md-6"><label for="nameService"
 							th:text="#{form.service.name}"></label> <span id="nameService_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> <input type="text"
@@ -56,9 +52,9 @@
 					</div>
 					<div class="form-row">
 						<div class="form-group col-md-6">
-							<label for="timeoutTime" th:text="#{form.service.timeout}"></label> 
+							<label for="timeout" th:text="#{form.service.timeout}"></label> 
 							<span id="timeout_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
-							<input type="time" step="1" class="form-control" id="timeoutTime" th:field="*{timeoutTime}"	required>
+							<input type="text" class="form-control" id="timeout" th:field="*{timeout}"	required>
 						</div>
 						<div class="form-group col-md-6">
 						<label for="timer"	th:text="#{form.service.timer}"></label> 
@@ -69,14 +65,14 @@
 					</div>
 					<div class="form-row">
 						<div class="form-group col-md-6">
-							<label for="uDegradedTime" th:text="#{form.service.udegraded}"></label> 
+							<label for="uDegraded" th:text="#{form.service.udegraded}"></label> 
 							<span id="uDegraded_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
-							<input type="time" step="1" class="form-control" id="uDegradedTime" th:field="*{degradedThresholdTime}" required>
+							<input type="text" class="form-control" id="uDegraded" th:field="*{degradedThreshold}" required>
 						</div>
 						<div class="form-group col-md-6">
-							<label for="uLostTime" th:text="#{form.service.ulost}"></label> 
+							<label for="uLost" th:text="#{form.service.ulost}"></label> 
 							<span id="uLost_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
-							<input type="text" step="1" class="form-control" id="uLostTime" th:field="*{lostThresholdTime}" required>
+							<input type="text" class="form-control" id="uLost" th:field="*{lostThreshold}" required>
 						</div>
 					</div>
 					
@@ -281,13 +277,13 @@ $(document).ready(function() {
 								
                 $("#idService").val(idService);
                 $("#nameService").val(nameService);
-                $("#timeoutTime").val(timeoutTime);
+                $("#timeout").val(timeoutValue);
                 $("#nameWsdl").val(nameWsdl);
 				platformChange(idPlatform, serviceTypes);
 				typeServiceChange(idPlatform, serviceTypes);
                 $("#timer").val(idTimer);
-                $("#uDegradedTime").val(degradedThresholdTime);
-                $("#uLostTime").val(lostThresholdValue);
+                $("#uDegraded").val(degradedThresholdValue);
+                $("#uLost").val(lostThresholdValue);
                 $("#alarm").val(idAlarm);
                 
 			}
@@ -528,6 +524,7 @@ $(document).ready(function() {
 					  });
 				  }else{
 					  $("#timerForm")[0].reset();
+					  cleanForm('#timerForm');
 					  $('#timerForm *').filter('span').each(function(){
 							$(this).text('');
 						});
@@ -566,11 +563,7 @@ $(document).ready(function() {
 	// Control del bot�n para guardar un timer
 	$( "#serviceBtn" ).click(function( event ) {
 	  event.preventDefault();
-	  
-	  $("#serviceForm input")[1].value = timeToMillisecond('#timeoutTime');
-	  $("#serviceForm input")[2].value = timeToMillisecond('#uDegradedTime');
-	  $("#serviceForm input")[3].value = timeToMillisecond('#uLostTime');
-	  
+	 	  
 	  var formData = JSON.stringify($("#serviceForm").serializeJSON());
 	  var url = /*[[@{/saveservice}]]*/;
 	  
@@ -635,6 +628,7 @@ $(document).ready(function() {
 					  });
 				  }else{
 					  $("#serviceForm")[0].reset();
+					  cleanForm('#serviceForm');
 					  $('#serviceForm *').filter('span').each(function(){
 							$(this).text('');
 						});
