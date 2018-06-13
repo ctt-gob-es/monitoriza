@@ -271,9 +271,6 @@ $(document).ready(function() {
                 var lostThresholdValue = d.data()[0][a[9].id]
                 var serviceTypes = d.data()[0][a[10].id]
 				var idAlarm = d.data()[0].alarm.idAlarm
-				
-				var timeoutTime = millisecondToTime(timeoutValue);
-				var degradedThresholdTime = millisecondToTime(degradedThresholdValue);
 								
                 $("#idService").val(idService);
                 $("#nameService").val(nameService);
@@ -396,6 +393,7 @@ $(document).ready(function() {
 	    				var d = dt.rows({
 	                        selected: !0
 	                    })
+						
 	                    var idTimer = d.data()[0][a[0].id]
 	    				var nameTimer = d.data()[0][a[1].id]
 	    				var freqValue = d.data()[0][a[2].id]
@@ -437,7 +435,11 @@ $(document).ready(function() {
 	        { "data": "idTimer",
 	          "visible": false},
 	        { "data": "name" },
-	        { "data": "frequency" }
+	        { "data": "frequency",
+	          "render": function ( data, type, row ) {
+						return millisecondToTime(data);
+					}
+			}
 	        ]
 		}).on('crudaction', function(e, accion, idTimer, data, rowindex){
 		    // e          Evento Jquery
@@ -486,8 +488,13 @@ $(document).ready(function() {
 	// Control del bot�n para guardar un timer
 	$( "#timerBtn" ).click(function( event ) {
 	  event.preventDefault();
-
-	  $("#timerForm input")[1].value = timeToMillisecond('#frequencyTime');
+	
+	  var freq = checkTypeTime($('#frequencyTime'));
+	  if (freq != $('#frequencyTime')[0].value){
+	    $("#timerForm input")[3].value = freq;
+	  }
+		
+	  $("#timerForm input")[1].value = timeToMillisecond(freq);
 	  
 	  var formData = JSON.stringify($("#timerForm").serializeJSON());
 	  var url = /*[[@{/savetimer}]]*/;
@@ -526,17 +533,18 @@ $(document).ready(function() {
 					  $("#timerForm")[0].reset();
 					  cleanForm('#timerForm');
 					  $('#timerForm *').filter('span').each(function(){
-							$(this).text('');
-						});
+						$(this).text('');
+					  });
+					  
+					  $('#timer').append($('<option>', {
+					    value: $(data.data)[0].idTimer,
+					    text: $(data.data)[0].name
+					  }));
+					  
+					  tblTimer.row.add($(data.data)).draw(false);
 				  }
 				  
-				  $('#timer').append($('<option>', {
-					    value: $(data.data).idTimer,
-					    text: $(data.data).name
-					}));
-				  
 				  hide();
-				  tblTimer.row.add($(data.data)).draw(false);
 				  
 				   $('#timerForm *').filter(':input').each(function(){
 					 $("#" + $(this).attr('id')).removeClass("has-error");
@@ -687,9 +695,20 @@ function cleanForm(f){
 
 }
 
-function timeToMillisecond(id){
-
+function checkTypeTime(id){
 	var numValue =  $(id)[0].value;
+	if (numValue.indexOf(':') != -1){
+		var splitValue = numValue.split(':');
+		if (splitValue.length == 2){
+			numValue += ":00"
+		}
+	}
+	return numValue;
+}
+
+function timeToMillisecond(s){
+
+	var numValue =  s;
 	
 	if (numValue.indexOf(':') != -1){
 		var splitValue = numValue.split(':');
