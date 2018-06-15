@@ -151,6 +151,9 @@ public class PlatformController {
     @RequestMapping(value = "editatsa", method = RequestMethod.POST)
     public String editTsa(@RequestParam("id") Long tsaId, Model model){
     	PlatformMonitoriza tsa = platformService.getPlatformById(tsaId);
+    	List<SystemCertificate> listCertificates = StreamSupport.stream(sysCertService.getAllAuth().spliterator(), false)
+				.collect(Collectors.toList());				
+		
     	TsaForm tsaForm = new TsaForm();
     	
     	tsaForm.setHost(tsa.getHost());
@@ -158,8 +161,15 @@ public class PlatformController {
     	tsaForm.setName(tsa.getName());
     	tsaForm.setServiceContext(tsa.getServiceContext());
     	tsaForm.setPort(tsa.getPort());
+    	tsaForm.setHttpsPort(tsa.getHttpsPort());
+    	tsaForm.setRfc3161Context(tsa.getRfc3161Context());
+    	tsaForm.setIsSecure(tsa.getIsSecure());
+    	tsaForm.setRfc3161Port(tsa.getRfc3161Port());
+    	tsaForm.setUseRfc3161Auth(tsa.getUseRfc3161Auth());
+    	tsaForm.setRfc3161Certificate(tsa.getRfc3161Certificate().getIdSystemCertificate());
 
     	model.addAttribute("tsaform", tsaForm);
+    	model.addAttribute("authcerts", listCertificates);
         return "modal/tsaForm";
     }
 

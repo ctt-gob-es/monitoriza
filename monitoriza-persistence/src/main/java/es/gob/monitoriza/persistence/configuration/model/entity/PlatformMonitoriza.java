@@ -35,6 +35,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Fetch;
+import org.hibernate.annotations.FetchMode;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
@@ -117,6 +119,11 @@ public class PlatformMonitoriza implements Serializable {
 	 * Attribute that represents the type of platform. 
 	 */
 	private CPlatformType platformType;
+	
+	/**
+	 * Attribute that indicates if the connection with the RFC3161 uses client authentication. 
+	 */
+	public Boolean userRfc3161Auth;
 	
 	/**
 	 * Attribute that represents the certificate for the RFC3161 authentication. 
@@ -388,6 +395,30 @@ public class PlatformMonitoriza implements Serializable {
 	public void setPlatformType(CPlatformType platformType) {
 		this.platformType = platformType;
 	}
+	
+	
+	/**
+	 * Gets the value of the attribute {@link #userRfc3161Auth}.
+	 * @return the value of the attribute {@link #userRfc3161Auth}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@Column(name = "RFC3161_USE_AUTH", nullable = false, precision = 1)
+	@Type(type = CONS_YES_NO)
+	@JsonView(DataTablesOutput.View.class)
+	public Boolean getUseRfc3161Auth() {
+		return userRfc3161Auth;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #userRfc3161Auth}.
+	 * @param userRfc3161Auth The value for the attribute {@link #userRfc3161Auth}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setUseRfc3161Auth(Boolean userRfc3161Auth) {
+		this.userRfc3161Auth = userRfc3161Auth;
+	}
 
 	/**
 	 * Gets the value of the attribute {@link #rfc3161Certificate}.
@@ -396,6 +427,7 @@ public class PlatformMonitoriza implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	@ManyToOne(fetch = FetchType.EAGER)
+	@Fetch(FetchMode.SELECT)
 	@JoinColumn(name = "RFC3161_AUTH_CERTIFICATE", nullable = false)
 	@JsonView(DataTablesOutput.View.class)	
 	public SystemCertificate getRfc3161Certificate() {

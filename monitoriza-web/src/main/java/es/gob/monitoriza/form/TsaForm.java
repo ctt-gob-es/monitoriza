@@ -98,6 +98,12 @@ public class TsaForm {
     private String rfc3161Port = "";
 	
 	/**
+	 * Attribute that represents the value of the input isSecure of the user in the form. 
+	 */
+	@NotNull(groups=CheckItFirst.class, message="{form.valid.platform.useauth.notnull}")
+    private Boolean useRfc3161Auth = false;
+	
+	/**
 	 * Attribute that represents the identifier of the certificate for RFC3161 authentication. 
 	 */
 	@NotNull(message="{form.platform.authcert.notnull}")
@@ -151,8 +157,8 @@ public class TsaForm {
 	public void setPort(String port) {
 		this.port = port;
 	}
-	
-	/**
+		
+	 /**
 	 * Gets the value of the attribute {@link #isSecure}.
 	 * @return the value of the attribute {@link #isSecure}.
 	 */
@@ -247,8 +253,23 @@ public class TsaForm {
 	public void setRfc3161Port(String rfc3161Port) {
 		this.rfc3161Port = rfc3161Port;
 	}
-
+			
+	/**
+	 * Gets the value of the attribute {@link #useRfc3161Auth}.
+	 * @return the value of the attribute {@link #useRfc3161Auth}.
+	 */
+	public Boolean getUseRfc3161Auth() {
+		return useRfc3161Auth;
+	}
 	
+	/**
+	 * Sets the value of the attribute {@link #useRfc3161Auth}.
+	 * @param useRfc3161Auth the value for the attribute {@link #useRfc3161Auth} to set.
+	 */
+	public void setUseRfc3161Auth(Boolean useRfc3161Auth) {
+		this.useRfc3161Auth = useRfc3161Auth;
+	}
+
 	/**
 	 * Gets the value of the attribute {@link #rfc3161Certificate}.
 	 * @return the value of the attribute {@link #rfc3161Certificate}.

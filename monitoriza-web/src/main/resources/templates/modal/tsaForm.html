@@ -47,7 +47,7 @@
 	<div class="form-row">
 		<div class="form-group col-md-6">
 			<div class="checkbox checkbox-circle checkbox-info peers ai-c cb-center">
-				<input type="checkbox" id="isSecure" name="isSecure" class="peer">
+				<input type="checkbox" id="isSecure" th:checked="${tsaform.isSecure}" class="peer">
 					<label for="isSecure" class="peers peer-greed js-sb ai-c">
 						<span class="peer peer-greed" th:text="#{form.platform.afirma.issecure}"></span>
 					</label>
@@ -95,9 +95,18 @@
 	</div>
 	
 	<div class="form-group">
+			<div class="checkbox checkbox-circle checkbox-info peers ai-c cb-center">
+				<input type="checkbox" id="useRfc3161Auth" th:checked="${tsaform.useRfc3161Auth}" class="peer"/>
+					<label for="useRfc3161Auth" class="peers peer-greed js-sb ai-c">
+						<span class="peer peer-greed" th:text="#{form.platform.tsa.useRfc3161Auth}"></span>
+					</label>
+			</div>
+	</div>
+	
+	<div class="form-group">
 		
 			<label for="rfc3161Certificate" class="col-form-label" th:text="#{form.platform.tsa.rfc3161authcert}"></label>
-			<select id="rfc3161Certificate" class="form-control" th:field="*{rfc3161Certificate}" required>
+			<select id="rfc3161Certificate" class="form-control" th:field="*{rfc3161Certificate}">
 				<option selected="selected" value="-1" th:text="#{form.platform.tsa.selectcert}"></option>
 				<option th:each="ac: ${authcerts}" th:value="${ac.idSystemCertificate}" th:text="${ac.alias}"></option>
 			</select>
@@ -111,17 +120,19 @@
 
 	$(document).ready(function () {
 		
-		// Inicialización con valor correcto del checkbox 
+		// Inicialización con valor correcto del checkbox isSecure
 		if ($("#isSecure").is(":checked")) {
-	    	$("#isSecure").attr('value', 'true');
+	    	$("#isSecure").val('true');
+	    	 $('#httpsPort').removeAttr("readonly");
 	    } else {
 	    	$("#isSecure").attr('value', 'false');
-	    	$('#httpsPort').attr('value', '');
+	    	$('#httpsPort').val('');
+	    	$('#httpsPort').attr('required', false);
 	    }
 			
 	    $("#isSecure").change(function () {
 	        if ($(this).is(":checked")) {
-	        	$(this).attr('value', 'true');
+	        	$(this).val('true');
 	            $('#httpsPort').removeAttr("readonly");
 				$('#httpsPort').attr('required', true);
 	        }
@@ -133,6 +144,35 @@
 	        }
 	    });
 	    
+	    
+	    var selectCertMsg = /*[[#{form.platform.tsa.selectcert}]]*/;
+	    
+	 // Inicialización con valor correcto del checkbox useRfc3161Auth
+		if ($("#useRfc3161Auth").is(":checked")) {
+			//$('#rfc3161Certificate').attr('disabled', false);
+			$("#useRfc3161Auth").val('true');
+	    	$('#rfc3161Certificate').attr('required', true);
+	    } else {
+	    	$("#useRfc3161Auth").attr('value', 'false');
+	    	$('#rfc3161Certificate').val(-1);
+			$('#rfc3161Certificate').attr('disabled', true);
+	    	$('#rfc3161Certificate').attr('required', false);
+	    }
+			
+	    $("#useRfc3161Auth").change(function () {
+	        if ($(this).is(":checked")) {
+	        	$('#rfc3161Certificate').attr("disabled", false);
+	        	$(this).attr('value', 'true');
+	            $('#rfc3161Certificate').val(-1);
+				$('#rfc3161Certificate').attr('required', true);
+	        }
+	        else {
+	        	$(this).attr('value', 'false');
+	        	$('#rfc3161Certificate').attr('disabled', true);
+	        	$('#rfc3161Certificate').val(-1);
+				$('#rfc3161Certificate').attr('required', false);
+	        }
+	    });
 	});
 	
 	function validateSOAP(){

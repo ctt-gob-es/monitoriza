@@ -251,8 +251,9 @@ public class PlatformRestController {
 				CPlatformType afirmaType = new CPlatformType();
 				afirmaType.setIdPlatformType(IPlatformService.ID_PLATFORM_TYPE_TSA);
 				platformTsa.setPlatformType(afirmaType);
-				platformTsa.setRfc3161Context(tsaForm.getRfc3161Port());
+				platformTsa.setRfc3161Context(tsaForm.getRfc3161Context());
 				platformTsa.setRfc3161Port(tsaForm.getRfc3161Port());
+				platformTsa.setUseRfc3161Auth(tsaForm.getUseRfc3161Auth());
 				platformTsa.setRfc3161Certificate(sysCertService.getSystemCertificateById(tsaForm.getRfc3161Certificate()));
 		
 				PlatformMonitoriza tsa = platformService.savePlatform(platformTsa);
