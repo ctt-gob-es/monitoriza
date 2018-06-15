@@ -557,6 +557,10 @@ $(document).ready(function() {
 			  },
 			  error:function(){
 				  hide();
+				  if (checkTypeTime($('#frequencyTime')) == $('#frequencyTime')[0].value){
+					$('#timerForm').append('<div id="errorModalTimer" class="alert alert-danger" role="alert"><strong>El formato de la frecuencia es incorrecto! (HH:mm:ss)</strong></div>');
+				  }
+				  
 				  if ($('#errorModalTimer').length == 0){
 				  	$('#timerForm').append('<div id="errorModalTimer" class="alert alert-danger" role="alert"><strong>Hay un Timer con el mismo nombre!</strong></div>');
 				  }
