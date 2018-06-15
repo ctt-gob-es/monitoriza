@@ -57,7 +57,7 @@ public class UserFormEdit {
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.user.name.notempty}")
 	@Size(min = 1, max = 15, groups = ThenCheckIt.class)
-	private String name = "";
+	private String nameEdit = "";
 
 	/**
 	 * Attribute that represents the value of the input surnames of the user in
@@ -65,7 +65,7 @@ public class UserFormEdit {
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.user.surnames.notempty}")
 	@Size(min = 1, max = 30, groups = ThenCheckIt.class)
-	private String surnames = "";
+	private String surnamesEdit = "";
 
 	/**
 	 * Attribute that represents the value of the input username of the user in
@@ -73,7 +73,7 @@ public class UserFormEdit {
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.user.login.notempty}")
 	@Size(min = 5, max = 30, groups = ThenCheckIt.class)
-	private String login = "";
+	private String loginEdit = "";
 
 	/**
 	 * Attribute that represents the value of the input email of the user in the
@@ -81,7 +81,7 @@ public class UserFormEdit {
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.user.email.notempty}")
 	@Size(min = 3, max = 254, groups = ThenCheckIt.class)
-	private String email = "";
+	private String emailEdit = "";
 
 	/**
 	 * Gets the value of the attribute {@link #idUserMonitoriza}.
@@ -102,79 +102,61 @@ public class UserFormEdit {
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #login}.
-	 * 
-	 * @return the value of the attribute {@link #login}.
+	 * @return the nameEdit
 	 */
-	public String getLogin() {
-		return login;
+	public String getNameEdit() {
+		return nameEdit;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #login}.
-	 * 
-	 * @param login
-	 *            the value for the attribute {@link #login} to set.
+	 * @param nameEdit the nameEdit to set
 	 */
-	public void setLogin(String login) {
-		this.login = login;
+	public void setNameEdit(String nameEdit) {
+		this.nameEdit = nameEdit;
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #name}.
-	 * 
-	 * @return the value of the attribute {@link #name}.
+	 * @return the surnamesEdit
 	 */
-	public String getName() {
-		return name;
+	public String getSurnamesEdit() {
+		return surnamesEdit;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #name}.
-	 * 
-	 * @param name
-	 *            the value for the attribute {@link #name} to set.
+	 * @param surnamesEdit the surnamesEdit to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setSurnamesEdit(String surnamesEdit) {
+		this.surnamesEdit = surnamesEdit;
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #surnames}.
-	 * 
-	 * @return the value of the attribute {@link #surnames}.
+	 * @return the loginEdit
 	 */
-	public String getSurnames() {
-		return surnames;
+	public String getLoginEdit() {
+		return loginEdit;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #surnames}.
-	 * 
-	 * @param name
-	 *            the value for the attribute {@link #surnames} to set.
+	 * @param loginEdit the loginEdit to set
 	 */
-	public void setSurnames(String surnames) {
-		this.surnames = surnames;
+	public void setLoginEdit(String loginEdit) {
+		this.loginEdit = loginEdit;
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #email}.
-	 * 
-	 * @return the value of the attribute {@link #email}.
+	 * @return the emailEdit
 	 */
-	public String getEmail() {
-		return email;
+	public String getEmailEdit() {
+		return emailEdit;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #email}.
-	 * 
-	 * @param name
-	 *            the value for the attribute {@link #email} to set.
+	 * @param emailEdit the emailEdit to set
 	 */
-	public void setEmail(String email) {
-		this.email = email;
+	public void setEmailEdit(String emailEdit) {
+		this.emailEdit = emailEdit;
 	}
+
+	
 
 }

@@ -208,14 +208,14 @@ public class UserRestController {
 				} else {
 					userMonitoriza = new UserMonitoriza();
 				}
-				userMonitoriza.setLogin(userForm.getLogin());
+				userMonitoriza.setLogin(userForm.getLoginEdit());
 				userMonitoriza.setAttemptsNumber(NumberConstants.NUM0);
-				userMonitoriza.setEmail(userForm.getEmail());
+				userMonitoriza.setEmail(userForm.getEmailEdit());
 				userMonitoriza.setIsBlocked(Boolean.FALSE);
 				userMonitoriza.setLastAccess(null);
 				userMonitoriza.setLastIpAccess(null);
-				userMonitoriza.setName(userForm.getName());
-				userMonitoriza.setSurnames(userForm.getSurnames());
+				userMonitoriza.setName(userForm.getNameEdit());
+				userMonitoriza.setSurnames(userForm.getSurnamesEdit());
 
 				UserMonitoriza user = userService.saveUserMonitoriza(userMonitoriza);
 
@@ -289,14 +289,14 @@ public class UserRestController {
 				} else {
 					userMonitoriza = new UserMonitoriza();
 				}
-				userMonitoriza.setLogin(userForm.getLogin());
+				userMonitoriza.setLogin(userForm.getLoginEdit());
 				userMonitoriza.setAttemptsNumber(NumberConstants.NUM0);
-				userMonitoriza.setEmail(userForm.getEmail());
+				userMonitoriza.setEmail(userForm.getEmailEdit());
 				userMonitoriza.setIsBlocked(Boolean.FALSE);
 				userMonitoriza.setLastAccess(null);
 				userMonitoriza.setLastIpAccess(null);
-				userMonitoriza.setName(userForm.getName());
-				userMonitoriza.setSurnames(userForm.getSurnames());
+				userMonitoriza.setName(userForm.getNameEdit());
+				userMonitoriza.setSurnames(userForm.getSurnamesEdit());
 
 				userService.saveUserMonitoriza(userMonitoriza);
 

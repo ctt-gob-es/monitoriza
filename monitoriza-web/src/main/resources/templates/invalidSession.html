@@ -1,22 +1,16 @@
-<!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" 
-      xmlns:th="http://www.thymeleaf.org">
-    <head>
-        <title>Session page</title>
-        <meta charset="utf-8" />
-        <link type="text/css" rel="stylesheet" th:href="@{css/bootstrap.min.css}"/>
-    </head>
-      
-    <body> 
-		<div class="container" >    		
-    		<div class="row">    			
-				<h3 class="alert alert-danger">Sesión caducada</h3>
-			</div>
-			<div class="row">
-				<div class="col-md-2 col-md-offset-5">
-					<a class="btn btn-primary btn-lg btn-block" th:href="@{/login.html}">login</a>
-				</div>										
-			</div>  	
-     	</div>
-    </body>
-</html>
+<div class="container-fluid">
+	<div class="row">
+	    <div class="col-12">
+	    	<div style="text-align: center;">
+		    	<img style="width: 350px;" th:src="@{images/expired.png}" alt="logo" />
+		
+		      	<div class='d-f jc-c fxd-c'>
+		        	<h1 class='mB-30 fw-900 lh-1 c-red-500' style="font-size: 60px;">Sesi&oacute;n expirada</h1>
+		        	<div>
+		        		<a href="inicio" type='primary' class='btn btn-primary' th:href="@{/inicio}">Volver al inicio</a>
+		        	</div>
+		    	</div>
+	    	</div>
+		</div>
+	</div>
+</div>

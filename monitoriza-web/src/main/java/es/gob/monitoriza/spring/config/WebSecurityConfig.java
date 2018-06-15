@@ -58,7 +58,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         
       http
         .authorizeRequests()
-        	.antMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/fonts/icons/themify/**", "/fonts/fontawesome/**", "/less/**")
+        	.antMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/fonts/icons/themify/**", "/fonts/fontawesome/**", "/less/**", "/invalidSession")
         	.permitAll() // Enable css, images and js when logged out
         	.and()
         .authorizeRequests()
@@ -80,13 +80,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         .csrf()
         	.disable()			//Disable CSRF
         .sessionManagement()
-	        .sessionFixation().migrateSession()
-	    	.maximumSessions(1)
-	    	.maxSessionsPreventsLogin(false)
-	    	.expiredUrl("/login.html"); 
+        	.maximumSessions(1)
+        	.expiredUrl("/invalidSession")
+        	.and()
+        	.invalidSessionUrl("/invalidSession");
 
     }
-       
+
     /**
      * Method that sets the authentication global configuration.
      * @param auth Object that represents the Spring security builder.

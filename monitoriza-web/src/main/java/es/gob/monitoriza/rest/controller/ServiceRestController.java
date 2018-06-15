@@ -242,6 +242,7 @@ public class ServiceRestController {
 			} catch (Exception e) {
 				listNewTimer = StreamSupport.stream(timerService.getAllTimerMonitoriza().spliterator(), false)
 						.collect(Collectors.toList());
+				dtOutput.setError("-1");
 				throw e;
 			}
 		}

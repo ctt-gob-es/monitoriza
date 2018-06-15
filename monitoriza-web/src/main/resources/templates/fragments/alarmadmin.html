@@ -108,7 +108,7 @@ $(document).ready(function() {
 	
 	$('.select2').select2();
 	
-	// Gestiï¿½n de las datatables
+	// Gestión de las datatables
 	var actionSaveMail = /*[[@{/savemail}]]*/;
 	var actionEmails = /*[[@{/emails}]]*/;
 	var actionDeleteMail = /*[[@{/deletemail}]]*/;
@@ -212,7 +212,7 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acciï¿½n "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acción "'+accion+'" no autorizada!</strong></div>');
 		            break;
 		    }
 		});
@@ -348,12 +348,12 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acciï¿½n "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acción "'+accion+'" no autorizada!</strong></div>');
 		            break;
 		    }
 		});
 	
-	// Control del botï¿½n para guardar un correo
+	// Control del botón para guardar un correo
 	$( "#mailBtn" ).click(function( event ) {
 	  event.preventDefault();
 
@@ -398,15 +398,8 @@ $(document).ready(function() {
 						});
 				  }
 				  
-				  $('#emailsDegraded').append($('<option>', {
-					  value: $(data.data).idMail,
-					  text: $(data.data).emailAddress
-				  }));
-				  
-				  $('#emailsDown').append($('<option>', {
-					  value: $(data.data).idMail,
-					  text: $(data.data).emailAddress
-				  }));
+				  addElementSelect2('emailsDegraded', data);
+				  addElementSelect2('emailsDown', data);
 				  
 				  hide();
 				  tblMail.row.add($(data.data)).draw(false);
@@ -541,6 +534,13 @@ $(document).ready(function() {
 	});
 		
 });
+
+function addElementSelect2(id, data){
+	var option = $("<option/>", {value: $(data.data)[0].idMail, text: $(data.data)[0].emailAddress});
+
+	$('#' + id).append(option);
+	$('#' + id).trigger('change');
+}
 
 function cleanForm(f){
 	
