@@ -25,7 +25,6 @@
 package es.gob.monitoriza.form;
 
 import java.sql.Time;
-import java.util.Date;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

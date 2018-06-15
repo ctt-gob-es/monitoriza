@@ -29,12 +29,10 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.repository.SystemCertificateRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.SystemCertificateDatatableRepository;
-import es.gob.monitoriza.persistence.configuration.model.specification.CPlatformTypeSpecification;
 import es.gob.monitoriza.persistence.configuration.model.specification.KeystoreSpecification;
 import es.gob.monitoriza.service.ISystemCertificateService;
 

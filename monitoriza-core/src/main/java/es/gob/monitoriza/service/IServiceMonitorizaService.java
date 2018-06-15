@@ -28,6 +28,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
@@ -61,6 +62,13 @@ public interface IServiceMonitorizaService {
 	 * @return a {@link Iterable<ServiceMonitoriza>} with the information of all services.
 	 */
 	Iterable<ServiceMonitoriza> getAllServiceMonitoriza();
+	
+	/**
+	 * Method that gets all the services from the persistence filtered by timer.
+	 * @param timer Criteria filter
+	 * @return a {@link Iterable<ServiceMonitoriza>} with the information of all services.
+	 */
+	Iterable<ServiceMonitoriza> getAllByTimer(TimerMonitoriza timer);	
 		
 	/**
 	 * 
