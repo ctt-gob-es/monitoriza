@@ -46,5 +46,10 @@ public class WebAdminController {
     public String index(Model model){
         return "inicio.html";
     }
+	
+	@RequestMapping(value = "invalidSession")
+    public String invalid(Model model){
+        return "invalidSession.html";
+    }
 
 }
