@@ -36,7 +36,7 @@ public final class StatusHolder {
 	/**
 	 * Attribute that represents the current map of statuses for services being processed. 
 	 */
-	private Map<String,String> currentStatusHolder;
+	private Map<String,StatusUptodate> currentStatusHolder;
 	
 	/**
 	 * Attribute that represents the instance for this class. 
@@ -47,7 +47,7 @@ public final class StatusHolder {
 	 * Constructor method for the class StatusHolder.java. 
 	 */
 	private StatusHolder() {
-		currentStatusHolder = new ConcurrentHashMap<String, String>();
+		currentStatusHolder = new ConcurrentHashMap<String, StatusUptodate>();
 	}
 	
 	/**
@@ -66,7 +66,7 @@ public final class StatusHolder {
 	 * Gets the {@link currentstatusHolder}.
 	 * @return {@link Map}.
 	 */
-	public Map<String, String> getCurrenttatusHolder() {
+	public Map<String, StatusUptodate> getCurrenttatusHolder() {
 		return currentStatusHolder;
 	}
 
@@ -75,7 +75,7 @@ public final class StatusHolder {
 	 * Sets the {@link currentstatusHolder}.
 	 * @param currentstatusHolder
 	 */
-	public void setCurrenttatusHolder(Map<String, String> currentstatusHolder) {
+	public void setCurrenttatusHolder(Map<String, StatusUptodate> currentstatusHolder) {
 		this.currentStatusHolder = currentstatusHolder;
 	}
 	

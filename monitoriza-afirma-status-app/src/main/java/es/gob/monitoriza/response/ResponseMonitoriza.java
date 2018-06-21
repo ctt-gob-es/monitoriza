@@ -46,7 +46,9 @@ import static j2html.TagCreator.td;
 import static j2html.TagCreator.th;
 import static j2html.TagCreator.title;
 import static j2html.TagCreator.tr;
+import static j2html.TagCreator.caption;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -54,6 +56,7 @@ import java.util.Map;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.status.StatusHolder;
+import es.gob.monitoriza.status.StatusUptodate;
 import es.gob.monitoriza.utilidades.GeneralUtils;
 import j2html.tags.Tag;
 
@@ -87,7 +90,19 @@ public class ResponseMonitoriza {
 	/**
 	 * Attribute that represents the column header name for the test result
 	 */
+	public static final String HEADER_RESULT_STATUS_UPTODATE = "Last update";
+	
+	/**
+	 * Attribute that represents the column header name for the test result
+	 */
+	public static final String CAPTION_LAST_REFRESH_DATETIME = "Last refresh time: ";
+	
+	/**
+	 * Attribute that represents the column header name for the test result
+	 */
 	public static final String HEADER_SYSTEM_NAME = "System";
+	
+	
 			
 	/**
 	 * Method that renders the HTML code for the result response.
@@ -137,9 +152,24 @@ public class ResponseMonitoriza {
 
 		List<Tag<?>> contents = new LinkedList<>();
 		
+		contents.add(makeTableCaption());
 		contents.addAll(makeTableHeader());
 		contents.addAll(makeTableRows(platformFilter));
 		return table().with(contents);
+	}
+	
+	/**
+	 * Method that builds the HTML caption for the result table.
+	 * @return
+	 */
+	private static Tag<?> makeTableCaption() {
+
+		final StringBuffer caption = new StringBuffer();
+
+		caption.append(CAPTION_LAST_REFRESH_DATETIME);
+		caption.append(GeneralUtils.getFormattedDateTime(LocalDateTime.now()));
+
+		return caption(caption.toString());
 	}
 
 
@@ -150,10 +180,11 @@ public class ResponseMonitoriza {
 	private static Collection<? extends Tag<?>> makeTableHeader() {
 		List<Tag<?>> rowsHeader = new LinkedList<>();
 		List<Tag<?>> headerGroup = new LinkedList<>();
-
+	
+		headerGroup.add(th(HEADER_SYSTEM_NAME));
 		headerGroup.add(th(HEADER_SERVICE_NAME));
 		headerGroup.add(th(HEADER_RESULT_STATUS));
-		headerGroup.add(th(HEADER_SYSTEM_NAME));
+		headerGroup.add(th(HEADER_RESULT_STATUS_UPTODATE));
 
 		rowsHeader.add(tr().with(headerGroup));
 
@@ -168,15 +199,18 @@ public class ResponseMonitoriza {
 		
 		List<Tag<?>> tdGroup = null;
 		List<Tag<?>> rows = new LinkedList<>();
+		StatusUptodate statusUptodate = null;
 		
-		for (Map.Entry<String,String> entry : StatusHolder.getInstance().getCurrenttatusHolder().entrySet()) {
+		for (Map.Entry<String,StatusUptodate> entry : StatusHolder.getInstance().getCurrenttatusHolder().entrySet()) {
 			
 			if (isRequestedService(platformFilter, entry.getKey())) {
     			tdGroup = new LinkedList<>();
-    			tdGroup.add(td(entry.getKey()));
-    			tdGroup.add(td(entry.getValue()));
     			tdGroup.add(td(GeneralUtils.getSystemName(entry.getKey())));
-    			rows.add(tr().with(tdGroup));
+    			tdGroup.add(td(entry.getKey()));
+    			statusUptodate = entry.getValue();
+    			tdGroup.add(td(statusUptodate.getStatusValue()));
+    			tdGroup.add(td( GeneralUtils.getFormattedDateTime(statusUptodate.getStatusUptodate())));
+       			rows.add(tr().with(tdGroup));
 			}
 		}
 

@@ -44,6 +44,7 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
+import java.time.LocalDateTime;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -61,6 +62,7 @@ import es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker;
 import es.gob.monitoriza.invoker.soap.HttpSoapInvoker;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.status.RunningServices;
+import es.gob.monitoriza.status.StatusUptodate;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
@@ -93,7 +95,7 @@ public final class RequestProcessorThread implements Runnable {
 	/**
 	 * Attribute that represents the reference to the Map where the status of each service are stored. 
 	 */
-	private Map<String, String> statusHolder;
+	private Map<String, StatusUptodate> statusHolder;
 		
 	/**
 	 * Attribute that represents . 
@@ -105,7 +107,7 @@ public final class RequestProcessorThread implements Runnable {
 	 * @param service DTOService that represents the service being processed in this thread.
 	 * @param statusHolder Reference to the Map that holds the current status for the processed services. 
 	 */
-	public RequestProcessorThread(final ServiceDTO service, final Map<String, String> statusHolder) {
+	public RequestProcessorThread(final ServiceDTO service, final Map<String, StatusUptodate> statusHolder) {
 
 		this.service = service;
 		this.statusHolder = statusHolder;
@@ -223,7 +225,8 @@ public final class RequestProcessorThread implements Runnable {
 				// hay más grupos de confirmación,
 				// pasamos a calcular el estado del servicio con los datos
 				// obtenidos.
-				statusHolder.put(service.getServiceId(), calcularEstadoDelServicio(service, tiempoMedio, perdidas));
+				StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(service, tiempoMedio, perdidas), LocalDateTime.now());
+				statusHolder.put(service.getServiceId(), statusUptodate);
 
 			} catch (InvokerException e) {
 				RunningServices.getRequestsRunning().put(service.getServiceId(), Boolean.FALSE);
@@ -306,9 +309,9 @@ public final class RequestProcessorThread implements Runnable {
 
 	/**
 	 * Gets the {@link statusHolder}.
-	 * @return {@link Map<String, String>}.
+	 * @return {@link Map<String, StatusUptodate>}.
 	 */
-	public Map<String, String> getStatusHolder() {
+	public Map<String, StatusUptodate> getStatusHolder() {
 		return statusHolder;
 	}
 
@@ -316,7 +319,7 @@ public final class RequestProcessorThread implements Runnable {
 	 * Sets the {@link currentstatusHolder}.
 	 * @param currentstatusHolder
 	 */
-	public void setStatusHolder(Map<String, String> statusHolder) {
+	public void setStatusHolder(Map<String, StatusUptodate> statusHolder) {
 		this.statusHolder = statusHolder;
 	}
 	
