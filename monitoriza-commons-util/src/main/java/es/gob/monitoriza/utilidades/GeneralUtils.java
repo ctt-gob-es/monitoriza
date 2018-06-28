@@ -24,6 +24,8 @@
 package es.gob.monitoriza.utilidades;
 
 import java.lang.reflect.Field;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +44,11 @@ public class GeneralUtils {
 	 * Attribute that represents the object that manages the log of the class.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
-
+	
+	/**
+	 * Attribute that represents the format of the date time strings. 
+	 */
+	public static final String LOCAL_DATE_TIME_FORMAT = "dd-MM-yyyy HH:mm:ss";
 	
 	/**
 	 * Method that gets the values of the defined constants of a given class.
@@ -82,6 +88,18 @@ public class GeneralUtils {
 		}
 		
 		return nombreSistema;
+	}
+	
+	/**
+	 * Gets the String representation of the given local date time.
+	 * @param localDateTime
+	 * @return String that represents the local date time
+	 */
+	public static String getFormattedDateTime(final LocalDateTime localDateTime) {
+		
+		DateTimeFormatter formatter = DateTimeFormatter.ofPattern(LOCAL_DATE_TIME_FORMAT);
+
+        return localDateTime.format(formatter);
 	}
 
 }
