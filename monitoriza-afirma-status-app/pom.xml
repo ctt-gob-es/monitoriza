@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>es.gob.monitoriza</groupId>
 		<artifactId>monitoriza-parent</artifactId>
-		<version>0.0.1-SNAPSHOT</version>
+		<version>1.0</version>
 	</parent>
 	<artifactId>monitoriza-afirma-status-app</artifactId>
 	<packaging>war</packaging>
@@ -56,6 +56,10 @@
 		<dependency>
 			<groupId>es.gob.monitoriza</groupId>
 			<artifactId>monitoriza-persistence</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>es.gob.monitoriza</groupId>
+			<artifactId>monitoriza-core</artifactId>
 		</dependency>
 	</dependencies>
 	<build>
