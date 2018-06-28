@@ -25,6 +25,7 @@
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 
@@ -33,7 +34,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriz
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 20 abr. 2018.
  */
-public interface ServiceMonitorizaRepository extends JpaRepository<ServiceMonitoriza, Long> {
+public interface ServiceMonitorizaRepository extends JpaRepository<ServiceMonitoriza, Long>, JpaSpecificationExecutor<ServiceMonitoriza> {
 	
 	/**
 	  * Method that obtains from the persistence a service identified by its primary key. 

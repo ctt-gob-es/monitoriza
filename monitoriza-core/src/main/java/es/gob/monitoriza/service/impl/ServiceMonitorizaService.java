@@ -32,8 +32,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.ServiceMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.ServiceMonitorizaDatatableRepository;
+import es.gob.monitoriza.persistence.configuration.model.specification.TimerSpecification;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
 
 /**
@@ -126,6 +128,18 @@ public class ServiceMonitorizaService implements IServiceMonitorizaService {
 	public DataTablesOutput<ServiceMonitoriza> findAll(DataTablesInput input) {
 
 		return dtRepository.findAll(input);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IServiceMonitorizaService#getAllByTimer(es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza)
+	 */
+	@Override
+	public Iterable<ServiceMonitoriza> getAllByTimer(TimerMonitoriza timer) {
+				
+		TimerSpecification byTimer = new TimerSpecification(timer);
+		
+		return repository.findAll(byTimer);
 	}
 
 }
