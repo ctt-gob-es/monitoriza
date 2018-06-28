@@ -115,42 +115,54 @@ $(document).ready(function() {
 			                  
 			            		// Se oculta la capa 'cargando...'
 			            		hide();
-			                    //tbl.row.add($(data.data)).draw(false);
-			                    $(".modal-body").html('');
-			            		var pick = $(".modal-body").pickList({data: data});
-			                    $("#addRowBtn").click(function () {
-			                       console.log(pick.getValues());
-			                      	// Se envían los alias de los certificados a añadir al
-			                      	// almacén para autenticación RFC3161
-			                   		$.ajax(actionSave, {
-			                   			contentType:'application/json',
-						                data : JSON.stringify(data),
-			                        	type:'POST',
-			                        	success: function(data){
-			                          
-				                    		// Se oculta la capa 'cargando...'
-				                    		hide();
-				                            tbl.row.add($(data.data)).draw(false);
-				                            		                    
-				                            $('#altEditor-modal .modal-body .alert').remove();
-				                            $('#altEditor-modal').modal('hide');
-				                            		                    
-				                        },
-				                        error:function(data){
-				                        	
-				                        	// Se oculta la capa 'cargando...'
-				                        	hide();
-				                        	// Se eliminan los posibles errores anteriores...
-				                        	clearValidationResult('authForm');
-				                        	// Se obtiene el JSON de los campos con errores de validación
-				                        	// y se modifican los estilos/añaden mensajes
-				                        	var validation = $(data)["0"].responseJSON;
-				                        	drawValidationResult(validation.fieldErrors);
-				                      
-				                        }
-				                    });
+			                    			                    
+			            		$('#altEditor-modal .modal-body .alert').remove();
+								
+								if (data.error != null && data.error != '' && data.error != 'undefined') {
+									
+									$('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + data.error + '</strong></div>');
+									
+									if (data.error.toLowerCase().indexOf("contraseña") >= 0) {
+										$('#authkeystorepass').addClass('is-invalid');
+									}
+
+								} else {
+										$(".modal-body").html('');
+										var pick = $(".modal-body").pickList({data: data.lista});
+										$("#addRowBtn").click(function () {
+										   console.log(pick.getValues());
+											// Se envían los alias de los certificados a añadir al
+											// almacén para autenticación RFC3161
+											$.ajax(actionSave, {
+												contentType:'application/json',
+												data : JSON.stringify(data),
+												type:'POST',
+												success: function(data){
+											  
+													// Se oculta la capa 'cargando...'
+													hide();
+													tbl.row.add($(data.data)).draw(false);
+																				
+													$('#altEditor-modal .modal-body .alert').remove();
+													$('#altEditor-modal').modal('hide');
+																				
+												},
+												error:function(data){
+													
+													// Se oculta la capa 'cargando...'
+													hide();
+													// Se eliminan los posibles errores anteriores...
+													clearValidationResult('authForm');
+													// Se obtiene el JSON de los campos con errores de validación
+													// y se modifican los estilos/añaden mensajes
+													var validation = $(data)["0"].responseJSON;
+													drawValidationResult(validation.fieldErrors);
+											  
+												}
+											});
 			                       
-			                    });
+										});
+								}
 			                    		                    
 			                },
 			                error:function(data){

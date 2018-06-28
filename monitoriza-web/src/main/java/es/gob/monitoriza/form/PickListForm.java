@@ -15,86 +15,57 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.form.PickListElement.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.form.PickListForm.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>1 jun. 2018.</p>
+ * <b>Date:</b><p>20 jun. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 1 jun. 2018.
+ * @version 1.0, 20 jun. 2018.
  */
 package es.gob.monitoriza.form;
+
+import java.util.Collections;
+import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
 /** 
- * <p>Class that represents an element of the picklist view component.</p>
+ * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 1 jun. 2018.
+ * @version 1.0, 20 jun. 2018.
  */
-public class PickListElement {
+public class PickListForm {
 	
 	/**
-	 * Attribute that represents the picklist element identifier. 
+	 * Attribute that represents the list of elements . 
 	 */
-	private String id;
+	List<PickListElement> lista = Collections.emptyList();
 	
 	/**
-	 * Attribute that represents the picklist element text. 
+	 * Attribute that represents . 
 	 */
-	private String text;
-	
-	/**
-	 * Constructor method for the class PickListElement.java. 
-	 */
-	public PickListElement() {
-		
-	}
-				
-	/**
-	 * Constructor method for the class PickListElement.java.
-	 * @param id
-	 * @param text 
-	 */
-	public PickListElement(String id, String text) {
-		super();
-		this.id = id;
-		this.text = text;
-	}
+	String error;
 
-	/**
-	 * 
-	 * @return
-	 */
-	@JsonView(PickListForm.View.class)
-	public String getId() {
-		return id;
+	@JsonView(View.class)
+	public List<PickListElement> getLista() {
+		return lista;
 	}
 
 	
-	/**
-	 * 
-	 * @param id
-	 */
-	public void setId(String id) {
-		this.id = id;
+	public void setLista(List<PickListElement> lista) {
+		this.lista = lista;
 	}
 
-	/**
-	 * 
-	 * @return
-	 */
-	@JsonView(PickListForm.View.class)
-	public String getText() {
-		return text;
+	@JsonView(View.class)
+	public String getError() {
+		return error;
 	}
 
 	
-	/**
-	 * 
-	 * @param text
-	 */
-	public void setText(String text) {
-		this.text = text;
+	public void setError(String error) {
+		this.error = error;
 	}
 		
+	public interface View {
+	}
 }

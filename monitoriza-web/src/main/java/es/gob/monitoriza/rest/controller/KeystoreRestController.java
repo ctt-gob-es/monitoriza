@@ -29,6 +29,7 @@ import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
@@ -64,8 +65,9 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
-import es.gob.monitoriza.form.PickListElement;
 import es.gob.monitoriza.form.CertificateForm;
+import es.gob.monitoriza.form.PickListElement;
+import es.gob.monitoriza.form.PickListForm;
 import es.gob.monitoriza.i18n.LanguageWeb;
 import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
@@ -89,17 +91,17 @@ public class KeystoreRestController {
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_WEB_LOG);
 	
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents the identifier of the html input text field for the SSL alias certificate. 
 	 */
 	private static final String FIELD_ALIAS = "alias";
 	
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents the identifier of the html input file field for the keystore file. 
 	 */
 	private static final String FIELD_FILE = "file";
 	
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents the identifier of the html input password field for the RFC3161 keystore's password. 
 	 */
 	private static final String FIELD_AUTH_PASSWORD = "authkeystorepass";
 			
@@ -118,8 +120,7 @@ public class KeystoreRestController {
 	 * Attribute that represents the password for the loaded keystore. 
 	 */
 	private String ksPassword;
-	
-	
+		
 	/**
 	 * Attribute that represents the service object for accessing the repository. 
 	 */
@@ -281,14 +282,15 @@ public class KeystoreRestController {
      * @param sslForm Object that represents the backing user form. 
      * @return 
      */
-	@JsonView(DataTablesOutput.View.class)
+	@JsonView(PickListForm.View.class)
 	@ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/loadauth", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<PickListElement> loadauth(@RequestParam(FIELD_FILE) MultipartFile file, @RequestParam(FIELD_AUTH_PASSWORD) String password) throws IOException {
+    public PickListForm loadauth(@RequestParam(FIELD_FILE) MultipartFile file, @RequestParam(FIELD_AUTH_PASSWORD) String password) throws IOException {
     			
 		byte[] ksBytes = null;
+		PickListForm pickList = new PickListForm();
 		List<PickListElement> listAliases = new ArrayList<>();
-				
+		String error = null;
 		ksBytes = file.getBytes();
 		
 		try {
@@ -305,9 +307,18 @@ public class KeystoreRestController {
 		} catch (KeyStoreException | NoSuchAlgorithmException
 				| CertificateException e) {
 			LOGGER.equals(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_LISTING_ALIASES, new Object [] {file.getOriginalFilename()}));
+		} catch (IOException ioe) {
+			
+			if (ioe.getCause() instanceof UnrecoverableKeyException) {
+				// La contraseña es incorrecta
+				error = "La contraseña introducida no es correcta.";
+			}
 		}
-				
-		return listAliases;
+					
+		pickList.setLista(listAliases);
+		pickList.setError(error);
+		
+		return pickList;
 		
     }
 	
@@ -475,6 +486,8 @@ public class KeystoreRestController {
     	
 		DataTablesOutput<SystemCertificate> dtOutput = new DataTablesOutput<>();
 		
+		List<SystemCertificate> listSystemCertificate = new ArrayList<SystemCertificate>();
+		
 		try {
 			
 			if (aliases != null && !aliases.isEmpty()) {
@@ -488,7 +501,7 @@ public class KeystoreRestController {
 					Certificate cert;
 					Keystore ko = null;
 					SystemCertificate sysCert = new SystemCertificate();
-					List<SystemCertificate> listSystemCertificate = new ArrayList<SystemCertificate>();
+					
 					while (aliasIt.hasNext()) {
 						alias = aliasIt.next().getId();
 						key = ksFromDataToAdd.getKey(alias, password);
@@ -522,17 +535,24 @@ public class KeystoreRestController {
 	        			// Importación correcta
 	        			LOGGER.info(LanguageWeb.getFormatResWebMonitoriza(LogMessages.KEY_PAIR_ADDED, new Object [] {alias}));
 					}
-        	
-        			dtOutput.setData(listSystemCertificate);
         			
 			}
 			
 		} catch (Exception e) {
 							
 			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_ADDING_KEY_PAIR, new Object [] {aliases}),e);
+			
+			listSystemCertificate = StreamSupport.stream(sysCertService.getAllSystemCertificate().spliterator(), false)
+					.collect(Collectors.toList());
+			JSONObject json = new JSONObject();
+			
+			//json.put(o.getField() + "_span", o.getDefaultMessage());
+			
+			dtOutput.setError(json.toString());
 		
 		}
 
+		dtOutput.setData(listSystemCertificate);
 		return dtOutput;
 
     }

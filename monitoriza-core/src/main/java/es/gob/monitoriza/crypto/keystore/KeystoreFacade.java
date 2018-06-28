@@ -191,14 +191,14 @@ public class KeystoreFacade implements IKeystoreFacade {
 						
 			// Actualizamos el almacén de claves físicamente. Si la clave es
 			// nula, sólo se insertará el certificado.
-			LOGGER.debug(LanguageWeb.getFormatResWebMonitoriza(LOG_SK007, new Object[ ] { alias, keystore.getTokenName() }));
+			LOGGER.debug(LanguageWeb.getFormatResWebMonitoriza(LOG_SK007, new Object[ ] { alias, keystore.getName() }));
 			addEntryToKeystore(alias, certificate, key);
 		} catch (CertificateException e) {
 			String errorMsg = LanguageWeb.getResWebMonitoriza(LOG_SK008);
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		} catch (KeyStoreException e) {
-			String errorMsg = LanguageWeb.getFormatResWebMonitoriza(LOG_SK009, new Object[ ] { alias, LanguageWeb.getResWebMonitoriza(keystore.getTokenName()) });
+			String errorMsg = LanguageWeb.getFormatResWebMonitoriza(LOG_SK009, new Object[ ] { alias, keystore.getName()});
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		} finally {
@@ -252,10 +252,10 @@ public class KeystoreFacade implements IKeystoreFacade {
 		
 		// Cargamos el keystore SSL desde la persistencia
 		KeyStore ks = KeyStore.getInstance(keystore.getKeystoreType());
+		char[] ksPass = new String(getKeystoreDecodedPassword()).toCharArray();
 	
 		try (ByteArrayInputStream bais = new ByteArrayInputStream(keystore.getKeystore());) {
-			//ks.load(bais, new String(getKeystoreDecodedPassword()).toCharArray());
-			ks.load(bais, AES_PASSWORD.toCharArray());
+			ks.load(bais, ksPass);
 			
 		} catch (NoSuchAlgorithmException | CertificateException
 				| IOException e) {
@@ -265,14 +265,13 @@ public class KeystoreFacade implements IKeystoreFacade {
 		if (key == null) {
 			ks.setCertificateEntry(alias, cert);
 		} else {
-			ks.setKeyEntry(alias, key, AES_PASSWORD.toCharArray(), new Certificate[ ] { cert });
+			ks.setKeyEntry(alias, key, ksPass, new Certificate[ ] { cert });
 		}
 		
 		// Establecemos el nuevo valor del almacén SSL
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
-			//ks.store(baos, new String(getKeystoreDecodedPassword()).toCharArray());
-			ks.store(baos, AES_PASSWORD.toCharArray());
-			
+			ks.store(baos, ksPass);
+						
 			keystore.setKeystore(baos.toByteArray());		
 		} catch (NoSuchAlgorithmException | CertificateException
 				| IOException e) {
@@ -290,13 +289,12 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 * @throws CryptographyException If there is some error decrypting the password of the keystore.
 	 */
 	private Keystore updateEntryToKeystore(String oldEntryAlias, String newEntryAlias) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CryptographyException {
-		//char[ ] entryPass = new String(getKeystoreDecodedPassword()).toCharArray();
-		char[] entryPass = AES_PASSWORD.toCharArray();
+		char[ ] ksPass = new String(getKeystoreDecodedPassword()).toCharArray();
 		// Cargamos el keystore SSL desde la persistencia
 		KeyStore ks = KeyStore.getInstance(keystore.getKeystoreType());
 		
 		try (ByteArrayInputStream bais = new ByteArrayInputStream(keystore.getKeystore());) {
-			ks.load(bais, new String(getKeystoreDecodedPassword()).toCharArray());
+			ks.load(bais, ksPass);
 		} catch (NoSuchAlgorithmException | CertificateException
 				| IOException e) {
 			LOGGER.error("Error cargando el keystore", e);
@@ -308,16 +306,16 @@ public class KeystoreFacade implements IKeystoreFacade {
 				ks.deleteEntry(oldEntryAlias);
 				ks.setCertificateEntry(newEntryAlias, cert);
 			} else if (ks.isKeyEntry(oldEntryAlias)) {
-				Key key = ks.getKey(oldEntryAlias, entryPass);
+				Key key = ks.getKey(oldEntryAlias, ksPass);
 				Certificate[ ] certChain = ks.getCertificateChain(oldEntryAlias);
 				ks.deleteEntry(oldEntryAlias);
-				ks.setKeyEntry(newEntryAlias, key, entryPass, certChain);
+				ks.setKeyEntry(newEntryAlias, key, ksPass, certChain);
 			}
 		}
 		
 		// Establecemos el nuevo valor del almacén SSL
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
-			ks.store(baos, entryPass);
+			ks.store(baos, ksPass);
 			keystore.setKeystore(baos.toByteArray());
 		} catch (NoSuchAlgorithmException | CertificateException
 				| IOException e) {
@@ -353,12 +351,12 @@ public class KeystoreFacade implements IKeystoreFacade {
 	@Override
 	public Keystore deleteCertificate(String alias) throws CryptographyException {
 
-		char[ ] entryPass = new String(getKeystoreDecodedPassword()).toCharArray();
+		char[ ] ksPass = new String(getKeystoreDecodedPassword()).toCharArray();
 
 		// Cargamos el keystore SSL desde la persistencia
 		try (ByteArrayInputStream bais = new ByteArrayInputStream(keystore.getKeystore());) {
 			KeyStore ks = KeyStore.getInstance(keystore.getKeystoreType());
-			ks.load(bais, new String(getKeystoreDecodedPassword()).toCharArray());
+			ks.load(bais, ksPass);
 
 			if (ks.containsAlias(alias)) {
 				// Si existe la entrada, la elimino
@@ -367,7 +365,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 
 			ByteArrayOutputStream baos = new ByteArrayOutputStream();
 
-			ks.store(baos, entryPass);
+			ks.store(baos, ksPass);
 			keystore.setKeystore(baos.toByteArray());
 		} catch (NoSuchAlgorithmException | CertificateException | IOException
 				| KeyStoreException e) {
@@ -430,5 +428,6 @@ public class KeystoreFacade implements IKeystoreFacade {
 		}
 		return result;
 	}
+	
 	
 }
