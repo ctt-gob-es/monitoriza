@@ -82,7 +82,13 @@ public class OcspInvoker {
 		String ip = StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_HOST);
 		String port = Boolean.valueOf(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_SECURE_MODE)) ? StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_HTTPS_PORT) : StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_PORT);
 		String ocspPath = StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_OCSP_PATH);
-		String base = secureMode + GeneralConstants.COLON + GeneralConstants.DOUBLE_PATH_SEPARATOR + ip + GeneralConstants.COLON + port;
+		
+		String base = "";
+		if (port != null && !"".equals(port)) {
+			base = secureMode + GeneralConstants.COLON + GeneralConstants.DOUBLE_PATH_SEPARATOR + ip + GeneralConstants.COLON + port;
+		} else {
+			base = secureMode + GeneralConstants.COLON + GeneralConstants.DOUBLE_PATH_SEPARATOR + ip;
+		}
 
 		try {
 

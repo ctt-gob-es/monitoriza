@@ -114,12 +114,6 @@ public class Rfc3161Invoker {
 		
 		try {
 			// Accedemos al almacén de confianza SSL
-//			msgError = Language.getResMonitoriza(LogMessages.ERROR_ACCESS_CERTIFICATE_SSL);
-//						
-//			KeyStore cer = KeyStore.getInstance(StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTSTORE_TYPE));
-//			InputStream readStream = new FileInputStream(StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTTORE_PATH));
-//			cer.load(readStream, StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTTORE_PASSWORD).toCharArray());
-//			readStream.close();	
 						
 			TrustManagerFactory tmf = TrustManagerFactory.getInstance(GeneralConstants.TRUST_MANAGER_FACTORY_SUN_X509);
 			

@@ -188,7 +188,11 @@ public class HttpSoapInvoker {
 		
 		StringBuilder baseUrl = new StringBuilder();
 		
-		baseUrl.append(protocol).append(GeneralConstants.COLON).append(GeneralConstants.DOUBLE_PATH_SEPARATOR).append(connection.getHost()).append(GeneralConstants.COLON).append(port).append(connection.getServiceContext());
+		if (port != null && !"".equals(port)) {
+			baseUrl.append(protocol).append(GeneralConstants.COLON).append(GeneralConstants.DOUBLE_PATH_SEPARATOR).append(connection.getHost()).append(GeneralConstants.COLON).append(port).append(connection.getServiceContext());
+		} else {
+			baseUrl.append(protocol).append(GeneralConstants.COLON).append(GeneralConstants.DOUBLE_PATH_SEPARATOR).append(connection.getHost()).append(connection.getServiceContext());
+		}
 		
 		return baseUrl.toString();
 		
