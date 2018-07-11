@@ -103,7 +103,7 @@ public class KeystoreRestController {
 	/**
 	 * Attribute that represents the identifier of the html input password field for the RFC3161 keystore's password. 
 	 */
-	private static final String FIELD_AUTH_PASSWORD = "authkeystorepass";
+	private static final String FIELD_AUTH_PASSWORD = "keystorepass";
 			
 	/**
 	 * Attribute that represents the service object for accessing the repository. 
@@ -285,7 +285,7 @@ public class KeystoreRestController {
 	@JsonView(PickListForm.View.class)
 	@ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/loadauth", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-    public PickListForm loadauth(@RequestParam(FIELD_FILE) MultipartFile file, @RequestParam(FIELD_AUTH_PASSWORD) String password) throws IOException {
+    public PickListForm loadauth(@RequestParam(FIELD_FILE) MultipartFile file, @RequestParam(FIELD_AUTH_PASSWORD) String password, @RequestParam("typekeystore") String typekeystore) throws IOException {
     			
 		byte[] ksBytes = null;
 		PickListForm pickList = new PickListForm();

@@ -25,14 +25,14 @@
 package es.gob.monitoriza.spring.config;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-
-import es.gob.monitoriza.service.impl.UserDetailServiceImpl;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 /** 
  * <p>Class that enables and configures Spring Web Security for the Monitoriz@ application.</p>
@@ -47,7 +47,13 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	 * Attribute that represents the injected service for user authentication. 
 	 */
 	@Autowired
-    private UserDetailServiceImpl userDetailsService;
+    private MultiFieldAuthenticationProvider multiFieldAuthenticationProvider;
+	
+	@Autowired
+	private SuccessHandler successHandler;
+	
+	@Autowired
+	private FailureHandler failureHandler;
 	
 	/**
 	 * {@inheritDoc}
@@ -67,11 +73,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
             .anyRequest()
             .authenticated()
             .and()
-        .formLogin()
-            .loginPage("/")
-            .defaultSuccessUrl("/inicio")
-            .permitAll()
-            .and()
+            .addFilterBefore(
+            		authenticationFilter(),
+                UsernamePasswordAuthenticationFilter.class)
         .logout()
             .permitAll()
             .and()
@@ -86,15 +90,27 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         	.invalidSessionUrl("/invalidSession");
 
     }
-
-    /**
+	
+	@Bean
+	public MultiFieldAuthenticationFilter authenticationFilter() throws Exception {
+		MultiFieldAuthenticationFilter authFilter = new MultiFieldAuthenticationFilter();
+	    authFilter.setRequiresAuthenticationRequestMatcher(new AntPathRequestMatcher("/", "POST"));
+	    authFilter.setAuthenticationManager(authenticationManager());
+	    authFilter.setAuthenticationSuccessHandler(successHandler);
+	    authFilter.setAuthenticationFailureHandler(failureHandler);
+	    authFilter.setUsernameParameter("username");
+	    authFilter.setPasswordParameter("password");
+	    authFilter.setSignatureBase64Parameter("signatureBase64");
+	    return authFilter;
+	}
+	
+	/**
      * Method that sets the authentication global configuration.
      * @param auth Object that represents the Spring security builder.
      * @throws Exception Object that represents the exception thrown in case of error.
      */
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.userDetailsService(userDetailsService).passwordEncoder(new BCryptPasswordEncoder());
+	@Override
+    public void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth.authenticationProvider(multiFieldAuthenticationProvider);
     }
-        
 }

@@ -62,6 +62,11 @@ public class Keystore implements Serializable {
 	public static final long ID_AUTHCLIENT_RFC3161 = 2L;
 
 	/**
+	 * Attribute that represents the identifier for the client authentication for user service keystore in database. 
+	 */
+	public static final long ID_USER_STORE = 3L;
+	
+	/**
 	 * Attribute that represents the object ID.
 	 */
 	private Long idKeystore;
@@ -149,7 +154,7 @@ public class Keystore implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	@OneToMany(mappedBy = "keystore", cascade = CascadeType.MERGE, fetch = FetchType.LAZY)
+	@OneToMany(mappedBy = "keystore", cascade = CascadeType.MERGE, fetch = FetchType.EAGER)
 	public List<SystemCertificate> getListSystemCertificates() {
 		// CHECKSTYLE:ON
 		return listSystemCertificates;

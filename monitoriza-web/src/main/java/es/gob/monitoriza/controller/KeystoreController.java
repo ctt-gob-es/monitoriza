@@ -87,6 +87,18 @@ public class KeystoreController {
     }
 	
 	/**
+	 * Method that maps the list keystore web requests to the controller and forwards the list of keystores
+	 * to the view.  
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "userstore")
+    public String keystoreUserStore(Model model){
+						
+        return "fragments/userstore.html";
+    }
+	
+	/**
 	 * Method that maps the add keystore web requests to the controller and forwards to the form
 	 * to the view.  
 	 * @param model Holder object for model attributes.

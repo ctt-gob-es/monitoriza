@@ -22,6 +22,7 @@ package es.gob.monitoriza.utilidades;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.math.BigInteger;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
@@ -181,6 +182,19 @@ public final class UtilsCertificate {
 			return null;
 		}
 		return canonicalizarIdCertificado(ASN1Utilities.toString(cert.getIssuerX500Principal()));
+	}
+	
+	/**
+	 * Method that obtains the serial number of a certificate.
+	 * @param cert Parameter that represents the certificate.
+	 * @return the serial number of the certificate.
+	 * @throws CommonUtilsException If the method fails.
+	 */
+	public static BigInteger getCertificateSerialNumber(X509Certificate cert) throws Exception {
+		if (cert == null) {
+			return null;
+		}
+		return cert.getSerialNumber();
 	}
 	
 
