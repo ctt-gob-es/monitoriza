@@ -1,7 +1,5 @@
 <form name="altEditor-form" role="form" id="authForm" action="/loadcertsauth" method="post">
 						
-			<input type='hidden' id="typekeystore" name="typekeystore" value="auth">
-						
 			<div class="form-group">
 
 					<div class="custom-file" id="customFile" lang="es">
@@ -14,8 +12,8 @@
 			
 			<div class="form-group">
 
-					<label for="keystorepass" class="col-form-label" th:text="#{form.keystore.password}"></label>
-					<input type="password" id="keystorepass" name="keystorepass" class="form-control" required pattern=".{3,15}" />
+					<label for="authkeystorepass" class="col-form-label" th:text="#{form.keystore.password}"></label>
+					<input type="password" id="authkeystorepass" name="authkeystorepass" class="form-control" required pattern=".{3,15}" />
 					<div id="invalid-authkeystorepass" class="invalid-feedback" ></div>
 				
 				<div style="clear:both;"/>
