@@ -79,8 +79,16 @@ $(document).ready(function() {
 	        { "data": "serviceContext"},
 	        { "data": "rfc3161Context" },
 	        { "data": "rfc3161Certificate.idSystemCertificate",
-	          "visible": false},
-	        { "data": "rfc3161Certificate.alias"}  
+	          "visible": false,
+	          "render": function ( data, type, full, meta ) {
+	        	return data == null ? "" :data;
+	        	} 
+	        },
+	        { "data": "rfc3161Certificate.alias",
+	          "render": function ( data, type, full, meta ) {
+		        	return data == null ? "" :data;
+		       	}
+	        }  
 	      ]
 		}).on('crudaction', function(e, accion, idPlatform, data, rowindex){
 		    // e          Evento Jquery

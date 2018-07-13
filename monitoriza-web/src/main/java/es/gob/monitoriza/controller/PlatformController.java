@@ -166,7 +166,10 @@ public class PlatformController {
     	tsaForm.setIsSecure(tsa.getIsSecure());
     	tsaForm.setRfc3161Port(tsa.getRfc3161Port());
     	tsaForm.setUseRfc3161Auth(tsa.getUseRfc3161Auth());
-    	tsaForm.setRfc3161Certificate(tsa.getRfc3161Certificate().getIdSystemCertificate());
+    	
+    	if (tsa.getUseRfc3161Auth()) {
+    		tsaForm.setRfc3161Certificate(tsa.getRfc3161Certificate().getIdSystemCertificate());
+    	}
 
     	model.addAttribute("tsaform", tsaForm);
     	model.addAttribute("authcerts", listCertificates);

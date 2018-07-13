@@ -54,6 +54,7 @@ import es.gob.monitoriza.form.AfirmaForm;
 import es.gob.monitoriza.form.TsaForm;
 import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IPlatformService;
 import es.gob.monitoriza.service.ISystemCertificateService;
@@ -255,8 +256,13 @@ public class PlatformRestController {
 				platformTsa.setRfc3161Port(tsaForm.getRfc3161Port());
 				platformTsa.setUseRfc3161Auth(tsaForm.getUseRfc3161Auth());
 				platformTsa.setRfc3161Certificate(sysCertService.getSystemCertificateById(tsaForm.getRfc3161Certificate()));
-		
+						
 				PlatformMonitoriza tsa = platformService.savePlatform(platformTsa);
+				
+				// Se construye objeto vacío para evitar warning de datatables
+				if (!tsaForm.getUseRfc3161Auth()) {
+					platformTsa.setRfc3161Certificate(new SystemCertificate());
+				}
 				
 				listNewAfirma.add(tsa);
 			}catch(Exception e) {
