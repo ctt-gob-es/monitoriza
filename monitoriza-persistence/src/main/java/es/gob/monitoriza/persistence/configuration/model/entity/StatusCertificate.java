@@ -97,7 +97,7 @@ public class StatusCertificate implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setIdStatusCertificate(Long idStatusCertificate) {
+	public void setIdStatusCertificate(final Long idStatusCertificate) {
 		// CHECKSTYLE:ON
 		this.idStatusCertificate = idStatusCertificate;
 	}
@@ -121,7 +121,7 @@ public class StatusCertificate implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setTokenName(String tokenName) {
+	public void setTokenName(final String tokenName) {
 		// CHECKSTYLE:ON
 		this.tokenName = tokenName;
 	}

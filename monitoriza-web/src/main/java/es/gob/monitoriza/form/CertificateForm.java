@@ -43,7 +43,7 @@ public class CertificateForm {
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input in the form. 
 	 */
-	private Long idSystemCertificate;
+	private Long idSystemCert;
 	
 	/**
 	 * Attribute that represents the value of the input alias of the system certificate in the form. 
@@ -74,19 +74,24 @@ public class CertificateForm {
 	private byte[] certBytes;
 	
 	/**
-	 * Gets the value of the attribute {@link #idSystemCertificate}.
-	 * @return the value of the attribute {@link #idSystemCertificate}.
+	 * Attribute that represents the user of the system certificate. 
+	 */
+	private Long idUserMonitoriza;
+	
+	/**
+	 * Gets the value of the attribute {@link #idSystemCert}.
+	 * @return the value of the attribute {@link #idSystemCert}.
 	 */	
-	public Long getIdSystemCertificate() {
-		return idSystemCertificate;
+	public Long getIdSystemCert() {
+		return idSystemCert;
 	}
 	
 	/**
-	 * Sets the value of the attribute {@link #idSystemCertificate}.
-	 * @param idSystemCertificate the value for the attribute {@link #idSystemCertificate} to set.
+	 * Sets the value of the attribute {@link #idSystemCert}.
+	 * @param idSystemCertP the value for the attribute {@link #idSystemCert} to set.
 	 */
-	public void setIdSystemCertificate(Long idSystemCertificate) {
-		this.idSystemCertificate = idSystemCertificate;
+	public void setIdSystemCert(final Long idSystemCertP) {
+		this.idSystemCert = idSystemCertP;
 	}
 	
 	/**
@@ -101,7 +106,7 @@ public class CertificateForm {
 	 * Sets the value of the attribute {@link #alias}.
 	 * @param alias the value for the attribute {@link #alias} to set.
 	 */
-	public void setAlias(String alias) {
+	public void setAlias(final String alias) {
 		this.alias = alias;
 	}
 		
@@ -119,7 +124,7 @@ public class CertificateForm {
 	 * Sets the value of the attribute {@link #issuer}.
 	 * @param issuer the value for the attribute {@link #issuer} to set.
 	 */
-	public void setIssuer(String issuer) {
+	public void setIssuer(final String issuer) {
 		this.issuer = issuer;
 	}
 
@@ -137,7 +142,7 @@ public class CertificateForm {
 	 * Sets the value of the attribute {@link #subject}.
 	 * @param subject the value for the attribute {@link #subject} to set.
 	 */
-	public void setSubject(String subject) {
+	public void setSubject(final String subject) {
 		this.subject = subject;
 	}
 
@@ -154,7 +159,7 @@ public class CertificateForm {
 	 * Sets the value of the attribute {@link #file}.
 	 * @param file the value for the attribute {@link #file} to set.
 	 */
-	public void setFile(MultipartFile sslCertificate) {
+	public void setFile(final MultipartFile sslCertificate) {
 		this.file = sslCertificate;
 	}
 
@@ -170,10 +175,26 @@ public class CertificateForm {
 	
 	/**
 	 * Sets the value of the attribute {@link #certBytes}.
-	 * @param certBytes the value for the attribute {@link #certBytes} to set.
+	 * @param certBytesP the value for the attribute {@link #certBytes} to set.
 	 */
-	public void setCertBytes(byte[ ] certBytes) {
-		this.certBytes = certBytes;
+	public void setCertBytes(final byte[ ] certBytesP) {
+		this.certBytes = certBytesP;
+	}
+	
+	/**
+	 * Gets the value of the attribute {@link #idUserMonitoriza}.
+	 * @return the value of the attribute {@link #idUserMonitoriza}.
+	 */	
+	public Long getIdUserMonitoriza() {
+		return idUserMonitoriza;
+	}
+	
+	/**
+	 * Sets the value of the attribute {@link #idUserMonitoriza}.
+	 * @param idUserMonitoriza the value for the attribute {@link #idUserMonitoriza} to set.
+	 */
+	public void setIdUserMonitoriza(final Long idUserMonitoriza) {
+		this.idUserMonitoriza = idUserMonitoriza;
 	}
 		
 }

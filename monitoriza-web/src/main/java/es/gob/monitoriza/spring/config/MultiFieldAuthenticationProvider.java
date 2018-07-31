@@ -1,5 +1,30 @@
+/*
+/*******************************************************************************
+ * Copyright (C) 2018 MINHAFP, Gobierno de España
+ * This program is licensed and may be used, modified and redistributed under the  terms
+ * of the European Public License (EUPL), either version 1.1 or (at your option)
+ * any later version as soon as they are approved by the European Commission.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and
+ * more details.
+ * You should have received a copy of the EUPL1.1 license
+ * along with this program; if not, you may find it at
+ * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
+ ******************************************************************************/
+
+/**
+ * <b>File:</b><p>es.gob.monitoriza.spring.config.MultiFieldAuthenticationProvider.java.</p>
+ * <b>Description:</b><p> .</p>
+ * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Date:</b><p>30 jul. 2018.</p>
+ * @author Gobierno de España.
+ * @version 1.0, 30 jul. 2018.
+ */
 package es.gob.monitoriza.spring.config;
 
+import java.security.KeyStore;
 import java.security.Security;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -31,13 +56,21 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
+import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.KeystoreRepository;
+import es.gob.monitoriza.persistence.configuration.model.repository.SystemCertificateRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.UserMonitorizaRepository;
 import es.gob.monitoriza.utilidades.UtilsCertificate;
 
+/**
+ * <p>Class .</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.0, 30 jul. 2018.
+ */
 @Component
 public class MultiFieldAuthenticationProvider implements AuthenticationProvider {
 
@@ -45,6 +78,11 @@ public class MultiFieldAuthenticationProvider implements AuthenticationProvider 
 	 * Attribute that represents the keystore of users
 	 */
 	public static final String USER_KEYSTORE = "UserStore";
+
+	/**
+	 * Attribute that represents the incorrect user.
+	 */
+	private static final String USER_INCORRECT = "Usuario incorrecto";
 
 	/**
 	 * Attribute that represents the interface that provides access to the CRUD
@@ -56,22 +94,32 @@ public class MultiFieldAuthenticationProvider implements AuthenticationProvider 
 	 * Attribute that represents the interface that provides access to the CRUD
 	 * operations for the Keystore entity.
 	 */
-	private final KeystoreRepository keystoreRepository;
+	private final KeystoreRepository keystoreRepo;
+
+	/**
+	 * Attribute that represents the interface that provides access to the CRUD
+	 * operations for the SystemCertificate entity.
+	 */
+	private final SystemCertificateRepository systemCertRepoy;
 
 	/**
 	 * Constructor method for the class UserDetailServiceImpl.java.
-	 * 
+	 *
 	 * @param repository
 	 */
 	@Autowired
-	public MultiFieldAuthenticationProvider(UserMonitorizaRepository userRepository,
-			KeystoreRepository keystoreRepository) {
+	public MultiFieldAuthenticationProvider(final UserMonitorizaRepository userRepository, final KeystoreRepository keystoreRepo, final SystemCertificateRepository systemCertRepoy) {
 		this.userRepository = userRepository;
-		this.keystoreRepository = keystoreRepository;
+		this.keystoreRepo = keystoreRepo;
+		this.systemCertRepoy = systemCertRepoy;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see org.springframework.security.authentication.AuthenticationProvider#authenticate(org.springframework.security.core.Authentication)
+	 */
 	@Override
-	public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+	public Authentication authenticate(final Authentication authentication) throws AuthenticationException {
 
 		Authentication auth = null;
 		MultiFieldLoginUserDetails customUser = (MultiFieldLoginUserDetails) authentication.getPrincipal();
@@ -82,43 +130,44 @@ public class MultiFieldAuthenticationProvider implements AuthenticationProvider 
 		UserMonitoriza curruser = null;
 
 		if (!StringUtils.isEmpty(signatureBase64)) {
-			byte[] signatureBase64Bytes = Base64.getDecoder().decode(signatureBase64.getBytes());
+			byte[ ] signBase64Bytes = Base64.getDecoder().decode(signatureBase64.getBytes());
 			try {
 				Security.addProvider(new BouncyCastleProvider());
-				CMSSignedData cms = new CMSSignedData(signatureBase64Bytes);
+				CMSSignedData cms = new CMSSignedData(signBase64Bytes);
 				Store store = cms.getCertificates();
 				SignerInformationStore signers = cms.getSignerInfos();
-				Iterator<?> it = signers.getSigners().iterator();
-				while (it.hasNext()) {
-					SignerInformation signer = (SignerInformation) it.next();
+				Iterator<?> itSigner = signers.getSigners().iterator();
+				X509CertificateHolder certHolder = null;
+				X509Certificate certificate = null;
+				JcaX509CertificateConverter jcaX509CertConv = new JcaX509CertificateConverter();
+				JcaSimpleSignerInfoVerifierBuilder jcaSimpSigInfoVer = new JcaSimpleSignerInfoVerifierBuilder();
+				Keystore keystoreUser = keystoreRepo.findByIdKeystore(Keystore.ID_USER_STORE);
+				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreUser);
+				while (itSigner.hasNext()) {
+					SignerInformation signer = (SignerInformation) itSigner.next();
 					Collection<?> certCollection = store.getMatches(signer.getSID());
 					Iterator<?> certIt = certCollection.iterator();
-					X509CertificateHolder certHolder = (X509CertificateHolder) certIt.next();
-					X509Certificate cert = new JcaX509CertificateConverter()
-							.setProvider(BouncyCastleProvider.PROVIDER_NAME).getCertificate(certHolder);
-					if (signer.verify(new JcaSimpleSignerInfoVerifierBuilder()
-							.setProvider(BouncyCastleProvider.PROVIDER_NAME).build(cert))) {
-						Keystore keyUserStore = keystoreRepository.findByName(USER_KEYSTORE);
+					certHolder = (X509CertificateHolder) certIt.next();
+					certificate = jcaX509CertConv.setProvider(BouncyCastleProvider.PROVIDER_NAME).getCertificate(certHolder);
+					if (signer.verify(jcaSimpSigInfoVer.setProvider(BouncyCastleProvider.PROVIDER_NAME).build(certificate))) {
+						KeyStore ksData = KeystoreFacade.getKeystore(keystoreUser.getKeystore(), keystoreUser.getKeystoreType(), keyStoreFacade.getKeystoreDecodedPasswordString(keystoreUser.getPassword()));
+						String alias = UtilsCertificate.createCertificateAlias(certificate, null);
 
-						for (SystemCertificate systemCertificate : keyUserStore.getListSystemCertificates()) {
-							if (systemCertificate.getIssuer()
-									.equalsIgnoreCase(UtilsCertificate.getCertificateIssuerId(cert))
-									&& systemCertificate.getSerialNumber()
-											.equals(UtilsCertificate.getCertificateSerialNumber(cert))) {
-								curruser = systemCertificate.getUserMonitoriza();
-								break;
-							}
+						if (ksData.containsAlias(alias)) {
+							SystemCertificate systemCertificate = systemCertRepoy.findByAlias(alias);
+							curruser = systemCertificate.getUserMonitoriza();
+							break;
 						}
 					}
 				}
 			} catch (Exception e) {
-				throw new BadCredentialsException("Usuario incorrecto");
+				auth = null;
 			}
 		} else {
 			if (name != null && password != null) {
 				curruser = userRepository.findByLogin(name);
 			} else {
-				throw new BadCredentialsException("Usuario incorrecto");
+				auth = null;
 			}
 		}
 		if (curruser != null) {
@@ -129,23 +178,50 @@ public class MultiFieldAuthenticationProvider implements AuthenticationProvider 
 
 				auth = new UsernamePasswordAuthenticationToken(name, password, grantedAuths);
 			} else {
-				throw new BadCredentialsException("Usuario incorrecto");
+				throw new BadCredentialsException(USER_INCORRECT);
 			}
 		} else {
-			throw new UsernameNotFoundException("Usuario incorrecto");
+			throw new UsernameNotFoundException(USER_INCORRECT);
 		}
 		return auth;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see org.springframework.security.authentication.AuthenticationProvider#supports(java.lang.Class)
+	 */
 	@Override
-	public boolean supports(Class<?> authentication) {
+	public boolean supports(final Class<?> authentication) {
 		return authentication.equals(UsernamePasswordAuthenticationToken.class);
 	}
 
 	/** The password encoder */
 	@Bean
 	public PasswordEncoder passwordEncoder() {
-		PasswordEncoder encoder = new BCryptPasswordEncoder();
-		return encoder;
+		return new BCryptPasswordEncoder();
+	}
+
+	/**
+	 * Get userRepository.
+	 * @return userRepository
+	 */
+	public UserMonitorizaRepository getUserRepository() {
+		return userRepository;
+	}
+
+	/**
+	 * Get keystoreRepo.
+	 * @return keystoreRepo
+	 */
+	public KeystoreRepository getKeystoreRepo() {
+		return keystoreRepo;
+	}
+
+	/**
+	 * Get systemCertRepoy.
+	 * @return systemCertRepoy
+	 */
+	public SystemCertificateRepository getSystemCertRepoy() {
+		return systemCertRepoy;
 	}
 }

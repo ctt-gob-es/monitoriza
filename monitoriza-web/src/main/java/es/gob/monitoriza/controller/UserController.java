@@ -1,4 +1,4 @@
-/* 
+/*
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,25 +14,25 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
+/**
  * <b>File:</b><p>es.gob.monitoriza.controller.UserController.java.</p>
  * <b>Description:</b><p>Class that manages the requests related to the Users administration.</p>
-  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 mar. 2018.</p>
  * @author Gobierno de España.
  * @version 1.0, 8 mar. 2018.
  */
 package es.gob.monitoriza.controller;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.form.CertificateForm;
 import es.gob.monitoriza.form.UserForm;
 import es.gob.monitoriza.form.UserFormEdit;
 import es.gob.monitoriza.form.UserFormPassword;
@@ -47,16 +47,11 @@ import es.gob.monitoriza.service.IUserMonitorizaService;
  * <p>
  * Application for monitoring services of @firma suite systems.
  * </p>
- * 
+ *
  * @version 1.0, 8 mar. 2018.
  */
 @Controller
 public class UserController {
-
-	/**
-	 * Attribute that represents the object that manages the log of the class.
-	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_WEB_LOG);
 
 	/**
 	 * Attribute that represents the service object for accessing the
@@ -68,13 +63,13 @@ public class UserController {
 	/**
 	 * Method that maps the list users web requests to the controller and
 	 * forwards the list of users to the view.
-	 * 
+	 *
 	 * @param model
 	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
 	@RequestMapping(value = "useradmin")
-	public String index(Model model) {
+	public String index(final Model model) {
 		model.addAttribute("userFormPassword", new UserFormPassword());
 		model.addAttribute("userformEdit", new UserFormEdit());
 		return "fragments/useradmin.html";
@@ -83,20 +78,26 @@ public class UserController {
 	/**
 	 * Method that maps the add user web request to the controller and sets the
 	 * backing form.
-	 * 
+	 *
 	 * @param model
 	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
 	@RequestMapping(value = "adduser", method = RequestMethod.POST)
-	public String addUser(Model model) {
+	public String addUser(final Model model) {
 		model.addAttribute("userform", new UserForm());
 		model.addAttribute("accion", "add");
 		return "modal/userForm";
 	}
 
+	/**
+	 * Method that opens the modal form password.
+	 * @param username
+	 * @param model
+	 * @return view
+	 */
 	@RequestMapping(value = "menupass")
-	public String menuPass(@RequestParam("username") String username, Model model) {
+	public String menuPass(@RequestParam("username") final String username, final Model model) {
 		UserMonitoriza userMonitoriza = userService.getUserMonitorizaByLogin(username);
 		UserFormPassword userFormPassword = new UserFormPassword();
 
@@ -106,8 +107,14 @@ public class UserController {
 		return "modal/userFormPass.html";
 	}
 
+	/**
+	 * Method that opens the modal form user edit.
+	 * @param username
+	 * @param model
+	 * @return view
+	 */
 	@RequestMapping(value = "menuedit")
-	public String menuEdit(@RequestParam("username") String username, Model model) {
+	public String menuEdit(@RequestParam("username") final String username, final Model model) {
 		UserMonitoriza userMonitoriza = userService.getUserMonitorizaByLogin(username);
 		UserFormEdit userFormEdit = new UserFormEdit();
 
@@ -119,6 +126,49 @@ public class UserController {
 
 		model.addAttribute("userformEdit", userFormEdit);
 		return "modal/userFormEdit.html";
+	}
+
+	/**
+	 * Method that maps the add user certificate web requests to the controller and forwards to the form
+	 * to the view.
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "/managecertuser/{idUserMonitoriza}")
+	public String manageCertUser(final Model model, @PathVariable("idUserMonitoriza") final Long idUserMonitoriza) {
+		model.addAttribute("idUserMonitoriza", idUserMonitoriza);
+		return "modal/certUser.html";
+	}
+
+	/**
+	 * Method that maps the add user web request to the controller and sets the
+	 * backing form.
+	 *
+	 * @param model
+	 *            Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "addcertuser", method = RequestMethod.POST)
+	public String addcertuserForm(final Model model) {
+		model.addAttribute("certUserForm", new CertificateForm());
+		model.addAttribute("accion", "add");
+		return "modal/certUserForm";
+	}
+
+	/**
+	 * Get userService.
+	 * @return userService
+	 */
+	public IUserMonitorizaService getUserService() {
+		return userService;
+	}
+
+	/**
+	 * SetuserService.
+	 * @param userServiceP set userService
+	 */
+	public void setUserService(final IUserMonitorizaService userServiceP) {
+		this.userService = userServiceP;
 	}
 
 }

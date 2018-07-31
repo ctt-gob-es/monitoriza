@@ -1,4 +1,4 @@
-/* 
+/*
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,10 +14,10 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
+/**
  * <b>File:</b><p>es.gob.monitoriza.service.ISystemCertificateService.java.</p>
  * <b>Description:</b><p> .</p>
-  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 may. 2018.</p>
  * @author Gobierno de España.
  * @version 1.0, 16 may. 2018.
@@ -29,7 +29,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 
-/** 
+/**
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 16 may. 2018.
@@ -42,63 +42,78 @@ public interface ISystemCertificateService {
 	 * @return {@link SystemCertificate}
 	 */
 	SystemCertificate getSystemCertificateById(Long certId);
-	
+
 	/**
 	 * Method that obtains a certificate by its alias.
 	 * @param alias The certificate alias.
 	 * @return {@link SystemCertificate}
 	 */
 	SystemCertificate getSystemCertificateByAlias(String alias);
-	
+
 	/**
 	 * Method that stores a user in the persistence.
 	 * @param user a {@link SystemCertificate} with the information of the user.
-	 * @return {@link SystemCertificate} The user. 
+	 * @return {@link SystemCertificate} The user.
 	 */
 	SystemCertificate saveSystemCertificate(SystemCertificate cert);
-			
+
 	/**
 	 * Method that deletes a user in the persistence.
 	 * @param certId {@link Integer} that represents the certificate identifier to delete.
 	 */
 	void deleteSystemCertificate(Long certId);
-	
+
 	/**
 	 * Method that gets all the certificates from the persistence.
 	 * @return a {@link Iterable<SystemCertificate>} with the information of all certificates.
 	 */
 	Iterable<SystemCertificate> getAllSystemCertificate();
-	
+
 	/**
 	 * Method that gets all the ssl certificates from the persistence.
 	 * @return a {@link Iterable<SystemCertificate>} with the information of all certificates.
 	 */
 	Iterable<SystemCertificate> getAllSsl();
-	
+
 	/**
 	 * Method that gets all the RFC3161 authentication certificates from the persistence.
 	 * @return a {@link Iterable<SystemCertificate>} with the information of all certificates.
 	 */
 	Iterable<SystemCertificate> getAllAuth();
-		
+
 	/**
 	 * Method that gets all certificates
 	 * @param input Datatable filter parameter
 	 * @return DataTablesOutput<SystemCertificate>
 	 */
 	DataTablesOutput<SystemCertificate> findAll(DataTablesInput input);
-	
+
 	/**
 	 * Method that gets all SSL certificates
 	 * @param input Datatable filter parameter
 	 * @return DataTablesOutput<SystemCertificate>
 	 */
 	DataTablesOutput<SystemCertificate> findAllSsl(DataTablesInput input);
-	
+
 	/**
 	 * Method that gets all RFC3161 authentication certificates
 	 * @param input Datatable filter parameter
 	 * @return DataTablesOutput<SystemCertificate>
 	 */
 	DataTablesOutput<SystemCertificate> findAllAuth(DataTablesInput input);
+
+	/**
+	 * Method that gets all user certificates
+	 * @param input Datatable filter parameter
+	 * @param id user filter parameter
+	 * @return DataTablesOutput<SystemCertificate>
+	 */
+	DataTablesOutput<SystemCertificate> findCertUserByUser(DataTablesInput input, Long idUserMonitoriza);
+
+	/**
+	 * Method that gets all user certificates
+	 * @param id user filter parameter
+	 * @return Iterable<SystemCertificate>
+	 */
+	Iterable<SystemCertificate> findCertUserByUser(Long idUserMonitoriza);
 }

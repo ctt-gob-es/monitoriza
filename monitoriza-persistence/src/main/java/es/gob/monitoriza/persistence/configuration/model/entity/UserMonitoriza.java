@@ -90,7 +90,7 @@ public class UserMonitoriza implements Serializable {
 	 * Attribute that represents the surnames of the user.
 	 */
 	private String surnames;
-	
+
 	/**
 	 * Attribute that represents the accumulated number of failed attempts accessing the platform since the last time which the
 	 * user acceded correctly.
@@ -108,6 +108,11 @@ public class UserMonitoriza implements Serializable {
 	private String lastIpAccess;
 
 	/**
+	 * Attribute that represents the system certificates of the user.
+	 */
+	// private List<SystemCertificate> systemCertificates;
+
+	/**
 	 * Gets the value of the attribute {@link #idUserMonitoriza}.
 	 * @return the value of the attribute {@link #idUserMonitoriza}.
 	 */
@@ -116,15 +121,7 @@ public class UserMonitoriza implements Serializable {
 	@Id
 	@Column(name = "ID_USER_MONITORIZA", unique = true, nullable = false, precision = NumberConstants.NUM19)
 	@GeneratedValue(generator = "sq_user_monitoriza")
-	@GenericGenerator(
-	                  name = "sq_user_monitoriza",
-	                  strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
-	                  parameters = {
-	                          @Parameter(name = "sequence_name", value = "SQ_USER_MONITORIZA"),
-	                          @Parameter(name = "initial_value", value = "1"),
-	                          @Parameter(name = "increment_size", value = "1")
-	                  }
-	          )
+	@GenericGenerator(name = "sq_user_monitoriza", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_USER_MONITORIZA"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
 	@JsonView(DataTablesOutput.View.class)
 	public Long getIdUserMonitoriza() {
 		// CHECKSTYLE:ON
@@ -133,13 +130,13 @@ public class UserMonitoriza implements Serializable {
 
 	/**
 	 * Sets the value of the attribute {@link #idUserMonitoriza}.
-	 * @param idUserMonitorizaParam The value for the attribute {@link #idUserMonitoriza}.
+	 * @param idUserMonitorizaP The value for the attribute {@link #idUserMonitoriza}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setIdUserMonitoriza(Long idUserMonitorizaParam) {
+	public void setIdUserMonitoriza(final Long idUserMonitorizaP) {
 		// CHECKSTYLE:ON
-		this.idUserMonitoriza = idUserMonitorizaParam;
+		this.idUserMonitoriza = idUserMonitorizaP;
 	}
 
 	/**
@@ -161,10 +158,10 @@ public class UserMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setIsBlocked(Boolean isBlockedParam) {
+	public void setIsBlocked(final Boolean isBlockedParam) {
 		// CHECKSTYLE:ON
 		this.isBlocked = isBlockedParam;
-	}	
+	}
 
 	/**
 	 * Gets the value of the attribute {@link #login}.
@@ -184,7 +181,7 @@ public class UserMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setLogin(String loginParam) {
+	public void setLogin(final String loginParam) {
 		this.login = loginParam;
 	}
 
@@ -207,7 +204,7 @@ public class UserMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setEmail(String mailParam) {
+	public void setEmail(final String mailParam) {
 		// CHECKSTYLE:ON
 		this.email = mailParam;
 	}
@@ -231,7 +228,7 @@ public class UserMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setName(String nameParam) {
+	public void setName(final String nameParam) {
 		// CHECKSTYLE:ON
 		this.name = nameParam;
 	}
@@ -255,7 +252,7 @@ public class UserMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setPassword(String passwordParam) {
+	public void setPassword(final String passwordParam) {
 		// CHECKSTYLE:ON
 		this.password = passwordParam;
 	}
@@ -279,7 +276,7 @@ public class UserMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setSurnames(String surnamesParam) {
+	public void setSurnames(final String surnamesParam) {
 		// CHECKSTYLE:ON
 		this.surnames = surnamesParam;
 	}
@@ -302,7 +299,7 @@ public class UserMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setAttemptsNumber(Integer attemptsNumber) {
+	public void setAttemptsNumber(final Integer attemptsNumber) {
 		// CHECKSTYLE:ON
 		this.attemptsNumber = attemptsNumber;
 	}
@@ -325,7 +322,7 @@ public class UserMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setLastAccess(Date lastAccess) {
+	public void setLastAccess(final Date lastAccess) {
 		// CHECKSTYLE:ON
 		this.lastAccess = lastAccess;
 	}
@@ -348,9 +345,33 @@ public class UserMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setLastIpAccess(String lastIpAccess) {
+	public void setLastIpAccess(final String lastIpAccess) {
 		// CHECKSTYLE:ON
 		this.lastIpAccess = lastIpAccess;
 	}
+
+	/**
+	 * Gets the value of the attribute {@link #systemCertificates}.
+	 * @return the value of the attribute {@link #systemCertificates}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	/*@OneToMany(fetch = FetchType.EAGER, mappedBy="userMonitoriza" )
+	@JsonView(DataTablesOutput.View.class)
+	public List<SystemCertificate> getSystemCertificates() {
+		// CHECKSTYLE:ON
+		return systemCertificates;
+	}*/
+
+	/**
+	 * Sets the value of the attribute {@link #systemCertificates}.
+	 * @param systemCertificates The value for the attribute {@link #systemCertificates}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	/*public void setSystemCertificates(List<SystemCertificate> systemCertificates) {
+		// CHECKSTYLE:ON
+		this.systemCertificates = systemCertificates;
+	}*/
 
 }
