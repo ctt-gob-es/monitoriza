@@ -32,6 +32,13 @@ import java.util.Iterator;
 import java.util.Set;
 import java.util.TreeSet;
 
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+
+import org.apache.log4j.Logger;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+
 /**
  * <p>Class that provides methods for managing certificates.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
@@ -39,6 +46,30 @@ import java.util.TreeSet;
  * @version 1.5, 29/11/2017.
  */
 public final class UtilsCertificate {
+
+	private static Logger LOGGER = Logger.getLogger(UtilsCertificate.class);
+
+	/**
+	 * Attribute that represents the UTF-8 codification chacarter.
+	 */
+	public static final String CODIFICACION_UTF_8 = "UTF-8";
+
+	/**
+	 * Attribute that represents the document builder. 
+	 */
+	public static DocumentBuilder db = null;
+
+	static {
+		// Obtención de un parseador de XML
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		dbf.setNamespaceAware(Boolean.TRUE);
+		dbf.setIgnoringComments(Boolean.FALSE);
+		try {
+			db = dbf.newDocumentBuilder();
+		} catch (Exception e) {
+			LOGGER.error("Error en inicialización");
+		}
+	}
 
 	/**
 	 * Constant that represents a coma separator.
@@ -59,14 +90,14 @@ public final class UtilsCertificate {
 	 * Constant that defines a default hash algorithm (SHA-256) used to calculate certificate hash.
 	 */
 	public static final String DEFAULT_HASH_ALGORITHM = "SHA-256";
-	
+
 	/**
 	 * Constructor method for the class UtilsCertificate.java.
 	 */
 	private UtilsCertificate() {
 		super();
 	}
-	
+
 	/**
 	 * Creates a X509Certificate given its content.
 	 * 
@@ -76,11 +107,10 @@ public final class UtilsCertificate {
 	 */
 	public static X509Certificate getCertificate(byte[ ] certificate) throws CertificateException {
 		InputStream is = new ByteArrayInputStream(certificate);
-		
+
 		return (X509Certificate) CertificateFactory.getInstance(CERTIFICATE_TYPE).generateCertificate(is);
-		
+
 	}
-		
 
 	/**
 	 * Creates a certificate alias used in PSC or Certificate Type Keystores. Certificate alias will be the certificate hash in hex String(in this case uses {@link #DEFAULT_HASH_ALGORITHM} to get it).
@@ -97,17 +127,17 @@ public final class UtilsCertificate {
 		}
 		String ha = hashAlgorithm == null ? DEFAULT_HASH_ALGORITHM : hashAlgorithm;
 		byte[ ] hash = null;
-		
-			byte[ ] issuerBytes = cert.getIssuerX500Principal().getEncoded();
-			byte[ ] serialNumberBytes = cert.getSerialNumber().toByteArray();
-			byte[ ] issuerAndSerialNumberBytes = new byte[issuerBytes.length + serialNumberBytes.length];
-			System.arraycopy(issuerBytes, 0, issuerAndSerialNumberBytes, 0, issuerBytes.length);
-			System.arraycopy(serialNumberBytes, 0, issuerAndSerialNumberBytes, issuerBytes.length, serialNumberBytes.length);
-			hash = MessageDigest.getInstance(ha).digest(issuerAndSerialNumberBytes);
-			return UtilsStringChar.convertByteArrayToHex(hash, true);
-		
+
+		byte[ ] issuerBytes = cert.getIssuerX500Principal().getEncoded();
+		byte[ ] serialNumberBytes = cert.getSerialNumber().toByteArray();
+		byte[ ] issuerAndSerialNumberBytes = new byte[issuerBytes.length + serialNumberBytes.length];
+		System.arraycopy(issuerBytes, 0, issuerAndSerialNumberBytes, 0, issuerBytes.length);
+		System.arraycopy(serialNumberBytes, 0, issuerAndSerialNumberBytes, issuerBytes.length, serialNumberBytes.length);
+		hash = MessageDigest.getInstance(ha).digest(issuerAndSerialNumberBytes);
+		return UtilsStringChar.convertByteArrayToHex(hash, true);
+
 	}
-	
+
 	/**
 	 * Method that canonicalizes the identifier of a certificate.
 	 * @param idCertificado Parameter that represents the identifier of a certificate.
@@ -154,7 +184,7 @@ public final class UtilsCertificate {
 			return idCertificado;
 		}
 	}
-	
+
 	/**
 	 * Gets certificate´s identifier (canonicalized subject).
 	 * 
@@ -170,7 +200,6 @@ public final class UtilsCertificate {
 		return canonicalizarIdCertificado(id);
 	}
 
-	
 	/**
 	 * Method that obtains the canonicalized identifier of the issuer of a certificate.
 	 * @param cert Parameter that represents the certificate.
@@ -183,7 +212,7 @@ public final class UtilsCertificate {
 		}
 		return canonicalizarIdCertificado(ASN1Utilities.toString(cert.getIssuerX500Principal()));
 	}
-	
+
 	/**
 	 * Method that obtains the serial number of a certificate.
 	 * @param cert Parameter that represents the certificate.
@@ -196,7 +225,6 @@ public final class UtilsCertificate {
 		}
 		return cert.getSerialNumber();
 	}
-	
 
 	/**
 	 * Method that indicates whether some other certificate is "equal to" this one (true) or not (false).
@@ -225,7 +253,66 @@ public final class UtilsCertificate {
 		}
 		return res;
 	}
-	
-	
+
+	/**
+	 * Method that procress the response of the plataform.
+	 *
+	 * @param response
+	 *            Respuesta XML de la plataforma
+	 * @return long statusCertificate
+	 */
+	public static Long processStatusCertificate(String response) throws Exception {
+
+		Document responseDoc = null;
+		Long statusCertificateId = StatusCertificateEnum.NOTVALID.getId();
+		String statusCertificateName = StatusCertificateEnum.NOTVALID.getName();
+		boolean validResult = Boolean.FALSE;
+
+		try {
+			responseDoc = db.parse(new ByteArrayInputStream(response.getBytes(UtilsCertificate.CODIFICACION_UTF_8)));
+		} catch (Exception e) {
+			LOGGER.error("Se ha producido un error obteniendo el estado de la respuesta");
+			throw (e);
+		}
+		NodeList resultMajorNode = null;
+		resultMajorNode = responseDoc.getElementsByTagName("dss:ResultMajor");
+		String resultMajor = resultMajorNode.item(0).getFirstChild().getNodeValue();
+
+		NodeList resultMinorNode = null;
+		resultMinorNode = responseDoc.getElementsByTagName("dss:ResultMinor");
+		String resultMinor = resultMinorNode.item(0).getFirstChild().getNodeValue();
+
+		if (resultMajor.contains("Success")) {
+			if (resultMinor.contains("Definitive") || resultMinor.contains("Temporal")) {
+				statusCertificateId = StatusCertificateEnum.VALID.getId();
+				statusCertificateName = StatusCertificateEnum.VALID.getName();
+			}
+			if (resultMinor.contains("Expired")) {
+				statusCertificateId = StatusCertificateEnum.CADUCATE.getId();
+				statusCertificateName = StatusCertificateEnum.CADUCATE.getName();
+			}
+			if (resultMinor.contains("Revoked") || resultMinor.contains("OnHold")) {
+				statusCertificateId = StatusCertificateEnum.REVOCATE.getId();
+				statusCertificateName = StatusCertificateEnum.REVOCATE.getName();
+			}
+			if (resultMinor.contains("PathValidationFails")) {
+				statusCertificateId = StatusCertificateEnum.UNKNOWN.getId();
+				statusCertificateName = StatusCertificateEnum.UNKNOWN.getName();
+			}
+			if (resultMinor.contains("NotYetValid")) {
+				statusCertificateId = StatusCertificateEnum.NOTVALIDYET.getId();
+				statusCertificateName = StatusCertificateEnum.NOTVALIDYET.getName();
+			}
+		}
+		if (statusCertificateId.equals(StatusCertificateEnum.VALID.getId()) || statusCertificateId.equals(StatusCertificateEnum.UNKNOWN.getId())) {
+			validResult = Boolean.TRUE;
+		}
+
+		if (!validResult) {
+			throw new Exception("Error al validar el certificado, certificado " + statusCertificateName.toLowerCase() + "!");
+		}
+
+		return statusCertificateId;
+	}
 
 }

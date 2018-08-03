@@ -145,13 +145,16 @@ $(document).ready(function() {
 			                	hide();
 			                	var responseText = jQuery.parseJSON(xhr.responseText);
 			                	var messageException = responseText.message;
-			                	var messageError = "Error al agregar el certificado!";
+			                	var messageError = "";
 			                	
 			                	if (messageException.includes("SYSTEM_CERT_UNIQUE")) {
 			                		messageError = "El certificado ya se encuentra asociado al usuario!";
-			                	}
-			                	if (messageException.includes("signed fields invalid")) {
+			                	} else if (messageException.includes("signed fields invalid")) {
 			                		messageError = "Debe seleccionar un archivo de certificado válido!";
+			                	} else if (messageException.includes("Error al validar el certificado")) {
+			                		messageError = messageException;
+			                	} else {
+			                		messageError = "Error al agregar el certificado!";
 			                	}
 			                	
 			                	$('#errorModalUser').remove();

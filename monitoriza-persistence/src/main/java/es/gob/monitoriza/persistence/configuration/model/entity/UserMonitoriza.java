@@ -21,21 +21,28 @@ package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.persistence.Transient;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.utilidades.StatusCertificateEnum;
 
 /**
  * <p>Class that maps the <i>USER_MONITORIZA</i> database table as a Plain Old Java Object.</p>
@@ -44,12 +51,23 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  */
 @Entity
 @Table(name = "USER_MONITORIZA")
+@JsonAutoDetect(fieldVisibility = Visibility.ANY)
 public class UserMonitoriza implements Serializable {
 
 	/**
 	 * Constant attribute that represents the string <i>"yes_no"</i>.
 	 */
 	private static final String CONS_YES_NO = "yes_no";
+
+	/**
+	 * Constant attribute that represents the string <i>"Sí"</i>.
+	 */
+	private static final String CONS_SI = "Sí";
+
+	/**
+	 * Constant attribute that represents the string <i>"No"</i>.
+	 */
+	private static final String CONS_NO = "No";
 
 	/**
 	 * Class serial version.
@@ -110,7 +128,21 @@ public class UserMonitoriza implements Serializable {
 	/**
 	 * Attribute that represents the system certificates of the user.
 	 */
-	// private List<SystemCertificate> systemCertificates;
+	private List<SystemCertificate> systemCertificates;
+
+	/*private String prueba;
+	
+	@Transient
+	@JsonView(DataTablesOutput.View.class)
+	public String getPrueba() {
+		prueba = "prueba";
+		return prueba;
+	}
+	
+	
+	public void setPrueba(String prueba) {
+		this.prueba = prueba;
+	}*/
 
 	/**
 	 * Gets the value of the attribute {@link #idUserMonitoriza}.
@@ -356,12 +388,11 @@ public class UserMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	/*@OneToMany(fetch = FetchType.EAGER, mappedBy="userMonitoriza" )
-	@JsonView(DataTablesOutput.View.class)
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "userMonitoriza")
 	public List<SystemCertificate> getSystemCertificates() {
 		// CHECKSTYLE:ON
 		return systemCertificates;
-	}*/
+	}
 
 	/**
 	 * Sets the value of the attribute {@link #systemCertificates}.
@@ -369,9 +400,26 @@ public class UserMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	/*public void setSystemCertificates(List<SystemCertificate> systemCertificates) {
+	public void setSystemCertificates(List<SystemCertificate> systemCertificates) {
 		// CHECKSTYLE:ON
 		this.systemCertificates = systemCertificates;
-	}*/
+	}
+
+	/**
+	 * Method that calculates if the user have a not valid certificate
+	 * @return String result
+	 */
+	@Transient
+	@JsonView(DataTablesOutput.View.class)
+	public String getSomeCertNotValid() {
+		String res = CONS_SI;
+		for (SystemCertificate systemCertificate: systemCertificates) {
+			if (systemCertificate.getStatusCertificate().getIdStatusCertificate().equals(StatusCertificateEnum.VALID.getId()) || systemCertificate.getStatusCertificate().getIdStatusCertificate().equals(StatusCertificateEnum.UNKNOWN.getId())) {
+				res = CONS_NO;
+				break;
+			}
+		}
+		return res;
+	}
 
 }

@@ -60,14 +60,14 @@ Insert into C_STATUS_CERTIFICATES
 Insert into C_STATUS_CERTIFICATES
    (ID_STATUS_CERTIFICATE, TOKEN_NAME)
  Values
-   (4, 'Otro');
+   (4, 'Desconocido');
    
 Insert into C_STATUS_CERTIFICATES
    (ID_STATUS_CERTIFICATE, TOKEN_NAME)
  Values
-   (5, 'No existe');
+   (5, 'Aún no válido');
    
 Insert into C_STATUS_CERTIFICATES
    (ID_STATUS_CERTIFICATE, TOKEN_NAME)
  Values
-   (6, 'Aún no válido');
+   (6, 'No válido');

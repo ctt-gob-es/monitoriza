@@ -15,6 +15,7 @@
 							<th th:text="#{table.user.login}"></th>
 							<th th:text="#{table.user.password}"></th>
 							<th th:text="#{table.user.email}"></th>
+							<th th:text="#{table.user.cert.correct}"></th>
 						</tr>
 					</thead>
 				</table>
@@ -256,7 +257,8 @@ $(document).ready(function() {
 	        { "data": "login" },
 	        { "data": "password",
 	          "visible": false},
-	        { "data": "email" }
+	        { "data": "email" },
+	        { "data": "someCertNotValid" }
 	        ]
 		}).on('crudaction', function(e, accion, idUserMonitoriza, data, rowindex){
 		    // e          Evento Jquery

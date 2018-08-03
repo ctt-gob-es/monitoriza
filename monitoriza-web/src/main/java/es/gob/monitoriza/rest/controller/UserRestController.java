@@ -25,13 +25,16 @@
 package es.gob.monitoriza.rest.controller;
 
 import java.io.IOException;
+import java.net.MalformedURLException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.validation.Valid;
+import javax.xml.rpc.ServiceException;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -72,6 +75,8 @@ import es.gob.monitoriza.service.ISystemCertificateService;
 import es.gob.monitoriza.service.IUserMonitorizaService;
 import es.gob.monitoriza.utilidades.NumberConstants;
 import es.gob.monitoriza.utilidades.UtilsCertificate;
+import es.gob.monitoriza.webservice.ClientManager;
+import es.gob.monitoriza.webservice.DSSCertificate;
 
 /**
  * <p>
@@ -87,6 +92,10 @@ import es.gob.monitoriza.utilidades.UtilsCertificate;
  */
 @RestController
 public class UserRestController {
+
+	private static final String APP_ID = "appPrueba";
+
+	private static final String LEVEL = "urn:oasis:names:tc:dss:1.0:reportdetail:allDetails";
 
 	/**
 	 * Attribute that represents the object that manages the log of the class.
@@ -107,6 +116,11 @@ public class UserRestController {
 	 * Attribute that represents the span text.
 	 */
 	private static final String SPAN = "_span";
+
+	/**
+	 * Attribute that represents the user column someCertNotValid. 
+	 */
+	private static final String COLUMN_CERT_NOT_VALID = "someCertNotValid";
 
 	/**
 	 * Attribute that represents the service object for accessing the
@@ -144,6 +158,7 @@ public class UserRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/usersdatatable", method = RequestMethod.GET)
 	public DataTablesOutput<UserMonitoriza> users(@Valid final DataTablesInput input) {
+		input.getColumn(COLUMN_CERT_NOT_VALID).setSearchable(Boolean.FALSE);
 		return (DataTablesOutput<UserMonitoriza>) userService.findAll(input);
 	}
 
@@ -387,7 +402,7 @@ public class UserRestController {
 	 */
 	@RequestMapping(value = "/savecertuser/{idUserMonitoriza}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
-	public @ResponseBody DataTablesOutput<SystemCertificate> savecertuser(@RequestParam(FIELD_FILE) final MultipartFile file, @PathVariable(FIELD_ID_USER) final Long idUserMonitoriza) {
+	public @ResponseBody DataTablesOutput<SystemCertificate> savecertuser(@RequestParam(FIELD_FILE) final MultipartFile file, @PathVariable(FIELD_ID_USER) final Long idUserMonitoriza) throws Exception {
 		DataTablesOutput<SystemCertificate> dtOutput = null;
 		List<SystemCertificate> listNewSystemCert = new ArrayList<SystemCertificate>();
 		SystemCertificate systemCertificate = new SystemCertificate();
@@ -400,39 +415,50 @@ public class UserRestController {
 			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreUser);
 			X509Certificate certificate = null;
 			certificate = UtilsCertificate.getCertificate(ksBytes);
+			String certificateBase64 = Base64.getEncoder().encodeToString(certificate.getEncoded());
 			String alias = UtilsCertificate.createCertificateAlias(certificate, null);
 			// Valida el certificado y lo añade al almacén truststore
 			// ssl del sistema
 			keystoreUser = keyStoreFacade.storeCertificate(alias, certificate, null);
-			// Modificamos el keystore correspondiente, añadiendo el certificado
-			keystoreService.saveKeystore(keystoreUser);
 
 			systemCertificate.setAlias(alias);
 			systemCertificate.setIssuer(UtilsCertificate.getCertificateIssuerId(certificate));
 			systemCertificate.setKey(Boolean.FALSE);
 			systemCertificate.setKeystore(keystoreUser);
 			systemCertificate.setSerialNumber(UtilsCertificate.getCertificateSerialNumber(certificate));
-			// De momento lo ponemos como válido, pero en este punto habría que
-			// validar
-			// contra @firma y si no es válido no debe permitir crear el
-			// registro
-			systemCertificate.setStatusCertificate(statusCertService.getStatusCertificateById(1L));
+
+			String peticion = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><dss:VerifyRequest xmlns:dss=\"urn:oasis:names:tc:dss:1.0:core:schema\" xmlns:ades=\"urn:oasis:names:tc:dss:1.0:profiles:AdES:schema#\" xmlns:afxp=\"urn:afirma:dss:1.0:profile:XSS:schema\" xmlns:cmism=\"http://docs.oasis-open.org/ns/cmis/messaging/200908/\" xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\" xmlns:vr=\"urn:oasis:names:tc:dss:1.0:profiles:verificationreport:schema#\" Profile=\"urn:afirma:dss:1.0:profile:XSS\">\r\n" + "	<dss:OptionalInputs>\r\n" + "		<dss:ClaimedIdentity>\r\n" + "			<dss:Name>" + APP_ID + "</dss:Name>\r\n" + "		</dss:ClaimedIdentity>\r\n" + "		<afxp:ReturnReadableCertificateInfo/>\r\n" + "		<vr:ReturnVerificationReport>\r\n" + "			<vr:CheckOptions>\r\n" + "				<vr:CheckCertificateStatus>" + true + "</vr:CheckCertificateStatus>\r\n" + "			</vr:CheckOptions>\r\n" + "			<vr:ReportOptions>\r\n" + "				<vr:IncludeCertificateValues>" + false + "</vr:IncludeCertificateValues>\r\n" + "				<vr:IncludeRevocationValues>" + false + "</vr:IncludeRevocationValues>\r\n" + "				<vr:ReportDetailLevel>" + LEVEL + "</vr:ReportDetailLevel>\r\n" + "			</vr:ReportOptions>\r\n" + "		</vr:ReturnVerificationReport>\r\n" + "	</dss:OptionalInputs>\r\n" + "	<dss:SignatureObject>\r\n" + "		<dss:Other>\r\n" + "			<ds:X509Data>\r\n" + "				<ds:X509Certificate>" + certificateBase64 + "</ds:X509Certificate>\r\n" + "			</ds:X509Data>\r\n" + "		</dss:Other>\r\n" + "	</dss:SignatureObject>\r\n" + "</dss:VerifyRequest>";
+
+			DSSCertificate certificateService = getServiceCertificate("http://localhost:8080/afirmaws/services/DSSAfirmaVerifyCertificate?wsdl");
+			String result = certificateService.verify(peticion);
+
+			systemCertificate.setStatusCertificate(statusCertService.getStatusCertificateById(UtilsCertificate.processStatusCertificate(result)));
 			systemCertificate.setSubject(UtilsCertificate.getCertificateId(certificate));
 			systemCertificate.setUserMonitoriza(userService.getUserMonitorizaById(idUserMonitoriza));
 			certService.saveSystemCertificate(systemCertificate);
+			// Modificamos el keystore correspondiente, anyadiendo el
+			// certificado
+			keystoreService.saveKeystore(keystoreUser);
 			listNewSystemCert.add(systemCertificate);
 		} catch (Exception e) {
 			listNewSystemCert = StreamSupport.stream(certService.findCertUserByUser(idUserMonitoriza).spliterator(), false).collect(Collectors.toList());
-			try {
-				throw e;
-			} catch (Exception e1) {
-				LOGGER.error(e.getMessage());
-			}
+			throw e;
 		}
 
 		dtOutput.setData(listNewSystemCert);
 
 		return dtOutput;
+	}
+
+	private DSSCertificate getServiceCertificate(String endpoint) throws ServiceException {
+		ClientManager clientManager = new ClientManager();
+		DSSCertificate certificateService = null;
+		try {
+			certificateService = clientManager.getDSSCertificateServiceClient(endpoint);
+		} catch (MalformedURLException e) {
+			LOGGER.error(e);
+		}
+		return certificateService;
 	}
 
 	/**
