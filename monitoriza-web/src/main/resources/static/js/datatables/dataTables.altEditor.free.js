@@ -141,7 +141,8 @@
                     selected: !0
                 }),
                 l = "";
-            l += "<form name='altEditor-form' role='form'>", l += "<input type='hidden' class='primarykey' id='" + a[0].id + "' name='" + a[0].title + "' placeholder='" + a[0].title + "' value='" + d.data()[0][a[0].id] + "'>";
+            l += "<form name='altEditor-form' role='form'>", 
+            l += "<input type='hidden' class='primarykey' id='" + a[0].id + "' name='" + a[0].title + "' placeholder='" + a[0].title + "' value='" + d.data()[0][a[0].id] + "'>";
             l += "<p>¿Está seguro de que quiere eliminar el registro?</p>";
             l += "</form>", t("#altEditor-modal").on("show.bs.modal", function() {
                 t("#altEditor-modal").find(".modal-title").html("Eliminar"), t("#altEditor-modal").find(".modal-body").html("<pre class='modal-pre'>" + l + "</pre>"), t("#altEditor-modal").find(".modal-footer").html("<button type='button' data-content='remove' class='btn btn-default' data-dismiss='modal'>Cerrar</button><button type='button' data-content='remove' class='btn btn-danger' id='deleteRowBtn'>Eliminar</button>")

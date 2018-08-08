@@ -13,10 +13,10 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
+/**
  * <b>File:</b><p>es.gob.monitoriza.service.impl.UserMonitorizaService.java.</p>
  * <b>Description:</b><p> .</p>
-  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>6 mar. 2018.</p>
  * @author Gobierno de España.
  * @version 1.0, 6 mar. 2018.
@@ -33,33 +33,32 @@ import es.gob.monitoriza.persistence.configuration.model.repository.UserMonitori
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.UserDatatableRepository;
 import es.gob.monitoriza.service.IUserMonitorizaService;
 
-
-/** 
+/**
  * <p>Class that implements the communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 6 mar. 2018.
  */
 @Service
 public class UserMonitorizaService implements IUserMonitorizaService {
-	
+
 	/**
-	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence.
 	 */
 	@Autowired
-    private UserMonitorizaRepository repository; 
-	
+	private UserMonitorizaRepository repository;
+
 	/**
-	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence.
 	 */
 	@Autowired
-    private UserDatatableRepository dtRepository; 
+	private UserDatatableRepository dtRepository;
 
 	/**
 	 * {@inheritDoc}
 	 * @see es.gob.monitoriza.service.IUserMonitorizaService#getUserMonitorizaById(java.lang.Long)
 	 */
 	@Override
-	public UserMonitoriza getUserMonitorizaById(Long userId) {
+	public UserMonitoriza getUserMonitorizaById(final Long userId) {
 		return repository.findByIdUserMonitoriza(userId);
 	}
 
@@ -68,9 +67,9 @@ public class UserMonitorizaService implements IUserMonitorizaService {
 	 * @see es.gob.monitoriza.service.IUserMonitorizaService#saveUserMonitoriza(es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza)
 	 */
 	@Override
-	public UserMonitoriza saveUserMonitoriza(UserMonitoriza user) {
+	public UserMonitoriza saveUserMonitoriza(final UserMonitoriza user) {
 		return repository.save(user);
-		
+
 	}
 
 	/**
@@ -78,9 +77,9 @@ public class UserMonitorizaService implements IUserMonitorizaService {
 	 * @see es.gob.monitoriza.service.IUserMonitorizaService#deleteUserMonitoriza(java.lang.Long)
 	 */
 	@Override
-	public void deleteUserMonitoriza(Long userId) {
+	public void deleteUserMonitoriza(final Long userId) {
 		repository.deleteById(userId);
-		
+
 	}
 
 	/**
@@ -97,7 +96,7 @@ public class UserMonitorizaService implements IUserMonitorizaService {
 	 * @see es.gob.monitoriza.service.IUserMonitorizaService#getUserMonitorizaByLogin(java.lang.String)
 	 */
 	@Override
-	public UserMonitoriza getUserMonitorizaByLogin(String login) {
+	public UserMonitoriza getUserMonitorizaByLogin(final String login) {
 		return repository.findByLogin(login);
 	}
 
@@ -106,9 +105,41 @@ public class UserMonitorizaService implements IUserMonitorizaService {
 	 * @see es.gob.monitoriza.service.IUserMonitorizaService#findAll(org.springframework.data.jpa.datatables.mapping.DataTablesInput)
 	 */
 	@Override
-	public DataTablesOutput<UserMonitoriza> findAll(DataTablesInput input) {
-		
+	public DataTablesOutput<UserMonitoriza> findAll(final DataTablesInput input) {
+
 		return dtRepository.findAll(input);
 	}
-		
+
+	/**
+	 * Get repository.
+	 * @return repository
+	 */
+	public UserMonitorizaRepository getRepository() {
+		return repository;
+	}
+
+	/**
+	 * Set repository.
+	 * @param repositoryP set repository
+	 */
+	public void setRepository(final UserMonitorizaRepository repositoryP) {
+		this.repository = repositoryP;
+	}
+
+	/**
+	 * Get dtRepository.
+	 * @return dtRepository
+	 */
+	public UserDatatableRepository getDtRepository() {
+		return dtRepository;
+	}
+
+	/**
+	 * Set dtRepository
+	 * @param dtRepositoryP set dtRepository
+	 */
+	public void setDtRepository(final UserDatatableRepository dtRepositoryP) {
+		this.dtRepository = dtRepositoryP;
+	}
+
 }

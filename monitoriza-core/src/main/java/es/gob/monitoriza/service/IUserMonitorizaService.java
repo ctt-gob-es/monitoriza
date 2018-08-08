@@ -13,10 +13,10 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
+/**
  * <b>File:</b><p>es.gob.monitoriza.service.IUserMonitorizaService.java.</p>
  * <b>Description:</b><p> .</p>
-  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>6 mar. 2018.</p>
  * @author Gobierno de España.
  * @version 1.0, 6 mar. 2018.
@@ -28,48 +28,48 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 
-/** 
+/**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 6 mar. 2018.
  */
 public interface IUserMonitorizaService {
-	
+
 	/**
 	 * Method that obtains an user by its identifier.
 	 * @param userId The user identifier.
 	 * @return {@link UserMonitoriza}
 	 */
 	UserMonitoriza getUserMonitorizaById(Long userId);
-	
+
 	/**
 	 * Method that obtains an user by its login.
 	 * @param userId The user login.
 	 * @return {@link UserMonitoriza}
 	 */
 	UserMonitoriza getUserMonitorizaByLogin(String login);
-	
+
 	/**
 	 * Method that stores a user in the persistence.
 	 * @param user a {@link UserMonitoriza} with the information of the user.
-	 * @return {@link UserMonitoriza} The user. 
+	 * @return {@link UserMonitoriza} The user.
 	 */
 	UserMonitoriza saveUserMonitoriza(UserMonitoriza user);
-			
+
 	/**
 	 * Method that deletes a user in the persistence.
 	 * @param userId {@link Integer} that represents the user identifier to delete.
 	 */
 	void deleteUserMonitoriza(Long userId);
-	
+
 	/**
 	 * Method that gets all the users from the persistence.
 	 * @return a {@link Iterable<UserMonitoriza>} with the information of all users.
 	 */
 	Iterable<UserMonitoriza> getAllUserMonitoriza();
-		
+
 	/**
-	 * 
+	 *
 	 * @param input
 	 * @return
 	 */

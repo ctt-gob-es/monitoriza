@@ -22,6 +22,7 @@
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
+import java.math.BigInteger;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -90,6 +91,21 @@ public class SystemCertificate implements Serializable {
 	 * Attribute that represents the subject of the certificate.
 	 */
 	private String subject;
+	
+	/**
+	 * Attribute that represents the serial number of the certificate.
+	 */
+	private BigInteger serialNumber;
+	
+	/**
+	 * Attribute that represents the vertificate status.
+	 */
+	private StatusCertificate statusCertificate;
+	
+	/**
+	 * Attribute that represents the user monitoriza.
+	 */
+	private UserMonitoriza userMonitoriza;
 	
 	/**
 	 * Gets the value of the attribute {@link #idSystemCertificate}.
@@ -224,6 +240,30 @@ public class SystemCertificate implements Serializable {
 	}
 	
 	/**
+	 * Gets the value of the attribute {@link #serialNumber}.
+	 * @return the value of the attribute {@link #serialNumber}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@Column(name = "SERIAL_NUMBER", length = NumberConstants.NUM100, nullable = false)
+	@JsonView(DataTablesOutput.View.class)
+	public BigInteger getSerialNumber() {
+		// CHECKSTYLE:ON
+		return serialNumber;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #serialNumber}.
+	 * @param serialNumberParam The value for the attribute {@link #serialNumber}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setSerialNumber(BigInteger serialNumberParam) {
+		// CHECKSTYLE:ON
+		this.serialNumber = serialNumberParam;
+	}
+	
+	/**
 	 * Gets the value of the attribute {@link #keystore}.
 	 * @return the value of the attribute {@link #keystore}.
 	 */
@@ -246,6 +286,56 @@ public class SystemCertificate implements Serializable {
 	public void setKeystore(Keystore keystoreParam) {
 		// CHECKSTYLE:ON
 		this.keystore = keystoreParam;
+	}
+	
+	/**
+	 * Gets the value of the attribute {@link #statusCertificate}.
+	 * @return the value of the attribute {@link #statusCertificate}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "ID_STATUS_CERTIFICATE", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
+	public StatusCertificate getStatusCertificate() {
+		// CHECKSTYLE:ON
+		return statusCertificate;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #statusCertificate}.
+	 * @param statusCertificateParam The value for the attribute {@link #statusCertificate}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setStatusCertificate(StatusCertificate statusCertificate) {
+		// CHECKSTYLE:ON
+		this.statusCertificate = statusCertificate;
+	}
+	
+	/**
+	 * Gets the value of the attribute {@link #userMonitoriza}.
+	 * @return the value of the attribute {@link #userMonitoriza}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "ID_USER_MONITORIZA", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
+	public UserMonitoriza getUserMonitoriza() {
+		// CHECKSTYLE:ON
+		return userMonitoriza;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #userMonitoriza}.
+	 * @param userMonitorizaParam The value for the attribute {@link #userMonitoriza}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setUserMonitoriza(UserMonitoriza userMonitoriza) {
+		// CHECKSTYLE:ON
+		this.userMonitoriza = userMonitoriza;
 	}
 
 }

@@ -1,4 +1,4 @@
-/* 
+/*
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,10 +14,10 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
+/**
  * <b>File:</b><p>es.gob.monitoriza.service.impl.SystemCertificateService.java.</p>
  * <b>Description:</b><p> .</p>
-  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 may. 2018.</p>
  * @author Gobierno de España.
  * @version 1.0, 16 may. 2018.
@@ -31,39 +31,40 @@ import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
+import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.SystemCertificateRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.SystemCertificateDatatableRepository;
 import es.gob.monitoriza.persistence.configuration.model.specification.KeystoreSpecification;
+import es.gob.monitoriza.persistence.configuration.model.specification.UserMonitorizaSpecification;
 import es.gob.monitoriza.service.ISystemCertificateService;
 
-
-/** 
+/**
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 16 may. 2018.
  */
 @Service
 public class SystemCertificateService implements ISystemCertificateService {
-	
+
 	/**
-	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence.
 	 */
 	@Autowired
-    private SystemCertificateRepository repository; 
-	
+	private SystemCertificateRepository repository;
+
 	/**
-	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence.
 	 */
 	@Autowired
-    private SystemCertificateDatatableRepository dtRepository; 
+	private SystemCertificateDatatableRepository dtRepository;
 
 	/**
 	 * {@inheritDoc}
 	 * @see es.gob.monitoriza.service.ISystemCertificateService#getSystemCertificateById(java.lang.Long)
 	 */
 	@Override
-	public SystemCertificate getSystemCertificateById(Long certId) {
-		
+	public SystemCertificate getSystemCertificateById(final Long certId) {
+
 		return repository.findByIdSystemCertificate(certId);
 	}
 
@@ -72,8 +73,8 @@ public class SystemCertificateService implements ISystemCertificateService {
 	 * @see es.gob.monitoriza.service.ISystemCertificateService#getSystemCertificateByAlias(java.lang.String)
 	 */
 	@Override
-	public SystemCertificate getSystemCertificateByAlias(String alias) {
-		
+	public SystemCertificate getSystemCertificateByAlias(final String alias) {
+
 		return repository.findByAlias(alias);
 	}
 
@@ -82,8 +83,8 @@ public class SystemCertificateService implements ISystemCertificateService {
 	 * @see es.gob.monitoriza.service.ISystemCertificateService#saveSystemCertificate(es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate)
 	 */
 	@Override
-	public SystemCertificate saveSystemCertificate(SystemCertificate cert) {
-		
+	public SystemCertificate saveSystemCertificate(final SystemCertificate cert) {
+
 		return repository.save(cert);
 	}
 
@@ -92,7 +93,7 @@ public class SystemCertificateService implements ISystemCertificateService {
 	 * @see es.gob.monitoriza.service.ISystemCertificateService#deleteSystemCertificate(java.lang.Long)
 	 */
 	@Override
-	public void deleteSystemCertificate(Long certId) {
+	public void deleteSystemCertificate(final Long certId) {
 
 		repository.deleteById(certId);
 
@@ -104,7 +105,7 @@ public class SystemCertificateService implements ISystemCertificateService {
 	 */
 	@Override
 	public Iterable<SystemCertificate> getAllSystemCertificate() {
-		
+
 		return repository.findAll();
 	}
 
@@ -113,39 +114,69 @@ public class SystemCertificateService implements ISystemCertificateService {
 	 * @see es.gob.monitoriza.service.ISystemCertificateService#findAll(org.springframework.data.jpa.datatables.mapping.DataTablesInput)
 	 */
 	@Override
-	public DataTablesOutput<SystemCertificate> findAll(DataTablesInput input) {
-		
+	public DataTablesOutput<SystemCertificate> findAll(final DataTablesInput input) {
+
 		return dtRepository.findAll(input);
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * @see es.gob.monitoriza.service.ISystemCertificateService#findAllSsl(org.springframework.data.jpa.datatables.mapping.DataTablesInput, es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate)
 	 */
 	@Override
-	public DataTablesOutput<SystemCertificate> findAllSsl(DataTablesInput input) {
-				
+	public DataTablesOutput<SystemCertificate> findAllSsl(final DataTablesInput input) {
+
 		Keystore keystoreSsl = new Keystore();
 		keystoreSsl.setIdKeystore(Keystore.ID_TRUSTSTORE_SSL);
 		KeystoreSpecification byKeystoreSsl = new KeystoreSpecification(keystoreSsl);
-		
+
 		return dtRepository.findAll(input, byKeystoreSsl);
-		
+
 	}
-	
+
 	/**
 	 * {@inheritDoc}
 	 * @see es.gob.monitoriza.service.ISystemCertificateService#findAllAuth(org.springframework.data.jpa.datatables.mapping.DataTablesInput, es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate)
 	 */
 	@Override
-	public DataTablesOutput<SystemCertificate> findAllAuth(DataTablesInput input) {
-				
+	public DataTablesOutput<SystemCertificate> findAllAuth(final DataTablesInput input) {
+
 		Keystore keystoreAuth = new Keystore();
 		keystoreAuth.setIdKeystore(Keystore.ID_AUTHCLIENT_RFC3161);
 		KeystoreSpecification byKeystoreAuth = new KeystoreSpecification(keystoreAuth);
-		
+
 		return dtRepository.findAll(input, byKeystoreAuth);
-		
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.ISystemCertificateService#findCertUserByUser(org.springframework.data.jpa.datatables.mapping.DataTablesInput, java.lang.Long)
+	 */
+	@Override
+	public DataTablesOutput<SystemCertificate> findCertUserByUser(final DataTablesInput input, final Long idUserMonitoriza) {
+
+		UserMonitoriza userMonitoriza = new UserMonitoriza();
+		userMonitoriza.setIdUserMonitoriza(idUserMonitoriza);
+		UserMonitorizaSpecification userMonSpec = new UserMonitorizaSpecification(userMonitoriza);
+
+		return dtRepository.findAll(input, userMonSpec);
+
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.ISystemCertificateService#findCertUserByUser(java.lang.Long)
+	 */
+	@Override
+	public Iterable<SystemCertificate> findCertUserByUser(final Long idUserMonitoriza) {
+
+		UserMonitoriza userMonitoriza = new UserMonitoriza();
+		userMonitoriza.setIdUserMonitoriza(idUserMonitoriza);
+		UserMonitorizaSpecification userMonSpec = new UserMonitorizaSpecification(userMonitoriza);
+
+		return repository.findAll(userMonSpec);
+
 	}
 
 	/**
@@ -154,11 +185,11 @@ public class SystemCertificateService implements ISystemCertificateService {
 	 */
 	@Override
 	public Iterable<SystemCertificate> getAllSsl() {
-		
+
 		Keystore keystoreSsl = new Keystore();
 		keystoreSsl.setIdKeystore(Keystore.ID_TRUSTSTORE_SSL);
 		KeystoreSpecification byKeystoreSsl = new KeystoreSpecification(keystoreSsl);
-		
+
 		return repository.findAll(byKeystoreSsl);
 	}
 
@@ -168,12 +199,44 @@ public class SystemCertificateService implements ISystemCertificateService {
 	 */
 	@Override
 	public Iterable<SystemCertificate> getAllAuth() {
-		
+
 		Keystore keystoreAuth = new Keystore();
 		keystoreAuth.setIdKeystore(Keystore.ID_AUTHCLIENT_RFC3161);
 		KeystoreSpecification byKeystoreAuth = new KeystoreSpecification(keystoreAuth);
-		
+
 		return repository.findAll(byKeystoreAuth);
+	}
+
+	/**
+	 * Get repository.
+	 * @return repository
+	 */
+	public SystemCertificateRepository getRepository() {
+		return repository;
+	}
+
+	/**
+	 * Set repository.
+	 * @param repositoryP set repository
+	 */
+	public void setRepository(final SystemCertificateRepository repositoryP) {
+		this.repository = repositoryP;
+	}
+
+	/**
+	 * Get dtRepository.
+	 * @return dtRepository
+	 */
+	public SystemCertificateDatatableRepository getDtRepository() {
+		return dtRepository;
+	}
+
+	/**
+	 * Set dtRepository.
+	 * @param dtRepositoryP set dtRepository
+	 */
+	public void setDtRepository(final SystemCertificateDatatableRepository dtRepositoryP) {
+		this.dtRepository = dtRepositoryP;
 	}
 
 }

@@ -15,6 +15,7 @@
 							<th th:text="#{table.user.login}"></th>
 							<th th:text="#{table.user.password}"></th>
 							<th th:text="#{table.user.email}"></th>
+							<th th:text="#{table.user.cert.correct}"></th>
 						</tr>
 					</thead>
 				</table>
@@ -143,6 +144,7 @@
 	</div>
 </div>
 
+
 <script th:inline="javascript">
 $(document).ready(function() {
 	
@@ -151,6 +153,7 @@ $(document).ready(function() {
 	var getusers = /*[[@{/usersdatatable}]]*/;
 	var editTemplate = /*[[@{/edituser}]]*/;
 	var addTemplate = /*[[@{/adduser}]]*/;
+	var manageCertUser = /*[[@{/managecertuser}]]*/;
 	var tbl = $('#userTable').DataTable({
 		dom: 'Bfrtip',
 	    select: 'single',
@@ -203,7 +206,25 @@ $(document).ready(function() {
 						  $("#idUserMonitorizaPass").val(idUserMonitorizaPass);
 	    	                
 	    				}
-					}],
+					},
+					{extend: 'selected',text: 'Gestionar certificados',name: 'manageCertificates',
+		    			  action: function ( e, dt, node, config ) {
+		    				  //$('#modalManageCertificates').modal('show');
+		    				  
+							  for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({
+								id: o.context[0].aoColumns[e].mData,
+								title: o.context[0].aoColumns[e].sTitle                
+							  });
+							  
+							  var d = dt.rows({
+		                        selected: !0
+							  });
+								
+							  var idUserMonitorizaEdit = d.data()[0][a[0].id];
+							  $("#idUserMonitorizaEdit").val(idUserMonitorizaEdit);
+		            		  loadIntoAjax('formMenu', manageCertUser + "/" + idUserMonitorizaEdit, 'optionReplacement', 'GET', null, true); return false;
+		    				}
+						}],
 	    "iTotalRecords": "totalElements",
         "iTotalDisplayRecords": "numberOfElements",
 	    
@@ -227,6 +248,7 @@ $(document).ready(function() {
 	            }
 	          }
 	        },
+	       
 		"columns": [
 	        { "data": "idUserMonitoriza",
 	          "visible": false},
@@ -235,7 +257,8 @@ $(document).ready(function() {
 	        { "data": "login" },
 	        { "data": "password",
 	          "visible": false},
-	        { "data": "email" }
+	        { "data": "email" },
+	        { "data": "someCertNotValid" }
 	        ]
 		}).on('crudaction', function(e, accion, idUserMonitoriza, data, rowindex){
 		    // e          Evento Jquery
@@ -267,7 +290,7 @@ $(document).ready(function() {
 		            	    
 		            	});
 		                
-		                // Esto es necesario para forzar que se muestren mensajes de validación de cliente
+		                // Esto es necesario para forzar que se muestren mensajes de validaciÃ³n de cliente
 		                $('<input type="submit">').hide().appendTo($('#userForm')).click().remove();
 		            } else {
 		            	if ($('#passwordAdd').val() != $('#confirmPasswordAdd').val()){
@@ -337,7 +360,7 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acción "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>AcciÃ³n "'+accion+'" no autorizada!</strong></div>');
 		            break;
 		    }
 		});

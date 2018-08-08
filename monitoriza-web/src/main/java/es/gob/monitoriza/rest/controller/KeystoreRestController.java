@@ -379,7 +379,7 @@ public class KeystoreRestController {
 			try {
 				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_TRUSTSTORE_SSL)); 
 								
-				SystemCertificate oldCert = sysCertService.getSystemCertificateById(sslForm.getIdSystemCertificate());
+				SystemCertificate oldCert = sysCertService.getSystemCertificateById(sslForm.getIdSystemCert());
 				// Acualiza el alias del certificado
 				Keystore ko = keyStoreFacade.updateCertificate(oldCert.getAlias(), sslForm.getAlias());
 										
@@ -387,7 +387,7 @@ public class KeystoreRestController {
 				keystoreService.saveKeystore(ko);
 				
 				SystemCertificate sysCert = new SystemCertificate();
-				sysCert.setIdSystemCertificate(sslForm.getIdSystemCertificate());
+				sysCert.setIdSystemCertificate(sslForm.getIdSystemCert());
 				sysCert.setAlias(sslForm.getAlias());
 				sysCert.setIssuer(sslForm.getIssuer());
 				sysCert.setSubject(sslForm.getSubject());
@@ -506,12 +506,10 @@ public class KeystoreRestController {
 						alias = aliasIt.next().getId();
 						key = ksFromDataToAdd.getKey(alias, password);
 						cert = ksFromDataToAdd.getCertificate(alias);
-						String serialNumber = null;
 						String issuer = null;
 						String subject = null;
 						if (cert != null) {
 							X509Certificate x509Cert = UtilsCertificate.getCertificate(cert.getEncoded());
-							serialNumber = x509Cert.getSerialNumber().toString();
 							issuer = UtilsCertificate.getCertificateIssuerId(x509Cert);
 							subject = UtilsCertificate.getCertificateId(x509Cert);
 						}
@@ -613,7 +611,7 @@ public class KeystoreRestController {
 			try {
 				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161)); 
 								
-				SystemCertificate oldCert = sysCertService.getSystemCertificateById(authForm.getIdSystemCertificate());
+				SystemCertificate oldCert = sysCertService.getSystemCertificateById(authForm.getIdSystemCert());
 				// Acualiza el alias del certificado
 				Keystore ko = keyStoreFacade.updateCertificate(oldCert.getAlias(), authForm.getAlias());
 										
@@ -621,7 +619,7 @@ public class KeystoreRestController {
 				keystoreService.saveKeystore(ko);
 				
 				SystemCertificate sysCert = new SystemCertificate();
-				sysCert.setIdSystemCertificate(authForm.getIdSystemCertificate());
+				sysCert.setIdSystemCertificate(authForm.getIdSystemCert());
 				sysCert.setAlias(authForm.getAlias());
 				sysCert.setIssuer(authForm.getIssuer());
 				sysCert.setSubject(authForm.getSubject());

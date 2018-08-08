@@ -45,7 +45,7 @@ public interface IKeystoreFacade {
 	 * @throws CryptographyException If the method fails.
 	 */
 	Keystore storeCertificate(String alias, Certificate certificate, Key key) throws CryptographyException;
-	
+
 	/**
 	 * Method that updates an entry into a keystore.
 	 * @param oldEntryAlias Parameter that represents the old alias of the entry.
@@ -54,7 +54,7 @@ public interface IKeystoreFacade {
 	 * @throws CryptographyException If the method fails.
 	 */
 	Keystore updateCertificate(String oldEntryAlias, String newEntryAlias) throws CryptographyException;
-	
+
 	/**
 	 * Method that deletes a certificate entry from a keystore
 	 * @param alias Parameter that represents the alias of the entry.
@@ -62,21 +62,28 @@ public interface IKeystoreFacade {
 	 * @throws CryptographyException
 	 */
 	Keystore deleteCertificate(String alias) throws CryptographyException;
-	
+
 	/**
 	 * Method that gets the keystore type given a file name.
 	 * @param nameFile The keystore file name
 	 * @return String that represents the keystore type.
 	 */
 	String getKeystoreType(final String nameFile);
-	
+
 	/**
 	 * Method that lists the aliases of the certificates stored in the given keystore.
-	 * @param ks The keystore whose aliases are listed.
-	 * @return List<String> that represents the list of aliases of the given Keystore 
+	 * @param keyStore The keystore whose aliases are listed.
+	 * @return List<String> that represents the list of aliases of the given Keystore
 	 * @throws KeyStoreException
 	 */
-	List<String> listAllAliases(KeyStore ks) throws KeyStoreException;
-	
-	
+	List<String> listAllAliases(KeyStore keyStore) throws KeyStoreException;
+
+	/**
+	 * Method that obtains the decoded password of the keystore.
+	 * @param password to decode.
+	 * @return the decoded password of the keystore represented.
+	 * @throws CryptographyException If the method fails.
+	 */
+	String getKeystoreDecodedPasswordString(String password) throws CryptographyException;
+
 }
