@@ -320,7 +320,7 @@ public class SystemCertificate implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	@ManyToOne(fetch = FetchType.EAGER)
-	@JoinColumn(name = "ID_USER_MONITORIZA", nullable = false)
+	@JoinColumn(name = "ID_USER_MONITORIZA", nullable = true)
 	@JsonView(DataTablesOutput.View.class)
 	public UserMonitoriza getUserMonitoriza() {
 		// CHECKSTYLE:ON
