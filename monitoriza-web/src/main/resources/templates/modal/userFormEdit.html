@@ -70,14 +70,14 @@
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" onclick="closeButton('modalEdit')">Cerrar</button>
-				<button type="submit" id="editBtn" class="btn btn-primary">Guardar cambios</button>
+				<button type="submit" id="editBtnModal" class="btn btn-primary">Guardar cambios</button>
 			</div>
 		</div>
 	</div>
 </div>
 
 <script th:inline="javascript">
-	$( "#editBtn" ).click(function( event ) {
+	$( "#editBtnModal" ).click(function( event ) {
 		  event.preventDefault();
 			
 		  var formData = JSON.stringify($("#userFormEdit").serializeJSON());
