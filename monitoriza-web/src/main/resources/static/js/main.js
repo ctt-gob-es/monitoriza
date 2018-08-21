@@ -42,6 +42,10 @@
            hideValidate(this);
         });
     });
+    
+    function debugHelper() {
+    	return true;
+    }
 
     function validate (input) {
         if($(input).attr('type') == 'email' || $(input).attr('name') == 'email') {
@@ -308,7 +312,7 @@ function drawValidationResult(jsonFieldErrors) {
 	}
 }
 
-function cleanValidationResult(formId) {
+function clearValidationResult(formId) {
 	$('#' + formId +' *').filter(':input').each(function(){
 	    $(this).removeClass("is-invalid");
 	});
@@ -317,4 +321,5 @@ function cleanValidationResult(formId) {
 function closeButton(btnId){
 	$('#' + btnId).modal('hide');
 	$('#' + btnId).remove();
+	$('.modal-backdrop').remove();
 }
