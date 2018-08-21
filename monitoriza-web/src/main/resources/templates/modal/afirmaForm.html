@@ -38,7 +38,7 @@
 				    var messagePort = /*[[#{form.platform.port.pattern}]]*/ 'default';
 				/*]]>*/
 			</script>
-			<input onblur="validate(this,messagePort);" type="text" id="port" th:field="*{port}" style="overflow:hidden" class="form-control" required pattern=".{1,5}"/>
+			<input onblur="validate(this,messagePort);" type="text" id="port" th:field="*{port}" style="overflow:hidden" class="form-control" required pattern="[0-9]{1,5}"/>
 			<div id="invalid-port" class="invalid-feedback" ></div>
 		
 		<div style="clear:both;"/>
@@ -60,7 +60,7 @@
 				    var messagePort = /*[[#{form.platform.port.pattern}]]*/ 'default';
 				/*]]>*/
 			</script>
-			<input readonly onblur="validate(this,messagePort);" type="text" id="httpsPort" th:field="*{httpsPort}" style="overflow:hidden" class="form-control" required pattern=".{0,5}"/>
+			<input readonly onblur="validate(this,messagePort);" type="text" id="httpsPort" th:field="*{httpsPort}" style="overflow:hidden" class="form-control" required pattern="[0-9]{1,5}"/>
 			<div id="invalid-port" class="invalid-feedback" ></div>
 		
 			<div style="clear:both;"/>
