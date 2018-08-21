@@ -24,6 +24,8 @@
  */
 package es.gob.monitoriza.form;
 
+import java.math.BigInteger;
+
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -43,7 +45,7 @@ public class CertificateForm {
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input in the form. 
 	 */
-	private Long idSystemCert;
+	private Long idSystemCertificate;
 	
 	/**
 	 * Attribute that represents the value of the input alias of the system certificate in the form. 
@@ -63,6 +65,11 @@ public class CertificateForm {
 	private String subject;
 	
 	/**
+	 * Attribute that represents the serial number of the system certificate. 
+	 */
+	private BigInteger serialNumber;
+	
+	/**
 	 * Attribute that represents the uploaded file of the system certificate. 
 	 */
 	@NotNull(groups=CheckItFirst.class, message="{form.valid.keystore.file.notnull}")
@@ -79,19 +86,19 @@ public class CertificateForm {
 	private Long idUserMonitoriza;
 	
 	/**
-	 * Gets the value of the attribute {@link #idSystemCert}.
-	 * @return the value of the attribute {@link #idSystemCert}.
+	 * Gets the value of the attribute {@link #idSystemCertificate}.
+	 * @return the value of the attribute {@link #idSystemCertificate}.
 	 */	
-	public Long getIdSystemCert() {
-		return idSystemCert;
+	public Long getIdSystemCertificate() {
+		return idSystemCertificate;
 	}
 	
 	/**
-	 * Sets the value of the attribute {@link #idSystemCert}.
-	 * @param idSystemCertP the value for the attribute {@link #idSystemCert} to set.
+	 * Sets the value of the attribute {@link #idSystemCertificate}.
+	 * @param idSystemCertP the value for the attribute {@link #idSystemCertificate} to set.
 	 */
-	public void setIdSystemCert(final Long idSystemCertP) {
-		this.idSystemCert = idSystemCertP;
+	public void setIdSystemCertificate(final Long idSystemCertificate) {
+		this.idSystemCertificate = idSystemCertificate;
 	}
 	
 	/**
@@ -144,6 +151,22 @@ public class CertificateForm {
 	 */
 	public void setSubject(final String subject) {
 		this.subject = subject;
+	}
+	
+	/**
+	 * Gets the value of the attribute {@link #serialNumber}.
+	 * @return the value of the attribute {@link #serialNumber}.
+	 */		
+	public BigInteger getSerialNumber() {
+		return serialNumber;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #serialNumber}.
+	 * @param subject the value for the attribute {@link #serialNumber} to set.
+	 */
+	public void setSerialNumber(BigInteger serialNumber) {
+		this.serialNumber = serialNumber;
 	}
 
 	/**
