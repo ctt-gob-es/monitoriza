@@ -104,6 +104,7 @@
 		  },
 		  error:function(){
 			  hide();
+			  $('#errorModalUser').remove();
 			  $('#userFormPassword').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>Error inesperado, int\u00E9ntelo mas tarde!</strong></div>');
 		  },
 		  dataType: "json",
