@@ -26,7 +26,7 @@ package es.gob.monitoriza.constant;
 /** 
  * <p>Interface that contains general constants.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.2, 25/01/2018.
+ * @version 1.3, 21/08/2018.
  */
 public interface GeneralConstants {
 	
@@ -140,6 +140,11 @@ public interface GeneralConstants {
 	 * Constant attribute that identifies the provider Sun for X.509 content type.
 	 */
 	public static final String TRUST_MANAGER_FACTORY_SUN_X509 = "SunX509";
+	
+	/**
+	 * Constant that represents the name of the truststore keystore at the database. 
+	 */
+	public static final String SSL_TRUST_STORE_NAME = "TrustStoreSSL";
 	
 	/**
 	 * Constant that represents the string 'smtp'.
