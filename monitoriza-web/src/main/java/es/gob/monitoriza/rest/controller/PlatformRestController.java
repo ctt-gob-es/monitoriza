@@ -244,7 +244,6 @@ public class PlatformRestController {
 		
 				platformTsa.setHost(tsaForm.getHost());
 				platformTsa.setName(tsaForm.getName());
-				platformTsa.setOcspContext(tsaForm.getRfc3161Context());
 				platformTsa.setPort(tsaForm.getPort());
 				platformTsa.setIsSecure(tsaForm.getIsSecure());
 				platformTsa.setHttpsPort(tsaForm.getHttpsPort());
