@@ -150,6 +150,16 @@ public class ServiceRestController {
 		PlatformMonitoriza platform = platformService.getPlatformById(idPlatform);
 		List<String> serviceTypes = new ArrayList<String>();
 
+		//		List<CServiceType> serviceTypesList = null;
+//		
+//		if (platform != null && platform.getPlatformType().getIdPlatformType() != null) {
+//			serviceTypesList = serviceService.findByPlatformType(platform.getPlatformType().getIdPlatformType());
+//		}
+//		
+//		for (CServiceType serviceType : serviceTypesList) {
+//			serviceTypes.add(serviceType.getServiceTypeName());
+//		}
+
 		if (platform != null
 				&& platform.getPlatformType().getIdPlatformType().equals(IPlatformService.ID_PLATFORM_TYPE_AFIRMA)) {
 
@@ -258,7 +268,22 @@ public class ServiceRestController {
 		DataTablesOutput<ServiceMonitoriza> dtOutput = new DataTablesOutput<>();
 		ServiceMonitoriza serviceMonitoriza = null;
 		List<ServiceMonitoriza> listNewService = new ArrayList<ServiceMonitoriza>();
-
+		
+		// Se controla manualmente el error 'requerido' para el campo nameWsdl, ya que depende del tipo de servicio
+		if (serviceForm.getServiceType().equalsIgnoreCase(GeneralConstants.SOAP_SERVICE)) {
+			
+			if ("".equals(serviceForm.getNameWsdl())) {
+				FieldError wsdlFieldError = new FieldError(ServiceForm.FORM_OBJECT_VALUE, ServiceForm.FIELD_ENDPOINT, "El campo 'Endpoint' es obligatorio.");
+				bindingResult.addError(wsdlFieldError);
+			}
+			
+			if (serviceForm.getNameWsdl() != null && (serviceForm.getNameWsdl().length() < 1 || serviceForm.getNameWsdl().length() > 30)) {
+				FieldError wsdlFieldError = new FieldError(ServiceForm.FORM_OBJECT_VALUE, ServiceForm.FIELD_ENDPOINT, "El tamaño debe estar entre 1 y 30.");
+				bindingResult.addError(wsdlFieldError);
+			}
+			
+		}
+					
 		if (bindingResult.hasErrors()) {
 			listNewService = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false)
 					.collect(Collectors.toList());
@@ -298,6 +323,7 @@ public class ServiceRestController {
 
 		return dtOutput;
 	}
+
 
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deletetimer", method = RequestMethod.POST)
