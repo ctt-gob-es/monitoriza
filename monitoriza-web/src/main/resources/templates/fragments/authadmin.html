@@ -83,10 +83,14 @@ $(document).ready(function() {
 		    loading();
 		    
 		    switch(accion){
+		    
+		 		// Se abre el modal para cargar el almacén de certificados desde el sistema de archivos local del cliente.
 		        case 'add':
+		        	
+		        	// Error de validación al introducir el fichero de almacén.
 		        	if ($('#authForm')[0].checkValidity() === false) {
-		        		// Se oculta la capa 'cargando...'
 		        		hide();
+		        		// Se oculta la capa 'cargando...'
 		                event.stopPropagation();
 		                
 		                $('#authForm *').filter(':input').each(function(){
@@ -103,9 +107,11 @@ $(document).ready(function() {
 		                
 		                // Esto es necesario para forzar que se muestren mensajes de validación de cliente
 		                $('<input type="submit">').hide().appendTo($('#authForm')).click().remove();
+		            // No se ha producido error, voy al diálogo de selección de certificados.   
 		            } else {
 		            	//var formData = new FormData($('#authForm')[0]);
 		            	var formData = new FormData(document.forms["authForm"]);
+		            	
 		            	$.ajax(actionLoad, {
 		            		data : formData,
 			            	contentType: false,
@@ -118,6 +124,7 @@ $(document).ready(function() {
 			                    			                    
 			            		$('#altEditor-modal .modal-body .alert').remove();
 								
+			            		// Ha ocurrido un error con la contraseña introducida
 								if (data.error != null && data.error != '' && data.error != 'undefined') {
 									
 									$('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + data.error + '</strong></div>');
@@ -126,16 +133,19 @@ $(document).ready(function() {
 										$('#authkeystorepass').addClass('is-invalid');
 									}
 
+								// No hay error, se muestra la selección de certificados.	
 								} else {
 										$(".modal-body").html('');
 										var pick = $(".modal-body").pickList({data: data.lista});
-										$("#addRowBtn").click(function () {
-										   console.log(pick.getValues());
+										$("#addRowBtn").on("click", function (event) {
+											event.stopPropagation();
+											event.preventDefault();
+										   //console.log(pick.getValues());
 											// Se envían los alias de los certificados a añadir al
 											// almacén para autenticación RFC3161
 											$.ajax(actionSave, {
 												contentType:'application/json',
-												data : JSON.stringify(data),
+												data : JSON.stringify(pick.getValues()),
 												type:'POST',
 												success: function(data){
 											  
