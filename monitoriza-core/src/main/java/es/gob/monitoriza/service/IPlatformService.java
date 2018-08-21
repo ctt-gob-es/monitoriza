@@ -33,7 +33,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitori
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 10 abr. 2018.
+ * @version 1.1, 21 ago. 2018.
  */
 public interface IPlatformService {
 	
@@ -81,7 +81,7 @@ public interface IPlatformService {
 	void deletePlatform(PlatformMonitoriza platform);
 	
 	/**
-	 * Method that gets all the @firma platform configuration from the persistence.
+	 * Method that gets all the platform configuration from the persistence.
 	 * @return a {@link Iterable<PlatformMonitoriza>} with the information of all users.
 	 */
 	Iterable<PlatformMonitoriza> getAllPlatform();
