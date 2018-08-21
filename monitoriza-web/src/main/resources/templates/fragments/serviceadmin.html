@@ -235,10 +235,22 @@ $(document).ready(function() {
 	            	serviceType : $('#serviceTypes').val()
 	            }, function(data) {
 	               $('#endpoint').attr('value', data.response);
+	               
+	               if (data.response.includes('OCSP') || data.response.includes('RFC3161')) {
+						
+						$("#nameWsdl").removeAttr("required");
+						$("#nameWsdl").prop('readonly', true);
+			
+					} else {
+				
+						$("#nameWsdl").prop('required',true);
+						$("#nameWsdl").prop('readonly', false);
+					}
+	               
 	            });
 	        });
 
-	// Gesti�n de las datatables
+	// Gestión de las datatables
 	
 	var actionSaveService = /*[[@{/saveservice}]]*/;
 	var actionDeleteService = /*[[@{/deleteservice}]]*/;
