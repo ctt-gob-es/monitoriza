@@ -25,6 +25,7 @@
 package es.gob.monitoriza.rest.controller;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.Key;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -48,6 +49,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -73,8 +75,10 @@ import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.service.IKeystoreService;
+import es.gob.monitoriza.service.IStatusCertificateService;
 import es.gob.monitoriza.service.ISystemCertificateService;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StatusCertificateEnum;
 import es.gob.monitoriza.utilidades.UtilsCertificate;
 
 /** 
@@ -131,8 +135,13 @@ public class KeystoreRestController {
 	 * Attribute that represents the service object for accessing the repository. 
 	 */
 	@Autowired
-	private ISystemCertificateService certificateService; 
+	private ISystemCertificateService certificateService;
 	
+	/**
+	 * Attribute that represents the service object for accessing the repository.
+	 */
+	@Autowired
+	private IStatusCertificateService statusCertService;	
 	
 	
 	/**
@@ -230,6 +239,7 @@ public class KeystoreRestController {
 				
 				String issuer = UtilsCertificate.getCertificateIssuerId(cert);
 				String subject = UtilsCertificate.getCertificateId(cert);
+				BigInteger serialNumber = UtilsCertificate.getCertificateSerialNumber(cert);
 				
 				Keystore ko = null;
 				
@@ -246,6 +256,8 @@ public class KeystoreRestController {
 				sysCert.setAlias(alias);
 				sysCert.setIssuer(issuer);
 				sysCert.setSubject(subject);
+				sysCert.setSerialNumber(serialNumber);
+				sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(StatusCertificateEnum.VALID.getId()));
 				sysCert.setKeystore(ko);
 				sysCert.setKey(false);
 								
@@ -379,7 +391,7 @@ public class KeystoreRestController {
 			try {
 				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_TRUSTSTORE_SSL)); 
 								
-				SystemCertificate oldCert = sysCertService.getSystemCertificateById(sslForm.getIdSystemCert());
+				SystemCertificate oldCert = sysCertService.getSystemCertificateById(sslForm.getIdSystemCertificate());
 				// Acualiza el alias del certificado
 				Keystore ko = keyStoreFacade.updateCertificate(oldCert.getAlias(), sslForm.getAlias());
 										
@@ -387,16 +399,17 @@ public class KeystoreRestController {
 				keystoreService.saveKeystore(ko);
 				
 				SystemCertificate sysCert = new SystemCertificate();
-				sysCert.setIdSystemCertificate(sslForm.getIdSystemCert());
+				sysCert.setIdSystemCertificate(sslForm.getIdSystemCertificate());
 				sysCert.setAlias(sslForm.getAlias());
 				sysCert.setIssuer(sslForm.getIssuer());
 				sysCert.setSubject(sslForm.getSubject());
+				sysCert.setSerialNumber(sslForm.getSerialNumber());
+				sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(StatusCertificateEnum.VALID.getId()));;
 				sysCert.setKeystore(ko);
 				sysCert.setKey(false);
 								
 				// Añade el certificado a la persistencia
-				sysCertService.saveSystemCertificate(sysCert);
-				
+				sysCertService.saveSystemCertificate(sysCert);				
 				
 				listSystemCertificate.add(sysCert);
 				dtOutput.setData(listSystemCertificate);
@@ -482,6 +495,7 @@ public class KeystoreRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@ResponseStatus(HttpStatus.OK)
     @RequestMapping(value = "/saveauth", method=RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Transactional
     public @ResponseBody DataTablesOutput<SystemCertificate> saveAuth(@RequestBody List<PickListElement> aliases) throws IOException {
     	
 		DataTablesOutput<SystemCertificate> dtOutput = new DataTablesOutput<>();
@@ -503,15 +517,17 @@ public class KeystoreRestController {
 					SystemCertificate sysCert = new SystemCertificate();
 					
 					while (aliasIt.hasNext()) {
-						alias = aliasIt.next().getId();
+						alias = aliasIt.next().getText();
 						key = ksFromDataToAdd.getKey(alias, password);
 						cert = ksFromDataToAdd.getCertificate(alias);
 						String issuer = null;
 						String subject = null;
+						BigInteger serialNumber = null;
 						if (cert != null) {
 							X509Certificate x509Cert = UtilsCertificate.getCertificate(cert.getEncoded());
 							issuer = UtilsCertificate.getCertificateIssuerId(x509Cert);
 							subject = UtilsCertificate.getCertificateId(x509Cert);
+							serialNumber = UtilsCertificate.getCertificateSerialNumber(x509Cert);
 						}
 						
 						// Valida el certificado y lo añade al almacén truststore
@@ -525,7 +541,9 @@ public class KeystoreRestController {
 	        			sysCert.setSubject(subject);
 	        			sysCert.setKeystore(ko);
 	        			sysCert.setKey(true);
-	        			
+	        			sysCert.setSerialNumber(serialNumber);
+	        			sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(StatusCertificateEnum.VALID.getId()));
+	        		        			
 	        			// Añade el certificado a la persistencia
 	        			sysCertService.saveSystemCertificate(sysCert);
 	        			listSystemCertificate.add(sysCert);
@@ -611,7 +629,7 @@ public class KeystoreRestController {
 			try {
 				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161)); 
 								
-				SystemCertificate oldCert = sysCertService.getSystemCertificateById(authForm.getIdSystemCert());
+				SystemCertificate oldCert = sysCertService.getSystemCertificateById(authForm.getIdSystemCertificate());
 				// Acualiza el alias del certificado
 				Keystore ko = keyStoreFacade.updateCertificate(oldCert.getAlias(), authForm.getAlias());
 										
@@ -619,12 +637,14 @@ public class KeystoreRestController {
 				keystoreService.saveKeystore(ko);
 				
 				SystemCertificate sysCert = new SystemCertificate();
-				sysCert.setIdSystemCertificate(authForm.getIdSystemCert());
+				sysCert.setIdSystemCertificate(authForm.getIdSystemCertificate());
 				sysCert.setAlias(authForm.getAlias());
 				sysCert.setIssuer(authForm.getIssuer());
 				sysCert.setSubject(authForm.getSubject());
 				sysCert.setKeystore(ko);
 				sysCert.setKey(true);
+				sysCert.setSerialNumber(authForm.getSerialNumber());
+    			sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(StatusCertificateEnum.VALID.getId()));
 								
 				// Añade el certificado a la persistencia
 				sysCertService.saveSystemCertificate(sysCert);				
