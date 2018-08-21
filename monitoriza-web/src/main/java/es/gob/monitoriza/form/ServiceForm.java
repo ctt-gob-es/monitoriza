@@ -45,6 +45,16 @@ import es.gob.monitoriza.rest.exception.ThenCheckIt;
  * @version 1.0, 20 abr. 2018.
  */
 public class ServiceForm {
+	
+	/**
+	 * Constant string that represents the name of the mapped form in the template view. 
+	 */
+	public static final String FORM_OBJECT_VALUE = "serviceForm";
+	
+	/**
+	 * Constant string that represents the identifier of the field "Endpoint" in the form of the template view. 
+	 */
+	public static final String FIELD_ENDPOINT = "nameWsdl";
 
 	/**
 	 * Attribute that represents the object ID.
@@ -69,8 +79,8 @@ public class ServiceForm {
 	 * Attribute that represents the name of the service in the WSDL endpoint
 	 * path.
 	 */
-	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.service.nameWsdl.notempty}")
-	@Size(min = 1, max = 30, groups = ThenCheckIt.class)
+	//@NotBlank(groups = CheckItFirst.class, message = "{form.valid.service.nameWsdl.notempty}")
+	//@Size(min = 1, max = 30, groups = ThenCheckIt.class)
 	private String nameWsdl;
 
 	/**
