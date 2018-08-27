@@ -78,9 +78,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	protected void configure(final HttpSecurity http) {
 
 		try {
-<<<<<<< HEAD
 			http.authorizeRequests()
-			    .antMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/fonts/icons/themify/**", "/fonts/fontawesome/**", "/less/**", "/invalidSession")
+			    .antMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/fonts/icons/themify/**", "/fonts/fontawesome/**", "/less/**", "/invalidSession", "/monitoriza-afirma-status-app/**")
 			    .permitAll() // Enable css, images and js when logged out
 				.and()
 				.authorizeRequests()
@@ -99,28 +98,17 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.disable() // Disable CSRF
 				.sessionManagement()
 				.maximumSessions(1)
-				.expiredUrl("/invalidSession")
+				.expiredUrl("/inicio")
 				.and()
 				.invalidSessionUrl("/invalidSession");
-=======
-			http.authorizeRequests().antMatchers("/css/**", "/images/**", "/js/**", "/fonts/**", "/fonts/icons/themify/**", "/fonts/fontawesome/**", "/less/**", "/invalidSession").permitAll() // Enable
-																																																// css,
-																																																// images
-																																																// and
-																																																// js
-																																																// when
-																																																// logged
-																																																// out
-				.and().authorizeRequests().antMatchers("/", "add", "delete/{id}", "edit/{id}", "save", "users").permitAll().anyRequest().authenticated().and().addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class).logout().permitAll().and().httpBasic().and().csrf().disable() // Disable
-																																																																												 // CSRF
-				.sessionManagement().maximumSessions(1).expiredUrl("/invalidSession").and().invalidSessionUrl("/invalidSession");
->>>>>>> e02ca9892d6429169187710d03817419f090553c
+			
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 
 	}
-
+	
+	 
 	/**
 	 * Filter authentication.
 	 * @return MultiFieldAuthenticationFilter filter
