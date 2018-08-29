@@ -33,6 +33,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import es.gob.monitoriza.constant.GeneralConstants;
@@ -40,7 +41,7 @@ import es.gob.monitoriza.constant.GeneralConstants;
 /**
  * <p>Class that enables and configures Spring Web Security for the Monitoriz@ application.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 6 mar. 2018.
+ * @version 1.1, 29/08/2018.
  */
 @Configuration
 @EnableWebSecurity
@@ -50,6 +51,11 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	 * Attribute that represents the object that manages the log of the class.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	
+	/**
+	 * Constant that represents the name of the cookie for session tracking. 
+	 */
+	public static final String SESSION_TRACKING_COOKIE_NAME = "JSESSIONID";
 
 	/**
 	 * Attribute that represents the injected service for user authentication.
@@ -89,7 +95,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.authenticated()
 				.and()
 				.addFilterBefore(authenticationFilter(), UsernamePasswordAuthenticationFilter.class)
-				.logout()
+				.logout().invalidateHttpSession(false).deleteCookies(SESSION_TRACKING_COOKIE_NAME).clearAuthentication(true).logoutSuccessUrl("/")
 				.permitAll()
 				.and()
 				.httpBasic()
@@ -97,8 +103,9 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.csrf()
 				.disable() // Disable CSRF
 				.sessionManagement()
+				.sessionFixation().migrateSession()
 				.maximumSessions(1)
-				.expiredUrl("/inicio")
+				.expiredUrl("/")
 				.and()
 				.invalidSessionUrl("/invalidSession");
 			
@@ -108,6 +115,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
 	}
 	
+	@Bean
+	public HttpSessionEventPublisher httpSessionEventPublisher() {
+	    return new HttpSessionEventPublisher();
+	}	
 	 
 	/**
 	 * Filter authentication.
