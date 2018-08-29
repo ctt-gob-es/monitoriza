@@ -56,7 +56,7 @@
             var o = this;
             this.s.dt;
             //t("body").append('<div class="modal fade" id="altEditor-modal"><div class="modal-dialog"><div class="modal-content"><div class="bd p-15"><h5 class="m-0" id="modal-title"></h5><button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button></div><div class="modal-body"><p></p></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button><button type="button" class="btn btn-primary">Save changes</button></div></div></div></div>'), this.s.dt.button("edit:name") && (this.s.dt.button("edit:name").action(function(t, a, e, d) {
-            t("body").append('<div class="modal fade" id="altEditor-modal" tabindex="-1" role="dialog"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title"></h4><button type="button" class="close" data-dismiss="modal" aria-label="Cerrar"><span aria-hidden="true">&times;</span></button></div><div class="modal-body"><p></p></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button><button type="button" class="btn btn-primary">Save changes</button></div></div></div></div>'), this.s.dt.button("edit:name") && (this.s.dt.button("edit:name").action(function(t, a, e, d) {
+            t("body").append('<div class="modal fade" id="altEditor-modal" tabindex="-1" role="dialog"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><h4 class="modal-title"></h4><button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" id="closeRowBtn"><span aria-hidden="true">&times;</span></button></div><div class="modal-body"><p></p></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button><button type="button" class="btn btn-primary">Save changes</button></div></div></div></div>'), this.s.dt.button("edit:name") && (this.s.dt.button("edit:name").action(function(t, a, e, d) {
                 a.rows({
                     selected: !0
                 }).count();
@@ -110,7 +110,7 @@
                    t("#altEditor-modal").on("show.bs.modal", function() {
                        t("#altEditor-modal").find(".modal-title").html("Editar Registro"), 
                        t("#altEditor-modal").find(".modal-body").html(l), 
-                       t("#altEditor-modal").find(".modal-footer").html("<button type='button' data-content='remove' class='btn btn-default' data-dismiss='modal'>Cerrar</button><button type='button' data-content='remove' class='btn btn-primary' id='editRowBtn'>Guardar Cambios</button>")
+                       t("#altEditor-modal").find(".modal-footer").html("<button type='button' data-content='remove' class='btn btn-default' data-dismiss='modal' id='closeRowBtn'>Cerrar</button><button type='button' data-content='remove' class='btn btn-primary' id='editRowBtn'>Guardar Cambios</button>")
                      }), t("#altEditor-modal").modal("show"), t("#altEditor-modal input.primarykey+div input").focus()
                       
                 },
@@ -145,7 +145,7 @@
             l += "<input type='hidden' class='primarykey' id='" + a[0].id + "' name='" + a[0].title + "' placeholder='" + a[0].title + "' value='" + d.data()[0][a[0].id] + "'>";
             l += "<p>¿Está seguro de que quiere eliminar el registro?</p>";
             l += "</form>", t("#altEditor-modal").on("show.bs.modal", function() {
-                t("#altEditor-modal").find(".modal-title").html("Eliminar"), t("#altEditor-modal").find(".modal-body").html("<pre class='modal-pre'>" + l + "</pre>"), t("#altEditor-modal").find(".modal-footer").html("<button type='button' data-content='remove' class='btn btn-default' data-dismiss='modal'>Cerrar</button><button type='button' data-content='remove' class='btn btn-danger' id='deleteRowBtn'>Eliminar</button>")
+                t("#altEditor-modal").find(".modal-title").html("Eliminar"), t("#altEditor-modal").find(".modal-body").html("<pre class='modal-pre'>" + l + "</pre>"), t("#altEditor-modal").find(".modal-footer").html("<button type='button' data-content='remove' class='btn btn-default' data-dismiss='modal' id='closeRowBtn'>Cerrar</button><button type='button' data-content='remove' class='btn btn-danger' id='deleteRowBtn'>Eliminar</button>")
             }), t("#altEditor-modal").modal("show"), t("#altEditor-modal input.primarykey+div input").focus()
                         
         },
@@ -186,7 +186,7 @@
                    t("#altEditor-modal").on("show.bs.modal", function() {
                       t("#altEditor-modal").find(".modal-title").html("Agregar"), 
                       t("#altEditor-modal").find(".modal-body").html(d), 
-                      t("#altEditor-modal").find(".modal-footer").html("<button type='button' data-content='remove' class='btn btn-default' data-dismiss='modal'>Cerrar</button><button type='button' data-content='remove' class='btn btn-primary' id='addRowBtn'>Agregar</button>")
+                      t("#altEditor-modal").find(".modal-footer").html("<button type='button' data-content='remove' class='btn btn-default' data-dismiss='modal' id='closeRowBtn'>Cerrar</button><button type='button' data-content='remove' class='btn btn-primary' id='addRowBtn'>Agregar</button>")
                     }), t("#altEditor-modal").modal("show"), t("#altEditor-modal input.primarykey+div input").focus()
                     
                 },
