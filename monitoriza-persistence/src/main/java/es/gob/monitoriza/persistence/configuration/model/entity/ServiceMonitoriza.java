@@ -33,7 +33,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -48,7 +47,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
 /** 
  * <p>Class that maps the <i>SERVICE_MONITORIZA</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 9 abr. 2018.
+ * @version 1.1, 29/08/2018.
  */
 @Entity
 @Table(name = "SERVICE_MONITORIZA")

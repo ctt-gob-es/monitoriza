@@ -30,22 +30,21 @@ import es.gob.monitoriza.constant.ServiceStatusConstants;
 import es.gob.monitoriza.exception.AlarmException;
 import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
-import es.gob.monitoriza.persistence.configuration.staticconfig.StaticServicesManager;
 import es.gob.monitoriza.utilidades.GeneralUtils;
 
 /** 
  * <p>Class that manages the alarms system of Monitoriz@.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 24/01/2018.
+ * @version 1.1, 30/08/2018.
  */
 public class AlarmManager {
 
 	static {
 		STATUS = GeneralUtils.getValuesOfConstants(ServiceStatusConstants.class, null);
-		SERVICES = StaticServicesManager.getServices();
+		//SERVICES = StaticServicesManager.getServices();
 	}
 	private static final List<String> STATUS;
-	private static final List<ServiceDTO> SERVICES;
+	//private static final List<ServiceDTO> SERVICES;
 
 	/**
 	 * Method that received a service name and a service status and it throws a new alarm.
@@ -54,19 +53,32 @@ public class AlarmManager {
 	 * @param serviceStatus Status of the service associated to the alarm.
 	 * @throws AlarmException if the input parameters are nor correct or something in the process fails.
 	 */
-	public static void throwNewAlarm(final String serviceName, final String serviceStatus, final Long tiempoMedio) throws AlarmException {
+	public static void throwNewAlarm(final ServiceDTO service, final String serviceStatus, final Long tiempoMedio) throws AlarmException {
 		// Comprobamos que los parametros introducidos sean correctos.
-		if (serviceName == null || serviceStatus == null) {
+		if (service == null || serviceStatus == null) {
 			throw new AlarmException(LogMessages.ERROR_SERVICE_STATUS_OR_SERVICE_NAME_NULL);
 		}
 		if (!STATUS.contains(serviceStatus)) {
 			throw new AlarmException(LogMessages.ERROR_SERVICE_STATUS_NOT_MATCH);
 		}
-		if (!SERVICES.contains(new ServiceDTO(serviceName))) {
-			throw new AlarmException(LogMessages.ERROR_SERVICE_NAME_NOT_MATCH);
-		}
+//		if (!SERVICES.contains(service)) {
+//			throw new AlarmException(LogMessages.ERROR_SERVICE_NAME_NOT_MATCH);
+//		}
 		// Creamos una nueva alarma.
-		Alarm alarm = new Alarm(serviceName, serviceStatus, tiempoMedio);
+		Alarm alarm = new Alarm(service.getServiceName(), serviceStatus, tiempoMedio);
+		
+		if (serviceStatus.equals(ServiceStatusConstants.DEGRADADO)) {
+			alarm.setAddresses(service.getListMailDegraded());
+		} else if (serviceStatus.equals(ServiceStatusConstants.CAIDO)) {
+			alarm.setAddresses(service.getListMailDown());
+		} else {
+			throw new AlarmException(LogMessages.ERROR_SERVICE_STATUS_NOT_MATCH);
+		}
+		
+		alarm.setBlockedTime(service.getBlockTimeAlarm());
+		alarm.setServiceWsdl(service.getWsdl());
+		alarm.setUmbralDegradado(service.getDegradedThreshold());
+		
 		// Enviamos la alarma al gestor de alarmas para que decida si hay que
 		// enviarla o añadirla al resumen.
 		AlarmTaskManager.sendAlarm(alarm);

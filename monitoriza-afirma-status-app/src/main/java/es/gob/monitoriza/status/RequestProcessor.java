@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.0, 15/01/2018.
+ * @version 1.1, 30/08/2018.
  */
 package es.gob.monitoriza.status;
 
@@ -67,7 +67,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 /** 
  * <p>Class that calculates the status for the @firma/ts@ services.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.0, 15/01/2018.
+ * @version 1.1, 29/08/2018.
  */
 public final class RequestProcessor {
 
@@ -130,12 +130,12 @@ public final class RequestProcessor {
 		// servicio.
 		for (ServiceDTO s: servicios) {
 
-			if (requestsRunning.get(s.getServiceId()) == null || !requestsRunning.get(s.getServiceId())) {	
+			if (requestsRunning.get(s.getServiceName()) == null || !requestsRunning.get(s.getServiceName())) {	
 				try {
 					processRequests(s, statusHolder);
 				} catch (InvokerException e) {
-					requestsRunning.put(s.getServiceId(), Boolean.FALSE);
-					LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_PROCESSING_SERVICE, new Object [] {s.getServiceId()}),e);
+					requestsRunning.put(s.getServiceName(), Boolean.FALSE);
+					LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_PROCESSING_SERVICE, new Object [] {s.getServiceName()}),e);
 				}
 			}
 		}
@@ -150,7 +150,7 @@ public final class RequestProcessor {
 	 */
 	private void processRequests(final ServiceDTO service, final Map<String, String> statusHolder) throws InvokerException {
 		
-		requestsRunning.put(service.getServiceId(), Boolean.TRUE);
+		requestsRunning.put(service.getServiceName(), Boolean.TRUE);
 
 		Long tiempoTotal = null;
 		Long tiempoMedio = null;
@@ -184,10 +184,11 @@ public final class RequestProcessor {
         
         						LOGGER.info(Language.getFormatResMonitoriza(LogMessages.SENDING_REQUEST, new Object[ ] { request.getName() }));
         
-        						if (service.getServiceId().equals(GeneralConstants.OCSP_SERVICE)) {
+        						if (service.getServiceName().equals(GeneralConstants.OCSP_SERVICE)) {
         							tiempoTotal = OcspInvoker.sendRequest(request, service, ssl);
-        						} else if (service.getServiceId().equals(GeneralConstants.RFC3161_SERVICE)){
-        							tiempoTotal = Rfc3161Invoker.sendRequest(request, service, ssl);
+        						} else if (service.getServiceName().equals(GeneralConstants.RFC3161_SERVICE)){
+        							// TODO Si se mantiene esta clase, implementar para pasar un keystore correcto en vez de null
+        							tiempoTotal = Rfc3161Invoker.sendRequest(request, service, ssl, null);
         						} else {
         							tiempoTotal = HttpSoapInvoker.sendRequest(request, service, ssl);
         						} 
@@ -228,7 +229,7 @@ public final class RequestProcessor {
         					try {
         						Thread.sleep(Long.parseLong(StaticMonitorizaProperties.getProperty(StaticConstants.CONFIRMATION_WAIT_TIME)));
         					} catch (InterruptedException e) {
-        						LOGGER.info(Language.getFormatResMonitoriza(LogMessages.CONFIRMATION_WAIT_INTERRUPTED, new Object[ ] { service.getServiceId() }));
+        						LOGGER.info(Language.getFormatResMonitoriza(LogMessages.CONFIRMATION_WAIT_INTERRUPTED, new Object[ ] { service.getServiceName() }));
         					}
         				} else {
         					necesarioConfirmar = Boolean.FALSE;
@@ -245,11 +246,11 @@ public final class RequestProcessor {
 			// más grupos de confirmación,
 			// pasamos a calcular el estado del servicio con los datos
 			// obtenidos.
-			statusHolder.put(service.getServiceId(), calcularEstadoDelServicio(service, tiempoMedio, perdidas));
+			statusHolder.put(service.getServiceName(), calcularEstadoDelServicio(service, tiempoMedio, perdidas));
 
 		}
 		
-		requestsRunning.put(service.getServiceId(), Boolean.FALSE);
+		requestsRunning.put(service.getServiceName(), Boolean.FALSE);
 
 	}
 
@@ -278,9 +279,9 @@ public final class RequestProcessor {
 		// Se comprueba si es necesario lanzar alarma
 		if (!estado.equals(ServiceStatusConstants.CORRECTO)) {
 			try {
-				AlarmManager.throwNewAlarm(service.getServiceId(), estado, tiempoMedio);
+				AlarmManager.throwNewAlarm(service, estado, tiempoMedio);
 			} catch (AlarmException e) {
-				LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_THROWING_ALARM, new Object [] {service.getServiceId(), estado}),e);
+				LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_THROWING_ALARM, new Object [] {service.getServiceName(), estado}),e);
 			}
 		}
 		

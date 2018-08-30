@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>22 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 22 ene. 2018.
+ * @version 1.1, 29/08/2018.
  */
 package es.gob.monitoriza.invoker.soap;
 
@@ -55,10 +55,7 @@ import org.apache.log4j.Logger;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
-import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
-import es.gob.monitoriza.persistence.configuration.staticconfig.ConnectionManager;
-import es.gob.monitoriza.persistence.configuration.staticconfig.StaticConnectionManager;
 import es.gob.monitoriza.utilidades.FileUtils;
 
 /** 
@@ -89,10 +86,8 @@ public class HttpSoapInvoker {
 		try (InputStream is = new ByteArrayInputStream(soapMsg.getBytes());) {
 					
 			String wsdlServiceName = service.getWsdl();
-			String base = null;
-						
-			base = getBaseUrl(service);
-
+			String base = service.getSoapUrl();
+			
 			// Creamos el Mime SoapAction necesario para enviar la petición
 			MimeHeaders mhs = new MimeHeaders();
 			// Generamos el SOAPAction para el servicio concreto.
@@ -168,36 +163,7 @@ public class HttpSoapInvoker {
 		
 		return tiempoTotal;
 	}
-	
-	private static String getBaseUrl(ServiceDTO service) {
 		
-		ConnectionManager connManager = new StaticConnectionManager();
-		
-		ConnectionDTO connection = null;
-		
-		if (service.getServiceId().contains("timestamp")) {
-			// Obtenemos las propiedades de comunicación con TS@
-			connection = connManager.getTsaConnection();
-		} else {
-			// Obtenemos las propiedades de comunicación con @Firma
-			connection = connManager.getAfirmaConnection();
-		}
-			
-		String port = connection.getSecureMode()? connection.getSecurePort():connection.getPort();
-		String protocol = connection.getSecureMode()? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP;
-		
-		StringBuilder baseUrl = new StringBuilder();
-		
-		if (port != null && !"".equals(port)) {
-			baseUrl.append(protocol).append(GeneralConstants.COLON).append(GeneralConstants.DOUBLE_PATH_SEPARATOR).append(connection.getHost()).append(GeneralConstants.COLON).append(port).append(connection.getServiceContext());
-		} else {
-			baseUrl.append(protocol).append(GeneralConstants.COLON).append(GeneralConstants.DOUBLE_PATH_SEPARATOR).append(connection.getHost()).append(connection.getServiceContext());
-		}
-		
-		return baseUrl.toString();
-		
-	}
-	
 	/**
 	 * <p>Private class that allows to verify the host of the HTTPS service.</p>
 	 * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>

@@ -24,13 +24,14 @@
 package es.gob.monitoriza.alarm.types;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 
 /** 
  * <p>Class that represents the type Alarm.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 14/02/2018.
+ * @version 1.2, 30/08/2018.
  */
 public class Alarm {
 
@@ -53,6 +54,26 @@ public class Alarm {
 	 * Attribute that represents the creation date of the alarm.
 	 */
 	private LocalDateTime dateOfCreation;
+	
+	/**
+	 * Attribute that represents the addresses to which send this alarm. 
+	 */
+	private List<String> addresses;
+	
+	/**
+	 * Attribute that represents the time (ms) during this alarm will be blocked. 
+	 */
+	private Long blockedTime;
+	
+	/**
+	 * Attribute that represents the service WSDL endpoint. 
+	 */
+	private String serviceWsdl;
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	private Long umbralDegradado;
 	
 	
 	/**
@@ -132,10 +153,74 @@ public class Alarm {
 
 	/**
 	 * Sets the value of the attribute {@link #avgTime}.
-	 * @param dateOfCreation The value for the attribute {@link #avgTime}.
+	 * @param avgTime The value for the attribute {@link #avgTime}.
 	 */
 	public void setAvgTime(Long tiempoMedio) {
 		this.avgTime = tiempoMedio;
+	}
+			
+	/**
+	 * Gets the value of the attribute {@link #addresses}.
+	 * @return the value of the attribute {@link #addresses}.
+	 */
+	public List<String> getAddresses() {
+		return addresses;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #addresses}.
+	 * @param addresses The value for the attribute {@link #addresses}.
+	 */
+	public void setAddresses(List<String> addresses) {
+		this.addresses = addresses;
+	}
+	
+	/**
+	 * Gets the value of the attribute {@link #blockedTime}.
+	 * @return the value of the attribute {@link #blockedTime}.
+	 */
+	public Long getBlockedTime() {
+		return blockedTime;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #blockedTime}.
+	 * @param blockedTime The value for the attribute {@link #blockedTime}.
+	 */
+	public void setBlockedTime(Long blockedTime) {
+		this.blockedTime = blockedTime;
+	}
+		
+	/**
+	 * Gets the value of the attribute {@link #serviceWsdl}.
+	 * @return the value of the attribute {@link #serviceWsdl}.
+	 */
+	public String getServiceWsdl() {
+		return serviceWsdl;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #serviceWsdl}.
+	 * @param dateOfCreation The value for the attribute {@link #serviceWsdl}.
+	 */
+	public void setServiceWsdl(String serviceWsdl) {
+		this.serviceWsdl = serviceWsdl;
+	}
+			
+	/**
+	 * Gets the value of the attribute {@link #umbralDegradado}.
+	 * @return the value of the attribute {@link #umbralDegradado}.
+	 */
+	public Long getUmbralDegradado() {
+		return umbralDegradado;
+	}
+	
+	/**
+	 * Sets the value of the attribute {@link #umbralDegradado}.
+	 * @param umbralDegradado The value for the attribute {@link #umbralDegradado}.
+	 */
+	public void setUmbralDegradado(Long umbralDegradado) {
+		this.umbralDegradado = umbralDegradado;
 	}
 
 	/**

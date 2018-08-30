@@ -42,13 +42,12 @@ import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.persistence.configuration.staticconfig.StaticServicesManager;
 import es.gob.monitoriza.utilidades.GeneralUtils;
-import es.gob.monitoriza.utilidades.MailUtils;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that represents the scheduler for the tasks object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 24/01/2018.
+ * @version 1.1, 30/08/2018.
  */
 public class AlarmTaskScheduler {
 	
@@ -69,7 +68,7 @@ public class AlarmTaskScheduler {
 			// Obtenemos el nombre del servicio
 			String serviceName = alarmsToSend.get(0).getServiceName();
 			// Obtenemos el identificador de la alarma (nombre del servicio y el estado.
-			String[ ] serviceIdentifier = new String[ ] { alarmsToSend.get(0).getServiceName(), alarmsToSend.get(0).getServiceStatus() };
+			//String[ ] serviceIdentifier = new String[ ] { alarmsToSend.get(0).getServiceName(), alarmsToSend.get(0).getServiceStatus() };
 			String issuer = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_ISSUER);
 			String host = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_HOST);
 			String port = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_PORT);
@@ -86,7 +85,8 @@ public class AlarmTaskScheduler {
 				subject = Language.getResMonitoriza(LogMessages.SUBJECT_MAIL_MONITORIZA).concat(" ").concat(Language.getFormatResMonitoriza(LogMessages.SUMMARY_ALARM_SUBJECT_MAIL, new Object[ ] { serviceName }));
 				body = generateSummaryBody(alarmsToSend);
 			}
-			destinations = MailUtils.getListAddresseesForAlarm(serviceIdentifier);
+			//destinations = MailUtils.getListAddresseesForAlarm(serviceIdentifier);
+			destinations = alarmsToSend.get(0).getAddresses();
 			MailService ms = new MailService(destinations, issuer, host, Integer.valueOf(port), Boolean.valueOf(authentication), Boolean.valueOf(tls), user, password, subject.toString(), body.toString());
 			
 			LOGGER.info("Mensaje enviado: \nSubject: "+ subject+"\nBody: "+ body +"\nNúmero de alarmas: " + alarmsToSend.size());
@@ -117,9 +117,8 @@ public class AlarmTaskScheduler {
 	 */
 	private static String generateBody(final Alarm alarm) {
 				
-		final ServiceDTO service = StaticServicesManager.getServiceById(alarm.getServiceName().toLowerCase());
-		final String systemService = GeneralUtils.getSystemName(alarm.getServiceName().toLowerCase()).concat(GeneralConstants.EN_DASH_WITH_SPACES).concat(service.getWsdl());
-		final String tiempoMedioServicio =  service != null? service.getDegradedThreshold().toString():null;
+		final String systemService = GeneralUtils.getSystemName(alarm.getServiceName().toLowerCase()).concat(GeneralConstants.EN_DASH_WITH_SPACES).concat(alarm.getServiceWsdl());
+		final String tiempoMedioServicio =  alarm.getUmbralDegradado() != null? alarm.getUmbralDegradado().toString(): null;
 		
 		String body = null;				
 				
@@ -144,8 +143,7 @@ public class AlarmTaskScheduler {
 	 */
 	private static String generateBodyRow(final Alarm alarm) {
 				
-		final ServiceDTO service = StaticServicesManager.getServiceById(alarm.getServiceName().toLowerCase());
-		final String tiempoMedioServicio =  service != null? service.getDegradedThreshold().toString():null;
+		final String tiempoMedioServicio =  alarm.getUmbralDegradado() != null? alarm.getUmbralDegradado().toString(): null;
 		
 		String body = null;
 				

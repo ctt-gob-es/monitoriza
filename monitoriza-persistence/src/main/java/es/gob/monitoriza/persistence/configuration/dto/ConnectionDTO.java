@@ -27,7 +27,7 @@ package es.gob.monitoriza.persistence.configuration.dto;
 /** 
  * <p>Data transfer object that encapsulates the information of a connection configuration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 30 ene. 2018.
+ * @version 1.1, 28/08/2018.
  */
 public class ConnectionDTO {
 	
@@ -71,6 +71,37 @@ public class ConnectionDTO {
 	 */
 	private String rfc3161Context;
 	
+	/**
+	 * Constructor method for the class ConnectionDTO.java. 
+	 */
+	public ConnectionDTO() {
+		
+	}		
+	
+	/**
+	 * Constructor method for the class ConnectionDTO.java.
+	 * @param secureMode
+	 * @param host
+	 * @param port
+	 * @param securePort
+	 * @param rfc3161Port
+	 * @param serviceContext
+	 * @param ocspContext
+	 * @param rfc3161Context 
+	 */
+	public ConnectionDTO(Boolean secureMode, String host, String port, String securePort, String rfc3161Port, String serviceContext, String ocspContext, String rfc3161Context) {
+		super();
+		this.secureMode = secureMode;
+		this.host = host;
+		this.port = port;
+		this.securePort = securePort;
+		this.rfc3161Port = rfc3161Port;
+		this.serviceContext = serviceContext;
+		this.ocspContext = ocspContext;
+		this.rfc3161Context = rfc3161Context;
+	}
+
+
 	/**
 	 * Gets the value of the attribute {@link #secureMode} 
 	 * @return the value of the attribute {@link #secureMode}

@@ -42,7 +42,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 /** 
  * <p>Class that manages the configuration of the @firma/ts@ services from static properties file.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 19/01/2018.
+ * @version 1.1, 29/08/2018.
  */
 public class StaticServicesManager {
 
@@ -111,7 +111,7 @@ public class StaticServicesManager {
 					if (services.contains(new ServiceDTO(serviceId))) {
 
 						if (keyArray[2].equals(SERVICE_TIMER_PROPERTY)) {
-							services.get(services.indexOf(new ServiceDTO(serviceId))).setTimerId((String) pair.getValue());
+							services.get(services.indexOf(new ServiceDTO(serviceId))).setTimerName((String) pair.getValue());
 						} else if (keyArray[2].equals(SERVICE_TIMEOUT_PROPERTY)) {
 							services.get(services.indexOf(new ServiceDTO(serviceId))).setTimeout(Long.parseLong((String)pair.getValue()));
 						} else if (keyArray[2].equals(SERVICE_WSDL_PROPERTY)) {
@@ -126,7 +126,7 @@ public class StaticServicesManager {
 
 						service = new ServiceDTO(serviceId);
 						if (keyArray[2].equals(SERVICE_TIMER_PROPERTY)) {
-							service.setTimerId((String) pair.getValue());
+							service.setTimerName((String) pair.getValue());
 						} else if (keyArray[2].equals(SERVICE_TIMEOUT_PROPERTY)) {
 							service.setTimeout(Long.parseLong((String)pair.getValue()));
 						} else if (keyArray[2].equals(SERVICE_WSDL_PROPERTY)) {
@@ -167,10 +167,10 @@ public class StaticServicesManager {
 
 	/**
 	 * Method that gets the services  from persistence (database or static properties file)
-	 * @param timerId The Identifier of the timer configured in the service
+	 * @param timerName The name of the timer configured in the service
 	 * @return List with the service configuration which its timer matches with the parameter timerId
 	 */
-	public static List<ServiceDTO> getServicesByTimer(final String timerId) {
+	public static List<ServiceDTO> getServicesByTimer(final String timerName) {
 
 		final List<ServiceDTO> servicesTimer = new ArrayList<ServiceDTO>();
 
@@ -180,7 +180,7 @@ public class StaticServicesManager {
 
 			ServiceDTO service = (ServiceDTO) itServices.next();
 
-			if (service.getTimerId().equals(timerId)) {
+			if (service.getTimerName().equals(timerName)) {
 
 				servicesTimer.add(service);
 

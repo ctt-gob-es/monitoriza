@@ -32,18 +32,12 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.0, 19/02/2018.
+ * @version 1.1, 30/08/2018.
  */
 package es.gob.monitoriza.status.thread;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.cert.CertificateException;
 import java.time.LocalDateTime;
 import java.util.Map;
 
@@ -68,17 +62,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.0, 19/02/2018.
- */
-/** 
- * <p>Class .</p>
- * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 27 abr. 2018.
- */
-/** 
- * <p>Class .</p>
- * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 27 abr. 2018.
+ * @version 1.1, 30/08/2018.
  */
 public final class RequestProcessorThread implements Runnable {
 
@@ -100,17 +84,24 @@ public final class RequestProcessorThread implements Runnable {
 	/**
 	 * Attribute that represents . 
 	 */
-	private static KeyStore ssl = loadSslTruststore();
+	private static KeyStore ssl;
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	private static KeyStore authClient;
 
 	/**
 	 * Private constructor method for the class RequestProcessor.java. 
 	 * @param service DTOService that represents the service being processed in this thread.
 	 * @param statusHolder Reference to the Map that holds the current status for the processed services. 
 	 */
-	public RequestProcessorThread(final ServiceDTO service, final Map<String, StatusUptodate> statusHolder) {
+	public RequestProcessorThread(final ServiceDTO service, final Map<String, StatusUptodate> statusHolder, final KeyStore sslTrustStore, final KeyStore rfc3161Keystore) {
 
 		this.service = service;
 		this.statusHolder = statusHolder;
+		ssl = sslTrustStore;
+		authClient = rfc3161Keystore;
 	}
 
 	/**
@@ -120,7 +111,7 @@ public final class RequestProcessorThread implements Runnable {
 	public void run() {
 		
 		RunningServices.getInstance();
-		RunningServices.getRequestsRunning().put(service.getServiceId(), Boolean.TRUE);
+		RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.TRUE);
 
 		Long tiempoTotal = null;
 		Long tiempoMedio = null;
@@ -156,10 +147,10 @@ public final class RequestProcessorThread implements Runnable {
 
 								LOGGER.info(Language.getFormatResMonitoriza(LogMessages.SENDING_REQUEST, new Object[ ] { request.getName() }));
 
-								if (service.getServiceId().equals(GeneralConstants.OCSP_SERVICE)) {
+								if (service.getServiceType().equalsIgnoreCase(GeneralConstants.OCSP_SERVICE)) {
 									tiempoTotal = OcspInvoker.sendRequest(request, service, ssl);
-								} else if (service.getServiceId().equals(GeneralConstants.RFC3161_SERVICE)) {
-									tiempoTotal = Rfc3161Invoker.sendRequest(request, service, ssl);
+								} else if (service.getServiceType().equalsIgnoreCase(GeneralConstants.RFC3161_SERVICE)) {
+									tiempoTotal = Rfc3161Invoker.sendRequest(request, service, ssl, authClient);
 								} else {
 									tiempoTotal = HttpSoapInvoker.sendRequest(request, service, ssl);
 								}
@@ -206,7 +197,7 @@ public final class RequestProcessorThread implements Runnable {
 								Thread.sleep(Long.parseLong(StaticMonitorizaProperties.getProperty(StaticConstants.CONFIRMATION_WAIT_TIME)));
 								
 							} catch (InterruptedException e) {
-								LOGGER.info(Language.getFormatResMonitoriza(LogMessages.CONFIRMATION_WAIT_INTERRUPTED, new Object[ ] { service.getServiceId() }));
+								LOGGER.info(Language.getFormatResMonitoriza(LogMessages.CONFIRMATION_WAIT_INTERRUPTED, new Object[ ] { service.getServiceName() }));
 							}
 						} else {
 							necesarioConfirmar = Boolean.FALSE;
@@ -226,16 +217,16 @@ public final class RequestProcessorThread implements Runnable {
 				// pasamos a calcular el estado del servicio con los datos
 				// obtenidos.
 				StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(service, tiempoMedio, perdidas), LocalDateTime.now());
-				statusHolder.put(service.getServiceId(), statusUptodate);
+				statusHolder.put(service.getServiceName(), statusUptodate);
 
 			} catch (InvokerException e) {
-				RunningServices.getRequestsRunning().put(service.getServiceId(), Boolean.FALSE);
-				LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_PROCESSING_SERVICE, new Object[ ] { service.getServiceId() }), e);
+				RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
+				LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_PROCESSING_SERVICE, new Object[ ] { service.getServiceName() }), e);
 			}
 
 		}
 		
-		RunningServices.getRequestsRunning().put(service.getServiceId(), Boolean.FALSE);
+		RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
 
 	}
 
@@ -265,9 +256,9 @@ public final class RequestProcessorThread implements Runnable {
 		// Se comprueba si es necesario lanzar alarma
 		if (!estado.equals(ServiceStatusConstants.CORRECTO) && sendAlarm) {
 			try {
-				AlarmManager.throwNewAlarm(service.getServiceId(), estado, tiempoMedio);
+				AlarmManager.throwNewAlarm(service, estado, tiempoMedio);
 			} catch (AlarmException e) {
-				LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_THROWING_ALARM, new Object[ ] { service.getServiceId(), estado }), e);
+				LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_THROWING_ALARM, new Object[ ] { service.getServiceName(), estado }), e);
 			}
 		}
 
@@ -321,30 +312,6 @@ public final class RequestProcessorThread implements Runnable {
 	 */
 	public void setStatusHolder(Map<String, StatusUptodate> statusHolder) {
 		this.statusHolder = statusHolder;
-	}
-	
-	/**
-	 * 
-	 * @return
-	 */
-	private static KeyStore loadSslTruststore() {
-
-		String msgError = null;
-		KeyStore cer = null;
-
-		try (InputStream readStream = new FileInputStream(StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTTORE_PATH));) {
-			// Accedemos al almacén de confianza SSL
-			msgError = Language.getResMonitoriza(LogMessages.ERROR_ACCESS_CERTIFICATE_SSL);
-			cer = KeyStore.getInstance(StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTSTORE_TYPE));
-
-			cer.load(readStream, StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTTORE_PASSWORD).toCharArray());
-
-		} catch (IOException | KeyStoreException | CertificateException
-				| NoSuchAlgorithmException ex) {
-			LOGGER.error(msgError, ex);
-		}
-
-		return cer;
-	}
+	}	
 
 }

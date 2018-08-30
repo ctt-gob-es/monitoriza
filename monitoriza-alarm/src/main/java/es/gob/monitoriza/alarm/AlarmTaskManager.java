@@ -35,7 +35,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 /** 
  * <p>Class that defines the methods in charge of send alarms or store it according to the defined block time.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 24/01/2018.
+ * @version 1.1, 30/08/2018.
  */
 public class AlarmTaskManager {
 
@@ -75,7 +75,7 @@ public class AlarmTaskManager {
 				alarmsToSend.add(alarm);
 				// Recuperamos el tiempo de bloqueo del tipo de alarma
 				// seleccionado.
-				long blockAlarmTime = getBlockTimeForService(serviceName);
+				long blockAlarmTime = alarm.getBlockedTime();
 				// Enviamos la alarma.
 				AlarmTaskScheduler.sendAlarm(alarmsToSend);
 				// Bloqueamos la alarma para que no se vuelva a enviar otra del

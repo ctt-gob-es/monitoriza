@@ -24,9 +24,7 @@
 package es.gob.monitoriza.invoker.rfc3161;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.MalformedURLException;
 import java.net.URL;
@@ -66,7 +64,7 @@ import es.gob.monitoriza.utilidades.UtilsResource;
 /** 
  * <p>Class that manages and performs the request of a service via RFC3161.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 29 ene. 2018.
+ * @version 1.1, 29/08/2018.
  */
 public class Rfc3161Invoker {
 	
@@ -105,7 +103,7 @@ public class Rfc3161Invoker {
 	 * If there is some configuration or communication problem, this value will be null.
 	 * @throws InvokerException If the method fails.
 	 */
-	public static Long sendRequest(final File requestFile, final ServiceDTO service, final KeyStore ssl) throws InvokerException {
+	public static Long sendRequest(final File requestFile, final ServiceDTO service, final KeyStore ssl, final KeyStore authRfc3161) throws InvokerException {
 		LOGGER.debug(Language.getResMonitoriza(LogMessages.INIT_RFC3161));
 		
 		Long tiempoTotal = null;
@@ -123,39 +121,38 @@ public class Rfc3161Invoker {
 
 			// Obtenemos el indicador para saber si es necesaria la
 			// autenticación del cliente
-			Boolean authClient = Boolean.parseBoolean(StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_HTTPS_USE_CLIENT_AUTHENTICATION));
-			if (authClient) {
+			if (service.getUseRfc3161Auth()) {
 				LOGGER.debug(Language.getResMonitoriza(LogMessages.AUTH_CLIENT_RFC3161_ON));
 
 				// Obtenemos el alias del certificado a usar para la
 				// autenticación cliente
-				String certificateAlias = StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_HTTPS_CERTIFICATE_ALIAS);
+				//String certificateAlias = StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_HTTPS_CERTIFICATE_ALIAS);
 				// Comprobamos que el alias del certificado a usar para la
 				// autenticación cliente no es nulo
-				checkValueNotNull(certificateAlias, Language.getResMonitoriza(LogMessages.ERROR_UNDEFINED_CERTIFICATE_AUTH_CLIENT_RFC3161));
+				checkValueNotNull(service.getRfc3161Cert(), Language.getResMonitoriza(LogMessages.ERROR_UNDEFINED_CERTIFICATE_AUTH_CLIENT_RFC3161));
 
 				// Accedemos al almacén con el certificado para la autenticación cliente
 				msgError = Language.getResMonitoriza(LogMessages.ERROR_KEYSTORE_ACCESS_AUTH_CLIENT_RFC3161);
 				
-				KeyStore cerAuth = KeyStore.getInstance(StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_HTTPS_CERTIFICATE_TYPE));
-				InputStream is = new FileInputStream(StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_AUTH_KEYSTORE_PATH));
-				cerAuth.load(is, StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_HTTPS_CERTIFICATE_PASSWORD).toCharArray());
+//				KeyStore cerAuth = KeyStore.getInstance(StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_HTTPS_CERTIFICATE_TYPE));
+//				InputStream is = new FileInputStream(StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_AUTH_KEYSTORE_PATH));
+//				cerAuth.load(is, StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_HTTPS_CERTIFICATE_PASSWORD).toCharArray());
 												
 				// Comprobamos que el certificado existe en el almacén
-				if (!cerAuth.containsAlias(certificateAlias)) {
-					msgError = Language.getFormatResMonitoriza(LogMessages.ERROR_NOCERT_IN_KEYSTORE_AUTH_CLIENT_RFC3161, new Object[ ] { certificateAlias });
+				if (!authRfc3161.containsAlias(service.getRfc3161Cert())) {
+					msgError = Language.getFormatResMonitoriza(LogMessages.ERROR_NOCERT_IN_KEYSTORE_AUTH_CLIENT_RFC3161, new Object[ ] { service.getRfc3161Cert() });
 				} else {
 					PrivateKey pk = null;
 					// Obtenemos la clave privada asociada al alias del
 					// certificado
-					msgError = Language.getFormatResMonitoriza(LogMessages.ERROR_PRIVATE_KEY_AUTH_CLIENT_RFC3161, new Object[ ] { certificateAlias });
-					if (cerAuth.isKeyEntry(certificateAlias)) {
-						pk = (PrivateKey) cerAuth.getKey(certificateAlias, StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_HTTPS_CERTIFICATE_PASSWORD).toCharArray());
+					msgError = Language.getFormatResMonitoriza(LogMessages.ERROR_PRIVATE_KEY_AUTH_CLIENT_RFC3161, new Object[ ] { service.getRfc3161Cert() });
+					if (authRfc3161.isKeyEntry(service.getRfc3161Cert())) {
+						pk = (PrivateKey) authRfc3161.getKey(service.getRfc3161Cert(), StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_HTTPS_CERTIFICATE_PASSWORD).toCharArray());
 					}
 					// Obtenemos la cadena de certificación para el alias del
 					// certificado
-					msgError = Language.getFormatResMonitoriza(LogMessages.ERROR_CERTIFICATE_CHAIN_AUTH_CLIENT_RFC3161, new Object[ ] { certificateAlias });
-					Certificate[ ] certificateChain = cerAuth.getCertificateChain(certificateAlias);
+					msgError = Language.getFormatResMonitoriza(LogMessages.ERROR_CERTIFICATE_CHAIN_AUTH_CLIENT_RFC3161, new Object[ ] { service.getRfc3161Cert() });
+					Certificate[ ] certificateChain = authRfc3161.getCertificateChain(service.getRfc3161Cert());
 					// Creamos un almacén de claves vacío para meter el
 					// certificado
 					// a usar para la autenticación cliente
@@ -164,7 +161,7 @@ public class Rfc3161Invoker {
 					String keystorePass = CLIENT_AUTH_KEYSTORE_PASSWORD;
 					KeyStore ks = KeyStore.getInstance(keystoreType);
 					ks.load(null, keystorePass.toCharArray());
-					ks.setKeyEntry(certificateAlias, pk, keystorePass.toCharArray(), certificateChain);
+					ks.setKeyEntry(service.getRfc3161Cert(), pk, keystorePass.toCharArray(), certificateChain);
 					KeyManagerFactory kmf = KeyManagerFactory.getInstance(GeneralConstants.TRUST_MANAGER_FACTORY_SUN_X509);
 					kmf.init(ks, keystorePass.toCharArray());
 					
@@ -181,13 +178,16 @@ public class Rfc3161Invoker {
 			byte request[] = FileUtils.fileToByteArray(requestFile);
 
 			// Obtenemos la URL de conexión con el servicio RFC 3161
-			URL url = getRFC3161TSAURL();
+			//URL url = getRFC3161TSAURL();
+			URL url = getRFC3161TSAURLFromWebAdmin(service);
 			//LOGGER.info(Language.getResMonitoriza("logTMH019"));
 
 			//msgError = Language.getResMonitoriza("logTMH018");
 			HttpsURLConnection tsaConnection = (HttpsURLConnection) url.openConnection();
 			tsaConnection.setHostnameVerifier(new NameVerifier());
 
+			LOGGER.info(Language.getFormatResMonitoriza(LogMessages.LOG_ENDPOINT, new Object[ ] { requestFile, url.toString()}));			
+			
 			SSLSocketFactory factory = ctx.getSocketFactory();
 			tsaConnection.setSSLSocketFactory(factory);
 			tsaConnection.setDoInput(true);
@@ -215,6 +215,23 @@ public class Rfc3161Invoker {
 		return tiempoTotal;
 	}
 		
+	/**
+	 * 
+	 * @param service
+	 * @return
+	 */
+	private static URL getRFC3161TSAURLFromWebAdmin(ServiceDTO service) throws InvokerException {
+					
+		StringBuffer tsaURL = new StringBuffer();
+		tsaURL.append(service.getBaseUrl()).append(service.getRfc3161Context());
+		
+		try {
+			return new URL(tsaURL.toString());
+		} catch (MalformedURLException e) {
+			throw new InvokerException(Language.getFormatResMonitoriza(LogMessages.ERROR_MALFORMED_URL_RFC3161, new Object[ ] { tsaURL }), e);
+		}
+	}
+
 	/**
 	 * Method that obtains the URL for connecting to TS@ RFC 3161 - HTTPS service from the configuration properties file.
 	 * @return the URL for connecting to TS@ RFC 3161 - HTTPS service.

@@ -20,10 +20,11 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 feb. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 19 feb. 2018.
+ * @version 1.1, 29/08/2018.
  */
 package es.gob.monitoriza.status.thread;
 
+import java.security.KeyStore;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutorService;
@@ -65,7 +66,7 @@ public class RequestLauncher {
 	 * @param responsesDir Path where the responses will be stored.
 	 * @throws InvokerException if the path is not correct or the directories structure is not correct.
 	 */
-	public void startInvoker(final Map<String, StatusUptodate> statusHolder, final List<ServiceDTO> servicios) {
+	public void startInvoker(final Map<String, StatusUptodate> statusHolder, final List<ServiceDTO> servicios, final KeyStore sslTrustStore, final KeyStore rfc3161Keystore) {
 
 		LOGGER.info(Language.getFormatResMonitoriza(LogMessages.PATH_DIRECTORY_REQUESTS, new Object[ ] { requestDirectory }));
 				
@@ -89,8 +90,8 @@ public class RequestLauncher {
 
 			RunningServices.getInstance();
 			
-			if (RunningServices.getRequestsRunning().get(s.getServiceId()) == null || !RunningServices.getRequestsRunning().get(s.getServiceId())) {
-    			RequestProcessorThread rpt = new RequestProcessorThread(s, statusHolder);
+			if (RunningServices.getRequestsRunning().get(s.getServiceName()) == null || !RunningServices.getRequestsRunning().get(s.getServiceName())) {
+    			RequestProcessorThread rpt = new RequestProcessorThread(s, statusHolder, sslTrustStore, rfc3161Keystore);
     
     			executor.execute(rpt);
 			} 			

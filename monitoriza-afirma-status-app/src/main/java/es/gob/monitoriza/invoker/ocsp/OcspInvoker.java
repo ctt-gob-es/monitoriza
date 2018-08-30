@@ -56,7 +56,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 /** 
  * <p>Class that performs the request of a OCSP service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 25 ene. 2018.
+ * @version 1.1, 29/08/2018.
  */
 public class OcspInvoker {
 
@@ -89,13 +89,13 @@ public class OcspInvoker {
 		} else {
 			base = secureMode + GeneralConstants.COLON + GeneralConstants.DOUBLE_PATH_SEPARATOR + ip;
 		}
-
+				
 		try {
 
 			
 			// Establecemos el timeout de la conexión y de la lectura
 			
-			URL endpoint = new URL(new URL(base), ocspPath, new URLStreamHandler() {
+			URL endpoint = new URL(new URL(service.getBaseUrl()), service.getOcspContext(), new URLStreamHandler() {
 
 				@Override
 				protected URLConnection openConnection(URL url) throws IOException {

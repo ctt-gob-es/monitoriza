@@ -38,9 +38,9 @@ import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriz
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that manages timer search criteria for monitoriz@ services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 12 jun. 2018.
+ * @version 1.1, 29/08/2018.
  */
 public class TimerSpecification implements Specification<ServiceMonitoriza>{
 		
@@ -70,7 +70,13 @@ public class TimerSpecification implements Specification<ServiceMonitoriza>{
         
         List<Predicate> predicates = new ArrayList<Predicate>();
              
-        predicates.add(builder.equal(root.get("timer").get("idTimer"), criteria.getIdTimer()));
+        if (criteria.getIdTimer() != null) {
+        	predicates.add(builder.equal(root.get("timer").get("idTimer"), criteria.getIdTimer()));
+        }
+        
+        if (criteria.getName() != null) {
+        	predicates.add(builder.equal(root.get("timer").get("name"), criteria.getName()));
+        }
                 
         return builder.and(predicates.toArray(new Predicate[predicates.size()]));
         

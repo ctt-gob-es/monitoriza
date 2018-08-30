@@ -26,7 +26,7 @@ package es.gob.monitoriza.constant;
 /** 
  * <p>Interface that contains general constants.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.3, 21/08/2018.
+ * @version 1.4, 29/08/2018.
  */
 public interface GeneralConstants {
 	
@@ -145,6 +145,11 @@ public interface GeneralConstants {
 	 * Constant that represents the name of the truststore keystore at the database. 
 	 */
 	public static final String SSL_TRUST_STORE_NAME = "TrustStoreSSL";
+	
+	/**
+	 * Constant that represents the name of the RFC3161 keystore at the database. 
+	 */
+	public static final String RFC3161_KEYSTORE_NAME = "AuthClientRFC3161";
 	
 	/**
 	 * Constant that represents the string 'smtp'.
