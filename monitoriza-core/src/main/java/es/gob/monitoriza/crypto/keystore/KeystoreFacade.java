@@ -45,7 +45,7 @@ import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.utils.CryptographyValidationUtils;
-import es.gob.monitoriza.i18n.LanguageWeb;
+import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 
 /**
@@ -164,13 +164,13 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 */
 	@Override
 	public final Keystore storeCertificate(final String alias, final Certificate certificate, final Key key) throws CryptographyException {
-		LOGGER.info(LanguageWeb.getResWebMonitoriza(LOG_SK001));
+		LOGGER.info(Language.getResWebMonitoriza(LOG_SK001));
 		try {
 			// Comprobamos que el certificado no sea nulo
-			CryptographyValidationUtils.checkIsNotNull(certificate, LanguageWeb.getResWebMonitoriza(LOG_SK003));
+			CryptographyValidationUtils.checkIsNotNull(certificate, Language.getResWebMonitoriza(LOG_SK003));
 
 			// Comprobamos que el alias no sea nulo
-			CryptographyValidationUtils.checkIsNotNull(alias, LanguageWeb.getResWebMonitoriza(LOG_SK004));
+			CryptographyValidationUtils.checkIsNotNull(alias, Language.getResWebMonitoriza(LOG_SK004));
 
 			// Tratamos de convertir el objeto Certificate a X509Certificate
 			CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
@@ -183,26 +183,26 @@ public class KeystoreFacade implements IKeystoreFacade {
 
 			} catch (CertificateExpiredException e) {
 				// Certificado caducado
-				LOGGER.warn(LanguageWeb.getResWebMonitoriza(LOG_SK005));
+				LOGGER.warn(Language.getResWebMonitoriza(LOG_SK005));
 			} catch (CertificateNotYetValidException e) {
 				// Certificado no válido aún
-				LOGGER.warn(LanguageWeb.getResWebMonitoriza(LOG_SK006));
+				LOGGER.warn(Language.getResWebMonitoriza(LOG_SK006));
 			}
 
 			// Actualizamos el almacén de claves físicamente. Si la clave es
 			// nula, sólo se insertará el certificado.
-			LOGGER.debug(LanguageWeb.getFormatResWebMonitoriza(LOG_SK007, new Object[ ] { alias, keystore.getName() }));
+			LOGGER.debug(Language.getFormatResWebMonitoriza(LOG_SK007, new Object[ ] { alias, keystore.getName() }));
 			addEntryToKeystore(alias, certificate, key);
 		} catch (CertificateException e) {
-			String errorMsg = LanguageWeb.getResWebMonitoriza(LOG_SK008);
+			String errorMsg = Language.getResWebMonitoriza(LOG_SK008);
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		} catch (KeyStoreException e) {
-			String errorMsg = LanguageWeb.getFormatResWebMonitoriza(LOG_SK009, new Object[ ] { alias, keystore.getName() });
+			String errorMsg = Language.getFormatResWebMonitoriza(LOG_SK009, new Object[ ] { alias, keystore.getName() });
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		} finally {
-			LOGGER.info(LanguageWeb.getResWebMonitoriza(LOG_SK002));
+			LOGGER.info(Language.getResWebMonitoriza(LOG_SK002));
 		}
 		// Devolvemos los datos en caché actualizados del almacén de claves
 		return keystore;
@@ -214,26 +214,26 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 */
 	@Override
 	public Keystore updateCertificate(final String oldEntryAlias, final String newEntryAlias) throws CryptographyException {
-		LOGGER.info(LanguageWeb.getResWebMonitoriza(LOG_SK001));
+		LOGGER.info(Language.getResWebMonitoriza(LOG_SK001));
 		try {
 
 			// Comprobamos que el alias no sea nulo
-			CryptographyValidationUtils.checkIsNotNull(newEntryAlias, LanguageWeb.getResWebMonitoriza(LOG_SK004));
+			CryptographyValidationUtils.checkIsNotNull(newEntryAlias, Language.getResWebMonitoriza(LOG_SK004));
 
 			// Actualizamos el almacén de claves físicamente. Si la clave es
 			// nula, sólo se insertará el certificado.
-			LOGGER.debug(LanguageWeb.getFormatResWebMonitoriza(LOG_SK007, new Object[ ] { newEntryAlias, keystore.getTokenName() }));
+			LOGGER.debug(Language.getFormatResWebMonitoriza(LOG_SK007, new Object[ ] { newEntryAlias, keystore.getTokenName() }));
 			updateEntryToKeystore(oldEntryAlias, newEntryAlias);
 		} catch (KeyStoreException e) {
-			String errorMsg = LanguageWeb.getFormatResWebMonitoriza(LOG_SK009, new Object[ ] { newEntryAlias, LanguageWeb.getResWebMonitoriza(keystore.getTokenName()) });
+			String errorMsg = Language.getFormatResWebMonitoriza(LOG_SK009, new Object[ ] { newEntryAlias, Language.getResWebMonitoriza(keystore.getTokenName()) });
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		} catch (UnrecoverableKeyException | NoSuchAlgorithmException e) {
-			String errorMsg = LanguageWeb.getFormatResWebMonitoriza(LOG_SK016, new Object[ ] { oldEntryAlias, newEntryAlias, LanguageWeb.getResWebMonitoriza(keystore.getTokenName()) });
+			String errorMsg = Language.getFormatResWebMonitoriza(LOG_SK016, new Object[ ] { oldEntryAlias, newEntryAlias, Language.getResWebMonitoriza(keystore.getTokenName()) });
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		} finally {
-			LOGGER.info(LanguageWeb.getResWebMonitoriza(LOG_SK002));
+			LOGGER.info(Language.getResWebMonitoriza(LOG_SK002));
 		}
 		// Devolvemos los datos en caché actualizados del almacén de claves
 		return keystore;
@@ -338,7 +338,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 
 			return cipher.doFinal(Base64.decodeBase64(password == null ? keystore.getPassword() : password));
 		} catch (Exception e) {
-			String errorMsg = LanguageWeb.getFormatResWebMonitoriza(LOG_SK014, new Object[ ] { keystore.getTokenName() });
+			String errorMsg = Language.getFormatResWebMonitoriza(LOG_SK014, new Object[ ] { keystore.getTokenName() });
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		}
@@ -382,11 +382,11 @@ public class KeystoreFacade implements IKeystoreFacade {
 			keystore.setKeystore(baos.toByteArray());
 		} catch (NoSuchAlgorithmException | CertificateException | IOException
 				| KeyStoreException e) {
-			String errorMsg = LanguageWeb.getFormatResWebMonitoriza(LOG_SK009, new Object[ ] { alias, LanguageWeb.getResWebMonitoriza(keystore.getTokenName()) });
+			String errorMsg = Language.getFormatResWebMonitoriza(LOG_SK009, new Object[ ] { alias, Language.getResWebMonitoriza(keystore.getTokenName()) });
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		} finally {
-			LOGGER.info(LanguageWeb.getResWebMonitoriza(LOG_SK002));
+			LOGGER.info(Language.getResWebMonitoriza(LOG_SK002));
 		}
 
 		return keystore;

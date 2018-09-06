@@ -109,6 +109,7 @@
 
 JAVA_HOME="C:\Java_64\jdk1.8.0_131"
 JAVA_OPTS="$JAVA_OPTS -Dmonitoriza.properties.path=$CATALINA_BASE/conf/staticMonitorizaConfig.properties"
+JAVA_OPTS="$JAVA_OPTS% -Dtomcat.config.path=$CATALINA_HOME/conf"
 JAVA_OPTS="$JAVA_OPTS -Dlog4j.configuration=file:$CATALINA_BASE/conf/monitoriza-log4j.xml"
 JAVA_OPTS="$JAVA_OPTS -Dfile.encoding=UTF-8"
 

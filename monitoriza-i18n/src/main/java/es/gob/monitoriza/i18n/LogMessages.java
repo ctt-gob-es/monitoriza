@@ -26,7 +26,7 @@ package es.gob.monitoriza.i18n;
 /** 
  * <p>Interface that contains the keys to the log monitoriza.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.3, 06/02/2018.
+ * @version 1.4, 30/08/2018.
  */
 public interface LogMessages {
 	
@@ -288,7 +288,7 @@ public interface LogMessages {
 	/**
 	 * i18n Token to show error when exception occurs while adding given key pair.
 	 */
-	public static final String ERROR_ADDING_KEY_PAIR = "errorAddingKeyPair";
+	String ERROR_ADDING_KEY_PAIR = "errorAddingKeyPair";
 	
 	/**
 	 * i18n Token to show error when exception occurs while reading given keystore.
@@ -299,5 +299,10 @@ public interface LogMessages {
 	 * i18n Token to show error when exception occurs while listing the aliases from a keystore.
 	 */
 	String ERROR_LISTING_ALIASES = "errorListingAliases";
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	String TIMER_UPDATED_CANCEL = "timerUpdatedCancel";
 }
 

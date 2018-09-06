@@ -70,7 +70,7 @@ import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
 import es.gob.monitoriza.form.CertificateForm;
 import es.gob.monitoriza.form.PickListElement;
 import es.gob.monitoriza.form.PickListForm;
-import es.gob.monitoriza.i18n.LanguageWeb;
+import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
@@ -194,7 +194,7 @@ public class KeystoreRestController {
 		// especiales.
 		if (alias != null && alias.length() != alias.trim().length()) {
 			
-			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_NOT_BLANK_ALIAS, new Object [] {alias}));
+			LOGGER.error(Language.getFormatResWebMonitoriza(LogMessages.ERROR_NOT_BLANK_ALIAS, new Object [] {alias}));
 			json.put(FIELD_ALIAS + "_span", "El campo alias no puede tener espacios blancos");
 			error = true;
 		}
@@ -206,7 +206,7 @@ public class KeystoreRestController {
 		}
 		
 		if (file == null || file.getSize() == 0) {
-			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_NOT_NULL_FILE_CERT, new Object [] {alias}));
+			LOGGER.error(Language.getFormatResWebMonitoriza(LogMessages.ERROR_NOT_NULL_FILE_CERT, new Object [] {alias}));
 			json.put(FIELD_FILE + "_span", "Es obligatorio seleccionar un archivo de certifiado");
 			error = true;
 		} else {
@@ -225,7 +225,7 @@ public class KeystoreRestController {
 		}
 		
 		if (res.length() > 0) {
-			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_SPECIAL_CHAR_ALIAS, new Object [] {alias}));
+			LOGGER.error(Language.getFormatResWebMonitoriza(LogMessages.ERROR_SPECIAL_CHAR_ALIAS, new Object [] {alias}));
 			json.put(FIELD_FILE + "_span", "El formato del campo alias es incorrecto");
 			error = true;
 		}
@@ -268,12 +268,12 @@ public class KeystoreRestController {
 				dtOutput.setData(listSystemCertificate);
 				
 				// Importación correcta
-				LOGGER.info(LanguageWeb.getFormatResWebMonitoriza(LogMessages.SYS_CERT_ADDED, new Object [] {alias}));
+				LOGGER.info(Language.getFormatResWebMonitoriza(LogMessages.SYS_CERT_ADDED, new Object [] {alias}));
 				
 			} catch (Exception e) {
 				listSystemCertificate = StreamSupport.stream(sysCertService.getAllSystemCertificate().spliterator(), false)
 						.collect(Collectors.toList());				
-				LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_ADDING_SYS_CERTS, new Object [] {alias}),e);
+				LOGGER.error(Language.getFormatResWebMonitoriza(LogMessages.ERROR_ADDING_SYS_CERTS, new Object [] {alias}),e);
 			
 			} 
 		} else {
@@ -318,7 +318,7 @@ public class KeystoreRestController {
 			
 		} catch (KeyStoreException | NoSuchAlgorithmException
 				| CertificateException e) {
-			LOGGER.equals(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_LISTING_ALIASES, new Object [] {file.getOriginalFilename()}));
+			LOGGER.equals(Language.getFormatResWebMonitoriza(LogMessages.ERROR_LISTING_ALIASES, new Object [] {file.getOriginalFilename()}));
 		} catch (IOException ioe) {
 			
 			if (ioe.getCause() instanceof UnrecoverableKeyException) {
@@ -366,7 +366,7 @@ public class KeystoreRestController {
 		// especiales.
 		if (sslForm.getAlias() != null && sslForm.getAlias().length() != sslForm.getAlias().trim().length()) {
 			
-			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_NOT_BLANK_ALIAS, new Object [] {sslForm.getAlias()}));
+			LOGGER.error(Language.getFormatResWebMonitoriza(LogMessages.ERROR_NOT_BLANK_ALIAS, new Object [] {sslForm.getAlias()}));
 			error = true;
 		}
 				
@@ -382,7 +382,7 @@ public class KeystoreRestController {
 		}
 		
 		if (res.length() > 0) {
-			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_SPECIAL_CHAR_ALIAS, new Object [] {sslForm.getAlias()}));
+			LOGGER.error(Language.getFormatResWebMonitoriza(LogMessages.ERROR_SPECIAL_CHAR_ALIAS, new Object [] {sslForm.getAlias()}));
 			error = true;
 		}
 						
@@ -415,12 +415,12 @@ public class KeystoreRestController {
 				dtOutput.setData(listSystemCertificate);
 				
 				// Importación correcta
-				LOGGER.info(LanguageWeb.getFormatResWebMonitoriza(LogMessages.SYS_CERT_ADDED, new Object [] {sslForm.getAlias()}));
+				LOGGER.info(Language.getFormatResWebMonitoriza(LogMessages.SYS_CERT_ADDED, new Object [] {sslForm.getAlias()}));
 				
 			} catch (Exception e) {
 				listSystemCertificate = StreamSupport.stream(sysCertService.getAllSystemCertificate().spliterator(), false)
 						.collect(Collectors.toList());		
-				LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_ADDING_SYS_CERTS, new Object [] {sslForm.getAlias()}),e);
+				LOGGER.error(Language.getFormatResWebMonitoriza(LogMessages.ERROR_ADDING_SYS_CERTS, new Object [] {sslForm.getAlias()}),e);
 			
 			} 
 		}
@@ -470,6 +470,7 @@ public class KeystoreRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deleteauth", method = RequestMethod.POST)
+	@Transactional
 	public String deleteAuth(@RequestParam("id") Long systemCertificateId, @RequestParam("index") String index) {
 		try {
 			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161));
@@ -549,14 +550,14 @@ public class KeystoreRestController {
 	        			listSystemCertificate.add(sysCert);
 	        			
 	        			// Importación correcta
-	        			LOGGER.info(LanguageWeb.getFormatResWebMonitoriza(LogMessages.KEY_PAIR_ADDED, new Object [] {alias}));
+	        			LOGGER.info(Language.getFormatResWebMonitoriza(LogMessages.KEY_PAIR_ADDED, new Object [] {alias}));
 					}
         			
 			}
 			
 		} catch (Exception e) {
 							
-			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_ADDING_KEY_PAIR, new Object [] {aliases}),e);
+			LOGGER.error(Language.getFormatResWebMonitoriza(LogMessages.ERROR_ADDING_KEY_PAIR, new Object [] {aliases}),e);
 			
 			listSystemCertificate = StreamSupport.stream(sysCertService.getAllSystemCertificate().spliterator(), false)
 					.collect(Collectors.toList());
@@ -604,7 +605,7 @@ public class KeystoreRestController {
 		// especiales.
 		if (authForm.getAlias() != null && authForm.getAlias().length() != authForm.getAlias().trim().length()) {
 			
-			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_NOT_BLANK_ALIAS, new Object [] {authForm.getAlias()}));
+			LOGGER.error(Language.getFormatResWebMonitoriza(LogMessages.ERROR_NOT_BLANK_ALIAS, new Object [] {authForm.getAlias()}));
 			error = true;
 		}
 				
@@ -620,7 +621,7 @@ public class KeystoreRestController {
 		}
 		
 		if (res.length() > 0) {
-			LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_SPECIAL_CHAR_ALIAS, new Object [] {authForm.getAlias()}));
+			LOGGER.error(Language.getFormatResWebMonitoriza(LogMessages.ERROR_SPECIAL_CHAR_ALIAS, new Object [] {authForm.getAlias()}));
 			error = true;
 		}
 						
@@ -653,12 +654,12 @@ public class KeystoreRestController {
 				dtOutput.setData(listSystemCertificate);
 				
 				// Importación correcta
-				LOGGER.info(LanguageWeb.getFormatResWebMonitoriza(LogMessages.SYS_CERT_ADDED, new Object [] {authForm.getAlias()}));
+				LOGGER.info(Language.getFormatResWebMonitoriza(LogMessages.SYS_CERT_ADDED, new Object [] {authForm.getAlias()}));
 				
 			} catch (Exception e) {
 				listSystemCertificate = StreamSupport.stream(sysCertService.getAllSystemCertificate().spliterator(), false)
 						.collect(Collectors.toList());		
-				LOGGER.error(LanguageWeb.getFormatResWebMonitoriza(LogMessages.ERROR_ADDING_SYS_CERTS, new Object [] {authForm.getAlias()}),e);
+				LOGGER.error(Language.getFormatResWebMonitoriza(LogMessages.ERROR_ADDING_SYS_CERTS, new Object [] {authForm.getAlias()}),e);
 			
 			} 
 		}
