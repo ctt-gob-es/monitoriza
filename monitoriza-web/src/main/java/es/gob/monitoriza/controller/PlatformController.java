@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.controller.PlatformController.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>10 abr. 2018.</p>
+ * <b>Date:</b><p>10/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 10 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -45,9 +45,9 @@ import es.gob.monitoriza.service.IPlatformService;
 import es.gob.monitoriza.service.ISystemCertificateService;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that manages the requests related to the Platform administration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 10 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 @Controller
 public class PlatformController {
@@ -167,7 +167,7 @@ public class PlatformController {
     	tsaForm.setRfc3161Port(tsa.getRfc3161Port());
     	tsaForm.setUseRfc3161Auth(tsa.getUseRfc3161Auth());
     	
-    	if (tsa.getUseRfc3161Auth()) {
+    	if (tsa.getUseRfc3161Auth() && tsa.getRfc3161Certificate() != null) {
     		tsaForm.setRfc3161Certificate(tsa.getRfc3161Certificate().getIdSystemCertificate());
     	}
 

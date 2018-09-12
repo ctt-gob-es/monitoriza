@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 8 may. 2018.
+ * @version 1.1, 12/09/2018.
  */
 package es.gob.monitoriza.form;
 
@@ -33,14 +33,14 @@ import es.gob.monitoriza.rest.exception.ThenCheckIt;
 
 /**
  * <p>
- * Class .
+ * Class that represents the backing form for adding/editing an alarm.
  * </p>
  * <b>Project:</b>
  * <p>
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 8 may. 2018.
+ * @version 1.1, 12/09/2018.
  */
 public class AlarmForm {
 
@@ -57,12 +57,24 @@ public class AlarmForm {
 	@NotNull(message="{form.valid.alarm.blockedTime.notempty}")
 	private Long blockedTime;
 
+	/**
+	 * Attribute that represents the concatenated mail addresses for degraded alarms. 
+	 */
 	private String degradedConcat;
 
+	/**
+	 * Attribute that represents the concatenated mail addresses for down alarms. 
+	 */
 	private String downConcat;
 
+	/**
+	 * Attribute that represents the concatenated mail addresses for degraded alarms. 
+	 */
 	private String emailsDegraded;
 
+	/**
+	 * Attribute that represents the concatenated mail addresses for down alarms. 
+	 */
 	private String emailsDown;
 
 	/**

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 package es.gob.monitoriza.service;
 
@@ -42,7 +42,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriz
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 public interface IMailMonitorizaService {
 
@@ -73,7 +73,7 @@ public interface IMailMonitorizaService {
 	void deleteMailMonitoriza(Long timerId);
 
 	/**
-	 * Method that gets all the timer from the persistence.
+	 * Method that gets all the timers from the persistence.
 	 * 
 	 * @return a {@link Iterable<TimerMonitoriza>} with the information of all
 	 *         services.
@@ -81,12 +81,17 @@ public interface IMailMonitorizaService {
 	Iterable<MailMonitoriza> getAllMailMonitoriza();
 
 	/**
-	 * 
-	 * @param input
-	 * @return
+	 * Method that gets all the mails from the persistence for populating a datatable
+	 * @param input DataTable input configuration object
+	 * @return DataTablesOutput object for drawing the datatable.
 	 */
 	DataTablesOutput<MailMonitoriza> findAll(DataTablesInput input);
 
-	Set<MailMonitoriza> splitMails(String degradedConcat);
+	/**
+	 * Method that gets a Set<MailMonitoriza> from a String of concatenated mail identifiers. 
+	 * @param mailsConcat String of concatenated mail identifiers
+	 * @return Set<MailMonitoriza>
+	 */
+	Set<MailMonitoriza> splitMails(String mailsConcat);
 
 }

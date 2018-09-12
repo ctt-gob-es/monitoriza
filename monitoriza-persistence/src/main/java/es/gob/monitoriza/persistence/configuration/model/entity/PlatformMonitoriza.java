@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza.java.</p>
  * <b>Description:</b><p>Class that maps the <i>PLATFORM_MONITORIZA</i> database table as a Plain Old Java Object.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>20 abr. 2018.</p>
+ * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -49,7 +49,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
 /** 
  * <p>Class that maps the <i>PLATFORM_MONITORIZA</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 @Entity
 @Table(name = "PLATFORM_MONITORIZA")
@@ -123,7 +123,7 @@ public class PlatformMonitoriza implements Serializable {
 	/**
 	 * Attribute that indicates if the connection with the RFC3161 uses client authentication. 
 	 */
-	public Boolean userRfc3161Auth;
+	private Boolean userRfc3161Auth;
 	
 	/**
 	 * Attribute that represents the certificate for the RFC3161 authentication. 

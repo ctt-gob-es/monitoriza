@@ -497,7 +497,7 @@ $(document).ready(function() {
 		    }
 		});
 	
-	// Control del bot�n para guardar un timer
+	// Control del botón para guardar un timer
 	$( "#timerBtn" ).click(function( event ) {
 	  event.preventDefault();
 	
@@ -568,13 +568,14 @@ $(document).ready(function() {
 				  
 			  },
 			  error:function(){
+				  $('#errorModalTimer').remove();
 				  hide();
 				  if (checkTypeTime($('#frequencyTime')) == $('#frequencyTime')[0].value){
 					$('#timerForm').append('<div id="errorModalTimer" class="alert alert-danger" role="alert"><strong>El formato de la frecuencia es incorrecto! (HH:mm:ss)</strong></div>');
 				  }
 				  
 				  if ($('#errorModalTimer').length == 0){
-				  	$('#timerForm').append('<div id="errorModalTimer" class="alert alert-danger" role="alert"><strong>Hay un Timer con el mismo nombre!</strong></div>');
+				  	$('#timerForm').append('<div id="errorModalTimer" class="alert alert-danger" role="alert"><strong>¡Hay un Timer con el mismo nombre!</strong></div>');
 				  }
 			  },
 			  dataType: "json",

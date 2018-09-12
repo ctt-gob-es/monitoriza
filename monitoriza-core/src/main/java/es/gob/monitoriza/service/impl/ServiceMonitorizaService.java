@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.service.impl.ServiceMonitorizaService.java.</p>
  * <b>Description:</b><p>Class that implements the communication with the operations of the persistence layer for ServiceMonitoriza.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>20 abr. 2018.</p>
+ * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -31,6 +31,8 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.ServiceMonitorizaRepository;
@@ -48,7 +50,7 @@ import es.gob.monitoriza.service.IServiceMonitorizaService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 @Service
 @Transactional
@@ -140,6 +142,26 @@ public class ServiceMonitorizaService implements IServiceMonitorizaService {
 		TimerSpecification byTimer = new TimerSpecification(timer);
 		
 		return repository.findAll(byTimer);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IServiceMonitorizaService#getAllByPlatform(es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza)
+	 */
+	@Override
+	public Iterable<ServiceMonitoriza> getAllByPlatform(PlatformMonitoriza platform) {
+		
+		return repository.findByPlatformIdPlatform(platform.getIdPlatform());
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IServiceMonitorizaService#getAllByAlarm(es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza)
+	 */
+	@Override
+	public Iterable<ServiceMonitoriza> getAllByAlarm(AlarmMonitoriza alarm) {
+		
+		return repository.findByAlarmIdAlarm(alarm.getIdAlarm());
 	}
 
 }

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
@@ -37,10 +37,28 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 public interface AlarmMonitorizaRepository extends JpaRepository<AlarmMonitoriza, Long> {
 
+	/**
+	 * Method that gets an AlarmMonitoriza by its identifier
+	 * @param id The identifier of the AlarmMonitoriza to get
+	 * @return AlarmMonitoriza
+	 */
 	AlarmMonitoriza findByIdAlarm(Long id);
 
+	/**
+	 * 
+	 * @param idMail
+	 * @return
+	 */
+	Iterable<AlarmMonitoriza> findByEmailsDegradedIdMail(Long idMail);
+	
+	/**
+	 * 
+	 * @param idMail
+	 * @return
+	 */
+	Iterable<AlarmMonitoriza> findByEmailsDownIdMail(Long idMail);
 }

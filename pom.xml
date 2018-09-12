@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
 	<!-- Información del proyecto. -->
 	<modelVersion>4.0.0</modelVersion>
@@ -18,8 +17,6 @@
 		<built.by>@Firma Team</built.by>
 		<monitoriza.version>${project.version}</monitoriza.version>
 		<monitoriza.project.name>Monitoriz@</monitoriza.project.name>
-		<!-- <java.1.8.home>/opt/jenkins/tools/java/jdk1.8.0_131</java.1.8.home> -->
-		<!-- <java.1.8.home>C:\Trabajo\Software\Java\jdk1.8.0_161</java.1.8.home> -->
 		<java.1.8.version>1.8.0_131</java.1.8.version>
 		<!-- Para la correcta ejecución maven, establecer la variable java.1.8.home hacia la ruta absoluta de donde se disponga la jdk -->
 		<java.home>${java.1.8.home}</java.home>
@@ -40,7 +37,7 @@
 		<module>monitoriza-persistence</module>
 		<module>monitoriza-web</module>
 		<module>monitoriza-core</module>
-	</modules>
+  </modules>
 
 	<dependencyManagement>
 		<dependencies>
@@ -82,6 +79,11 @@
 				<version>1.2.16</version>
 			</dependency>
 			<!-- Spring Boot 2 -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-web</artifactId>
@@ -264,7 +266,7 @@
 										</goals>
 									</pluginExecutionFilter>
 									<action>
-										<ignore />
+										<ignore/>
 									</action>
 								</pluginExecution>
 							</pluginExecutions>

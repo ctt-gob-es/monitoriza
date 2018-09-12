@@ -15,9 +15,9 @@
  * Old Java Object.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * <b>Date:</b><p>14/02/2012.</p>
+ * <b>Date:</b><p>14/02/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 14/02/2012.
+ * @version 1.0, 14/02/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -46,7 +46,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * <p>Class that represents the representation of the <i>SYSTEM_CERTIFICATE</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.0, 14/02/2012.
+ * @version 1.0, 14/02/2018.
  */
 @Entity
 @Table(name = "SYSTEM_CERTIFICATE")

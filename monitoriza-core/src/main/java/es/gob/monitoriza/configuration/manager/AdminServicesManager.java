@@ -32,9 +32,12 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.Timer;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -57,16 +60,19 @@ import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.service.IAlarmMonitorizaService;
 import es.gob.monitoriza.service.IKeystoreService;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
 import es.gob.monitoriza.service.ITimerMonitorizaService;
+import es.gob.monitoriza.service.ITimerScheduledService;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
- * <p>Class that manages the configuration of the @firma/ts@ services from database persistence.</p>
+ * <p>Class that manages the configuration of the @firma/ts@ services from database persistence
+ *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 30/08/2018.
+ * @version 1.2, 12/09/2018.
  */
 @Service("adminServicesManager")
 public class AdminServicesManager {
@@ -76,15 +82,43 @@ public class AdminServicesManager {
 	 */
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 	
+	/**
+	 * Attribute that represents the object that maps TimerMonitoriza by its identifier to the corresponding programmable timer. 
+	 */
+	public static Map<Long, Timer> scheduledTimers = new HashMap<Long, Timer>();
+	
+	/**
+	 * Attribute that represents the service object for accessing the service
+	 * repository.
+	 */
 	@Autowired
 	IServiceMonitorizaService serviceService;
 	
+	/**
+	 * Attribute that represents the service object for accessing the timer
+	 * repository.
+	 */
 	@Autowired
 	ITimerMonitorizaService timerService;
 	
+	/**
+	 * Attribute that represents the service object for accessing the scheduled timer
+	 * repository.
+	 */
+	@Autowired
+	ITimerScheduledService scheduledService;
+		
+	/**
+	 * Attribute that represents the service object for accessing the keystore
+	 * repository.
+	 */
 	@Autowired
 	IKeystoreService keystoreService;
 	
+	/**
+	 * Attribute that represents the service object for accessing the alarm
+	 * repository.
+	 */
 	@Autowired
 	IAlarmMonitorizaService alarmService;
 	
@@ -95,6 +129,23 @@ public class AdminServicesManager {
 	public List<TimerDTO> getAllTimers() {
 		
 		final List<TimerMonitoriza> timers = StreamSupport.stream(timerService.getAllTimerMonitoriza().spliterator(), false).collect(Collectors.toList());
+		final List<TimerDTO> timersDTO = new ArrayList<TimerDTO>();
+		
+		for (TimerMonitoriza timer : timers) {
+			
+			timersDTO.add(new TimerDTO(timer.getIdTimer(), timer.getName(), timer.getFrequency()));
+		}
+		
+		return timersDTO;
+	}
+	
+	/**
+	 * Method that gets timers by ids from database
+	 * @return List of TimerDTO
+	 */
+	public List<TimerDTO> getAllTimersById(List<Long> idTimers) {
+		
+		final List<TimerMonitoriza> timers = StreamSupport.stream(timerService.getAllTimerMonitorizaById(idTimers).spliterator(), false).collect(Collectors.toList());
 		final List<TimerDTO> timersDTO = new ArrayList<TimerDTO>();
 		
 		for (TimerMonitoriza timer : timers) {
@@ -118,7 +169,7 @@ public class AdminServicesManager {
 		final TimerMonitoriza timer = new TimerMonitoriza();
 		timer.setIdTimer(timerDTO.getIdTimer());
 		//timer.setName(timerDTO.getName());
-		List<ServiceMonitoriza> servicesByTimer = StreamSupport.stream(serviceService.getAllByTimer(timer).spliterator(), false)
+		final List<ServiceMonitoriza> servicesByTimer = StreamSupport.stream(serviceService.getAllByTimer(timer).spliterator(), false)
 				.collect(Collectors.toList());
 		ServiceDTO serviceDTO = null;
 		
@@ -152,6 +203,18 @@ public class AdminServicesManager {
 
 		return servicesTimer;
 	}
+	
+	/**
+	 * Method that gets a timer by its identifier
+	 * @param idTimer Timer database identifier
+	 * @return Data transfer object with timer data.
+	 */
+	public TimerDTO getTimerById(final Long idTimer) {
+		
+		final TimerMonitoriza timer = timerService.getTimerMonitorizaById(idTimer);
+		
+		return new TimerDTO(timer.getIdTimer(), timer.getName(), timer.getFrequency());
+	}
 
 	/**
 	 * Method that builds and returns the directory path for a service.
@@ -183,7 +246,7 @@ public class AdminServicesManager {
 	 */
 	private String getBaseUrl(final PlatformMonitoriza platform) {
 								
-		ConnectionDTO connection = new ConnectionDTO(platform.getIsSecure(), platform.getHost(), platform.getPort(), platform.getHttpsPort(), platform.getRfc3161Port(), platform.getServiceContext(), platform.getOcspContext(), platform.getRfc3161Context());		
+		final ConnectionDTO connection = new ConnectionDTO(platform.getIsSecure(), platform.getHost(), platform.getPort(), platform.getHttpsPort(), platform.getRfc3161Port(), platform.getServiceContext(), platform.getOcspContext(), platform.getRfc3161Context());		
 				
 		String port = connection.getSecureMode()? connection.getSecurePort():connection.getPort();
 		String protocol = connection.getSecureMode()? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP;
@@ -205,7 +268,7 @@ public class AdminServicesManager {
 	 */
 	public KeyStore loadSslTruststore() {
 		
-		Keystore ks = keystoreService.getKeystoreByName(GeneralConstants.SSL_TRUST_STORE_NAME);
+		final Keystore ks = keystoreService.getKeystoreByName(GeneralConstants.SSL_TRUST_STORE_NAME);
 		
 		IKeystoreFacade keyStoreFacade = new KeystoreFacade(ks);
 
@@ -234,9 +297,9 @@ public class AdminServicesManager {
 	 */
 	public KeyStore loadRfc3161Keystore() {
 		
-		Keystore ks = keystoreService.getKeystoreByName(GeneralConstants.RFC3161_KEYSTORE_NAME);
+		final Keystore ks = keystoreService.getKeystoreByName(GeneralConstants.RFC3161_KEYSTORE_NAME);
 		
-		IKeystoreFacade keyStoreFacade = new KeystoreFacade(ks);
+		final IKeystoreFacade keyStoreFacade = new KeystoreFacade(ks);
 
 		String msgError = null;
 		KeyStore cer = null;
@@ -261,9 +324,9 @@ public class AdminServicesManager {
 	 * @param mailSet
 	 * @return
 	 */
-	private List<String> getAddressesFromAlarm(Set<MailMonitoriza> mailSet) {
+	private List<String> getAddressesFromAlarm(final Set<MailMonitoriza> mailSet) {
 		
-		List<String> mailList = new ArrayList<String>();
+		final List<String> mailList = new ArrayList<String>();
 		
 		Iterator<MailMonitoriza> mailIterator = mailSet.iterator();
 		
@@ -274,4 +337,30 @@ public class AdminServicesManager {
 		
 		return mailList;
 	}
+		
+	/**
+	 * Saves a scheduled timer in database
+	 * @param timer The scheduled timer to save
+	 * @return TimerScheduled object saved in database
+	 */
+	public TimerScheduled saveTimerScheduled(final TimerScheduled scheduled) {
+		
+		return scheduledService.saveTimerScheduled(scheduled);
+	}
+	
+	/**
+	 * Deletes a scheduled timer in database
+	 * @param scheduledId The scheduled timer identifier
+	 */
+	public void deleteTimerScheduled(final Long scheduledId) {
+		scheduledService.deleteTimerScheduled(scheduledId);
+	}
+	
+	/**
+	 * Deletes all scheduled timers in database
+	 */
+	public void emptyTimersScheduled() {
+		scheduledService.emptyTimersScheduled();
+	}
+		
 }

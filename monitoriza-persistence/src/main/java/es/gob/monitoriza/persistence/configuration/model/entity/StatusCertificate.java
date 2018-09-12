@@ -38,7 +38,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 import es.gob.monitoriza.utilidades.NumberConstants;
 
 /**
- * <p>Class that represents the representation of the <i>SYSTEM_CERTIFICATE</i> database table as a Plain Old Java Object.</p>
+ * <p>Class that represents the representation of the <i>C_STATUS_CERTIFICATES</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
  * @version 1.0, 14/02/2012.

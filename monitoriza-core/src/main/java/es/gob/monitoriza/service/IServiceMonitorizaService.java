@@ -20,20 +20,22 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 package es.gob.monitoriza.service;
 
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 public interface IServiceMonitorizaService {
 	
@@ -71,10 +73,24 @@ public interface IServiceMonitorizaService {
 	Iterable<ServiceMonitoriza> getAllByTimer(TimerMonitoriza timer);	
 		
 	/**
-	 * 
-	 * @param input
-	 * @return
+	 * Method that gets all the services for the data table.
+	 * @param input DataTablesInput
+	 * @return DataTablesOutput<ServiceMonitoriza>
 	 */
 	DataTablesOutput<ServiceMonitoriza> findAll(DataTablesInput input);
+	
+	/**
+	 * Method that gets all the services from the persistence filtered by platform.
+	 * @param timer Criteria filter
+	 * @return a {@link Iterable<ServiceMonitoriza>} with the information of all services.
+	 */
+	Iterable<ServiceMonitoriza> getAllByPlatform(PlatformMonitoriza platform);	
+	
+	/**
+	 * Method that gets all the services from the persistence filtered by alarm.
+	 * @param timer Criteria filter
+	 * @return a {@link Iterable<ServiceMonitoriza>} with the information of all services.
+	 */
+	Iterable<ServiceMonitoriza> getAllByAlarm(AlarmMonitoriza platform);	
 
 }

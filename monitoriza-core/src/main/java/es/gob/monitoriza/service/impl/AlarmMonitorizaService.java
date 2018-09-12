@@ -20,9 +20,13 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 package es.gob.monitoriza.service.impl;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -30,6 +34,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.AlarmMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.AlarmMonitorizaDatatableRepository;
 import es.gob.monitoriza.service.IAlarmMonitorizaService;
@@ -44,7 +49,7 @@ import es.gob.monitoriza.service.IAlarmMonitorizaService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 @Service
 public class AlarmMonitorizaService implements IAlarmMonitorizaService {
@@ -118,4 +123,19 @@ public class AlarmMonitorizaService implements IAlarmMonitorizaService {
 		return dtRepository.findAll(input);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IAlarmMonitorizaService#getAllAlarmMonitorizaByMail(es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza)
+	 */
+	@Override
+	public Iterable<AlarmMonitoriza> getAllAlarmMonitorizaByMail(MailMonitoriza mail) {
+		
+		List<AlarmMonitoriza> degraded = StreamSupport.stream(repository.findByEmailsDegradedIdMail(mail.getIdMail()).spliterator(), false).collect(Collectors.toList());
+		List<AlarmMonitoriza> down = StreamSupport.stream(repository.findByEmailsDownIdMail(mail.getIdMail()).spliterator(), false).collect(Collectors.toList());
+		
+		degraded.addAll(down);
+				
+		return degraded.stream().distinct().collect(Collectors.toList());
+	}
+	
 }

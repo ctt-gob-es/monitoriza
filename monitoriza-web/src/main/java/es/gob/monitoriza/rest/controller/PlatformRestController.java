@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.rest.controller.PlatformAfirmaRestController.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>10 abr. 2018.</p>
+ * <b>Date:</b><p>10/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 10 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -54,10 +54,14 @@ import es.gob.monitoriza.form.AfirmaForm;
 import es.gob.monitoriza.form.TsaForm;
 import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
+import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IPlatformService;
+import es.gob.monitoriza.service.IServiceMonitorizaService;
 import es.gob.monitoriza.service.ISystemCertificateService;
+import es.gob.monitoriza.service.ITimerScheduledService;
 
 /**
  * <p>
@@ -69,7 +73,7 @@ import es.gob.monitoriza.service.ISystemCertificateService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 10 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 @RestController
 public class PlatformRestController {
@@ -85,6 +89,20 @@ public class PlatformRestController {
 	 */
 	@Autowired
 	private IPlatformService platformService;
+	
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IServiceMonitorizaService serviceService;
+	
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private ITimerScheduledService scheduledService;
 	
 	/**
 	 * Attribute that represents the service object for accessing the
@@ -164,6 +182,7 @@ public class PlatformRestController {
 		DataTablesOutput<PlatformMonitoriza> dtOutput = new DataTablesOutput<>();
 		PlatformMonitoriza platformAfirma = null;
 		List<PlatformMonitoriza> listNewAfirma = new ArrayList<PlatformMonitoriza>();
+		boolean afirmaHaCambiado = false;
 		
 		if (bindingResult.hasErrors()) {
 			listNewAfirma = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
@@ -177,6 +196,7 @@ public class PlatformRestController {
 			try {
 				if (afirmaForm.getIdPlatform() != null) {
 					platformAfirma = platformService.getPlatformById(afirmaForm.getIdPlatform());
+					afirmaHaCambiado = isAfirmaUpdatedForm(afirmaForm, platformAfirma);
 				} else {
 					platformAfirma = new PlatformMonitoriza();
 				}
@@ -193,8 +213,14 @@ public class PlatformRestController {
 				platformAfirma.setPlatformType(afirmaType);
 		
 				PlatformMonitoriza afirma = platformService.savePlatform(platformAfirma);
-				
 				listNewAfirma.add(afirma);
+				
+				// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
+				if (afirmaHaCambiado && platformAfirma.getIdPlatform() != null) {
+					
+					updateScheduledTimerFromPlatform(platformAfirma);
+				}
+				
 			}catch(Exception e) {
 				listNewAfirma = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
 						.collect(Collectors.toList());
@@ -224,10 +250,11 @@ public class PlatformRestController {
 			@Validated(OrderedValidation.class) @RequestBody TsaForm tsaForm, BindingResult bindingResult) {
 		DataTablesOutput<PlatformMonitoriza> dtOutput = new DataTablesOutput<>();
 		PlatformMonitoriza platformTsa = null;
-		List<PlatformMonitoriza> listNewAfirma = new ArrayList<PlatformMonitoriza>();
+		List<PlatformMonitoriza> listNewTsa = new ArrayList<PlatformMonitoriza>();
+		boolean tsaHaCambiado = false;
 		
 		if (bindingResult.hasErrors()) {
-			listNewAfirma = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
+			listNewTsa = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
 					.collect(Collectors.toList());
 			JSONObject json = new JSONObject();
 			for (FieldError o : bindingResult.getFieldErrors()) {
@@ -238,6 +265,7 @@ public class PlatformRestController {
 			try {
 				if (tsaForm.getIdPlatform() != null) {
 					platformTsa = platformService.getPlatformById(tsaForm.getIdPlatform());
+					tsaHaCambiado = isTsaUpdatedForm(tsaForm, platformTsa);
 				} else {
 					platformTsa = new PlatformMonitoriza();
 				}
@@ -255,6 +283,10 @@ public class PlatformRestController {
 				platformTsa.setRfc3161Port(tsaForm.getRfc3161Port());
 				platformTsa.setUseRfc3161Auth(tsaForm.getUseRfc3161Auth());
 				platformTsa.setRfc3161Certificate(sysCertService.getSystemCertificateById(tsaForm.getRfc3161Certificate()));
+				
+				if (tsaForm.getRfc3161Certificate() == null || tsaForm.getRfc3161Certificate().longValue() == -1) {
+					platformTsa.setUseRfc3161Auth(false);
+				}
 						
 				PlatformMonitoriza tsa = platformService.savePlatform(platformTsa);
 				
@@ -262,19 +294,85 @@ public class PlatformRestController {
 				if (!tsaForm.getUseRfc3161Auth()) {
 					platformTsa.setRfc3161Certificate(new SystemCertificate());
 				}
+												
+				listNewTsa.add(tsa);
 				
-				listNewAfirma.add(tsa);
+				// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
+				if (tsaHaCambiado && platformTsa.getIdPlatform() != null) {
+					
+					updateScheduledTimerFromPlatform(platformTsa);
+				}
+				
 			}catch(Exception e) {
-				listNewAfirma = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
+				listNewTsa = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
 						.collect(Collectors.toList());
 				throw e;
 			}
 		}
 		
-		dtOutput.setData(listNewAfirma);
+		dtOutput.setData(listNewTsa);
 
 		return dtOutput;
 
+	}
+	
+	/**
+	 * Method that sets the scheduled timers of the services which uses this platform as updated
+	 * @param platform
+	 */
+	private void updateScheduledTimerFromPlatform(PlatformMonitoriza platform) {
+		
+		List<ServiceMonitoriza> servicesUsingThisPlatform = StreamSupport.stream(serviceService.getAllByPlatform(platform).spliterator(), false).collect(Collectors.toList());
+		
+		TimerScheduled scheduled = null;
+		for (ServiceMonitoriza service : servicesUsingThisPlatform) {
+			
+			scheduled = scheduledService.getTimerScheduledByIdTimer(service.getTimer().getIdTimer());
+			scheduled.setUpdated(false);
+			scheduledService.saveTimerScheduled(scheduled);
+			
+		}
+		
+	}
+	
+	/**
+	 * Method thar checks if there are changes between the afirma form and the persisted platform
+	 * @param afirmaForm
+	 * @param service
+	 * @return
+	 */
+	private boolean isAfirmaUpdatedForm(AfirmaForm afirmaForm, PlatformMonitoriza platform) {
+		
+		return !(afirmaForm.getIsSecure().equals(platform.getIsSecure()) &&
+				 afirmaForm.getHost().equals(platform.getHost()) &&
+				 afirmaForm.getHttpsPort().equals(platform.getHttpsPort()) &&
+				 afirmaForm.getName().equals(platform.getName()) &&
+				 afirmaForm.getOcspContext().equals(platform.getOcspContext()) &&
+				 afirmaForm.getPort().equals(platform.getPort()) &&
+				 afirmaForm.getIsSecure().equals(platform.getIsSecure()) &&
+				 afirmaForm.getServiceContext().equals(platform.getServiceContext()));
+		
+	}
+	
+	/**
+	 * Method thar checks if there are changes between the TS@ form and the persisted platform
+	 * @param afirmaForm
+	 * @param service
+	 * @return
+	 */
+	private boolean isTsaUpdatedForm(TsaForm tsaForm, PlatformMonitoriza platform) {
+		
+		return !(tsaForm.getIsSecure().equals(platform.getIsSecure()) &&
+				tsaForm.getHost().equals(platform.getHost()) &&
+				tsaForm.getHttpsPort().equals(platform.getHttpsPort()) &&
+				tsaForm.getName().equals(platform.getName()) &&
+				tsaForm.getRfc3161Certificate().equals(platform.getRfc3161Certificate().getIdSystemCertificate())) &&
+				tsaForm.getRfc3161Context().equals(platform.getRfc3161Context()) &&
+				tsaForm.getRfc3161Port().equals(platform.getRfc3161Port()) &&
+				tsaForm.getPort().equals(platform.getPort()) &&
+				tsaForm.getIsSecure().equals(platform.getIsSecure()) &&
+				tsaForm.getServiceContext().equals(platform.getServiceContext());
+		
 	}
 
 }

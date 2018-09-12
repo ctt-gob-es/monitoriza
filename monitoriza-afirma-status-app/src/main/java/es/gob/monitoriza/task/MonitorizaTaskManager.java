@@ -1,3 +1,4 @@
+/* 
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,13 +15,12 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.MonitorizaServletTask.java.</p>
- * <b>Description:</b>
- * <p>Class that initializes the timers for processing the batch of requests for each service.</p>
- * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * <b>Date:</b><p>22/12/2017.</p>
+ * <b>File:</b><p>es.gob.monitoriza.configuration.manager.MonitorizaTaskManager.java.</p>
+ * <b>Description:</b><p> .</p>
+  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 12/09/2018.
+ * @version 1.0, 12/09/2018.
  */
 package es.gob.monitoriza.task;
 
@@ -30,14 +30,9 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-
 import org.apache.log4j.Logger;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.context.ApplicationContext;
-import org.springframework.web.context.WebApplicationContext;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.configuration.manager.AdminServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
@@ -45,93 +40,94 @@ import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TimerDTO;
-import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
+import es.gob.monitoriza.service.ITimerScheduledService;
 import es.gob.monitoriza.status.StatusHolder;
 import es.gob.monitoriza.status.thread.RequestLauncher;
 import es.gob.monitoriza.timers.TimersHolder;
 
 /** 
- * <p>Class that initializes the timers for processing the batch of requests for each service.</p>
- * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.2, 12/09/2018.
+ * <p>Class that update the configuration of the scheduled services.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.0, 12/09/2018.
  */
-@Configurable
-public class MonitorizaServletTask extends HttpServlet {
-
-	/**
-	 * Attribute that represents the serial number. 
-	 */
-	private static final long serialVersionUID = -4512378490682333055L;
-
+@Service("monitorizaTaskManager")
+class MonitorizaTaskManager {
+	
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 	
 	/**
-	 * {@inheritDoc}
-	 * @see javax.servlet.GenericServlet#init()
+	 * Attribute that represents . 
 	 */
-	public void init(final ServletConfig config) throws ServletException {
-		
-		super.init(config);
-		
-		ApplicationContext ac = (ApplicationContext) getServletConfig().getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-
-		//scheduleTimersFromStaticConfig();
-		
-		scheduleTimersFromWebAdmin(ac);
-	}
+	@Autowired
+	AdminServicesManager serviceManager;
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	@Autowired
+	ITimerScheduledService scheduledService;
 		
 	/**
-	 * Method that gets the configuration from the web admin database and schedules the service request batch.
+	 * Method that updates the executing timers.
+	 * @param listIdTimersUpdated List with the timers whose elements has changed.
 	 */
-	private void scheduleTimersFromWebAdmin(final ApplicationContext applicationContext) {
+	void updateTimersFromWebAdmin(final List<Long> listIdTimersUpdated) {
 		
-		// Se programan los timers dados de alta en la administración web
-		Timer timer = null;
-		AdminServicesManager adminServiceManager = (AdminServicesManager) applicationContext.getBean("adminServicesManager");
+		// Se obtienen los timers cuya configuración (incluyendo elementos relacionados) haya cambiando
+		List<TimerDTO> timers = serviceManager.getAllTimersById(listIdTimersUpdated);
 		
-		// Se vacía la tabla de timers programados
-		adminServiceManager.emptyTimersScheduled();
-
-		List<TimerDTO> timers = adminServiceManager.getAllTimers();
-		ExecuteTimer batchTimer = null;
-
-		// Se carga una sola vez el almacén de certificados para conexión
-		// segura.
-		KeyStore sslKeystore = adminServiceManager.loadSslTruststore();
-
-		// Se carga una sola vez el almacén de certificados para autenticación
-		// RFC3161.
-		KeyStore rfc3161Keystore = adminServiceManager.loadRfc3161Keystore();
-
-		for (TimerDTO timerDTO: timers) {
-
-			List<ServiceDTO> serviciosTimer = adminServiceManager.getServicesByTimer(timerDTO);
-			
-			// Sólo programo el timer si tiene algún servicio asociado
-			if (serviciosTimer != null && !serviciosTimer.isEmpty()) {
-				timer = new Timer();
-				batchTimer = new ExecuteTimer(timerDTO.getName(), serviciosTimer, sslKeystore, rfc3161Keystore);
-				timer.schedule(batchTimer, 0, timerDTO.getFrequency());
-				
-				// El timer programado se añade a la memoria para poder gestionarlo  
-				TimersHolder.getInstance().getCurrentTimersHolder().put(timerDTO.getIdTimer(), timer);
-								
-				// El timer programado se guarda en persistencia para poder consultar si ha sido modificado
-				TimerScheduled scheduled = new TimerScheduled();
-				TimerMonitoriza timerMonitoriza = new TimerMonitoriza();
-				timerMonitoriza.setIdTimer(timerDTO.getIdTimer());
-				scheduled.setTimer(timerMonitoriza);
-				scheduled.setUpdated(Boolean.TRUE);
-				adminServiceManager.saveTimerScheduled(scheduled);
-			}
+		if (timers != null && !timers.isEmpty()) {
+		
+    		ExecuteTimer batchTimer = null;	
+    		
+    		// Se carga una sola vez el almacén de certificados para conexión segura.
+    		KeyStore sslKeystore = serviceManager.loadSslTruststore();
+    		
+    		// Se carga una sola vez el almacén de certificados para conexión segura.
+    		KeyStore rfc3161Keystore = serviceManager.loadRfc3161Keystore();
+    						
+    		for (TimerDTO timerDTO : timers) {
+    			
+    			Timer timer = TimersHolder.getInstance().getCurrentTimersHolder().get(timerDTO.getIdTimer());
+    			
+    			// El timer existía y ha habido algún cambio en en la configuración que le afecta.
+    			if (timer != null) {
+    				
+    				// Se cancela el timer para volver a programarlo con los valores actualizados
+    				LOGGER.info(Language.getFormatResMonitoriza(LogMessages.TIMER_UPDATED_CANCEL, new Object[ ] { timerDTO.getName()}));
+    				timer.cancel();
+    			} 
+    			
+    			List<ServiceDTO> serviciosTimer = serviceManager.getServicesByTimer(timerDTO);
+    			    			
+    			// Actualiza/añade el timer sólo si tiene asociado algún servicio
+    			if (serviciosTimer != null && !serviciosTimer.isEmpty()) {
+    				timer = new Timer();
+    				batchTimer = new ExecuteTimer(timerDTO.getName(), serviciosTimer, sslKeystore, rfc3161Keystore);
+        			timer.schedule(batchTimer, 0, timerDTO.getFrequency());
+    				// Se actualiza el Map de timers con el nuevo timer en ejecución
+    				TimersHolder.getInstance().getCurrentTimersHolder().put(timerDTO.getIdTimer(), timer);
+    				
+    				final TimerScheduled scheduled = scheduledService.getTimerScheduledByIdTimer(timerDTO.getIdTimer());
+    				scheduled.setUpdated(true);
+    				
+    				scheduledService.saveTimerScheduled(scheduled);
+    				
+    			} else {
+    				// El timer ya no tiene ningún servicio asociado, luego se elimina de entre los programados.
+    				TimersHolder.getInstance().getCurrentTimersHolder().remove(timerDTO.getIdTimer());
+    				scheduledService.deleteTimerScheduled(timerDTO.getIdTimer());
+    				
+    			}
+    		}
 		}
 	}
-	
 
+	
 	/**
 	 * <p>Timer class that process the batch of requests for testing the services.</p>
 	 * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>

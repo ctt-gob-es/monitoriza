@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.specification.KeystoreSpecification.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>30 may. 2018.</p>
+ * <b>Date:</b><p>30/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 30 may. 2018.
+ * @version 1.0, 30/05/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.specification;
 
@@ -38,9 +38,9 @@ import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that manages keystore search criteria for system certificates.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 30 may. 2018.
+ * @version 1.0, 30/05/2018.
  */
 public class KeystoreSpecification implements Specification<SystemCertificate>{
 

@@ -1,4 +1,3 @@
-/* 
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,24 +13,7 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
- * <b>File:</b><p>es.gob.monitoriza.spring.config.WebMvcConfig.java.</p>
- * <b>Description:</b><p> .</p>
-  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>3 abr. 2018.</p>
- * @author Gobierno de España.
- * @version 1.0, 3 abr. 2018.
+/**
+ * Package that provides the interfaces with the constant attribute names to read from properties files.
  */
-package es.gob.monitoriza.spring.config;
-
-import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter;
-
-
-/** 
- * <p>Class .</p>
- * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 3 abr. 2018.
- */
-public class WebMvcConfig extends WebMvcConfigurerAdapter {
-
-}
+package es.gob.monitoriza.timers;

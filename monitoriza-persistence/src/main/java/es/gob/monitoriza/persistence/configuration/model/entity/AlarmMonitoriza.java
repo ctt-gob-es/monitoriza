@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>9 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 9 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -55,7 +55,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 9 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 @Entity
 @Table(name = "ALARM_MONITORIZA")
@@ -83,12 +83,12 @@ public class AlarmMonitoriza implements Serializable {
 	private Long blockedTime;
 
 	/**
-	 * Attribute that represents the emails degraded configured in this alarm.
+	 * Attribute that represents the emails for degraded alarms configured in this alarm.
 	 */
 	private Set<MailMonitoriza> emailsDegraded;
 
 	/**
-	 * Attribute that represents the emails fallen configured in this alarm.
+	 * Attribute that represents the emails for down alarms configured in this alarm.
 	 */
 	private Set<MailMonitoriza> emailsDown;
 

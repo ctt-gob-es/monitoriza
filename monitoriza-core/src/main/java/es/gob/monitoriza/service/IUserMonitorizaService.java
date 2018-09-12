@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>6 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 6 mar. 2018.
+ * @version 1.1, 12/09/2018.
  */
 package es.gob.monitoriza.service;
 
@@ -31,7 +31,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 6 mar. 2018.
+ * @version 1.1, 12/09/2018.
  */
 public interface IUserMonitorizaService {
 
@@ -69,9 +69,9 @@ public interface IUserMonitorizaService {
 	Iterable<UserMonitoriza> getAllUserMonitoriza();
 
 	/**
-	 *
-	 * @param input
-	 * @return
+	 * Method that gets all the users from the persistence for populating a datatable
+	 * @param input DataTable input configuration object
+	 * @return DataTablesOutput object for drawing the datatable.
 	 */
 	DataTablesOutput<UserMonitoriza> findAll(DataTablesInput input);
 }

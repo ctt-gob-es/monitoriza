@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.0, 22 dic. 2017.
+ * @version 1.1, 12/09/2018.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -50,7 +50,7 @@ import es.gob.monitoriza.constant.GeneralConstants;
 /** 
  * <p>Class contains static properties of Monitoriz@. This properties are immutable and they can be modified only restarting the server context.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.0, 22 dic. 2017.
+ * @version 1.1, 12/09/2018.
  */
 public class StaticMonitorizaProperties {
 
@@ -75,7 +75,7 @@ public class StaticMonitorizaProperties {
 	public static final String MONITORIZA_AFIRMA_DSSAFIRMAVERIFY_WSDL= "monitoriza.afirma.dssafirmaverify.wsdl";
 	
 	/**
-	 * Constructor method for the class StaticEVisorToPDFWSProperties.java.
+	 * Constructor method for the class StaticMonitorizaProperties.java.
 	 */
 	private StaticMonitorizaProperties() {
 	}
@@ -94,7 +94,7 @@ public class StaticMonitorizaProperties {
 						staticProperties.load(configStream);
 						
 					} catch (IOException e) {
-						LOGGER.error("Error al cargar el archivo de propiedades de openoffice con ruta: " + System.getProperty(STATIC_MONITORIZA_SYSTEM_PROPERTY));
+						LOGGER.error("Error al cargar el archivo de propiedades de monitoriza con ruta: " + System.getProperty(STATIC_MONITORIZA_SYSTEM_PROPERTY));
 					} 
 				}
 			}

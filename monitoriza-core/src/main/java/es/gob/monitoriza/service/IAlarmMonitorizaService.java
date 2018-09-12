@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 package es.gob.monitoriza.service;
 
@@ -41,7 +41,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriz
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 12/09/2018.
  */
 public interface IAlarmMonitorizaService {
 
@@ -49,7 +49,7 @@ public interface IAlarmMonitorizaService {
 	 * Method that obtains the configuration for mail by its identifier.
 	 * 
 	 * @param mailId
-	 * @return {@link MailMonitoriza}
+	 * @return {@link AlarmMonitoriza}
 	 */
 	AlarmMonitoriza getAlarmMonitorizaById(Long alarmId);
 
@@ -59,12 +59,12 @@ public interface IAlarmMonitorizaService {
 	 * @param user
 	 *            a {@link ServiceMonitoriza} with the information of the
 	 *            service.
-	 * @return {@link ServiceMonitoriza} The service.
+	 * @return {@link AlarmMonitoriza} The service.
 	 */
 	AlarmMonitoriza saveAlarmMonitoriza(AlarmMonitoriza alarm);
 
 	/**
-	 * Method that deletes a timer in the persistence.
+	 * Method that deletes a alarm in the persistence.
 	 * 
 	 * @param serviceId
 	 *            {@link Integer} that represents the user identifier to delete.
@@ -72,15 +72,23 @@ public interface IAlarmMonitorizaService {
 	void deleteAlarmMonitoriza(Long alarmId);
 
 	/**
-	 * Method that gets all the timer from the persistence.
+	 * Method that gets all the alarms from the persistence.
 	 * 
-	 * @return a {@link Iterable<TimerMonitoriza>} with the information of all
+	 * @return a {@link Iterable<AlarmMonitoriza>} with the information of all
 	 *         services.
 	 */
 	Iterable<AlarmMonitoriza> getAllAlarmMonitoriza();
-
+	
 	/**
+	 * Method that gets all the timer from the persistence.
 	 * 
+	 * @return a {@link Iterable<AlarmMonitoriza>} with the information of all
+	 *         services.
+	 */
+	Iterable<AlarmMonitoriza> getAllAlarmMonitorizaByMail(MailMonitoriza mail);
+	
+	/**
+	 * Method that finds all alarms in the persistence.
 	 * @param input
 	 * @return
 	 */

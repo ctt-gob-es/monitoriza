@@ -15,65 +15,67 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.service.IServiceMonitorizaService.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.service.IServiceScheduledService.java.</p>
  * <b>Description:</b><p>Interface that provides communication with the operations of the persistence layer.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>20 abr. 2018.</p>
+ * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.0, 12/09/2018.
  */
 package es.gob.monitoriza.service;
 
-import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
-import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-
-import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 12/09/2018.
+ * @version 1.0, 12/09/2018.
  */
-public interface ITimerMonitorizaService {
+public interface ITimerScheduledService {
 	
 	/**
 	 * Method that obtains the configuration for timer by its identifier.
 	 * @param userId The platform identifier.
-	 * @return {@link PlatformAfirma}
+	 * @return {@link TimerScheduled}
 	 */
-	TimerMonitoriza getTimerMonitorizaById(Long timerId);
+	TimerScheduled getTimerScheduledById(Long timerId);
+	
+	/**
+	 * Method that obtains the configuration for timer by its identifier.
+	 * @param userId The platform identifier.
+	 * @return {@link TimerScheduled}
+	 */
+	TimerScheduled getTimerScheduledByIdTimer(Long timerIdTimer);
 			
 	/**
 	 * Method that stores a timer in the persistence.
-	 * @param user a {@link ServiceMonitoriza} with the information of the service.
-	 * @return {@link ServiceMonitoriza} The service. 
+	 * @param user a {@link ServiceScheduled} with the information of the service.
+	 * @return {@link ServiceScheduled} The service. 
 	 */
-	TimerMonitoriza saveTimerMonitoriza(TimerMonitoriza timer);
+	TimerScheduled saveTimerScheduled(TimerScheduled timer);
 			
 	/**
 	 * Method that deletes a timer in the persistence.
 	 * @param serviceId {@link Integer} that represents the user identifier to delete.
 	 */
-	void deleteTimerMonitoriza(Long timerId);
+	void deleteTimerScheduled(Long timerId);
 	
 	/**
 	 * Method that gets all the timer from the persistence.
-	 * @return a {@link Iterable<TimerMonitoriza>} with the information of all services.
+	 * @return a {@link Iterable<TimerScheduled>} with the information of all services.
 	 */
-	Iterable<TimerMonitoriza> getAllTimerMonitoriza();
+	Iterable<TimerScheduled> getAllTimerScheduled();
 	
 	/**
 	 * Method that gets all the timer from the persistence.
-	 * @return a {@link Iterable<TimerMonitoriza>} with the information of all services.
+	 * @return a {@link Iterable<TimerScheduled>} with the information of all services.
 	 */
-	Iterable<TimerMonitoriza> getAllTimerMonitorizaById(Iterable<Long> idTimers);
-		
+	Iterable<TimerScheduled> getAllTimerScheduledById(Iterable<Long> idTimers);		
+	
 	/**
-	 * 
-	 * @param input
-	 * @return
+	 * Method that deletes all entities of TimerScheduled from persistence.
 	 */
-	DataTablesOutput<TimerMonitoriza> findAll(DataTablesInput input);
+	void emptyTimersScheduled();
+
 
 }
