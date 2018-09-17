@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 12/09/2018.
+ * @version 1.1, 17/09/2018.
  */
 package es.gob.monitoriza.task;
 
@@ -31,7 +31,6 @@ import java.util.stream.StreamSupport;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import es.gob.monitoriza.constant.GeneralConstants;
@@ -41,7 +40,7 @@ import es.gob.monitoriza.service.ITimerScheduledService;
 /** 
  * <p>Class that executes a scheduled task to check if there are changes on running scheduled timers.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 12/09/2018.
+ * @version 1.1, 17/09/2018.
  */
 @Component
 public class TimerScheduledCheckerTask {
@@ -50,12 +49,7 @@ public class TimerScheduledCheckerTask {
 	 * Attribute that represents the object that manages the log of the class.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
-	
-	/**
-	 * Attribute that represents . 
-	 */
-	private static final long CHECKRATE = 60000;
-	
+		
 	/**
 	 * Attribute that represents . 
 	 */
@@ -67,8 +61,7 @@ public class TimerScheduledCheckerTask {
 	 */
 	@Autowired
 	MonitorizaTaskManager taskManager;
-		
-	@Scheduled(fixedRate = CHECKRATE)
+
 	public void checkIfScheduledTimersHaveChanged() {
 		
 		LOGGER.info("Se comprueba si existen timers pendientes de actualizar");

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>07/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 17/09/2018.
  */
 package es.gob.monitoriza.spring;
 
@@ -29,15 +29,13 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.web.servlet.support.SpringBootServletInitializer;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.scheduling.annotation.EnableScheduling;
 
 /** 
  * <p>SpringBoot main initialization class.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 17/09/2018.
  */
 @SpringBootApplication
-@EnableScheduling
 @ComponentScan("es.gob.monitoriza")
 public class SpringBootWebApplication extends SpringBootServletInitializer {
 
