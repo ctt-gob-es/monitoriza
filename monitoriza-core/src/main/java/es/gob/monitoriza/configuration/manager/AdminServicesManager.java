@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 19 ene. 2018.
+ *  @version 1.3, 20/09/2018.
  */
 package es.gob.monitoriza.configuration.manager;
 
@@ -72,7 +72,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <p>Class that manages the configuration of the @firma/ts@ services from database persistence
  *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 12/09/2018.
+ *  @version 1.3, 20/09/2018.
  */
 @Service("adminServicesManager")
 public class AdminServicesManager {
@@ -191,6 +191,13 @@ public class AdminServicesManager {
 				// Alias del certificado para la autenticación del servicio RFC3161 que usaremos en Rfc3161Invoker.
 				serviceDTO.setRfc3161Cert(service.getPlatform().getRfc3161Certificate().getAlias());
 			}
+			
+			try {
+				serviceDTO.setRfc3161Password(getRfc3161KeystorePassword());
+			} catch (CryptographyException e) {
+				String errorMsg = Language.getFormatResCoreMonitoriza(KeystoreFacade.LOG_SK014, new Object[ ] { keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161).getTokenName() });
+				LOGGER.error(errorMsg, e);
+			}			
 			
 			serviceDTO.setBlockTimeAlarm(service.getAlarm().getBlockedTime());
 			service.getAlarm().getEmailsDegraded();
@@ -318,6 +325,7 @@ public class AdminServicesManager {
 
 		return cer;
 	}
+		
 	
 	/**
 	 * Method that retrieves the addresses from a MailMonitoriza object
@@ -361,6 +369,21 @@ public class AdminServicesManager {
 	 */
 	public void emptyTimersScheduled() {
 		scheduledService.emptyTimersScheduled();
+	}
+	
+	
+	/**
+	 * Method that retrieves the password for the RFC3161 Authentication Keystore
+	 * @return String that represetns the decodified password
+	 * @throws CryptographyException
+	 */
+	private String getRfc3161KeystorePassword() throws CryptographyException {
+		
+		IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161));
+		final String encodedPassword = keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161).getPassword();
+		
+		return keyStoreFacade.getKeystoreDecodedPasswordString(encodedPassword);		
+		
 	}
 		
 }

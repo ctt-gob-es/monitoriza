@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>29 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 29 ene. 2018.
+ * @version 1.2, 20/09/2018.
  */
 package es.gob.monitoriza.invoker.rfc3161;
 
@@ -50,21 +50,17 @@ import javax.net.ssl.TrustManagerFactory;
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
-import es.gob.monitoriza.persistence.configuration.staticconfig.ConnectionManager;
-import es.gob.monitoriza.persistence.configuration.staticconfig.StaticConnectionManager;
 import es.gob.monitoriza.utilidades.FileUtils;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 import es.gob.monitoriza.utilidades.UtilsResource;
 
 /** 
  * <p>Class that manages and performs the request of a service via RFC3161.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 29/08/2018.
+ * @version 1.2, 20/09/2018.
  */
 public class Rfc3161Invoker {
 	
@@ -133,10 +129,6 @@ public class Rfc3161Invoker {
 
 				// Accedemos al almacén con el certificado para la autenticación cliente
 				msgError = Language.getResMonitoriza(LogMessages.ERROR_KEYSTORE_ACCESS_AUTH_CLIENT_RFC3161);
-				
-//				KeyStore cerAuth = KeyStore.getInstance(StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_HTTPS_CERTIFICATE_TYPE));
-//				InputStream is = new FileInputStream(StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_AUTH_KEYSTORE_PATH));
-//				cerAuth.load(is, StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_HTTPS_CERTIFICATE_PASSWORD).toCharArray());
 												
 				// Comprobamos que el certificado existe en el almacén
 				if (!authRfc3161.containsAlias(service.getRfc3161Cert())) {
@@ -147,7 +139,7 @@ public class Rfc3161Invoker {
 					// certificado
 					msgError = Language.getFormatResMonitoriza(LogMessages.ERROR_PRIVATE_KEY_AUTH_CLIENT_RFC3161, new Object[ ] { service.getRfc3161Cert() });
 					if (authRfc3161.isKeyEntry(service.getRfc3161Cert())) {
-						pk = (PrivateKey) authRfc3161.getKey(service.getRfc3161Cert(), StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_HTTPS_CERTIFICATE_PASSWORD).toCharArray());
+						pk = (PrivateKey) authRfc3161.getKey(service.getRfc3161Cert(), service.getRfc3161Password().toCharArray());
 					}
 					// Obtenemos la cadena de certificación para el alias del
 					// certificado
@@ -227,28 +219,6 @@ public class Rfc3161Invoker {
 		
 		try {
 			return new URL(tsaURL.toString());
-		} catch (MalformedURLException e) {
-			throw new InvokerException(Language.getFormatResMonitoriza(LogMessages.ERROR_MALFORMED_URL_RFC3161, new Object[ ] { tsaURL }), e);
-		}
-	}
-
-	/**
-	 * Method that obtains the URL for connecting to TS@ RFC 3161 - HTTPS service from the configuration properties file.
-	 * @return the URL for connecting to TS@ RFC 3161 - HTTPS service.
-	 * @throws InvokerException If the method fails.
-	 */
-	private static URL getRFC3161TSAURL() throws InvokerException {
-		
-		ConnectionManager tsaConnection = new StaticConnectionManager();
-		
-		String host = tsaConnection.getTsaConnection().getHost();
-		String port = tsaConnection.getTsaConnection().getRfc3161Port();
-		String context = tsaConnection.getTsaConnection().getRfc3161Context();
-				
-		String tsaURL = "https://" + host + ":" + port + context;
-		
-		try {
-			return new URL(tsaURL);
 		} catch (MalformedURLException e) {
 			throw new InvokerException(Language.getFormatResMonitoriza(LogMessages.ERROR_MALFORMED_URL_RFC3161, new Object[ ] { tsaURL }), e);
 		}

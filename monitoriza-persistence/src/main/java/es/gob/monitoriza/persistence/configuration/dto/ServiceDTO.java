@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 30/08/2018.
+ * @version 1.2, 20/09/2018.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -32,9 +32,9 @@ import java.util.Objects;
  * @version 1.0, 22 ene. 2018.
  */
 /** 
- * <p>Class .</p>
+ * <p>Data transfer object class that encapsulates the information of the services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 29/08/2018.
+ * @version 1.2, 20/09/2018.
  */
 public class ServiceDTO {
 	
@@ -82,6 +82,11 @@ public class ServiceDTO {
 	 * Attribute that represents the certificate selected for RFC3161 service authentication in TS@ platform. 
 	 */
 	private String rfc3161Cert;
+	
+	/**
+	 * Attribute that represents the password for the RFC3161 keystore. 
+	 */
+	private String rfc3161Password;
 	
 	/**
 	 * Attribute that represents the threshold response time in milliseconds above which the service is considered degraded. 
@@ -271,7 +276,7 @@ public class ServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #ocspContext}.
-	 * @param wsdl the value for the attribute {@link #ocspContext} to set.
+	 * @param ocspContext the value for the attribute {@link #ocspContext} to set.
 	 */
 	public void setOcspContext(String ocspContext) {
 		this.ocspContext = ocspContext;
@@ -287,7 +292,7 @@ public class ServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #rfc3161Context}.
-	 * @param wsdl the value for the attribute {@link #rfc3161Context} to set.
+	 * @param rfc3161Context the value for the attribute {@link #rfc3161Context} to set.
 	 */
 	public void setRfc3161Context(String rfc3161Context) {
 		this.rfc3161Context = rfc3161Context;
@@ -303,7 +308,7 @@ public class ServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #useRfc3161Auth}.
-	 * @param wsdl the value for the attribute {@link #useRfc3161Auth} to set.
+	 * @param useRfc3161Auth the value for the attribute {@link #useRfc3161Auth} to set.
 	 */
 	public void setUseRfc3161Auth(Boolean useRfc3161Auth) {
 		this.useRfc3161Auth = useRfc3161Auth;
@@ -319,12 +324,27 @@ public class ServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #rfc3161Cert}.
-	 * @param wsdl the value for the attribute {@link #rfc3161Cert} to set.
+	 * @param rfc3161Cert the value for the attribute {@link #rfc3161Cert} to set.
 	 */
 	public void setRfc3161Cert(String rfc3161Cert) {
 		this.rfc3161Cert = rfc3161Cert;
 	}
+			
+	/**
+	 * Gets the value of the attribute {@link #rfc3161Password}.
+	 * @return the value of the attribute {@link #rfc3161Password}.
+	 */
+	public String getRfc3161Password() {
+		return rfc3161Password;
+	}
 
+	/**
+	 * Sets the value of the attribute {@link #rfc3161Password}.
+	 * @param rfc3161Password the value for the attribute {@link #rfc3161Password} to set.
+	 */
+	public void setRfc3161Password(String rfc3161Password) {
+		this.rfc3161Password = rfc3161Password;
+	}
 
 	/**
 	 * Gets the value of the attribute {@link #degradedThreshold}.

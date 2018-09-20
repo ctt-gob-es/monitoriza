@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>30 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 17/09/2018.
+ * @version 1.2, 20/09/2018.
  */
 package es.gob.monitoriza.constant;
 
@@ -28,7 +28,7 @@ package es.gob.monitoriza.constant;
 /** 
  * <p>Interface that contains the static constants for the static configuration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 17/09/2018.
+ * @version 1.2, 20/09/2018.
  */
 public interface StaticConstants {
 	
@@ -232,5 +232,20 @@ public interface StaticConstants {
 	 * Attribute that represents the name for property <code>fixedRate.in.milliseconds</code>.
 	 */
 	public static final String FIXED_RATE_MILLISSECONDS = "fixedRate.in.milliseconds";
+	
+	/**
+	 * Attribute that represents the Padding algorithm for the AES cipher.
+	 */
+	public static final String AES_PADDING_ALG = "aes.padding.alg";
+
+	/**
+	 * Attribute that represents the AES algorithm name.
+	 */
+	public static final String AES_ALGORITHM = "aes.algorithm";
+
+	/**
+	 * Attribute that represents the password for the system keystores.
+	 */
+	public static final String AES_PASSWORD = "aes.password";
 	
 }

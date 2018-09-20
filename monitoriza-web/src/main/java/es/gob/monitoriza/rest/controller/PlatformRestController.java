@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 20/09/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -73,7 +73,7 @@ import es.gob.monitoriza.service.ITimerScheduledService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 20/09/2018..
  */
 @RestController
 public class PlatformRestController {
@@ -289,18 +289,18 @@ public class PlatformRestController {
 				}
 						
 				PlatformMonitoriza tsa = platformService.savePlatform(platformTsa);
-				
-				// Se construye objeto vacío para evitar warning de datatables
-				if (!tsaForm.getUseRfc3161Auth()) {
-					platformTsa.setRfc3161Certificate(new SystemCertificate());
-				}
-												
+																
 				listNewTsa.add(tsa);
 				
 				// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
 				if (tsaHaCambiado && platformTsa.getIdPlatform() != null) {
 					
 					updateScheduledTimerFromPlatform(platformTsa);
+				}
+				
+				// Se construye objeto vacío para evitar warning de datatables
+				if (!tsaForm.getUseRfc3161Auth()) {
+					platformTsa.setRfc3161Certificate(new SystemCertificate());
 				}
 				
 			}catch(Exception e) {
@@ -362,16 +362,27 @@ public class PlatformRestController {
 	 */
 	private boolean isTsaUpdatedForm(TsaForm tsaForm, PlatformMonitoriza platform) {
 		
+		boolean changeAuthRFC3161 = false;
+		
+		if (platform.getRfc3161Certificate() == null ) {
+			
+			changeAuthRFC3161 = tsaForm.getRfc3161Certificate() != null;
+			
+		} else {
+			
+			changeAuthRFC3161 = !platform.getRfc3161Certificate().getIdSystemCertificate().equals(tsaForm.getRfc3161Certificate());
+		}
+		
 		return !(tsaForm.getIsSecure().equals(platform.getIsSecure()) &&
 				tsaForm.getHost().equals(platform.getHost()) &&
 				tsaForm.getHttpsPort().equals(platform.getHttpsPort()) &&
 				tsaForm.getName().equals(platform.getName()) &&
-				tsaForm.getRfc3161Certificate().equals(platform.getRfc3161Certificate().getIdSystemCertificate())) &&
+				!changeAuthRFC3161 &&
 				tsaForm.getRfc3161Context().equals(platform.getRfc3161Context()) &&
 				tsaForm.getRfc3161Port().equals(platform.getRfc3161Port()) &&
 				tsaForm.getPort().equals(platform.getPort()) &&
 				tsaForm.getIsSecure().equals(platform.getIsSecure()) &&
-				tsaForm.getServiceContext().equals(platform.getServiceContext());
+				tsaForm.getServiceContext().equals(platform.getServiceContext()));
 		
 	}
 

@@ -14,9 +14,9 @@
  * <b>Description:</b><p>Interface that defines the methods to manage operations with keystores.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * <b>Date:</b><p>06/06/2012.</p>
+ * <b>Date:</b><p>06/06/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 06/06/2012.
+ * @version 1.0, 06/06/2018.
  */
 package es.gob.monitoriza.crypto.keystore;
 
@@ -32,7 +32,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 /**
  * <p>Interface that defines the methods to manage operations with keystores.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 06/06/2012.
+ * @version 1.0, 06/06/2018.
  */
 public interface IKeystoreFacade {
 

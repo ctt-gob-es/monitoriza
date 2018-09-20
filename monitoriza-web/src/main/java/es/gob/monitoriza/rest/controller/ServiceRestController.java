@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018..
+ * @version 1.2, 20/09/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -76,7 +76,7 @@ import es.gob.monitoriza.service.ITimerScheduledService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 20/09/2018.
  */
 @RestController
 public class ServiceRestController {
@@ -159,16 +159,6 @@ public class ServiceRestController {
 
 		PlatformMonitoriza platform = platformService.getPlatformById(idPlatform);
 		List<String> serviceTypes = new ArrayList<String>();
-
-		//		List<CServiceType> serviceTypesList = null;
-//		
-//		if (platform != null && platform.getPlatformType().getIdPlatformType() != null) {
-//			serviceTypesList = serviceService.findByPlatformType(platform.getPlatformType().getIdPlatformType());
-//		}
-//		
-//		for (CServiceType serviceType : serviceTypesList) {
-//			serviceTypes.add(serviceType.getServiceTypeName());
-//		}
 
 		if (platform != null
 				&& platform.getPlatformType().getIdPlatformType().equals(IPlatformService.ID_PLATFORM_TYPE_AFIRMA)) {
@@ -255,9 +245,7 @@ public class ServiceRestController {
 				timerMonitoriza.setFrequency(timerForm.getFrequency());
 				timerMonitoriza.setName(timerForm.getName());
 				TimerMonitoriza timer = timerService.saveTimerMonitoriza(timerMonitoriza);
-				
-				List<Long> timersId = new ArrayList<Long>();
-				
+								
 				// Sólo se actualiza la tarea programada del timer, si éste exsistía ya.
 				// Un nuevo timer sin servicios no debe ser contemplado.
 				if (timerForm.getIdTimer() != null) {
@@ -284,10 +272,11 @@ public class ServiceRestController {
 	}
 
 	/**
-	 * 
-	 * @param serviceForm
-	 * @param bindingResult
-	 * @return
+	 * Method that maps the save service web request to the controller and saves
+	 * it in the persistence.
+	 * @param serviceForm Backing form object with the service data.
+	 * @param bindingResult Validation binding object.
+	 * @return {@link DataTablesOutput<ServiceMonitoriza>}
 	 */
 	@RequestMapping(path = "/saveservice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
