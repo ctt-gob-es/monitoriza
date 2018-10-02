@@ -20,12 +20,13 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>9 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 9 abr. 2018.
+ * @version 1.2, 02/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -33,6 +34,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -47,7 +49,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
 /** 
  * <p>Class that maps the <i>SERVICE_MONITORIZA</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 29/08/2018.
+ * @version 1.2, 02/10/2018.
  */
 @Entity
 @Table(name = "SERVICE_MONITORIZA")
@@ -110,6 +112,11 @@ public class ServiceMonitoriza implements Serializable {
 	 * Attribute that represents the type of service. 
 	 */
 	private String serviceType;
+	
+	/**
+	 * Attribute that represents the ZIP file containing the requests. 
+	 */
+	private RequestServiceFile requestFile;
 		
 	/**
 	 * Gets the value of the attribute {@link #idService}.
@@ -131,16 +138,18 @@ public class ServiceMonitoriza implements Serializable {
 	          )
 	@JsonView(DataTablesOutput.View.class)
 	public Long getIdService() {
+		// CHECKSTYLE:ON
 		return idService;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #idService}.
-	 * @param isBlockedParam The value for the attribute {@link #idService}.
+	 * @param idService The value for the attribute {@link #idService}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setIdService(Long idService) {
+		// CHECKSTYLE:ON
 		this.idService = idService;
 	}
 
@@ -153,16 +162,18 @@ public class ServiceMonitoriza implements Serializable {
 	@Column(name = "NAME", nullable = false, length = NumberConstants.NUM100, unique = true)
 	@JsonView(DataTablesOutput.View.class)
 	public String getName() {
+		// CHECKSTYLE:ON
 		return name;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #name}.
-	 * @param isBlockedParam The value for the attribute {@link #name}.
+	 * @param name The value for the attribute {@link #name}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setName(String name) {
+		// CHECKSTYLE:ON
 		this.name = name;
 	}
 
@@ -175,16 +186,18 @@ public class ServiceMonitoriza implements Serializable {
 	@Column(name = "SERVICE_TIMEOUT", nullable = false, length = NumberConstants.NUM100, unique = true)
 	@JsonView(DataTablesOutput.View.class)
 	public Long getTimeout() {
+		// CHECKSTYLE:ON
 		return timeout;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #timeout}.
-	 * @param isBlockedParam The value for the attribute {@link #timeout}.
+	 * @param timeout The value for the attribute {@link #timeout}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setTimeout(Long timeout) {
+		// CHECKSTYLE:ON
 		this.timeout = timeout;
 	}
 
@@ -197,16 +210,18 @@ public class ServiceMonitoriza implements Serializable {
 	@Column(name = "NAME_ENDPOINT_WSDL", nullable = false, length = NumberConstants.NUM100, unique = true)
 	@JsonView(DataTablesOutput.View.class)
 	public String getNameWsdl() {
+		// CHECKSTYLE:ON
 		return nameWsdl;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #idService}.
-	 * @param isBlockedParam The value for the attribute {@link #idService}.
+	 * @param nameWsdl The value for the attribute {@link #idService}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setNameWsdl(String nameWsdl) {
+		// CHECKSTYLE:ON
 		this.nameWsdl = nameWsdl;
 	}
 
@@ -219,16 +234,18 @@ public class ServiceMonitoriza implements Serializable {
 	@Column(name = "DEGRADED_THRESHOLD", nullable = false, length = NumberConstants.NUM100, unique = true)
 	@JsonView(DataTablesOutput.View.class)
 	public Long getDegradedThreshold() {
+		// CHECKSTYLE:ON
 		return degradedThreshold;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #degradedThreshold}.
-	 * @param isBlockedParam The value for the attribute {@link #degradedThreshold}.
+	 * @param degradedThreshold The value for the attribute {@link #degradedThreshold}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setDegradedThreshold(Long degradedThreshold) {
+		// CHECKSTYLE:ON
 		this.degradedThreshold = degradedThreshold;
 	}
 
@@ -241,16 +258,18 @@ public class ServiceMonitoriza implements Serializable {
 	@Column(name = "LOST_THRESHOLD", nullable = false, length = NumberConstants.NUM100, unique = true)
 	@JsonView(DataTablesOutput.View.class)
 	public Long getLostThreshold() {
+		// CHECKSTYLE:ON
 		return lostThreshold;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #lostThreshold}.
-	 * @param isBlockedParam The value for the attribute {@link #lostThreshold}.
+	 * @param lostThreshold The value for the attribute {@link #lostThreshold}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setLostThreshold(Long lostThreshold) {
+		// CHECKSTYLE:ON
 		this.lostThreshold = lostThreshold;
 	}
 
@@ -264,16 +283,18 @@ public class ServiceMonitoriza implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public TimerMonitoriza getTimer() {
+		// CHECKSTYLE:ON
 		return timer;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #timer}.
-	 * @param isBlockedParam The value for the attribute {@link #timer}.
+	 * @param timer The value for the attribute {@link #timer}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setTimer(TimerMonitoriza timer) {
+		// CHECKSTYLE:ON
 		this.timer = timer;
 	}
 
@@ -287,16 +308,18 @@ public class ServiceMonitoriza implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public AlarmMonitoriza getAlarm() {
+		// CHECKSTYLE:ON
 		return alarm;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #alarm}.
-	 * @param isBlockedParam The value for the attribute {@link #alarm}.
+	 * @param alarm The value for the attribute {@link #alarm}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setAlarm(AlarmMonitoriza alarm) {
+		// CHECKSTYLE:ON
 		this.alarm = alarm;
 	}
 
@@ -310,33 +333,67 @@ public class ServiceMonitoriza implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public PlatformMonitoriza getPlatform() {
+		// CHECKSTYLE:ON
 		return platform;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #platform}.
-	 * @param isBlockedParam The value for the attribute {@link #platform}.
+	 * @param platform The value for the attribute {@link #platform}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setPlatform(PlatformMonitoriza platform) {
+		// CHECKSTYLE:ON
 		this.platform = platform;
 	}
 
+	/**
+	 * Gets the value of the attribute {@link #serviceType}.
+	 * @return the value of the attribute {@link #serviceType}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+		// because Hibernate JPA needs not final access methods.
 	@Column(name = "SERVICE_TYPE", nullable = false, length = NumberConstants.NUM100, unique = false)
 	@JsonView(DataTablesOutput.View.class)
 	public String getServiceType() {
+		// CHECKSTYLE:ON
 		return serviceType;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #serviceType}.
-	 * @param isBlockedParam The value for the attribute {@link #serviceType}.
+	 * @param serviceType The value for the attribute {@link #serviceType}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setServiceType(String serviceType) {
+		// CHECKSTYLE:ON
 		this.serviceType = serviceType;
+	}
+	/**
+	 * Gets the value of the attribute {@link #requestFile}.
+	 * @return the value of the attribute {@link #requestFile}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @JoinColumn(name = "ID_REQUEST_FILE", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
+	public RequestServiceFile getRequestFile() {
+		// CHECKSTYLE:ON
+		return requestFile;
+	}
+	
+	/**
+	 * Sets the value of the attribute {@link #requestFile}.
+	 * @param requestFile The value for the attribute {@link #requestFile}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setRequestFile(RequestServiceFile requestFile) {
+		// CHECKSTYLE:ON
+		this.requestFile = requestFile;
 	}
 
 			

@@ -20,11 +20,12 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 ene. 2018.</p>
  * @author Gobierno de España.
- *  @version 1.3, 20/09/2018.
+ *  @version 1.4, 02/10/2018.
  */
 package es.gob.monitoriza.configuration.manager;
 
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -50,6 +51,7 @@ import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
+import es.gob.monitoriza.exception.RequestFileNotFoundException;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
@@ -58,21 +60,24 @@ import es.gob.monitoriza.persistence.configuration.dto.TimerDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.RequestServiceFile;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.service.IAlarmMonitorizaService;
 import es.gob.monitoriza.service.IKeystoreService;
+import es.gob.monitoriza.service.IRequestServiceFileService;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
 import es.gob.monitoriza.service.ITimerMonitorizaService;
 import es.gob.monitoriza.service.ITimerScheduledService;
+import es.gob.monitoriza.utilidades.FileUtils;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that manages the configuration of the @firma/ts@ services from database persistence
  *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- *  @version 1.3, 20/09/2018.
+ *  @version 1.4, 02/10/2018.
  */
 @Service("adminServicesManager")
 public class AdminServicesManager {
@@ -121,6 +126,13 @@ public class AdminServicesManager {
 	 */
 	@Autowired
 	IAlarmMonitorizaService alarmService;
+	
+	/**
+	 * Attribute that represents the service object for accessing the request file
+	 * repository.
+	 */
+	@Autowired
+	IRequestServiceFileService fileService;
 	
 	/**
 	 * Method that gets all timers from database
@@ -206,6 +218,30 @@ public class AdminServicesManager {
 			serviceDTO.setListMailDown(getAddressesFromAlarm(service.getAlarm().getEmailsDown()));
 			
 			servicesTimer.add(serviceDTO);
+						
+			// Se actualiza la carpeta de peticiones
+			RequestServiceFile file;
+			try {
+				file = fileService.getRequestFileById(service.getRequestFile().getIdRequestServiceFile());
+
+				StringBuffer targetFolder = new StringBuffer();
+				targetFolder.append(StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY)).append(GeneralConstants.DOUBLE_PATH_SEPARATOR).append(serviceDTO.getServiceId()).append(GeneralConstants.SEPARATOR).append(serviceDTO.getServiceName()).append(GeneralConstants.DOUBLE_PATH_SEPARATOR);
+				
+				// El primer paso es eliminar la existente para este servicio
+				File directoryToBeDeleted = new java.io.File(targetFolder.toString());
+				if (directoryToBeDeleted.exists()) {
+					FileUtils.deleteDirectory(directoryToBeDeleted);
+				}
+				// Se descomprime el ZIP extraído de base de datos en el destino configurado
+				FileUtils.unZipFileWithSubFolders(file.getFiledata(), file.getFilename(), targetFolder.toString());
+			} catch (RequestFileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 
 		return servicesTimer;

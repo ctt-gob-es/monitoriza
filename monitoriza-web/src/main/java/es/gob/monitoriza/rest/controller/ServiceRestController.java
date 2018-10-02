@@ -20,17 +20,21 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 20/09/2018.
+ * @version 1.3, 02/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
@@ -40,6 +44,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.MediaType;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -47,24 +52,33 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.exception.RequestFileNotFoundException;
 import es.gob.monitoriza.form.ServiceForm;
 import es.gob.monitoriza.form.TimerForm;
+import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.RequestServiceFile;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IAlarmMonitorizaService;
 import es.gob.monitoriza.service.IPlatformService;
+import es.gob.monitoriza.service.IRequestServiceFileService;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
 import es.gob.monitoriza.service.ITimerMonitorizaService;
 import es.gob.monitoriza.service.ITimerScheduledService;
+import es.gob.monitoriza.utilidades.FileUtils;
+import es.gob.monitoriza.utilidades.NumberConstants;
 
 /**
  * <p>
@@ -76,7 +90,7 @@ import es.gob.monitoriza.service.ITimerScheduledService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.2, 20/09/2018.
+ * @version 1.3, 02/10/2018.
  */
 @RestController
 public class ServiceRestController {
@@ -114,8 +128,19 @@ public class ServiceRestController {
 	@Autowired
 	private IPlatformService platformService;
 
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
 	@Autowired
 	private IAlarmMonitorizaService alarmService;
+	
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IRequestServiceFileService fileService;
 	
 	
 	/**
@@ -278,10 +303,10 @@ public class ServiceRestController {
 	 * @param bindingResult Validation binding object.
 	 * @return {@link DataTablesOutput<ServiceMonitoriza>}
 	 */
-	@RequestMapping(path = "/saveservice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@RequestMapping(path = "/saveservice", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@JsonView(DataTablesOutput.View.class)
 	public @ResponseBody DataTablesOutput<ServiceMonitoriza> saveService(
-			@Validated(OrderedValidation.class) @RequestBody ServiceForm serviceForm, BindingResult bindingResult) {
+			@Validated(OrderedValidation.class) @RequestPart("serviceForm") ServiceForm serviceForm, @RequestPart("file") MultipartFile file, BindingResult bindingResult) {
 		
 		DataTablesOutput<ServiceMonitoriza> dtOutput = new DataTablesOutput<>();
 		ServiceMonitoriza serviceMonitoriza = null;
@@ -289,6 +314,8 @@ public class ServiceRestController {
 		boolean elServicioHaCambiado = false;
 		boolean nuevoTimerSeleccionado = false;
 		TimerMonitoriza nuevoTimer = null;
+		RequestServiceFile requestFile = new RequestServiceFile();
+		serviceForm.setFile(file);
 		
 		// Se controla manualmente el error 'requerido' para el campo nameWsdl, ya que depende del tipo de servicio
 		if (serviceForm.getServiceType().equalsIgnoreCase(GeneralConstants.SOAP_SERVICE)) {
@@ -304,6 +331,20 @@ public class ServiceRestController {
 			}
 			
 		}
+		
+		// Al ser file un campo individual de la petición, se controla la validación por separado. 
+		// En modo edición, existe un identificador de fichero, pero se manda un fichero vacío por
+		// requisitos de la petición (no acepta null) / Error: "Required request part 'file' is not present".
+		if ((file == null || file.isEmpty()) && serviceForm.getIdFile() == null) {
+			
+			FieldError fileNullError = new FieldError(ServiceForm.FORM_OBJECT_VALUE, ServiceForm.FIELD_FILE, "El campo 'Archivo de peticiones' es obligatorio.");
+			bindingResult.addError(fileNullError);
+			
+		} else if (!file.isEmpty() && !checkAllowedFormat(file)) {
+			
+			FieldError fileTypeError = new FieldError(ServiceForm.FORM_OBJECT_VALUE, ServiceForm.FIELD_FILE, "El archivo de peticiones debe tener formato ZIP.");
+			bindingResult.addError(fileTypeError);
+		}				
 					
 		if (bindingResult.hasErrors()) {
 			listNewService = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false)
@@ -315,9 +356,14 @@ public class ServiceRestController {
 			dtOutput.setError(json.toString());
 		} else {
 			try {
+				
+				// Si es una edición, se recupera el servicio original de la persistencia
+				// para comprobar si existen cambios respecto a los datos del formulario.
 				if (serviceForm.getIdService() != null) {
 					serviceMonitoriza = serviceService.getServiceMonitorizaById(serviceForm.getIdService());
 					elServicioHaCambiado = isServiceUpdatedForm(serviceForm, serviceMonitoriza);
+					
+					// Si se ha seleccionado un nuevo timer, habrá que reprogamar el original y el nuevo.
 					nuevoTimerSeleccionado = !serviceForm.getTimer().equals(serviceMonitoriza.getTimer().getIdTimer());
 					
 					if (nuevoTimerSeleccionado) {
@@ -337,8 +383,19 @@ public class ServiceRestController {
 				serviceMonitoriza.setTimeout(serviceForm.getTimeout());
 				serviceMonitoriza.setTimer(timerService.getTimerMonitorizaById(serviceForm.getTimer()));
 				serviceMonitoriza.setServiceType(serviceForm.getServiceType());
-
+				
+				// Se añade/modifica el fichero de peticiones
+				if (file != null && !file.isEmpty()) {
+					
+					requestFile.setIdRequestServiceFile(serviceForm.getIdFile());
+					requestFile.setFilename(file.getOriginalFilename());
+					requestFile.setContentType(file.getContentType());
+					requestFile.setFiledata(file.getBytes());
+					serviceMonitoriza.setRequestFile(requestFile);
+				}
+							
 				ServiceMonitoriza service = serviceService.saveServiceMonitoriza(serviceMonitoriza);
+							
 				listNewService.add(service);	
 						
 				// Si el servicio ha cambiado o es nuevo, hay que gestionar la programación de timer asociado
@@ -374,9 +431,9 @@ public class ServiceRestController {
 				listNewService = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false)
 						.collect(Collectors.toList());
 				dtOutput.setError("-1");
-				throw e;
 			}
 		}
+		
 		dtOutput.setData(listNewService);
 
 		return dtOutput;
@@ -419,13 +476,16 @@ public class ServiceRestController {
 	}
 	
 	/**
-	 * Method thar checks if there are changes between the service form and the persisted service
-	 * @param serviceForm
-	 * @param service
-	 * @return
+	 * Method that checks if there are changes between the service form and the persisted service.
+	 * @param serviceForm Form object for the service.
+	 * @param service Entity object for the service.
+	 * @return true if there are changes between the service form and the persisted service.
+	 * @throws IOException 
 	 */
-	private boolean isServiceUpdatedForm(ServiceForm serviceForm, ServiceMonitoriza service) {
+	private boolean isServiceUpdatedForm(final ServiceForm serviceForm, final ServiceMonitoriza service) throws IOException {
 		
+		boolean filesAreEquals = serviceForm.getFile().isEmpty() || Arrays.equals(serviceForm.getFile().getBytes(), service.getRequestFile().getFiledata());
+						
 		return !(serviceForm.getAlarm().equals(service.getAlarm().getIdAlarm()) 
 				&& serviceForm.getDegradedThreshold().equals(service.getDegradedThreshold())
 				&& serviceForm.getLostThreshold().equals(service.getLostThreshold())
@@ -434,8 +494,64 @@ public class ServiceRestController {
 				&& serviceForm.getPlatform().equals(service.getPlatform().getIdPlatform())
 				&& serviceForm.getServiceType().equals(service.getServiceType())
 				&& serviceForm.getTimeout().equals(service.getTimeout())
-				&& serviceForm.getTimer().equals(service.getTimer().getIdTimer()));
+				&& serviceForm.getTimer().equals(service.getTimer().getIdTimer())
+				&& filesAreEquals);
 		
 	}
-
+	
+	/**
+	 * Method to discard non zip files. 
+	 * @param file Multipart file to check
+	 * @return true if the file matches supported extension and includes signature format number for zip files.
+	 * @throws IOException 
+	 */
+	private boolean checkAllowedFormat(final MultipartFile file) {
+		
+		final String extension = file.getOriginalFilename().split("\\.")[1];
+		boolean esZip = false;
+		byte[ ] fileBytes;
+		
+		try {
+			
+			fileBytes = file.getBytes();
+		
+			final String isoZipSignature = new String(fileBytes, StandardCharsets.ISO_8859_1).substring(NumberConstants.NUM0, NumberConstants.NUM2);
+						
+			// Se comprueba si es zip
+			if (FileUtils.ZIP_EXTENSION.equals(extension) && FileUtils.ZIP_ISO8859_1_SIGNATURE.equalsIgnoreCase(isoZipSignature) && FileUtils.isZipType(file.getContentType())) {
+				
+				esZip = true;
+			} 
+			
+		} catch (IOException e) {
+			
+			LOGGER.error(Language.getFormatResWebMonitoriza(LogMessages.ERROR_BYTES_ZIP_FILE, new Object[ ] { file.getOriginalFilename() }), e.getCause());
+		}
+						
+		return esZip;
+		
+	}
+		
+	
+	/**
+	 * Method that copy to the response the contents of the file requested
+	 * @param idFile Identifier of the file to download
+	 * @param response HttpServletResponse
+	 * @throws IOException
+	 * @throws RequestFileNotFoundException
+	 */
+	@RequestMapping(value = "/downloadFile", produces = "application/zip")
+	public void downloadFile(@RequestParam("idFile") Long idFile, HttpServletResponse response) throws IOException, RequestFileNotFoundException {
+				
+		final RequestServiceFile file = fileService.getRequestFileById(idFile);
+		
+		String fileName = "attachment; filename=" + file.getFilename();
+		
+		response.setHeader("Content-Disposition", fileName);
+		response.setContentType(file.getContentType());
+		response.setCharacterEncoding(StandardCharsets.ISO_8859_1.name());
+		FileCopyUtils.copy(file.getFiledata(), response.getOutputStream());
+		response.flushBuffer();
+	} 
+		
 }

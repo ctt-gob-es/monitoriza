@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>19 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 19 abr. 2018.
+ * @version 1.1, 02/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -49,14 +49,14 @@ import es.gob.monitoriza.service.ITimerMonitorizaService;
 
 /**
  * <p>
- * Class .
+ * Class that manages the requests related to the Services administration.
  * </p>
  * <b>Project:</b>
  * <p>
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 19 abr. 2018.
+ * @version 1.1, 02/10/2018.
  */
 @Controller
 public class ServiceController {
@@ -93,7 +93,7 @@ public class ServiceController {
 	 */
 	@Autowired
 	private IAlarmMonitorizaService alarmService;
-
+	
 	/**
 	 * Method that maps the list users web requests to the controller and
 	 * forwards the list of users to the view.
@@ -121,15 +121,15 @@ public class ServiceController {
 		alarms = StreamSupport.stream(alarmService.getAllAlarmMonitoriza().spliterator(), false)
 				.collect(Collectors.toList());
 
-		model.addAttribute("serviceform", serviceForm);
+		model.addAttribute("serviceForm", serviceForm);
 		model.addAttribute("timerform", timerForm);
 		model.addAttribute("platforms", platforms);
 		model.addAttribute("alarms", alarms);
 		model.addAttribute("serviceTypes", serviceTypes);
 		model.addAttribute("timers", timers);
 		model.addAttribute("services", services);
-
+	
 		return "fragments/serviceadmin.html";
 	}
-
+	
 }

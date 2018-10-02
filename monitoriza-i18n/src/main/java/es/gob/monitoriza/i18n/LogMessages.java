@@ -19,14 +19,14 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * <b>Date:</b><p> 09/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 06/02/2018.
+ * @version 1.5, 02/10/2018.
  */
 package es.gob.monitoriza.i18n;
 
 /** 
  * <p>Interface that contains the keys to the log monitoriza.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.4, 30/08/2018.
+ * @version 1.4, 02/10/2018.
  */
 public interface LogMessages {
 	
@@ -301,8 +301,13 @@ public interface LogMessages {
 	String ERROR_LISTING_ALIASES = "errorListingAliases";
 	
 	/**
-	 * Attribute that represents . 
+	 * i18n Token to show error when exception occurs while listing the aliases from a keystore.
 	 */
 	String TIMER_UPDATED_CANCEL = "timerUpdatedCancel";
+	
+	/**
+	 * i18n Token to show error when exception occurs while getting the bytes of the compressed request file.
+	 */
+	String ERROR_BYTES_ZIP_FILE = "errorBytesZipFile";
 }
 

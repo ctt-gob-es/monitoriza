@@ -4,7 +4,7 @@
 		<div class="bgc-white p-20 bd">
 			<h6 class="c-grey-900">Nuevo servicio</h6>
 			<div class="mT-30">
-				<form id="serviceForm" th:object="${serviceform}" th:action="@{/saveservice}" method="post">
+				<form id="serviceForm" name="serviceForm" role="form" th:object="${serviceForm}" th:action="@{/saveservice}" method="post" enctype="multipart/form-data">
 				
 					<input type='hidden' class='primarykey' id="idService" th:field="*{idService}">
 					
@@ -13,15 +13,12 @@
 							th:text="#{form.service.name}"></label> <span id="nameService_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> <input type="text"
 							class="form-control" id="nameService" th:field="*{name}" required>
 					</div>
-						<div class="form-group col-md-6"><label for="platform"
-							th:text="#{form.service.platform}"></label> <select id="platform"
-							class="form-control" th:field="*{platform}" required>
-								<option selected="selected" value="-1"
-									th:text="#{form.service.select.platform}"></option>
-								<option th:each="p: ${platforms}" th:value="${p.idPlatform}"
-									th:text="${p.name}">
-								</option>
-						</select></div>
+						<div class="form-group col-md-6"><label for="platform" th:text="#{form.service.platform}"></label>
+						 <select id="platform" class="form-control" th:field="*{platform}" required>
+								<option selected="selected" value="-1" th:text="#{form.service.select.platform}"></option>
+								<option th:each="p: ${platforms}" th:value="${p.idPlatform}" th:text="${p.name}"></option>
+						</select>
+						</div>
 					</div>
 					<div class="form-row">
 						<div class="col-md-4">
@@ -35,15 +32,12 @@
 						<div id="serviceTypesContainer" class="form-group col-md-3">
 							<select id="serviceTypes" class="form-control"
 							th:field="*{serviceType}" required>
-								<option selected="selected" value="-1"
-									th:text="#{form.service.select.servicetype}"></option>
-								<option th:each="ts: ${serviceTypes}" th:value="${ts}"
-									th:text="#{ts}">
-								</option>
+								<option selected="selected" value="-1" th:text="#{form.service.select.servicetype}"></option>
+								<option th:each="ts: ${serviceTypes}" th:value="${ts}" th:text="#{ts}"></option>
 							</select>
 						</div>
 						<div class="form-group col-md-6">
-							<input type="text" class="form-control" alt id="endpoint" readonly required>
+							<input type="text" class="form-control" alt id="endpoint" readonly>
 						</div>
 						<div class="form-group col-md-3">
 							<span id="nameWsdl_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
@@ -85,10 +79,27 @@
 								<option th:each="p: ${alarms}" th:value="${p.idAlarm}"
 									th:text="${p.name}">
 								</option>
-						</select></div>
+							</select>
+						</div>
 					</div>
+
+					<div class="form-row">
+						<div class="form-group">
+						<label for="file" th:text="#{form.service.file}"></label> 
+								<div class="custom-file" id="customFile" lang="es">
+									<input type="file" class="custom-file-input" id="file" th:field="*{file}" aria-describedby="fileHelp">
+									<label class="custom-file-label" for="file" th:text="#{form.ssl.file.choose}"></label>
+								</div>
+								<span id="file_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
+							<div style="clear: both;" />
+						</div>
+					</div>
+					
+					<input type='hidden' class='primarykey' id="idFile" th:field="*{idFile}">
+					<input type='hidden' class='primarykey' id="fileData" th:field="*{fileData}">
+
 					<button id="serviceBtn" type="submit" class="btn btn-primary">Guardar</button>
-					<button id="cleanBtn" class="btn btn-primary" onclick="cleanForm('#serviceForm');">Limpiar formulario</button>
+					<button id="cleanServiceBtn" class="btn btn-primary" onclick="cleanForm('#serviceForm');">Limpiar formulario</button>
 				</form>
 		</div>
 	</div>
@@ -115,7 +126,7 @@
 						</div>
 					</div>
 					<button id="timerBtn" type="submit" class="btn btn-primary">Guardar</button>
-					<button id="cleanBtn" class="btn btn-primary" onclick="cleanForm('#timerForm');">Limpiar formulario</button>
+					<button id="cleanTimerBtn" class="btn btn-primary" onclick="cleanForm('#timerForm');">Limpiar formulario</button>
 				</form>
 			</div>
 		</div>
@@ -155,6 +166,8 @@
 						<th th:text="#{table.service.serviceType}"></th>
 						<th></th>
 						<th th:text="#{table.service.alarm}"></th>
+						<th></th>
+						<th th:text="#{table.service.file}"></th>
 					</tr>
 				</thead>
 			</table>
@@ -236,30 +249,19 @@ $(document).ready(function() {
 	            }, function(data) {
 	               $('#endpoint').attr('value', data.response);
 	               
-	               if (data.response.includes('OCSP') || data.response.includes('RFC3161')) {
-						
-						$("#nameWsdl").removeAttr("required");
-						$("#nameWsdl").prop('readonly', true);
-			
-					} else {
-				
-						$("#nameWsdl").prop('required',true);
-						$("#nameWsdl").prop('readonly', false);
-					}
+	               checkIfDisabledEndpoint(data.response);
 	               
 	            });
 	        });
 
 	// Gestión de las datatables
 	
-	var actionSaveService = /*[[@{/saveservice}]]*/;
 	var actionDeleteService = /*[[@{/deleteservice}]]*/;
 	var getservices = /*[[@{/servicesdatatable}]]*/;
 	var tblService = $('#serviceTable').DataTable({
 		dom: 'Bfrtip',
 	    select: 'single',
 	    responsive: true,
-	    
 	    altEditor: true,
 	    buttons: [{extend: 'selected',text: 'Editar',name: 'editPageForm',
 	    	action: function ( e, dt, node, config ) {
@@ -273,6 +275,8 @@ $(document).ready(function() {
                     selected: !0
                 })
                 
+				hide();
+				
                 var idService = d.data()[0][a[0].id]
 				var nameService = d.data()[0][a[1].id]
 				var timeoutValue = d.data()[0][a[2].id]
@@ -282,9 +286,21 @@ $(document).ready(function() {
                 var degradedThresholdValue = d.data()[0][a[8].id]
                 var lostThresholdValue = d.data()[0][a[9].id]
                 var serviceTypes = d.data()[0][a[10].id]
+				var fileName = d.data()[0].requestFile.filename	
+				
+				checkIfDisabledEndpoint(serviceTypes);
+				
 				var idAlarm = d.data()[0].alarm.idAlarm
+				var idFile;
+				
+				if (d.data()[0].requestFile == null) {
+					idFile = null;
+				} else {
+					idFile = d.data()[0].requestFile.idRequestServiceFile;
+				}				
 								
                 $("#idService").val(idService);
+				$("#idFile").val(idFile);
                 $("#nameService").val(nameService);
                 $("#timeout").val(timeoutValue);
                 $("#nameWsdl").val(nameWsdl);
@@ -294,6 +310,11 @@ $(document).ready(function() {
                 $("#uDegraded").val(degradedThresholdValue);
                 $("#uLost").val(lostThresholdValue);
                 $("#alarm").val(idAlarm);
+				$("#idFile").val(idFile);
+				
+				
+				$(".custom-file-label").attr('data-content', fileName);
+				$(".custom-file-label").text(fileName);
                 
 			}
 	    }, {extend: 'selected',text: 'Eliminar',name: 'delete'}],
@@ -337,7 +358,21 @@ $(document).ready(function() {
 	        { "data": "serviceType" },
 	        { "data": "alarm.idAlarm",
 	          "visible": false},
-	        { "data": "alarm.name"}
+	        { "data": "alarm.name"},
+	        { "data": "requestFile.filename",
+				  "visible": false,
+				  "defaultContent": ""},
+	        { "data": "requestFile.idRequestServiceFile", 
+	        	"render": function (data, type, row) {	
+				
+	        		if (data != null && data != '' && data != 'undefined') {
+						var filename = row.requestFile.filename;
+	        			return '<a id="download" target="_blank" onclick="downloadFile(' + data + ',\'' + filename + '\');"><span class="icon-holder"><i class="c-green-500 ti-download pointer"></i></span></a>';
+	        		} else {
+						return 'Sin peticiones';
+					}
+	        	}
+	        }
 	        ]
 		}).on('crudaction', function(e, accion, idService, data, rowindex){
 		    // e          Evento Jquery
@@ -418,7 +453,7 @@ $(document).ready(function() {
 	    				$("#frequencyTime").val(freqTimer);
 	    				
 	    				}
-	    		  }, {extend: 'selected',text: 'Eliminar',name: 'delete'}],
+	    		  }, {extend: 'selected', text: 'Eliminar', name: 'delete'}],
 		
 		"iTotalRecords": "totalElements",
         "iTotalDisplayRecords": "numberOfElements",
@@ -585,12 +620,26 @@ $(document).ready(function() {
 	  
 	});
 	
-	// Control del bot�n para guardar un timer
-	$( "#serviceBtn" ).click(function( event ) {
+	// Control del botón para guardar un servicio
+	$( "#serviceForm" ).submit(function( event ) {
 	  event.preventDefault();
 	 	  
-	  var formData = JSON.stringify($("#serviceForm").serializeJSON());
-	  var url = /*[[@{/saveservice}]]*/;
+	  //var formData = JSON.stringify($("#serviceForm").serializeJSON());
+	  
+	  var formData = new FormData();
+	  var file =  $('#file').prop('files')[0];
+	  var blob = new Blob([JSON.stringify($("#serviceForm").serializeJSON())], {type: "application/json"});
+	  
+	  hide();
+	  
+	  if (file == undefined && ) {
+			file = new File([""], "nofile", {type: "text/plain", lastModified: new Date()});
+	  }
+
+	  formData.append("file", file);
+	  formData.append('serviceForm', blob);
+	
+	  var saveserviceaction = /*[[@{/saveservice}]]*/;
 	  
 	  loading();
 	  
@@ -601,9 +650,17 @@ $(document).ready(function() {
       	    
           	if(!$(this)[0].checkValidity()){
       	  	 	$("#" + $(this).attr('id')).addClass("has-error");
+				
       	    } else {
       	  	 	$("#" + $(this).attr('id')).removeClass("has-error");
       	    }
+			
+          	// Se trata el error de fichero a parte, ya que el estilo
+          	// debe ir en la etiqueta y no en el propio elemento
+			if (!$('#file')[0].checkValidity()) {
+					$("#file").removeClass("has-error");
+					$(".custom-file-label").addClass("has-error");
+				}
       	    
       	  });
 		  
@@ -638,8 +695,10 @@ $(document).ready(function() {
 	  } else{
 		  $.ajax({
 			  type: "POST",
-			  url: url,
+			  url: saveserviceaction,
 			  data: formData,
+			  processData: false,
+			  contentType: false,
 			  success: function(data){
 				  var errores = JSON.parse(data.error);
 				  
@@ -661,6 +720,7 @@ $(document).ready(function() {
 				  
 				  hide();
 				  tblService.row.add($(data.data)).draw(false);
+				  tblService.rows().invalidate($(data.data)).draw(false);
 				  
 				  $('#serviceForm *').filter(':input').each(function(){
 					 $("#" + $(this).attr('id')).removeClass("has-error");
@@ -670,6 +730,7 @@ $(document).ready(function() {
 				  $('#serviceTypes').removeClass("has-error");
 				  $('#timer').removeClass("has-error");
 				  $('#alarm').removeClass("has-error");
+				  $('#file').removeClass("has-error");
 				  
 				  if ($('#errorModalService').length > 0){
 					 $('#errorModalService').remove();
@@ -687,9 +748,7 @@ $(document).ready(function() {
 					  	$('#serviceForm').append('<div id="errorModalService" class="alert alert-danger" role="alert"><strong>Error inesperado, int\u00E9ntelo mas tarde!</strong></div>');
 					  }
 				  }
-			  },
-			  dataType: "json",
-			  contentType : "application/json"
+			  }
 			});
 	  }
 	});
@@ -700,6 +759,8 @@ function cleanForm(f){
 	
 	$(f + ' *').filter(':input').each(function(){
 		$(this).val('');
+		$(this).next(".custom-file-label").attr('data-content', '');
+		$(this).next(".custom-file-label").text('');
 	});
 	
 	$(f + ' *').filter('span').each(function(){
@@ -760,6 +821,67 @@ function millisecondToTime(s){
 	var hrs = (s - mins) / 60;
 
  	return pad(hrs) + ':' + pad(mins) + ':' + pad(secs);
+}
+
+function checkIfDisabledEndpoint(serviceTypes) {
+	
+	if (serviceTypes.includes('OCSP') || serviceTypes.includes('RFC3161')) {
+		
+		$("#nameWsdl").removeAttr("required");
+		$("#nameWsdl").prop('readonly', true);
+
+	} else {
+
+		$("#nameWsdl").prop('required',true);
+		$("#nameWsdl").prop('readonly', false);
+	}
+}
+
+$("input[type=file]").change(function () {
+
+	  var fieldVal = $(this).val();
+
+	  // Change the node's value by removing the fake path (Chrome)
+	  fieldVal = fieldVal.replace("C:\\fakepath\\", "");
+
+	  if (fieldVal != undefined || fieldVal != "") {
+		    $(this).next(".custom-file-label").attr('data-content', fieldVal);
+		    $(this).next(".custom-file-label").text(fieldVal);
+		  }
+
+	});
+	
+	
+function str2bytes (str) {
+	   var bytes = new Uint8Array(str.length);
+	   for (var i=0; i<str.length; i++) {
+	      bytes[i] = str.charCodeAt(i);
+	    }
+	    return bytes;
+	}
+
+function downloadFile(idFile, fileName) {
+	loading();
+	
+	var downloadFile =/*[[@{/downloadFile}]]*/;
+	
+	$.ajax({
+		type: "POST",
+		data:$.param({'idFile':idFile}),
+		url: downloadFile,
+		success: function(data) {
+			hide();
+			var blob = new Blob([str2bytes(data)], {type: "application/zip"});
+						
+			var link=document.createElement('a');
+			link.href=window.URL.createObjectURL(blob);
+			link.download=fileName;
+			link.target="_blank";
+			link.click();
+
+  }
+})
+	
 }
 
 </script>
