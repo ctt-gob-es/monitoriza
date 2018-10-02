@@ -24,12 +24,23 @@
  */
 package es.gob.monitoriza.spring.config;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepositoryFactoryBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import org.springframework.scheduling.annotation.EnableScheduling;
+
+import es.gob.monitoriza.cron.SchedulerObjectInterface;
+import es.gob.monitoriza.cron.ValidCertificatesJob;
+import es.gob.monitoriza.service.IValidServiceService;
 
 /** 
  * <p>Spring configuration class that sets the configuration of Spring components, entities and repositories.</p>
@@ -37,10 +48,71 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
  * @version 1.0, 7 mar. 2018.
  */
 @Configuration
+@EnableScheduling
 @EnableAutoConfiguration
 @ComponentScan("es.gob.monitoriza")
 @EntityScan("es.gob.monitoriza.persistence.configuration.model.entity")
 @EnableJpaRepositories(repositoryFactoryBeanClass = DataTablesRepositoryFactoryBean.class, basePackages = "es.gob.monitoriza.persistence.configuration.model.repository")
 public class ApplicationConfig {
+	
+	/**
+	 * Attribute that represents the service object for accessing the repository. 
+	 */
+	@Autowired
+	private ValidCertificatesJob validCertificatesJob;
+	
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * valid service repository.
+	 */
+	@Autowired
+	private IValidServiceService validServiceService;
+	
+	private static Map<String, SchedulerObjectInterface> schduledJobsMap = new HashMap<>();
+    
+    @PostConstruct
+    public void initScheduler() {
+        schduledJobsMap.put(ValidCertificatesJob.class.getName(), validCertificatesJob);
+        startAll();
+    }
 
+    private void startAll() {
+        for (SchedulerObjectInterface schedulerObjectInterface : schduledJobsMap.values()) {
+            schedulerObjectInterface.start();
+        }
+    }
+	
+	/**
+	 * Get validCertificatesJob.
+	 * @return validCertificatesJob
+	 */
+	public ValidCertificatesJob getValidCertificatesJob() {
+		return validCertificatesJob;
+	}
+
+	
+	/**
+	 * Set validCertificatesJob.
+	 * @param validCertificatesJob set validCertificatesJob
+	 */
+	public void setValidCertificatesJob(ValidCertificatesJob validCertificatesJob) {
+		this.validCertificatesJob = validCertificatesJob;
+	}
+	
+	/**
+	 * Get validServiceService.
+	 * @return validServiceService
+	 */
+	public IValidServiceService getValidServiceService() {
+		return validServiceService;
+	}
+
+	/**
+	 * Set validServiceService.
+	 * @param validServiceService set validServiceService
+	 */
+	public void setValidServiceService(IValidServiceService validServiceService) {
+		this.validServiceService = validServiceService;
+	}
+	
 }

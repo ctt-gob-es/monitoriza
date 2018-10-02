@@ -25,6 +25,7 @@
 <script th:inline="javascript">
 $(document).ready(function() {
 	var actionSave = /*[[@{/savecertuser}]]*/;
+	var actionDownload = /*[[@{/downloadCertificate}]]*/;
 	var actionDelete = /*[[@{/deletecertuser}]]*/;
 	var getcertsuser = /*[[@{/certuserdatatable}]]*/;
 	var addTemplate = /*[[@{/addcertuser}]]*/;
@@ -38,6 +39,23 @@ $(document).ready(function() {
 	    
 	    altEditor: true,
 	    buttons: [{text: 'Agregar', name: 'add'}, {extend: 'selected',text: 'Eliminar',name: 'delete'}, 
+	    	{extend: 'selected',text: 'Descargar certificado',name: 'downloadCertificate',
+			  action: function ( e, dt, node, config ) {
+				  
+				  for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({
+					id: o.context[0].aoColumns[e].mData              
+				  });
+				  
+				  var d = dt.rows({
+                selected: !0
+				  });
+					
+				  var idSystemCertificate = d.data()[0][a[0].id];
+				  var alias = d.data()[0][a[1].id];
+				  
+				  window.location.href = actionDownload + "/" + idSystemCertificate;
+				}
+			}, 
 	    	{text: 'Volver',name: 'return',
 			  action: function (  ) {
         		  loadIntoAjax('formMenu', actionReturn, 'optionReplacement', 'GET', null, true); return false;
@@ -150,7 +168,7 @@ $(document).ready(function() {
 			                	if (messageException.includes("SYSTEM_CERT_UNIQUE")) {
 			                		messageError = "El certificado ya se encuentra asociado al usuario!";
 			                	} else if (messageException.includes("signed fields invalid")) {
-			                		messageError = "Debe seleccionar un archivo de certificado válido!";
+			                		messageError = "Debe seleccionar un archivo de certificado v\u00e1lido!";
 			                	} else if (messageException.includes("Error al validar el certificado")) {
 			                		messageError = messageException;
 			                	} else {

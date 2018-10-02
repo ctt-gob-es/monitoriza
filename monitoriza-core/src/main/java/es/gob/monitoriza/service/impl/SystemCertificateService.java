@@ -148,6 +148,21 @@ public class SystemCertificateService implements ISystemCertificateService {
 		return dtRepository.findAll(input, byKeystoreAuth);
 
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.ISystemCertificateService#findAllAuth(org.springframework.data.jpa.datatables.mapping.DataTablesInput, es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate)
+	 */
+	@Override
+	public DataTablesOutput<SystemCertificate> findAllValidService(final DataTablesInput input) {
+
+		Keystore keystoreAuth = new Keystore();
+		keystoreAuth.setIdKeystore(Keystore.ID_VALID_SERVICE_STORE);
+		KeystoreSpecification byKeystoreAuth = new KeystoreSpecification(keystoreAuth);
+
+		return dtRepository.findAll(input, byKeystoreAuth);
+
+	}
 
 	/**
 	 * {@inheritDoc}
@@ -202,6 +217,20 @@ public class SystemCertificateService implements ISystemCertificateService {
 
 		Keystore keystoreAuth = new Keystore();
 		keystoreAuth.setIdKeystore(Keystore.ID_AUTHCLIENT_RFC3161);
+		KeystoreSpecification byKeystoreAuth = new KeystoreSpecification(keystoreAuth);
+
+		return repository.findAll(byKeystoreAuth);
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.ISystemCertificateService#getAllValidService()
+	 */
+	@Override
+	public Iterable<SystemCertificate> getAllValidService() {
+
+		Keystore keystoreAuth = new Keystore();
+		keystoreAuth.setIdKeystore(Keystore.ID_VALID_SERVICE_STORE);
 		KeystoreSpecification byKeystoreAuth = new KeystoreSpecification(keystoreAuth);
 
 		return repository.findAll(byKeystoreAuth);

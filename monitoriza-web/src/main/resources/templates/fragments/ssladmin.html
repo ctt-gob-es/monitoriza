@@ -26,6 +26,7 @@
 $(document).ready(function() {
 	var actionSave = /*[[@{/savessl}]]*/;
 	var actionUpdate = /*[[@{/updatessl}]]*/;
+	var actionDownload = /*[[@{/downloadCertificate}]]*/;
 	var actionDelete = /*[[@{/deletessl}]]*/;
 	var getssls = /*[[@{/ssldatatable}]]*/;
 	var editTemplate = /*[[@{/editcert}]]*/;
@@ -37,7 +38,23 @@ $(document).ready(function() {
 	    responsive: true,
 	    
 	    altEditor: true,
-	    buttons: [{text: 'Agregar', name: 'add'}, {extend: 'selected',text: 'Editar',name: 'edit'}, {extend: 'selected',text: 'Eliminar',name: 'delete'}],
+	    buttons: [{text: 'Agregar', name: 'add'}, {extend: 'selected',text: 'Editar',name: 'edit'}, {extend: 'selected',text: 'Eliminar',name: 'delete'}, 
+	    	{extend: 'selected',text: 'Descargar certificado',name: 'downloadCertificate',
+			  action: function ( e, dt, node, config ) {
+				  
+				  for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({
+					id: o.context[0].aoColumns[e].mData              
+				  });
+				  
+				  var d = dt.rows({
+                  selected: !0
+				  });
+				
+				  var idSystemCertificate = d.data()[0][a[0].id];
+				  
+				  window.location.href = actionDownload + "/" + idSystemCertificate;
+				}
+			}],
 	
 	    "iTotalRecords": "totalElements",
         "iTotalDisplayRecords": "numberOfElements",
@@ -130,7 +147,8 @@ $(document).ready(function() {
 			                	// y se modifican los estilos/añaden mensajes
 			                	var validation = $(data)["0"].responseJSON;
 			                	drawValidationResult(validation.fieldErrors);
-			              
+			                	$('#altEditor-modal .modal-body .alert').remove();
+					            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Se ha producido un error al agregar el certificado!</strong></div>');
 			                }
 			            });
 		            	

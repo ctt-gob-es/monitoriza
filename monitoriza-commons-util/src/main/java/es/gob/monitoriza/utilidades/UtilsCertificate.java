@@ -53,6 +53,24 @@ public final class UtilsCertificate {
 	 * Attribute that represents the UTF-8 codification chacarter.
 	 */
 	public static final String CODIFICACION_UTF_8 = "UTF-8";
+	
+	/**
+	 * Attribute that represents the protocol http.
+	 */
+	public static final String PROTOCOL_HTTP = "http";
+	
+	/**
+	 * Attribute that represents the protocol https.
+	 */
+	public static final String PROTOCOL_HTTPS = "https";
+	
+	
+	public static final String VALID_SERVICE_ENDPOINT = "/afirmaws/services/DSSAfirmaVerifyCertificate";
+	
+	/**
+	 * Attribute that represents the path sign validation report.
+	 */
+	public static final String PATH_CERT_VALIDATION_REPORT = "/WEB-INF/classes/static/xml/validCertificate.xml";
 
 	/**
 	 * Attribute that represents the document builder. 
@@ -90,6 +108,21 @@ public final class UtilsCertificate {
 	 * Constant that defines a default hash algorithm (SHA-256) used to calculate certificate hash.
 	 */
 	public static final String DEFAULT_HASH_ALGORITHM = "SHA-256";
+	
+	/**
+	 * Attribute that represents the header to download certificate. 
+	 */
+	public static final String HEADER_DOWNLOAD_CERTIFICATE = "attachment; filename=certificate.cer";
+
+	/**
+	 * Attribute that represents the content disposition to download certificate. 
+	 */
+	public static final String CONTENT_DISPOSITION_DOWNLOAD_CERTIFICATE = "Content-disposition";
+	
+	/**
+	 * Attribute that represents the content disposition to download certificate. 
+	 */
+	public static final String CONTENT_TYPE_DOWNLOAD_CERTIFICATE = "application/x-x509-ca-cert";
 
 	/**
 	 * Constructor method for the class UtilsCertificate.java.
@@ -265,8 +298,8 @@ public final class UtilsCertificate {
 
 		Document responseDoc = null;
 		Long statusCertificateId = StatusCertificateEnum.NOTVALID.getId();
-		String statusCertificateName = StatusCertificateEnum.NOTVALID.getName();
-		boolean validResult = Boolean.FALSE;
+		//String statusCertificateName = StatusCertificateEnum.NOTVALID.getName();
+		//boolean validResult = Boolean.FALSE;
 
 		try {
 			responseDoc = db.parse(new ByteArrayInputStream(response.getBytes(UtilsCertificate.CODIFICACION_UTF_8)));
@@ -285,32 +318,32 @@ public final class UtilsCertificate {
 		if (resultMajor.contains("Success")) {
 			if (resultMinor.contains("Definitive") || resultMinor.contains("Temporal")) {
 				statusCertificateId = StatusCertificateEnum.VALID.getId();
-				statusCertificateName = StatusCertificateEnum.VALID.getName();
+				//statusCertificateName = StatusCertificateEnum.VALID.getName();
 			}
 			if (resultMinor.contains("Expired")) {
 				statusCertificateId = StatusCertificateEnum.CADUCATE.getId();
-				statusCertificateName = StatusCertificateEnum.CADUCATE.getName();
+				//statusCertificateName = StatusCertificateEnum.CADUCATE.getName();
 			}
 			if (resultMinor.contains("Revoked") || resultMinor.contains("OnHold")) {
 				statusCertificateId = StatusCertificateEnum.REVOCATE.getId();
-				statusCertificateName = StatusCertificateEnum.REVOCATE.getName();
+				//statusCertificateName = StatusCertificateEnum.REVOCATE.getName();
 			}
 			if (resultMinor.contains("PathValidationFails")) {
 				statusCertificateId = StatusCertificateEnum.UNKNOWN.getId();
-				statusCertificateName = StatusCertificateEnum.UNKNOWN.getName();
+				//statusCertificateName = StatusCertificateEnum.UNKNOWN.getName();
 			}
 			if (resultMinor.contains("NotYetValid")) {
 				statusCertificateId = StatusCertificateEnum.NOTVALIDYET.getId();
-				statusCertificateName = StatusCertificateEnum.NOTVALIDYET.getName();
+				//statusCertificateName = StatusCertificateEnum.NOTVALIDYET.getName();
 			}
 		}
-		if (statusCertificateId.equals(StatusCertificateEnum.VALID.getId()) || statusCertificateId.equals(StatusCertificateEnum.UNKNOWN.getId())) {
+		/*if (statusCertificateId.equals(StatusCertificateEnum.VALID.getId()) || statusCertificateId.equals(StatusCertificateEnum.UNKNOWN.getId())) {
 			validResult = Boolean.TRUE;
 		}
 
 		if (!validResult) {
 			throw new Exception("Error al validar el certificado, certificado " + statusCertificateName.toLowerCase() + "!");
-		}
+		}*/
 
 		return statusCertificateId;
 	}

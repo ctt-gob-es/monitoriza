@@ -4,10 +4,14 @@
 			
 			<div class="form-group">
 				
-					<label for="name" class="col-form-label" th:text="#{form.ssl.alias}"></label>
-					
-					<input type="text" id="alias" th:field="*{alias}" style="overflow:hidden" class="form-control" required pattern=".{3,15}" />
-					<div id="invalid-name" class="invalid-feedback"></div>
+					<label for="alias" class="col-form-label" th:text="#{form.ssl.alias}"></label>
+					<script th:inline="javascript">
+						/*<![CDATA[*/
+						    var messageAlias = /*[[#{form.cert.edit.alias.pattern}]]*/ 'default';
+						/*]]>*/
+					</script>
+					<input onblur="validate(this,messageAlias);" type="text" id="alias" th:field="*{alias}" style="overflow:hidden" class="form-control" required pattern=".{3,4000}" />
+					<div id="invalid-alias" class="invalid-feedback"></div>
 				
 				<div style="clear:both;"/>
 			</div>

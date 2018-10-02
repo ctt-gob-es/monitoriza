@@ -163,12 +163,24 @@ public final class FileUtils {
 		return res.toString();
 	}
 	
+	/**
+	 * Method that reads the contents of a file and return the encoded byte array as string
+	 * @param path Path to the file
+	 * @param encoding Encoding to use
+	 * @return String that represents the encoded contents of the file
+	 * @throws IOException
+	 */
 	public static String readFile(String path, Charset encoding) throws IOException {
 		
 		byte[ ] encoded = Files.readAllBytes(Paths.get(path));
 		return new String(encoded, encoding);
 	}
 
+	/**
+	 * Method that reads a file returning it as a byte array
+	 * @param file The file to get its byte array
+	 * @return byte[] representing the file
+	 */
 	public static byte[ ] fileToByteArray(File file) {
 
 		byte[ ] raw;
@@ -268,6 +280,13 @@ public final class FileUtils {
 		
 	}
 	
+	/**
+	 * Method that unzips a compressed file recursively
+	 * @param fileBytes byte array representing the file
+	 * @param fileName Name of the file
+	 * @param targetFolder Folder to which unzip the file
+	 * @throws IOException
+	 */
 	public static void unZipFileWithSubFolders(final byte[] fileBytes, final String fileName, final String targetFolder) throws IOException {
 		try {
 			
@@ -279,19 +298,14 @@ public final class FileUtils {
 			writeFile(fileBytes, tempFilePath);
 			
 			
-            // Open the zip file
+            // Se abre el fichero zip
             ZipFile zipFile = new ZipFile(tempFilePath);
             Enumeration<?> enu = zipFile.entries();
             while (enu.hasMoreElements()) {
                 ZipEntry zipEntry = (ZipEntry) enu.nextElement();
 
                 String name = targetFolder.concat(zipEntry.getName());
-                               
-                long size = zipEntry.getSize();
-                long compressedSize = zipEntry.getCompressedSize();
-                //LOGGER.info("name: " + name + "| size: " + size + "| compressed size: " + compressedSize + "\n");
-
-                // Do we need to create a directory ?
+                
                 File file = new File(name);
                 if (name.endsWith("/")) {
                     file.mkdirs();
@@ -304,7 +318,7 @@ public final class FileUtils {
                     parent.mkdirs();
                 }
 
-                // Extract the file
+                // Se extrae el fichero
                 InputStream is = zipFile.getInputStream(zipEntry);
                 FileOutputStream fos = new FileOutputStream(file);
                 byte[] bytes = new byte[1024];
@@ -358,9 +372,9 @@ public final class FileUtils {
 	}
 	
 	/**
-	 * Method that 
-	 * @param bytes
-	 * @return
+	 * Method that gets a String representing the contents of the file in hexadecimal
+	 * @param bytes byte array of the file
+	 * @return String in hexadecimal representing the file content
 	 */
 	public static String bytesToHex(final byte[] bytes, final int length) {
 	    return IntStream.range(0, length)
@@ -370,9 +384,9 @@ public final class FileUtils {
 	}
 	
 	/**
-	 * 
-	 * @param filePath
-	 * @return
+	 * Method that deletes a file
+	 * @param filePath Path to the file
+	 * @return true if the deletion was successful, false otherwise
 	 */
 	private static boolean deleteFile(final String filePath) {
 		
