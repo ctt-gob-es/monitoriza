@@ -67,6 +67,11 @@ public class Keystore implements Serializable {
 	public static final long ID_USER_STORE = 3L;
 	
 	/**
+	 * Attribute that represents the identifier for the client authentication for valid service keystore in database. 
+	 */
+	public static final long ID_VALID_SERVICE_STORE = 4L;
+	
+	/**
 	 * Attribute that represents the object ID.
 	 */
 	private Long idKeystore;

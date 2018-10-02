@@ -1,4 +1,4 @@
-<form name="altEditor-form" role="form" id="authForm" action="/loadcertsauth" method="post">
+<form name="altEditor-form" role="form" id="validServForm" th:action="@{/loadvalidservicekeystore}" method="post">
 						
 			<div class="form-group">
 
@@ -12,9 +12,9 @@
 			
 			<div class="form-group">
 
-					<label for="authkeystorepass" class="col-form-label" th:text="#{form.keystore.password}"></label>
+					<label for="validservicekeystorepass" class="col-form-label" th:text="#{form.keystore.password}"></label>
 					<input type="password" style="display:none">
-					<input type="password" id="authkeystorepass" name="authkeystorepass" class="form-control" required pattern=".{3,15}" />
+					<input type="password" id="validservicekeystorepass" name="validservicekeystorepass" class="form-control" required pattern=".{3,15}" />
 									
 				<div style="clear:both;"/>
 			</div>
@@ -36,7 +36,7 @@ $("input[type=file]").change(function () {
 });
 
 $(function(){
-    $('#authForm').find('input,select').keydown(function(event){
+    $('#validServForm').find('input,select').keydown(function(event){
         if ( event.keyCode == 13 ){
             event.preventDefault();
         }

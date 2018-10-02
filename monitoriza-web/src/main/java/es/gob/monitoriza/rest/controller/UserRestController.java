@@ -25,7 +25,6 @@
 package es.gob.monitoriza.rest.controller;
 
 import java.io.IOException;
-import java.net.MalformedURLException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -33,8 +32,8 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import javax.servlet.ServletContext;
 import javax.validation.Valid;
-import javax.xml.rpc.ServiceException;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -68,15 +67,18 @@ import es.gob.monitoriza.form.UserFormPassword;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IKeystoreService;
 import es.gob.monitoriza.service.IStatusCertificateService;
 import es.gob.monitoriza.service.ISystemCertificateService;
 import es.gob.monitoriza.service.IUserMonitorizaService;
+import es.gob.monitoriza.service.IValidServiceService;
 import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.utilidades.StatusCertificateEnum;
 import es.gob.monitoriza.utilidades.UtilsCertificate;
+import es.gob.monitoriza.utilidades.UtilsXml;
 import es.gob.monitoriza.webservice.ClientManager;
-import es.gob.monitoriza.webservice.DSSCertificate;
 
 /**
  * <p>
@@ -92,11 +94,7 @@ import es.gob.monitoriza.webservice.DSSCertificate;
  */
 @RestController
 public class UserRestController {
-
-	private static final String APP_ID = "appPrueba";
-
-	private static final String LEVEL = "urn:oasis:names:tc:dss:1.0:reportdetail:allDetails";
-
+	
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
@@ -147,6 +145,24 @@ public class UserRestController {
 	@Autowired
 	private IStatusCertificateService statusCertService;
 
+	/**
+	 * Attribute that represents the service object for accessing the repository.
+	 */
+	@Autowired
+	private IValidServiceService validServiceService;
+	
+	/**
+	 * Attribute that represents the service object for accessing the repository.
+	 */
+	@Autowired
+	private ClientManager clientManager;
+	
+	/**
+	 * Attribute that represents the context object.
+	 */
+	@Autowired
+	private ServletContext context;
+	
 	/**
 	 * Method that maps the list users web requests to the controller and
 	 * forwards the list of users to the view.
@@ -417,8 +433,7 @@ public class UserRestController {
 			certificate = UtilsCertificate.getCertificate(ksBytes);
 			String certificateBase64 = Base64.getEncoder().encodeToString(certificate.getEncoded());
 			String alias = UtilsCertificate.createCertificateAlias(certificate, null);
-			// Valida el certificado y lo añade al almacén truststore
-			// ssl del sistema
+			// Valida el certificado y lo añade al almacén de usuarios del sistema
 			keystoreUser = keyStoreFacade.storeCertificate(alias, certificate, null);
 
 			systemCertificate.setAlias(alias);
@@ -426,20 +441,48 @@ public class UserRestController {
 			systemCertificate.setKey(Boolean.FALSE);
 			systemCertificate.setKeystore(keystoreUser);
 			systemCertificate.setSerialNumber(UtilsCertificate.getCertificateSerialNumber(certificate));
+			
+			List<ValidService> validServices = validServiceService.getAllValidServices();
+			ValidService validService = null;
+			if (!validServices.isEmpty()) {
+				validService = validServices.get(0);
+			}
+			
+			if (validService != null) {
 
-			String peticion = "<?xml version=\"1.0\" encoding=\"UTF-8\"?><dss:VerifyRequest xmlns:dss=\"urn:oasis:names:tc:dss:1.0:core:schema\" xmlns:ades=\"urn:oasis:names:tc:dss:1.0:profiles:AdES:schema#\" xmlns:afxp=\"urn:afirma:dss:1.0:profile:XSS:schema\" xmlns:cmism=\"http://docs.oasis-open.org/ns/cmis/messaging/200908/\" xmlns:ds=\"http://www.w3.org/2000/09/xmldsig#\" xmlns:vr=\"urn:oasis:names:tc:dss:1.0:profiles:verificationreport:schema#\" Profile=\"urn:afirma:dss:1.0:profile:XSS\">\r\n" + "	<dss:OptionalInputs>\r\n" + "		<dss:ClaimedIdentity>\r\n" + "			<dss:Name>" + APP_ID + "</dss:Name>\r\n" + "		</dss:ClaimedIdentity>\r\n" + "		<afxp:ReturnReadableCertificateInfo/>\r\n" + "		<vr:ReturnVerificationReport>\r\n" + "			<vr:CheckOptions>\r\n" + "				<vr:CheckCertificateStatus>" + true + "</vr:CheckCertificateStatus>\r\n" + "			</vr:CheckOptions>\r\n" + "			<vr:ReportOptions>\r\n" + "				<vr:IncludeCertificateValues>" + false + "</vr:IncludeCertificateValues>\r\n" + "				<vr:IncludeRevocationValues>" + false + "</vr:IncludeRevocationValues>\r\n" + "				<vr:ReportDetailLevel>" + LEVEL + "</vr:ReportDetailLevel>\r\n" + "			</vr:ReportOptions>\r\n" + "		</vr:ReturnVerificationReport>\r\n" + "	</dss:OptionalInputs>\r\n" + "	<dss:SignatureObject>\r\n" + "		<dss:Other>\r\n" + "			<ds:X509Data>\r\n" + "				<ds:X509Certificate>" + certificateBase64 + "</ds:X509Certificate>\r\n" + "			</ds:X509Data>\r\n" + "		</dss:Other>\r\n" + "	</dss:SignatureObject>\r\n" + "</dss:VerifyRequest>";
+				String protocol = validService.getIsSecure() != null && validService.getIsSecure() ? UtilsCertificate.PROTOCOL_HTTPS : UtilsCertificate.PROTOCOL_HTTP;
+				String host = validService.getHost();
+				String port = validService.getPort();
+				
+				String result ="";
+				String endpoint = protocol + "://" + host + ":" + port + UtilsCertificate.VALID_SERVICE_ENDPOINT;
+				Object[] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
+				try {
+					result = clientManager.getDSSCertificateServiceClientResult(endpoint, validService, peticion);
+				} catch (Exception e) {
+					LOGGER.error("Se ha producido un error al obtener el servicio DSSCertificate: " + e.getMessage());
+				}
+				
+				Long statusCertificateId = UtilsCertificate.processStatusCertificate(result);
+				boolean validResult = Boolean.FALSE;
+				if (statusCertificateId.equals(StatusCertificateEnum.VALID.getId()) || statusCertificateId.equals(StatusCertificateEnum.UNKNOWN.getId())) {
+					validResult = Boolean.TRUE;
+				}
 
-			DSSCertificate certificateService = getServiceCertificate("http://localhost:8080/afirmaws/services/DSSAfirmaVerifyCertificate?wsdl");
-			String result = certificateService.verify(peticion);
+				if (!validResult) {
+					throw new Exception("Error al validar el certificado, certificado, certificado no válido!");
+				}
 
-			systemCertificate.setStatusCertificate(statusCertService.getStatusCertificateById(UtilsCertificate.processStatusCertificate(result)));
-			systemCertificate.setSubject(UtilsCertificate.getCertificateId(certificate));
-			systemCertificate.setUserMonitoriza(userService.getUserMonitorizaById(idUserMonitoriza));
-			certService.saveSystemCertificate(systemCertificate);
-			// Modificamos el keystore correspondiente, anyadiendo el
-			// certificado
-			keystoreService.saveKeystore(keystoreUser);
-			listNewSystemCert.add(systemCertificate);
+				systemCertificate.setStatusCertificate(statusCertService.getStatusCertificateById(statusCertificateId));
+				
+				systemCertificate.setSubject(UtilsCertificate.getCertificateId(certificate));
+				systemCertificate.setUserMonitoriza(userService.getUserMonitorizaById(idUserMonitoriza));
+				certService.saveSystemCertificate(systemCertificate);
+				// Modificamos el keystore correspondiente, anyadiendo el
+				// certificado
+				keystoreService.saveKeystore(keystoreUser);
+				listNewSystemCert.add(systemCertificate);
+			}
 		} catch (Exception e) {
 			listNewSystemCert = StreamSupport.stream(certService.findCertUserByUser(idUserMonitoriza).spliterator(), false).collect(Collectors.toList());
 			throw e;
@@ -448,17 +491,6 @@ public class UserRestController {
 		dtOutput.setData(listNewSystemCert);
 
 		return dtOutput;
-	}
-
-	private DSSCertificate getServiceCertificate(String endpoint) throws ServiceException {
-		ClientManager clientManager = new ClientManager();
-		DSSCertificate certificateService = null;
-		try {
-			certificateService = clientManager.getDSSCertificateServiceClient(endpoint);
-		} catch (MalformedURLException e) {
-			LOGGER.error(e);
-		}
-		return certificateService;
 	}
 
 	/**
@@ -549,6 +581,54 @@ public class UserRestController {
 	 */
 	public void setStatusCertService(final IStatusCertificateService staCertServiceP) {
 		this.statusCertService = staCertServiceP;
+	}
+
+	/**
+	 * Get validServiceService.
+	 * @return validServiceService
+	 */
+	public IValidServiceService getValidServiceService() {
+		return validServiceService;
+	}
+
+	/**
+	 * Set validServiceService.
+	 * @param validServiceServiceP set validServiceService
+	 */
+	public void setValidServiceService(IValidServiceService validServiceServiceP) {
+		this.validServiceService = validServiceServiceP;
+	}
+
+	/**
+	 * Get clientManager.
+	 * @return clientManager
+	 */
+	public ClientManager getClientManager() {
+		return clientManager;
+	}
+
+	/**
+	 * Set clientManager.
+	 * @param clientManagerP set clientManager
+	 */
+	public void setClientManager(ClientManager clientManagerP) {
+		this.clientManager = clientManagerP;
+	}
+	
+	/**
+	 * Get context.
+	 * @return context
+	 */
+	public ServletContext getContext() {
+		return context;
+	}
+
+	/**
+	 * Set context.
+	 * @param context set context
+	 */
+	public void setContext(ServletContext context) {
+		this.context = context;
 	}
 
 }

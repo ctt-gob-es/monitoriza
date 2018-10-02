@@ -80,6 +80,12 @@ public interface ISystemCertificateService {
 	 * @return a {@link Iterable<SystemCertificate>} with the information of all certificates.
 	 */
 	Iterable<SystemCertificate> getAllAuth();
+	
+	/**
+	 * Method that gets all the valid service authentication certificates from the persistence.
+	 * @return a {@link Iterable<SystemCertificate>} with the information of all certificates.
+	 */
+	Iterable<SystemCertificate> getAllValidService();
 
 	/**
 	 * Method that gets all certificates
@@ -101,6 +107,13 @@ public interface ISystemCertificateService {
 	 * @return DataTablesOutput<SystemCertificate>
 	 */
 	DataTablesOutput<SystemCertificate> findAllAuth(DataTablesInput input);
+	
+	/**
+	 * Method that gets all valid service authentication certificates
+	 * @param input Datatable filter parameter
+	 * @return DataTablesOutput<SystemCertificate>
+	 */
+	DataTablesOutput<SystemCertificate> findAllValidService(final DataTablesInput input);
 
 	/**
 	 * Method that gets all user certificates

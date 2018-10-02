@@ -325,6 +325,34 @@ public class AdminServicesManager {
 
 		return cer;
 	}
+	
+	/**
+	 * Method that retrieves the keystore for valid service key pairs from database.
+	 * @return Keystore cointaining the key pairs for valid service.
+	 */
+	public KeyStore loadValidServiceKeystore() {
+
+		final Keystore ks = keystoreService.getKeystoreById(Keystore.ID_VALID_SERVICE_STORE);
+
+		final IKeystoreFacade keyStoreFacade = new KeystoreFacade(ks);
+
+		String msgError = null;
+		KeyStore cer = null;
+
+		try (InputStream readStream = new ByteArrayInputStream(ks.getKeystore());) {
+			// Accedemos al almacén de confianza SSL
+			msgError = Language.getResMonitoriza(LogMessages.ERROR_KEYSTORE_ACCESS_AUTH_CLIENT_RFC3161);
+			cer = KeyStore.getInstance(ks.getKeystoreType());
+
+			cer.load(readStream, keyStoreFacade.getKeystoreDecodedPasswordString(ks.getPassword()).toCharArray());
+
+		} catch (IOException | KeyStoreException | CertificateException
+				| NoSuchAlgorithmException | CryptographyException ex) {
+			LOGGER.error(msgError, ex);
+		}
+
+		return cer;
+	}
 		
 	
 	/**

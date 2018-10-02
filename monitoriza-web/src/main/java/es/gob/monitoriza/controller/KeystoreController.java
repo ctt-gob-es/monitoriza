@@ -77,6 +77,12 @@ public class KeystoreController {
 
 		return "fragments/authadmin.html";
 	}
+	
+	@RequestMapping(value = "keystorevalidserviceadmin")
+	public String keystoreValidServiceAdmin(final Model model) {
+
+		return "fragments/keystorevalidserviceadmin.html";
+	}
 
 	/**
 	 * Method that maps the add keystore web requests to the controller and forwards to the form
@@ -102,6 +108,18 @@ public class KeystoreController {
 	public String addAuth() {
 
 		return "modal/authForm.html";
+	}
+	
+	/**
+	 * Method that maps the add keystore web requests to the controller and forwards to the form
+	 * to the view.
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "addvalidservicekeystore")
+	public String addValidService() {
+
+		return "modal/validServForm.html";
 	}
 
 	/**

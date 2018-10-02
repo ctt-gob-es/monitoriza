@@ -119,6 +119,15 @@
 		               			</script>
 		               		</a>
 	               		</li>
+	               		<li>
+							<a id="aKeystoreValidServiceAdmin" class='sidebar-link' href="#">
+							    <span class="title" th:text="#{menu.admin.keystore.valid.service}"></span>
+								<script th:inline="javascript">
+		                 			var actionKeystoreValidService = /*[[@{/keystorevalidserviceadmin}]]*/;
+		                 			$('#aKeystoreValidServiceAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionKeystoreValidService, 'optionReplacement', 'GET', null, true); return false;});
+		               			</script>
+		               		</a>
+	               		</li>
 				   </ul>
 				</li>
 				<li class="nav-item">
@@ -133,6 +142,26 @@
 	                </script>
 	              </a>
 	            </li>
+	            <li class="nav-item dropdown">
+	              <a id="aGlobalConfAdmin" class="dropdown-toggle" href="javascript:void(0);">
+	                <span class="icon-holder">
+	                  <i class="c-black-500 ti-settings"></i>
+	                </span>
+	                <span class="title" th:text="#{menu.admin.global.conf}"></span>
+	                <span class="arrow"><i class="ti-angle-right"></i></span>
+	              </a> 
+				   <ul class="dropdown-menu">
+						<li>
+							<a id="aValidServiceAdmin" class='sidebar-link' href="#">
+							    <span class="title" th:text="#{menu.admin.global.conf.valid.service}"></span>
+								<script th:inline="javascript">
+		                 			var actionValidService = /*[[@{/validservicecertificate}]]*/;
+		                 			$('#aValidServiceAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionValidService, 'optionReplacement', 'GET', null, true); return false;});
+		               			</script>
+	               			</a>
+	               		</li>
+				   </ul>
+				</li>
 	          </ul>
           </form>
         </div>
