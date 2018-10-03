@@ -361,7 +361,7 @@ public class ValidService implements Serializable {
 	// because Hibernate JPA needs not final access methods.
 	@ManyToOne(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
-	@JoinColumn(name = "ID_AUTH_CERTIFICATE", nullable = false)
+	@JoinColumn(name = "ID_AUTH_CERTIFICATE", nullable = true)
 	@JsonIgnore
 	public SystemCertificate getValidServiceCertificate() {
 		// CHECKSTYLE:On

@@ -236,7 +236,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 */
 	private void addEntryToKeystore(final String alias, final Certificate cert, final Key key) throws KeyStoreException, CryptographyException {
 
-		// Cargamos el keystore SSL desde la persistencia
+		// Cargamos el keystore desde la persistencia
 		KeyStore kstore = KeyStore.getInstance(keystore.getKeystoreType());
 		char[ ] ksPass = new String(getKeystoreDecodedPassword(null)).toCharArray();
 
@@ -254,7 +254,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 			kstore.setKeyEntry(alias, key, ksPass, new Certificate[ ] { cert });
 		}
 
-		// Establecemos el nuevo valor del almacén SSL
+		// Establecemos el nuevo valor del almacén
 		try (ByteArrayOutputStream baos = new ByteArrayOutputStream();) {
 			kstore.store(baos, ksPass);
 

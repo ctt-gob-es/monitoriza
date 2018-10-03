@@ -159,42 +159,45 @@ $(document).ready(function() {
 									if (pick.length > 1) {
 										pick.splice(1, pick.length - 1);
 									}
-									alert(pick.length);
 									
 									$("#addRowBtn").on("click", function (event) {
-										event.stopPropagation();
-										event.preventDefault();
-									   //console.log(pick.getValues());
-										// Se envían los alias de los certificados a añadir al
-										// almacén para autenticación RFC3161
-										$.ajax(actionSave, {
-											contentType:'application/json',
-											data : JSON.stringify(pick.getValues()),
-											type:'POST',
-											success: function(data){
-										  
-												// Se oculta la capa 'cargando...'
-												hide();
-												tbl.row.add($(data.data)).draw(false);
-																			
-												$('#altEditor-modal .modal-body .alert').remove();
-												$('#altEditor-modal').modal('hide');
-																			
-											},
-											error:function(data){
-												
-												// Se oculta la capa 'cargando...'
-												hide();
-												// Se eliminan los posibles errores anteriores...
-												clearValidationResult('authForm');
-												// Se obtiene el JSON de los campos con errores de validación
-												// y se modifican los estilos/añaden mensajes
-												var validation = $(data)["0"].responseJSON;
-												drawValidationResult(validation.fieldErrors);
-												$('#altEditor-modal .modal-body .alert').remove();
-									            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Se ha producido un error al agregar el certificado!</strong></div>');
-											}
-										});
+										if (pick.getValues() == "") {
+											event.stopPropagation();
+											event.preventDefault();
+											$('#altEditor-modal .modal-body .alert').remove();
+								            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Debe seleccionar un certificado!</strong></div>');
+										} else {
+											// Se envían los alias de los certificados a añadir al
+											// almacén para autenticación RFC3161
+											$.ajax(actionSave, {
+												contentType:'application/json',
+												data : JSON.stringify(pick.getValues()),
+												type:'POST',
+												success: function(data){
+											  
+													// Se oculta la capa 'cargando...'
+													hide();
+													tbl.row.add($(data.data)).draw(false);
+																				
+													$('#altEditor-modal .modal-body .alert').remove();
+													$('#altEditor-modal').modal('hide');
+																				
+												},
+												error:function(data){
+													
+													// Se oculta la capa 'cargando...'
+													hide();
+													// Se eliminan los posibles errores anteriores...
+													clearValidationResult('authForm');
+													// Se obtiene el JSON de los campos con errores de validación
+													// y se modifican los estilos/añaden mensajes
+													var validation = $(data)["0"].responseJSON;
+													drawValidationResult(validation.fieldErrors);
+													$('#altEditor-modal .modal-body .alert').remove();
+										            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Se ha producido un error al agregar el certificado!</strong></div>');
+												}
+											});	
+										}
 									});
 								}
 			                    		                    

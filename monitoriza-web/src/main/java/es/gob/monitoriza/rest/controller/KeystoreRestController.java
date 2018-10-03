@@ -45,6 +45,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
+import org.apache.axis.utils.ByteArray;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -156,19 +157,19 @@ public class KeystoreRestController {
 	 */
 	@Autowired
 	private IStatusCertificateService statusCertService;
-	
+
 	/**
 	 * Attribute that represents the service object for accessing the repository.
 	 */
 	@Autowired
 	private IValidServiceService validServiceService;
-	
+
 	/**
 	 * Attribute that represents the service object for accessing the repository.
 	 */
 	@Autowired
 	private ClientManager clientManager;
-	
+
 	/**
 	 * Attribute that represents the context object.
 	 */
@@ -293,22 +294,22 @@ public class KeystoreRestController {
 				// Valida el certificado y lo añade al almacén truststore
 				// ssl del sistema
 				String certificateBase64 = Base64.getEncoder().encodeToString(cert.getEncoded());
-				
+
 				List<ValidService> validServices = validServiceService.getAllValidServices();
 				ValidService validService = null;
 				if (!validServices.isEmpty()) {
 					validService = validServices.get(0);
 				}
-				
+
 				if (validService != null) {
 
 					String protocol = validService.getIsSecure() != null && validService.getIsSecure() ? UtilsCertificate.PROTOCOL_HTTPS : UtilsCertificate.PROTOCOL_HTTP;
 					String host = validService.getHost();
 					String port = validService.getPort();
-					
-					String result ="";
+
+					String result = "";
 					String endpoint = protocol + "://" + host + ":" + port + UtilsCertificate.VALID_SERVICE_ENDPOINT;
-					Object[] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
+					Object[ ] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
 					try {
 						result = clientManager.getDSSCertificateServiceClientResult(endpoint, validService, peticion);
 					} catch (Exception e) {
@@ -324,14 +325,14 @@ public class KeystoreRestController {
 					if (!validResult) {
 						throw new Exception("Error al validar el certificado, certificado, certificado no válido!");
 					}
-					
+
 					ko = keyStoreFacade.storeCertificate(alias, cert, null);
 					// Modificamos el keystore correspondiente, añadiendo el
 					// certificado
 					keystoreService.saveKeystore(ko);
-					
+
 					SystemCertificate sysCert = new SystemCertificate();
-					
+
 					sysCert.setAlias(alias);
 					sysCert.setIssuer(issuer);
 					sysCert.setSubject(subject);
@@ -684,22 +685,22 @@ public class KeystoreRestController {
 					// Valida el certificado y lo añade al almacén truststore
 					// ssl del sistema
 					String certificateBase64 = Base64.getEncoder().encodeToString(cert.getEncoded());
-					
+
 					List<ValidService> validServices = validServiceService.getAllValidServices();
 					ValidService validService = null;
 					if (!validServices.isEmpty()) {
 						validService = validServices.get(0);
 					}
-					
+
 					if (validService != null) {
 
 						String protocol = validService.getIsSecure() != null && validService.getIsSecure() ? UtilsCertificate.PROTOCOL_HTTPS : UtilsCertificate.PROTOCOL_HTTP;
 						String host = validService.getHost();
 						String port = validService.getPort();
-						
-						String result ="";
+
+						String result = "";
 						String endpoint = protocol + "://" + host + ":" + port + UtilsCertificate.VALID_SERVICE_ENDPOINT;
-						Object[] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
+						Object[ ] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
 						try {
 							result = clientManager.getDSSCertificateServiceClientResult(endpoint, validService, peticion);
 						} catch (Exception e) {
@@ -715,7 +716,7 @@ public class KeystoreRestController {
 						if (!validResult) {
 							throw new Exception("Error al validar el certificado, certificado, certificado no válido!");
 						}
-						
+
 						ko = keyStoreFacade.storeCertificate(alias, cert, key);
 						// Modificamos el keystore correspondiente, añadiendo el
 						// certificado
@@ -797,22 +798,22 @@ public class KeystoreRestController {
 					// Valida el certificado y lo añade al almacén valid service
 					// valid service del sistema
 					String certificateBase64 = Base64.getEncoder().encodeToString(cert.getEncoded());
-					
+
 					List<ValidService> validServices = validServiceService.getAllValidServices();
 					ValidService validService = null;
 					if (!validServices.isEmpty()) {
 						validService = validServices.get(0);
 					}
-					
+
 					if (validService != null) {
 
 						String protocol = validService.getIsSecure() != null && validService.getIsSecure() ? UtilsCertificate.PROTOCOL_HTTPS : UtilsCertificate.PROTOCOL_HTTP;
 						String host = validService.getHost();
 						String port = validService.getPort();
-						
-						String result ="";
+
+						String result = "";
 						String endpoint = protocol + "://" + host + ":" + port + UtilsCertificate.VALID_SERVICE_ENDPOINT;
-						Object[] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
+						Object[ ] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
 						try {
 							result = clientManager.getDSSCertificateServiceClientResult(endpoint, validService, peticion);
 						} catch (Exception e) {
@@ -828,7 +829,7 @@ public class KeystoreRestController {
 						if (!validResult) {
 							throw new Exception("Error al validar el certificado, certificado, certificado no válido!");
 						}
-						
+
 						ko = keyStoreFacade.storeCertificate(alias, cert, key);
 						// Modificamos el keystore correspondiente, añadiendo el
 						// certificado
@@ -1068,17 +1069,50 @@ public class KeystoreRestController {
 				cert = ksCetificate.getCertificate(systemCertificate.getAlias());
 				if (cert != null) {
 					x509CertBytes = cert.getEncoded();
-					response.setHeader(UtilsCertificate.CONTENT_DISPOSITION_DOWNLOAD_CERTIFICATE, UtilsCertificate.HEADER_DOWNLOAD_CERTIFICATE);
-					response.setContentType(UtilsCertificate.CONTENT_TYPE_DOWNLOAD_CERTIFICATE);
-					FileCopyUtils.copy(x509CertBytes, response.getOutputStream());
-					response.flushBuffer();
 				}
 			}
-
+			response.setHeader(UtilsCertificate.CONTENT_DISPOSITION_DOWNLOAD_CERTIFICATE, UtilsCertificate.HEADER_DOWNLOAD_CERTIFICATE);
+			response.setContentType(UtilsCertificate.CONTENT_TYPE_DOWNLOAD_CERTIFICATE);
+			FileCopyUtils.copy(x509CertBytes != null ? x509CertBytes : new ByteArray().toByteArray(), response.getOutputStream());
+			response.flushBuffer();
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
 		}
 	}
+
+	/**
+	 * Method that copy to the response the contents of the file requested
+	 * @param idFile Identifier of the file to download
+	 * @param response HttpServletResponse
+	 * @throws IOException
+	 * @throws RequestFileNotFoundException
+	 */
+	/*@RequestMapping(value = "/downloadCertificate", produces = "application/x-x509-ca-cert")
+	public void downloadFile(@RequestParam("idSystemCertificate") Long idSystemCertificate, HttpServletResponse response) throws IOException {
+
+		byte[ ] x509CertBytes = null;
+		try {
+			SystemCertificate systemCertificate = certificateService.getSystemCertificateById(idSystemCertificate);
+			IKeystoreFacade keyStoreFacade = new KeystoreFacade(systemCertificate.getKeystore());
+			Keystore ks = keystoreService.getKeystoreById(systemCertificate.getKeystore().getIdKeystore());
+			KeyStore ksCetificate = KeystoreFacade.getKeystore(ks.getKeystore(), ks.getKeystoreType(), keyStoreFacade.getKeystoreDecodedPasswordString(ks.getPassword()));
+			if (systemCertificate.getAlias() != null) {
+				Certificate cert;
+				cert = ksCetificate.getCertificate(systemCertificate.getAlias());
+				if (cert != null) {
+					x509CertBytes = cert.getEncoded();
+				}
+			}
+			String fileName = "attachment; filename=certificate.cer";
+			response.setHeader("Content-Disposition", fileName);
+			response.setContentType("application/x-x509-ca-cert");
+			//response.setCharacterEncoding(StandardCharsets.ISO_8859_1.name());
+			FileCopyUtils.copy(x509CertBytes != null ? x509CertBytes : new ByteArray().toByteArray(), response.getOutputStream());
+			response.flushBuffer();
+		} catch (Exception e) {
+			LOGGER.error(e.getMessage());
+		}
+	}*/
 
 	/**
 	 * Get keystoreService.
@@ -1207,7 +1241,7 @@ public class KeystoreRestController {
 	public void setContext(ServletContext context) {
 		this.context = context;
 	}
-	
+
 	/**
 	 * Get clientManager.
 	 * @return clientManager

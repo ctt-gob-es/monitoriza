@@ -107,7 +107,7 @@ public class ValidationServiceController {
 		if (!validServices.isEmpty()) {
 			validService.setIdValidService(validServices.get(0).getIdValidService());
 			validService.setApplication(validServices.get(0).getApplication());
-			validService.setAuthenticationType(validServices.get(0).getAuthenticationType().getIdAuthenticationType());
+			validService.setAuthenticationType(validServices.get(0).getAuthenticationType() != null ? validServices.get(0).getAuthenticationType().getIdAuthenticationType() : -1);
 			validService.setHost(validServices.get(0).getHost());
 			validService.setIsSecure(validServices.get(0).getIsSecure());
 			validService.setIsEnableValidationJob(validServices.get(0).getIsEnableValidationJob());
@@ -115,7 +115,7 @@ public class ValidationServiceController {
 			validService.setPass(validServices.get(0).getPass());
 			validService.setPort(validServices.get(0).getPort());
 			validService.setUser(validServices.get(0).getUser());
-			validService.setValidServiceCertificate(validServices.get(0).getValidServiceCertificate().getIdSystemCertificate());
+			validService.setValidServiceCertificate(validServices.get(0).getValidServiceCertificate() != null ? validServices.get(0).getValidServiceCertificate().getIdSystemCertificate() : -1);
 		}
 		model.addAttribute("validServiceForm", validService);
 
@@ -152,7 +152,6 @@ public class ValidationServiceController {
 				validService.setUser(validServiceForm.getUser());
 				validService.setValidServiceCertificate(sysCertService.getSystemCertificateById(validServiceForm.getValidServiceCertificate()));
 				validService = validServiceService.saveValidService(validService);
-				validService.getValidServiceCertificate().getKeystore().getClass();
 
 			} catch (Exception e) {
 				LOGGER.error("Se ha producido un error al guardar el servicio de validación: " + e.getMessage());
