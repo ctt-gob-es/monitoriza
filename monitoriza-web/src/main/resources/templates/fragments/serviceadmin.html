@@ -632,7 +632,7 @@ $(document).ready(function() {
 	  
 	  hide();
 	  
-	  if (file == undefined && ) {
+	  if (file == undefined) {
 			file = new File([""], "nofile", {type: "text/plain", lastModified: new Date()});
 	  }
 
@@ -879,8 +879,8 @@ function downloadFile(idFile, fileName) {
 			link.target="_blank";
 			link.click();
 
-  }
-})
+  		}
+	})
 	
 }
 
