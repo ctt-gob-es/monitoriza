@@ -123,6 +123,16 @@ public class KeystoreRestController {
 	 * Attribute that represents the identifier of the html input password field for the valid service keystore's password. 
 	 */
 	private static final String FIELD_VALID_SERVICE_PASSWORD = "validservicekeystorepass";
+	
+	/**
+	 * Attribute that represents the excetion if the certificate is not valid. 
+	 */
+	private static final String CERTIFICATE_NOT_VALID = "CertificateNotValid";
+	
+	/**
+	 * Attribute that represents the excetion if the certificate is already stored in the keystore.
+	 */
+	private static final String CERTIFICATE_STORED = "CertificateStored";
 
 	/**
 	 * Attribute that represents the service object for accessing the repository. 
@@ -323,12 +333,19 @@ public class KeystoreRestController {
 					}
 
 					if (!validResult) {
-						throw new Exception("Error al validar el certificado, certificado, certificado no válido!");
+						LOGGER.error("Error al validar el certificado con alias " + alias + " , certificado no válido");
+						throw new Exception(CERTIFICATE_NOT_VALID);
 					}
 
 					ko = keyStoreFacade.storeCertificate(alias, cert, null);
 					// Modificamos el keystore correspondiente, añadiendo el
 					// certificado
+					
+					if (sysCertService.getSystemCertificateByKeystoreAndAlias(ko, issuer, serialNumber) != null) {
+						LOGGER.error("Error al guardar el certificado, el certificado con alias " + alias + " ya existe en el almacén");
+						throw new Exception(CERTIFICATE_STORED);
+					}
+					
 					keystoreService.saveKeystore(ko);
 
 					SystemCertificate sysCert = new SystemCertificate();
@@ -714,12 +731,19 @@ public class KeystoreRestController {
 						}
 
 						if (!validResult) {
-							throw new Exception("Error al validar el certificado, certificado, certificado no válido!");
+							LOGGER.error("Error al validar el certificado con alias " + alias + " , certificado no válido");
+							throw new Exception(CERTIFICATE_NOT_VALID);
 						}
 
 						ko = keyStoreFacade.storeCertificate(alias, cert, key);
 						// Modificamos el keystore correspondiente, añadiendo el
 						// certificado
+						
+						if (sysCertService.getSystemCertificateByKeystoreAndAlias(ko, issuer, serialNumber) != null) {
+							LOGGER.error("Error al guardar el certificado, el certificado con alias " + alias + " ya existe en el almacén");
+							throw new Exception(CERTIFICATE_STORED);
+						}
+						
 						keystoreService.saveKeystore(ko);
 
 						sysCert.setAlias(alias);
@@ -827,12 +851,19 @@ public class KeystoreRestController {
 						}
 
 						if (!validResult) {
-							throw new Exception("Error al validar el certificado, certificado, certificado no válido!");
+							LOGGER.error("Error al validar el certificado con alias " + alias + " , certificado no válido");
+							throw new Exception(CERTIFICATE_NOT_VALID);
 						}
 
 						ko = keyStoreFacade.storeCertificate(alias, cert, key);
 						// Modificamos el keystore correspondiente, añadiendo el
 						// certificado
+						
+						if (sysCertService.getSystemCertificateByKeystoreAndAlias(ko, issuer, serialNumber) != null) {
+							LOGGER.error("Error al guardar el certificado, el certificado con alias " + alias + " ya existe en el almacén");
+							throw new Exception(CERTIFICATE_STORED);
+						}
+						
 						keystoreService.saveKeystore(ko);
 
 						sysCert.setAlias(alias);

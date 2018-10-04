@@ -470,7 +470,7 @@ public class UserRestController {
 				}
 
 				if (!validResult) {
-					throw new Exception("Error al validar el certificado, certificado, certificado no válido!");
+					throw new Exception("Error al validar el certificado, certificado no válido!");
 				}
 
 				systemCertificate.setStatusCertificate(statusCertService.getStatusCertificateById(statusCertificateId));

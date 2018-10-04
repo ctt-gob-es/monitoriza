@@ -298,8 +298,6 @@ public final class UtilsCertificate {
 
 		Document responseDoc = null;
 		Long statusCertificateId = StatusCertificateEnum.NOTVALID.getId();
-		//String statusCertificateName = StatusCertificateEnum.NOTVALID.getName();
-		//boolean validResult = Boolean.FALSE;
 
 		try {
 			responseDoc = db.parse(new ByteArrayInputStream(response.getBytes(UtilsCertificate.CODIFICACION_UTF_8)));
@@ -318,32 +316,20 @@ public final class UtilsCertificate {
 		if (resultMajor.contains("Success")) {
 			if (resultMinor.contains("Definitive") || resultMinor.contains("Temporal")) {
 				statusCertificateId = StatusCertificateEnum.VALID.getId();
-				//statusCertificateName = StatusCertificateEnum.VALID.getName();
 			}
 			if (resultMinor.contains("Expired")) {
 				statusCertificateId = StatusCertificateEnum.CADUCATE.getId();
-				//statusCertificateName = StatusCertificateEnum.CADUCATE.getName();
 			}
 			if (resultMinor.contains("Revoked") || resultMinor.contains("OnHold")) {
 				statusCertificateId = StatusCertificateEnum.REVOCATE.getId();
-				//statusCertificateName = StatusCertificateEnum.REVOCATE.getName();
 			}
 			if (resultMinor.contains("PathValidationFails")) {
 				statusCertificateId = StatusCertificateEnum.UNKNOWN.getId();
-				//statusCertificateName = StatusCertificateEnum.UNKNOWN.getName();
 			}
 			if (resultMinor.contains("NotYetValid")) {
 				statusCertificateId = StatusCertificateEnum.NOTVALIDYET.getId();
-				//statusCertificateName = StatusCertificateEnum.NOTVALIDYET.getName();
 			}
 		}
-		/*if (statusCertificateId.equals(StatusCertificateEnum.VALID.getId()) || statusCertificateId.equals(StatusCertificateEnum.UNKNOWN.getId())) {
-			validResult = Boolean.TRUE;
-		}
-
-		if (!validResult) {
-			throw new Exception("Error al validar el certificado, certificado " + statusCertificateName.toLowerCase() + "!");
-		}*/
 
 		return statusCertificateId;
 	}

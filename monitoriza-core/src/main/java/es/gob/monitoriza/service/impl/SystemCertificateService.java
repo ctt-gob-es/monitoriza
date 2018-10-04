@@ -24,6 +24,8 @@
  */
 package es.gob.monitoriza.service.impl;
 
+import java.math.BigInteger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -76,6 +78,18 @@ public class SystemCertificateService implements ISystemCertificateService {
 	public SystemCertificate getSystemCertificateByAlias(final String alias) {
 
 		return repository.findByAlias(alias);
+	}
+	
+	/**
+	  * Method that obtains a system certificate by its keystore, its issue and its serialNumber.
+	 * @param keystore Keystore that represents the keystore.
+	 * @param issuer String that represents the certificate issuer.
+	 * @param serialNumber BigInteger that represents the certificate serial number
+	 * @return Object that represents a system certificate from the persistence. 
+	 */
+	@Override
+	public SystemCertificate getSystemCertificateByKeystoreAndAlias(Keystore keystore, String issuer, BigInteger serialNumber) {
+		return repository.findByKeystoreAndIssuerAndSerialNumber(keystore, issuer, serialNumber);
 	}
 
 	/**

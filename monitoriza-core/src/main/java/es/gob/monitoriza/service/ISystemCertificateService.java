@@ -24,9 +24,12 @@
  */
 package es.gob.monitoriza.service;
 
+import java.math.BigInteger;
+
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 
 /**
@@ -49,6 +52,15 @@ public interface ISystemCertificateService {
 	 * @return {@link SystemCertificate}
 	 */
 	SystemCertificate getSystemCertificateByAlias(String alias);
+	
+	/**
+	  * Method that obtains a system certificate by its keystore, its issue and its serialNumber.
+	 * @param keystore Keystore that represents the keystore.
+	 * @param issuer String that represents the certificate issuer.
+	 * @param serialNumber BigInteger that represents the certificate serial number
+	 * @return Object that represents a system certificate from the persistence. 
+	 */
+	SystemCertificate getSystemCertificateByKeystoreAndAlias(Keystore keystore, String issuer, BigInteger serialNumber);
 
 	/**
 	 * Method that stores a user in the persistence.

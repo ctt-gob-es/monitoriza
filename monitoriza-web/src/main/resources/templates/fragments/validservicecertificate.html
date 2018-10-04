@@ -15,7 +15,7 @@
 				    var messageApplication = /*[[#{form.validservice.application.pattern}]]*/ 'default';
 				/*]]>*/
 			</script>
-			<input onblur="validate(this,messageName);" type="text" id="application" th:field="*{application}" style="overflow:hidden" class="form-control" required pattern=".{3,100}" />
+			<input onblur="validate(this,messageApplication);" type="text" id="application" th:field="*{application}" style="overflow:hidden" class="form-control" required pattern=".{3,100}" />
 			<div id="invalid-application" class="invalid-feedback" ></div>
 		</div>
 		<div class="form-group col-md-6">

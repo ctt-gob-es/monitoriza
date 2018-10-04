@@ -24,9 +24,12 @@
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
+import java.math.BigInteger;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 
 /** 
@@ -37,17 +40,26 @@ import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificat
 public interface SystemCertificateRepository extends JpaRepository<SystemCertificate, Long>, JpaSpecificationExecutor<SystemCertificate> {
 	
 	/**
-	  * Method that obtains from the persistence a @firma platform identified by its primary key. 
+	  * Method that obtains a system certificate by its primary key. 
 	 * @param id String that represents the primary key of the @firma platform in the persistence.
-	 * @return Object that represents a @firma platform from the persistence. 
+	 * @return Object that represents a system certificate from the persistence. 
 	 */
 	SystemCertificate findByIdSystemCertificate(Long id);
 	
 	/**
-	  * Method that obtains from the persistence a @firma platform identified by its primary key. 
-	 * @param id String that represents the primary key of the @firma platform in the persistence.
-	 * @return Object that represents a @firma platform from the persistence. 
+	  * Method that obtains a system certificate by its alias. 
+	 * @param alias String that represents the certificate alias.
+	 * @return Object that represents a system certificate from the persistence. 
 	 */
 	SystemCertificate findByAlias(String alias);
+	
+	/**
+	  * Method that obtains a system certificate by its keystore, its issue and its serialNumber.
+	 * @param keystore Keystore that represents the keystore.
+	 * @param issuer String that represents the certificate issuer.
+	 * @param serialNumber BigInteger that represents the certificate serial number
+	 * @return Object that represents a system certificate from the persistence. 
+	 */
+	SystemCertificate findByKeystoreAndIssuerAndSerialNumber(Keystore keystore, String issuer, BigInteger serialNumber);
 
 }
