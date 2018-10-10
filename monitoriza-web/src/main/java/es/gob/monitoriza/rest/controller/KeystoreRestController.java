@@ -123,16 +123,6 @@ public class KeystoreRestController {
 	 * Attribute that represents the identifier of the html input password field for the valid service keystore's password. 
 	 */
 	private static final String FIELD_VALID_SERVICE_PASSWORD = "validservicekeystorepass";
-	
-	/**
-	 * Attribute that represents the excetion if the certificate is not valid. 
-	 */
-	private static final String CERTIFICATE_NOT_VALID = "CertificateNotValid";
-	
-	/**
-	 * Attribute that represents the excetion if the certificate is already stored in the keystore.
-	 */
-	private static final String CERTIFICATE_STORED = "CertificateStored";
 
 	/**
 	 * Attribute that represents the service object for accessing the repository. 
@@ -303,68 +293,33 @@ public class KeystoreRestController {
 
 				// Valida el certificado y lo añade al almacén truststore
 				// ssl del sistema
-				String certificateBase64 = Base64.getEncoder().encodeToString(cert.getEncoded());
 
-				List<ValidService> validServices = validServiceService.getAllValidServices();
-				ValidService validService = null;
-				if (!validServices.isEmpty()) {
-					validService = validServices.get(0);
+				ko = keyStoreFacade.storeCertificate(alias, cert, null);
+				// Modificamos el keystore correspondiente, añadiendo el
+				// certificado
+				if (sysCertService.getSystemCertificateByKsAndIssAndSn(ko, issuer, serialNumber) != null) {
+					LOGGER.error("Error al guardar el certificado, el certificado con alias " + alias + " ya existe en el almacén");
+					throw new Exception(GeneralConstants.CERTIFICATE_STORED);
 				}
 
-				if (validService != null) {
+				keystoreService.saveKeystore(ko);
 
-					String protocol = validService.getIsSecure() != null && validService.getIsSecure() ? UtilsCertificate.PROTOCOL_HTTPS : UtilsCertificate.PROTOCOL_HTTP;
-					String host = validService.getHost();
-					String port = validService.getPort();
+				SystemCertificate sysCert = new SystemCertificate();
 
-					String result = "";
-					String endpoint = protocol + "://" + host + ":" + port + UtilsCertificate.VALID_SERVICE_ENDPOINT;
-					Object[ ] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
-					try {
-						result = clientManager.getDSSCertificateServiceClientResult(endpoint, validService, peticion);
-					} catch (Exception e) {
-						LOGGER.error("Se ha producido un error al obtener el servicio DSSCertificate: " + e.getMessage());
-					}
+				sysCert.setAlias(alias);
+				sysCert.setIssuer(issuer);
+				sysCert.setSubject(subject);
+				sysCert.setKeystore(ko);
+				sysCert.setKey(true);
+				sysCert.setSerialNumber(serialNumber);
+				sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(StatusCertificateEnum.VALID.getId()));
 
-					Long statusCertificateId = UtilsCertificate.processStatusCertificate(result);
-					boolean validResult = Boolean.FALSE;
-					if (statusCertificateId.equals(StatusCertificateEnum.VALID.getId()) || statusCertificateId.equals(StatusCertificateEnum.UNKNOWN.getId())) {
-						validResult = Boolean.TRUE;
-					}
+				// Añade el certificado a la persistencia
+				sysCertService.saveSystemCertificate(sysCert);
+				listSystemCertificate.add(sysCert);
 
-					if (!validResult) {
-						LOGGER.error("Error al validar el certificado con alias " + alias + " , certificado no válido");
-						throw new Exception(CERTIFICATE_NOT_VALID);
-					}
-
-					ko = keyStoreFacade.storeCertificate(alias, cert, null);
-					// Modificamos el keystore correspondiente, añadiendo el
-					// certificado
-					
-					if (sysCertService.getSystemCertificateByKeystoreAndAlias(ko, issuer, serialNumber) != null) {
-						LOGGER.error("Error al guardar el certificado, el certificado con alias " + alias + " ya existe en el almacén");
-						throw new Exception(CERTIFICATE_STORED);
-					}
-					
-					keystoreService.saveKeystore(ko);
-
-					SystemCertificate sysCert = new SystemCertificate();
-
-					sysCert.setAlias(alias);
-					sysCert.setIssuer(issuer);
-					sysCert.setSubject(subject);
-					sysCert.setKeystore(ko);
-					sysCert.setKey(true);
-					sysCert.setSerialNumber(serialNumber);
-					sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(StatusCertificateEnum.VALID.getId()));
-
-					// Añade el certificado a la persistencia
-					sysCertService.saveSystemCertificate(sysCert);
-					listSystemCertificate.add(sysCert);
-
-					// Importación correcta
-					LOGGER.info(Language.getFormatResWebMonitoriza(LogMessages.KEY_PAIR_ADDED, new Object[ ] { alias }));
-				}
+				// Importación correcta
+				LOGGER.info(Language.getFormatResWebMonitoriza(LogMessages.KEY_PAIR_ADDED, new Object[ ] { alias }));
 
 			} catch (Exception e) {
 				LOGGER.error(Language.getFormatResWebMonitoriza(LogMessages.ERROR_ADDING_SYS_CERTS, new Object[ ] { alias }), e);
@@ -543,7 +498,7 @@ public class KeystoreRestController {
 				sysCert.setIssuer(sslForm.getIssuer());
 				sysCert.setSubject(sslForm.getSubject());
 				sysCert.setSerialNumber(sslForm.getSerialNumber());
-				sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(StatusCertificateEnum.VALID.getId()));
+				sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(sslForm.getIdSystemCertificate()));
 				;
 				sysCert.setKeystore(ko);
 				sysCert.setKey(false);
@@ -732,18 +687,18 @@ public class KeystoreRestController {
 
 						if (!validResult) {
 							LOGGER.error("Error al validar el certificado con alias " + alias + " , certificado no válido");
-							throw new Exception(CERTIFICATE_NOT_VALID);
+							throw new Exception(GeneralConstants.CERTIFICATE_NOT_VALID);
 						}
 
 						ko = keyStoreFacade.storeCertificate(alias, cert, key);
 						// Modificamos el keystore correspondiente, añadiendo el
 						// certificado
-						
-						if (sysCertService.getSystemCertificateByKeystoreAndAlias(ko, issuer, serialNumber) != null) {
+
+						if (sysCertService.getSystemCertificateByKsAndIssAndSn(ko, issuer, serialNumber) != null) {
 							LOGGER.error("Error al guardar el certificado, el certificado con alias " + alias + " ya existe en el almacén");
-							throw new Exception(CERTIFICATE_STORED);
+							throw new Exception(GeneralConstants.CERTIFICATE_STORED);
 						}
-						
+
 						keystoreService.saveKeystore(ko);
 
 						sysCert.setAlias(alias);
@@ -752,7 +707,7 @@ public class KeystoreRestController {
 						sysCert.setKeystore(ko);
 						sysCert.setKey(true);
 						sysCert.setSerialNumber(serialNumber);
-						sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(StatusCertificateEnum.VALID.getId()));
+						sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(statusCertificateId));
 
 						// Añade el certificado a la persistencia
 						sysCertService.saveSystemCertificate(sysCert);
@@ -760,6 +715,9 @@ public class KeystoreRestController {
 
 						// Importación correcta
 						LOGGER.info(Language.getFormatResWebMonitoriza(LogMessages.KEY_PAIR_ADDED, new Object[ ] { alias }));
+					} else {
+						LOGGER.error("Error al guardar el certificado, el certificado con alias " + alias + " ya existe en el almacén");
+						throw new Exception(GeneralConstants.VALID_SERVICE_NOT_CONFIGURED);
 					}
 				}
 
@@ -852,18 +810,18 @@ public class KeystoreRestController {
 
 						if (!validResult) {
 							LOGGER.error("Error al validar el certificado con alias " + alias + " , certificado no válido");
-							throw new Exception(CERTIFICATE_NOT_VALID);
+							throw new Exception(GeneralConstants.CERTIFICATE_NOT_VALID);
 						}
 
 						ko = keyStoreFacade.storeCertificate(alias, cert, key);
 						// Modificamos el keystore correspondiente, añadiendo el
 						// certificado
-						
-						if (sysCertService.getSystemCertificateByKeystoreAndAlias(ko, issuer, serialNumber) != null) {
+
+						if (sysCertService.getSystemCertificateByKsAndIssAndSn(ko, issuer, serialNumber) != null) {
 							LOGGER.error("Error al guardar el certificado, el certificado con alias " + alias + " ya existe en el almacén");
-							throw new Exception(CERTIFICATE_STORED);
+							throw new Exception(GeneralConstants.CERTIFICATE_STORED);
 						}
-						
+
 						keystoreService.saveKeystore(ko);
 
 						sysCert.setAlias(alias);
@@ -872,7 +830,7 @@ public class KeystoreRestController {
 						sysCert.setKeystore(ko);
 						sysCert.setKey(true);
 						sysCert.setSerialNumber(serialNumber);
-						sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(StatusCertificateEnum.VALID.getId()));
+						sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(statusCertificateId));
 
 						// Añade el certificado a la persistencia
 						sysCertService.saveSystemCertificate(sysCert);
@@ -880,6 +838,9 @@ public class KeystoreRestController {
 
 						// Importación correcta
 						LOGGER.info(Language.getFormatResWebMonitoriza(LogMessages.KEY_PAIR_ADDED, new Object[ ] { alias }));
+					} else {
+						LOGGER.error("Error al guardar el certificado, el certificado con alias " + alias + " ya existe en el almacén");
+						throw new Exception(GeneralConstants.VALID_SERVICE_NOT_CONFIGURED);
 					}
 				}
 			}
@@ -964,7 +925,7 @@ public class KeystoreRestController {
 				sysCert.setKeystore(ko);
 				sysCert.setKey(true);
 				sysCert.setSerialNumber(authForm.getSerialNumber());
-				sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(StatusCertificateEnum.VALID.getId()));
+				sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(authForm.getIdStatusCertificate()));
 
 				// Añade el certificado a la persistencia
 				sysCertService.saveSystemCertificate(sysCert);
@@ -1058,7 +1019,7 @@ public class KeystoreRestController {
 				sysCert.setKeystore(ko);
 				sysCert.setKey(true);
 				sysCert.setSerialNumber(validServForm.getSerialNumber());
-				sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(StatusCertificateEnum.VALID.getId()));
+				sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(validServForm.getIdStatusCertificate()));
 
 				// Añade el certificado a la persistencia
 				sysCertService.saveSystemCertificate(sysCert);
@@ -1120,7 +1081,7 @@ public class KeystoreRestController {
 	 */
 	/*@RequestMapping(value = "/downloadCertificate", produces = "application/x-x509-ca-cert")
 	public void downloadFile(@RequestParam("idSystemCertificate") Long idSystemCertificate, HttpServletResponse response) throws IOException {
-
+	
 		byte[ ] x509CertBytes = null;
 		try {
 			SystemCertificate systemCertificate = certificateService.getSystemCertificateById(idSystemCertificate);

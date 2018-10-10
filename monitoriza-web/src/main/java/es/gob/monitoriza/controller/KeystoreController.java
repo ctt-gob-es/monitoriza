@@ -160,6 +160,7 @@ public class KeystoreController {
 		certForm.setSubject(sysCert.getSubject());
 		certForm.setSerialNumber(sysCert.getSerialNumber());
 		certForm.setIdSystemCertificate(certId);
+		certForm.setIdStatusCertificate(sysCert.getStatusCertificate().getIdStatusCertificate());
 
 		model.addAttribute("certform", certForm);
 		return "modal/certEditForm";

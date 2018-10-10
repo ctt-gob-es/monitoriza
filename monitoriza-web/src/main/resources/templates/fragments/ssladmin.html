@@ -143,9 +143,11 @@ $(document).ready(function() {
 			                	var messageError = "";
 			                	
 			                	if (messageException.includes("CertificateStored")) {
-			                		messageError = "El certificado ya se encuentra en el almac\u00E9n!";
+			                		messageError = "Error al agregar el certificado, el certificado ya se encuentra en el almac\u00E9n!";
 			                	} else if (messageException.includes("CertificateNotValid")) {
-			                		messageError = "Se ha producido un error al agregar el certificado, certificado no v\u00e1lido!";
+			                		messageError = "Error al agregar el certificado, certificado no v\u00e1lido!";
+			                	} else if (messageException.includes("ValidServiceNotConfigured")) {
+			                		messageError = "Error al agregar el certificado, no est\u00e1 configurado el servicio de validaci\u00F3n!";
 			                	} else {
 			                		messageError = "Se ha producido un error al agregar el certificado!";
 			                	}

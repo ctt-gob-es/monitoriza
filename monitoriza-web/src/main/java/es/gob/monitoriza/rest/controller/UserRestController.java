@@ -25,6 +25,7 @@
 package es.gob.monitoriza.rest.controller;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -42,6 +43,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -190,7 +192,12 @@ public class UserRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deleteuser", method = RequestMethod.POST)
+	@Transactional
 	public String deleteUser(@RequestParam("id") final Long userId, @RequestParam("index") final String index) {
+		
+		UserMonitoriza userMonitoriza = userService.getUserMonitorizaById(userId);
+		certService.deleteSystemCertificateByUserMonitoriza(userMonitoriza);
+		
 		userService.deleteUserMonitoriza(userId);
 
 		return index;
@@ -476,7 +483,16 @@ public class UserRestController {
 				systemCertificate.setStatusCertificate(statusCertService.getStatusCertificateById(statusCertificateId));
 				
 				systemCertificate.setSubject(UtilsCertificate.getCertificateId(certificate));
-				systemCertificate.setUserMonitoriza(userService.getUserMonitorizaById(idUserMonitoriza));
+				UserMonitoriza userMonitoriza = userService.getUserMonitorizaById(idUserMonitoriza);
+				systemCertificate.setUserMonitoriza(userMonitoriza);
+				
+				String issuer = UtilsCertificate.getCertificateIssuerId(certificate);
+				BigInteger serialNumber = UtilsCertificate.getCertificateSerialNumber(certificate);
+				if (certService.getSystemCertificateByKsAndIssAndSnAndUser(keystoreUser, issuer, serialNumber, userMonitoriza) != null) {
+					LOGGER.error("Error al guardar el certificado, el certificado con alias " + alias + " ya existe en el almacén");
+					throw new Exception(GeneralConstants.CERTIFICATE_STORED);
+				}
+				
 				certService.saveSystemCertificate(systemCertificate);
 				// Modificamos el keystore correspondiente, anyadiendo el
 				// certificado

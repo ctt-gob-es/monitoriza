@@ -130,20 +130,6 @@ public class UserMonitoriza implements Serializable {
 	 */
 	private List<SystemCertificate> systemCertificates;
 
-	/*private String prueba;
-	
-	@Transient
-	@JsonView(DataTablesOutput.View.class)
-	public String getPrueba() {
-		prueba = "prueba";
-		return prueba;
-	}
-	
-	
-	public void setPrueba(String prueba) {
-		this.prueba = prueba;
-	}*/
-
 	/**
 	 * Gets the value of the attribute {@link #idUserMonitoriza}.
 	 * @return the value of the attribute {@link #idUserMonitoriza}.
@@ -413,10 +399,14 @@ public class UserMonitoriza implements Serializable {
 	@JsonView(DataTablesOutput.View.class)
 	public String getSomeCertNotValid() {
 		String res = CONS_SI;
-		for (SystemCertificate systemCertificate: systemCertificates) {
-			if (systemCertificate.getStatusCertificate().getIdStatusCertificate().equals(StatusCertificateEnum.VALID.getId()) || systemCertificate.getStatusCertificate().getIdStatusCertificate().equals(StatusCertificateEnum.UNKNOWN.getId())) {
-				res = CONS_NO;
-				break;
+		if (systemCertificates == null || systemCertificates.isEmpty()) {
+			res = CONS_NO;
+		} else {
+			for (SystemCertificate systemCertificate: systemCertificates) {
+				if (systemCertificate.getStatusCertificate().getIdStatusCertificate().equals(StatusCertificateEnum.VALID.getId()) || systemCertificate.getStatusCertificate().getIdStatusCertificate().equals(StatusCertificateEnum.UNKNOWN.getId())) {
+					res = CONS_NO;
+					break;
+				}
 			}
 		}
 		return res;

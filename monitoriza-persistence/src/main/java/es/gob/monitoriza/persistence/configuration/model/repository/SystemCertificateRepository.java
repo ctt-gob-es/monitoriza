@@ -31,6 +31,7 @@ import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
+import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 
 /** 
  * <p>Class .</p>
@@ -55,11 +56,27 @@ public interface SystemCertificateRepository extends JpaRepository<SystemCertifi
 	
 	/**
 	  * Method that obtains a system certificate by its keystore, its issue and its serialNumber.
-	 * @param keystore Keystore that represents the keystore.
-	 * @param issuer String that represents the certificate issuer.
-	 * @param serialNumber BigInteger that represents the certificate serial number
+	 * @param keystore Keystore that represents the keystore certificate.
+	 * @param issuer String that represents the issuer certificate.
+	 * @param serialNumber BigInteger that represents the serial number certificate.
 	 * @return Object that represents a system certificate from the persistence. 
 	 */
 	SystemCertificate findByKeystoreAndIssuerAndSerialNumber(Keystore keystore, String issuer, BigInteger serialNumber);
+	
+	/**
+	  * Method that obtains a system certificate by its keystore, its issue and its serialNumber.
+	 * @param keystore Keystore that represents the keystore certificate.
+	 * @param issuer String that represents the issuer certificate.
+	 * @param serialNumber BigInteger that represents the serial number certificate.
+	 * @param userMonitoriza UserMonitoriza that represents the user certificate.
+	 * @return Object that represents a system certificate from the persistence.
+	 */
+	SystemCertificate findByKeystoreAndIssuerAndSerialNumberAndUserMonitoriza(Keystore keystore, String issuer, BigInteger serialNumber, UserMonitoriza userMonitoriza);
+	
+	/**
+	 * Method that delete all certificates of a user.
+	 * @param userMonitoriza
+	 */
+	void deleteByUserMonitoriza(UserMonitoriza userMonitoriza);
 
 }

@@ -50,12 +50,12 @@ public class Keystore implements Serializable {
 	 * Class serial version.
 	 */
 	private static final long serialVersionUID = 1210946181096500994L;
-	
+
 	/**
 	 * Attribute that represents the identifier for the truststore ssl keystore in database. 
 	 */
 	public static final long ID_TRUSTSTORE_SSL = 1L;
-	
+
 	/**
 	 * Attribute that represents the identifier for the client authentication for RFC3161 service keystore in database. 
 	 */
@@ -65,12 +65,12 @@ public class Keystore implements Serializable {
 	 * Attribute that represents the identifier for the client authentication for user service keystore in database. 
 	 */
 	public static final long ID_USER_STORE = 3L;
-	
+
 	/**
 	 * Attribute that represents the identifier for the client authentication for valid service keystore in database. 
 	 */
 	public static final long ID_VALID_SERVICE_STORE = 4L;
-	
+
 	/**
 	 * Attribute that represents the object ID.
 	 */
@@ -100,16 +100,21 @@ public class Keystore implements Serializable {
 	 * Attribute that represents the password of the keystore.
 	 */
 	private String password;
-	
+
 	/**
 	 * Attribute that represents the type of the keystore.
 	 */
 	private String keystoreType;
 
-		/**
-	 * Gets the value of the attribute {@link #idKeystore}.
-	 * @return the value of the attribute {@link #idKeystore}.
+	/**
+	 * Attribute that represents the object version.
 	 */
+	private Long version;
+
+	/**
+	* Gets the value of the attribute {@link #idKeystore}.
+	* @return the value of the attribute {@link #idKeystore}.
+	*/
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	@Id
@@ -270,6 +275,29 @@ public class Keystore implements Serializable {
 	public void setKeystoreType(String keystoreTypeParam) {
 		// CHECKSTYLE:ON
 		this.keystoreType = keystoreTypeParam;
+	}
+	
+	/**
+	* Gets the value of the attribute {@link #version}.
+	* @return the value of the attribute {@link #version}.
+	*/
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@Column(name = "VERSION", nullable = false, precision = NumberConstants.NUM19)
+	public Long getVersion() {
+		// CHECKSTYLE:ON
+		return version;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #version}.
+	 * @param versionParam The value for the attribute {@link #version}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setVersion(Long versionParam) {
+		// CHECKSTYLE:ON
+		this.version = versionParam;
 	}
 
 }

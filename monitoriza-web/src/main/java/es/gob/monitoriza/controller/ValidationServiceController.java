@@ -43,6 +43,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.cron.ValidCertificatesJob;
+import es.gob.monitoriza.enums.AuthenticationTypeEnum;
 import es.gob.monitoriza.form.ValidServiceForm;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
@@ -127,7 +128,7 @@ public class ValidationServiceController {
 	}
 
 	@RequestMapping(value = "/savevalidservice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public @ResponseBody ValidService saveValidService(@Validated(OrderedValidation.class) @RequestBody final ValidServiceForm validServiceForm, final BindingResult bindingResult) {
+	public @ResponseBody ValidService saveValidService(@Validated(OrderedValidation.class) @RequestBody final ValidServiceForm validServiceForm, final BindingResult bindingResult) throws Exception{
 
 		ValidService validService = null;
 		boolean runJob = Boolean.FALSE;
@@ -151,6 +152,15 @@ public class ValidationServiceController {
 				validService.setPort(validServiceForm.getPort());
 				validService.setUser(validServiceForm.getUser());
 				validService.setValidServiceCertificate(sysCertService.getSystemCertificateById(validServiceForm.getValidServiceCertificate()));
+				
+				if (validServiceForm.getAuthenticationType().equals(AuthenticationTypeEnum.CERTIFICATE.getId())) {
+					if (validServiceForm.getValidServiceCertificate().intValue() == -1) {
+						LOGGER.error("Se ha producido un error al guardar el servicio de validación");
+						throw new Exception("NoCertForAuthentication");
+					}
+				}
+				
+				
 				validService = validServiceService.saveValidService(validService);
 
 			} catch (Exception e) {

@@ -26,20 +26,14 @@ package es.gob.monitoriza.webservice;
 
 import java.net.MalformedURLException;
 import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
 
 import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManager;
-import javax.net.ssl.TrustManagerFactory;
-import javax.net.ssl.X509TrustManager;
 import javax.xml.namespace.QName;
 
+import org.apache.axis.AxisProperties;
 import org.apache.axis.client.Call;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -50,12 +44,11 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
 import es.gob.monitoriza.enums.AuthenticationTypeEnum;
-import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.handler.ClientHandler;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
-import es.gob.monitoriza.trust.WSAuthSSLX509TrustManager;
+import es.gob.monitoriza.service.IKeystoreService;
 
 /** 
  * <p>Class ClientManager.</p>
@@ -84,6 +77,12 @@ public class ClientManager {
 	 * Attribute that represents the loval part.
 	 */
 	private static final String LOCAL_PART = "verify";
+	
+	/**
+	 * Attribute that represents the service object for accessing the repository. 
+	 */
+	@Autowired
+	private IKeystoreService keystoreService;
 
 	/**
 	 * Attribute that represents the service object for accessing the aminServicesManager.
@@ -117,14 +116,15 @@ public class ClientManager {
 		String response = null;
 		
 		if (validService.getIsSecure() != null && validService.getIsSecure()) {
-
-			KeyStore cerSSL = adminServicesManager.loadSslTruststore();
-
-			TrustManagerFactory tmf = TrustManagerFactory.getInstance(GeneralConstants.TRUST_MANAGER_FACTORY_SUN_X509);
-
-			tmf.init(cerSSL);
-
-			HttpsURLConnection.setDefaultSSLSocketFactory(getSSLSocketFactory(cerSSL));
+			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_TRUSTSTORE_SSL));
+			Keystore ksSSL = keystoreService.getKeystoreById(Keystore.ID_TRUSTSTORE_SSL);
+			
+			KeyStore ks = adminServicesManager.loadSslTruststore();
+			
+		    AxisSSLSocketFactory.setKeystorePass(keyStoreFacade.getKeystoreDecodedPasswordString(ksSSL.getPassword()));
+		    AxisSSLSocketFactory.setKeyStore(ks);
+		    AxisProperties.setProperty("axis.socketSecureFactory", "es.gob.monitoriza.webservice.AxisSSLSocketFactory");
+			
 		}
 		
 		ClientHandler requestHandler = null;
@@ -151,7 +151,7 @@ public class ClientManager {
 			Call call = (Call) service.createCall();
 			call.setTargetEndpointAddress(url);
 			call.setOperationName(new QName(NAME_SPACE_URI, LOCAL_PART));
-			call.setTimeout(10000);
+			call.setTimeout(1000000);
 			if (requestHandler != null) {
 				call.setClientHandlers(requestHandler,null);
 			}
@@ -160,67 +160,24 @@ public class ClientManager {
 		} catch (Exception e) {
 			LOGGER.equals(e.getMessage());
 		}
-		
 		LOGGER.info("getDSSCertificateServiceClient end");
-		
 		return response;
 	}
-
+	
 	/**
-	 * Method that initializes the trust managers.
-	 * @param keystore Parameter that represents the KeyStore.
-	 * @return one trust manager for each type of trust material.
-	 * @throws KeyStoreException If the method fails.
-	 * @throws NoSuchAlgorithmException If the method fails.
+	 * Get keystoreService.
+	 * @return keystoreService
 	 */
-	private static TrustManager[ ] createTrustManagers(KeyStore keystore) throws KeyStoreException, NoSuchAlgorithmException {
-		TrustManagerFactory tmfactory = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
-		tmfactory.init(keystore);
-		TrustManager[ ] trustmanagers = tmfactory.getTrustManagers();
-		for (int i = 0; i < trustmanagers.length; i++) {
-			if (trustmanagers[i] instanceof X509TrustManager) {
-				trustmanagers[i] = new WSAuthSSLX509TrustManager((X509TrustManager) trustmanagers[i]);
-			}
-		}
-		return trustmanagers;
+	public IKeystoreService getKeystoreService() {
+		return keystoreService;
 	}
 
 	/**
-	 * Method that generates the object used to manage the SSL communication with TS@.
-	 * @return the object used to manage the SSL communication with TS@.
-	 * @throws TSAServicesException If the method fails.
+	 * Set keystoreService.
+	 * @param keystoreService set keystoreService
 	 */
-	private SSLSocketFactory getSSLSocketFactory(final KeyStore ksSSL) {
-		SSLSocketFactory sslSocketFactory = null;
-		try {
-			// Comprobamos que el almacén de confianza TSA - SSL se haya cargado
-			checkValueNotNull(ksSSL, "Mensaje");
-		} catch (Exception e) {
-			LOGGER.error("Error");
-		}
-		try {
-			// Obtenemos el array de trust managers contenidos en el almacén de
-			// confianza TSA - SSL
-			SSLContext sslcontext = SSLContext.getInstance("SSL");
-			TrustManager[ ] trustmanagers = createTrustManagers(ksSSL);
-			sslcontext.init(null, trustmanagers, null);
-			sslSocketFactory = sslcontext.getSocketFactory();
-		} catch (Exception e) {
-			LOGGER.error("Error");
-		}
-		return sslSocketFactory;
-	}
-
-	/**
-	 * Method that checks if a value isn't null.
-	 * @param value Parameter that represents the value to check.
-	 * @param msg Parameter that represents the error message for the exception generated when the value is null.
-	 * @throws InvokerException If the value is null.
-	 */
-	private void checkValueNotNull(final Object value, final String msg) throws InvokerException {
-		if (value == null) {
-			throw new InvokerException(msg);
-		}
+	public void setKeystoreService(IKeystoreService keystoreService) {
+		this.keystoreService = keystoreService;
 	}
 
 	/**

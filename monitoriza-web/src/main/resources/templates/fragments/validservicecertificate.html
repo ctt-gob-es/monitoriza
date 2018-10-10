@@ -236,8 +236,10 @@
               	var messageException = responseText.message;
               	var messageError = "";
               	if (messageException.includes("ConstraintViolationException")) {
-            		messageError = "Debe elegir un certificado para la autenticaci\u00F3n!";
-            	} else {
+            		messageError = "Debe seleccionar un tipo de acceso para la autenticaci\u00F3n!";
+            	} else if (messageException.includes("NoCertForAuthentication")) 
+            		messageError = "Debe seleccionar un certificado para la autenticaci\u00F3n!";
+              	else {
             		messageError = "Error al guardar el servicio de validaci\u00F3n!";
             	}
 				  hide();

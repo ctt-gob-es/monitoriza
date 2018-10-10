@@ -24,7 +24,6 @@
  */
 package es.gob.monitoriza.constant;
 
-
 /** 
  * <p>Interface that contains the static constants for the static configuration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
@@ -247,5 +246,10 @@ public interface StaticConstants {
 	 * Attribute that represents the password for the system keystores.
 	 */
 	public static final String AES_PASSWORD = "aes.password";
+	
+	/**
+	 * Constant attribute that represents the property key jboss.server.config.dir. 
+	 */
+	public static final String PROP_TOMCAT_SERVER_CONFIG_DIR = "tomcat.config.path";
 	
 }

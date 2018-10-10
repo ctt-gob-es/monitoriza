@@ -52,7 +52,8 @@ CREATE TABLE "KEYSTORE"(
   "KEYSTORE" BLOB,
   "TOKEN_NAME" VARCHAR(30) NOT NULL,
   "PASSWORD" VARCHAR(255) NOT NULL,
-  "KEYSTORE_TYPE" VARCHAR(50) NOT NULL
+  "KEYSTORE_TYPE" VARCHAR(50) NOT NULL,
+  "VERSION" NUMERIC(19) NOT NULL
 );
 ALTER TABLE "KEYSTORE" ADD CONSTRAINT "ID_KEYSTORE" PRIMARY KEY ("ID_KEYSTORE");
 ALTER TABLE "KEYSTORE" ADD CONSTRAINT "KEYSTORE_UNIQUE_NAME" UNIQUE ("NAME");
@@ -63,6 +64,7 @@ COMMENT ON COLUMN "KEYSTORE"."KEYSTORE" IS 'Valor que representa el almacén de 
 COMMENT ON COLUMN "KEYSTORE"."TOKEN_NAME" IS 'Valor que representa el token con la descripción almacenada en cada archivo de propiedades por idioma.';
 COMMENT ON COLUMN "KEYSTORE"."PASSWORD" IS 'Valor que representa la contraseña de acceso al almacén de claves.';
 COMMENT ON COLUMN "KEYSTORE"."KEYSTORE_TYPE" IS 'Valor que representa el tipo del almacén de claves.';
+COMMENT ON COLUMN "KEYSTORE"."VERSION" IS 'Valor que representa el número de modificaciones aplicadas al almacén de claves inicial.';
 
 CREATE TABLE "C_STATUS_CERTIFICATES"(
  	"ID_STATUS_CERTIFICATE" NUMERIC(19) NOT NULL, 

@@ -221,5 +221,20 @@ public interface GeneralConstants {
 	 * Attribute that represents the string for identifying the ts@ filter paramenter on callin the status servlet. 
 	 */
 	public static final String PARAMETER_TSA = "tsa";
+	
+	/**
+	 * Attribute that represents the excetion if the certificate is not valid. 
+	 */
+	public static final String CERTIFICATE_NOT_VALID = "CertificateNotValid";
+	
+	/**
+	 * Attribute that represents the excetion if the certificate is already stored in the keystore.
+	 */
+	public static final String CERTIFICATE_STORED = "CertificateStored";
+	
+	/**
+	 * Attribute that represents the excetion if the validation service is not configured.
+	 */
+	public static final String VALID_SERVICE_NOT_CONFIGURED = "ValidServiceNotConfigured";
 }
 
