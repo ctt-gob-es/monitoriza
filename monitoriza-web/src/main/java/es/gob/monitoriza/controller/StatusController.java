@@ -15,12 +15,12 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.controller.WebAdminController.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.controller.StatusController.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>16 mar. 2018.</p>
+ * <b>Date:</b><p>8 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16 mar. 2018.
+ * @version 1.0, 8 oct. 2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -36,17 +36,17 @@ import es.gob.monitoriza.service.IStatusService;
 
 /**
  * <p>
- * Class .
+ * Class StatusController.
  * </p>
- * <b>Project:</b>
+ * <b>Project: </b>
  * <p>
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 16 mar. 2018.
+ * @version 1.0, 8 oct. 2018.
  */
 @Controller
-public class WebAdminController {
+public class StatusController {
 
 	@Autowired
 	private IStatusService statusService;
@@ -59,23 +59,14 @@ public class WebAdminController {
 	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-//	 @RequestMapping(value = "inicio")
-//	 public String index(Model model){
-//	 return "inicio.html";
-//	 }
+	@RequestMapping(value = "status")
+	public String status(Model model) {
 
-	@RequestMapping(value = "invalidSession")
-	public String invalid(Model model) {
-		return "invalidSession.html";
-	}
-
-	@RequestMapping(value = "inicio")
-	public String index(Model model) {
 		List<StatusDTO> statusDto = statusService.completeStatus();
 
 		model.addAttribute("status", statusDto);
 
-		return "fragments/statusInit.html";
+		return "fragments/status.html";
 	}
 
 }
