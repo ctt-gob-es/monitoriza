@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>21/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.2, 02/10/2018.
+ * @version 1.3, 10/10/2018.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -51,13 +51,13 @@ import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
+import es.gob.monitoriza.i18n.ICommonsUtilLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.i18n.LogMessages;
 
 /** 
  * <p>Utilities class for Files.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.1, 02/10/2018.
+ * @version 1.2, 10/10/2018.
  */
 public final class FileUtils {
 
@@ -141,22 +141,22 @@ public final class FileUtils {
 				}
 			}
 		} catch (FileNotFoundException e) {
-			LOGGER.error(Language.getResMonitoriza(LogMessages.ERROR_NO_FILE_EXISTS), e);
+			LOGGER.error(Language.getFormatResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.ERRORUTILS001, new Object[ ] {file.getAbsolutePath()}), e);
 		} catch (IOException e) {
-			LOGGER.error(Language.getResMonitoriza(LogMessages.ERROR_READING_FILE), e);
+			LOGGER.error(Language.getFormatResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.ERRORUTILS002, new Object[ ] {file.getAbsolutePath()}), e);
 		} finally {
 			if (result != null) {
 				try {
 					result.close();
 				} catch (IOException e) {
-					LOGGER.error(Language.getResMonitoriza(LogMessages.ERROR_INPUT_OUTPUT_FILE), e);
+					LOGGER.error(Language.getResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.ERRORUTILS003), e);
 				}
 			}
 			if (bf != null) {
 				try {
 					bf.close();
 				} catch (IOException e) {
-					LOGGER.error(Language.getResMonitoriza(LogMessages.ERROR_INPUT_OUTPUT_FILE), e);
+					LOGGER.error(Language.getResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.ERRORUTILS003), e);
 				}
 			}
 		}
@@ -197,7 +197,7 @@ public final class FileUtils {
 			}
 			
 		} catch (IOException e) {
-			LOGGER.error(Language.getResMonitoriza(LogMessages.ERROR_READING_FILE), e);
+			LOGGER.error(Language.getFormatResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.ERRORUTILS002, new Object[ ] {file.getAbsolutePath()}), e);
 		}
 
 		result = baos.toByteArray();
@@ -224,10 +224,10 @@ public final class FileUtils {
 					fos.write(buffer, 0, bytesReaded);
 				}
 			} catch (IOException e) {
-				LOGGER.error(e);
+				LOGGER.error(Language.getFormatResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.ERRORUTILS004, new Object[ ] {filename}), e);
 			} 
 		} else {
-			LOGGER.error("No se puede crear archivo: los datos de entrada son incorrectos");
+			LOGGER.error(Language.getFormatResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.ERRORUTILS005, new Object[ ] {filename}));
 		}
 	}
 	

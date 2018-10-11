@@ -20,32 +20,25 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16 may. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.service.impl;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.repository.KeystoreRepository;
 import es.gob.monitoriza.service.IKeystoreService;
 
 
 /** 
- * <p>Class .</p>
+ * <p>Class that implements the communication with the operations of the persistence layer for Keystore.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 16 may. 2018.
+ * @version 1.0, 10/10/2018.
  */
 @Service
 public class KeystoreService implements IKeystoreService {
-	
-	/**
-	 * Attribute that represents the object that manages the log of the class.
-	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_WEB_LOG);
 	
 	/**
 	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
@@ -86,7 +79,7 @@ public class KeystoreService implements IKeystoreService {
 	 */
 	@Override
 	public Keystore saveKeystore(Keystore keystore) {
-		
+		keystore.setVersion(keystore.getVersion() + 1L);
 		return repository.save(keystore);
 	}
 	

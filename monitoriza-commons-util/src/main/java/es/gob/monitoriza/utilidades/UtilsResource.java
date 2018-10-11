@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>1 feb. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 1 feb. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -30,12 +30,13 @@ import java.io.OutputStream;
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.i18n.ICommonsUtilLogMessages;
 import es.gob.monitoriza.i18n.Language;
 
 /** 
  * <p>Class that provides functionality to control resources.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 1 feb. 2018.
+ * @version 1.1 10/10/2018.
  */
 public final class UtilsResource {
 	
@@ -67,7 +68,7 @@ public final class UtilsResource {
 			try {
 				os.close();
 			} catch (IOException e) {
-				LOGGER.error(Language.getFormatResMonitoriza("", new Object[ ] { os.getClass().getName(), e.getMessage() }));
+				LOGGER.error(Language.getResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.ERRORUTILS010));
 			}
 		}
 	}
@@ -81,7 +82,7 @@ public final class UtilsResource {
 			try {
 				is.close();
 			} catch (IOException e) {
-				LOGGER.error(Language.getFormatResMonitoriza("", new Object[ ] { is.getClass().getName(), e.getMessage() }));
+				LOGGER.error(Language.getResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.ERRORUTILS011));
 			}
 		}
 	}

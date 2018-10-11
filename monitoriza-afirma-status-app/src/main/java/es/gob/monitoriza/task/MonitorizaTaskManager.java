@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 12/09/2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.task;
 
@@ -36,8 +36,8 @@ import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.configuration.manager.AdminServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TimerDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
@@ -49,7 +49,7 @@ import es.gob.monitoriza.timers.TimersHolder;
 /** 
  * <p>Class that update the configuration of the scheduled services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 12/09/2018.
+ * @version 1.1, 10/10/2018.
  */
 @Service("monitorizaTaskManager")
 class MonitorizaTaskManager {
@@ -98,7 +98,7 @@ class MonitorizaTaskManager {
     			if (timer != null) {
     				
     				// Se cancela el timer para volver a programarlo con los valores actualizados
-    				LOGGER.info(Language.getFormatResMonitoriza(LogMessages.TIMER_UPDATED_CANCEL, new Object[ ] { timerDTO.getName()}));
+    				LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS014, new Object[ ] { timerDTO.getName()}));
     				timer.cancel();
     			} 
     			
@@ -174,7 +174,7 @@ class MonitorizaTaskManager {
 		@Override
 		public void run() {
 
-			LOGGER.info(Language.getFormatResMonitoriza(LogMessages.INIT_SERVICE, new Object[ ] { timerId }));
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS001, new Object[ ] { timerId }));
 			
 			RequestLauncher rlt = new RequestLauncher();
 			

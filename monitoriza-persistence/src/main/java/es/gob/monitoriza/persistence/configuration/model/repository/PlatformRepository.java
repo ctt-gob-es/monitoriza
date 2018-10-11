@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 10 abr. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
@@ -31,16 +31,16 @@ import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitori
 
 
 /** 
- * <p>Interface that provides CRUD functionality for the PlatformAfirma entity.</p>
+ * <p>Interface that provides CRUD functionality for the PlatformMonitoriza entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 10 abr. 2018.
+ * @version 1.1, 10/10/2018.
  */
 public interface PlatformRepository extends JpaRepository<PlatformMonitoriza, Long>, JpaSpecificationExecutor<PlatformMonitoriza> {
 	
 	/**
-	  * Method that obtains from the persistence a @firma platform identified by its primary key. 
-	 * @param id String that represents the primary key of the @firma platform in the persistence.
-	 * @return Object that represents a @firma platform from the persistence. 
+	  * Method that obtains from the persistence a platform identified by its primary key. 
+	 * @param id String that represents the primary key of the platform in the persistence.
+	 * @return Object that represents a platform from the persistence. 
 	 */
 	PlatformMonitoriza findByIdPlatform(Long id);
 	

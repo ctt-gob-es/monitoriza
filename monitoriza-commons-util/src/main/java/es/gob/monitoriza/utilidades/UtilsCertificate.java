@@ -16,7 +16,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>10/05/2012.</p>
  * @author Gobierno de España.
- * @version 1.5, 29/11/2017.
+ * @version 1.6, 10/10/2018.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -39,11 +39,14 @@ import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import es.gob.monitoriza.i18n.ICommonsUtilLogMessages;
+import es.gob.monitoriza.i18n.Language;
+
 /**
  * <p>Class that provides methods for managing certificates.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.5, 29/11/2017.
+ * @version 1.6, 10/10/2018.
  */
 public final class UtilsCertificate {
 
@@ -85,7 +88,7 @@ public final class UtilsCertificate {
 		try {
 			db = dbf.newDocumentBuilder();
 		} catch (Exception e) {
-			LOGGER.error("Error en inicialización");
+			LOGGER.error(Language.getResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.ERRORUTILS008));
 		}
 	}
 
@@ -298,13 +301,11 @@ public final class UtilsCertificate {
 
 		Document responseDoc = null;
 		Long statusCertificateId = StatusCertificateEnum.NOTVALID.getId();
-		//String statusCertificateName = StatusCertificateEnum.NOTVALID.getName();
-		//boolean validResult = Boolean.FALSE;
 
 		try {
 			responseDoc = db.parse(new ByteArrayInputStream(response.getBytes(UtilsCertificate.CODIFICACION_UTF_8)));
 		} catch (Exception e) {
-			LOGGER.error("Se ha producido un error obteniendo el estado de la respuesta");
+			LOGGER.error(Language.getResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.ERRORUTILS009));
 			throw (e);
 		}
 		NodeList resultMajorNode = null;
@@ -318,32 +319,20 @@ public final class UtilsCertificate {
 		if (resultMajor.contains("Success")) {
 			if (resultMinor.contains("Definitive") || resultMinor.contains("Temporal")) {
 				statusCertificateId = StatusCertificateEnum.VALID.getId();
-				//statusCertificateName = StatusCertificateEnum.VALID.getName();
 			}
 			if (resultMinor.contains("Expired")) {
 				statusCertificateId = StatusCertificateEnum.CADUCATE.getId();
-				//statusCertificateName = StatusCertificateEnum.CADUCATE.getName();
 			}
 			if (resultMinor.contains("Revoked") || resultMinor.contains("OnHold")) {
 				statusCertificateId = StatusCertificateEnum.REVOCATE.getId();
-				//statusCertificateName = StatusCertificateEnum.REVOCATE.getName();
 			}
 			if (resultMinor.contains("PathValidationFails")) {
 				statusCertificateId = StatusCertificateEnum.UNKNOWN.getId();
-				//statusCertificateName = StatusCertificateEnum.UNKNOWN.getName();
 			}
 			if (resultMinor.contains("NotYetValid")) {
 				statusCertificateId = StatusCertificateEnum.NOTVALIDYET.getId();
-				//statusCertificateName = StatusCertificateEnum.NOTVALIDYET.getName();
 			}
 		}
-		/*if (statusCertificateId.equals(StatusCertificateEnum.VALID.getId()) || statusCertificateId.equals(StatusCertificateEnum.UNKNOWN.getId())) {
-			validResult = Boolean.TRUE;
-		}
-
-		if (!validResult) {
-			throw new Exception("Error al validar el certificado, certificado " + statusCertificateName.toLowerCase() + "!");
-		}*/
 
 		return statusCertificateId;
 	}

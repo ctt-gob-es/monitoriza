@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 8 mar. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.form;
 
@@ -34,7 +34,7 @@ import es.gob.monitoriza.rest.exception.ThenCheckIt;
 /** 
  * <p>Class that represents the backing form for adding/editing a ts@ platform.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 5/06/2018.
+ * @version 1.1, 10/10/2018.
  */
 public class TsaForm {
 	
@@ -120,7 +120,7 @@ public class TsaForm {
 
 	/**
 	 * Sets the value of the attribute {@link #idPlatform}.
-	 * @return the value of the attribute {@link #idPlatform}.
+	 * @param the value of the attribute {@link #idPlatform} to set.
 	 */
 	public void setIdPlatform(Long idPlatform) {
 		this.idPlatform = idPlatform;

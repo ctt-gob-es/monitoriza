@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 8 mar. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.form;
 
@@ -32,12 +32,13 @@ import es.gob.monitoriza.constraints.FieldMatch;
 import es.gob.monitoriza.rest.exception.CheckItFirst;
 import es.gob.monitoriza.rest.exception.ThenCheckIt;
 
-@FieldMatch(first = "password", second = "confirmPassword", message = "{form.valid.user.password.confirm}")
+
 /** 
  * <p>Class that represents the backing form for adding/editing a user.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 8 mar. 2018.
+ * @version 1.1, 10/10/2018.
  */
+@FieldMatch(first = "password", second = "confirmPassword", message = "{form.valid.user.password.confirm}")
 public class UserForm {
 	
 	/**
@@ -98,7 +99,7 @@ public class UserForm {
 
 	/**
 	 * Gets the value of the attribute {@link #idUserMonitoriza}.
-	 * @return the value of the attribute {@link #idUserMonitoriza}.
+	 * @param idUserMonitoriza UserMonitoriza identifier
 	 */
 	public void setIdUserMonitoriza(Long idUserMonitoriza) {
 		this.idUserMonitoriza = idUserMonitoriza;
@@ -162,7 +163,7 @@ public class UserForm {
 	
 	/**
 	 * Sets the value of the attribute {@link #surnames}.
-	 * @param name the value for the attribute {@link #surnames} to set.
+	 * @param surnames the value for the attribute {@link #surnames} to set.
 	 */
 	public void setSurnames(String surnames) {
 		this.surnames = surnames;
@@ -178,7 +179,7 @@ public class UserForm {
 	
 	/**
 	 * Sets the value of the attribute {@link #email}.
-	 * @param name the value for the attribute {@link #email} to set.
+	 * @param email the value for the attribute {@link #email} to set.
 	 */
 	public void setEmail(String email) {
 		this.email = email;

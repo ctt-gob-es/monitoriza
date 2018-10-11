@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>9 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 10/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -55,7 +55,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 10/10/2018.
  */
 @Entity
 @Table(name = "ALARM_MONITORIZA")
@@ -114,7 +114,7 @@ public class AlarmMonitoriza implements Serializable {
 	/**
 	 * Sets the value of the attribute {@link #idAlarm}.
 	 * 
-	 * @param isBlockedParam
+	 * @param idAlarm
 	 *            The value for the attribute {@link #idAlarm}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
@@ -141,7 +141,7 @@ public class AlarmMonitoriza implements Serializable {
 	/**
 	 * Sets the value of the attribute {@link #name}.
 	 * 
-	 * @param isBlockedParam
+	 * @param name
 	 *            The value for the attribute {@link #name}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
@@ -153,7 +153,6 @@ public class AlarmMonitoriza implements Serializable {
 
 	/**
 	 * Gets the value of the attribute {@link #blockedTime}.
-	 * 
 	 * @return the value of the attribute {@link #blockedTime}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
@@ -166,10 +165,8 @@ public class AlarmMonitoriza implements Serializable {
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #emails}.
-	 * 
-	 * @param isBlockedParam
-	 *            The value for the attribute {@link #emails}.
+	 * Sets the value of the attribute {@link #blockedTime}.
+	 * @param blockedTime The value for the attribute {@link #blockedTime}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
@@ -178,23 +175,51 @@ public class AlarmMonitoriza implements Serializable {
 		this.blockedTime = blockedTime;
 	}
 
+	/**
+	 * Gets the value of the attribute {@link #emailsDegraded}.
+	 * @return the value of the attribute {@link #emailsDegraded}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "R_ALARM_MAIL_DEGRADED", joinColumns = @JoinColumn(name = "ID_ALARM", referencedColumnName = "ID_ALARM", nullable = false), inverseJoinColumns = @JoinColumn(name = "ID_MAIL", referencedColumnName = "ID_MAIL", nullable = false))
 	public Set<MailMonitoriza> getEmailsDegraded() {
+		// CHECKSTYLE:ON
 		return emailsDegraded;
 	}
 
+	/**
+	 * Sets the value of the attribute {@link #emailsDegraded}.
+	 * @param emailsDegraded The value for the attribute {@link #emailsDegraded}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
 	public void setEmailsDegraded(Set<MailMonitoriza> emailsDegraded) {
+		// CHECKSTYLE:ON
 		this.emailsDegraded = emailsDegraded;
 	}
 
+	/**
+	 * Gets the value of the attribute {@link #emailsDown}.
+	 * @return the value of the attribute {@link #emailsDown}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
 	@ManyToMany(fetch = FetchType.EAGER)
 	@JoinTable(name = "R_ALARM_MAIL_DOWN", joinColumns = @JoinColumn(name = "ID_ALARM", referencedColumnName = "ID_ALARM", nullable = false), inverseJoinColumns = @JoinColumn(name = "ID_MAIL", referencedColumnName = "ID_MAIL", nullable = false))
 	public Set<MailMonitoriza> getEmailsDown() {
+		// CHECKSTYLE:ON
 		return emailsDown;
 	}
 
+	/**
+	 * Sets the value of the attribute {@link #emailsDown}.
+	 * @param emailsDown The value for the attribute {@link #emailsDown}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
 	public void setEmailsDown(Set<MailMonitoriza> emailsDown) {
+		// CHECKSTYLE:ON
 		this.emailsDown = emailsDown;
 	}
 

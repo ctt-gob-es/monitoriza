@@ -20,34 +20,63 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16 may. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
+
+import java.math.BigInteger;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
+import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 
 /** 
- * <p>Class .</p>
+ * <p>Interface that provides CRUD functionality for the SystemCertificate entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 16 may. 2018.
+ * @version 10/10/2018.
  */
 public interface SystemCertificateRepository extends JpaRepository<SystemCertificate, Long>, JpaSpecificationExecutor<SystemCertificate> {
 	
 	/**
-	  * Method that obtains from the persistence a @firma platform identified by its primary key. 
+	  * Method that obtains a system certificate by its primary key. 
 	 * @param id String that represents the primary key of the @firma platform in the persistence.
-	 * @return Object that represents a @firma platform from the persistence. 
+	 * @return Object that represents a system certificate from the persistence. 
 	 */
 	SystemCertificate findByIdSystemCertificate(Long id);
 	
 	/**
-	  * Method that obtains from the persistence a @firma platform identified by its primary key. 
-	 * @param id String that represents the primary key of the @firma platform in the persistence.
-	 * @return Object that represents a @firma platform from the persistence. 
+	  * Method that obtains a system certificate by its alias. 
+	 * @param alias String that represents the certificate alias.
+	 * @return Object that represents a system certificate from the persistence. 
 	 */
 	SystemCertificate findByAlias(String alias);
+	
+	/**
+	  * Method that obtains a system certificate by its keystore, its issue and its serialNumber.
+	 * @param keystore Keystore that represents the keystore certificate.
+	 * @param issuer String that represents the issuer certificate.
+	 * @param serialNumber BigInteger that represents the serial number certificate.
+	 * @return Object that represents a system certificate from the persistence. 
+	 */
+	SystemCertificate findByKeystoreAndIssuerAndSerialNumber(Keystore keystore, String issuer, BigInteger serialNumber);
+	
+	/**
+	  * Method that obtains a system certificate by its keystore, its issue and its serialNumber.
+	 * @param keystore Keystore that represents the keystore certificate.
+	 * @param issuer String that represents the issuer certificate.
+	 * @param serialNumber BigInteger that represents the serial number certificate.
+	 * @param userMonitoriza UserMonitoriza that represents the user certificate.
+	 * @return Object that represents a system certificate from the persistence.
+	 */
+	SystemCertificate findByKeystoreAndIssuerAndSerialNumberAndUserMonitoriza(Keystore keystore, String issuer, BigInteger serialNumber, UserMonitoriza userMonitoriza);
+	
+	/**
+	 * Method that delete all certificates of a user.
+	 * @param userMonitoriza
+	 */
+	void deleteByUserMonitoriza(UserMonitoriza userMonitoriza);
 
 }

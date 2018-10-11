@@ -30,10 +30,22 @@ import static java.lang.annotation.RetentionPolicy.RUNTIME;
 @Documented
 public @interface FieldMatch
 {
+    /**
+     * 
+     * @return
+     */
     String message() default "{constraints.fieldmatch}";
 
+    /**
+     * 
+     * @return
+     */
     Class<?>[] groups() default {};
 
+    /**
+     * 
+     * @return
+     */
     Class<? extends Payload>[] payload() default {};
 
     /**
@@ -47,15 +59,19 @@ public @interface FieldMatch
     String second();
 
     /**
-     * Defines several <code>@FieldMatch</code> annotations on the same element
+     * Defines several <code>@FieldMatch</code> annotations on the same element.
      *
      * @see FieldMatch
      */
     @Target({TYPE, ANNOTATION_TYPE})
     @Retention(RUNTIME)
     @Documented
-            @interface List
+    @interface List
     {
+        /**
+         * 
+         * @return
+         */
         FieldMatch[] value();
     }
 }

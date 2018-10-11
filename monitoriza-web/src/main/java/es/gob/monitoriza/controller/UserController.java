@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 8 mar. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -48,7 +48,7 @@ import es.gob.monitoriza.service.IUserMonitorizaService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  *
- * @version 1.0, 8 mar. 2018.
+ * @version 1.1, 10/10/2018.
  */
 @Controller
 public class UserController {
@@ -92,9 +92,9 @@ public class UserController {
 
 	/**
 	 * Method that opens the modal form password.
-	 * @param username
-	 * @param model
-	 * @return view
+	 * @param username String that represents the user's name
+	 * @param model view Model object
+	 * @return String that represents the navigation HTML fragment
 	 */
 	@RequestMapping(value = "menupass")
 	public String menuPass(@RequestParam("username") final String username, final Model model) {
@@ -109,9 +109,9 @@ public class UserController {
 
 	/**
 	 * Method that opens the modal form user edit.
-	 * @param username
-	 * @param model
-	 * @return view
+	 * @param username String that represents the user's name
+	 * @param model view Model object
+	 * @return String that represents the navigation HTML fragment
 	 */
 	@RequestMapping(value = "menuedit")
 	public String menuEdit(@RequestParam("username") final String username, final Model model) {
@@ -132,6 +132,7 @@ public class UserController {
 	 * Method that maps the add user certificate web requests to the controller and forwards to the form
 	 * to the view.
 	 * @param model Holder object for model attributes.
+	 * @param idUserMonitoriza Identifier for the idUserMonitoriza
 	 * @return String that represents the name of the view to forward.
 	 */
 	@RequestMapping(value = "/managecertuser/{idUserMonitoriza}")

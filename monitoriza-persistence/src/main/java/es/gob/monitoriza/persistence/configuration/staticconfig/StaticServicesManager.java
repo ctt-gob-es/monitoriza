@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 19 ene. 2018.
+ * @version 1.2, 10/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.staticconfig;
 
@@ -34,17 +34,17 @@ import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
+import es.gob.monitoriza.i18n.IPersistenceLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that manages the configuration of the @firma/ts@ services from static properties file.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 29/08/2018.
+ * @version 1.2, 10/10/2018.
  */
-public class StaticServicesManager {
+public final class StaticServicesManager {
 
 	/**
 	 * Attribute that represents the object that manages the log of the class.
@@ -75,10 +75,17 @@ public class StaticServicesManager {
 	 * Attribute that represents the key suffix for the service wsdl property. 
 	 */
 	private static final String SERVICE_LOST_THRESHOLD_PROPERTY = "lostthreshold";
+	
+	/**
+	 * Constructor method for the class StaticServicesManager.java. 
+	 */
+	private StaticServicesManager(){
+		
+	}
 
 	/**
-	 * Method that gets the services configuration from persistence (database or static properties file)
-	 * @return
+	 * Method that gets the services configuration from persistence (database or static properties file).
+	 * @return List<ServiceDTO>
 	 */
 	public static List<ServiceDTO> getServices() {
 		
@@ -155,7 +162,7 @@ public class StaticServicesManager {
 					
 
 				} catch (ArrayIndexOutOfBoundsException e) {
-					LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_PROPERTY_SERVICE, new Object[ ] { key }));
+					LOGGER.error(Language.getFormatResPersistenceMonitoriza(IPersistenceLogMessages.ERRORPERSISTENCE001, new Object[ ] { key }));
 				}
 
 			}
@@ -166,7 +173,7 @@ public class StaticServicesManager {
 	}
 
 	/**
-	 * Method that gets the services  from persistence (database or static properties file)
+	 * Method that gets the services  from persistence (database or static properties file).
 	 * @param timerName The name of the timer configured in the service
 	 * @return List with the service configuration which its timer matches with the parameter timerId
 	 */
@@ -192,9 +199,9 @@ public class StaticServicesManager {
 	}
 	
 	/**
-	 * 
-	 * @param serviceId
-	 * @return
+	 * Method that finds a service by its identifier in List<ServiceDTO>.
+	 * @param serviceId Service identifier
+	 * @return ServiceDTO object that represents the service found
 	 */
 	public static ServiceDTO getServiceById(final String serviceId) {
 				

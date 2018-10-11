@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>22 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 29/08/2018.
+ * @version 1.2, 10/10/2018.
  */
 package es.gob.monitoriza.invoker.soap;
 
@@ -53,15 +53,15 @@ import javax.xml.soap.SOAPMessage;
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.utilidades.FileUtils;
 
 /** 
  * <p>Class that performs the request of a service via HTTP SOAP.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 22 ene. 2018.
+ * @version 1.1, 10/10/2018.
  */
 public class HttpSoapInvoker {
 	
@@ -112,8 +112,8 @@ public class HttpSoapInvoker {
 					URLConnection connection = target.openConnection();
 					
 					if (connection instanceof HttpsURLConnection) {
-						
-						String msgError = Language.getResMonitoriza(LogMessages.ERROR_CONTEXT_RFC3161);
+																
+						String msgError = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS011);
 						
 						try {
 							
@@ -144,7 +144,7 @@ public class HttpSoapInvoker {
 				
 			});
 			
-			LOGGER.info(Language.getFormatResMonitoriza(LogMessages.LOG_ENDPOINT, new Object[ ] { requestFile, endpoint}));
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS008, new Object[ ] { requestFile, endpoint}));
 			
 			LocalTime beforeCall = LocalTime.now();
 			
@@ -155,7 +155,7 @@ public class HttpSoapInvoker {
 			tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
 												
 		} catch (IOException | SOAPException e) {
-			LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_SENDING_SOAP_PETITION, new Object[ ] { service.isAfirmaService()?GeneralConstants.PLATFORM_AFIRMA:GeneralConstants.PLATFORM_TSA}), e);
+			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS012, new Object[ ] { service.isAfirmaService()?GeneralConstants.PLATFORM_AFIRMA:GeneralConstants.PLATFORM_TSA}), e);
 
 		} catch (IllegalArgumentException | SecurityException e) {
 			LOGGER.error(e.getMessage());

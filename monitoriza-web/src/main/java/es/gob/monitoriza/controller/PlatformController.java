@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 10/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -47,7 +47,7 @@ import es.gob.monitoriza.service.ISystemCertificateService;
 /** 
  * <p>Class that manages the requests related to the Platform administration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 10/10/2018.
  */
 @Controller
 public class PlatformController {
@@ -136,6 +136,8 @@ public class PlatformController {
     	afirmaForm.setOcspContext(afirma.getOcspContext());
     	afirmaForm.setServiceContext(afirma.getServiceContext());
     	afirmaForm.setPort(afirma.getPort());
+    	afirmaForm.setHttpsPort(afirma.getHttpsPort());
+    	afirmaForm.setIsSecure(afirma.getIsSecure());
 
     	model.addAttribute("afirmaform", afirmaForm);
         return "modal/afirmaForm";

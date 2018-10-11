@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.0, 21 dic. 2017.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.status;
 
@@ -46,17 +46,21 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.i18n.LogMessages;
+import es.gob.monitoriza.response.DatatableStatus;
 import es.gob.monitoriza.response.ResponseErrorConnection;
+import es.gob.monitoriza.response.ResponseJsonMonitoriza;
 import es.gob.monitoriza.response.ResponseMonitoriza;
 
 
 /** 
  * <p>Class that gets the status for the @firma/ts@ services through servlet call</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.0, 05 feb. 2018.
+ * @version 1.1, 10/10/2018.
  */
 public class AfirmaServicesStatus extends HttpServlet {
 
@@ -79,7 +83,7 @@ public class AfirmaServicesStatus extends HttpServlet {
 			response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "");
 			response.flushBuffer();
 		} catch (Exception e) {
-			LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_SERVLET_POST, new Object[ ] { request.getRemoteAddr() }), e);
+			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS013, new Object[ ] { request.getRemoteAddr() }), e);
 		}
 	}
 
@@ -90,26 +94,37 @@ public class AfirmaServicesStatus extends HttpServlet {
 	public void doGet(HttpServletRequest request, HttpServletResponse response) {
 			
 		byte[ ] responseBytes = null;
+		String responseJson = null;
 		OutputStream os = null;
 		DataOutputStream out = null;
 		
+		
+		// Procesamos la petición, obteniendo el posible parámetro
+		// para filtrar la plataforma
+		final String platformFilter = request.getParameter(GeneralConstants.OPERATION_CODE_PLATFORM_FILTER);
+		final String adminFilter = request.getParameter(GeneralConstants.OPERATION_CODE_ADMIN_FILTER);
+		
 		try {
-			
-			// Procesamos la petición, obteniendo el posible parámetro
-			// para filtrar la plataforma
-			final String platformFilter = request.getParameter(GeneralConstants.OPERATION_CODE_PLATFORM_FILTER);
-			
+		
 			os = response.getOutputStream();
 			out = new DataOutputStream(new BufferedOutputStream(os));
-			
-			response.setContentType("text/html");
+					
+			response.setStatus(HttpServletResponse.SC_OK);
 			response.setCharacterEncoding("UTF-8");
 			response.addHeader("Server:", "Servidor Monitoriz@");
-			
-			response.setStatus(HttpServletResponse.SC_OK);
-						
-			responseBytes = ResponseMonitoriza.render(platformFilter).getBytes();
-			response.setContentLength(responseBytes.length);
+				
+			if (adminFilter == null) {
+    			responseBytes = ResponseMonitoriza.render(platformFilter, adminFilter).getBytes();
+    			response.setContentLength(responseBytes.length);
+    			response.setContentType("text/html");
+    			
+			} else {
+				responseJson = ResponseJsonMonitoriza.getResponseStatus();
+				response.setContentLength(responseJson.length());
+				response.setContentType("application/Json");
+		        		        
+				responseBytes = responseJson.getBytes();
+			}
 			
 			out.write(responseBytes);
 			out.flush();
@@ -118,11 +133,23 @@ public class AfirmaServicesStatus extends HttpServlet {
 			
 			try {
 				response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-				responseBytes = ResponseErrorConnection.render().getBytes();
-				response.setContentLength(responseBytes.length);
+				final String msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS014, new Object[ ] { request.getRemoteAddr() });
+				
+				if (adminFilter == null) {
+    				responseBytes = ResponseErrorConnection.render().getBytes();
+    				response.setContentLength(responseBytes.length);
+    				
+				} else {
+					DatatableStatus dtStatusError = new DatatableStatus();
+					dtStatusError.setError(msgError);
+					ObjectMapper objectMapper = new ObjectMapper();
+					responseJson = objectMapper.writeValueAsString(dtStatusError);
+					responseBytes = responseJson.getBytes();
+				}
+				
 				out.write(responseBytes);
 				out.flush();
-				LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_SERVLET_REQUEST, new Object[ ] { request.getRemoteAddr() }), e);
+				LOGGER.error(msgError, e);
 			} catch (Exception e1) {
 				// No se hace nada...
 			}

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 12/09/2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
@@ -31,7 +31,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 /** 
  * <p>Interface that provides CRUD functionality for the TimerScheduled entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 12/09/2018.
+ * @version 1.1, 10/10/2018.
  */
 public interface TimerScheduledRepository extends JpaRepository<TimerScheduled, Long> {
 	
@@ -44,7 +44,7 @@ public interface TimerScheduledRepository extends JpaRepository<TimerScheduled, 
 	
 	/**
 	 * Method that obtains from the persistence a scheduled timer by timer. 
-	 * @param idTimer
+	 * @param idTimer Timer identifier
 	 * @return Object that represents a service from the persistence. 
 	 */
 	TimerScheduled findByTimerIdTimer(Long idTimer);

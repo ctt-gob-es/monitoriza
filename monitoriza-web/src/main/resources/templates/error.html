@@ -4,6 +4,7 @@
         <title>Error page</title>
         <meta charset="utf-8" />
         <link type="text/css" rel="stylesheet" th:href="@{css/bootstrap.min.css}"/>
+        <link type="image/png" rel="icon" th:href="@{images/chart_favicon.png}">
     </head>
     
 	<body class="app" th:with="httpStatus=${T(org.springframework.http.HttpStatus).valueOf(#response.status)}" style="text-align: center;">

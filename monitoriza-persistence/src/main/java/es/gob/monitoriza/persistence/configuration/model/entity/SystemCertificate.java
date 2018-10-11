@@ -17,7 +17,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>14/02/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 14/02/2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -46,7 +46,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * <p>Class that represents the representation of the <i>SYSTEM_CERTIFICATE</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.0, 14/02/2018.
+ * @version 1.1, 10/10/2018.
  */
 @Entity
 @Table(name = "SYSTEM_CERTIFICATE")
@@ -304,7 +304,7 @@ public class SystemCertificate implements Serializable {
 
 	/**
 	 * Sets the value of the attribute {@link #statusCertificate}.
-	 * @param statusCertificateParam The value for the attribute {@link #statusCertificate}.
+	 * @param statusCertificate The value for the attribute {@link #statusCertificate}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
@@ -329,7 +329,7 @@ public class SystemCertificate implements Serializable {
 
 	/**
 	 * Sets the value of the attribute {@link #userMonitoriza}.
-	 * @param userMonitorizaParam The value for the attribute {@link #userMonitoriza}.
+	 * @param userMonitoriza The value for the attribute {@link #userMonitoriza}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.

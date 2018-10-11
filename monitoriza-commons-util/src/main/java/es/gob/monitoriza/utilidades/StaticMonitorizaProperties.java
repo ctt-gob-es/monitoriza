@@ -32,10 +32,11 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 10/10/2018.
  */
 package es.gob.monitoriza.utilidades;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.Map.Entry;
@@ -45,12 +46,15 @@ import java.util.Set;
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.StaticConstants;
+import es.gob.monitoriza.i18n.ICommonsUtilLogMessages;
+import es.gob.monitoriza.i18n.Language;
 
 
 /** 
  * <p>Class contains static properties of Monitoriz@. This properties are immutable and they can be modified only restarting the server context.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 10/10/2018.
  */
 public class StaticMonitorizaProperties {
 
@@ -94,7 +98,7 @@ public class StaticMonitorizaProperties {
 						staticProperties.load(configStream);
 						
 					} catch (IOException e) {
-						LOGGER.error("Error al cargar el archivo de propiedades de monitoriza con ruta: " + System.getProperty(STATIC_MONITORIZA_SYSTEM_PROPERTY));
+						LOGGER.error(Language.getFormatResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.ERRORUTILS007, new Object[ ] { System.getProperty(STATIC_MONITORIZA_SYSTEM_PROPERTY) }), e);
 					} 
 				}
 			}
@@ -120,5 +124,23 @@ public class StaticMonitorizaProperties {
 	
 		return getProperties().entrySet();
 		
+	}
+	
+	/**
+	 * Method that returns the value of the system property tomcat.config.path.
+	 * @return Value of the system property tomcat.config.path. Null if not exist.
+	 */
+	public static String getTomcatServerConfigDir() {
+		return System.getProperty(StaticConstants.PROP_TOMCAT_SERVER_CONFIG_DIR);
+	}
+	
+	/**
+	 * Auxiliar method to create an absolute path to a file.
+	 * @param pathDir Directory absolute path that contains the file.
+	 * @param filename Name of the file.
+	 * @return Absolute path of the file.
+	 */
+	public static String createAbsolutePath(String pathDir, String filename) {
+		return pathDir + File.separator + filename;
 	}
 }

@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>29 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 20/09/2018.
+ * @version 1.3, 10/10/2018.
  */
 package es.gob.monitoriza.invoker.rfc3161;
 
@@ -51,8 +51,8 @@ import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.exception.InvokerException;
+import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.utilidades.FileUtils;
 import es.gob.monitoriza.utilidades.UtilsResource;
@@ -60,7 +60,7 @@ import es.gob.monitoriza.utilidades.UtilsResource;
 /** 
  * <p>Class that manages and performs the request of a service via RFC3161.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 20/09/2018.
+ * @version 1.3, 10/10/2018.
  */
 public class Rfc3161Invoker {
 	
@@ -100,7 +100,7 @@ public class Rfc3161Invoker {
 	 * @throws InvokerException If the method fails.
 	 */
 	public static Long sendRequest(final File requestFile, final ServiceDTO service, final KeyStore ssl, final KeyStore authRfc3161) throws InvokerException {
-		LOGGER.debug(Language.getResMonitoriza(LogMessages.INIT_RFC3161));
+		LOGGER.debug(Language.getResMonitoriza(IStatusLogMessages.STATUS009));
 		
 		Long tiempoTotal = null;
 		String msgError = null;
@@ -118,37 +118,37 @@ public class Rfc3161Invoker {
 			// Obtenemos el indicador para saber si es necesaria la
 			// autenticación del cliente
 			if (service.getUseRfc3161Auth()) {
-				LOGGER.debug(Language.getResMonitoriza(LogMessages.AUTH_CLIENT_RFC3161_ON));
+				LOGGER.debug(Language.getResMonitoriza(IStatusLogMessages.STATUS010));
 
 				// Obtenemos el alias del certificado a usar para la
 				// autenticación cliente
 				//String certificateAlias = StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_HTTPS_CERTIFICATE_ALIAS);
 				// Comprobamos que el alias del certificado a usar para la
 				// autenticación cliente no es nulo
-				checkValueNotNull(service.getRfc3161Cert(), Language.getResMonitoriza(LogMessages.ERROR_UNDEFINED_CERTIFICATE_AUTH_CLIENT_RFC3161));
+				checkValueNotNull(service.getRfc3161Cert(), Language.getResMonitoriza(IStatusLogMessages.STATUS011));
 
 				// Accedemos al almacén con el certificado para la autenticación cliente
-				msgError = Language.getResMonitoriza(LogMessages.ERROR_KEYSTORE_ACCESS_AUTH_CLIENT_RFC3161);
+				msgError = Language.getResMonitoriza(IStatusLogMessages.STATUS012);
 												
 				// Comprobamos que el certificado existe en el almacén
 				if (!authRfc3161.containsAlias(service.getRfc3161Cert())) {
-					msgError = Language.getFormatResMonitoriza(LogMessages.ERROR_NOCERT_IN_KEYSTORE_AUTH_CLIENT_RFC3161, new Object[ ] { service.getRfc3161Cert() });
+					msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS006, new Object[ ] { service.getRfc3161Cert() });
 				} else {
 					PrivateKey pk = null;
 					// Obtenemos la clave privada asociada al alias del
 					// certificado
-					msgError = Language.getFormatResMonitoriza(LogMessages.ERROR_PRIVATE_KEY_AUTH_CLIENT_RFC3161, new Object[ ] { service.getRfc3161Cert() });
+					msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS007, new Object[ ] { service.getRfc3161Cert() });
 					if (authRfc3161.isKeyEntry(service.getRfc3161Cert())) {
 						pk = (PrivateKey) authRfc3161.getKey(service.getRfc3161Cert(), service.getRfc3161Password().toCharArray());
 					}
 					// Obtenemos la cadena de certificación para el alias del
 					// certificado
-					msgError = Language.getFormatResMonitoriza(LogMessages.ERROR_CERTIFICATE_CHAIN_AUTH_CLIENT_RFC3161, new Object[ ] { service.getRfc3161Cert() });
+					msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS008, new Object[ ] { service.getRfc3161Cert() });
 					Certificate[ ] certificateChain = authRfc3161.getCertificateChain(service.getRfc3161Cert());
 					// Creamos un almacén de claves vacío para meter el
 					// certificado
 					// a usar para la autenticación cliente
-					msgError = Language.getResMonitoriza(LogMessages.ERROR_CONTEXT_RFC3161);
+					msgError = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS009);
 					String keystoreType = KEYSTORE_TYPE_PKCS12;
 					String keystorePass = CLIENT_AUTH_KEYSTORE_PASSWORD;
 					KeyStore ks = KeyStore.getInstance(keystoreType);
@@ -161,8 +161,8 @@ public class Rfc3161Invoker {
 				}
 
 			} else {
-				LOGGER.debug(Language.getResMonitoriza(LogMessages.AUTH_CLIENT_RFC3161_OFF));
-				msgError = Language.getResMonitoriza(LogMessages.ERROR_CONTEXT_RFC3161);
+				LOGGER.info(Language.getResMonitoriza(IStatusLogMessages.STATUS013));
+				msgError = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS009);
 				ctx.init(null, tmf.getTrustManagers(), null);
 			}
 
@@ -170,15 +170,12 @@ public class Rfc3161Invoker {
 			byte request[] = FileUtils.fileToByteArray(requestFile);
 
 			// Obtenemos la URL de conexión con el servicio RFC 3161
-			//URL url = getRFC3161TSAURL();
 			URL url = getRFC3161TSAURLFromWebAdmin(service);
-			//LOGGER.info(Language.getResMonitoriza("logTMH019"));
-
-			//msgError = Language.getResMonitoriza("logTMH018");
+			
 			HttpsURLConnection tsaConnection = (HttpsURLConnection) url.openConnection();
 			tsaConnection.setHostnameVerifier(new NameVerifier());
 
-			LOGGER.info(Language.getFormatResMonitoriza(LogMessages.LOG_ENDPOINT, new Object[ ] { requestFile, url.toString()}));			
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS008, new Object[ ] { requestFile, url.toString()}));			
 			
 			SSLSocketFactory factory = ctx.getSocketFactory();
 			tsaConnection.setSSLSocketFactory(factory);
@@ -208,9 +205,9 @@ public class Rfc3161Invoker {
 	}
 		
 	/**
-	 * 
-	 * @param service
-	 * @return
+	 * Method that gets the URL of the configured RFC3161 service in TS@
+	 * @param service Configured RFC3161 service
+	 * @return URL of the RFC3161 service in TS@
 	 */
 	private static URL getRFC3161TSAURLFromWebAdmin(ServiceDTO service) throws InvokerException {
 					
@@ -220,7 +217,7 @@ public class Rfc3161Invoker {
 		try {
 			return new URL(tsaURL.toString());
 		} catch (MalformedURLException e) {
-			throw new InvokerException(Language.getFormatResMonitoriza(LogMessages.ERROR_MALFORMED_URL_RFC3161, new Object[ ] { tsaURL }), e);
+			throw new InvokerException(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS010, new Object[ ] { tsaURL }), e);
 		}
 	}
 	

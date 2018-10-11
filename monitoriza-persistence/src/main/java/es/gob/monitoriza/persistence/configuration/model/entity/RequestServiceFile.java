@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>26/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 26/09/2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -44,7 +44,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
 /** 
  * <p>Class that maps the <i>REQUEST_SERVICE_FILE</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 26/09/2018.
+ * @version 1.1, 10/10/2018.
  */
 @Entity
 @Table(name = "REQUEST_SERVICE_FILE")
@@ -126,7 +126,7 @@ public class RequestServiceFile implements Serializable{
 
 	/**
 	 * Sets the value of the attribute {@link #filename}.
-	 * @param idRequestServiceFile The value for the attribute {@link #filename}.
+	 * @param filename The value for the attribute {@link #filename}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.

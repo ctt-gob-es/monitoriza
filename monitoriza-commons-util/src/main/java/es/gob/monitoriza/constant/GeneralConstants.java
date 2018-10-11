@@ -19,14 +19,14 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.2, 25/01/2018.
+ * @version 1.5, 10/10/2018.
  */
 package es.gob.monitoriza.constant;
 
 /** 
  * <p>Interface that contains general constants.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.4, 29/08/2018.
+ * @version 1.4, 10/10/2018.
  */
 public interface GeneralConstants {
 	
@@ -89,6 +89,11 @@ public interface GeneralConstants {
 	 * Constant that represents the colon character ':'.
 	 */
 	public static final String COLON = ":";
+	
+	/**
+	 * Constant that represents the colon character ';'.
+	 */
+	public static final String SEMICOLON = ";";
 	
 	/**
 	 * Constant that represents the path separator character '//'.
@@ -203,6 +208,12 @@ public interface GeneralConstants {
 	public static final String OPERATION_CODE_PLATFORM_FILTER = "platform";
 	
 	/**
+	 * Attribute that represents the name of the parameter that receives the response servlet
+	 * for showing admin mode results, including details about each request file and times. 
+	 */
+	public static final String OPERATION_CODE_ADMIN_FILTER = "admin";
+	
+	/**
 	 * Attribute that represents the string for identifying the @firma platform. 
 	 */
 	public static final String PLATFORM_AFIRMA = "@Firma";
@@ -221,5 +232,20 @@ public interface GeneralConstants {
 	 * Attribute that represents the string for identifying the ts@ filter paramenter on callin the status servlet. 
 	 */
 	public static final String PARAMETER_TSA = "tsa";
+	
+	/**
+	 * Attribute that represents the excetion if the certificate is not valid. 
+	 */
+	public static final String CERTIFICATE_NOT_VALID = "CertificateNotValid";
+	
+	/**
+	 * Attribute that represents the excetion if the certificate is already stored in the keystore.
+	 */
+	public static final String CERTIFICATE_STORED = "CertificateStored";
+	
+	/**
+	 * Attribute that represents the excetion if the validation service is not configured.
+	 */
+	public static final String VALID_SERVICE_NOT_CONFIGURED = "ValidServiceNotConfigured";
 }
 

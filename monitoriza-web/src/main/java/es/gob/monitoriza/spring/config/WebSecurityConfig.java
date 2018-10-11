@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>6 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 6 mar. 2018.
+ * @version 1.2, 10/10/2018.
  */
 package es.gob.monitoriza.spring.config;
 
@@ -37,11 +37,13 @@ import org.springframework.security.web.session.HttpSessionEventPublisher;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.i18n.IWebLogMessages;
+import es.gob.monitoriza.i18n.Language;
 
 /**
  * <p>Class that enables and configures Spring Web Security for the Monitoriz@ application.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 29/08/2018.
+ * @version 1.2, 10/10/2018.
  */
 @Configuration
 @EnableWebSecurity
@@ -110,11 +112,15 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 				.invalidSessionUrl("/invalidSession");
 			
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
+			LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB012));
 		}
 
 	}
 	
+	/**
+	 * Method that creates a new HttpSessionEventPublisher instance.
+	 * @return new HttpSessionEventPublisher instance
+	 */
 	@Bean
 	public HttpSessionEventPublisher httpSessionEventPublisher() {
 	    return new HttpSessionEventPublisher();
@@ -132,7 +138,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 		try {
 			authFilter.setAuthenticationManager(authenticationManager());
 		} catch (Exception e) {
-			LOGGER.error(e.getMessage());
+			LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB013));
 		}
 		authFilter.setAuthenticationSuccessHandler(successHandler);
 		authFilter.setAuthenticationFailureHandler(failureHandler);

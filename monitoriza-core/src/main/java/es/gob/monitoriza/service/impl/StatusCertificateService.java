@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16 may. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -32,9 +32,9 @@ import es.gob.monitoriza.persistence.configuration.model.repository.StatusCertif
 import es.gob.monitoriza.service.IStatusCertificateService;
 
 /**
- * <p>Class .</p>
+ * <p>Class that implements the communication with the operations of the persistence layer for StatusCertificate.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 16 may. 2018.
+ * @version 1.1, 10/10/2018.
  */
 @Service
 public class StatusCertificateService implements IStatusCertificateService {
@@ -56,7 +56,7 @@ public class StatusCertificateService implements IStatusCertificateService {
 	}
 
 	/**
-	 * Get repository
+	 * Get the repository.
 	 * @return repository
 	 */
 	public StatusCertificateRepository getRepository() {

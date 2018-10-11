@@ -20,11 +20,12 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 21 mar. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
 import java.io.IOException;
+import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
 import java.util.Base64;
@@ -42,6 +43,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -64,6 +66,8 @@ import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
 import es.gob.monitoriza.form.UserForm;
 import es.gob.monitoriza.form.UserFormEdit;
 import es.gob.monitoriza.form.UserFormPassword;
+import es.gob.monitoriza.i18n.IWebLogMessages;
+import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
@@ -90,7 +94,7 @@ import es.gob.monitoriza.webservice.ClientManager;
  * Application for monitoring services of @firma suite systems.
  * </p>
  *
- * @version 1.0, 21 mar. 2018.
+ * @version 1.1, 10/10/2018.
  */
 @RestController
 public class UserRestController {
@@ -190,7 +194,12 @@ public class UserRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deleteuser", method = RequestMethod.POST)
+	@Transactional
 	public String deleteUser(@RequestParam("id") final Long userId, @RequestParam("index") final String index) {
+		
+		UserMonitoriza userMonitoriza = userService.getUserMonitorizaById(userId);
+		certService.deleteSystemCertificateByUserMonitoriza(userMonitoriza);
+		
 		userService.deleteUserMonitoriza(userId);
 
 		return index;
@@ -460,7 +469,7 @@ public class UserRestController {
 				try {
 					result = clientManager.getDSSCertificateServiceClientResult(endpoint, validService, peticion);
 				} catch (Exception e) {
-					LOGGER.error("Se ha producido un error al obtener el servicio DSSCertificate: " + e.getMessage());
+					LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB005), e.getCause());
 				}
 				
 				Long statusCertificateId = UtilsCertificate.processStatusCertificate(result);
@@ -470,13 +479,22 @@ public class UserRestController {
 				}
 
 				if (!validResult) {
-					throw new Exception("Error al validar el certificado, certificado, certificado no válido!");
+					throw new Exception(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB006, new Object[] {alias}));
 				}
 
 				systemCertificate.setStatusCertificate(statusCertService.getStatusCertificateById(statusCertificateId));
 				
 				systemCertificate.setSubject(UtilsCertificate.getCertificateId(certificate));
-				systemCertificate.setUserMonitoriza(userService.getUserMonitorizaById(idUserMonitoriza));
+				UserMonitoriza userMonitoriza = userService.getUserMonitorizaById(idUserMonitoriza);
+				systemCertificate.setUserMonitoriza(userMonitoriza);
+				
+				String issuer = UtilsCertificate.getCertificateIssuerId(certificate);
+				BigInteger serialNumber = UtilsCertificate.getCertificateSerialNumber(certificate);
+				if (certService.getSystemCertificateByKsAndIssAndSnAndUser(keystoreUser, issuer, serialNumber, userMonitoriza) != null) {
+					LOGGER.error("Error al guardar el certificado, el certificado con alias " + alias + " ya existe en el almacén");
+					throw new Exception(GeneralConstants.CERTIFICATE_STORED);
+				}
+				
 				certService.saveSystemCertificate(systemCertificate);
 				// Modificamos el keystore correspondiente, anyadiendo el
 				// certificado

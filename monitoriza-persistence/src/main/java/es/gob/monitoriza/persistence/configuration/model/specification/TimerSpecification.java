@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>30 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 30 may. 2018.
+ * @version 1.2, 10/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.specification;
 
@@ -40,7 +40,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 /** 
  * <p>Class that manages timer search criteria for monitoriz@ services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 29/08/2018.
+ * @version 1.2, 10/10/2018.
  */
 public class TimerSpecification implements Specification<ServiceMonitoriza>{
 		
@@ -64,6 +64,10 @@ public class TimerSpecification implements Specification<ServiceMonitoriza>{
 		this.criteria = criteria;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see org.springframework.data.jpa.domain.Specification#toPredicate(javax.persistence.criteria.Root, javax.persistence.criteria.CriteriaQuery, javax.persistence.criteria.CriteriaBuilder)
+	 */
 	@Override
     public Predicate toPredicate
       (Root<ServiceMonitoriza> root, CriteriaQuery<?> query, CriteriaBuilder builder) {

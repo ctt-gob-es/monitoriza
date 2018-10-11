@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.2, 12/09/2018.
+ * @version 1.3, 10/10/2018.
  */
 package es.gob.monitoriza.task;
 
@@ -41,8 +41,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import es.gob.monitoriza.configuration.manager.AdminServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TimerDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
@@ -54,7 +54,7 @@ import es.gob.monitoriza.timers.TimersHolder;
 /** 
  * <p>Class that initializes the timers for processing the batch of requests for each service.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.2, 12/09/2018.
+ * @version 1.3, 10/10/2018.
  */
 @Configurable
 public class MonitorizaServletTask extends HttpServlet {
@@ -178,7 +178,7 @@ public class MonitorizaServletTask extends HttpServlet {
 		@Override
 		public void run() {
 
-			LOGGER.info(Language.getFormatResMonitoriza(LogMessages.INIT_SERVICE, new Object[ ] { timerId }));
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS001, new Object[ ] { timerId }));
 			
 			RequestLauncher rlt = new RequestLauncher();
 			

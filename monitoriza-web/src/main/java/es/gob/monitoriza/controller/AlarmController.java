@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>19 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 19 abr. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -47,14 +47,14 @@ import es.gob.monitoriza.service.IMailMonitorizaService;
 
 /**
  * <p>
- * Class .
+ * Class that maps the request for the alarm form to the controller.
  * </p>
  * <b>Project:</b>
  * <p>
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 19 abr. 2018.
+ * @version 1.1, 10/10/2018.
  */
 @Controller
 public class AlarmController {
@@ -71,6 +71,10 @@ public class AlarmController {
 	@Autowired
 	private IMailMonitorizaService mailService;
 
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
 	@Autowired
 	private IAlarmMonitorizaService alarmService;
 

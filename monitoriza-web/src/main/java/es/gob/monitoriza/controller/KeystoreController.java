@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>14 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 14 may. 2018.
+ * @version 1.1 10/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -41,9 +41,9 @@ import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificat
 import es.gob.monitoriza.service.ISystemCertificateService;
 
 /**
- * <p>Class .</p>
+ * <p>Class that maps the request for the keystores forms to the controller.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 14 may. 2018.
+ * @version 1.1, 10/10/2018.
  */
 @Controller
 public class KeystoreController {

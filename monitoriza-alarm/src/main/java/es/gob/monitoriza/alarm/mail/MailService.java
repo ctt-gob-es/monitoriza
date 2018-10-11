@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>23/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 23/01/2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.alarm.mail;
 
@@ -38,15 +38,15 @@ import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
+import es.gob.monitoriza.i18n.IAlarmLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.utilidades.MailUtils;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that manages the mail service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 23/01/2018.
+ * @version 1.1, 10/10/2018.
  */
 public class MailService {
 
@@ -358,7 +358,7 @@ public class MailService {
 			transport.close();
 
 		} catch (MessagingException e) {
-			LOGGER.error(Language.getResMonitoriza(LogMessages.ERROR_SENDING_MAIL), e.getCause());
+			LOGGER.error(Language.getResMonitoriza(IAlarmLogMessages.ERRORALAMR003), e.getCause());
 			return false;
 		}
 		

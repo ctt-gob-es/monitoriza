@@ -15,7 +15,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * <b>Date:</b><p>06/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 06/03/2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -47,7 +47,7 @@ import es.gob.monitoriza.utilidades.StatusCertificateEnum;
 /**
  * <p>Class that maps the <i>USER_MONITORIZA</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 06/03/2018.
+ * @version 1.1, 10/10/2018.
  */
 @Entity
 @Table(name = "USER_MONITORIZA")
@@ -129,20 +129,6 @@ public class UserMonitoriza implements Serializable {
 	 * Attribute that represents the system certificates of the user.
 	 */
 	private List<SystemCertificate> systemCertificates;
-
-	/*private String prueba;
-	
-	@Transient
-	@JsonView(DataTablesOutput.View.class)
-	public String getPrueba() {
-		prueba = "prueba";
-		return prueba;
-	}
-	
-	
-	public void setPrueba(String prueba) {
-		this.prueba = prueba;
-	}*/
 
 	/**
 	 * Gets the value of the attribute {@link #idUserMonitoriza}.
@@ -406,17 +392,21 @@ public class UserMonitoriza implements Serializable {
 	}
 
 	/**
-	 * Method that calculates if the user have a not valid certificate
+	 * Method that calculates if the user have a not valid certificate.
 	 * @return String result
 	 */
 	@Transient
 	@JsonView(DataTablesOutput.View.class)
 	public String getSomeCertNotValid() {
 		String res = CONS_SI;
-		for (SystemCertificate systemCertificate: systemCertificates) {
-			if (systemCertificate.getStatusCertificate().getIdStatusCertificate().equals(StatusCertificateEnum.VALID.getId()) || systemCertificate.getStatusCertificate().getIdStatusCertificate().equals(StatusCertificateEnum.UNKNOWN.getId())) {
-				res = CONS_NO;
-				break;
+		if (systemCertificates == null || systemCertificates.isEmpty()) {
+			res = CONS_NO;
+		} else {
+			for (SystemCertificate systemCertificate: systemCertificates) {
+				if (systemCertificate.getStatusCertificate().getIdStatusCertificate().equals(StatusCertificateEnum.VALID.getId()) || systemCertificate.getStatusCertificate().getIdStatusCertificate().equals(StatusCertificateEnum.UNKNOWN.getId())) {
+					res = CONS_NO;
+					break;
+				}
 			}
 		}
 		return res;
