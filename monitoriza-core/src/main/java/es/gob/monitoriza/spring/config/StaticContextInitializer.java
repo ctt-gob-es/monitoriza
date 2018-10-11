@@ -15,30 +15,39 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.spring.config.ApplicationConfiguration.java.</p>
- * <b>Description:</b><p>Spring configuration class that sets the configuration of Spring components, entities and repositories.</p>
+ * <b>File:</b><p>es.gob.monitoriza.spring.config.StaticContextInitializer.java.</p>
+ * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>7 mar. 2018.</p>
+ * <b>Date:</b><p>8 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 7 mar. 2018.
+ * @version 1.0, 8 oct. 2018.
  */
 package es.gob.monitoriza.spring.config;
 
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
-import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.datatables.repository.DataTablesRepositoryFactoryBean;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
+import javax.annotation.PostConstruct;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import es.gob.monitoriza.keystore.KeystoreVersionFileManager;
+import es.gob.monitoriza.service.IKeystoreService;
 
 /** 
- * <p>Spring configuration class that sets the configuration of Spring components, entities and repositories.</p>
+ * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 7 mar. 2018.
+ * @version 1.0, 8 oct. 2018.
  */
-@Configuration
-@EnableAutoConfiguration
-@ComponentScan("es.gob.monitoriza")
-@EntityScan("es.gob.monitoriza.persistence.configuration.model.entity")
-@EnableJpaRepositories(repositoryFactoryBeanClass = DataTablesRepositoryFactoryBean.class, basePackages = "es.gob.monitoriza.persistence.configuration.model.repository")
-public class ApplicationConfig {}
+@Component
+public class StaticContextInitializer {
+
+    /**
+	 * Attribute that represents the service object for accessing the repository. 
+	 */
+	@Autowired
+	private IKeystoreService keystoreService;
+
+    @PostConstruct
+    public void init() {
+    	KeystoreVersionFileManager.setKeystoreService(keystoreService);
+    }
+}

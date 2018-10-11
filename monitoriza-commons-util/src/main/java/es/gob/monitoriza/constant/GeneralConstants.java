@@ -26,7 +26,7 @@ package es.gob.monitoriza.constant;
 /** 
  * <p>Interface that contains general constants.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.4, 10/10/2018.
+ * @version 1.5, 10/10/2018.
  */
 public interface GeneralConstants {
 	
@@ -248,4 +248,3 @@ public interface GeneralConstants {
 	 */
 	public static final String VALID_SERVICE_NOT_CONFIGURED = "ValidServiceNotConfigured";
 }
-

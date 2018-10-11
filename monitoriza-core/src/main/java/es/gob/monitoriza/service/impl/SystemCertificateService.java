@@ -24,6 +24,8 @@
  */
 package es.gob.monitoriza.service.impl;
 
+import java.math.BigInteger;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -77,7 +79,36 @@ public class SystemCertificateService implements ISystemCertificateService {
 
 		return repository.findByAlias(alias);
 	}
+	
+	/**
+	  * Method that obtains a system certificate by its keystore, its issue and its serialNumber.
+	 * @param keystore Keystore that represents the keystore certificate.
+	 * @param issuer String that represents the issuer certificate.
+	 * @param serialNumber BigInteger that represents the serial number certificate.
+	 * @return Object that represents a system certificate from the persistence. 
+	 */
+	@Override
+	public SystemCertificate getSystemCertificateByKsAndIssAndSn(Keystore keystore, String issuer, BigInteger serialNumber) {
+		
+		return repository.findByKeystoreAndIssuerAndSerialNumber(keystore, issuer, serialNumber);
+		
+	}
 
+	/**
+	  * Method that obtains a system certificate by its keystore, its issue and its serialNumber.
+	 * @param keystore Keystore that represents the keystore certificate.
+	 * @param issuer String that represents the issuer certificate.
+	 * @param serialNumber BigInteger that represents the serial number certificate.
+	 * @param userMonitoriza UserMonitoriza that represents the user certificate.
+	 * @return Object that represents a system certificate from the persistence.
+	 */
+	@Override
+	public SystemCertificate getSystemCertificateByKsAndIssAndSnAndUser(Keystore keystore, String issuer, BigInteger serialNumber, UserMonitoriza userMonitoriza) {
+		
+		return repository.findByKeystoreAndIssuerAndSerialNumberAndUserMonitoriza(keystore, issuer, serialNumber, userMonitoriza);
+		
+	}
+	
 	/**
 	 * {@inheritDoc}
 	 * @see es.gob.monitoriza.service.ISystemCertificateService#saveSystemCertificate(es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate)
@@ -97,6 +128,16 @@ public class SystemCertificateService implements ISystemCertificateService {
 
 		repository.deleteById(certId);
 
+	}
+	
+	/**
+	 * Method that delete all certificates of a user.
+	 * @param userMonitoriza
+	 */
+	public void deleteSystemCertificateByUserMonitoriza(UserMonitoriza userMonitoriza) {
+		
+		repository.deleteByUserMonitoriza(userMonitoriza);
+		
 	}
 
 	/**

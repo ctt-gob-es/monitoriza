@@ -10,8 +10,8 @@
 						    var messageName = /*[[#{form.user.name.pattern}]]*/ 'default';
 						/*]]>*/
 					</script>
-					<input onblur="validate(this,messageName);" type="text" id="name" th:field="*{name}" style="overflow:hidden" class="form-control" required pattern=".{3,15}" />
-					<div id="invalid-name" class="invalid-feedback" ></div>
+					<input onblur="validate(this,messageName);" type="text" name="nameAdd" id="nameAdd" th:field="*{name}" class="form-control" pattern=".{3,15}" required />
+					<div id="invalid-nameAdd" class="invalid-modal" ></div>
 				
 				<div style="clear:both;"/>
 			</div>
@@ -24,8 +24,8 @@
 						    var messageSurname = /*[[#{form.user.surnames.pattern}]]*/ 'default';
 						/*]]>*/
 					</script>
-					<input onblur="validate(this,messageSurname);" type="text" id="surnames" th:field="*{surnames}" style="overflow:hidden" class="form-control" required pattern=".{3,30}"/>
-					<div id="invalid-surnames" class="invalid-feedback" ></div>
+					<input onblur="validate(this,messageSurname);" type="text" name="surnamesAdd" id="surnamesAdd" th:field="*{surnames}" class="form-control" required pattern=".{3,30}"/>
+					<div id="invalid-surnamesAdd" class="invalid-modal" ></div>
 				
 				<div style="clear:both;"/>
 			</div>
@@ -38,8 +38,8 @@
 						    var messageLogin = /*[[#{form.user.login.pattern}]]*/ 'default';
 						/*]]>*/
 					</script>
-					<input onblur="validate(this,messageLogin);" type="text" id="login" th:field="*{login}" style="overflow:hidden" class="form-control" required pattern=".{5,30}"/>
-					<div id="invalid-login" class="invalid-feedback" ></div>
+					<input onblur="validate(this,messageLogin);" type="text" name="loginAdd" id="loginAdd" th:field="*{login}" style="overflow:hidden" class="form-control" required pattern=".{5,30}"/>
+					<div id="invalid-loginAdd" class="invalid-modal" ></div>
 				
 				<div style="clear:both;"/>
 			</div>
@@ -52,8 +52,9 @@
 						    var messagePassword = /*[[#{form.user.password.pattern}]]*/ 'default';
 						/*]]>*/
 					</script>
-					<input onblur="validate(this,messagePassword);" name="password" type="password" id="passwordAdd" th:field="*{password}" class="form-control" pattern=".{7,30}" required />
-					<div id="invalid-password" class="invalid-feedback" ></div>
+					<input type="password" style="display:none">
+					<input onblur="validate(this,messagePassword);" type="password" name="passwordAdd" id="passwordAdd" th:field="*{password}" class="form-control" pattern=".{7,30}" required />
+					<div id="invalid-passwordAdd" class="invalid-modal" ></div>
 				
 				<div style="clear:both;"/>
 			</div>
@@ -75,8 +76,8 @@
 						    var messageEmail = /*[[#{form.user.email.pattern}]]*/ 'default';
 						/*]]>*/
 					</script>
-					<input onblur="validate(this,messageEmail);" type="email" id="email" th:field="*{email}" style="overflow:hidden" class="form-control" required/>
-					<div id="invalid-email" class="invalid-feedback" ></div>
+					<input onblur="validate(this,messageEmail);" type="email" name="emailAdd" id="emailAdd" th:field="*{email}" style="overflow:hidden" class="form-control" required/>
+					<div id="invalid-emailAdd" class="invalid-modal" ></div>
 				
 				<div style="clear:both;"/>
 			</div>

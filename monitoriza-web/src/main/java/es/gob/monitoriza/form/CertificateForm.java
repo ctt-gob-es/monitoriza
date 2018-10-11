@@ -86,6 +86,11 @@ public class CertificateForm {
 	private Long idUserMonitoriza;
 	
 	/**
+	 * Attribute that represents the status of the system certificate. 
+	 */
+	private Long idStatusCertificate;
+	
+	/**
 	 * Gets the value of the attribute {@link #idSystemCertificate}.
 	 * @return the value of the attribute {@link #idSystemCertificate}.
 	 */	
@@ -218,6 +223,22 @@ public class CertificateForm {
 	 */
 	public void setIdUserMonitoriza(final Long idUserMonitoriza) {
 		this.idUserMonitoriza = idUserMonitoriza;
+	}
+	
+	/**
+	 * Gets the value of the attribute {@link #idStatusCertificate}.
+	 * @return the value of the attribute {@link #idStatusCertificate}.
+	 */	
+	public Long getIdStatusCertificate() {
+		return idStatusCertificate;
+	}
+	
+	/**
+	 * Sets the value of the attribute {@link #idStatusCertificate}.
+	 * @param idStatusCertificate the value for the attribute {@link #idStatusCertificate} to set.
+	 */
+	public void setIdStatusCertificate(final Long idStatusCertificate) {
+		this.idStatusCertificate = idStatusCertificate;
 	}
 		
 }

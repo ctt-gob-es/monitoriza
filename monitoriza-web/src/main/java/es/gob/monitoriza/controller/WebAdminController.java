@@ -31,34 +31,41 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-/** 
- * <p>Class that maps the request for the front page to the controller.</p>
+import es.gob.monitoriza.persistence.configuration.dto.StatusDTO;
+import es.gob.monitoriza.service.IStatusService;
+
+/**
+ * <p>Class that maps the request for the front view to the controller.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * 
+ * @version 1.0, 10/10/2018.
  */
 @Controller
 public class WebAdminController {
 
+	/**
+	 * Attribute that represents the service. 
+	 */
 	@Autowired
 	private IStatusService statusService;
 
 	/**
-	 * Method that maps the list users web requests to the controller and forwards the list of users
-	 * to the view.  
-	 * @param model Holder object for model attributes.
+	 * Method that maps the invalid session request.
+	* @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
-	 */
-
-	/**
-	 * Method that maps the invalid requests.
-	 * @param model view Object model
-	 * @return String that represents the navigation HTML page
 	 */
 	@RequestMapping(value = "invalidSession")
 	public String invalid(Model model) {
 		return "invalidSession.html";
 	}
 
+	/**
+	 * Method that maps the list users web requests to the controller and forwards
+	 * the list of users to the view.
+	 * 
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
 	@RequestMapping(value = "inicio")
 	public String index(Model model) {
 		List<StatusDTO> statusDto = statusService.completeStatus();
@@ -68,5 +75,5 @@ public class WebAdminController {
 		return "fragments/statusInit.html";
 	}
 
-
 }
+

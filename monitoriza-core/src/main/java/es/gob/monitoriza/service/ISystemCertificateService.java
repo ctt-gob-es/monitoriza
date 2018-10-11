@@ -24,10 +24,14 @@
  */
 package es.gob.monitoriza.service;
 
+import java.math.BigInteger;
+
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
+import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
@@ -49,6 +53,25 @@ public interface ISystemCertificateService {
 	 * @return {@link SystemCertificate}
 	 */
 	SystemCertificate getSystemCertificateByAlias(String alias);
+	
+	/**
+	  * Method that obtains a system certificate by its keystore, its issue and its serialNumber.
+	 * @param keystore Keystore that represents the keystore.
+	 * @param issuer String that represents the certificate issuer.
+	 * @param serialNumber BigInteger that represents the certificate serial number
+	 * @return Object that represents a system certificate from the persistence. 
+	 */
+	SystemCertificate getSystemCertificateByKsAndIssAndSn(Keystore keystore, String issuer, BigInteger serialNumber);
+	
+	/**
+	  * Method that obtains a system certificate by its keystore, its issue and its serialNumber.
+	 * @param keystore Keystore that represents the keystore certificate.
+	 * @param issuer String that represents the issuer certificate.
+	 * @param serialNumber BigInteger that represents the serial number certificate.
+	 * @param userMonitoriza UserMonitoriza that represents the user certificate.
+	 * @return Object that represents a system certificate from the persistence.
+	 */
+	SystemCertificate getSystemCertificateByKsAndIssAndSnAndUser(Keystore keystore, String issuer, BigInteger serialNumber, UserMonitoriza userMonitoriza);
 
 	/**
 	 * Method that stores a user in the persistence.
@@ -62,6 +85,12 @@ public interface ISystemCertificateService {
 	 * @param certId {@link Integer} that represents the certificate identifier to delete.
 	 */
 	void deleteSystemCertificate(Long certId);
+	
+	/**
+	 * Method that delete all certificates of a user.
+	 * @param userMonitoriza
+	 */
+	void deleteSystemCertificateByUserMonitoriza(UserMonitoriza userMonitoriza);
 
 	/**
 	 * Method that gets all the certificates from the persistence.

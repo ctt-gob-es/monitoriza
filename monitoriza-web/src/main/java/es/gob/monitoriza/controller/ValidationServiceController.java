@@ -163,7 +163,7 @@ public class ValidationServiceController {
 				
 				if (validServiceForm.getAuthenticationType().equals(AuthenticationTypeEnum.CERTIFICATE.getId())) {
 					if (validServiceForm.getValidServiceCertificate().intValue() == -1) {
-						LOGGER.error("Se ha producido un error al guardar el servicio de validación");
+						LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB010));
 						throw new Exception("NoCertForAuthentication");
 					}
 				}
@@ -247,3 +247,4 @@ public class ValidationServiceController {
 	}
 
 }
+

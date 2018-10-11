@@ -50,7 +50,6 @@ import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.i18n.ICommonsUtilLogMessages;
 import es.gob.monitoriza.i18n.Language;
 
-
 /** 
  * <p>Class contains static properties of Monitoriz@. This properties are immutable and they can be modified only restarting the server context.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>

@@ -491,7 +491,7 @@ public class UserRestController {
 				String issuer = UtilsCertificate.getCertificateIssuerId(certificate);
 				BigInteger serialNumber = UtilsCertificate.getCertificateSerialNumber(certificate);
 				if (certService.getSystemCertificateByKsAndIssAndSnAndUser(keystoreUser, issuer, serialNumber, userMonitoriza) != null) {
-					LOGGER.error("Error al guardar el certificado, el certificado con alias " + alias + " ya existe en el almacén");
+					LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB014, new Object[] {alias}));
 					throw new Exception(GeneralConstants.CERTIFICATE_STORED);
 				}
 				
@@ -515,10 +515,8 @@ public class UserRestController {
 	 * Method that maps the delete system certificate request from datatable to the controller
 	 * and performs the delete of the system certificate identified by its id.
 	 *
-	 * @param systermCertificateId
-	 *            Identifier of the system certificate to be deleted.
-	 * @param index
-	 *            Row index of the datatable.
+	 * @param systermCertId Identifier of the system certificate to be deleted.
+	 * @param index Row index of the datatable.
 	 * @return String that represents the name of the view to redirect.
 	 * @throws CryptographyException
 	 * @throws IOException

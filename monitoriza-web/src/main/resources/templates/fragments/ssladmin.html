@@ -120,7 +120,6 @@ $(document).ready(function() {
 		                // Esto es necesario para forzar que se muestren mensajes de validación de cliente
 		                $('<input type="submit">').hide().appendTo($('#sslForm')).click().remove();
 		            } else {
-		            	//var formData = new FormData($('#certForm')[0]);
 		            	var formData = new FormData(document.forms["sslForm"]);
 		            	$.ajax(actionSave, {
 		            		data : formData,
@@ -137,24 +136,26 @@ $(document).ready(function() {
 			                    $('#altEditor-modal').modal('hide');
 			                    		                    
 			                },
-			                error:function(data){
-			                	
-			                	// Se oculta la capa 'cargando...'
+			                error:function(xhr,status,error) {
 			                	hide();
-			                	// Se eliminan los posibles errores anteriores...
-			                	clearValidationResult('sslForm');
-			                	// Se obtiene el JSON de los campos con errores de validación
-			                	// y se modifican los estilos/añaden mensajes
-			                	var validation = $(data)["0"].responseJSON;
-			                	drawValidationResult(validation.fieldErrors);
+			                	var responseText = jQuery.parseJSON(xhr.responseText);
+			                	var messageException = responseText.message;
+			                	var messageError = "";
+			                	
+			                	if (messageException.includes("CertificateStored")) {
+			                		messageError = "Error al agregar el certificado, el certificado ya se encuentra en el almac\u00E9n!";
+			                	} else if (messageException.includes("CertificateNotValid")) {
+			                		messageError = "Error al agregar el certificado, certificado no v\u00e1lido!";
+			                	} else if (messageException.includes("ValidServiceNotConfigured")) {
+			                		messageError = "Error al agregar el certificado, no est\u00e1 configurado el servicio de validaci\u00F3n!";
+			                	} else {
+			                		messageError = "Se ha producido un error al agregar el certificado!";
+			                	}
+			                	
 			                	$('#altEditor-modal .modal-body .alert').remove();
-					            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Se ha producido un error al agregar el certificado!</strong></div>');
+					            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + messageError + '</strong></div>');
 			                }
 			            });
-		            	
-		            	/* $( "#addRowBtn" ).click(function() {
-		                	  $( "#certForm" ).submit();
-		                	}); */
 		            }
 		        	$('#certForm').addClass('was-validated');
 		            break;

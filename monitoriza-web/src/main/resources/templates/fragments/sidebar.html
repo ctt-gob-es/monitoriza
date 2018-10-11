@@ -5,7 +5,7 @@
             <div class="peers ai-c fxw-nw">
               <div class="peer peer-greed">
                 <a class="sidebar-link td-n" th:href="@{/inicio}">
-                  <div class="peers ai-c fxw-nw">
+                  <div id="aStatus" class="peers ai-c fxw-nw">
                     <div class="peer">
                       <div class="logo">
                         <img th:src="@{images/chart_logo.png}"
@@ -27,6 +27,11 @@
               </div>
             </div>
           </div>
+          
+          <script th:inline="javascript">
+			var actionStatus = /*[[@{/status}]]*/;
+			$('#aStatus').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionStatus, 'optionReplacement', 'GET', null, true); return false;});
+          </script>
 
           <!-- ### $Sidebar Menu ### -->
           <form id="formMenu" class="form-sidebar"> 

@@ -10,7 +10,7 @@
 						    var messageName = /*[[#{form.valid.keystore.alias.pattern}]]*/ 'default';
 						/*]]>*/
 					</script>
-					<input onblur="validate(this,messageName);" type="text" id="alias" th:field="*{alias}" style="overflow:hidden" class="form-control" required pattern=".{3,15}" />
+					<input onblur="validate(this,messageName);" type="text" id="alias" th:field="*{alias}" style="overflow:hidden" class="form-control" required pattern=".{3,50}" />
 					<div id="invalid-alias" class="invalid-feedback"></div>
 				
 				<div style="clear:both;"/>
