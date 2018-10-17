@@ -88,7 +88,7 @@ $(document).ready(function() {
 						var isSecure = row.isSecure;
 						var protocol;
 						
-						if (isSecure == 'true') {
+						if (isSecure == true) {
 							protocol = 'https';
 						} else {
 							protocol = 'http';
@@ -204,14 +204,14 @@ $(document).ready(function() {
 			            		// Se oculta la capa 'cargando...'
 			            		hide();
 			                    
-			                    if ($('#errorModalPlatform').length > 0){
-									$('#errorModalPlatform').remove();
+			                    if ($('#errorModalNode').length > 0){
+									$('#errorModalNode').remove();
 								}
 			                    
 			                },
 			                error:function(data){
 			                	hide();
-			                	$('#nodeAfirmaForm').append('<div id="errorModalPlatform" class="alert alert-danger" role="alert"><strong>Hay una plataforma con el mismo nombre!</strong></div>');
+			                	$('#nodeAfirmaForm').append('<div id="errorModalNode" class="alert alert-danger" role="alert"><strong>Hay una plataforma con el mismo nombre!</strong></div>');
 			                }
 			            });
 		            }
@@ -253,13 +253,13 @@ $(document).ready(function() {
 			                    $('#altEditor-modal .modal-body .alert').remove();
 			                    $('#altEditor-modal').modal('hide');
 			                    
-			                    if ($('#errorModalPlatform').length > 0){
-									$('#errorModalPlatform').remove();
+			                    if ($('#errorModalNode').length > 0){
+									$('#errorModalNode').remove();
 								}
 			                },
 			                error:function(data){
 			                	hide();
-			                	$('#nodeAfirmaForm').append('<div id="errorModalPlatform" class="alert alert-danger" role="alert"><strong>Ya exsite un nodo con el mismo nombre!</strong></div>');
+			                	$('#nodeAfirmaForm').append('<div id="errorModalNode" class="alert alert-danger" role="alert"><strong>Ya exsite un nodo con el mismo nombre!</strong></div>');
 			                }
 			            });
 		            }
