@@ -296,6 +296,12 @@ CREATE TABLE "NODE_MONITORIZA" (
 	"HOST" VARCHAR(100) NOT NULL,
 	"PORT" VARCHAR(10) NOT NULL,
 	"IS_SECURE" CHAR(1) NOT NULL,
+	"CHECK_EMERGENCYDB" CHAR(1),
+	"CHECK_TSA" CHAR(1),
+	"CHECK_AFIRMA" CHAR(1),
+	"CHECK_HSM" CHAR(1),
+	"CHECK_SERVICES" CHAR(1),
+	"CHECK_VALIDATION_METHOD" CHAR(1),
 	"ID_NODE_TYPE" NUMERIC(19) NOT NULL
 	);
 ALTER TABLE "NODE_MONITORIZA" ADD CONSTRAINT "ID_NODE_CONS" PRIMARY KEY ("ID_NODE");
@@ -306,6 +312,12 @@ COMMENT ON COLUMN "NODE_MONITORIZA"."NAME" IS 'Valor que representa el nombre ú
 COMMENT ON COLUMN "NODE_MONITORIZA"."HOST" IS 'Valor que representa el host para la conexión con el nodo.';
 COMMENT ON COLUMN "NODE_MONITORIZA"."PORT" IS 'Valor que representa el puerto para la conexión con el nodo.';
 COMMENT ON COLUMN "NODE_MONITORIZA"."IS_SECURE" IS 'Valor que indica si la conexión al nodo es segura.';
+COMMENT ON COLUMN "NODE_MONITORIZA"."CHECK_EMERGENCYDB" IS 'Valor que indica si se va a monitorizar el SPIE de la base de datos de emergencia.';
+COMMENT ON COLUMN "NODE_MONITORIZA"."CHECK_TSA" IS 'Valor que indica si se va a monitorizar el SPIE de la conexión a TS@.';
+COMMENT ON COLUMN "NODE_MONITORIZA"."CHECK_AFIRMA" IS 'Valor que indica si se va a monitorizar el SPIE de la conexión a @Firma.';
+COMMENT ON COLUMN "NODE_MONITORIZA"."CHECK_HSM" IS 'Valor que indica si se va a monitorizar el SPIE de la conexión al HSM.';
+COMMENT ON COLUMN "NODE_MONITORIZA"."CHECK_SERVICES" IS 'Valor que indica si se va a monitorizar el SPIE de tiempos de respuesta de servicios @Firma.';
+COMMENT ON COLUMN "NODE_MONITORIZA"."CHECK_VALIDATION_METHOD" IS 'Valor que indica si se va a monitorizar el SPIE de conexión con métodos de validación.';
 COMMENT ON COLUMN "NODE_MONITORIZA"."ID_NODE_TYPE" IS 'Valor que indica si el nodo pertenece a @Firma o TS@.';
 
 ALTER TABLE "SERVICE_MONITORIZA" ADD CONSTRAINT "R_TIMER_SERVICE" FOREIGN KEY ("ID_TIMER_SERVICE") REFERENCES "TIMER_MONITORIZA" ("ID_TIMER");

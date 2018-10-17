@@ -24,6 +24,9 @@
  */
 package es.gob.monitoriza.service;
 
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 
 /** 
@@ -52,5 +55,25 @@ public interface INodeMonitorizaService {
 	 * @param nodeId {@link Integer} that represents the user identifier to delete.
 	 */
 	void deleteNodeById(Long nodeId);
+	
+	/**
+	 * Method that returns a list of @firma nodes to be showed in DataTable.
+	 * @param input DataTableInput with filtering, paging and sorting configuration.
+	 * @return A set of DataTable rows that matches the query.
+	 */
+	DataTablesOutput<NodeMonitoriza> findAllAfirma(DataTablesInput input);
+	
+	/**
+	 * Method that returns a list of TS@ nodes to be showed in DataTable.
+	 * @param input DataTableInput with filtering, paging and sorting configuration.
+	 * @return A set of DataTable rows that matches the query.
+	 */
+	DataTablesOutput<NodeMonitoriza> findAllTsa(DataTablesInput input);
+	
+	/**
+	 * Method that returns all nodes.
+	 * @return Iterable<NodeMonitoriza>
+	 */
+	Iterable<NodeMonitoriza> getAllNode();
 
 }

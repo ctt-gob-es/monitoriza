@@ -28,8 +28,11 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -47,7 +50,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * @version 1.0, 09/10/2018.
  */
 @Entity
-@Table(name = "NODE_AFIMRA")
+@Table(name = "NODE_MONITORIZA")
 public class NodeMonitoriza implements Serializable {
 	
 	/**
@@ -81,6 +84,41 @@ public class NodeMonitoriza implements Serializable {
 	private String port;
 	
 	/**
+	 * Attribute that represents the type of platform. 
+	 */
+	private CPlatformType nodeType;
+	
+	/**
+	 * Attribute that indicates if the SPIE for emergency database connection will be checked.
+	 */
+	private Boolean checkEmergencyDB;
+	
+	/**
+	 * Attribute that indicates if the SPIE for TS@ connection will be checked.
+	 */
+	private Boolean checkTsa;
+	
+	/**
+	 * Attribute that indicates if the SPIE for @Firma connection will be checked.
+	 */
+	private Boolean checkAfirma;
+	
+	/**
+	 * Attribute that indicates if the SPIE for HSM connection will be checked.
+	 */
+	private Boolean checkHsm;
+	
+	/**
+	 * Attribute that indicates if the SPIE for service response times will be checked.
+	 */
+	private Boolean checkServices;
+	
+	/**
+	 * Attribute that indicates if the SPIE for validation methods connection will be checked.
+	 */
+	private Boolean checkValidMethod;
+	
+	/**
 	 * Attribute that indicates whether the access to the node is through secured connection (https).
 	 */
 	private Boolean isSecure;
@@ -93,12 +131,12 @@ public class NodeMonitoriza implements Serializable {
 	// because Hibernate JPA needs not final access methods.
 	@Id
 	@Column(name = "ID_NODE", unique = true, nullable = false, precision = NumberConstants.NUM19)
-	@GeneratedValue(generator = "sq_node_afirma")
+	@GeneratedValue(generator = "sq_node_monitoriza")
 	@GenericGenerator(
-	                  name = "sq_node_afirma",
+	                  name = "sq_node_monitoriza",
 	                  strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator",
 	                  parameters = {
-	                          @Parameter(name = "sequence_name", value = "SQ_NODE_AFIRMA"),
+	                          @Parameter(name = "sequence_name", value = "SQ_NODE_MONITORIZA"),
 	                          @Parameter(name = "initial_value", value = "2"),
 	                          @Parameter(name = "increment_size", value = "1")
 	                  }
@@ -191,6 +229,31 @@ public class NodeMonitoriza implements Serializable {
 		// CHECKSTYLE:ON
 		this.port = port;
 	}
+	
+	/**
+	 * Gets the value of the attribute {@link #nodeType}.
+	 * @return the value of the attribute {@link #nodeType}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "ID_NODE_TYPE", nullable = false)
+	@JsonView(DataTablesOutput.View.class)	
+	public CPlatformType getNodeType() {
+		// CHECKSTYLE:ON
+		return nodeType;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #nodeType}.
+	 * @param nodeType The value for the attribute {@link #nodeType}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setNodeType(CPlatformType nodeType) {
+		// CHECKSTYLE:ON
+		this.nodeType = nodeType;
+	}
 
 	/**
 	 * Gets the value of the attribute {@link #isSecure}.
@@ -216,7 +279,156 @@ public class NodeMonitoriza implements Serializable {
 		// CHECKSTYLE:ON
 		this.isSecure = isSecure;
 	}
-	
+
+	/**
+	 * Gets the value of the attribute {@link #checkEmergencyDB}.
+	 * @return the value of the attribute {@link #checkEmergencyDB}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@Column(name = "CHECK_EMERGENCYDB", nullable = true, precision = 1)
+	@Type(type = CONS_YES_NO)
+	@JsonView(DataTablesOutput.View.class)
+	public Boolean getCheckEmergencyDB() {
+		// CHECKSTYLE:ON
+		return checkEmergencyDB;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #checkEmergencyDB}.
+	 * @param checkEmergencyDB The value for the attribute {@link #checkEmergencyDB}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setCheckEmergencyDB(Boolean checkEmergencyDB) {
+		// CHECKSTYLE:ON
+		this.checkEmergencyDB = checkEmergencyDB;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #checkTsa}.
+	 * @return the value of the attribute {@link #checkTsa}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@Column(name = "CHECK_TSA", nullable = true, precision = 1)
+	@Type(type = CONS_YES_NO)
+	@JsonView(DataTablesOutput.View.class)
+	public Boolean getCheckTsa() {
+		// CHECKSTYLE:ON
+		return checkTsa;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #checkTsa}.
+	 * @param checkTsa The value for the attribute {@link #checkTsa}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setCheckTsa(Boolean checkTsa) {
+		// CHECKSTYLE:ON
+		this.checkTsa = checkTsa;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #checkAfirma}.
+	 * @return the value of the attribute {@link #checkAfirma}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@Column(name = "CHECK_AFIRMA", nullable = true, precision = 1)
+	@Type(type = CONS_YES_NO)
+	@JsonView(DataTablesOutput.View.class)
+	public Boolean getCheckAfirma() {
+		// CHECKSTYLE:ON
+		return checkAfirma;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #checkAfirma}.
+	 * @param checkAfirma The value for the attribute {@link #checkAfirma}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setCheckAfirma(Boolean checkAfirma) {
+		// CHECKSTYLE:ON
+		this.checkAfirma = checkAfirma;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #checkHsm}.
+	 * @return the value of the attribute {@link #checkHsm}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@Column(name = "CHECK_HSM", nullable = true, precision = 1)
+	@Type(type = CONS_YES_NO)
+	@JsonView(DataTablesOutput.View.class)
+	public Boolean getCheckHsm() {
+		// CHECKSTYLE:ON
+		return checkHsm;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #checkHsm}.
+	 * @param checkHsm The value for the attribute {@link #checkHsm}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setCheckHsm(Boolean checkHsm) {
+		// CHECKSTYLE:ON
+		this.checkHsm = checkHsm;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #checkServices}.
+	 * @return the value of the attribute {@link #checkServices}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@Column(name = "CHECK_SERVICES", nullable = true, precision = 1)
+	@Type(type = CONS_YES_NO)
+	@JsonView(DataTablesOutput.View.class)
+	public Boolean getCheckServices() {
+		// CHECKSTYLE:ON
+		return checkServices;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #checkService}.
+	 * @param checkService The value for the attribute {@link #checkService}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setCheckServices(Boolean checkService) {
+		// CHECKSTYLE:ON
+		this.checkServices = checkService;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #checkValidMethod}.
+	 * @return the value of the attribute {@link #checkValidMethod}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@Column(name = "CHECK_VALIDATION_METHOD", nullable = true, precision = 1)
+	@Type(type = CONS_YES_NO)
+	@JsonView(DataTablesOutput.View.class)
+	public Boolean getCheckValidMethod() {
+		// CHECKSTYLE:ON
+		return checkValidMethod;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #checkValidMethod}.
+	 * @param checkValidMethod The value for the attribute {@link #checkValidMethod}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setCheckValidMethod(Boolean checkValidMethod) {
+		// CHECKSTYLE:ON
+		this.checkValidMethod = checkValidMethod;
+	}
 	
 
 }

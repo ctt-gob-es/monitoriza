@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 17/10/2018.
  */
 package es.gob.monitoriza.service;
 
@@ -33,19 +33,10 @@ import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitori
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 17/10/2018.
  */
 public interface IPlatformService {
 	
-	/**
-	 * Attribute that represents the identifier for the @Firma platform type. 
-	 */
-	Long ID_PLATFORM_TYPE_AFIRMA = 1L;
-	
-	/**
-	 * Attribute that represents the identifier for the @Firma platform type.
-	 */
-	Long ID_PLATFORM_TYPE_TSA = 2L;
 	
 	/**
 	 * Method that obtains the configuration for a platform by its identifier.

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 10/10/2018.
+ * @version 1.5, 17/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -90,7 +90,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.4, 10/10/2018.
+ * @version 1.5, 17/10/2018.
  */
 @RestController
 public class ServiceRestController {
@@ -186,13 +186,13 @@ public class ServiceRestController {
 		List<String> serviceTypes = new ArrayList<String>();
 
 		if (platform != null
-				&& platform.getPlatformType().getIdPlatformType().equals(IPlatformService.ID_PLATFORM_TYPE_AFIRMA)) {
+				&& platform.getPlatformType().getIdPlatformType().equals(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA)) {
 
 			serviceTypes.add(GeneralConstants.SOAP_SERVICE.toUpperCase());
 			serviceTypes.add(GeneralConstants.OCSP_SERVICE.toUpperCase());
 
 		} else if (platform != null
-				&& platform.getPlatformType().getIdPlatformType().equals(IPlatformService.ID_PLATFORM_TYPE_TSA)) {
+				&& platform.getPlatformType().getIdPlatformType().equals(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA)) {
 
 			serviceTypes.add(GeneralConstants.SOAP_SERVICE.toUpperCase());
 			serviceTypes.add(GeneralConstants.RFC3161_SERVICE.toUpperCase());

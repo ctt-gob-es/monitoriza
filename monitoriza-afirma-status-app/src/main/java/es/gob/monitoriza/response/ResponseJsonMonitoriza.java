@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>04/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/10/2018.
+ * @version 1.1, 17/10/2018.
  */
 package es.gob.monitoriza.response;
 
@@ -34,12 +34,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import es.gob.monitoriza.status.StatusHolder;
 import es.gob.monitoriza.status.StatusUptodate;
 import es.gob.monitoriza.utilidades.GeneralUtils;
-import es.gob.monitoriza.utilidades.NumberConstants;
 
 /** 
  * <p>Class that builds the JSON response for servlet admin calls.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 04/10/2018.
+ * @version 1.1, 17/10/2018.
  */
 public class ResponseJsonMonitoriza {
 	
@@ -78,9 +77,7 @@ public class ResponseJsonMonitoriza {
 		}
 		
 		dtStatus.setData(responseList);
-		dtStatus.setRecordsTotal(responseList.size());
-		dtStatus.setDraw(NumberConstants.NUM1);
-		
+				
 		return objectMapper.writeValueAsString(dtStatus);
 		 
 	}

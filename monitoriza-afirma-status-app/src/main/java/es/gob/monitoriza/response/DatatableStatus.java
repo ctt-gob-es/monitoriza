@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>04/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/10/2018.
+ * @version 1.1, 17/10/2018.
  */
 package es.gob.monitoriza.response;
 
@@ -32,32 +32,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 /** 
  * <p>Class that represents the output of the status servlet y JSON format.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 04/10/2018.
+ * @version 1.1, 17/10/2018.
  */
 public class DatatableStatus {
-
-	/**
-	  * The draw counter that this object is a response to - from the draw parameter sent as part of
-	  * the data request. Note that it is strongly recommended for security reasons that you cast this
-	  * parameter to an integer, rather than simply echoing back to the client what it sent in the draw
-	  * parameter, in order to prevent Cross Site Scripting (XSS) attacks.
-	  */
-	@JsonView(View.class)
-	private int draw;
-
-	/**
-	 * Total records, before filtering (i.e. the total number of records in the database)
-	 */
-	@JsonView(View.class)
-	private long recordsTotal = 0L;
-
-	/**
-	 * Total records, after filtering (i.e. the total number of records after filtering has been
-	 * applied - not just the number of records being returned for this page of data).
-	 */
-	@JsonView(View.class)
-	private long recordsFiltered = 0L;
-
+	
 	/**
 	 * The data to be displayed in the table. This is an array of data source objects, one for each
 	 * row, which will be used by DataTables. Note that this parameter's name can be changed using the
@@ -74,69 +52,35 @@ public class DatatableStatus {
 	@JsonView(View.class)
 	private String error;
 	
-	
-	public int getDraw() {
-		return draw;
-	}
-
-
-	public void setDraw(int draw) {
-		this.draw = draw;
-	}
-
-
-
-	
-	public long getRecordsTotal() {
-		return recordsTotal;
-	}
-
-
-
-	
-	public void setRecordsTotal(long recordsTotal) {
-		this.recordsTotal = recordsTotal;
-	}
-
-
-
-	
-	public long getRecordsFiltered() {
-		return recordsFiltered;
-	}
-
-
-
-	
-	public void setRecordsFiltered(long recordsFiltered) {
-		this.recordsFiltered = recordsFiltered;
-	}
-
-
-
-	
+	/**
+	 * Gets the value of the attribute {@link #data}.
+	 * @return the value of the attribute {@link #data}.
+	 */
 	public List<ResponsePOJO> getData() {
 		return data;
 	}
-
-
-
 	
-	public void setData(List<ResponsePOJO> data) {
+	/**
+	 * Sets the value of the attribute {@link #data}.
+	 * @param data the value for the attribute {@link #data} to set.
+	 */
+	public void setData(final List<ResponsePOJO> data) {
 		this.data = data;
 	}
 
-
-
-	
+	/**
+	 * Gets the value of the attribute {@link #error}.
+	 * @return the value of the attribute {@link #error}.
+	 */
 	public String getError() {
 		return error;
 	}
 
-
-
-	
-	public void setError(String error) {
+	/**
+	 * Sets the value of the attribute {@link #error}.
+	 * @param error the value for the attribute {@link #error} to set.
+	 */
+	public void setError(final String error) {
 		this.error = error;
 	}
 

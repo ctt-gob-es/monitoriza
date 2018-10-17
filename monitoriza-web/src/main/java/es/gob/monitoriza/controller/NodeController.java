@@ -27,8 +27,14 @@ package es.gob.monitoriza.controller;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.form.NodeForm;
+import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 import es.gob.monitoriza.service.INodeMonitorizaService;
 
 /** 
@@ -49,5 +55,107 @@ public class NodeController {
 	 */
 	@Autowired
 	private INodeMonitorizaService nodeService;
+	
+	/**
+	 * Method that maps the list users web requests to the controller and forwards the list of SPIE nodes
+	 * to the view.  
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "nodesafirma")
+    public String nodesAfirma(Model model){
+        return "fragments/nodesafirma.html";
+    }
+	
+	/**
+	 * Method that maps the list users web requests to the controller and forwards the list of SPIE nodes
+	 * to the view.  
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "nodestsa")
+    public String nodeTsa(Model model){
+        return "fragments/nodestsa.html";
+    }
+	
+	/**
+	 * Method that maps the add new node web request to the controller and sets the backing form. 
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "addafirmanode", method = RequestMethod.POST)
+    public String addNodeAfirma(Model model){
+		model.addAttribute("nodeafirmaform", new NodeForm());
+		return "modal/nodeAfirmaForm";
+    }	
+	
+	/**
+	 * Method that maps the add new node web request to the controller and sets the backing form. 
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "addtsanode", method = RequestMethod.POST)
+    public String addNodeTsa(Model model){
+		model.addAttribute("nodetsaform", new NodeForm());
+		return "modal/nodeTsaForm";
+    }	
+	
+	/**
+     * Method that maps the edit node web request to the controller and loads the node to the
+     * backing form.
+     * @param nodeId Identifier of the node to be edited.
+     * @param model Holder object for model attributes.
+     * @return String that represents the name of the view to forward.
+     */
+    @RequestMapping(value = "editafirmanode", method = RequestMethod.POST)
+    public String editNodeAfirma(@RequestParam("id") Long nodeId, Model model){
+    	NodeMonitoriza node = nodeService.getNodeById(nodeId);
+    	NodeForm nodeForm = new NodeForm();
+    	
+    	nodeForm.setHost(node.getHost());
+    	nodeForm.setCheckAfirma(node.getCheckAfirma());
+    	nodeForm.setCheckEmergencyDB(node.getCheckEmergencyDB());
+    	nodeForm.setCheckHsm(node.getCheckHsm());
+    	nodeForm.setCheckServices(node.getCheckServices());
+    	nodeForm.setCheckTsa(node.getCheckTsa());
+    	nodeForm.setHost(node.getHost());
+    	nodeForm.setIdNode(node.getIdNode());
+    	nodeForm.setType(node.getNodeType().getIdPlatformType());
+    	nodeForm.setIsSecure(node.getIsSecure());
+    	nodeForm.setName(node.getName());
+    	nodeForm.setPort(node.getPort());
+    	
+    	model.addAttribute("nodeafirmaform", nodeForm);
+        return "modal/nodeAfirmaForm";
+    }
+    
+    /**
+     * Method that maps the edit node web request to the controller and loads the node to the
+     * backing form.
+     * @param nodeId Identifier of the node to be edited.
+     * @param model Holder object for model attributes.
+     * @return String that represents the name of the view to forward.
+     */
+    @RequestMapping(value = "edittsanode", method = RequestMethod.POST)
+    public String editNodeTsa(@RequestParam("id") Long nodeId, Model model){
+    	NodeMonitoriza node = nodeService.getNodeById(nodeId);
+    	NodeForm nodeForm = new NodeForm();
+    	
+    	nodeForm.setHost(node.getHost());
+    	nodeForm.setCheckAfirma(node.getCheckAfirma());
+    	nodeForm.setCheckEmergencyDB(node.getCheckEmergencyDB());
+    	nodeForm.setCheckHsm(node.getCheckHsm());
+    	nodeForm.setCheckServices(node.getCheckServices());
+    	nodeForm.setCheckTsa(node.getCheckTsa());
+    	nodeForm.setHost(node.getHost());
+    	nodeForm.setIdNode(node.getIdNode());
+    	nodeForm.setType(node.getNodeType().getIdPlatformType());
+    	nodeForm.setIsSecure(node.getIsSecure());
+    	nodeForm.setName(node.getName());
+    	nodeForm.setPort(node.getPort());
+    	
+    	model.addAttribute("nodetsaform", nodeForm);
+        return "modal/nodeTsaForm";
+    }
 
 }

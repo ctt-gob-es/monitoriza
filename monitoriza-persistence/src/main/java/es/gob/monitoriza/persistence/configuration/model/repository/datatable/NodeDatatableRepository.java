@@ -24,8 +24,10 @@
  */
 package es.gob.monitoriza.persistence.configuration.model.repository.datatable;
 
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 
 /** 
@@ -34,5 +36,12 @@ import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
  * @version 1.0, 09/10/2018.
  */
 public interface NodeDatatableRepository extends DataTablesRepository<NodeMonitoriza, Long> {
+	
+	/**
+	 * Method that gets all platforms by its type.
+	 * @param nodeType Node type identifier
+	 * @return DataTablesOutput<NodeMonitoriza> containing all platforms of the type specified
+	 */
+	DataTablesOutput<NodeMonitoriza> findByNodeType(CPlatformType nodeType);
 
 }

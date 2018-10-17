@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 17/10/2018.
  */
 package es.gob.monitoriza.alarm;
 
@@ -40,15 +40,13 @@ import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.i18n.IAlarmLogMessages;
 import es.gob.monitoriza.i18n.IAlarmMailText;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
-import es.gob.monitoriza.persistence.configuration.staticconfig.StaticServicesManager;
 import es.gob.monitoriza.utilidades.GeneralUtils;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that represents the scheduler for the tasks object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 17/10/2018.
  */
 public class AlarmTaskScheduler {
 	
@@ -83,7 +81,7 @@ public class AlarmTaskScheduler {
 				subject = generateSubject(alarmsToSend.get(0));
 				body = generateBody(alarmsToSend.get(0));
 			} else {
-				subject = Language.getResAlarmMonitoriza(IAlarmMailText.SUBJECT_MAIL_MONITORIZA).concat(" ").concat(Language.getFormatResMonitoriza(IAlarmMailText.SUMMARY_ALARM_SUBJECT_MAIL, new Object[ ] { serviceName }));
+				subject = Language.getResAlarmMonitoriza(IAlarmMailText.SUBJECT_MAIL_MONITORIZA).concat(" ").concat(Language.getFormatResAlarmMonitoriza(IAlarmMailText.SUMMARY_ALARM_SUBJECT_MAIL, new Object[ ] { serviceName }));
 				body = generateSummaryBody(alarmsToSend);
 			}
 			//destinations = MailUtils.getListAddresseesForAlarm(serviceIdentifier);
@@ -150,10 +148,10 @@ public class AlarmTaskScheduler {
 				
 		switch (alarm.getServiceStatus()) {
 			case ServiceStatusConstants.DEGRADADO:
-				body = Language.getFormatResMonitoriza(IAlarmMailText.BODY_MAIL_SUMMARY_ROW_DEGRADED, new Object[ ] { alarm.getAvgTime(), tiempoMedioServicio });
+				body = Language.getFormatResAlarmMonitoriza(IAlarmMailText.BODY_MAIL_SUMMARY_ROW_DEGRADED, new Object[ ] { alarm.getAvgTime(), tiempoMedioServicio });
 				break;
 			case ServiceStatusConstants.CAIDO:
-				body = Language.getFormatResMonitoriza(IAlarmMailText.BODY_MAIL_SUMMARY_ROW_LOST, new Object[ ] { });
+				body = Language.getFormatResAlarmMonitoriza(IAlarmMailText.BODY_MAIL_SUMMARY_ROW_LOST, new Object[ ] { });
 				break;
 			default:
 				break;
@@ -179,14 +177,14 @@ public class AlarmTaskScheduler {
 				AlarmTaskManager.removeBlockedAlarm(serviceIdentifier);
 				// Si existen alarmas almacenadas para su envío, las
 				// enviamos.
-				LOGGER.info(Language.getFormatResMonitoriza(IAlarmMailText.SUMMARY_ALARM_SENT, new Object [] {serviceIdentifier}));
+				LOGGER.info(Language.getFormatResAlarmMonitoriza(IAlarmMailText.SUMMARY_ALARM_SENT, new Object [] {serviceIdentifier}));
 				sendAlarm(alarms);
 				// Vaciamos la pila de alarmas
 				AlarmTaskManager.removeAlarmStack(serviceIdentifier);
 				
 				scheduler.shutdown();
 								
-				LOGGER.info(Language.getFormatResMonitoriza(IAlarmLogMessages.ALARM001, new Object [] {serviceIdentifier}));
+				LOGGER.info(Language.getFormatResAlarmMonitoriza(IAlarmLogMessages.ALARM001, new Object [] {serviceIdentifier}));
 			}
 		};
 				
@@ -206,9 +204,8 @@ public class AlarmTaskScheduler {
 	 */
 	private static String generateSummaryBody(List<Alarm> alarmsToSent) {
 		StringBuilder body = new StringBuilder();
-		final ServiceDTO service = StaticServicesManager.getServiceById(alarmsToSent.get(0).getServiceName().toLowerCase());
-		final String systemService = GeneralUtils.getSystemName(alarmsToSent.get(0).getServiceName().toLowerCase()).concat(GeneralConstants.EN_DASH_WITH_SPACES).concat(service.getWsdl());
-		body.append(Language.getFormatResMonitoriza(IAlarmMailText.BODY_MAIL_SUMMARY, new Object[]{alarmsToSent.size(), systemService, alarmsToSent.get(0).getServiceStatus().toUpperCase()}));
+		final String systemService = GeneralUtils.getSystemName(alarmsToSent.get(0).getServiceName().toLowerCase()).concat(GeneralConstants.EN_DASH_WITH_SPACES).concat(alarmsToSent.get(0).getServiceWsdl());
+		body.append(Language.getFormatResAlarmMonitoriza(IAlarmMailText.BODY_MAIL_SUMMARY, new Object[]{alarmsToSent.size(), systemService, alarmsToSent.get(0).getServiceStatus().toUpperCase()}));
 		for(Alarm alarm : alarmsToSent){
 			body.append(GeneralConstants.LINE_FEED + alarm.getDateOfCreation().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + GeneralConstants.LINE_FEED + generateBodyRow(alarm));
 		}

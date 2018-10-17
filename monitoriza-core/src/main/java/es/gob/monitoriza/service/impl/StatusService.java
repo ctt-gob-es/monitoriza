@@ -20,19 +20,29 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 8 oct. 2018.
+ * @version 1.1, 17/10/2018.
  */
 package es.gob.monitoriza.service.impl;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClients;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import es.gob.monitoriza.persistence.configuration.dto.RowStatusDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusDTO;
 import es.gob.monitoriza.service.IStatusService;
 
@@ -40,7 +50,7 @@ import es.gob.monitoriza.service.IStatusService;
  * <p>Class that implements the communication with the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.0, 10/10/2018.
+ * @version 1.1, 17/10/2018.
  */
 @Service
 public class StatusService implements IStatusService {
@@ -49,7 +59,7 @@ public class StatusService implements IStatusService {
 	 * 
 	 */
 	@Override
-	public List<StatusDTO> completeStatus() {
+	public StatusDTO completeStatus() {
 
 		// Del JSON obtenido solo usamos el 'data'
 		String json = "[{\r\n" 
@@ -121,11 +131,14 @@ public class StatusService implements IStatusService {
 				"		\"samplingTime\": \"05-10-2018 10:36:31\"\r\n" + 
 				"	}\r\n" + 
 				"]";
+				
+		Type listType = new TypeToken<StatusDTO>() {}.getType();
 		
-		Type listType = new TypeToken<ArrayList<StatusDTO>>() {}.getType();
-		List<StatusDTO> status = new Gson().fromJson(json2, listType);
+		String jsonFromServlet = getRequestFromStatusServlet();
+		
+		StatusDTO status = new Gson().fromJson(jsonFromServlet, listType);
 
-		status = checkStatus(status);
+		status.setData(checkStatus(status.getData()));
 
 		return status;
 	}
@@ -135,8 +148,8 @@ public class StatusService implements IStatusService {
 	 * @param status
 	 * @return
 	 */
-	private List<StatusDTO> checkStatus(List<StatusDTO> status) {
-		for (StatusDTO s : status) {
+	private List<RowStatusDTO> checkStatus(List<RowStatusDTO> status) {
+		for (RowStatusDTO s : status) {
 			switch (s.getStatus()) {
 			case "Correcto":
 				s.setStatusAux(0L);
@@ -152,6 +165,36 @@ public class StatusService implements IStatusService {
 			}
 		}
 		return status;
+	}
+	
+	private String getRequestFromStatusServlet() {
+		
+		HttpClient httpclient = HttpClients.createDefault();
+		HttpGet httpget = new HttpGet("http://localhost:8080/monitoriza-afirma-status-app/afirmaServicesStatus?admin=true");
+		String result = null;
+				
+		//Execute and get the response.
+		HttpResponse response = null;
+		HttpEntity entity = null;
+		
+		try {
+			response = httpclient.execute(httpget);
+			entity = response.getEntity();
+			
+			if (entity != null) {
+			    try (InputStream instream = entity.getContent();) {
+			    	result = new BufferedReader(new InputStreamReader(instream))
+			    			  .lines().collect(Collectors.joining("\n"));
+			    } 
+			}
+						
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		return result;
+		
 	}
 
 }

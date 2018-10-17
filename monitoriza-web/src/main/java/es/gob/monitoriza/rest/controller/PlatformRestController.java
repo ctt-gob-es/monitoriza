@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 10/10/2018.
+ * @version 1.4, 17/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -73,7 +73,7 @@ import es.gob.monitoriza.service.ITimerScheduledService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.3, 10/10/2018..
+ * @version 1.4, 17/10/2018..
  */
 @RestController
 public class PlatformRestController {
@@ -207,7 +207,7 @@ public class PlatformRestController {
 				platformAfirma.setHttpsPort(afirmaForm.getHttpsPort());
 				platformAfirma.setServiceContext(afirmaForm.getServiceContext());
 				CPlatformType afirmaType = new CPlatformType();
-				afirmaType.setIdPlatformType(IPlatformService.ID_PLATFORM_TYPE_AFIRMA);
+				afirmaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
 				platformAfirma.setPlatformType(afirmaType);
 		
 				PlatformMonitoriza afirma = platformService.savePlatform(platformAfirma);
@@ -275,7 +275,7 @@ public class PlatformRestController {
 				platformTsa.setHttpsPort(tsaForm.getHttpsPort());
 				platformTsa.setServiceContext(tsaForm.getServiceContext());
 				CPlatformType afirmaType = new CPlatformType();
-				afirmaType.setIdPlatformType(IPlatformService.ID_PLATFORM_TYPE_TSA);
+				afirmaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA);
 				platformTsa.setPlatformType(afirmaType);
 				platformTsa.setRfc3161Context(tsaForm.getRfc3161Context());
 				platformTsa.setRfc3161Port(tsaForm.getRfc3161Port());

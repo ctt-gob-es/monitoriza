@@ -40,7 +40,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="st : ${status}">
+									<tr th:each="st : ${status.data}">
 										<td th:if="${st.statusAux eq 2}">
 											<i class="c-red-500 ti-control-record"></i>
 										</td>
@@ -175,8 +175,12 @@ function format ( d ) {
     return result;
 }
 
+/* setInterval(function(){
+	   table.ajax.reload();
+	}, 5000) */
+	
 // Auto refresco de la pagina de estados de semaforos
-var time = new Date().getTime();
+/* var time = new Date().getTime();
 
    function refresh() {
        if(new Date().getTime() - time >= 60000){
@@ -186,6 +190,6 @@ var time = new Date().getTime();
 	}
    }
 
-   setTimeout(refresh, 10000);
+   setTimeout(refresh, 10000); */
 
 </script>

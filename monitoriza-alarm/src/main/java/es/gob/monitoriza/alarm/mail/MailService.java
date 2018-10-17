@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>23/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 17/10/2018.
  */
 package es.gob.monitoriza.alarm.mail;
 
@@ -46,7 +46,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 /** 
  * <p>Class that manages the mail service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 17/10/2018.
  */
 public class MailService {
 
@@ -358,7 +358,7 @@ public class MailService {
 			transport.close();
 
 		} catch (MessagingException e) {
-			LOGGER.error(Language.getResMonitoriza(IAlarmLogMessages.ERRORALAMR003), e.getCause());
+			LOGGER.error(Language.getResAlarmMonitoriza(IAlarmLogMessages.ERRORALAMR003), e.getCause());
 			return false;
 		}
 		

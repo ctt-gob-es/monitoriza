@@ -20,11 +20,9 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 8 oct. 2018.
+ * @version 1.1, 17/10/2018.
  */
 package es.gob.monitoriza.controller;
-
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -43,11 +41,15 @@ import es.gob.monitoriza.service.IStatusService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 8 oct. 2018.
+ * @version 1.1, 17/10/2018.
  */
 @Controller
 public class StatusController {
 
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
 	@Autowired
 	private IStatusService statusService;
 
@@ -62,7 +64,7 @@ public class StatusController {
 	@RequestMapping(value = "status")
 	public String status(Model model) {
 
-		List<StatusDTO> statusDto = statusService.completeStatus();
+		StatusDTO statusDto = statusService.completeStatus();
 
 		model.addAttribute("status", statusDto);
 

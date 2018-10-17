@@ -20,11 +20,9 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 17/10/2018.
  */
 package es.gob.monitoriza.controller;
-
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -38,7 +36,7 @@ import es.gob.monitoriza.service.IStatusService;
  * <p>Class that maps the request for the front view to the controller.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.0, 10/10/2018.
+ * @version 1.1, 17/10/2018.
  */
 @Controller
 public class WebAdminController {
@@ -68,7 +66,7 @@ public class WebAdminController {
 	 */
 	@RequestMapping(value = "inicio")
 	public String index(Model model) {
-		List<StatusDTO> statusDto = statusService.completeStatus();
+		StatusDTO statusDto = statusService.completeStatus();
 
 		model.addAttribute("status", statusDto);
 

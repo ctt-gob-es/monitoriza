@@ -32,12 +32,13 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 17/10/2018.
  */
 package es.gob.monitoriza.status;
 
 import java.io.BufferedOutputStream;
 import java.io.DataOutputStream;
+import java.io.IOException;
 import java.io.OutputStream;
 
 import javax.servlet.http.HttpServlet;
@@ -60,7 +61,7 @@ import es.gob.monitoriza.response.ResponseMonitoriza;
 /** 
  * <p>Class that gets the status for the @firma/ts@ services through servlet call</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 17/10/2018.
  */
 public class AfirmaServicesStatus extends HttpServlet {
 
@@ -107,6 +108,9 @@ public class AfirmaServicesStatus extends HttpServlet {
 		try {
 		
 			os = response.getOutputStream();
+			
+			
+			
 			out = new DataOutputStream(new BufferedOutputStream(os));
 					
 			response.setStatus(HttpServletResponse.SC_OK);
@@ -118,12 +122,13 @@ public class AfirmaServicesStatus extends HttpServlet {
     			response.setContentLength(responseBytes.length);
     			response.setContentType("text/html");
     			
+    			
 			} else {
 				responseJson = ResponseJsonMonitoriza.getResponseStatus();
-				response.setContentLength(responseJson.length());
 				response.setContentType("application/Json");
-		        		        
+				
 				responseBytes = responseJson.getBytes();
+				response.setContentLength(responseBytes.length);
 			}
 			
 			out.write(responseBytes);
@@ -156,6 +161,12 @@ public class AfirmaServicesStatus extends HttpServlet {
 			
 		} finally {
 			
+			try {
+				out.close();
+			} catch (IOException e) {
+				// No se hace nada...
+				
+			}
 		}
 	
 	}

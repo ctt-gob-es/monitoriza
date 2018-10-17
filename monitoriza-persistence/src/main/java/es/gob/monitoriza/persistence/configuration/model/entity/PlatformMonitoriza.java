@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 17/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -49,11 +49,21 @@ import es.gob.monitoriza.utilidades.NumberConstants;
 /** 
  * <p>Class that maps the <i>PLATFORM_MONITORIZA</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 17/10/2018.
  */
 @Entity
 @Table(name = "PLATFORM_MONITORIZA")
 public class PlatformMonitoriza implements Serializable {
+	
+	/**
+	 * Attribute that represents the identifier for the @Firma platform type. 
+	 */
+	public static final Long ID_PLATFORM_TYPE_AFIRMA = 1L;
+	
+	/**
+	 * Attribute that represents the identifier for the @Firma platform type.
+	 */
+	public static final Long ID_PLATFORM_TYPE_TSA = 2L;
 		
 	/**
 	 * Constant attribute that represents the string <i>"yes_no"</i>.
@@ -232,7 +242,7 @@ public class PlatformMonitoriza implements Serializable {
 	
 	/**
 	 * Sets the value of the attribute {@link #host}.
-	 * @param isBlockedParam The value for the attribute {@link #host}.
+	 * @param host The value for the attribute {@link #host}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.

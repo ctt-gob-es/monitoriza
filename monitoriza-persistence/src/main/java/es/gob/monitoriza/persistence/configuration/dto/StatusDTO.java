@@ -19,11 +19,14 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>8 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 8 oct. 2018.
+ * @version 1.1, 17/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
-import java.util.Map;
+import java.util.Collections;
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>
@@ -34,105 +37,66 @@ import java.util.Map;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 8 oct. 2018.
+ * @version 1.1, 17/10/2018.
  */
 public class StatusDTO {
 
-	private Long statusAux;
-	private String status;
-	private String service;
-	private float averageTime;
-	private String samplingTime;
-	private Map<String, Long> partialRequestResult;
+	/**
+	 * The data to be displayed in the table. This is an array of data source objects, one for each
+	 * row, which will be used by DataTables. Note that this parameter's name can be changed using the
+	 * ajaxDT option's dataSrc property.
+	 */
+	@JsonView(View.class)
+	private List<RowStatusDTO> data = Collections.emptyList();
 
 	/**
-	 * @return the statusAux
+	 * Optional: If an error occurs during the running of the server-side processing script, you can
+	 * inform the user of this error by passing back the error message to be displayed using this
+	 * parameter. Do not include if there is no error.
 	 */
-	public Long getStatusAux() {
-		return statusAux;
+	@JsonView(View.class)
+	private String error;
+	
+	/**
+	 * Gets the value of the attribute {@link #data}.
+	 * @return the value of the attribute {@link #data}.
+	 */
+	public List<RowStatusDTO> getData() {
+		return data;
+	}
+	
+	/**
+	 * Sets the value of the attribute {@link #data}.
+	 * @param data the value for the attribute {@link #data} to set.
+	 */
+	public void setData(List<RowStatusDTO> data) {
+		this.data = data;
 	}
 
 	/**
-	 * @param statusAux
-	 *            the statusAux to set
+	 * Gets the value of the attribute {@link #error}.
+	 * @return the value of the attribute {@link #error}.
 	 */
-	public void setStatusAux(Long statusAux) {
-		this.statusAux = statusAux;
+	public String getError() {
+		return error;
 	}
 
 	/**
-	 * @return the status
+	 * Sets the value of the attribute {@link #error}.
+	 * @param error the value for the attribute {@link #error} to set.
 	 */
-	public String getStatus() {
-		return status;
+	public void setError(String error) {
+		this.error = error;
 	}
 
-	/**
-	 * @param status
-	 *            the status to set
-	 */
-	public void setStatus(String status) {
-		this.status = status;
-	}
 
-	/**
-	 * @return the service
-	 */
-	public String getService() {
-		return service;
-	}
 
-	/**
-	 * @param service
-	 *            the service to set
+	/** 
+	 * <p>Interface used by Jackson (JSON) for annotate view fields.</p>
+	 * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+	 * @version 1.0, 05/10/2018.
 	 */
-	public void setService(String service) {
-		this.service = service;
-	}
-
-	/**
-	 * @return the averageTime
-	 */
-	public float getAverageTime() {
-		return averageTime;
-	}
-
-	/**
-	 * @param averageTime
-	 *            the averageTime to set
-	 */
-	public void setAverageTime(float averageTime) {
-		this.averageTime = averageTime;
-	}
-
-	/**
-	 * @return the samplingTime
-	 */
-	public String getSamplingTime() {
-		return samplingTime;
-	}
-
-	/**
-	 * @param samplingTime
-	 *            the samplingTime to set
-	 */
-	public void setSamplingTime(String samplingTime) {
-		this.samplingTime = samplingTime;
-	}
-
-	/**
-	 * @return the partialRequestResult
-	 */
-	public Map<String, Long> getPartialRequestResult() {
-		return partialRequestResult;
-	}
-
-	/**
-	 * @param partialRequestResult
-	 *            the partialRequestResult to set
-	 */
-	public void setPartialRequestResult(Map<String, Long> partialRequestResult) {
-		this.partialRequestResult = partialRequestResult;
+	public interface View {
 	}
 
 }

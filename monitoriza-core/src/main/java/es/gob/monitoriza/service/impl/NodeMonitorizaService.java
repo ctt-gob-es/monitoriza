@@ -25,10 +25,17 @@
 package es.gob.monitoriza.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.repository.CPlatformTypeRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.NodeMonitorizaRepository;
+import es.gob.monitoriza.persistence.configuration.model.repository.datatable.NodeDatatableRepository;
+import es.gob.monitoriza.persistence.configuration.model.specification.CNodeTypeSpecification;
 import es.gob.monitoriza.service.INodeMonitorizaService;
 
 
@@ -44,7 +51,19 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
 	 */
 	@Autowired
-    private NodeMonitorizaRepository repository; 
+    private NodeMonitorizaRepository repository;
+	
+	/**
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 */
+	@Autowired
+    private CPlatformTypeRepository typeRepository; 
+	
+	/**
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 */
+	@Autowired
+    private NodeDatatableRepository dtRepository; 
 
 	/**
 	 * {@inheritDoc}
@@ -75,6 +94,46 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 		
 		repository.deleteById(nodeId);
 
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.INodeMonitorizaService#findAllAfirma(org.springframework.data.jpa.datatables.mapping.DataTablesInput)
+	 */
+	@Override
+	public DataTablesOutput<NodeMonitoriza> findAllAfirma(DataTablesInput input) {
+		
+		CPlatformType nodeType = new CPlatformType();
+		nodeType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
+		CNodeTypeSpecification byNodeType = new CNodeTypeSpecification(nodeType);
+		
+		return dtRepository.findAll(input, byNodeType);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.INodeMonitorizaService#findAllTsa(org.springframework.data.jpa.datatables.mapping.DataTablesInput)
+	 */
+	@Override
+	public DataTablesOutput<NodeMonitoriza> findAllTsa(DataTablesInput input) {
+		
+		CPlatformType nodeType = new CPlatformType();
+		nodeType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA);
+		CNodeTypeSpecification byNodeType = new CNodeTypeSpecification(nodeType);
+		
+		return dtRepository.findAll(input, byNodeType);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.INodeMonitorizaService#getAllNode()
+	 */
+	@Override
+	public Iterable<NodeMonitoriza> getAllNode() {
+		
+		return repository.findAll();
 	}
 
 }
