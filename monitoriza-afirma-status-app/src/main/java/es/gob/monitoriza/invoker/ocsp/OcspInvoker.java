@@ -19,12 +19,13 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>25 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 18/10/2018.
  */
 package es.gob.monitoriza.invoker.ocsp;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
@@ -54,7 +55,7 @@ import es.gob.monitoriza.utilidades.FileUtils;
 /** 
  * <p>Class that performs the request of a OCSP service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 18/10/2018.
  */
 public class OcspInvoker {
 
@@ -86,7 +87,6 @@ public class OcspInvoker {
 		try {
 		
 			// Establecemos el timeout de la conexión y de la lectura
-			
 			URL endpoint = new URL(new URL(service.getBaseUrl()), service.getOcspContext(), new URLStreamHandler() {
 
 				@Override
@@ -137,6 +137,12 @@ public class OcspInvoker {
 			con.setRequestProperty("charset", "utf-8");
 			con.setRequestProperty("Content-Length", Integer.toString(requestByte.length));
 			con.setUseCaches(false);
+			
+			// Se escribe la petición OCSP en la conexión
+			OutputStream os = con.getOutputStream();
+			os.write(requestByte);
+			os.flush();
+			os.close();
 
 			LocalTime beforeCall = LocalTime.now();
 			// Conexión...
@@ -156,8 +162,8 @@ public class OcspInvoker {
 		} catch (IOException e) {
 
 			LOGGER.error(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS005), e);
-
 		}
+		
 
 		return tiempoTotal;
 	}
