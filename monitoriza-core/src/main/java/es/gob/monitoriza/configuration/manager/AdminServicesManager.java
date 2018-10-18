@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 ene. 2018.</p>
  * @author Gobierno de España.
- *  @version 1.5, 10/10/2018.
+ *  @version 1.6, 18/10/2018.
  */
 package es.gob.monitoriza.configuration.manager;
 
@@ -78,7 +78,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <p>Class that manages the configuration of the @firma/ts@ services from database persistence
  *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- *  @version 1.5, 10/10/2018.
+ *  @version 1.6, 18/10/2018.
  */
 @Service("adminServicesManager")
 public class AdminServicesManager {
@@ -98,42 +98,42 @@ public class AdminServicesManager {
 	 * repository.
 	 */
 	@Autowired
-	IServiceMonitorizaService serviceService;
+	private IServiceMonitorizaService serviceService;
 	
 	/**
 	 * Attribute that represents the service object for accessing the timer
 	 * repository.
 	 */
 	@Autowired
-	ITimerMonitorizaService timerService;
+	private ITimerMonitorizaService timerService;
 	
 	/**
 	 * Attribute that represents the service object for accessing the scheduled timer
 	 * repository.
 	 */
 	@Autowired
-	ITimerScheduledService scheduledService;
+	private ITimerScheduledService scheduledService;
 		
 	/**
 	 * Attribute that represents the service object for accessing the keystore
 	 * repository.
 	 */
 	@Autowired
-	IKeystoreService keystoreService;
+	private IKeystoreService keystoreService;
 	
 	/**
 	 * Attribute that represents the service object for accessing the alarm
 	 * repository.
 	 */
 	@Autowired
-	IAlarmMonitorizaService alarmService;
+	private IAlarmMonitorizaService alarmService;
 	
 	/**
 	 * Attribute that represents the service object for accessing the request file
 	 * repository.
 	 */
 	@Autowired
-	IRequestServiceFileService fileService;
+	private IRequestServiceFileService fileService;
 	
 	/**
 	 * Method that gets all timers from database
@@ -172,7 +172,7 @@ public class AdminServicesManager {
 
 	/**
 	 * Method that gets the services  from persistence (database or static properties file)
-	 * @param timerId The Identifier of the timer configured in the service
+	 * @param timerDTO The Identifier of the timer configured in the service
 	 * @return List with the service configuration which its timer matches with the parameter timerId
 	 */
 	public List<ServiceDTO> getServicesByTimer(final TimerDTO timerDTO) {

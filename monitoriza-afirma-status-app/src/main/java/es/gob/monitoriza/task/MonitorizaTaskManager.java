@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 18/10/2018.
  */
 package es.gob.monitoriza.task;
 
@@ -49,7 +49,7 @@ import es.gob.monitoriza.timers.TimersHolder;
 /** 
  * <p>Class that update the configuration of the scheduled services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 18/10/2018.
  */
 @Service("monitorizaTaskManager")
 class MonitorizaTaskManager {
@@ -120,7 +120,8 @@ class MonitorizaTaskManager {
     			} else {
     				// El timer ya no tiene ningún servicio asociado, luego se elimina de entre los programados.
     				TimersHolder.getInstance().getCurrentTimersHolder().remove(timerDTO.getIdTimer());
-    				scheduledService.deleteTimerScheduled(timerDTO.getIdTimer());
+    				final TimerScheduled scheduled = scheduledService.getTimerScheduledByIdTimer(timerDTO.getIdTimer());
+    				scheduledService.deleteTimerScheduled(scheduled.getIdTimerScheduled());
     				
     			}
     		}
