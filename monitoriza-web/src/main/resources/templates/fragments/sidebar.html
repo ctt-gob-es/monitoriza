@@ -147,6 +147,56 @@
 	                </script>
 	              </a>
 	            </li>
+	            <!-- SPIE -->
+                <li class="nav-item dropdown">
+                  <a id="aSPIEAdmin" class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                      <i class="c-orange-500 ti-bar-chart"></i>
+                    </span>
+                    <span class="title" th:text="#{menu.admin.spie.conf}"></span>
+                    <span class="arrow"><i class="ti-angle-right"></i></span>
+                  </a> 
+                   <ul class="dropdown-menu">
+                   	   <li>
+                          <a id="aConfSpieAdmin" class='sidebar-link' href="#">
+                              <span class="title" th:text="#{menu.admin.global.conf}"></span>
+                              <script th:inline="javascript">
+		                           var actionConfSpie = /*[[@{/confspie}]]*/;
+		                           $('#aConfSpieAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionConfSpie, 'optionReplacement', 'GET', null, true); return false;});
+                           	  </script>
+                          </a>
+                  	   </li>
+                       <li>
+                          <a id="aNodosAfirmaAdmin" class='sidebar-link' href="#">
+                              <span class="title" th:text="#{menu.admin.spie.conf.node.afirma}"></span>
+                              <script th:inline="javascript">
+		                           var actionNodeAfirma = /*[[@{/nodesafirma}]]*/;
+		                           $('#aNodosAfirmaAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionNodeAfirma, 'optionReplacement', 'GET', null, true); return false;});
+                           	  </script>
+                          </a>
+                  	   </li>
+                  	   <li>
+							<a id="aNodosTsaAdmin" class='sidebar-link' href="#">
+							    <span class="title" th:text="#{menu.admin.spie.conf.node.tsa}"></span>
+								<script th:inline="javascript">
+		                 			var actionNodeTsa = /*[[@{/nodestsa}]]*/;
+		                 			$('#aNodosTsaAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionNodeTsa, 'optionReplacement', 'GET', null, true); return false;});
+		               			</script>
+	               			</a>
+	               		</li>
+                  	   <li>
+                          <a id="aAlarmSpieAdmin" class='sidebar-link' href="#">
+                              <span class="title" th:text="#{menu.admin.alarm}"></span>
+                              <script th:inline="javascript">
+		                           var actionAlarmSpie = /*[[@{/confalarmadmin}]]*/;
+		                           $('#aAlarmSpieAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionAlarmSpie, 'optionReplacement', 'GET', null, true); return false;});
+                           	  </script>
+                          </a>
+                  	   </li>
+                   </ul>
+                </li>
+                <!-- FIN SPIE -->
+	            
 	            <li class="nav-item dropdown">
 	              <a id="aGlobalConfAdmin" class="dropdown-toggle" href="javascript:void(0);">
 	                <span class="icon-holder">
@@ -162,6 +212,15 @@
 								<script th:inline="javascript">
 		                 			var actionValidService = /*[[@{/validservicecertificate}]]*/;
 		                 			$('#aValidServiceAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionValidService, 'optionReplacement', 'GET', null, true); return false;});
+		               			</script>
+	               			</a>
+	               		</li>
+	               		<li>
+							<a id="aConfServerAdmin" class='sidebar-link' href="#">
+								<span class="title" th:text="#{menu.admin.confServerMail}"></span>
+								<script th:inline="javascript">
+		                 			var actionConfMail = /*[[@{/confmailadmin}]]*/;
+		                 			$('#aConfServerAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionConfMail, 'optionReplacement', 'GET', null, true); return false;});
 		               			</script>
 	               			</a>
 	               		</li>

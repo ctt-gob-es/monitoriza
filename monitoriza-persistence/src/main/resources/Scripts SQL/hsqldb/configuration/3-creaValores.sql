@@ -93,3 +93,14 @@ Insert into C_AUTHENTICATION_TYPE
    (ID_AUTHENTICATION_TYPE, TOKEN_NAME)
  Values
    (3, 'Certificado');
+   
+ -- TABLA ALARM_DEFECT
+ 
+Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_001', 'Nodo de @firma sin conexión con TS@');
+Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_002', 'Nodo de @firma sin conexión con HSM');
+Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_003', 'Nodo de @firma con método de validación en estado no correcto');
+Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_004', 'Nodo de @firma con servicio degradado');
+Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_005', 'Nodo de @firma en modo de emergencia');
+Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_006', 'Nodo de TS@ sin conexión con HSM');
+Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_007', 'Nodo de TS@ sin conexión con @firma');
+Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_008', 'Nodo de TS@ en modo de emergencia');

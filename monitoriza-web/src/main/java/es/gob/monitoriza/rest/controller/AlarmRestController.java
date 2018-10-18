@@ -15,12 +15,12 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.rest.controller.ServiceRestController.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.rest.controller.AlarmRestController.java.</p>
  * <b>Description:</b><p>Class that manages the REST requests related to the Services administration and JSON communication.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>20 abr. 2018.</p>
+ * <b>Date:</b><p>18 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.3, 18/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -53,13 +53,16 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.form.AlarmForm;
+import es.gob.monitoriza.form.ConfAlarmForm;
 import es.gob.monitoriza.form.MailForm;
+import es.gob.monitoriza.persistence.configuration.model.entity.Alarm;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IAlarmMonitorizaService;
+import es.gob.monitoriza.service.IAlarmService;
 import es.gob.monitoriza.service.IMailMonitorizaService;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
 import es.gob.monitoriza.service.ITimerScheduledService;
@@ -74,7 +77,7 @@ import es.gob.monitoriza.service.ITimerScheduledService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.1, 12/09/2018.
+ * @version 1.3, 18/10/2018.
  */
 @RestController
 public class AlarmRestController {
@@ -85,36 +88,39 @@ public class AlarmRestController {
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_WEB_LOG);
 
 	/**
-	 * Attribute that represents the service object for accessing the
-	 * repository.
+	 * Attribute that represents the service object for accessing the repository.
 	 */
 	@Autowired
 	private IMailMonitorizaService mailService;
 
 	/**
-	 * Attribute that represents the service object for accessing the
-	 * repository.
+	 * Attribute that represents the service object for accessing the repository.
 	 */
 	@Autowired
-	private IAlarmMonitorizaService alarmService;
-	
+	private IAlarmMonitorizaService alarmMonitorizaService;
+
 	/**
-	 * Attribute that represents the service object for accessing the
-	 * repository.
+	 * Attribute that represents the service object for accessing the repository.
 	 */
 	@Autowired
 	private IServiceMonitorizaService serviceService;
-	
+
 	/**
-	 * Attribute that represents the service object for accessing the
-	 * repository.
+	 * Attribute that represents the service object for accessing the repository.
 	 */
 	@Autowired
 	private ITimerScheduledService scheduledService;
 
 	/**
-	 * Method that maps the list users web requests to the controller and
-	 * forwards the list of services to the view.
+	 * Attribute that represents the service object for accessing the
+	 * AlarmRespository.
+	 */
+	@Autowired
+	private IAlarmService alarmService;
+
+	/**
+	 * Method that maps the list users web requests to the controller and forwards
+	 * the list of services to the view.
 	 * 
 	 * @param input
 	 *            Holder object for datatable attributes.
@@ -129,35 +135,35 @@ public class AlarmRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/alarmsdatatable", method = RequestMethod.GET)
 	public DataTablesOutput<AlarmMonitoriza> alarms(@Valid DataTablesInput input) {
-		return (DataTablesOutput<AlarmMonitoriza>) alarmService.findAll(input);
+		return (DataTablesOutput<AlarmMonitoriza>) alarmMonitorizaService.findAll(input);
 	}
-	
+
 	@RequestMapping(path = "/emails", method = RequestMethod.GET)
 	public List<Long> emails(@RequestParam("id") Long idAlarm, @RequestParam("type") int type) {
 		List<Long> result = new ArrayList<Long>();
 		Set<MailMonitoriza> mails = new HashSet<MailMonitoriza>();
-		AlarmMonitoriza alarmMonitoriza = alarmService.getAlarmMonitorizaById(idAlarm); 
-		switch(type) {
-			case 0:
-				mails = alarmMonitoriza.getEmailsDegraded();
-				break;
-			case 1:
-				mails = alarmMonitoriza.getEmailsDown();
-				break;
-			default:
-				break;
+		AlarmMonitoriza alarmMonitoriza = alarmMonitorizaService.getAlarmMonitorizaById(idAlarm);
+		switch (type) {
+		case 0:
+			mails = alarmMonitoriza.getEmailsDegraded();
+			break;
+		case 1:
+			mails = alarmMonitoriza.getEmailsDown();
+			break;
+		default:
+			break;
 		}
-		
-		for (MailMonitoriza mm: mails) {
+
+		for (MailMonitoriza mm : mails) {
 			result.add(mm.getIdMail());
 		}
 
 		return result;
 	}
-	
+
 	/**
-	 * Method that maps the save timer web request to the controller and saves
-	 * it in the persistence.
+	 * Method that maps the save timer web request to the controller and saves it in
+	 * the persistence.
 	 * 
 	 * @param timerForm
 	 *            Object that represents the backing timer form.
@@ -178,7 +184,7 @@ public class AlarmRestController {
 			listNewMail = StreamSupport.stream(mailService.getAllMailMonitoriza().spliterator(), false)
 					.collect(Collectors.toList());
 			JSONObject json = new JSONObject();
-			for (FieldError o: bindingResult.getFieldErrors()) {
+			for (FieldError o : bindingResult.getFieldErrors()) {
 				json.put(o.getField() + "_span", o.getDefaultMessage());
 			}
 			dtOutput.setError(json.toString());
@@ -190,17 +196,16 @@ public class AlarmRestController {
 				} else {
 					mailMonitoriza = new MailMonitoriza();
 				}
-	
+
 				mailMonitoriza.setEmailAddress(mailForm.getEmailAddress());
 				MailMonitoriza mail = mailService.saveMailMonitoriza(mailMonitoriza);
-	
+
 				listNewMail.add(mail);
-				
+
 				if (haCambiadoEmail && mailMonitoriza.getIdMail() != null) {
 					updateScheduledTimerFromMail(mailMonitoriza);
 				}
-												
-				
+
 			} catch (Exception e) {
 				listNewMail = StreamSupport.stream(mailService.getAllMailMonitoriza().spliterator(), false)
 						.collect(Collectors.toList());
@@ -214,8 +219,10 @@ public class AlarmRestController {
 
 	/**
 	 * Method that saves an alarm in the persistence
-	 * @param alarmForm 
-	 * @param bindingResult Validation result binding object.
+	 * 
+	 * @param alarmForm
+	 * @param bindingResult
+	 *            Validation result binding object.
 	 * @return
 	 */
 	@RequestMapping(path = "/savealarm", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
@@ -226,49 +233,50 @@ public class AlarmRestController {
 		AlarmMonitoriza alarmMonitoriza = null;
 		List<AlarmMonitoriza> listNewAlarm = new ArrayList<AlarmMonitoriza>();
 		boolean laAlarmaHaCambiado = false;
-		
+
 		if (bindingResult.hasErrors()) {
-			listNewAlarm = StreamSupport.stream(alarmService.getAllAlarmMonitoriza().spliterator(), false)
+			listNewAlarm = StreamSupport.stream(alarmMonitorizaService.getAllAlarmMonitoriza().spliterator(), false)
 					.collect(Collectors.toList());
 			JSONObject json = new JSONObject();
-			for (FieldError o: bindingResult.getFieldErrors()) {
+			for (FieldError o : bindingResult.getFieldErrors()) {
 				json.put(o.getField() + "_span", o.getDefaultMessage());
 			}
 			dtOutput.setError(json.toString());
-						
+
 		} else {
 			try {
 				if (alarmForm.getIdAlarm() != null) {
-					alarmMonitoriza = alarmService.getAlarmMonitorizaById(alarmForm.getIdAlarm());
+					alarmMonitoriza = alarmMonitorizaService.getAlarmMonitorizaById(alarmForm.getIdAlarm());
 					laAlarmaHaCambiado = isAlarmUpdatedForm(alarmForm, alarmMonitoriza);
 				} else {
 					alarmMonitoriza = new AlarmMonitoriza();
 				}
-	
+
 				alarmMonitoriza.setName(alarmForm.getName());
 				alarmMonitoriza.setBlockedTime(alarmForm.getBlockedTime());
 				Set<MailMonitoriza> mailsDegraded = mailService.splitMails(alarmForm.getDegradedConcat());
 				alarmMonitoriza.setEmailsDegraded(mailsDegraded);
 				Set<MailMonitoriza> mailsDown = mailService.splitMails(alarmForm.getDownConcat());
 				alarmMonitoriza.setEmailsDown(mailsDown);
-				AlarmMonitoriza alarm = alarmService.saveAlarmMonitoriza(alarmMonitoriza);
-	
-				for(MailMonitoriza mm: mailsDegraded) {
+				AlarmMonitoriza alarm = alarmMonitorizaService.saveAlarmMonitoriza(alarmMonitoriza);
+
+				for (MailMonitoriza mm : mailsDegraded) {
 					mailService.saveMailMonitoriza(mm);
 				}
-				for(MailMonitoriza mm2: mailsDown) {
+				for (MailMonitoriza mm2 : mailsDown) {
 					mailService.saveMailMonitoriza(mm2);
 				}
-				
+
 				listNewAlarm.add(alarm);
-				
-				// Si la alarma ha cambiado y no es nueva (desasignada), hay que actualizar el timer programado.
+
+				// Si la alarma ha cambiado y no es nueva (desasignada), hay que actualizar el
+				// timer programado.
 				if (laAlarmaHaCambiado && alarmMonitoriza.getIdAlarm() != null) {
 					updateScheduledTimerFromAlarm(alarmMonitoriza);
 				}
-				
+
 			} catch (Exception e) {
-				listNewAlarm = StreamSupport.stream(alarmService.getAllAlarmMonitoriza().spliterator(), false)
+				listNewAlarm = StreamSupport.stream(alarmMonitorizaService.getAllAlarmMonitoriza().spliterator(), false)
 						.collect(Collectors.toList());
 				throw e;
 			}
@@ -280,18 +288,21 @@ public class AlarmRestController {
 
 	/**
 	 * Method that deletes a mail from persistence
-	 * @param mailId The identifier for the mail to delete
-	 * @param index Index of the datatable.
+	 * 
+	 * @param mailId
+	 *            The identifier for the mail to delete
+	 * @param index
+	 *            Index of the datatable.
 	 * @return The row index for the datatable.
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deletemail", method = RequestMethod.POST)
 	public String deleteMail(@RequestParam("id") Long mailId, @RequestParam("index") String index) {
 		try {
-			MailMonitoriza mailMonitoriza =  mailService.getMailMonitorizaById(mailId);
-			if( mailMonitoriza.getAlarmDegraded().isEmpty() && mailMonitoriza.getAlarmDown().isEmpty() ) {
+			MailMonitoriza mailMonitoriza = mailService.getMailMonitorizaById(mailId);
+			if (mailMonitoriza.getAlarmDegraded().isEmpty() && mailMonitoriza.getAlarmDown().isEmpty()) {
 				mailService.deleteMailMonitoriza(mailId);
-			}else {
+			} else {
 				index = "-1";
 			}
 		} catch (Exception e) {
@@ -302,87 +313,196 @@ public class AlarmRestController {
 
 	/**
 	 * Method that deletes an alarm from the persistence.
-	 * @param alarmId Identifier of the alarm to delete.
-	 * @param index Row index of the datatable.
+	 * 
+	 * @param alarmId
+	 *            Identifier of the alarm to delete.
+	 * @param index
+	 *            Row index of the datatable.
 	 * @return The row index of the datatable.
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deletealarm", method = RequestMethod.POST)
 	public String deleteAlarm(@RequestParam("id") Long alarmId, @RequestParam("index") String index) {
 		try {
-			alarmService.deleteAlarmMonitoriza(alarmId);
+			alarmMonitorizaService.deleteAlarmMonitoriza(alarmId);
 		} catch (Exception e) {
 			index = "-1";
 		}
 		return index;
 	}
-	
+
 	/**
-	 * Method that sets the scheduled timers of the services which uses this platform as updated
-	 * @param alarm The alarm whose timers must be updated
+	 * Method that sets the scheduled timers of the services which uses this
+	 * platform as updated
+	 * 
+	 * @param alarm
+	 *            The alarm whose timers must be updated
 	 */
 	private void updateScheduledTimerFromAlarm(final AlarmMonitoriza alarm) {
-		
-		final List<ServiceMonitoriza> servicesUsingThisAlarm = StreamSupport.stream(serviceService.getAllByAlarm(alarm).spliterator(), false).collect(Collectors.toList());
-		
+
+		final List<ServiceMonitoriza> servicesUsingThisAlarm = StreamSupport
+				.stream(serviceService.getAllByAlarm(alarm).spliterator(), false).collect(Collectors.toList());
+
 		TimerScheduled scheduled = null;
 		for (ServiceMonitoriza service : servicesUsingThisAlarm) {
-			
+
 			scheduled = scheduledService.getTimerScheduledByIdTimer(service.getTimer().getIdTimer());
 			scheduled.setUpdated(false);
 			scheduledService.saveTimerScheduled(scheduled);
-			
+
 		}
 	}
-	
+
 	/**
-	 * Method that sets the scheduled timers of the services which uses this platform as updated
-	 * @param alarm The alarm whose timers must be updated
+	 * Method that sets the scheduled timers of the services which uses this
+	 * platform as updated
+	 * 
+	 * @param alarm
+	 *            The alarm whose timers must be updated
 	 */
 	private void updateScheduledTimerFromMail(final MailMonitoriza mail) {
-		
-		List<AlarmMonitoriza> alarmsUsingThisMail = StreamSupport.stream(alarmService.getAllAlarmMonitorizaByMail(mail).spliterator(), false).collect(Collectors.toList());
-		
+
+		List<AlarmMonitoriza> alarmsUsingThisMail = StreamSupport
+				.stream(alarmMonitorizaService.getAllAlarmMonitorizaByMail(mail).spliterator(), false)
+				.collect(Collectors.toList());
+
 		List<ServiceMonitoriza> servicesUsingThisAlarm = new ArrayList<ServiceMonitoriza>();
 		for (AlarmMonitoriza alarm : alarmsUsingThisMail) {
-			servicesUsingThisAlarm.addAll(StreamSupport.stream(serviceService.getAllByAlarm(alarm).spliterator(), false).collect(Collectors.toList()));
+			servicesUsingThisAlarm.addAll(StreamSupport.stream(serviceService.getAllByAlarm(alarm).spliterator(), false)
+					.collect(Collectors.toList()));
 		}
-				
+
 		TimerScheduled scheduled = null;
 		for (ServiceMonitoriza service : servicesUsingThisAlarm) {
-			
+
 			scheduled = scheduledService.getTimerScheduledByIdTimer(service.getTimer().getIdTimer());
 			scheduled.setUpdated(false);
 			scheduledService.saveTimerScheduled(scheduled);
-			
+
 		}
 	}
-	
+
 	/**
-	 * Method that checks if there are changes between the alarm form and the persisted alarm
-	 * @param alarmForm The backing form for the alarm
-	 * @param alarm The alarm 
-	 * @return true if there are changes in the saved alarm, false otherwise. 
+	 * Method that checks if there are changes between the alarm form and the
+	 * persisted alarm
+	 * 
+	 * @param alarmForm
+	 *            The backing form for the alarm
+	 * @param alarm
+	 *            The alarm
+	 * @return true if there are changes in the saved alarm, false otherwise.
 	 */
 	private boolean isAlarmUpdatedForm(final AlarmForm alarmForm, final AlarmMonitoriza alarm) {
-				
-		return !(alarmForm.getBlockedTime().equals(alarm.getBlockedTime()) 
+
+		return !(alarmForm.getBlockedTime().equals(alarm.getBlockedTime())
 				&& alarmForm.getName().equals(alarm.getName())
 				&& mailService.splitMails(alarmForm.getDegradedConcat()).equals(alarm.getEmailsDegraded())
 				&& mailService.splitMails(alarmForm.getDownConcat()).equals(alarm.getEmailsDown()));
-		
+
 	}
-	
+
 	/**
-	 * Method thar checks if there are changes between the mail form and the persisted mail
+	 * Method thar checks if there are changes between the mail form and the
+	 * persisted mail
+	 * 
 	 * @param mailForm
 	 * @param mail
 	 * @return
 	 */
 	private boolean isMailUpdatedForm(MailForm mailForm, MailMonitoriza mail) {
-		
+
 		return !(mailForm.getEmailAddress().equals(mail.getEmailAddress()));
-		
+
+	}
+
+	/**
+	 * Method that maps the list alarms web requests to the controller and forwards
+	 * the list of alarms to the view.
+	 * 
+	 * @param input
+	 *            Holder object for datatable attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(path = "/confalarmsdatatable", method = RequestMethod.GET)
+	public DataTablesOutput<Alarm> confAlarms(@Valid DataTablesInput input) {
+		return (DataTablesOutput<Alarm>) alarmService.getAllAlarm(input);
+	}
+
+	/**
+	 * Method that maps the save user web request to the controller and saves it in
+	 * the persistence.
+	 *
+	 * @param alarmForm
+	 *            Object that represents the backing alarm form.
+	 * @param bindingResult
+	 *            Object that represents the form validation result.
+	 * @return {@link DataTablesOutput<Alarmt>}
+	 */
+	@RequestMapping(value = "/saveconfalarm", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@JsonView(DataTablesOutput.View.class)
+	public @ResponseBody DataTablesOutput<Alarm> save(
+			@Validated(OrderedValidation.class) @RequestBody ConfAlarmForm alarmForm, BindingResult bindingResult) {
+		DataTablesOutput<Alarm> dtOutput = new DataTablesOutput<>();
+		Alarm alarm = null;
+		List<Alarm> listNewAlarm = new ArrayList<Alarm>();
+
+		if (bindingResult.hasErrors()) {
+			listNewAlarm = StreamSupport.stream(alarmService.getAllAlarm().spliterator(), false)
+					.collect(Collectors.toList());
+			JSONObject json = new JSONObject();
+			for (FieldError o : bindingResult.getFieldErrors()) {
+				json.put(o.getField() + "_span", o.getDefaultMessage());
+			}
+			dtOutput.setError(json.toString());
+		} else {
+			try {
+				alarm = alarmService.getAlarmById(alarmForm.getIdAlarm());
+				alarm.setIdAlarm(alarmForm.getIdAlarm());
+				alarm.setTimeBlock(alarmForm.getTimeBlock());
+				alarm.setActive(alarmForm.getActive());
+				Set<MailMonitoriza> mails = mailService.splitMails(alarmForm.getMailsConcat());
+				alarm.setMails(mails);
+
+				Alarm alarmNew = alarmService.saveAlarm(alarm);
+
+				for (MailMonitoriza m : mails) {
+					mailService.saveMailMonitoriza(m);
+				}
+
+				listNewAlarm.add(alarmNew);
+			} catch (Exception e) {
+				listNewAlarm = StreamSupport.stream(alarmService.getAllAlarm().spliterator(), false)
+						.collect(Collectors.toList());
+				throw e;
+			}
+		}
+
+		dtOutput.setData(listNewAlarm);
+
+		return dtOutput;
+	}
+
+	/**
+	 * Method that get all emails of system
+	 * 
+	 * @param idAlarm
+	 *            Parameter that represents a Alarm identifier.
+	 * @return {@link List<Long>}
+	 */
+	@RequestMapping(path = "/confemails", method = RequestMethod.GET)
+	public List<Long> confEmails(@RequestParam("id") String idAlarm) {
+		List<Long> result = new ArrayList<Long>();
+		Set<MailMonitoriza> mails = new HashSet<MailMonitoriza>();
+
+		Alarm alarm = alarmService.getAlarmById(idAlarm);
+		mails = alarm.getMails();
+
+		for (MailMonitoriza mm : mails) {
+			result.add(mm.getIdMail());
+		}
+
+		return result;
 	}
 
 }

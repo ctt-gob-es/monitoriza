@@ -40,7 +40,7 @@
 									</tr>
 								</thead>
 								<tbody>
-									<tr th:each="st : ${status}">
+									<tr th:each="st : ${status.data}">
 										<td th:if="${st.statusAux eq 2}">
 											<i class="c-red-500 ti-control-record"></i>
 										</td>
@@ -84,7 +84,7 @@ tr.shown td.details-control {
 
 $(document).ready(function() {
 	
-	var table = $('#statusTable').DataTable({
+	var tableStatusInterval = $('#statusTable').DataTable({
 		"pagingType" : "full_numbers",
 		"initComplete" : function(settings, json) {
 			//eliminamos el scroll inferior
@@ -127,7 +127,7 @@ $(document).ready(function() {
 	// Add event listener for opening and closing details
 	$('#statusTable tbody').on('click', 'td.details-control', function () {
         var tr = $(this).closest('tr');
-        var row = table.row( tr );
+        var row = tableStatusInterval.row( tr );
  
         if ( row.child.isShown() ) {
             // This row is already open - close it
@@ -160,7 +160,7 @@ function format ( d ) {
 				var files = value.split(",");
 				for(var i=0; i<files.length;i++){
 					var filesAux = files[i].split("=");
-					var pos = filesAux[0].search('grupoPrincipal');
+					var pos = filesAux[0].search('grupo');
 					if(pos >= 0){
 						var filName = filesAux[0].substr(pos);
 					}
@@ -176,16 +176,11 @@ function format ( d ) {
 }
 
 // Auto refresco de la pagina de estados de semaforos
-var time = new Date().getTime();
-
-   function refresh() {
-       if(new Date().getTime() - time >= 60000){
-           window.location.reload(true);
-       }else {
-           setTimeout(refresh, 10000);
+setInterval(function(){
+	var urlStatus = /*[[@{/status}]]*/;
+	if (tableStatusInterval != undefined){
+		tableStatusInterval.ajax.url( urlStatus ).load();
 	}
-   }
-
-   setTimeout(refresh, 10000);
+}, 30000);
 
 </script>

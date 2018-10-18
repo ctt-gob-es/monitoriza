@@ -15,12 +15,12 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.controller.ServiceController.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.controller.AlarmController.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>19 abr. 2018.</p>
+ * <b>Date:</b><p>18 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 19 abr. 2018.
+ * @version 1.2, 18/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -39,22 +39,25 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.form.AlarmForm;
+import es.gob.monitoriza.form.ConfAlarmForm;
 import es.gob.monitoriza.form.MailForm;
+import es.gob.monitoriza.persistence.configuration.model.entity.Alarm;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
 import es.gob.monitoriza.service.IAlarmMonitorizaService;
+import es.gob.monitoriza.service.IAlarmService;
 import es.gob.monitoriza.service.IMailMonitorizaService;
 
 /**
  * <p>
- * Class .
+ * Class that maps the request for the alarm form to the controller.
  * </p>
  * <b>Project:</b>
  * <p>
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 19 abr. 2018.
+ * @version 1.2, 18/10/2018.
  */
 @Controller
 public class AlarmController {
@@ -65,18 +68,27 @@ public class AlarmController {
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_WEB_LOG);
 
 	/**
-	 * Attribute that represents the service object for accessing the
-	 * repository.
+	 * Attribute that represents the service object for accessing the repository.
 	 */
 	@Autowired
 	private IMailMonitorizaService mailService;
 
+	/**
+	 * Attribute that represents the service object for acceding to
+	 * AlarmMonitorizaRepository.
+	 */
 	@Autowired
-	private IAlarmMonitorizaService alarmService;
+	private IAlarmMonitorizaService alarmMonitorizaService;
 
 	/**
-	 * Method that maps the list users web requests to the controller and
-	 * forwards the list of users to the view.
+	 * Attribute that represents the service object for acceding to AlarmRepository.
+	 */
+	@Autowired
+	private IAlarmService alarmService;
+
+	/**
+	 * Method that maps the list users web requests to the controller and forwards
+	 * the list of users to the view.
 	 * 
 	 * @param model
 	 *            Holder object for model attributes.
@@ -97,7 +109,7 @@ public class AlarmController {
 				.collect(Collectors.toSet());
 		emailsDowns = StreamSupport.stream(mailService.getAllMailMonitoriza().spliterator(), false)
 				.collect(Collectors.toSet());
-		alarms = StreamSupport.stream(alarmService.getAllAlarmMonitoriza().spliterator(), false)
+		alarms = StreamSupport.stream(alarmMonitorizaService.getAllAlarmMonitoriza().spliterator(), false)
 				.collect(Collectors.toList());
 
 		model.addAttribute("mailform", mailForm);
@@ -108,6 +120,30 @@ public class AlarmController {
 		model.addAttribute("emailsDowns", emailsDowns);
 
 		return "fragments/alarmadmin.html";
+	}
+
+	/**
+	 * Method that maps the add Alarm web request to the controller and sets the
+	 * backing form.
+	 * 
+	 * @param model
+	 *            Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "confalarmadmin")
+	public String confAlarmAdmin(Model model) {
+		List<Alarm> alarms = new ArrayList<Alarm>();
+		List<MailMonitoriza> mails = new ArrayList<MailMonitoriza>();
+		ConfAlarmForm alarmForm = new ConfAlarmForm();
+
+		alarms = StreamSupport.stream(alarmService.getAllAlarm().spliterator(), false).collect(Collectors.toList());
+		mails = StreamSupport.stream(mailService.getAllMailMonitoriza().spliterator(), false).collect(Collectors.toList());
+
+		model.addAttribute("alarms", alarms);
+		model.addAttribute("mailsAlarm", mails);
+		model.addAttribute("alarmForm", alarmForm);
+
+		return "fragments/confalarmadmin.html";
 	}
 
 }

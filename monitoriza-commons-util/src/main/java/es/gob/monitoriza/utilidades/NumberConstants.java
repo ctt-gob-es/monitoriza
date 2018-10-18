@@ -19,14 +19,14 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 05/03/2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.utilidades;
 
 /**
  * <p>Interface that defines numeric constants for generalized usage.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.0, 05/03/2018.
+ * @version 1.1, 10/10/2018.
  */
 public interface NumberConstants {
 
@@ -54,9 +54,14 @@ public interface NumberConstants {
 	 * Constant attribute that represents the number 0.
 	 */
 	int NUM0 = 0;
+	
+	/**
+	 * Constant attribute that represents the number 1.
+	 */
+	int NUM1 = 1;
 
 	/**
-	 * Constant attribute that represents the number 3.
+	 * Constant attribute that represents the number 2.
 	 */
 	int NUM2 = 2;
 
