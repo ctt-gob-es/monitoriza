@@ -252,4 +252,9 @@ public interface StaticConstants {
 	 */
 	public static final String PROP_TOMCAT_SERVER_CONFIG_DIR = "tomcat.config.path";
 	
+	/**
+	 * Constant attribute that represents the property key monitoriza.vip.status.servlet. 
+	 */
+	public static final String MONITORIZA_VIP_STATUS_SERVLET = "monitoriza.vip.status.servlet";
+	
 }

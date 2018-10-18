@@ -44,11 +44,13 @@ import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.RowStatusDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusDTO;
 import es.gob.monitoriza.service.IStatusService;
+import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /**
  * <p>Class that implements the communication with the status servlet.</p>
@@ -117,7 +119,7 @@ public class StatusService implements IStatusService {
 	private String getRequestFromStatusServlet() {
 		
 		HttpClient httpclient = HttpClients.createDefault();
-		HttpGet httpget = new HttpGet("http://localhost:8080/monitoriza-afirma-status-app/afirmaServicesStatus?admin=true");
+		HttpGet httpget = new HttpGet(StaticMonitorizaProperties.getProperty(StaticConstants.MONITORIZA_VIP_STATUS_SERVLET));
 		String result = null;
 				
 		//Execute and get the response.
