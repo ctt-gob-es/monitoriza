@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>05/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 05/10/2018.
+ * @version 1.1, 18/10/2018.
  */
 package es.gob.monitoriza.response;
 
@@ -29,9 +29,9 @@ import java.util.Map;
 import com.fasterxml.jackson.annotation.JsonView;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that represents each of the service results for the JSON response.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 05/10/2018.
+ * @version 1.1, 18/10/2018.
  */
 public class ResponsePOJO {
 	
@@ -58,7 +58,7 @@ public class ResponsePOJO {
 	/**
 	 * Attribute that represents the time result for each request file. 
 	 */
-	private Map<String,Long> partialRequestResult;
+	private Map<String,String> partialRequestResult;
 	
 	/**
 	 * Gets the value of the attribute {@link #status}.
@@ -133,7 +133,7 @@ public class ResponsePOJO {
 	 * @return the value of the attribute {@link #partialRequestResult}.
 	 */
 	@JsonView(DatatableStatus.View.class)
-	public Map<String, Long> getPartialRequestResult() {
+	public Map<String, String> getPartialRequestResult() {
 		return partialRequestResult;
 	}
 
@@ -141,7 +141,7 @@ public class ResponsePOJO {
 	 * Sets the value of the attribute {@link #partialRequestResult}.
 	 * @param momentoMuestreo the value for the attribute {@link #partialRequestResult} to set.
 	 */
-	public void setPartialRequestResult(final Map<String, Long> partialRequestResult) {
+	public void setPartialRequestResult(final Map<String, String> partialRequestResult) {
 		this.partialRequestResult = partialRequestResult;
 	}
 

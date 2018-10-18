@@ -129,7 +129,8 @@ function format ( d ) {
 				var files = value.split(",");
 				for(var i=0; i<files.length;i++){
 					var filesAux = files[i].split("=");
-					var pos = filesAux[0].search('grupoPrincipal');
+					var pos = filesAux[0].search('grupo');
+					
 					if(pos >= 0){
 						var filName = filesAux[0].substr(pos);
 					}

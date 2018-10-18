@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21 jun. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 18/10/2018.
  */
 package es.gob.monitoriza.status;
 
@@ -30,9 +30,9 @@ import java.util.Map;
 import es.gob.monitoriza.constant.GeneralConstants;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that stores the last results for a service invocation.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 18/10/2018.
  */
 public class StatusUptodate {
 	
@@ -49,7 +49,7 @@ public class StatusUptodate {
 	/**
 	 * Attribute that represents the time result for each request file. 
 	 */
-	private Map<String,Long> partialRequestResult;
+	private Map<String,String> partialRequestResult;
 	
 	/**
 	 * Attribute that represents the date and time of the last status update. 
@@ -68,7 +68,7 @@ public class StatusUptodate {
 	 * @param statusValue
 	 * @param statusUptodate 
 	 */
-	public StatusUptodate(final String statusValue, final Long averageTime, final LocalDateTime statusUptodate, final Map<String,Long> partialRequestResult) {
+	public StatusUptodate(final String statusValue, final Long averageTime, final LocalDateTime statusUptodate, final Map<String,String> partialRequestResult) {
 		super();
 		this.statusValue = statusValue;
 		this.averageTime = averageTime;
@@ -128,7 +128,7 @@ public class StatusUptodate {
 	 * Gets the value of the attribute {@link #partialRequestResult}.
 	 * @return the value of the attribute {@link #partialRequestResult}.
 	 */
-	public Map<String, Long> getPartialRequestResult() {
+	public Map<String, String> getPartialRequestResult() {
 		return partialRequestResult;
 	}
 
@@ -136,7 +136,7 @@ public class StatusUptodate {
 	 * Sets the value of the attribute {@link #partialRequestResult}.
 	 * @param partialRequestResult the value for the attribute {@link #partialRequestResult} to set.
 	 */
-	public void setPartialRequestResult(Map<String, Long> partialRequestResult) {
+	public void setPartialRequestResult(Map<String, String> partialRequestResult) {
 		this.partialRequestResult = partialRequestResult;
 	}
 	
@@ -148,7 +148,7 @@ public class StatusUptodate {
 		
 		final StringBuffer advancedInfo = new StringBuffer();
 		
-		for (Map.Entry<String, Long> entry : partialRequestResult.entrySet()) {
+		for (Map.Entry<String, String> entry : partialRequestResult.entrySet()) {
 			advancedInfo.append(entry.getKey()).append(GeneralConstants.SLASH).append(entry.getValue() == null?-1:entry.getValue());
 			advancedInfo.append(GeneralConstants.SEMICOLON);
 	    }

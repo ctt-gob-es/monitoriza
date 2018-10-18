@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 18/10/2018.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -63,7 +63,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 18/10/2018.
  */
 public final class RequestProcessorThread implements Runnable {
 
@@ -122,7 +122,7 @@ public final class RequestProcessorThread implements Runnable {
 		Long totalTimes = 0L;
 		boolean necesarioConfirmar = Boolean.TRUE;
 		File grupoAProcesar = null;
-		Map<String, Long> partialRequestResult = new HashMap<String, Long>();
+		Map<String, String> partialRequestResult = new HashMap<String, String>();
 		int groupIndex = 1;
 
 		File serviceDir = new File(service.getDirectoryPath());
@@ -173,7 +173,7 @@ public final class RequestProcessorThread implements Runnable {
 								}
 								
 								// Se almacena el resultado parcial para la petición del grupo actual
-								partialRequestResult.put(request.getAbsolutePath(), isServiceRequestLost(service, tiempoTotal)?null:tiempoTotal);
+								partialRequestResult.put(request.getAbsolutePath(), isServiceRequestLost(service, tiempoTotal)? "Sin respuesta" : tiempoTotal.toString());
 								
 							}
 

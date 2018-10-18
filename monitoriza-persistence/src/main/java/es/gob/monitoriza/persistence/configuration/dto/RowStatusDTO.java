@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>11/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 11/10/2018.
+ * @version 1.1, 18/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -28,12 +28,10 @@ import java.util.Map;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.persistence.configuration.dto.StatusDTO.View;
-
 /** 
- * <p>Class .</p>
+ * <p>Class that represents a row of the datatable status semaphore.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 11/10/2018.
+ * @version 1.1, 18/10/2018.
  */
 public class RowStatusDTO {
 	
@@ -55,7 +53,7 @@ public class RowStatusDTO {
 	/**
 	 * Attribute that represents the average response time. 
 	 */
-	private Long averageTime;
+	private String averageTime;
 	
 	/**
 	 * Attribute that represents the date time of the sampling. 
@@ -65,7 +63,7 @@ public class RowStatusDTO {
 	/**
 	 * Attribute that represents the time result for each request file. 
 	 */
-	private Map<String,Long> partialRequestResult;
+	private Map<String,String> partialRequestResult;
 	
 	
 	/**
@@ -125,7 +123,7 @@ public class RowStatusDTO {
 	 * @return the value of the attribute {@link #averageTime}.
 	 */
 	@JsonView(StatusDTO.View.class)
-	public Long getAverageTime() {
+	public String getAverageTime() {
 		return averageTime;
 	}
 
@@ -133,7 +131,7 @@ public class RowStatusDTO {
 	 * Sets the value of the attribute {@link #averageTime}.
 	 * @param averageTime the value for the attribute {@link #averageTime} to set.
 	 */
-	public void setAverageTime(final Long averageTime) {
+	public void setAverageTime(final String averageTime) {
 		this.averageTime = averageTime;
 	}
 
@@ -159,7 +157,7 @@ public class RowStatusDTO {
 	 * @return the value of the attribute {@link #partialRequestResult}.
 	 */
 	@JsonView(StatusDTO.View.class)
-	public Map<String, Long> getPartialRequestResult() {
+	public Map<String, String> getPartialRequestResult() {
 		return partialRequestResult;
 	}
 
@@ -167,7 +165,7 @@ public class RowStatusDTO {
 	 * Sets the value of the attribute {@link #partialRequestResult}.
 	 * @param momentoMuestreo the value for the attribute {@link #partialRequestResult} to set.
 	 */
-	public void setPartialRequestResult(final Map<String, Long> partialRequestResult) {
+	public void setPartialRequestResult(final Map<String, String> partialRequestResult) {
 		this.partialRequestResult = partialRequestResult;
 	}
 

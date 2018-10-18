@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 18/10/2018.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -37,11 +37,15 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
+import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.i18n.IWebLogMessages;
+import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.RowStatusDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusDTO;
 import es.gob.monitoriza.service.IStatusService;
@@ -50,87 +54,22 @@ import es.gob.monitoriza.service.IStatusService;
  * <p>Class that implements the communication with the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 18/10/2018.
  */
 @Service
 public class StatusService implements IStatusService {
-
+	
 	/**
-	 * 
+	 * Attribute that represents the object that manages the log of the class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_WEB_LOG);
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IStatusService#completeStatus()
 	 */
 	@Override
 	public StatusDTO completeStatus() {
-
-		// Del JSON obtenido solo usamos el 'data'
-		String json = "[{\r\n" 
-					+ "    \"status\": \"Correcto\", \r\n" 
-					+ "    \"service\": \"validarcertificado1\", \r\n"
-					+ "    \"averageTime\": 11, \r\n" 
-					+ "    \"samplingTime\": \"05-10-2018 10:36:31\", \r\n"
-					+ "    \"partialRequestResult\": {\r\n" 
-					+ "        \"C:\\Proyecto\\Monitoriza\\peticionesAfirmaFormZip\\5_validarcertificado\\grupoPrincipal\\ValidarCertificado_1.xml\": 111, \r\n"
-					+ "        \"C:\\Proyecto\\Monitoriza\\peticionesAfirmaFormZip\\5_validarcertificado\\grupoPrincipal\\ValidarCertificado_2.xml\": 222 \r\n"
-					+ "    }\r\n" 
-					+ "},\r\n" 
-					+ "{\r\n"
-					+ "    \"status\": \"Degradado\", \r\n" 
-					+ "    \"service\": \"validarcertificado2\", \r\n"
-					+ "    \"averageTime\": 22, \r\n" 
-					+ "    \"samplingTime\": \"05-10-2018 10:36:31\", \r\n"
-					+ "    \"partialRequestResult\": {\r\n" 
-					+ "        \"C:\\Proyecto\\Monitoriza\\peticionesAfirmaFormZip\\5_validarcertificado\\grupoPrincipal\\ValidarCertificado_3.xml\": 333 \r\n"
-					+ "    }\r\n" 
-					+ "},\r\n" 
-					+ "{\r\n"
-					+ "    \"status\": \"Caido\", \r\n" 
-					+ "    \"service\": \"validarcertificado3\", \r\n"
-					+ "    \"averageTime\": 33, \r\n" 
-					+ "    \"samplingTime\": \"05-10-2018 10:36:31\", \r\n"
-					+ "    \"partialRequestResult\": {\r\n" 
-					+ "    }\r\n" 
-					+ "},\r\n" 
-					+ "{\r\n"
-					+ "    \"status\": \"Caido\", \r\n" 
-					+ "    \"service\": \"validarcertificado4\", \r\n"
-					+ "    \"averageTime\": 44, \r\n" 
-					+ "    \"samplingTime\": \"05-10-2018 10:36:31\" \r\n"
-					+ "}\r\n" 
-					+ "]";
-
-		String json2 = "[{\r\n" + 
-				"		\"status\": \"Caido\",\r\n" + 
-				"		\"service\": \"validarcertificado1\",\r\n" + 
-				"		\"averageTime\": 11,\r\n" + 
-				"		\"samplingTime\": \"05-10-2018 10:36:31\",\r\n" + 
-				"		\"partialRequestResult\": {\r\n" + 
-				"			\"C:\\\\Proyecto\\\\Monitoriza\\\\peticionesAfirmaFormZip\\\\5_validarcertificado\\\\grupoPrincipal\\\\ValidarCertificado_1.xml\": 46,\r\n" + 
-				"			\"C:\\\\Proyecto\\\\Monitoriza\\\\peticionesAfirmaFormZip\\\\5_validarcertificado\\\\grupoPrincipal\\\\ValidarCertificado_2.xml\": 48\r\n" + 
-				"		}\r\n" + 
-				"	},\r\n" + 
-				"	{\r\n" + 
-				"		\"status\": \"Caido\",\r\n" + 
-				"		\"service\": \"validarcertificado2\",\r\n" + 
-				"		\"averageTime\": 22,\r\n" + 
-				"		\"samplingTime\": \"05-10-2018 10:36:31\",\r\n" + 
-				"		\"partialRequestResult\": {\r\n" + 
-				"			\"C:\\\\Proyecto\\\\Monitoriza\\\\peticionesAfirmaFormZip\\\\5_validarcertificado\\\\grupoPrincipal\\\\ValidarCertificado_3.xml\": 46,\r\n" + 
-				"			\"C:\\\\Proyecto\\\\Monitoriza\\\\peticionesAfirmaFormZip\\\\5_validarcertificado\\\\grupoPrincipal\\\\ValidarCertificado_4.xml\": 48\r\n" + 
-				"		}\r\n" + 
-				"	},\r\n" + 
-				"	{\r\n" + 
-				"		\"status\": \"Correcto\",\r\n" + 
-				"		\"service\": \"validarcertificado3\",\r\n" + 
-				"		\"averageTime\": 33,\r\n" + 
-				"		\"samplingTime\": \"05-10-2018 10:36:31\",\r\n" + 
-				"		\"partialRequestResult\": {}\r\n" + 
-				"	},\r\n" + 
-				"	{\r\n" + 
-				"		\"status\": \"Degradado\",\r\n" + 
-				"		\"service\": \"validarcertificado4\",\r\n" + 
-				"		\"averageTime\": 44,\r\n" + 
-				"		\"samplingTime\": \"05-10-2018 10:36:31\"\r\n" + 
-				"	}\r\n" + 
-				"]";
 				
 		Type listType = new TypeToken<StatusDTO>() {}.getType();
 		
@@ -144,9 +83,9 @@ public class StatusService implements IStatusService {
 	}
 
 	/**
-	 * 
-	 * @param status
-	 * @return
+	 * Method that process the servlet response, setting readable values.
+	 * @param status List of status per service
+	 * @return List<RowStatusDTO>
 	 */
 	private List<RowStatusDTO> checkStatus(List<RowStatusDTO> status) {
 		for (RowStatusDTO s : status) {
@@ -163,10 +102,18 @@ public class StatusService implements IStatusService {
 			default:
 				s.setStatusAux(2L);
 			}
+			
+			if (s.getAverageTime() == null) {
+				s.setAverageTime("timeout");
+			}
 		}
 		return status;
 	}
 	
+	/**
+	 * Method that calls the status servlet.
+	 * @return String that represents the status information in JSON format
+	 */
 	private String getRequestFromStatusServlet() {
 		
 		HttpClient httpclient = HttpClients.createDefault();
@@ -184,12 +131,12 @@ public class StatusService implements IStatusService {
 			if (entity != null) {
 			    try (InputStream instream = entity.getContent();) {
 			    	result = new BufferedReader(new InputStreamReader(instream))
-			    			  .lines().collect(Collectors.joining("\n"));
+			    			  .lines().collect(Collectors.joining());
 			    } 
 			}
 						
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB016, new Object[]{ httpget.getURI() }));
 			e.printStackTrace();
 		}
 		
