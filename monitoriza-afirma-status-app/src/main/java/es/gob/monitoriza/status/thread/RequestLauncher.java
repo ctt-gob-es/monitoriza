@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 feb. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 29/08/2018.
+ * @version 1.2, 10/10/2018.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -35,8 +35,8 @@ import org.apache.log4j.Logger;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.exception.InvokerException;
+import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.status.RunningServices;
 import es.gob.monitoriza.status.StatusUptodate;
@@ -45,7 +45,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 /** 
  * <p>Class that manages the thread pool for processing each service in a separate thread.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 19 feb. 2018.
+ * @version 1.2, 10/10/2018.
  */
 public class RequestLauncher {
 
@@ -68,14 +68,14 @@ public class RequestLauncher {
 	 */
 	public void startInvoker(final Map<String, StatusUptodate> statusHolder, final List<ServiceDTO> servicios, final KeyStore sslTrustStore, final KeyStore rfc3161Keystore) {
 
-		LOGGER.info(Language.getFormatResMonitoriza(LogMessages.PATH_DIRECTORY_REQUESTS, new Object[ ] { requestDirectory }));
+		LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS002, new Object[ ] { requestDirectory }));
 				
 		Integer threads = null;
 				
 		try {
 			threads = Integer.parseInt(StaticMonitorizaProperties.getProperty(StaticConstants.REQUEST_THREAD_POOL_SIZE));
 		} catch (NumberFormatException e) {
-			LOGGER.info(Language.getFormatResMonitoriza(LogMessages.ERROR_FORMAT_THREAD_POOL_SIZE, new Object[ ] { requestDirectory }));
+			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS001, new Object[ ] { requestDirectory }), e);
 		}
 		
 		if (threads == null || threads <= 0) {

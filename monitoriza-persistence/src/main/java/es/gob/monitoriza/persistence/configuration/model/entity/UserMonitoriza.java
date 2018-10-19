@@ -15,7 +15,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * <b>Date:</b><p>06/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 06/03/2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -47,7 +47,7 @@ import es.gob.monitoriza.utilidades.StatusCertificateEnum;
 /**
  * <p>Class that maps the <i>USER_MONITORIZA</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 06/03/2018.
+ * @version 1.1, 10/10/2018.
  */
 @Entity
 @Table(name = "USER_MONITORIZA")
@@ -392,7 +392,7 @@ public class UserMonitoriza implements Serializable {
 	}
 
 	/**
-	 * Method that calculates if the user have a not valid certificate
+	 * Method that calculates if the user have a not valid certificate.
 	 * @return String result
 	 */
 	@Transient

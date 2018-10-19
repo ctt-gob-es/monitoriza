@@ -16,7 +16,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>06/06/2012.</p>
  * @author Gobierno de España.
- * @version 1.0, 06/06/2012.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.crypto.keystore;
 
@@ -31,7 +31,7 @@ import es.gob.monitoriza.service.IKeystoreService;
 /**
  * <p>Class that manages the generation of the class which manages the keystores in the system.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 06/06/2012.
+ * @version 1.1, 10/10/2018.
  */
 public final class KeystoreFactory {
 
@@ -54,13 +54,13 @@ public final class KeystoreFactory {
 	private KeystoreFactory(Long idKeystoreParam) throws CryptographyException {
 		// Comprobamos que el ID del almacén de claves no es nulo
 		if (idKeystoreParam == null) {
-			throw new CryptographyException(Language.getResMonitoriza("logKF001"));
+			throw new CryptographyException(Language.getResCoreMonitoriza("logKF001"));
 		}
 
 		// Obtenemos el almacén de claves
 		Keystore keystore = keystoreService.getKeystoreById(idKeystoreParam);
 		// Comprobamos que el almacén de claves no es nulo
-		CryptographyValidationUtils.checkIsNotNull(keystore, Language.getFormatResMonitoriza("logKF003", new Object[ ] { idKeystoreParam }));
+		CryptographyValidationUtils.checkIsNotNull(keystore, Language.getFormatResCoreMonitoriza("logKF003", new Object[ ] { idKeystoreParam }));
 
 		keystoreInstance = new KeystoreFacade(keystore);
 	

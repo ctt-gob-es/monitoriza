@@ -132,12 +132,26 @@ public class AlarmRestController {
 		return (DataTablesOutput<MailMonitoriza>) mailService.findAll(input);
 	}
 
+	/**
+	 * Method that maps the datatable alarms requests to the controller and forwards
+	 * the JSON with the data.
+	 * 
+	 * @param input
+	 *            DataTablesInput
+	 * @return DataTablesOutput<AlarmMonitoriza>
+	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/alarmsdatatable", method = RequestMethod.GET)
 	public DataTablesOutput<AlarmMonitoriza> alarms(@Valid DataTablesInput input) {
 		return (DataTablesOutput<AlarmMonitoriza>) alarmMonitorizaService.findAll(input);
 	}
 
+	/**
+	 * Method that get all emails of system
+	 * @param idAlarm
+	 * @param type
+	 * @return
+	 */
 	@RequestMapping(path = "/emails", method = RequestMethod.GET)
 	public List<Long> emails(@RequestParam("id") Long idAlarm, @RequestParam("type") int type) {
 		List<Long> result = new ArrayList<Long>();
@@ -165,8 +179,8 @@ public class AlarmRestController {
 	 * Method that maps the save timer web request to the controller and saves it in
 	 * the persistence.
 	 * 
-	 * @param timerForm
-	 *            Object that represents the backing timer form.
+	 * @param mailForm
+	 *            Object that represents the backing mail form.
 	 * @param bindingResult
 	 *            Object that represents the form validation result.
 	 * @return {@link DataTablesOutput<TimerMonitoriza>}
@@ -218,12 +232,13 @@ public class AlarmRestController {
 	}
 
 	/**
-	 * Method that saves an alarm in the persistence
+	 * Method that saves an alarm in the persistence.
 	 * 
 	 * @param alarmForm
+	 *            Object that represents the backing alarm form
 	 * @param bindingResult
 	 *            Validation result binding object.
-	 * @return
+	 * @return DataTablesOutput<AlarmMonitoriza>
 	 */
 	@RequestMapping(path = "/savealarm", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
@@ -287,7 +302,7 @@ public class AlarmRestController {
 	}
 
 	/**
-	 * Method that deletes a mail from persistence
+	 * Method that deletes a mail from persistence.
 	 * 
 	 * @param mailId
 	 *            The identifier for the mail to delete
@@ -357,8 +372,8 @@ public class AlarmRestController {
 	 * Method that sets the scheduled timers of the services which uses this
 	 * platform as updated
 	 * 
-	 * @param alarm
-	 *            The alarm whose timers must be updated
+	 * @param mail
+	 *            The mail whose timers must be updated
 	 */
 	private void updateScheduledTimerFromMail(final MailMonitoriza mail) {
 
@@ -383,9 +398,8 @@ public class AlarmRestController {
 	}
 
 	/**
-	 * Method that checks if there are changes between the alarm form and the
-	 * persisted alarm
-	 * 
+	 * Method that checks if there are changes between the alarm
+	 *         form and the persisted alarm.
 	 * @param alarmForm
 	 *            The backing form for the alarm
 	 * @param alarm
@@ -402,12 +416,13 @@ public class AlarmRestController {
 	}
 
 	/**
-	 * Method thar checks if there are changes between the mail form and the
-	 * persisted mail
-	 * 
+	 * Method thar checks if there are changes between the mail form
+	 *         and the persisted mail.
 	 * @param mailForm
+	 *            Object that represents the backing form.
 	 * @param mail
-	 * @return
+	 *            Object that represents the MailMonitoriza entity.
+	 * @return true if the mail has been updates, false otherwise. 
 	 */
 	private boolean isMailUpdatedForm(MailForm mailForm, MailMonitoriza mail) {
 

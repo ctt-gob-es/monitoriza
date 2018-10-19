@@ -47,7 +47,7 @@
 	<div class="form-row">
 		<div class="form-group col-md-6">
 			<div class="checkbox checkbox-circle checkbox-info peers ai-c cb-center">
-				<input type="checkbox" id="isSecure" name="isSecure" class="peer">
+				<input type="checkbox" id="isSecure" th:checked="${afirmaform.isSecure}" class="peer">
 					<label for="isSecure" class="peers peer-greed js-sb ai-c">
 						<span class="peer peer-greed" th:text="#{form.platform.afirma.issecure}"></span>
 					</label>
@@ -91,17 +91,19 @@
 
 	$(document).ready(function () {
 		
-		// Inicialización con valor correcto del checkbox 
+		// Inicialización con valor correcto del checkbox isSecure
 		if ($("#isSecure").is(":checked")) {
-        	$("#isSecure").attr('value', 'true');
-        } else {
-        	$("#isSecure").attr('value', 'false');
-        	$('#httpsPort').attr('value', '');
-        }
+	    	$("#isSecure").val('true');
+	    	 $('#httpsPort').removeAttr("readonly");
+	    } else {
+	    	$("#isSecure").attr('value', 'false');
+	    	$('#httpsPort').val('');
+	    	$('#httpsPort').attr('required', false);
+	    }
 			
 	    $("#isSecure").change(function () {
 	        if ($(this).is(":checked")) {
-	        	$(this).attr('value', 'true');
+	        	$(this).val('true');
 	            $('#httpsPort').removeAttr("readonly");
 				$('#httpsPort').attr('required', true);
 	        }

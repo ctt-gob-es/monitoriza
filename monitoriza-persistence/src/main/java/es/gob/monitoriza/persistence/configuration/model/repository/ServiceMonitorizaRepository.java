@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 10/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
@@ -32,7 +32,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriz
 /** 
  * <p>Interface that provides CRUD functionality for the ServiceMonitoriza entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 10/10/2018.
  */
 public interface ServiceMonitorizaRepository extends JpaRepository<ServiceMonitoriza, Long>, JpaSpecificationExecutor<ServiceMonitoriza> {
 	
@@ -44,15 +44,15 @@ public interface ServiceMonitorizaRepository extends JpaRepository<ServiceMonito
 	ServiceMonitoriza findByIdService(Long id);
 	
 	/**
-	 * Method that obtains from the persistence all services using the platform identified by idPlatform
+	 * Method that obtains from the persistence all services using the platform identified by idPlatform.
 	 * @param idPlatform The platform identifier
 	 * @return Iterable<ServiceMonitoriza>
 	 */
 	Iterable<ServiceMonitoriza> findByPlatformIdPlatform(Long idPlatform);
 	
 	/**
-	 * Method that obtains from the persistence all services using the platform identified by idAlarm
-	 * @param idPlatform The platform identifier
+	 * Method that obtains from the persistence all services using the platform identified by idAlarm.
+	 * @param idAlarm The platform identifier
 	 * @return Iterable<ServiceMonitoriza>
 	 */
 	Iterable<ServiceMonitoriza> findByAlarmIdAlarm(Long idAlarm);

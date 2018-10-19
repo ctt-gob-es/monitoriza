@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>27 sept. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 27 sept. 2018.
+ * @version 1.0, 10/10/2018.
  */
 package es.gob.monitoriza.cron;
 
@@ -45,6 +45,8 @@ import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
+import es.gob.monitoriza.i18n.ICoreLogMessages;
+import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
@@ -57,9 +59,9 @@ import es.gob.monitoriza.utilidades.UtilsXml;
 import es.gob.monitoriza.webservice.ClientManager;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that manages the scheduled job for certificate validation.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 27 sept. 2018.
+ * @version 1.0, 10/10/2018.
  */
 @Service
 public class ValidCertificatesJob implements SchedulerObjectInterface {
@@ -125,7 +127,7 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
             	try {
             		validCertificatesJobScheduled();
 				} catch (Exception e) {
-					LOGGER.error("Error en la configuración de la tarea del servicio de validación: " + e.getMessage());
+					LOGGER.error(Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE007), e.getCause());
 				}
             }
         }, new Trigger() {
@@ -144,7 +146,7 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
                     CronTrigger trigger = new CronTrigger(cronExpression);
                     nextExec = trigger.nextExecutionTime(triggerContext);
             	} catch (Exception e) {
-            		LOGGER.error("Error en la configuración de la tarea del servicio de validación: " + e.getMessage());
+            		LOGGER.error(Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE007), e.getCause());
             	}
                 return nextExec;
             }
@@ -198,9 +200,9 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
 			}
 		} catch (Exception e) {
 			if (aliasCertificate.isEmpty()) {
-				LOGGER.error("Se ha producido un error en el proceso de validación: " + e.getMessage());
+				LOGGER.error(Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE008), e.getCause());
 			} else {
-				LOGGER.error("Se ha producido un error validando el certificado con alias: " + aliasCertificate);
+				LOGGER.error(Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE008, new Object[ ] { aliasCertificate }), e.getCause());
 			}
 		}
 		LOGGER.info("End validCertificatesJobScheduled");

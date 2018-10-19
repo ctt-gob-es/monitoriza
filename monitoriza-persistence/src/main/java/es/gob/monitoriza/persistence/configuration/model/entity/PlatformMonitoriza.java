@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.3, 17/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -49,11 +49,21 @@ import es.gob.monitoriza.utilidades.NumberConstants;
 /** 
  * <p>Class that maps the <i>PLATFORM_MONITORIZA</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 12/09/2018.
+ * @version 1.3, 17/10/2018.
  */
 @Entity
 @Table(name = "PLATFORM_MONITORIZA")
 public class PlatformMonitoriza implements Serializable {
+	
+	/**
+	 * Attribute that represents the identifier for the @Firma platform type. 
+	 */
+	public static final Long ID_PLATFORM_TYPE_AFIRMA = 1L;
+	
+	/**
+	 * Attribute that represents the identifier for the @Firma platform type.
+	 */
+	public static final Long ID_PLATFORM_TYPE_TSA = 2L;
 		
 	/**
 	 * Constant attribute that represents the string <i>"yes_no"</i>.
@@ -156,13 +166,13 @@ public class PlatformMonitoriza implements Serializable {
 	
 	/**
 	 * Sets the value of the attribute {@link #idPlatform}.
-	 * @param isBlockedParam The value for the attribute {@link #idPlatform}.
+	 * @param idPlatform The value for the attribute {@link #idPlatform}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setIdPlatform(Long idPlatformAfirma) {
+	public void setIdPlatform(Long idPlatform) {
 		// CHECKSTYLE:ON
-		this.idPlatform = idPlatformAfirma;
+		this.idPlatform = idPlatform;
 	}
 
 
@@ -182,7 +192,7 @@ public class PlatformMonitoriza implements Serializable {
 	
 	/**
 	 * Sets the value of the attribute {@link #ocspContext}.
-	 * @param isBlockedParam The value for the attribute {@link #ocspContext}.
+	 * @param ocspContext The value for the attribute {@link #ocspContext}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
@@ -200,6 +210,7 @@ public class PlatformMonitoriza implements Serializable {
 	@Column(name = "NAME", nullable = false, length = NumberConstants.NUM100, unique = true)
 	@JsonView(DataTablesOutput.View.class)
 	public String getName() {
+		// CHECKSTYLE:ON
 		return name;
 	}
 
@@ -211,6 +222,7 @@ public class PlatformMonitoriza implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setName(String name) {
+		// CHECKSTYLE:ON
 		this.name = name;
 	}
 
@@ -223,17 +235,19 @@ public class PlatformMonitoriza implements Serializable {
 	@Column(name = "HOST", nullable = false, length = NumberConstants.NUM100, unique = true)
 	@JsonView(DataTablesOutput.View.class)
 	public String getHost() {
+		// CHECKSTYLE:ON
 		return host;
 	}
 
 	
 	/**
 	 * Sets the value of the attribute {@link #host}.
-	 * @param isBlockedParam The value for the attribute {@link #host}.
+	 * @param host The value for the attribute {@link #host}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setHost(String host) {
+		// CHECKSTYLE:ON
 		this.host = host;
 	}
 
@@ -243,9 +257,10 @@ public class PlatformMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	@Column(name = "PORT", nullable = false, length = NumberConstants.NUM100)
+	@Column(name = "PORT", nullable = false, length = NumberConstants.NUM10)
 	@JsonView(DataTablesOutput.View.class)
 	public String getPort() {
+		// CHECKSTYLE:ON
 		return port;
 	}
 
@@ -256,6 +271,7 @@ public class PlatformMonitoriza implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setPort(String port) {
+		// CHECKSTYLE:ON
 		this.port = port;
 	}
 			
@@ -269,6 +285,7 @@ public class PlatformMonitoriza implements Serializable {
 	@Type(type = CONS_YES_NO)
 	@JsonView(DataTablesOutput.View.class)
 	public Boolean getIsSecure() {
+		// CHECKSTYLE:ON
 		return isSecure;
 	}
 
@@ -279,6 +296,7 @@ public class PlatformMonitoriza implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setIsSecure(Boolean isSecure) {
+		// CHECKSTYLE:ON
 		this.isSecure = isSecure;
 	}
 	
@@ -288,9 +306,10 @@ public class PlatformMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	@Column(name = "HTTPS_PORT", nullable = true, length = NumberConstants.NUM100)
+	@Column(name = "HTTPS_PORT", nullable = true, length = NumberConstants.NUM10)
 	@JsonView(DataTablesOutput.View.class)	
 	public String getHttpsPort() {
+		// CHECKSTYLE:ON
 		return httpsPort;
 	}
 	
@@ -301,6 +320,7 @@ public class PlatformMonitoriza implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setHttpsPort(String httpsPort) {
+		// CHECKSTYLE:ON
 		this.httpsPort = httpsPort;
 	}
 
@@ -319,7 +339,7 @@ public class PlatformMonitoriza implements Serializable {
 	
 	/**
 	 * Sets the value of the attribute {@link #serviceContext}.
-	 * @param isBlockedParam The value for the attribute {@link #serviceContext}.
+	 * @param serviceContext The value for the attribute {@link #serviceContext}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
@@ -337,6 +357,7 @@ public class PlatformMonitoriza implements Serializable {
 	@Column(name = "RFC3161_CONTEXT", nullable = true, length = NumberConstants.NUM100, unique = true)
 	@JsonView(DataTablesOutput.View.class)
 	public String getRfc3161Context() {
+		// CHECKSTYLE:ON
 		return rfc3161Context;
 	}
 
@@ -348,6 +369,7 @@ public class PlatformMonitoriza implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setRfc3161Context(String rfc3161Context) {
+		// CHECKSTYLE:ON
 		this.rfc3161Context = rfc3161Context;
 	}
 	
@@ -360,6 +382,7 @@ public class PlatformMonitoriza implements Serializable {
 	@Column(name = "RFC3161_PORT", nullable = true, length = NumberConstants.NUM100, unique = true)
 	@JsonView(DataTablesOutput.View.class)	
 	public String getRfc3161Port() {
+		// CHECKSTYLE:ON
 		return rfc3161Port;
 	}
 
@@ -370,6 +393,7 @@ public class PlatformMonitoriza implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setRfc3161Port(String rfc3161Port) {
+		// CHECKSTYLE:ON
 		this.rfc3161Port = rfc3161Port;
 	}
 
@@ -383,6 +407,7 @@ public class PlatformMonitoriza implements Serializable {
 	@JoinColumn(name = "ID_PLATFORM_TYPE", nullable = false)
 	@JsonView(DataTablesOutput.View.class)	
 	public CPlatformType getPlatformType() {
+		// CHECKSTYLE:ON
 		return platformType;
 	}
 
@@ -393,6 +418,7 @@ public class PlatformMonitoriza implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setPlatformType(CPlatformType platformType) {
+		// CHECKSTYLE:ON
 		this.platformType = platformType;
 	}
 	
@@ -407,6 +433,7 @@ public class PlatformMonitoriza implements Serializable {
 	@Type(type = CONS_YES_NO)
 	@JsonView(DataTablesOutput.View.class)
 	public Boolean getUseRfc3161Auth() {
+		// CHECKSTYLE:ON
 		return userRfc3161Auth;
 	}
 
@@ -417,6 +444,7 @@ public class PlatformMonitoriza implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	public void setUseRfc3161Auth(Boolean userRfc3161Auth) {
+		// CHECKSTYLE:ON
 		this.userRfc3161Auth = userRfc3161Auth;
 	}
 

@@ -37,6 +37,7 @@
 package es.gob.monitoriza.response;
 
 import static j2html.TagCreator.body;
+import static j2html.TagCreator.caption;
 import static j2html.TagCreator.div;
 import static j2html.TagCreator.head;
 import static j2html.TagCreator.html;
@@ -46,7 +47,6 @@ import static j2html.TagCreator.td;
 import static j2html.TagCreator.th;
 import static j2html.TagCreator.title;
 import static j2html.TagCreator.tr;
-import static j2html.TagCreator.caption;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
@@ -93,6 +93,21 @@ public class ResponseMonitoriza {
 	public static final String HEADER_RESULT_STATUS_UPTODATE = "Last update";
 	
 	/**
+	 * Attribute that represents the column header name for the advanced information of the service. 
+	 */
+	public static final String HEADER_RESULT_ADVANCED_INFO = "Advanced info";
+	
+	/**
+	 * Attribute that represents the column header for the name of the request file in advanced info. 
+	 */
+	public static final String HEADER_RESULT_REQUEST_FILE = "Request file";
+	
+	/**
+	 * Attribute that represents the column header for the time of the request in advanced info.  
+	 */
+	public static final String HEADER_RESULT_REQUEST_TIME = "Request time";
+	
+	/**
 	 * Attribute that represents the column header name for the test result
 	 */
 	public static final String CAPTION_LAST_REFRESH_DATETIME = "Last refresh time: ";
@@ -102,7 +117,12 @@ public class ResponseMonitoriza {
 	 */
 	public static final String HEADER_SYSTEM_NAME = "System";
 	
-	
+	/**
+	 * Constructor method for the class ResponseMonitoriza.java. 
+	 */
+	private ResponseMonitoriza(){
+		
+	}
 			
 	/**
 	 * Method that renders the HTML code for the result response.
@@ -110,9 +130,9 @@ public class ResponseMonitoriza {
 	 * @return String that represents the HTML code of the result
 	 * @throws Exception
 	 */
-	public static String render(final String platformFilter) throws Exception {
+	public static String render(final String platformFilter, final String adminFilter) throws Exception {
 				
-        return html().with(makeHead(), makeBody(platformFilter)).render(); 
+        return html().with(makeHead(), makeBody(platformFilter, adminFilter)).render(); 
     } 
 		
 	/**
@@ -125,36 +145,42 @@ public class ResponseMonitoriza {
  
     /**
      * Method that builds the HTML body for the response.
-     * @param operations List that represents response results for the requested tests. 
+     * @param platformFilter String that represents the optional filter for showing results for a platform. 
+     * @param adminFilter String that represents the optional filter for showing additional information
      * @return Tag that represents the HTML body
      */
-    private static Tag<?> makeBody(final String platformFilter) {
+    private static Tag<?> makeBody(final String platformFilter, final String adminFilter) {
     	    	
-        return body().with(makeDivOperations(platformFilter)); 
+        return body().with(makeDivOperations(platformFilter, adminFilter)); 
     }
     
    
     /**
      * Method that builds the HTML divs for each of the operation result.
-     * @param operations List that represents response results for the requested tests. 
+     * @param platformFilter String that represents the optional filter for showing results for a platform. 
+     * @param adminFilter String that represents the optional filter for showing additional information
      * @return Tag that represents the HTML divs for each of the operation result.
      */
-    private static Tag<?> makeDivOperations(final String platformFilter) {
+    private static Tag<?> makeDivOperations(final String platformFilter, final String adminFilter) {
 		    	  	
-    	return div().with(makeTableResultOperation(platformFilter));
+    	return div().with(makeTableResultOperation(platformFilter, adminFilter));
 		
     }
     
-    /* (non-Javadoc)
-	 * @see es.gob.afirma.spie.response.ResponseSPIEOperation#makeTableResultOperation()
+   
+	/**
+	 * Method that builds the HTML for the table for the opertaion results
+     * @param platformFilter String that represents the optional filter for showing results for a platform. 
+     * @param adminFilter String that represents the optional filter for showing additional information
+	 * @return Tag that represents the table
 	 */
-	public static Tag<?> makeTableResultOperation(final String platformFilter) {
+	public static Tag<?> makeTableResultOperation(final String platformFilter, final String adminFilter) {
 
 		List<Tag<?>> contents = new LinkedList<>();
 		
 		contents.add(makeTableCaption());
-		contents.addAll(makeTableHeader());
-		contents.addAll(makeTableRows(platformFilter));
+		contents.addAll(makeTableHeader(adminFilter));
+		contents.addAll(makeTableRows(platformFilter, adminFilter));
 		return table().with(contents);
 	}
 	
@@ -177,16 +203,20 @@ public class ResponseMonitoriza {
 	 * Method that builds the HTML header for the result table.
 	 * @return
 	 */
-	private static Collection<? extends Tag<?>> makeTableHeader() {
+	private static Collection<? extends Tag<?>> makeTableHeader(final String adminFilter) {
 		List<Tag<?>> rowsHeader = new LinkedList<>();
-		List<Tag<?>> headerGroup = new LinkedList<>();
+		List<Tag<?>> headerGroup1 = new LinkedList<>();
 	
-		headerGroup.add(th(HEADER_SYSTEM_NAME));
-		headerGroup.add(th(HEADER_SERVICE_NAME));
-		headerGroup.add(th(HEADER_RESULT_STATUS));
-		headerGroup.add(th(HEADER_RESULT_STATUS_UPTODATE));
+		headerGroup1.add(th(HEADER_SYSTEM_NAME));
+		headerGroup1.add(th(HEADER_SERVICE_NAME));
+		headerGroup1.add(th(HEADER_RESULT_STATUS));
+		headerGroup1.add(th(HEADER_RESULT_STATUS_UPTODATE));
+		
+		if (adminFilter != null) {
+			headerGroup1.add(th(HEADER_RESULT_ADVANCED_INFO));
+		}
 
-		rowsHeader.add(tr().with(headerGroup));
+		rowsHeader.add(tr().with(headerGroup1));
 
 		return rowsHeader;
 	}
@@ -195,7 +225,7 @@ public class ResponseMonitoriza {
 	 * Method that builds the HTML for the result rows.
 	 * @return
 	 */
-	private static Collection<? extends Tag<?>> makeTableRows(final String platformFilter) {
+	private static Collection<? extends Tag<?>> makeTableRows(final String platformFilter, final String adminFilter) {
 		
 		List<Tag<?>> tdGroup = null;
 		List<Tag<?>> rows = new LinkedList<>();
@@ -210,7 +240,13 @@ public class ResponseMonitoriza {
     			statusUptodate = entry.getValue();
     			tdGroup.add(td(statusUptodate.getStatusValue()));
     			tdGroup.add(td( GeneralUtils.getFormattedDateTime(statusUptodate.getStatusUptodate())));
+    			
+    			if (adminFilter != null) {
+       				tdGroup.add(td(statusUptodate.generateAdvancedInfoString()));
+       			}
+    			
        			rows.add(tr().with(tdGroup));
+             			
 			}
 		}
 

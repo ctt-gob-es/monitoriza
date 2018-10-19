@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 10 abr. 2018.
+ * @version 1.1, 17/10/2018.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -41,7 +41,7 @@ import es.gob.monitoriza.service.IPlatformService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for PlatformAfirma.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 10 abr. 2018.
+ * @version 1.1, 17/10/2018.
  */
 @Service
 public class PlatformService implements IPlatformService {
@@ -130,7 +130,7 @@ public class PlatformService implements IPlatformService {
 	public DataTablesOutput<PlatformMonitoriza> findAllAfirma(DataTablesInput input) {
 				
 		CPlatformType platformType = new CPlatformType();
-		platformType.setIdPlatformType(ID_PLATFORM_TYPE_AFIRMA);
+		platformType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
 		CPlatformTypeSpecification byPlatformType = new CPlatformTypeSpecification(platformType);
 		
 		return dtRepository.findAll(input, byPlatformType);
@@ -144,7 +144,7 @@ public class PlatformService implements IPlatformService {
 	@Override
 	public DataTablesOutput<PlatformMonitoriza> findAllTsa(DataTablesInput input) {
 		CPlatformType platformType = new CPlatformType();
-		platformType.setIdPlatformType(ID_PLATFORM_TYPE_TSA);
+		platformType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA);
 		CPlatformTypeSpecification byPlatformType = new CPlatformTypeSpecification(platformType);
 		
 		return dtRepository.findAll(input, byPlatformType);

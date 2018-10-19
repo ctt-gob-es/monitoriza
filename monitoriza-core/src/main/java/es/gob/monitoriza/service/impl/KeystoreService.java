@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16 may. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -33,9 +33,9 @@ import es.gob.monitoriza.service.IKeystoreService;
 
 
 /** 
- * <p>Class .</p>
+ * <p>Class that implements the communication with the operations of the persistence layer for Keystore.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 16 may. 2018.
+ * @version 1.0, 10/10/2018.
  */
 @Service
 public class KeystoreService implements IKeystoreService {

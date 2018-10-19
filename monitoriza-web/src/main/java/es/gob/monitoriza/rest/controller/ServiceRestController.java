@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 02/10/2018.
+ * @version 1.5, 17/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -63,8 +63,8 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.exception.RequestFileNotFoundException;
 import es.gob.monitoriza.form.ServiceForm;
 import es.gob.monitoriza.form.TimerForm;
+import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.RequestServiceFile;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
@@ -90,7 +90,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.3, 02/10/2018.
+ * @version 1.5, 17/10/2018.
  */
 @RestController
 public class ServiceRestController {
@@ -186,13 +186,13 @@ public class ServiceRestController {
 		List<String> serviceTypes = new ArrayList<String>();
 
 		if (platform != null
-				&& platform.getPlatformType().getIdPlatformType().equals(IPlatformService.ID_PLATFORM_TYPE_AFIRMA)) {
+				&& platform.getPlatformType().getIdPlatformType().equals(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA)) {
 
 			serviceTypes.add(GeneralConstants.SOAP_SERVICE.toUpperCase());
 			serviceTypes.add(GeneralConstants.OCSP_SERVICE.toUpperCase());
 
 		} else if (platform != null
-				&& platform.getPlatformType().getIdPlatformType().equals(IPlatformService.ID_PLATFORM_TYPE_TSA)) {
+				&& platform.getPlatformType().getIdPlatformType().equals(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA)) {
 
 			serviceTypes.add(GeneralConstants.SOAP_SERVICE.toUpperCase());
 			serviceTypes.add(GeneralConstants.RFC3161_SERVICE.toUpperCase());
@@ -525,7 +525,7 @@ public class ServiceRestController {
 			
 		} catch (IOException e) {
 			
-			LOGGER.error(Language.getFormatResWebMonitoriza(LogMessages.ERROR_BYTES_ZIP_FILE, new Object[ ] { file.getOriginalFilename() }), e.getCause());
+			LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB011, new Object[ ] { file.getOriginalFilename() }), e.getCause());
 		}
 						
 		return esZip;

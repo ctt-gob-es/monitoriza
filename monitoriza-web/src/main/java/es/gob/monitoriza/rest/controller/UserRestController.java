@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 21 mar. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -66,6 +66,8 @@ import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
 import es.gob.monitoriza.form.UserForm;
 import es.gob.monitoriza.form.UserFormEdit;
 import es.gob.monitoriza.form.UserFormPassword;
+import es.gob.monitoriza.i18n.IWebLogMessages;
+import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
@@ -92,7 +94,7 @@ import es.gob.monitoriza.webservice.ClientManager;
  * Application for monitoring services of @firma suite systems.
  * </p>
  *
- * @version 1.0, 21 mar. 2018.
+ * @version 1.1, 10/10/2018.
  */
 @RestController
 public class UserRestController {
@@ -467,7 +469,7 @@ public class UserRestController {
 				try {
 					result = clientManager.getDSSCertificateServiceClientResult(endpoint, validService, peticion);
 				} catch (Exception e) {
-					LOGGER.error("Se ha producido un error al obtener el servicio DSSCertificate: " + e.getMessage());
+					LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB005), e.getCause());
 				}
 				
 				Long statusCertificateId = UtilsCertificate.processStatusCertificate(result);
@@ -477,7 +479,7 @@ public class UserRestController {
 				}
 
 				if (!validResult) {
-					throw new Exception("Error al validar el certificado, certificado no válido!");
+					throw new Exception(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB006, new Object[] {alias}));
 				}
 
 				systemCertificate.setStatusCertificate(statusCertService.getStatusCertificateById(statusCertificateId));
@@ -489,7 +491,7 @@ public class UserRestController {
 				String issuer = UtilsCertificate.getCertificateIssuerId(certificate);
 				BigInteger serialNumber = UtilsCertificate.getCertificateSerialNumber(certificate);
 				if (certService.getSystemCertificateByKsAndIssAndSnAndUser(keystoreUser, issuer, serialNumber, userMonitoriza) != null) {
-					LOGGER.error("Error al guardar el certificado, el certificado con alias " + alias + " ya existe en el almacén");
+					LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB014, new Object[] {alias}));
 					throw new Exception(GeneralConstants.CERTIFICATE_STORED);
 				}
 				
@@ -513,10 +515,8 @@ public class UserRestController {
 	 * Method that maps the delete system certificate request from datatable to the controller
 	 * and performs the delete of the system certificate identified by its id.
 	 *
-	 * @param systermCertificateId
-	 *            Identifier of the system certificate to be deleted.
-	 * @param index
-	 *            Row index of the datatable.
+	 * @param systermCertId Identifier of the system certificate to be deleted.
+	 * @param index Row index of the datatable.
 	 * @return String that represents the name of the view to redirect.
 	 * @throws CryptographyException
 	 * @throws IOException

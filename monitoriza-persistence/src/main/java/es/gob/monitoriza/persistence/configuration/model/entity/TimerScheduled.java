@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 12/09/2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -45,7 +45,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
 /** 
  * <p>Class that maps the <i>TIMER_SCHEDULED</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 12/09/2018.
+ * @version 1.1, 10/10/2018.
  */
 @Entity
 @Table(name = "TIMER_SCHEDULED")
@@ -140,7 +140,7 @@ public class TimerScheduled implements Serializable {
 
 	/**
 	 * Sets the value of the attribute {@link #updated}.
-	 * @param isKey The value for the attribute {@link #updated}.
+	 * @param updated The value for the attribute {@link #updated}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.

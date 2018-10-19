@@ -145,12 +145,10 @@ function format ( d ) {
     return result;
 }
 
-// Auto refresco de la pagina de estados de semaforos
 setInterval(function(){
 	var urlStatus = /*[[@{/status}]]*/;
 	if (tableStatusInterval != undefined){
 		tableStatusInterval.ajax.url( urlStatus ).load();
-	}
 }, 30000);
 
 </script>

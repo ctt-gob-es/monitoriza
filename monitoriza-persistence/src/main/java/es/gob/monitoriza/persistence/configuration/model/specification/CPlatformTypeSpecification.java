@@ -38,9 +38,9 @@ import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that manages platform search criteria for platform type.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 24 abr. 2018.
+ * @version 1.1, 10/10/2018.
  */
 public class CPlatformTypeSpecification implements Specification<PlatformMonitoriza>{
 	
@@ -64,6 +64,10 @@ public class CPlatformTypeSpecification implements Specification<PlatformMonitor
 		this.criteria = criteria;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see org.springframework.data.jpa.domain.Specification#toPredicate(javax.persistence.criteria.Root, javax.persistence.criteria.CriteriaQuery, javax.persistence.criteria.CriteriaBuilder)
+	 */
 	@Override
     public Predicate toPredicate
       (Root<PlatformMonitoriza> root, CriteriaQuery<?> query, CriteriaBuilder builder) {

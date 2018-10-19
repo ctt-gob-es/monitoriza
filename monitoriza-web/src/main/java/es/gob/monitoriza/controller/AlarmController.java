@@ -137,7 +137,8 @@ public class AlarmController {
 		ConfAlarmForm alarmForm = new ConfAlarmForm();
 
 		alarms = StreamSupport.stream(alarmService.getAllAlarm().spliterator(), false).collect(Collectors.toList());
-		mails = StreamSupport.stream(mailService.getAllMailMonitoriza().spliterator(), false).collect(Collectors.toList());
+		mails = StreamSupport.stream(mailService.getAllMailMonitoriza().spliterator(), false)
+				.collect(Collectors.toList());
 
 		model.addAttribute("alarms", alarms);
 		model.addAttribute("mailsAlarm", mails);

@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16 may. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.service;
 
@@ -34,9 +34,9 @@ import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificat
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 
 /**
- * <p>Class .</p>
+ * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 16 may. 2018.
+ * @version 1.1, 10/10/2018.
  */
 public interface ISystemCertificateService {
 
@@ -75,7 +75,7 @@ public interface ISystemCertificateService {
 
 	/**
 	 * Method that stores a user in the persistence.
-	 * @param user a {@link SystemCertificate} with the information of the user.
+	 * @param cert a {@link SystemCertificate} with the information of the user.
 	 * @return {@link SystemCertificate} The user.
 	 */
 	SystemCertificate saveSystemCertificate(SystemCertificate cert);

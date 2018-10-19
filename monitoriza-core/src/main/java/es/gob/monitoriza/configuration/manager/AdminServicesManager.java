@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 ene. 2018.</p>
  * @author Gobierno de España.
- *  @version 1.4, 02/10/2018.
+ *  @version 1.5, 10/10/2018.
  */
 package es.gob.monitoriza.configuration.manager;
 
@@ -52,8 +52,9 @@ import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
 import es.gob.monitoriza.exception.RequestFileNotFoundException;
+import es.gob.monitoriza.i18n.ICoreLogMessages;
+import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TimerDTO;
@@ -77,7 +78,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <p>Class that manages the configuration of the @firma/ts@ services from database persistence
  *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- *  @version 1.4, 02/10/2018.
+ *  @version 1.5, 10/10/2018.
  */
 @Service("adminServicesManager")
 public class AdminServicesManager {
@@ -187,7 +188,7 @@ public class AdminServicesManager {
 		
 		for (ServiceMonitoriza service : servicesByTimer) {
 									
-			serviceDTO = new ServiceDTO(service.getIdService(), service.getName(), service.getTimer().getName(), service.getTimeout(), service.getNameWsdl(), service.getDegradedThreshold(), service.getLostThreshold().toString(), getDirectoryPath(service.getName()), isAfirmaPlatform(service.getPlatform().getPlatformType().getName()), service.getServiceType(), service.getPlatform().getIdPlatform());
+			serviceDTO = new ServiceDTO(service.getIdService(), service.getName(), service.getTimer().getName(), service.getTimeout(), service.getNameWsdl(), service.getDegradedThreshold(), service.getLostThreshold().toString(), getDirectoryPath(service.getIdService(), service.getName()), isAfirmaPlatform(service.getPlatform().getPlatformType().getName()), service.getServiceType(), service.getPlatform().getIdPlatform());
 					
 			// Base URL de cada plataforma sin tener en cuenta ningún contexto. Servirá para construir la URL de invocación OCSP y RFC3161.
 			serviceDTO.setBaseUrl(getBaseUrl(service.getPlatform()));
@@ -207,7 +208,7 @@ public class AdminServicesManager {
 			try {
 				serviceDTO.setRfc3161Password(getRfc3161KeystorePassword());
 			} catch (CryptographyException e) {
-				String errorMsg = Language.getFormatResCoreMonitoriza(KeystoreFacade.LOG_SK014, new Object[ ] { keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161).getTokenName() });
+				String errorMsg = Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE003, new Object[ ] { keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161).getTokenName() });
 				LOGGER.error(errorMsg, e);
 			}			
 			
@@ -220,28 +221,29 @@ public class AdminServicesManager {
 			servicesTimer.add(serviceDTO);
 						
 			// Se actualiza la carpeta de peticiones
-			RequestServiceFile file;
-			try {
-				file = fileService.getRequestFileById(service.getRequestFile().getIdRequestServiceFile());
-
-				StringBuffer targetFolder = new StringBuffer();
-				targetFolder.append(StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY)).append(GeneralConstants.DOUBLE_PATH_SEPARATOR).append(serviceDTO.getServiceId()).append(GeneralConstants.SEPARATOR).append(serviceDTO.getServiceName()).append(GeneralConstants.DOUBLE_PATH_SEPARATOR);
-				
-				// El primer paso es eliminar la existente para este servicio
-				File directoryToBeDeleted = new java.io.File(targetFolder.toString());
-				if (directoryToBeDeleted.exists()) {
-					FileUtils.deleteDirectory(directoryToBeDeleted);
-				}
-				// Se descomprime el ZIP extraído de base de datos en el destino configurado
-				FileUtils.unZipFileWithSubFolders(file.getFiledata(), file.getFilename(), targetFolder.toString());
-			} catch (RequestFileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			if (service.getRequestFile() != null) {
+    			RequestServiceFile file;
+    			try {
+    				file = fileService.getRequestFileById(service.getRequestFile().getIdRequestServiceFile());
+    
+    				StringBuffer targetFolder = new StringBuffer();
+    				targetFolder.append(StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY)).append(GeneralConstants.DOUBLE_PATH_SEPARATOR).append(serviceDTO.getServiceId()).append(GeneralConstants.SEPARATOR).append(serviceDTO.getServiceName()).append(GeneralConstants.DOUBLE_PATH_SEPARATOR);
+    				
+    				// El primer paso es eliminar la existente para este servicio
+    				File directoryToBeDeleted = new java.io.File(targetFolder.toString());
+    				if (directoryToBeDeleted.exists()) {
+    					FileUtils.deleteDirectory(directoryToBeDeleted);
+    				}
+    				// Se descomprime el ZIP extraído de base de datos en el destino configurado
+    				FileUtils.unZipFileWithSubFolders(file.getFiledata(), file.getFilename(), targetFolder.toString());
+    			} catch (RequestFileNotFoundException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			} catch (IOException e) {
+    				// TODO Auto-generated catch block
+    				e.printStackTrace();
+    			}
 			}
-			
 		}
 
 		return servicesTimer;
@@ -260,15 +262,15 @@ public class AdminServicesManager {
 	}
 
 	/**
-	 * Method that builds and returns the directory path for a service.
+	 * Method that builds and returns the directory path for a service: "service-identifier_service-name"
 	 * @param serviceId The name identifier for the service.
 	 * @return String that represents the directory path for the service passed as parameter.
 	 */
-	private String getDirectoryPath(final String serviceId) {
+	private String getDirectoryPath(final Long serviceId, final String serviceName) {
 		
 		String basePath = StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY);
 		
-		return basePath.concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(serviceId);
+		return basePath.concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(serviceId.toString()).concat(GeneralConstants.SEPARATOR).concat(serviceName);
 				
 	}
 
@@ -320,10 +322,8 @@ public class AdminServicesManager {
 
 		try (InputStream readStream = new ByteArrayInputStream(ks.getKeystore());) {
 			// Accedemos al almacén de confianza SSL
-			msgError = Language.getResMonitoriza(LogMessages.ERROR_ACCESS_CERTIFICATE_SSL);
+			msgError = Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE005);
 			cer = KeyStore.getInstance(ks.getKeystoreType());
-
-			//cer.load(readStream, StaticMonitorizaProperties.getProperty(StaticConstants.SSL_TRUSTTORE_PASSWORD).toCharArray());
 			cer.load(readStream, keyStoreFacade.getKeystoreDecodedPasswordString(ks.getPassword()).toCharArray());
 
 		} catch (IOException | KeyStoreException | CertificateException
@@ -348,8 +348,8 @@ public class AdminServicesManager {
 		KeyStore cer = null;
 
 		try (InputStream readStream = new ByteArrayInputStream(ks.getKeystore());) {
-			// Accedemos al almacén de confianza SSL
-			msgError = Language.getResMonitoriza(LogMessages.ERROR_KEYSTORE_ACCESS_AUTH_CLIENT_RFC3161);
+			// Accedemos al almacén RFC3161
+			msgError = Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE006);
 			cer = KeyStore.getInstance(ks.getKeystoreType());
 
 			cer.load(readStream, keyStoreFacade.getKeystoreDecodedPasswordString(ks.getPassword()).toCharArray());
@@ -377,7 +377,7 @@ public class AdminServicesManager {
 
 		try (InputStream readStream = new ByteArrayInputStream(ks.getKeystore());) {
 			// Accedemos al almacén de confianza SSL
-			msgError = Language.getResMonitoriza(LogMessages.ERROR_KEYSTORE_ACCESS_AUTH_CLIENT_RFC3161);
+			msgError = Language.getResCoreMonitoriza(IStatusLogMessages.STATUS012);
 			cer = KeyStore.getInstance(ks.getKeystoreType());
 
 			cer.load(readStream, keyStoreFacade.getKeystoreDecodedPasswordString(ks.getPassword()).toCharArray());

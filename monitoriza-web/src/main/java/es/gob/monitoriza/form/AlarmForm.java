@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 10/10/2018.
  */
 package es.gob.monitoriza.form;
 
@@ -40,7 +40,7 @@ import es.gob.monitoriza.rest.exception.ThenCheckIt;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 10/10/2018.
  */
 public class AlarmForm {
 
@@ -50,10 +50,16 @@ public class AlarmForm {
 	 */
 	private Long idAlarm;
 
+	/**
+	 * Attribute that represents . 
+	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.alarm.name.notempty}")
 	@Size(min = 3, max = 254, groups = ThenCheckIt.class)
 	private String name;
 
+	/**
+	 * Attribute that represents . 
+	 */
 	@NotNull(message="{form.valid.alarm.blockedTime.notempty}")
 	private Long blockedTime;
 

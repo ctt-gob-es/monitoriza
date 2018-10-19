@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 20/09/2018.
+ * @version 1.4, 17/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -73,7 +73,7 @@ import es.gob.monitoriza.service.ITimerScheduledService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.2, 20/09/2018..
+ * @version 1.4, 17/10/2018..
  */
 @RestController
 public class PlatformRestController {
@@ -147,10 +147,8 @@ public class PlatformRestController {
 	 * Method that maps the delete user request from datatable to the controller
 	 * and performs the delete of the user identified by its id.
 	 * 
-	 * @param userId
-	 *            Identifier of the user to be deleted.
-	 * @param index
-	 *            Row index of the datatable.
+	 * @param platformId Identifier of the platform to be deleted.
+	 * @param index Row index of the datatable.
 	 * @return String that represents the name of the view to redirect.
 	 */
 	@JsonView(DataTablesOutput.View.class)
@@ -169,8 +167,8 @@ public class PlatformRestController {
 	 * Method that maps the save user web request to the controller and saves it
 	 * in the persistence.
 	 * 
-	 * @param userForm
-	 *            Object that represents the backing user form.
+	 * @param afirmaForm
+	 *            Object that represents the backing platform form.
 	 * @param bindingResult
 	 *            Object that represents the form validation result.
 	 * @return {@link DataTablesOutput<PlatformMonitoriza>}
@@ -209,7 +207,7 @@ public class PlatformRestController {
 				platformAfirma.setHttpsPort(afirmaForm.getHttpsPort());
 				platformAfirma.setServiceContext(afirmaForm.getServiceContext());
 				CPlatformType afirmaType = new CPlatformType();
-				afirmaType.setIdPlatformType(IPlatformService.ID_PLATFORM_TYPE_AFIRMA);
+				afirmaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
 				platformAfirma.setPlatformType(afirmaType);
 		
 				PlatformMonitoriza afirma = platformService.savePlatform(platformAfirma);
@@ -238,8 +236,8 @@ public class PlatformRestController {
 	 * Method that maps the save user web request to the controller and saves it
 	 * in the persistence.
 	 * 
-	 * @param userForm
-	 *            Object that represents the backing user form.
+	 * @param tsaForm
+	 *            Object that represents the backing platform form.
 	 * @param bindingResult
 	 *            Object that represents the form validation result.
 	 * @return {@link DataTablesOutput<PlatformMonitoriza>}
@@ -277,7 +275,7 @@ public class PlatformRestController {
 				platformTsa.setHttpsPort(tsaForm.getHttpsPort());
 				platformTsa.setServiceContext(tsaForm.getServiceContext());
 				CPlatformType afirmaType = new CPlatformType();
-				afirmaType.setIdPlatformType(IPlatformService.ID_PLATFORM_TYPE_TSA);
+				afirmaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA);
 				platformTsa.setPlatformType(afirmaType);
 				platformTsa.setRfc3161Context(tsaForm.getRfc3161Context());
 				platformTsa.setRfc3161Port(tsaForm.getRfc3161Port());
@@ -318,7 +316,7 @@ public class PlatformRestController {
 	
 	/**
 	 * Method that sets the scheduled timers of the services which uses this platform as updated
-	 * @param platform
+	 * @param platform Object that represents the platform
 	 */
 	private void updateScheduledTimerFromPlatform(PlatformMonitoriza platform) {
 		
@@ -336,10 +334,10 @@ public class PlatformRestController {
 	}
 	
 	/**
-	 * Method thar checks if there are changes between the afirma form and the persisted platform
-	 * @param afirmaForm
-	 * @param service
-	 * @return
+	 * Method thar checks if there are changes between the afirma form and the persisted platform.
+	 * @param afirmaForm Object that represents the backing form for the @firma platform
+	 * @param platform Object that represents the persisted @firma platform 
+	 * @return true if the data of the form has been updated
 	 */
 	private boolean isAfirmaUpdatedForm(AfirmaForm afirmaForm, PlatformMonitoriza platform) {
 		
@@ -355,10 +353,10 @@ public class PlatformRestController {
 	}
 	
 	/**
-	 * Method thar checks if there are changes between the TS@ form and the persisted platform
-	 * @param afirmaForm
-	 * @param service
-	 * @return
+	 * Method that checks if there are changes between the TS@ form and the persisted platform.
+	 * @param tsaForm Object that represents the backing form for the @firma platform
+	 * @param platform Object that represents the platform
+	 * @return true if the data of the form has been updated
 	 */
 	private boolean isTsaUpdatedForm(TsaForm tsaForm, PlatformMonitoriza platform) {
 		

@@ -32,13 +32,14 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.1, 30/08/2018.
+ * @version 1.3, 18/10/2018.
  */
 package es.gob.monitoriza.status.thread;
 
 import java.io.File;
 import java.security.KeyStore;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.log4j.Logger;
@@ -49,8 +50,8 @@ import es.gob.monitoriza.constant.ServiceStatusConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.exception.AlarmException;
 import es.gob.monitoriza.exception.InvokerException;
+import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.i18n.LogMessages;
 import es.gob.monitoriza.invoker.ocsp.OcspInvoker;
 import es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker;
 import es.gob.monitoriza.invoker.soap.HttpSoapInvoker;
@@ -62,7 +63,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.1, 30/08/2018.
+ * @version 1.3, 18/10/2018.
  */
 public final class RequestProcessorThread implements Runnable {
 
@@ -121,16 +122,17 @@ public final class RequestProcessorThread implements Runnable {
 		Long totalTimes = 0L;
 		boolean necesarioConfirmar = Boolean.TRUE;
 		File grupoAProcesar = null;
+		Map<String, String> partialRequestResult = new HashMap<String, String>();
 		int groupIndex = 1;
 
 		File serviceDir = new File(service.getDirectoryPath());
 		// Comprobamos que la ruta proporcioanda es correcta.
-		// Si existe un directorio con el nombre del servicio, continúo...
+		// Si existe un directorio con el nombre del servicio, continuo...
 		if (serviceDir != null && serviceDir.exists() && serviceDir.isDirectory()) {
 
 			try {
 
-				LOGGER.info(Language.getFormatResMonitoriza(LogMessages.STARTING_TO_SEND_STORED_REQUESTS, new Object[ ] { serviceDir.toPath().toString(), service.getWsdl() }));
+				LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS003, new Object[ ] { serviceDir.toPath().toString(), service.getWsdl() }));
 
 				// Enviamos las peticiones del grupo principal
 				grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaProperties.getProperty(StaticConstants.GRUPO_PRINCIPAL_PATH_DIRECTORY)));
@@ -139,13 +141,13 @@ public final class RequestProcessorThread implements Runnable {
 
 					// Se procesa el grupo...
 					if (grupoAProcesar != null && grupoAProcesar.exists() && grupoAProcesar.listFiles() != null) {
-
+						
 						for (File request: grupoAProcesar.listFiles()) {
 							// Vamos recorriendo los ficheros, y si es una
 							// petición, la enviamos a @Firma o TS@
 							if (request != null) {
 
-								LOGGER.info(Language.getFormatResMonitoriza(LogMessages.SENDING_REQUEST, new Object[ ] { request.getName() }));
+								LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS004, new Object[ ] { request.getName() }));
 
 								if (service.getServiceType().equalsIgnoreCase(GeneralConstants.OCSP_SERVICE)) {
 									tiempoTotal = OcspInvoker.sendRequest(request, service, ssl);
@@ -169,6 +171,10 @@ public final class RequestProcessorThread implements Runnable {
 								} else {
 									totalTimes += tiempoTotal;
 								}
+								
+								// Se almacena el resultado parcial para la petición del grupo actual
+								partialRequestResult.put(request.getAbsolutePath(), isServiceRequestLost(service, tiempoTotal)? "Sin respuesta" : tiempoTotal.toString());
+								
 							}
 
 						}
@@ -184,7 +190,7 @@ public final class RequestProcessorThread implements Runnable {
 						// Si se cumplen las condiciones, se obtiene el posible
 						// próximo grupo de confirmación...
 						if (perdidas > Integer.parseInt(service.getLostThreshold()) || tiempoMedio > service.getDegradedThreshold()) {
-							LOGGER.info(Language.getFormatResMonitoriza(LogMessages.CONFIRMATION_REQUIRED, new Object[ ] { service.getWsdl(), perdidas, tiempoMedio == null ? "N/A": tiempoMedio }));
+							LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS005, new Object[ ] { service.getWsdl(), perdidas, tiempoMedio == null ? "N/A": tiempoMedio }));
 							necesarioConfirmar = Boolean.TRUE;
 							grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaProperties.getProperty(StaticConstants.GRUPO_CONFIRMACION_PATH_DIRECTORY)) + groupIndex);
 							groupIndex++;
@@ -193,11 +199,11 @@ public final class RequestProcessorThread implements Runnable {
 							// de confirmación,
 							// dormimos el hilo para simular la espera...
 							try {
-								LOGGER.info(Language.getFormatResMonitoriza(LogMessages.REQUEST_THREAD_WAIT, new Object[ ] { grupoAProcesar.getAbsolutePath() }));
+								LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS006, new Object[ ] { grupoAProcesar.getAbsolutePath() }));
 								Thread.sleep(Long.parseLong(StaticMonitorizaProperties.getProperty(StaticConstants.CONFIRMATION_WAIT_TIME)));
 								
 							} catch (InterruptedException e) {
-								LOGGER.info(Language.getFormatResMonitoriza(LogMessages.CONFIRMATION_WAIT_INTERRUPTED, new Object[ ] { service.getServiceName() }));
+								LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS007, new Object[ ] { service.getServiceName() }));
 							}
 						} else {
 							necesarioConfirmar = Boolean.FALSE;
@@ -216,17 +222,17 @@ public final class RequestProcessorThread implements Runnable {
 				// hay más grupos de confirmación,
 				// pasamos a calcular el estado del servicio con los datos
 				// obtenidos.
-				StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(service, tiempoMedio, perdidas), LocalDateTime.now());
+				StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(service, tiempoMedio, perdidas), tiempoMedio, LocalDateTime.now(), partialRequestResult);
 				statusHolder.put(service.getServiceName(), statusUptodate);
 
 			} catch (InvokerException e) {
 				RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
-				LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_PROCESSING_SERVICE, new Object[ ] { service.getServiceName() }), e);
+				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS002, new Object[ ] { service.getServiceName() }), e);
 			}
 
 		}
 		
-		RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
+	RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
 
 	}
 
@@ -258,7 +264,7 @@ public final class RequestProcessorThread implements Runnable {
 			try {
 				AlarmManager.throwNewAlarm(service, estado, tiempoMedio);
 			} catch (AlarmException e) {
-				LOGGER.error(Language.getFormatResMonitoriza(LogMessages.ERROR_THROWING_ALARM, new Object[ ] { service.getServiceName(), estado }), e);
+				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS003, new Object[ ] { service.getServiceName(), estado }), e);
 			}
 		}
 

@@ -20,32 +20,24 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 8 oct. 2018.
+ * @version 1.1, 17/10/2018.
  */
 package es.gob.monitoriza.service;
-
-import java.util.List;
 
 import es.gob.monitoriza.persistence.configuration.dto.StatusDTO;
 
 /**
- * <p>
- * Interface that provides communication with the operations of the persistence
- * layer.
- * </p>
- * <b>Project:</b>
- * <p>
- * Application for monitoring services of @firma suite systems.
- * </p>
+ * <p>Interface that provides communication with the status servlet.
+ * </p><b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.0, 8 oct. 2018.
+ * @version 1.1, 17/10/2018.
  */
 public interface IStatusService {
 
 	/**
-	 * 
-	 * @return
+	 * Method that get the service status from the status servlet.
+	 * @return StatusDTO
 	 */
-	List<StatusDTO> completeStatus();
+	StatusDTO completeStatus();
 
 }

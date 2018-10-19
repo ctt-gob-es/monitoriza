@@ -15,7 +15,7 @@
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI certificates and electronic signature.</p>
  * <b>Date:</b><p>03/03/2015.</p>
  * @author Gobierno de España.
- * @version 1.3, 20/09/2019.
+ * @version 1.4, 10/10/2019.
  */
 package es.gob.monitoriza.crypto.keystore;
 
@@ -46,6 +46,7 @@ import org.apache.log4j.Logger;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.utils.CryptographyValidationUtils;
+import es.gob.monitoriza.i18n.ICoreLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
@@ -53,7 +54,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 /**
  * <p>Class that manages all the operations related with JCE, JCEKS and PKCS#12 keystores.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 20/09/2019.
+ * @version 1.4, 10/10/2019.
  */
 public class KeystoreFacade implements IKeystoreFacade {
 
@@ -72,61 +73,6 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 */
 	public static final String PKCS12 = "PKCS12";
 	
-	/**
-	 * Constant attribute that represents the name of the property <code>logSK014</code> belonging to the file core/general_xx_YY.properties.
-	 */
-	public static final String LOG_SK016 = "logSK016";
-
-	/**
-	 * Constant attribute that represents the name of the property <code>logSK014</code> belonging to the file core/general_xx_YY.properties.
-	 */
-	public static final String LOG_SK014 = "logSK014";
-
-	/**
-	 * Constant attribute that represents the name of the property <code>logSK009</code> belonging to the file core/general_xx_YY.properties.
-	 */
-	public static final String LOG_SK009 = "logSK009";
-
-	/**
-	 * Constant attribute that represents the name of the property <code>logSK008</code> belonging to the file core/general_xx_YY.properties.
-	 */
-	public static final String LOG_SK008 = "logSK008";
-
-	/**
-	 * Constant attribute that represents the name of the property <code>logSK007</code> belonging to the file core/general_xx_YY.properties.
-	 */
-	public static final String LOG_SK007 = "logSK007";
-
-	/**
-	 * Constant attribute that represents the name of the property <code>logSK006</code> belonging to the file core/general_xx_YY.properties.
-	 */
-	public static final String LOG_SK006 = "logSK006";
-
-	/**
-	 * Constant attribute that represents the name of the property <code>logSK005</code> belonging to the file core/general_xx_YY.properties.
-	 */
-	public static final String LOG_SK005 = "logSK005";
-
-	/**
-	 * Constant attribute that represents the name of the property <code>logSK004</code> belonging to the file core/general_xx_YY.properties.
-	 */
-	public static final String LOG_SK004 = "logSK004";
-
-	/**
-	 * Constant attribute that represents the name of the property <code>logSK003</code> belonging to the file core/general_xx_YY.properties.
-	 */
-	public static final String LOG_SK003 = "logSK003";
-
-	/**
-	 * Constant attribute that represents the name of the property <code>logSK002</code> belonging to the file core/general_xx_YY.properties.
-	 */
-	public static final String LOG_SK002 = "logSK002";
-
-	/**
-	 * Constant attribute that represents the name of the property <code>logSK001</code> belonging to the file core/general_xx_YY.properties.
-	 */
-	public static final String LOG_SK001 = "logSK001";
-
 	/**
 	 * Attribute that represents the information about the keystore from the cache system.
 	 */
@@ -151,13 +97,13 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 */
 	@Override
 	public final Keystore storeCertificate(final String alias, final Certificate certificate, final Key key) throws CryptographyException {
-		LOGGER.info(Language.getResCoreMonitoriza(LOG_SK001));
+		LOGGER.info(Language.getResCoreMonitoriza(ICoreLogMessages.CORE001));
 		try {
 			// Comprobamos que el certificado no sea nulo
-			CryptographyValidationUtils.checkIsNotNull(certificate, Language.getResCoreMonitoriza(LOG_SK003));
+			CryptographyValidationUtils.checkIsNotNull(certificate, Language.getResCoreMonitoriza(ICoreLogMessages.CORE003));
 
 			// Comprobamos que el alias no sea nulo
-			CryptographyValidationUtils.checkIsNotNull(alias, Language.getResCoreMonitoriza(LOG_SK004));
+			CryptographyValidationUtils.checkIsNotNull(alias, Language.getResCoreMonitoriza(ICoreLogMessages.CORE004));
 
 			// Tratamos de convertir el objeto Certificate a X509Certificate
 			CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
@@ -170,26 +116,26 @@ public class KeystoreFacade implements IKeystoreFacade {
 
 			} catch (CertificateExpiredException e) {
 				// Certificado caducado
-				LOGGER.warn(Language.getResCoreMonitoriza(LOG_SK005));
+				LOGGER.warn(Language.getResCoreMonitoriza(ICoreLogMessages.CORE005));
 			} catch (CertificateNotYetValidException e) {
 				// Certificado no válido aún
-				LOGGER.warn(Language.getResCoreMonitoriza(LOG_SK006));
+				LOGGER.warn(Language.getResCoreMonitoriza(ICoreLogMessages.CORE006));
 			}
 
 			// Actualizamos el almacén de claves físicamente. Si la clave es
 			// nula, sólo se insertará el certificado.
-			LOGGER.debug(Language.getFormatResCoreMonitoriza(LOG_SK007, new Object[ ] { alias, keystore.getName() }));
+			LOGGER.debug(Language.getFormatResCoreMonitoriza(ICoreLogMessages.CORE007, new Object[ ] { alias, keystore.getName() }));
 			addEntryToKeystore(alias, certificate, key);
 		} catch (CertificateException e) {
-			String errorMsg = Language.getResCoreMonitoriza(LOG_SK008);
+			String errorMsg = Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE001);
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		} catch (KeyStoreException e) {
-			String errorMsg = Language.getFormatResCoreMonitoriza(LOG_SK009, new Object[ ] { alias, keystore.getName() });
+			String errorMsg = Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE002, new Object[ ] { alias, keystore.getName() });
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		} finally {
-			LOGGER.info(Language.getResCoreMonitoriza(LOG_SK002));
+			LOGGER.info(Language.getResCoreMonitoriza(ICoreLogMessages.CORE002));
 		}
 		// Devolvemos los datos en caché actualizados del almacén de claves
 		return keystore;
@@ -201,26 +147,26 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 */
 	@Override
 	public Keystore updateCertificate(final String oldEntryAlias, final String newEntryAlias) throws CryptographyException {
-		LOGGER.info(Language.getResCoreMonitoriza(LOG_SK001));
+		LOGGER.info(Language.getResCoreMonitoriza(ICoreLogMessages.CORE001));
 		try {
 
 			// Comprobamos que el alias no sea nulo
-			CryptographyValidationUtils.checkIsNotNull(newEntryAlias, Language.getResCoreMonitoriza(LOG_SK004));
+			CryptographyValidationUtils.checkIsNotNull(newEntryAlias, Language.getResCoreMonitoriza(ICoreLogMessages.CORE004));
 
 			// Actualizamos el almacén de claves físicamente. Si la clave es
 			// nula, sólo se insertará el certificado.
-			LOGGER.debug(Language.getFormatResCoreMonitoriza(LOG_SK007, new Object[ ] { newEntryAlias, keystore.getTokenName() }));
+			LOGGER.debug(Language.getFormatResCoreMonitoriza(ICoreLogMessages.CORE007, new Object[ ] { newEntryAlias, keystore.getTokenName() }));
 			updateEntryToKeystore(oldEntryAlias, newEntryAlias);
 		} catch (KeyStoreException e) {
-			String errorMsg = Language.getFormatResCoreMonitoriza(LOG_SK009, new Object[ ] { newEntryAlias, Language.getResCoreMonitoriza(keystore.getTokenName()) });
+			String errorMsg = Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE002, new Object[ ] { newEntryAlias, Language.getResCoreMonitoriza(keystore.getTokenName()) });
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		} catch (UnrecoverableKeyException | NoSuchAlgorithmException e) {
-			String errorMsg = Language.getFormatResCoreMonitoriza(LOG_SK016, new Object[ ] { oldEntryAlias, newEntryAlias, Language.getResCoreMonitoriza(keystore.getTokenName()) });
+			String errorMsg = Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE004, new Object[ ] { oldEntryAlias, newEntryAlias, Language.getResCoreMonitoriza(keystore.getTokenName()) });
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		} finally {
-			LOGGER.info(Language.getResCoreMonitoriza(LOG_SK002));
+			LOGGER.info(Language.getResCoreMonitoriza(ICoreLogMessages.CORE002));
 		}
 		// Devolvemos los datos en caché actualizados del almacén de claves
 		return keystore;
@@ -245,7 +191,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 
 		} catch (NoSuchAlgorithmException | CertificateException
 				| IOException e) {
-			LOGGER.error("Error cargando el keystore", e);
+			LOGGER.error(Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE010), e);
 		}
 
 		if (key == null) {
@@ -261,7 +207,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 			keystore.setKeystore(baos.toByteArray());
 		} catch (NoSuchAlgorithmException | CertificateException
 				| IOException e) {
-			LOGGER.error("Error modificando el keystore", e);
+			LOGGER.error(Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE011), e);
 		}
 
 	}
@@ -283,7 +229,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 			kstore.load(bais, ksPass);
 		} catch (NoSuchAlgorithmException | CertificateException
 				| IOException e) {
-			LOGGER.error("Error cargando el keystore", e);
+			LOGGER.error(Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE010), e);
 		}
 
 		if (kstore.containsAlias(oldEntryAlias)) {
@@ -305,7 +251,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 			keystore.setKeystore(baos.toByteArray());
 		} catch (NoSuchAlgorithmException | CertificateException
 				| IOException e) {
-			LOGGER.error("Error modificando el keystore", e);
+			LOGGER.error(Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE011), e);
 		}
 
 		return keystore;
@@ -326,7 +272,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 
 			return cipher.doFinal(Base64.decodeBase64(password == null ? keystore.getPassword() : password));
 		} catch (Exception e) {
-			String errorMsg = Language.getFormatResCoreMonitoriza(LOG_SK014, new Object[ ] { keystore.getTokenName() });
+			String errorMsg = Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE003, new Object[ ] { keystore.getTokenName() });
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		}
@@ -370,11 +316,11 @@ public class KeystoreFacade implements IKeystoreFacade {
 			keystore.setKeystore(baos.toByteArray());
 		} catch (NoSuchAlgorithmException | CertificateException | IOException
 				| KeyStoreException e) {
-			String errorMsg = Language.getFormatResCoreMonitoriza(LOG_SK009, new Object[ ] { alias, Language.getResCoreMonitoriza(keystore.getTokenName()) });
+			String errorMsg = Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE002, new Object[ ] { alias, Language.getResCoreMonitoriza(keystore.getTokenName()) });
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
 		} finally {
-			LOGGER.info(Language.getResCoreMonitoriza(LOG_SK002));
+			LOGGER.info(Language.getResCoreMonitoriza(ICoreLogMessages.CORE002));
 		}
 
 		return keystore;

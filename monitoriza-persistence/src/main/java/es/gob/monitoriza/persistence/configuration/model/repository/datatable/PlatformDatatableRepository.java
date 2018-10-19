@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>9 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 9 abr. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository.datatable;
 
@@ -32,10 +32,15 @@ import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitori
 /** 
  * <p>Interface that provides CRUD functionality for the PlatformMonitoriza entity and DataTables.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 9 abr. 2018.
+ * @version 1.1, 10/10/2018.
  */
 public interface PlatformDatatableRepository extends DataTablesRepository<PlatformMonitoriza, Long> {
 	
+	/**
+	 * Method that gets all platforms by its type.
+	 * @param idPlatformType Platform type identifier
+	 * @return DataTablesOutput<PlatformMonitoriza> containing all platforms of the type specified
+	 */
 	DataTablesOutput<PlatformMonitoriza> findByPlatformTypeIdPlatformType(Long idPlatformType);
 
 }

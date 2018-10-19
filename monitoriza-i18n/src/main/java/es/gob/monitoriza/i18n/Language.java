@@ -68,11 +68,6 @@ public final class Language {
 	private Language() {
 		super();
 	}
-
-	/**
-	 * Attribute that represents the list of messages.
-	 */
-	private static ResourceBundle monitoriza;
 	
 	/**
 	 * Attribute that represents the locale specified in the configuration.
@@ -100,6 +95,11 @@ public final class Language {
 	private static final String BUNDLENAME_STATUS = "status.monitoriza";
 	
 	/**
+	 * Constant attribute that represents the string to identify the bundle name to the file related with the alarm module.
+	 */
+	private static final String BUNDLENAME_ALARM = "alarm.monitoriza";
+	
+	/**
 	 * Constant attribute that represents the string to identify the bundle name to the file related with core logs.
 	 */
 	private static final String BUNDLENAME_CORE = "core.monitoriza";
@@ -125,9 +125,14 @@ public final class Language {
 	private static final String LANGUAGE = "LANGUAGE";
 	
 	/**
-	 * Attribute that represents the properties for the locale for the core bundle messages.
+	 * Attribute that represents the properties for the locale for the servlet status bundle messages.
 	 */
 	private static ResourceBundle resStatusAppBundle = null;
+	
+	/**
+	 * Attribute that represents the properties for the locale for the alarm bundle messages.
+	 */
+	private static ResourceBundle resAlarmBundle = null;
 	
 	/**
 	 * Attribute that represents the properties for the locale for the core bundle messages.
@@ -224,8 +229,11 @@ public final class Language {
 		// Se informa en el log del Locale selecccionado.
 		LOGGER.info("Take the next locale for messages logs: " + currentLocale.toString());
 		
-		// Se cargan los mensajes del módulo del core.
+		// Se cargan los mensajes del módulo del servlet de estados.
 		resStatusAppBundle = ResourceBundle.getBundle(BUNDLENAME_STATUS, currentLocale, urlClassLoaderMessages);
+		
+		// Se cargan los mensajes del módulo de alarmas.
+		resAlarmBundle = ResourceBundle.getBundle(BUNDLENAME_ALARM, currentLocale, urlClassLoaderMessages);
 
 		// Se cargan los mensajes del módulo del core.
 		resCoreBundle = ResourceBundle.getBundle(BUNDLENAME_CORE, currentLocale, urlClassLoaderMessages);
@@ -259,6 +267,26 @@ public final class Language {
 	public static String getResMonitoriza(String key) {
 		return resStatusAppBundle.getString(key);
 	}
+	
+	/**
+	 * Gets the message with the key and values indicated as input parameters.
+	 * @param key Key for obtain the message.
+	 * @param values Values for insert in the message.
+	 * @return String with the message well-formed.
+	 */
+	public static String getFormatResAlarmMonitoriza(String key, Object[ ] values) {
+		return new MessageFormat(resAlarmBundle.getString(key), currentLocale).format(values);
+	}
+
+	/**
+	 * Gets the message with the key indicated as input parameters.
+	 * @param key Key for obtain the message.
+	 * @return String with the message.
+	 */
+	public static String getResAlarmMonitoriza(String key) {
+		return resAlarmBundle.getString(key);
+	}
+		
 	
 	/**
 	 * Gets the message with the key and values indicated as input parameters.

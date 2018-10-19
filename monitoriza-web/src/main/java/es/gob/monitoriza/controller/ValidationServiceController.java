@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>28 ago. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 28 ago. 2018.
+ * @version 1.1, 10/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -45,6 +45,8 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.cron.ValidCertificatesJob;
 import es.gob.monitoriza.enums.AuthenticationTypeEnum;
 import es.gob.monitoriza.form.ValidServiceForm;
+import es.gob.monitoriza.i18n.IWebLogMessages;
+import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
@@ -53,9 +55,9 @@ import es.gob.monitoriza.service.ISystemCertificateService;
 import es.gob.monitoriza.service.IValidServiceService;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that maps the request for the validation service form to the controller.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 28 ago. 2018.
+ * @version 1.1, 10/10/2018.
  */
 @Controller
 public class ValidationServiceController {
@@ -127,6 +129,12 @@ public class ValidationServiceController {
 		return "fragments/validservicecertificate.html";
 	}
 
+	/**
+	 * Method that stores a ValidService in persistence.
+	 * @param validServiceForm Object that maps the HTML form
+	 * @param bindingResult Object that maps the validation errors in the form
+	 * @return ValidService persisted
+	 */
 	@RequestMapping(value = "/savevalidservice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public @ResponseBody ValidService saveValidService(@Validated(OrderedValidation.class) @RequestBody final ValidServiceForm validServiceForm, final BindingResult bindingResult) throws Exception{
 
@@ -155,7 +163,7 @@ public class ValidationServiceController {
 				
 				if (validServiceForm.getAuthenticationType().equals(AuthenticationTypeEnum.CERTIFICATE.getId())) {
 					if (validServiceForm.getValidServiceCertificate().intValue() == -1) {
-						LOGGER.error("Se ha producido un error al guardar el servicio de validación");
+						LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB010));
 						throw new Exception("NoCertForAuthentication");
 					}
 				}
@@ -164,7 +172,7 @@ public class ValidationServiceController {
 				validService = validServiceService.saveValidService(validService);
 
 			} catch (Exception e) {
-				LOGGER.error("Se ha producido un error al guardar el servicio de validación: " + e.getMessage());
+				LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB010), e.getCause());
 				throw e;
 			}
 		}
@@ -184,7 +192,7 @@ public class ValidationServiceController {
 
 	/**
 	 * Set authenticationTypeService.
-	 * @param authenticationType set authenticationTypeService
+	 * @param authenticationTypeService set authenticationTypeService
 	 */
 	public void setAuthenticationTypeService(IAuthenticationTypeService authenticationTypeService) {
 		this.authenticationTypeService = authenticationTypeService;
@@ -239,3 +247,4 @@ public class ValidationServiceController {
 	}
 
 }
+

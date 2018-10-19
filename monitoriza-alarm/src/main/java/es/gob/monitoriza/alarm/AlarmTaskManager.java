@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 24/01/2018.
+ * @version 1.2, 10/10/2018.
  */
 package es.gob.monitoriza.alarm;
 
@@ -30,12 +30,11 @@ import java.util.Map;
 
 import es.gob.monitoriza.alarm.types.Alarm;
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that defines the methods in charge of send alarms or store it according to the defined block time.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 30/08/2018.
+ * @version 1.2, 10/10/2018.
  */
 public class AlarmTaskManager {
 
@@ -97,19 +96,6 @@ public class AlarmTaskManager {
 				}
 			}
 		}
-	}
-
-	/**
-	 * Method that gets the block alarm time defined for the service in the static properties.
-	 * 
-	 * @param serviceName name of the service to search.
-	 * @return the time to keep blocked the alarm.
-	 */
-	private static long getBlockTimeForService(String serviceName) {
-		String propertyKey = GeneralConstants.SERVICE + GeneralConstants.DOT + serviceName.toLowerCase() + GeneralConstants.DOT + GeneralConstants.BLOCK_TIME_KEY;
-		String blockAlarmTimeId = StaticMonitorizaProperties.getProperty(propertyKey);
-		String time = StaticMonitorizaProperties.getProperty(blockAlarmTimeId);
-		return Long.valueOf(time);
 	}
 	
 	/**

@@ -64,6 +64,10 @@ public class KeystoreSpecification implements Specification<SystemCertificate>{
 		this.criteria = criteria;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 * @see org.springframework.data.jpa.domain.Specification#toPredicate(javax.persistence.criteria.Root, javax.persistence.criteria.CriteriaQuery, javax.persistence.criteria.CriteriaBuilder)
+	 */
 	@Override
     public Predicate toPredicate
       (Root<SystemCertificate> root, CriteriaQuery<?> query, CriteriaBuilder builder) {
