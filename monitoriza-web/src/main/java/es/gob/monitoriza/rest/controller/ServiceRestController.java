@@ -274,9 +274,9 @@ public class ServiceRestController {
 				// Sólo se actualiza la tarea programada del timer, si éste exsistía ya.
 				// Un nuevo timer sin servicios no debe ser contemplado.
 				if (timerForm.getIdTimer() != null) {
-					// Actualizar en bd (tabla TIMER_SCHEDULED) el timer poniendo IS_UPDATED a false
-					TimerScheduled scheduled = scheduledService.getTimerScheduledByIdTimer(timerForm.getIdTimer());
 					
+					TimerScheduled scheduled = scheduledService.getTimerScheduledByIdTimer(timerForm.getIdTimer());
+					// Actualizar en bd (tabla TIMER_SCHEDULED) el timer poniendo IS_UPDATED a false
 					if (scheduled != null) {
     					scheduled.setUpdated(false);
     					scheduledService.saveTimerScheduled(scheduled);
