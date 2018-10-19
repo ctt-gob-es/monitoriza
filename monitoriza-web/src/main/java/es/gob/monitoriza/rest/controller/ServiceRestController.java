@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 17/10/2018.
+ * @version 1.6, 18/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -44,6 +44,7 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -90,7 +91,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.5, 17/10/2018.
+ * @version 1.6, 18/10/2018.
  */
 @RestController
 public class ServiceRestController {
@@ -175,8 +176,7 @@ public class ServiceRestController {
 	 * Method that maps the request to get the service types for the selected
 	 * platform type. to the view.
 	 * 
-	 * @param model
-	 *            Holder object for model attributes.
+	 * @param idPlatform Platform identifier
 	 * @return String that represents the name of the view to forward.
 	 */
 	@RequestMapping(path = "/loadservicetype", method = RequestMethod.GET)
@@ -204,9 +204,8 @@ public class ServiceRestController {
 	/**
 	 * Method that maps the request to get the service types for the selected
 	 * platform type. to the view.
-	 * 
-	 * @param model
-	 *            Holder object for model attributes.
+	 * @param idPlatform Platform identifier
+	 * @param serviceType String that represents the service type.
 	 * @return String that represents the name of the view to forward.
 	 */
 	@RequestMapping(path = "/loadbaseendpoint", method = RequestMethod.GET)
@@ -245,6 +244,7 @@ public class ServiceRestController {
 	 */
 	@RequestMapping(value = "/savetimer", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
+	@Transactional
 	public @ResponseBody DataTablesOutput<TimerMonitoriza> saveTimer(
 			@Validated(OrderedValidation.class) @RequestBody TimerForm timerForm, BindingResult bindingResult) {
 		DataTablesOutput<TimerMonitoriza> dtOutput = new DataTablesOutput<>();
@@ -300,11 +300,13 @@ public class ServiceRestController {
 	 * Method that maps the save service web request to the controller and saves
 	 * it in the persistence.
 	 * @param serviceForm Backing form object with the service data.
+	 * @param file ZIP file with requests for this service
 	 * @param bindingResult Validation binding object.
 	 * @return {@link DataTablesOutput<ServiceMonitoriza>}
 	 */
 	@RequestMapping(path = "/saveservice", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@JsonView(DataTablesOutput.View.class)
+	@Transactional
 	public @ResponseBody DataTablesOutput<ServiceMonitoriza> saveService(
 			@Validated(OrderedValidation.class) @RequestPart("serviceForm") ServiceForm serviceForm, @RequestPart("file") MultipartFile file, BindingResult bindingResult) {
 		
@@ -399,7 +401,7 @@ public class ServiceRestController {
 				listNewService.add(service);	
 						
 				// Si el servicio ha cambiado o es nuevo, hay que gestionar la programación de timer asociado
-				if (elServicioHaCambiado || serviceMonitoriza.getIdService() == null) {
+				if (elServicioHaCambiado || serviceForm.getIdService() == null) {
 					
     				// Actualizar en bd (tabla TIMER_SCHEDULED) el timer poniendo IS_UPDATED a false
     				TimerScheduled scheduled = scheduledService.getTimerScheduledByIdTimer(serviceForm.getTimer());
@@ -441,16 +443,22 @@ public class ServiceRestController {
 
 
 	/**
-	 * Method that deletes a timer from persistence
+	 * Method that deletes a timer from persistence.
 	 * @param timerId Identifier of the timer to be deleted
 	 * @param index Index of the row in the data table
 	 * @return The index of the row (timer) to be deleted, -1 in case of error.
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deletetimer", method = RequestMethod.POST)
+	@Transactional
 	public String deleteTimer(@RequestParam("id") Long timerId, @RequestParam("index") String index) {
 		try {
 			timerService.deleteTimerMonitoriza(timerId);
+						
+			TimerScheduled scheduled = scheduledService.getTimerScheduledByIdTimer(timerId);
+			scheduled.setUpdated(false);
+			scheduledService.saveTimerScheduled(scheduled);    	
+			
 		} catch (Exception e) {
 			index = "-1";
 		}
@@ -458,16 +466,24 @@ public class ServiceRestController {
 	}
 
 	/**
-	 * Method that deletes a service from persistence
+	 * Method that deletes a service from persistence.
 	 * @param idService Identifier of the service to be deleted
 	 * @param index Index of the row in the data table
 	 * @return The index of the row (service) to be deleted, -1 in case of error.
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deleteservice", method = RequestMethod.POST)
+	@Transactional
 	public String deleteservice(@RequestParam("id") Long idService, @RequestParam("index") String index) {
 		try {
+				
+			ServiceMonitoriza service = serviceService.getServiceMonitorizaById(idService);
 			serviceService.deleteServiceMonitoriza(idService);
+						
+			TimerScheduled scheduled = scheduledService.getTimerScheduledByIdTimer(service.getTimer().getIdTimer());
+			scheduled.setUpdated(false);
+			scheduledService.saveTimerScheduled(scheduled);    	
+			
 		} catch (EmptyResultDataAccessException e) {
 			index = "-1";
 			throw e;
