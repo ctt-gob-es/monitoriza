@@ -101,11 +101,6 @@ public class PlatformMonitoriza implements Serializable {
 	private Boolean isSecure;
 	
 	/**
-	 * Attribute that represents the HTTPS port string for connections to the platform. 
-	 */
-	private String httpsPort;
-	
-	/**
 	 * Attribute that represents the context path for SOAP services. 
 	 */
 	private String serviceContext;
@@ -298,30 +293,6 @@ public class PlatformMonitoriza implements Serializable {
 	public void setIsSecure(Boolean isSecure) {
 		// CHECKSTYLE:ON
 		this.isSecure = isSecure;
-	}
-	
-	/**
-	 * Gets the value of the attribute {@link #httpsPort}.
-	 * @return the value of the attribute {@link #httpsPort}.
-	 */
-	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
-	// because Hibernate JPA needs not final access methods.
-	@Column(name = "HTTPS_PORT", nullable = true, length = NumberConstants.NUM10)
-	@JsonView(DataTablesOutput.View.class)	
-	public String getHttpsPort() {
-		// CHECKSTYLE:ON
-		return httpsPort;
-	}
-	
-	/**
-	 * Sets the value of the attribute {@link #httpsPort}.
-	 * @param httpsPort The value for the attribute {@link #httpsPort}.
-	 */
-	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
-	// because Hibernate JPA needs not final access methods.
-	public void setHttpsPort(String httpsPort) {
-		// CHECKSTYLE:ON
-		this.httpsPort = httpsPort;
 	}
 
 	/**
