@@ -143,13 +143,13 @@ $(document).ready(function() {
 			                	var messageError = "";
 			                	
 			                	if (messageException.includes("CertificateStored")) {
-			                		messageError = "Error al agregar el certificado, el certificado ya se encuentra en el almac\u00E9n!";
+			                		messageError = messageError = [[#{auth.admin.error.certUnique}]];
 			                	} else if (messageException.includes("CertificateNotValid")) {
-			                		messageError = "Error al agregar el certificado, certificado no v\u00e1lido!";
+			                		messageError = [[#{auth.admin.error.notValid}]];
 			                	} else if (messageException.includes("ValidServiceNotConfigured")) {
-			                		messageError = "Error al agregar el certificado, no est\u00e1 configurado el servicio de validaci\u00F3n!";
+			                		messageError = [[#{auth.admin.error.notConfigServiceVal}]];
 			                	} else {
-			                		messageError = "Se ha producido un error al agregar el certificado!";
+			                		messageError = [[#{auth.admin.error.globalError}]];
 			                	}
 			                	
 			                	$('#altEditor-modal .modal-body .alert').remove();
@@ -229,7 +229,7 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acción "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.NotAuthorized}]] + '</strong></div>');
 		            break;
 		    }
 		});

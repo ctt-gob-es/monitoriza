@@ -146,7 +146,7 @@ $(document).ready(function() {
 			if ($('#errorModalConfSpie').length > 0){
 				 $('#errorModalConfSpie').remove();
 			  }
-		  $('#newConfSpieForm').append('<div id="errorModalConfSpie" class="alert alert-danger" role="alert"><strong>Error al a&ntilde;adir un m&eacute;todo de validaci&oacute;n</strong></div>');
+		  $('#newConfSpieForm').append('<div id="errorModalConfSpie" class="alert alert-danger" role="alert"><strong>' + [[#{spie.admin.error.addMetVal}]] + '</strong></div>');
 		}
 
 	});
@@ -173,7 +173,7 @@ $(document).ready(function() {
 		  
 		  var formData = JSON.stringify($("#newConfSpieForm").serializeJSON());
 		  var url = /*[[@{/saveconfspie}]]*/ null;
-		  
+
 		  loading();
 		  if ($('#newConfSpieForm')[0].checkValidity() === false) {
 			  hide();
@@ -237,7 +237,7 @@ $(document).ready(function() {
 					  if ($('#errorModalConfSpie').length > 0){
 							 $('#errorModalConfSpie').remove();
 						  }
-					  $('#newConfSpieForm').append('<div id="errorModalConfSpie" class="alert alert-danger" role="alert"><strong>Error al guardar la configuraci&oacute;n global del SPIE</strong></div>');
+					  $('#newConfSpieForm').append('<div id="errorModalConfSpie" class="alert alert-danger" role="alert"><strong>' + [[#{spie.admin.error.saveConfSpie}]] + '</strong></div>');
 				  }
 				});
 		  }

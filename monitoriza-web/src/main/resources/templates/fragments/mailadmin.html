@@ -65,7 +65,7 @@
 	</div>
 	<div class="masonry-item col-md-6">
 		<div class="bgc-white p-20 bd">
-			<h6 class="c-grey-900">Nuevo Mail</h6>
+			<h6 class="c-grey-900" th:text="#{mail.admin.title}"></h6>
 			<div class="mT-30">
 				<form id="mailForm" th:object="${mailform}" th:action="@{/saveMail}"
 					method="post">
@@ -77,8 +77,8 @@
 							class="form-control" id="emailAddress" th:field="*{emailAddress}"
 							required></div>
 					</div>
-					<button id="mailBtn" type="submit" class="btn btn-primary">Guardar</button>
-					<button id="cleanBtn" class="btn btn-primary" onclick="cleanForm('#mailForm');">Limpiar formulario</button>
+					<button id="mailBtn" type="submit" class="btn btn-primary" th:text="#{button.save}"></button>
+					<button id="cleanBtn" class="btn btn-primary" onclick="cleanForm('#mailForm');" th:text="#{button.cleanForm}"></button>
 				</form>
 			</div>
 		</div>
@@ -101,7 +101,7 @@
 
 $(document).ready(function() {
 	
-	// Gestión de las datatables
+	// Gestiï¿½n de las datatables
 	var actionSaveMail = /*[[@{/savemail}]]*/;
 	var actionEmails = /*[[@{/emails}]]*/;
 	var actionDeleteMail = /*[[@{/deletemail}]]*/;
@@ -181,7 +181,7 @@ $(document).ready(function() {
 			                success: function(data){
 			                    
 			                	if (data == "-1" && $('#errorModalMail').length == 0){
-			                		$('#mailForm').append('<div id="errorModalMail" class="alert alert-danger" role="alert"><strong>El Correo est&aacute; siendo utilizado!</strong></div>');
+			                		$('#mailForm').append('<div id="errorModalMail" class="alert alert-danger" role="alert"><strong>' + [[#{mail.admin.error.inUse}]] + '</strong></div>');
 			                	}else{
 									$('#errorModalMail').remove();
 								}
@@ -202,12 +202,12 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acción "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.NotAuthorized}]] + '</strong></div>');
 		            break;
 		    }
 		});
 	
-	// Control del botón para guardar un correo
+	// Control del botï¿½n para guardar un correo
 	$( "#mailBtn" ).click(function( event ) {
 	  event.preventDefault();
 
@@ -266,7 +266,7 @@ $(document).ready(function() {
 			  },
 			  error:function(){
 				  hide();
-				  $('#mailForm').append('<div id="errorModalMail" class="alert alert-danger" role="alert"><strong>Hay un Correo con el mismo nombre!</strong></div>');
+				  $('#mailForm').append('<div id="errorModalMail" class="alert alert-danger" role="alert"><strong>' + [[#{mail.admin.error.sameName}]] + '</strong></div>');
 			  },
 			  dataType: "json",
 			  contentType : "application/json"
@@ -329,7 +329,7 @@ $( "#saveBtn" ).click(function( event ) {
 				  if ($('#errorModalConfMail').length > 0){
 						 $('#errorModalConfMail').remove();
 					  }
-				  $('#newConfServerMailForm').append('<div id="errorModalConfMail" class="alert alert-danger" role="alert"><strong>Error al guardar la configuraci&oacute;n del servidor del correo electr&oacute;nico</strong></div>');
+				  $('#newConfServerMailForm').append('<div id="errorModalConfMail" class="alert alert-danger" role="alert"><strong>' + [[#{mail.admin.error.saveConfMail}]] + '</strong></div>');
 			  }
 			});
 	  }

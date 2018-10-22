@@ -168,7 +168,7 @@ $(document).ready(function() {
 			                },
 			                error:function(data){
 			                	hide();
-			                	$('#afirmaForm').append('<div id="errorModalPlatform" class="alert alert-danger" role="alert"><strong>Hay una plataforma con el mismo nombre!</strong></div>');
+			                	$('#afirmaForm').append('<div id="errorModalPlatform" class="alert alert-danger" role="alert"><strong>' + [[#{platform.admin.error.sameName}]] + '</strong></div>');
 			                }
 			            });
 		            }
@@ -215,7 +215,7 @@ $(document).ready(function() {
 			                },
 			                error:function(data){
 			                	hide();
-			                	$('#afirmaForm').append('<div id="errorModalPlatform" class="alert alert-danger" role="alert"><strong>Hay una plataforma con el mismo nombre!</strong></div>');
+			                	$('#afirmaForm').append('<div id="errorModalPlatform" class="alert alert-danger" role="alert"><strong>' + [[#{platform.admin.error.sameName}]] + '</strong></div>');
 			                }
 			            });
 		            }
@@ -228,7 +228,7 @@ $(document).ready(function() {
 		                success: function(data){
 		                    
 		                	if (data == "-1" && $('#errorPlatform').length == 0){
-		                		$('#tablePlatform').append('<div id="errorPlatform" class="alert alert-danger" role="alert"><strong>La plataforma est&aacute; siendo utilizada!</strong></div>');
+		                		$('#tablePlatform').append('<div id="errorPlatform" class="alert alert-danger" role="alert"><strong>' + [[#{platform.admin.error.inUse}]] + '</strong></div>');
 		                	}else{
 								$('#errorPlatform').remove();
 							}
@@ -245,7 +245,7 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acción "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.NotAuthorized}]] + '</strong></div>');
 		            break;
 		    }
 		});

@@ -2,7 +2,7 @@
 	<div class="masonry-sizer col-md-12"></div>
 	<div class="masonry-item col-md-6">
 		<div class="bgc-white p-20 bd">
-			<h6 class="c-grey-900">Nuevo servicio</h6>
+			<h6 class="c-grey-900" th:text="#{service.admin.new}"></h6>
 			<div class="mT-30">
 				<form id="serviceForm" name="serviceForm" role="form" th:object="${serviceForm}" th:action="@{/saveservice}" method="post" enctype="multipart/form-data">
 				
@@ -98,8 +98,8 @@
 					<input type='hidden' class='primarykey' id="idFile" th:field="*{idFile}">
 					<input type='hidden' class='primarykey' id="fileData" th:field="*{fileData}">
 
-					<button id="serviceBtn" type="submit" class="btn btn-primary">Guardar</button>
-					<button id="cleanServiceBtn" class="btn btn-primary" onclick="cleanForm('#serviceForm');">Limpiar formulario</button>
+					<button id="serviceBtn" type="submit" class="btn btn-primary" th:text="#{button.save}"></button>
+					<button id="cleanServiceBtn" class="btn btn-primary" onclick="cleanForm('#serviceForm');" th:text="#{button.cleanForm}"></button>
 				</form>
 		</div>
 	</div>
@@ -107,7 +107,7 @@
 </div>
 	<div class="masonry-item col-md-6">
 		<div class="bgc-white p-20 bd">
-			<h6 class="c-grey-900">Nuevo timer</h6>
+			<h6 class="c-grey-900" th:text="#{timer.admin.new}"></h6>
 			<div class="mT-30">
 				<form id="timerForm" th:object="${timerform}" th:action="@{/savetimer}" method="post">
 					<input type='hidden' class='primarykey' id="idTimer" th:field="*{idTimer}">
@@ -125,8 +125,8 @@
 							<input type="time" class="form-control" id="frequencyTime" th:field="*{frequencyTime}" step="1"	required>
 						</div>
 					</div>
-					<button id="timerBtn" type="submit" class="btn btn-primary">Guardar</button>
-					<button id="cleanTimerBtn" class="btn btn-primary" onclick="cleanForm('#timerForm');">Limpiar formulario</button>
+					<button id="timerBtn" type="submit" class="btn btn-primary" th:text="#{button.save}"></button>
+					<button id="cleanTimerBtn" class="btn btn-primary" onclick="cleanForm('#timerForm');" th:text="#{button.cleanForm}"></button>
 				</form>
 			</div>
 		</div>
@@ -395,7 +395,7 @@ $(document).ready(function() {
 			                success: function(data){
 			                    
 			                	if (data == "-1" && $('#errorModalService').length == 0){
-			                		$('#serviceForm').append('<div id="errorModalService" class="alert alert-danger" role="alert"><strong>El Servicio est&aacute; siendo utilizado!</strong></div>');
+			                		$('#serviceForm').append('<div id="errorModalService" class="alert alert-danger" role="alert"><strong>' + [[#{service.admin.error.inUse}]] + '</strong></div>');
 			                	}else{
 									$('#errorModalService').remove();
 								}
@@ -416,7 +416,7 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acci�n "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.NotAuthorized}]] + '</strong></div>');
 		            break;
 		    }
 		});
@@ -507,7 +507,7 @@ $(document).ready(function() {
 			                success: function(data){
 			                    
 			                	if (data == "-1" && $('#errorModalTimer').length == 0){
-			                		$('#timerForm').append('<div id="errorModalTimer" class="alert alert-danger" role="alert"><strong>El Timer est&aacute; siendo utilizado!</strong></div>');
+			                		$('#timerForm').append('<div id="errorModalTimer" class="alert alert-danger" role="alert"><strong>' + [[#{timer.admin.error.inUse}]] + '</strong></div>');
 			                	}else{
 									$('#errorModalTimer').remove();
 								}
@@ -527,7 +527,7 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acci�n "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.NotAuthorized}]] + '</strong></div>');
 		            break;
 		    }
 		});
@@ -606,11 +606,11 @@ $(document).ready(function() {
 				  $('#errorModalTimer').remove();
 				  hide();
 				  if (checkTypeTime($('#frequencyTime')) == $('#frequencyTime')[0].value){
-					$('#timerForm').append('<div id="errorModalTimer" class="alert alert-danger" role="alert"><strong>El formato de la frecuencia es incorrecto! (HH:mm:ss)</strong></div>');
+					$('#timerForm').append('<div id="errorModalTimer" class="alert alert-danger" role="alert"><strong>' + [[#{timer.admin.error.badFormat}]] + '</strong></div>');
 				  }
 				  
 				  if ($('#errorModalTimer').length == 0){
-				  	$('#timerForm').append('<div id="errorModalTimer" class="alert alert-danger" role="alert"><strong>¡Hay un Timer con el mismo nombre!</strong></div>');
+				  	$('#timerForm').append('<div id="errorModalTimer" class="alert alert-danger" role="alert"><strong>' + [[#{timer.admin.error.sameName}]] + '</strong></div>');
 				  }
 			  },
 			  dataType: "json",
@@ -741,11 +741,11 @@ $(document).ready(function() {
 				  hide();
 				  if (data.error == "-1"){
 					  if ($('#errorModalService').length == 0){
-					  	$('#serviceForm').append('<div id="errorModalService" class="alert alert-danger" role="alert"><strong>Hay un Servicio con el mismo nombre!</strong></div>');
+					  	$('#serviceForm').append('<div id="errorModalService" class="alert alert-danger" role="alert"><strong>' + [[#{service.admin.error.sameName}]] + '</strong></div>');
 					  }
 				  }else{
 					  if ($('#errorModalService').length == 0){
-					  	$('#serviceForm').append('<div id="errorModalService" class="alert alert-danger" role="alert"><strong>Error inesperado, int\u00E9ntelo mas tarde!</strong></div>');
+					  	$('#serviceForm').append('<div id="errorModalService" class="alert alert-danger" role="alert"><strong>' + [[#{message.error}]] + '</strong></div>');
 					  }
 				  }
 			  }
