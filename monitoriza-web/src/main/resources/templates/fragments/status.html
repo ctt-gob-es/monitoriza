@@ -146,9 +146,10 @@ function format ( d ) {
 }
 
 setInterval(function(){
-	var urlStatus = /*[[@{/status}]]*/;
-	if (tableStatusInterval != undefined){
-		tableStatusInterval.ajax.url( urlStatus ).load();
-}, 30000);
+	var tableStatusInterval = $('#statusTable').DataTable();
+	if (tableStatusInterval.table.length > 0){
+		location.reload()
+	}
+}, 10000);
 
 </script>

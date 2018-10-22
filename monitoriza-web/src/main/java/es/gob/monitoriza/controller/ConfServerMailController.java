@@ -105,6 +105,8 @@ public class ConfServerMailController {
 			confServerMailForm.setIssuerMail(confServerMail.getIssuerMail());
 			confServerMailForm.setHostMail(confServerMail.getHostMail());
 			confServerMailForm.setPortMail(confServerMail.getPortMail());
+			confServerMailForm.setTslMail(confServerMail.getTslMail());
+			confServerMailForm.setAuthenticationMail(confServerMail.getAuthenticationMail());
 			confServerMailForm.setUserMail(confServerMail.getUserMail());
 			confServerMailForm.setPasswordMail(confServerMail.getPasswordMail());
 		}

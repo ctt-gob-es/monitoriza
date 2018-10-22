@@ -26,6 +26,17 @@
 					</div>
 					
 					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="tslMailForm" th:text="#{form.alarm.tsl}"></label>
+							<input type="checkbox" id="tslMailForm" th:field="*{tslMail}" checked>
+						</div>
+						<div class="form-group col-md-6">
+							<label for="authenticationMailForm" th:text="#{form.alarm.authentication}"></label>
+							<input type="checkbox" id="authenticationMailForm" th:field="*{authenticationMail}" checked>
+						</div>
+					</div>
+					
+					<div class="form-row">
 						<div class="form-group col-md-12">
 							<label for="userMailForm" th:text="#{form.confServerMail.user}"></label> 
 							<input type="text" class="form-control" id="userMailForm" th:field="*{userMail}">
@@ -299,6 +310,8 @@ $( "#saveBtn" ).click(function( event ) {
 				  $('#issuerMailForm').val(data.issuerMail);
 				  $('#hostMailForm').val(data.hostMail);
 				  $('#portMailForm').val(data.portMail);
+				  $('#tslMailForm').val(data.tslMail);
+				  $('#authenticationMailForm').val(data.authenticationMail);
 				  $('#userMailForm').val(data.userMail);
 				  $('#passwordMailForm').val(data.passwordMail);
 				  

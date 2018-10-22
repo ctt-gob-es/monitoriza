@@ -46,23 +46,27 @@ public class ConfServerMailForm {
 	/**
 	 * Attribute that represents the issuer.
 	 */
-	// @NotBlank(groups = CheckItFirst.class, message =
-	// "{form.valid.confServerMail.issuer.notempty}")
-	// @Size(min = 3, max = 200, groups = ThenCheckIt.class)
 	private String issuerMail;
 
 	/**
 	 * Attribute that represents the host.
 	 */
-	// @NotBlank(groups = CheckItFirst.class, message =
-	// "{form.valid.confServerMail.host.notempty}")
-	// @Size(min = 3, max = 200, groups = ThenCheckIt.class)
 	private String hostMail;
 
 	/**
 	 * Attribute that represents the port.
 	 */
 	private Long portMail;
+
+	/**
+	 * Attribute that represents the tsl.
+	 */
+	private Boolean tslMail;
+
+	/**
+	 * Attribute that represents the authentication.
+	 */
+	private Boolean authenticationMail;
 
 	/**
 	 * Attribute that represents the user.
@@ -187,4 +191,35 @@ public class ConfServerMailForm {
 	public void setPasswordMail(String passwordMail) {
 		this.passwordMail = passwordMail;
 	}
+
+	/**
+	 * @return the tslMail
+	 */
+	public Boolean getTslMail() {
+		return tslMail;
+	}
+
+	/**
+	 * @param tslMail
+	 *            the tslMail to set
+	 */
+	public void setTslMail(Boolean tslMail) {
+		this.tslMail = tslMail;
+	}
+
+	/**
+	 * @return the authenticationMail
+	 */
+	public Boolean getAuthenticationMail() {
+		return authenticationMail;
+	}
+
+	/**
+	 * @param authenticationMail
+	 *            the authenticationMail to set
+	 */
+	public void setAuthenticationMail(Boolean authenticationMail) {
+		this.authenticationMail = authenticationMail;
+	}
+
 }

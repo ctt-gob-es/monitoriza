@@ -2,7 +2,7 @@
 	<div class="masonry-sizer col-md-12"></div>
 	<div class="masonry-item col-md-12">
 		<div class="bgc-white p-20 bd">
-			<h6 class="c-grey-900">Nuevo servicio de validación</h6>
+			<h6 class="c-grey-900" th:text="#{validService.admin.title}"></h6>
 			<div class="mT-30">
 				<form name="altEditor-form" role="form" id="validServiceForm" th:object="${validServiceForm}" th:action="@{/savevalidservice}" method="post">
 									
@@ -130,7 +130,7 @@
 						
 					</div>
 
-					<button type="submit" id="validServiceBtn" class="btn btn-primary">Guardar</button>
+					<button type="submit" id="validServiceBtn" class="btn btn-primary" th:text="#{button.save}"></button>
 
 				</form>
 			</div>

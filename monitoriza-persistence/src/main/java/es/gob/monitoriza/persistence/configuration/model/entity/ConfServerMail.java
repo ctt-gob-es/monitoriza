@@ -77,6 +77,16 @@ public class ConfServerMail {
 	private Long portMail;
 
 	/**
+	 * Attribute that represents the tsl.
+	 */
+	private Boolean tslMail;
+
+	/**
+	 * Attribute that represents the authentication.
+	 */
+	private Boolean authenticationMail;
+
+	/**
 	 * Attribute that represents the user.
 	 */
 	private String userMail;
@@ -210,4 +220,37 @@ public class ConfServerMail {
 	public void setPasswordMail(String passwordMail) {
 		this.passwordMail = passwordMail;
 	}
+
+	/**
+	 * @return the tsl
+	 */
+	@Column(name = "TSL", nullable = false, precision = NumberConstants.NUM1)
+	public Boolean getTslMail() {
+		return tslMail;
+	}
+
+	/**
+	 * @param tsl
+	 *            the tsl to set
+	 */
+	public void setTslMail(Boolean tslMail) {
+		this.tslMail = tslMail;
+	}
+
+	/**
+	 * @return the authentication
+	 */
+	@Column(name = "AUTHENTICATION", nullable = false, precision = NumberConstants.NUM1)
+	public Boolean getAuthenticationMail() {
+		return authenticationMail;
+	}
+
+	/**
+	 * @param authentication
+	 *            the authentication to set
+	 */
+	public void setAuthenticationMail(Boolean authenticationMail) {
+		this.authenticationMail = authenticationMail;
+	}
+
 }
