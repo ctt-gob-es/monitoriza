@@ -136,7 +136,6 @@ public class PlatformController {
     	afirmaForm.setOcspContext(afirma.getOcspContext());
     	afirmaForm.setServiceContext(afirma.getServiceContext());
     	afirmaForm.setPort(afirma.getPort());
-    	afirmaForm.setHttpsPort(afirma.getHttpsPort());
     	afirmaForm.setIsSecure(afirma.getIsSecure());
 
     	model.addAttribute("afirmaform", afirmaForm);
@@ -163,7 +162,6 @@ public class PlatformController {
     	tsaForm.setName(tsa.getName());
     	tsaForm.setServiceContext(tsa.getServiceContext());
     	tsaForm.setPort(tsa.getPort());
-    	tsaForm.setHttpsPort(tsa.getHttpsPort());
     	tsaForm.setRfc3161Context(tsa.getRfc3161Context());
     	tsaForm.setIsSecure(tsa.getIsSecure());
     	tsaForm.setRfc3161Port(tsa.getRfc3161Port());

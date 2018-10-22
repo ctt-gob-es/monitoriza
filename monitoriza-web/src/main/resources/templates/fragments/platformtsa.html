@@ -10,15 +10,15 @@
 						<tr>
 							<!-- Columna oculta para el identificador de la plataforma -->
 							<th></th>
-							<th th:text="#{table.platform.tsa.name}"></th>
-							<th th:text="#{table.platform.tsa.host}"></th>
-							<th th:text="#{table.platform.tsa.port}"></th>
-							<th></th>
-							<th th:text="#{table.platform.afirma.httpsport}"></th>
-							<th th:text="#{table.platform.tsa.servicecontext}"></th>
-							<th th:text="#{table.platform.tsa.rfc3161context}"></th>
-							<th></th>
-							<th th:text="#{table.platform.tsa.rfc3161authcert}"></th>
+                            <th th:text="#{table.platform.tsa.name}"></th>
+                            <th th:text="#{table.platform.tsa.host}"></th>
+                            <th th:text="#{table.platform.tsa.port}"></th>
+                            <th></th>
+                            <th th:text="#{table.platform.afirma.address}"></th>
+                            <th th:text="#{table.platform.tsa.servicecontext}"></th>
+                            <th th:text="#{table.platform.tsa.rfc3161context}"></th>
+                            <th></th>
+                            <th th:text="#{table.platform.tsa.rfc3161authcert}"></th>
 						</tr>
 					</thead>
 				</table>
@@ -70,12 +70,34 @@ $(document).ready(function() {
 	        { "data": "idPlatform",
 	          "visible": false},
 	        { "data": "name" },
-	        { "data": "host" },
-	        { "data": "port" },
+	        { "data": "host",
+	          "visible": false },
+	        { "data": "port",
+	          "visible": false },
 	        { "data": "isSecure",
 		      "visible": false,
 		      "name": "isSecure"},
-		    { "data": "httpsPort"},
+		    { "data": "host",
+
+	        	"render": function (data, type, row) {
+
+	        		if (data != null && data != '' && data != 'undefined') {
+						var host = row.host;
+						var port = row.port;
+						var isSecure = row.isSecure;
+						var protocol;
+
+						if (isSecure == true) {
+							protocol = 'https';
+						} else {
+							protocol = 'http';
+						}
+
+	        			return protocol + "://" + host + ":" + port
+	        		} else {
+						return 'N/A';
+					}
+	        	}},
 	        { "data": "serviceContext"},
 	        { "data": "rfc3161Context" },
 	        { "data": "rfc3161Certificate.idSystemCertificate",

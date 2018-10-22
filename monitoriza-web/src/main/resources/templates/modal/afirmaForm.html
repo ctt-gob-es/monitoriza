@@ -45,25 +45,13 @@
 	</div>
 	
 	<div class="form-row">
-		<div class="form-group col-md-6">
+		<div class="form-group col-md-12">
 			<div class="checkbox checkbox-circle checkbox-info peers ai-c cb-center">
 				<input type="checkbox" id="isSecure" th:checked="${afirmaform.isSecure}" class="peer">
 					<label for="isSecure" class="peers peer-greed js-sb ai-c">
 						<span class="peer peer-greed" th:text="#{form.platform.afirma.issecure}"></span>
 					</label>
 			</div>
-		</div>	
-		<div class="form-group col-md-6">
-			<label for="httpsPort" class="col-form-label" th:text="#{form.platform.afirma.httpsport}"></label>
-			<script th:inline="javascript">
-				/*<![CDATA[*/
-				    var messagePort = /*[[#{form.platform.port.pattern}]]*/ 'default';
-				/*]]>*/
-			</script>
-			<input readonly onblur="validate(this,messagePort);" type="text" id="httpsPort" th:field="*{httpsPort}" style="overflow:hidden" class="form-control" required pattern="[0-9]{1,5}"/>
-			<div id="invalid-port" class="invalid-feedback" ></div>
-		
-			<div style="clear:both;"/>
 		</div>
 	</div>
 	
@@ -90,33 +78,23 @@
 <script th:inline="javascript">
 
 	$(document).ready(function () {
-		
+
 		// Inicialización con valor correcto del checkbox isSecure
 		if ($("#isSecure").is(":checked")) {
-	    	$("#isSecure").val('true');
-	    	 $('#httpsPort').removeAttr("readonly");
+	    	$("#isSecure").attr('value', 'true');
 	    } else {
 	    	$("#isSecure").attr('value', 'false');
-	    	$('#httpsPort').val('');
-	    	$('#httpsPort').attr('required', false);
 	    }
-			
+
 	    $("#isSecure").change(function () {
 	        if ($(this).is(":checked")) {
-	        	$(this).val('true');
-	            $('#httpsPort').removeAttr("readonly");
-				$('#httpsPort').attr('required', true);
-	        }
-	        else {
+	        	$(this).attr('value', 'true');
+	        }else {
 	        	$(this).attr('value', 'false');
-	            $('#httpsPort').attr('readonly', true);
-	            $('#httpsPort').val('');
-				$('#httpsPort').attr('required', false);
 	        }
 	    });
-	    
-	});
-	
+   });
+
 	function validateSOAP(){
 		
 		var messageSOAP = /*[[#{form.platform.servicecontext.pattern}]]*/ 'default';

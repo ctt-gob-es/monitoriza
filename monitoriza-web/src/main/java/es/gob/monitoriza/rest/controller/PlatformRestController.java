@@ -204,7 +204,6 @@ public class PlatformRestController {
 				platformAfirma.setOcspContext(afirmaForm.getOcspContext());
 				platformAfirma.setPort(afirmaForm.getPort());
 				platformAfirma.setIsSecure(afirmaForm.getIsSecure());
-				platformAfirma.setHttpsPort(afirmaForm.getHttpsPort());
 				platformAfirma.setServiceContext(afirmaForm.getServiceContext());
 				CPlatformType afirmaType = new CPlatformType();
 				afirmaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
@@ -272,7 +271,6 @@ public class PlatformRestController {
 				platformTsa.setName(tsaForm.getName());
 				platformTsa.setPort(tsaForm.getPort());
 				platformTsa.setIsSecure(tsaForm.getIsSecure());
-				platformTsa.setHttpsPort(tsaForm.getHttpsPort());
 				platformTsa.setServiceContext(tsaForm.getServiceContext());
 				CPlatformType afirmaType = new CPlatformType();
 				afirmaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA);
@@ -343,7 +341,6 @@ public class PlatformRestController {
 		
 		return !(afirmaForm.getIsSecure().equals(platform.getIsSecure()) &&
 				 afirmaForm.getHost().equals(platform.getHost()) &&
-				 afirmaForm.getHttpsPort().equals(platform.getHttpsPort()) &&
 				 afirmaForm.getName().equals(platform.getName()) &&
 				 afirmaForm.getOcspContext().equals(platform.getOcspContext()) &&
 				 afirmaForm.getPort().equals(platform.getPort()) &&
@@ -373,7 +370,6 @@ public class PlatformRestController {
 		
 		return !(tsaForm.getIsSecure().equals(platform.getIsSecure()) &&
 				tsaForm.getHost().equals(platform.getHost()) &&
-				tsaForm.getHttpsPort().equals(platform.getHttpsPort()) &&
 				tsaForm.getName().equals(platform.getName()) &&
 				!changeAuthRFC3161 &&
 				tsaForm.getRfc3161Context().equals(platform.getRfc3161Context()) &&
