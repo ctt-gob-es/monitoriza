@@ -25,9 +25,7 @@
 package es.gob.monitoriza.controller;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -38,13 +36,10 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.form.AlarmForm;
 import es.gob.monitoriza.form.ConfServerMailForm;
 import es.gob.monitoriza.form.MailForm;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ConfServerMail;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
-import es.gob.monitoriza.service.IAlarmMonitorizaService;
 import es.gob.monitoriza.service.IConfServerMailService;
 import es.gob.monitoriza.service.IMailMonitorizaService;
 

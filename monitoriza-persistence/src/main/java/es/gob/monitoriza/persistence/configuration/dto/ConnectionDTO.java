@@ -83,18 +83,16 @@ public class ConnectionDTO {
 	 * @param secureMode
 	 * @param host
 	 * @param port
-	 * @param securePort
 	 * @param rfc3161Port
 	 * @param serviceContext
 	 * @param ocspContext
 	 * @param rfc3161Context 
 	 */
-	public ConnectionDTO(Boolean secureMode, String host, String port, String securePort, String rfc3161Port, String serviceContext, String ocspContext, String rfc3161Context) {
+	public ConnectionDTO(Boolean secureMode, String host, String port, String rfc3161Port, String serviceContext, String ocspContext, String rfc3161Context) {
 		super();
 		this.secureMode = secureMode;
 		this.host = host;
 		this.port = port;
-		this.securePort = securePort;
 		this.rfc3161Port = rfc3161Port;
 		this.serviceContext = serviceContext;
 		this.ocspContext = ocspContext;

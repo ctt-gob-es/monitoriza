@@ -65,7 +65,6 @@ import es.gob.monitoriza.persistence.configuration.model.entity.RequestServiceFi
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
-import es.gob.monitoriza.service.IAlarmMonitorizaService;
 import es.gob.monitoriza.service.IKeystoreService;
 import es.gob.monitoriza.service.IRequestServiceFileService;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
@@ -91,7 +90,7 @@ public class AdminServicesManager {
 	/**
 	 * Attribute that represents the object that maps TimerMonitoriza by its identifier to the corresponding programmable timer. 
 	 */
-	public static Map<Long, Timer> scheduledTimers = new HashMap<Long, Timer>();
+	private static Map<Long, Timer> scheduledTimers = new HashMap<Long, Timer>();
 	
 	/**
 	 * Attribute that represents the service object for accessing the service
@@ -136,7 +135,7 @@ public class AdminServicesManager {
 	private IRequestServiceFileService fileService;
 	
 	/**
-	 * Method that gets all timers from database
+	 * Method that gets all timers from database.
 	 * @return List of TimerDTO
 	 */
 	public List<TimerDTO> getAllTimers() {
@@ -153,7 +152,8 @@ public class AdminServicesManager {
 	}
 	
 	/**
-	 * Method that gets timers by ids from database
+	 * Method that gets timers by ids from database.
+	 * @param idTimers List that contains timer identifiers.
 	 * @return List of TimerDTO
 	 */
 	public List<TimerDTO> getAllTimersById(List<Long> idTimers) {
@@ -171,7 +171,7 @@ public class AdminServicesManager {
 	
 
 	/**
-	 * Method that gets the services  from persistence (database or static properties file)
+	 * Method that gets the services  from persistence (database or static properties file).
 	 * @param timerDTO The Identifier of the timer configured in the service
 	 * @return List with the service configuration which its timer matches with the parameter timerId
 	 */
@@ -222,7 +222,7 @@ public class AdminServicesManager {
 						
 			// Se actualiza la carpeta de peticiones
 			if (service.getRequestFile() != null) {
-    			RequestServiceFile file;
+    			RequestServiceFile file = new RequestServiceFile();
     			try {
     				file = fileService.getRequestFileById(service.getRequestFile().getIdRequestServiceFile());
     
@@ -237,11 +237,9 @@ public class AdminServicesManager {
     				// Se descomprime el ZIP extraído de base de datos en el destino configurado
     				FileUtils.unZipFileWithSubFolders(file.getFiledata(), file.getFilename(), targetFolder.toString());
     			} catch (RequestFileNotFoundException e) {
-    				// TODO Auto-generated catch block
-    				e.printStackTrace();
+    				LOGGER.error(Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE012, new Object[]{service.getRequestFile().getIdRequestServiceFile()}), e);
     			} catch (IOException e) {
-    				// TODO Auto-generated catch block
-    				e.printStackTrace();
+    				LOGGER.error(Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE013, new Object[]{file.getFilename()}), e);
     			}
 			}
 		}
@@ -250,7 +248,7 @@ public class AdminServicesManager {
 	}
 	
 	/**
-	 * Method that gets a timer by its identifier
+	 * Method that gets a timer by its identifier.
 	 * @param idTimer Timer database identifier
 	 * @return Data transfer object with timer data.
 	 */
@@ -262,8 +260,9 @@ public class AdminServicesManager {
 	}
 
 	/**
-	 * Method that builds and returns the directory path for a service: "service-identifier_service-name"
+	 * Method that builds and returns the directory path for a service: "service-identifier_service-name".
 	 * @param serviceId The name identifier for the service.
+	 * @param serviceName String that represents the service name. It will be used to determine the service request directory path.
 	 * @return String that represents the directory path for the service passed as parameter.
 	 */
 	private String getDirectoryPath(final Long serviceId, final String serviceName) {
@@ -276,6 +275,7 @@ public class AdminServicesManager {
 
 	/**
 	 * Method that determines if the service belongs to @Firma or TS@ platform.
+	 * @param platformTypeName String that represents the platform type
 	 * @return true if the service belongs to @Firma, false if the service belongs to TS@.
 	 */
 	private boolean isAfirmaPlatform(final String platformTypeName) {
@@ -286,14 +286,14 @@ public class AdminServicesManager {
 	
 	/**
 	 * Method that returns the base URL connection with the platform, considering host, port, etc.
-	 * @param service ServiceDTO with the configuration of the service.
+	 * @param platform Platform configuration.
 	 * @return String that represents the base URL connection with the platform, considering host, port, etc.
 	 */
 	private String getBaseUrl(final PlatformMonitoriza platform) {
 								
-		final ConnectionDTO connection = new ConnectionDTO(platform.getIsSecure(), platform.getHost(), platform.getPort(), platform.getHttpsPort(), platform.getRfc3161Port(), platform.getServiceContext(), platform.getOcspContext(), platform.getRfc3161Context());		
-				
-		String port = connection.getSecureMode()? connection.getSecurePort():connection.getPort();
+		final ConnectionDTO connection = new ConnectionDTO(platform.getIsSecure(), platform.getHost(), platform.getPort(), platform.getRfc3161Port(), platform.getServiceContext(), platform.getOcspContext(), platform.getRfc3161Context());
+
+		String port = connection.getPort();
 		String protocol = connection.getSecureMode()? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP;
 		
 		StringBuilder url = new StringBuilder();
@@ -392,9 +392,9 @@ public class AdminServicesManager {
 		
 	
 	/**
-	 * Method that retrieves the addresses from a MailMonitoriza object
-	 * @param mailSet
-	 * @return
+	 * Method that retrieves the addresses from a MailMonitoriza object.
+	 * @param mailSet Set of mail configuration objects of Monitoriz@
+	 * @return List<String> that represents the mail addresses 
 	 */
 	private List<String> getAddressesFromAlarm(final Set<MailMonitoriza> mailSet) {
 		
@@ -411,8 +411,8 @@ public class AdminServicesManager {
 	}
 		
 	/**
-	 * Saves a scheduled timer in database
-	 * @param timer The scheduled timer to save
+	 * Saves a scheduled timer in database.
+	 * @param scheduled The scheduled timer to save
 	 * @return TimerScheduled object saved in database
 	 */
 	public TimerScheduled saveTimerScheduled(final TimerScheduled scheduled) {
@@ -421,7 +421,7 @@ public class AdminServicesManager {
 	}
 	
 	/**
-	 * Deletes a scheduled timer in database
+	 * Deletes a scheduled timer in database.
 	 * @param scheduledId The scheduled timer identifier
 	 */
 	public void deleteTimerScheduled(final Long scheduledId) {
@@ -429,7 +429,7 @@ public class AdminServicesManager {
 	}
 	
 	/**
-	 * Deletes all scheduled timers in database
+	 * Deletes all scheduled timers in database.
 	 */
 	public void emptyTimersScheduled() {
 		scheduledService.emptyTimersScheduled();
@@ -437,7 +437,7 @@ public class AdminServicesManager {
 	
 	
 	/**
-	 * Method that retrieves the password for the RFC3161 Authentication Keystore
+	 * Method that retrieves the password for the RFC3161 Authentication Keystore.
 	 * @return String that represetns the decodified password
 	 * @throws CryptographyException
 	 */
@@ -449,5 +449,23 @@ public class AdminServicesManager {
 		return keyStoreFacade.getKeystoreDecodedPasswordString(encodedPassword);		
 		
 	}
+
+	/**
+	 * Gets the value of the attribute {@link #scheduledTimers}.
+	 * @return the value of the attribute {@link #scheduledTimers}.
+	 */
+	public static Map<Long, Timer> getScheduledTimers() {
+		return scheduledTimers;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #scheduledTimers}.
+	 * @param scheduledTimers the value for the attribute {@link #scheduledTimers} to set.
+	 */
+	public static void setScheduledTimers(Map<Long, Timer> scheduledTimers) {
+		AdminServicesManager.scheduledTimers = scheduledTimers;
+	}
+	
+	
 		
 }
