@@ -413,7 +413,7 @@ public class PlatformMonitoriza implements Serializable {
 
 	/**
 	 * Sets the value of the attribute {@link #platformType}.
-	 * @param isBlockedParam The value for the attribute {@link #platformType}.
+	 * @param platformType The value for the attribute {@link #platformType}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
