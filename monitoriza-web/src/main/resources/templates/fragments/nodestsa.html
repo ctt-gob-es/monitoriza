@@ -170,7 +170,7 @@ $(document).ready(function() {
 								if (data.error != null){
 									  jQuery.each(errores, function(i, val) {
 										$('#nodeAfirmaForm *').filter('.invalid-modal').each(function(){
-											debugger;
+
 											if (i == $(this).attr('id')){
 												$("#" + i).text(val);
 											}
