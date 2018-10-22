@@ -94,8 +94,7 @@ Insert into C_AUTHENTICATION_TYPE
  Values
    (3, 'Certificado');
    
- -- TABLA ALARM_DEFECT
- 
+ -- TABLA ALARM 
 Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_001', 'Nodo de @firma sin conexión con TS@');
 Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_002', 'Nodo de @firma sin conexión con HSM');
 Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_003', 'Nodo de @firma con método de validación en estado no correcto');
