@@ -292,8 +292,8 @@ public class AdminServicesManager {
 	private String getBaseUrl(final PlatformMonitoriza platform) {
 								
 		final ConnectionDTO connection = new ConnectionDTO(platform.getIsSecure(), platform.getHost(), platform.getPort(), platform.getRfc3161Port(), platform.getServiceContext(), platform.getOcspContext(), platform.getRfc3161Context());
-				
-		String port = connection.getSecureMode()? connection.getSecurePort():connection.getPort();
+
+		String port = connection.getPort();
 		String protocol = connection.getSecureMode()? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP;
 		
 		StringBuilder url = new StringBuilder();
