@@ -170,7 +170,7 @@ $(document).ready(function() {
 								if (data.error != null){
 									  jQuery.each(errores, function(i, val) {
 										$('#nodeAfirmaForm *').filter('.invalid-modal').each(function(){
-											debugger;
+
 											if (i == $(this).attr('id')){
 												$("#" + i).text(val);
 											}
@@ -195,7 +195,7 @@ $(document).ready(function() {
 			                },
 			                error:function(data){
 			                	hide();
-			                	$('#nodeAfirmaForm').append('<div id="errorModalNode" class="alert alert-danger" role="alert"><strong>Hay un nodo con el mismo nombre!</strong></div>');
+			                	$('#nodeAfirmaForm').append('<div id="errorModalNode" class="alert alert-danger" role="alert"><strong>' + [[#{node.admin.error.sameName}]] + '</strong></div>');
 			                }
 			            });
 		            }
@@ -243,7 +243,7 @@ $(document).ready(function() {
 			                },
 			                error:function(data){
 			                	hide();
-			                	$('#nodeAfirmaForm').append('<div id="errorModalNode" class="alert alert-danger" role="alert"><strong>Ya exsite un nodo con el mismo nombre!</strong></div>');
+			                	$('#nodeAfirmaForm').append('<div id="errorModalNode" class="alert alert-danger" role="alert"><strong>' + [[#{node.admin.error.sameName}]] + '</strong></div>');
 			                }
 			            });
 		            }
@@ -256,7 +256,7 @@ $(document).ready(function() {
 		                success: function(data){
 		                    
 		                	if (data == "-1" && $('#errorNode').length == 0){
-		                		$('#tableTsaNode').append('<div id="errorNode" class="alert alert-danger" role="alert"><strong>El nodo est&aacute; siendo utilizado!</strong></div>');
+		                		$('#tableTsaNode').append('<div id="errorNode" class="alert alert-danger" role="alert"><strong>' + [[#{node.admin.error.inUse}]] + '</strong></div>');
 		                	}else{
 								$('#errorNode').remove();
 							}
@@ -274,7 +274,7 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acción "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.NotAuthorized}]] + '</strong></div>');
 		            break;
 		    }
 		});

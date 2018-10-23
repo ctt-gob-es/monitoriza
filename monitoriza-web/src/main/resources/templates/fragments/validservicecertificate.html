@@ -142,7 +142,7 @@
 
 	$(document).ready(function () {
 		
-		// Inicialización con valor correcto del checkbox
+		// Inicializaciï¿½n con valor correcto del checkbox
 		if ($("#valueIsSecure").val() == 'true') {
 			$("#isSecure").prop('checked', true);
 			$("#isSecure").attr('value', true);
@@ -239,18 +239,18 @@
 			  success: function(data) {
 				hide();
 				$('#resultValidService').addClass( "alert alert-success" );
-				$('#resultValidService').append('<strong id="resultValidServiceText">Se ha guardado el servicio de validaci\u00F3n correctamente!</strong>');
+				$('#resultValidService').append('<strong id="resultValidServiceText">' + [[#{validService.admin.ok.save}]] + '</strong>');
 			  },
 			  error:function(xhr,status,error) {
 				var responseText = jQuery.parseJSON(xhr.responseText);
               	var messageException = responseText.message;
               	var messageError = "";
               	if (messageException.includes("ConstraintViolationException")) {
-            		messageError = "Debe seleccionar un tipo de acceso para la autenticaci\u00F3n!";
+            		messageError = [[#{validService.admin.error.oneTypeAccess}]];
             	} else if (messageException.includes("NoCertForAuthentication")) 
-            		messageError = "Debe seleccionar un certificado para la autenticaci\u00F3n!";
+            		messageError = [[#{validService.admin.error.oneCert}]];
               	else {
-            		messageError = "Error al guardar el servicio de validaci\u00F3n!";
+            		messageError = [[#{validService.admin.error.save}]];
             	}
 				  hide();
               	$('#resultValidService').addClass( "alert alert-danger" );

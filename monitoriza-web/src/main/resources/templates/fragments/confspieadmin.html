@@ -146,7 +146,7 @@ $(document).ready(function() {
 			if ($('#errorModalConfSpie').length > 0){
 				 $('#errorModalConfSpie').remove();
 			  }
-		  $('#newConfSpieForm').append('<div id="errorModalConfSpie" class="alert alert-danger" role="alert"><strong>Error al a&ntilde;adir un m&eacute;todo de validaci&oacute;n</strong></div>');
+		  $('#newConfSpieForm').append('<div id="errorModalConfSpie" class="alert alert-danger" role="alert"><strong>' + [[#{spie.admin.error.addMetVal}]] + '</strong></div>');
 		}
 
 	});
@@ -157,7 +157,7 @@ $(document).ready(function() {
 	
 	$( "#saveBtn" ).click(function( event ) {
 		  event.preventDefault();
-		  debugger;
+
 		  //Procedemos a transformar los timer en ms
 		  var freqAfirma = checkTypeTime($("#frequencyAFirmaTime"));
 		  if (freqAfirma != $("#frequencyAFirmaTime")[0].value){
@@ -173,7 +173,7 @@ $(document).ready(function() {
 		  
 		  var formData = JSON.stringify($("#newConfSpieForm").serializeJSON());
 		  var url = /*[[@{/saveconfspie}]]*/ null;
-		  debugger;
+
 		  loading();
 		  if ($('#newConfSpieForm')[0].checkValidity() === false) {
 			  hide();
@@ -189,7 +189,7 @@ $(document).ready(function() {
 
 		  } else{
 			  
-			  // Añadimos los metodos de validacion al formData
+			  // Aï¿½adimos los metodos de validacion al formData
 			  var dataTable = tableMethodVal.rows().data();
 			  var methods = "[";
 			  for(var i=0; i<dataTable.length; i++){
@@ -237,7 +237,7 @@ $(document).ready(function() {
 					  if ($('#errorModalConfSpie').length > 0){
 							 $('#errorModalConfSpie').remove();
 						  }
-					  $('#newConfSpieForm').append('<div id="errorModalConfSpie" class="alert alert-danger" role="alert"><strong>Error al guardar la configuraci&oacute;n global del SPIE</strong></div>');
+					  $('#newConfSpieForm').append('<div id="errorModalConfSpie" class="alert alert-danger" role="alert"><strong>' + [[#{spie.admin.error.saveConfSpie}]] + '</strong></div>');
 				  }
 				});
 		  }

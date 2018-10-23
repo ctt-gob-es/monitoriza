@@ -28,7 +28,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title">Editar registro</h4>
+				<h4 class="modal-title" th:text="#{table.user.action.edit}"></h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -95,8 +95,8 @@
 				</form>
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				<button type="submit" id="editBtn" class="btn btn-primary">Guardar cambios</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{button.close}"></button>
+				<button type="submit" id="editBtn" class="btn btn-primary"th:text="#{button.save}"></button>
 			</div>
 		</div>
 	</div>
@@ -106,7 +106,7 @@
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
-				<h4 class="modal-title">Cambiar contrase&ntilde;a</h4>
+				<h4 class="modal-title" th:text="#{user.admin.changePassword}"></h4>
 				<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
 					<span aria-hidden="true">&times;</span>
 				</button>
@@ -138,8 +138,8 @@
 
 			</div>
 			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-				<button type="submit" id="passwordBtn" class="btn btn-primary">Guardar cambios</button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{button.close}"></button>
+				<button type="submit" id="passwordBtn" class="btn btn-primary" th:text="#{button.save}"></button>
 			</div>
 		</div>
 	</div>
@@ -294,7 +294,7 @@ $(document).ready(function() {
 		                $('<input type="submit">').hide().appendTo($('#userForm')).click().remove();
 		            } else {
 		            	if ($('#passwordAdd').val() != $('#confirmPasswordAdd').val()){
-		            		$('#userForm').append('<div id="errorModalUser3" class="alert alert-danger" role="alert"><strong>El campo Confirmar contrase&ntilde;a es obligatorio y debe coincidir con el campo Contrase&ntilde;a.</strong></div>');
+		            		$('#userForm').append('<div id="errorModalUser3" class="alert alert-danger" role="alert"><strong>' + [[#{user.admin.error.confPassword}]] + '</strong></div>');
 		            		hide();
 		            	}else{
 		            		
@@ -335,7 +335,7 @@ $(document).ready(function() {
 				                error:function(data){
 				                	hide();
 				                	$('#errorModalUser').remove();
-				                	$('#userForm').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>Hay un usuario con el mismo login!</strong></div>');
+				                	$('#userForm').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>' + [[#{user.admin.error.sameName}]] + '</strong></div>');
 				                }
 				            });
 		            	}
@@ -360,7 +360,7 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acción "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.NotAuthorized}]] + '</strong></div>');
 		            break;
 		    }
 		});
@@ -387,11 +387,11 @@ $(document).ready(function() {
 				break;
 			case -1:
 				$('#errorModalUser').remove();
-				$('#userFormPassword').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>La contrase\u00F1a anterior debe de coincidir!</strong></div>');
+				$('#userFormPassword').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>' + [[#{user.admin.error.oldPassword}]] + '</strong></div>');
 				break;
 			case -2:
 				$('#errorModalUser').remove();
-				$('#userFormPassword').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>Error inesperado, int\u00E9ntelo mas tarde!</strong></div>');
+				$('#userFormPassword').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>' + [[#{message.error}]] + '</strong></div>');
 				break;
 			default:
 				if (data != null){
@@ -408,7 +408,7 @@ $(document).ready(function() {
 		  error:function(){
 			  hide();
 			  $('#errorModalUser').remove();
-			  $('#userFormPassword').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>Error inesperado, int\u00E9ntelo mas tarde!</strong></div>');
+			  $('#userFormPassword').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>' + [[#{message.error}]] + '</strong></div>');
 		  },
 		  dataType: "json",
 		  contentType : "application/json"
@@ -442,7 +442,7 @@ $(document).ready(function() {
 			  error:function(){
 				  hide();
 				  $('#errorModalEdit').remove();
-				  $('#userFormEdit').append('<div id="errorModalEdit" class="alert alert-danger" role="alert"><strong>Error inesperado, int\u00E9ntelo mas tarde!</strong></div>');
+				  $('#userFormEdit').append('<div id="errorModalEdit" class="alert alert-danger" role="alert"><strong>' + [[#{message.error}]] + '</strong></div>');
 			  },
 			  dataType: "json",
 			  contentType : "application/json"

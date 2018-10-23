@@ -2,7 +2,7 @@
 	<div class="masonry-sizer col-md-12"></div>
 	<div class="masonry-item col-md-6">
 		<div class="bgc-white p-20 bd">
-			<h6 class="c-grey-900">Nueva Alarma</h6>
+			<h6 class="c-grey-900" th:text="#{alarm.admin.title.new}">Nueva Alarma</h6>
 			<div class="mT-30">
 				<form id="alarmForm" th:object="${alarmform}"
 					th:action="@{/savealarm}" method="post">
@@ -49,8 +49,8 @@
 						</select></div>
 					</div>
 					
-					<button id="alarmBtn" type="submit" class="btn btn-primary">Guardar</button>
-					<button id="cleanBtn" class="btn btn-primary" onclick="cleanForm('#alarmForm');">Limpiar formulario</button>
+					<button id="alarmBtn" type="submit" class="btn btn-primary" th:text="#{button.save}">Guardar</button>
+					<button id="cleanBtn" class="btn btn-primary" onclick="cleanForm('#alarmForm');" th:text="#{button.cleanForm}">Limpiar formulario</button>
 				</form>
 			</div>
 		</div>
@@ -78,7 +78,7 @@ $(document).ready(function() {
 	
 	$('.select2').select2();
 	
-	// Gestión de las datatables
+	// Gestiï¿½n de las datatables
 	var actionSaveAlarm = /*[[@{/savealarm}]]*/;
 	var actionDeleteAlarm = /*[[@{/deletealarm}]]*/;
 	var getAlarms = /*[[@{/alarmsdatatable}]]*/;
@@ -111,7 +111,7 @@ $(document).ready(function() {
 						$('#emailsDegraded').select2().val(data).trigger('change');
 					},
 					error:function(){
-						$('#alarmForm').append('<div id="errorModalAlarm" class="alert alert-danger" role="alert"><strong>Error recuperando los correos degradados!</strong></div>');
+						$('#alarmForm').append('<div id="errorModalAlarm" class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.mailDegraded}]] + '</strong></div>');
 					}
 				});
 				
@@ -122,7 +122,7 @@ $(document).ready(function() {
 						$('#emailsDown').select2().val(data).trigger('change');
 					},
 					error:function(){
-						$('#alarmForm').append('<div id="errorModalAlarm" class="alert alert-danger" role="alert"><strong>Error recuperando los correos caidos!</strong></div>');
+						$('#alarmForm').append('<div id="errorModalAlarm" class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.mailDown}]] + '</strong></div>');
 					}
 				});
 				
@@ -181,7 +181,7 @@ $(document).ready(function() {
 			                success: function(data){
 			                    
 			                	if (data == "-1" && $('#errorModalMail').length == 0){
-			                		$('#alarmForm').append('<div id="errorModalAlarm" class="alert alert-danger" role="alert"><strong>La alarma est&aacute; siendo utilizada!</strong></div>');
+			                		$('#alarmForm').append('<div id="errorModalAlarm" class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.inUse}]] + '</strong></div>');
 			                	}else{
 									$('#errorModalAlarm').remove();
 								}
@@ -214,7 +214,7 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>Acción "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.NotAuthorized}]] + '</strong></div>');
 		            break;
 		    }
 		});
@@ -263,14 +263,14 @@ $(document).ready(function() {
 			  
 			  if ($("#emailsDegraded").select2('data').length == 0){
 				  $('#errorModalAlarm2').remove();
-				  $('#alarmForm').append('<div id="errorModalAlarm2" class="alert alert-danger" role="alert"><strong>Debe introducir al menos un correo degradado.</strong></div>');
+				  $('#alarmForm').append('<div id="errorModalAlarm2" class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.oneMailDegraded}]] + '</strong></div>');
 			  }else{
 				  $('#errorModalAlarm2').remove();
 			  }
 			  
 			  if ($("#emailsDown").select2('data').length == 0){
 				  $('#errorModalAlarm3').remove();
-				  $('#alarmForm').append('<div id="errorModalAlarm3" class="alert alert-danger" role="alert"><strong>Debe introducir al menos un correo caida.</strong></div>');
+				  $('#alarmForm').append('<div id="errorModalAlarm3" class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.oneMailDown}]] + '</strong></div>');
 			  }else{
 				  $('#errorModalAlarm3').remove();
 			  }
@@ -320,7 +320,7 @@ $(document).ready(function() {
 				  },
 				  error:function(){
 					  hide();
-					  $('#alarmForm').append('<div id="errorModalAlarm" class="alert alert-danger" role="alert"><strong>Hay una alarma con el mismo nombre!</strong></div>');
+					  $('#alarmForm').append('<div id="errorModalAlarm" class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.sameName}]] + '</strong></div>');
 				  },
 				  dataType: "json",
 				  contentType : "application/json"

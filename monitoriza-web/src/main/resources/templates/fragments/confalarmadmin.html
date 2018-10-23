@@ -103,7 +103,7 @@ $(document).ready(function() {
 						$('#mails').select2().val(data).trigger('change');
 					},
 					error:function(){
-						$('#newAlarmForm').append('<div id="errorModalAlarm" class="alert alert-danger" role="alert"><strong>Error recuperando los correos!</strong></div>');
+						$('#newAlarmForm').append('<div id="errorModalAlarm" class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.getMail}]] + '</strong></div>');
 					}
 				});
                 
@@ -190,13 +190,13 @@ $(document).ready(function() {
 		            break;
 		        default:
 		            $('#altEditor-modal .modal-body .alert').remove();
-		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>AcciÃ³n "'+accion+'" no autorizada!</strong></div>');
+		            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.NotAuthorized}]] + '</strong></div>');
 		            break;
 		    }
 		});
 });	
 
-//Control del botón para guardar un correo
+//Control del botï¿½n para guardar un correo
 $( "#alarmBtn" ).click(function( event ) {
 	  event.preventDefault();
 	  
@@ -232,7 +232,7 @@ $( "#alarmBtn" ).click(function( event ) {
 		  
 		  if ($("#mails").select2('data').length == 0){
 			  $('#errorModalAlarm2').remove();
-			  $('#newAlarmForm').append('<div id="errorModalAlarm2" class="alert alert-danger" role="alert"><strong>Debe introducir al menos un correo.</strong></div>');
+			  $('#newAlarmForm').append('<div id="errorModalAlarm2" class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.oneMail}]] + '</strong></div>');
 		  }else{
 			  $('#errorModalAlarm2').remove();
 		  }
@@ -282,7 +282,7 @@ $( "#alarmBtn" ).click(function( event ) {
 				  if ($('#errorModalAlarm').length > 0){
 						 $('#errorModalAlarm').remove();
 					  }
-				  $('#newAlarmForm').append('<div id="errorModalAlarm" class="alert alert-danger" role="alert"><strong>Hay una alarma con el mismo nombre!</strong></div>');
+				  $('#newAlarmForm').append('<div id="errorModalAlarm" class="alert alert-danger" role="alert"><strong>' + [[#{alarm.admin.error.sameName}]] + '</strong></div>');
 			  },
 			  dataType: "json",
 			  contentType : "application/json"
