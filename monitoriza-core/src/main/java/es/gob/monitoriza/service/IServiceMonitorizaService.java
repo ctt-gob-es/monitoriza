@@ -20,13 +20,17 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.service;
 
+import java.io.IOException;
+
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.web.multipart.MultipartFile;
 
+import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
@@ -35,24 +39,17 @@ import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 28/10/2018.
  */
 public interface IServiceMonitorizaService {
 	
 	/**
 	 * Method that obtains the configuration for service by its identifier.
-	 * @param userId The platform identifier.
+	 * @param serviceId The platform identifier.
 	 * @return {@link PlatformAfirma}
 	 */
 	ServiceMonitoriza getServiceMonitorizaById(Long serviceId);
-			
-	/**
-	 * Method that stores a service in the persistence.
-	 * @param user a {@link ServiceMonitoriza} with the information of the service.
-	 * @return {@link ServiceMonitoriza} The service. 
-	 */
-	ServiceMonitoriza saveServiceMonitoriza(ServiceMonitoriza service);
-			
+				
 	/**
 	 * Method that deletes a service in the persistence.
 	 * @param serviceId {@link Integer} that represents the user identifier to delete.
@@ -81,16 +78,25 @@ public interface IServiceMonitorizaService {
 	
 	/**
 	 * Method that gets all the services from the persistence filtered by platform.
-	 * @param timer Criteria filter
+	 * @param platform Criteria filter
 	 * @return a {@link Iterable<ServiceMonitoriza>} with the information of all services.
 	 */
 	Iterable<ServiceMonitoriza> getAllByPlatform(PlatformMonitoriza platform);	
 	
 	/**
 	 * Method that gets all the services from the persistence filtered by alarm.
-	 * @param timer Criteria filter
+	 * @param platform Criteria filter
 	 * @return a {@link Iterable<ServiceMonitoriza>} with the information of all services.
 	 */
 	Iterable<ServiceMonitoriza> getAllByAlarm(AlarmMonitoriza platform);	
+	
+	/**
+	 * Method that saves a ServiceMonitoriza entity in persistence and updates the scheduled timers.
+	 * @param servideDto Backing object from the form to map with the entity to persist 
+	 * @param file MultipartFile that represents the ZIP file containing the requests configured for the service
+	 * @return ServiceMonitoriza that represents the persisted entity
+	 * @throws IOException Exception launched when there is an error related to the ZIP file
+	 */
+	ServiceMonitoriza saveServiceMonitoriza(ServiceDTO servideDto, MultipartFile file) throws IOException;
 
 }

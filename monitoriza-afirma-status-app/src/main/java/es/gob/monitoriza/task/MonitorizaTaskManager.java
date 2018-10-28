@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 18/10/2018.
+ * @version 1.3, 28/10/2018.
  */
 package es.gob.monitoriza.task;
 
@@ -38,8 +38,8 @@ import es.gob.monitoriza.configuration.manager.AdminServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
-import es.gob.monitoriza.persistence.configuration.dto.TimerDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ConfigTimerDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.service.ITimerScheduledService;
 import es.gob.monitoriza.status.StatusHolder;
@@ -49,7 +49,7 @@ import es.gob.monitoriza.timers.TimersHolder;
 /** 
  * <p>Class that update the configuration of the scheduled services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 18/10/2018.
+ * @version 1.3, 28/10/2018.
  */
 @Service("monitorizaTaskManager")
 class MonitorizaTaskManager {
@@ -63,13 +63,13 @@ class MonitorizaTaskManager {
 	 * Attribute that represents . 
 	 */
 	@Autowired
-	AdminServicesManager serviceManager;
+	private AdminServicesManager serviceManager;
 	
 	/**
 	 * Attribute that represents . 
 	 */
 	@Autowired
-	ITimerScheduledService scheduledService;
+	private ITimerScheduledService scheduledService;
 		
 	/**
 	 * Method that updates the executing timers.
@@ -78,7 +78,7 @@ class MonitorizaTaskManager {
 	void updateTimersFromWebAdmin(final List<Long> listIdTimersUpdated) {
 		
 		// Se obtienen los timers cuya configuración (incluyendo elementos relacionados) haya cambiando
-		List<TimerDTO> timers = serviceManager.getAllTimersById(listIdTimersUpdated);
+		List<ConfigTimerDTO> timers = serviceManager.getAllTimersById(listIdTimersUpdated);
 		
 		if (timers != null && !timers.isEmpty()) {
 		
@@ -90,7 +90,7 @@ class MonitorizaTaskManager {
     		// Se carga una sola vez el almacén de certificados para conexión segura.
     		KeyStore rfc3161Keystore = serviceManager.loadRfc3161Keystore();
     						
-    		for (TimerDTO timerDTO : timers) {
+    		for (ConfigTimerDTO timerDTO : timers) {
     			
     			Timer timer = TimersHolder.getInstance().getCurrentTimersHolder().get(timerDTO.getIdTimer());
     			
@@ -102,7 +102,7 @@ class MonitorizaTaskManager {
     				timer.cancel();
     			} 
     			
-    			List<ServiceDTO> serviciosTimer = serviceManager.getServicesByTimer(timerDTO);
+    			List<ConfigServiceDTO> serviciosTimer = serviceManager.getServicesByTimer(timerDTO);
     			    			
     			// Actualiza/añade el timer sólo si tiene asociado algún servicio
     			if (serviciosTimer != null && !serviciosTimer.isEmpty()) {
@@ -139,7 +139,7 @@ class MonitorizaTaskManager {
 		/**
 		 * Attribute that represents the list of services for the timer being executed. 
 		 */
-		private transient List<ServiceDTO> serviciosDelTimer = new ArrayList<ServiceDTO>();
+		private transient List<ConfigServiceDTO> serviciosDelTimer = new ArrayList<ConfigServiceDTO>();
 
 		/**
 		 * Attribute that represents the timer being executed. 
@@ -158,14 +158,16 @@ class MonitorizaTaskManager {
 
 		/**
 		 * Constructor method for the class MonitorizaServletTask.java.
-		 * @param timerId String that represents the identifier of the timer being executed
-		 * @param serviciosDelTimer List<DTOService> that contains the services associated to the timer
+		 * @param timerIdParam String that represents the identifier of the timer being executed
+		 * @param serviciosDelTimerParam List<DTOService> that contains the services associated to the timer
+		 * @param sslTrustStoreParam KeyStore object containing the system truststore
+		 * @param rfc3161KeystoreParam KeyStore object containing the authentication keystore for RFC3161 service
 		 */
-		public ExecuteTimer(final String timerId, final List<ServiceDTO> serviciosDelTimer, final KeyStore sslTrustStore, final KeyStore rfc3161Keystore) {
-			this.timerId = timerId;
-			this.serviciosDelTimer = serviciosDelTimer;
-			this.sslTrustStore = sslTrustStore;
-			this.rfc3161Keystore = rfc3161Keystore;
+		ExecuteTimer(final String timerIdParam, final List<ConfigServiceDTO> serviciosDelTimerParam, final KeyStore sslTrustStoreParam, final KeyStore rfc3161KeystoreParam) {
+			this.timerId = timerIdParam;
+			this.serviciosDelTimer = serviciosDelTimerParam;
+			this.sslTrustStore = sslTrustStoreParam;
+			this.rfc3161Keystore = rfc3161KeystoreParam;
 		}
 
 		/**

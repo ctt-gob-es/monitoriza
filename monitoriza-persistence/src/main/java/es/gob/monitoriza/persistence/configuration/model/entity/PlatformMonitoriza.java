@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 17/10/2018.
+ * @version 1.4, 28/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -49,7 +49,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
 /** 
  * <p>Class that maps the <i>PLATFORM_MONITORIZA</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 17/10/2018.
+ * @version 1.4, 28/10/2018.
  */
 @Entity
 @Table(name = "PLATFORM_MONITORIZA")
@@ -128,7 +128,7 @@ public class PlatformMonitoriza implements Serializable {
 	/**
 	 * Attribute that indicates if the connection with the RFC3161 uses client authentication. 
 	 */
-	private Boolean userRfc3161Auth;
+	private Boolean useRfc3161Auth;
 	
 	/**
 	 * Attribute that represents the certificate for the RFC3161 authentication. 
@@ -395,8 +395,8 @@ public class PlatformMonitoriza implements Serializable {
 	
 	
 	/**
-	 * Gets the value of the attribute {@link #userRfc3161Auth}.
-	 * @return the value of the attribute {@link #userRfc3161Auth}.
+	 * Gets the value of the attribute {@link #useRfc3161Auth}.
+	 * @return the value of the attribute {@link #useRfc3161Auth}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
@@ -405,18 +405,18 @@ public class PlatformMonitoriza implements Serializable {
 	@JsonView(DataTablesOutput.View.class)
 	public Boolean getUseRfc3161Auth() {
 		// CHECKSTYLE:ON
-		return userRfc3161Auth;
+		return useRfc3161Auth;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #userRfc3161Auth}.
-	 * @param userRfc3161Auth The value for the attribute {@link #userRfc3161Auth}.
+	 * Sets the value of the attribute {@link #useRfc3161Auth}.
+	 * @param useRfc3161Auth The value for the attribute {@link #useRfc3161Auth}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setUseRfc3161Auth(Boolean userRfc3161Auth) {
+	public void setUseRfc3161Auth(Boolean useRfc3161Auth) {
 		// CHECKSTYLE:ON
-		this.userRfc3161Auth = userRfc3161Auth;
+		this.useRfc3161Auth = useRfc3161Auth;
 	}
 
 	/**

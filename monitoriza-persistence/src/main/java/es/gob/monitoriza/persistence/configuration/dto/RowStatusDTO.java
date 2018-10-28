@@ -67,8 +67,8 @@ public class RowStatusDTO {
 	
 	
 	/**
-	 * 
-	 * @return
+	 * Gets the value of the attribute {@link #statusAux}.
+	 * @return the value of the attribute {@link #statusAux}.
 	 */
 	@JsonView(StatusDTO.View.class)
 	public Long getStatusAux() {
@@ -77,8 +77,8 @@ public class RowStatusDTO {
 
 	
 	/**
-	 * 
-	 * @param statusAux
+	 * Sets the value of the attribute {@link #statusAux}.
+	 * @param statusAux the value for the attribute {@link #statusAux} to set.
 	 */
 	public void setStatusAux(Long statusAux) {
 		this.statusAux = statusAux;

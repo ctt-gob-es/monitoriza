@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 ene. 2018.</p>
  * @author Gobierno de España.
- *  @version 1.6, 18/10/2018.
+ *  @version 1.7, 28/10/2018.
  */
 package es.gob.monitoriza.configuration.manager;
 
@@ -55,9 +55,9 @@ import es.gob.monitoriza.exception.RequestFileNotFoundException;
 import es.gob.monitoriza.i18n.ICoreLogMessages;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ConfigTimerDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
-import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
-import es.gob.monitoriza.persistence.configuration.dto.TimerDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
@@ -77,7 +77,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <p>Class that manages the configuration of the @firma/ts@ services from database persistence
  *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- *  @version 1.6, 18/10/2018.
+ *  @version 1.7, 28/10/2018.
  */
 @Service("adminServicesManager")
 public class AdminServicesManager {
@@ -121,13 +121,6 @@ public class AdminServicesManager {
 	private IKeystoreService keystoreService;
 	
 	/**
-	 * Attribute that represents the service object for accessing the alarm
-	 * repository.
-	 */
-	@Autowired
-	private IAlarmMonitorizaService alarmService;
-	
-	/**
 	 * Attribute that represents the service object for accessing the request file
 	 * repository.
 	 */
@@ -138,14 +131,14 @@ public class AdminServicesManager {
 	 * Method that gets all timers from database.
 	 * @return List of TimerDTO
 	 */
-	public List<TimerDTO> getAllTimers() {
+	public List<ConfigTimerDTO> getAllTimers() {
 		
 		final List<TimerMonitoriza> timers = StreamSupport.stream(timerService.getAllTimerMonitoriza().spliterator(), false).collect(Collectors.toList());
-		final List<TimerDTO> timersDTO = new ArrayList<TimerDTO>();
+		final List<ConfigTimerDTO> timersDTO = new ArrayList<ConfigTimerDTO>();
 		
 		for (TimerMonitoriza timer : timers) {
 			
-			timersDTO.add(new TimerDTO(timer.getIdTimer(), timer.getName(), timer.getFrequency()));
+			timersDTO.add(new ConfigTimerDTO(timer.getIdTimer(), timer.getName(), timer.getFrequency()));
 		}
 		
 		return timersDTO;
@@ -156,14 +149,14 @@ public class AdminServicesManager {
 	 * @param idTimers List that contains timer identifiers.
 	 * @return List of TimerDTO
 	 */
-	public List<TimerDTO> getAllTimersById(List<Long> idTimers) {
+	public List<ConfigTimerDTO> getAllTimersById(List<Long> idTimers) {
 		
 		final List<TimerMonitoriza> timers = StreamSupport.stream(timerService.getAllTimerMonitorizaById(idTimers).spliterator(), false).collect(Collectors.toList());
-		final List<TimerDTO> timersDTO = new ArrayList<TimerDTO>();
+		final List<ConfigTimerDTO> timersDTO = new ArrayList<ConfigTimerDTO>();
 		
 		for (TimerMonitoriza timer : timers) {
 			
-			timersDTO.add(new TimerDTO(timer.getIdTimer(), timer.getName(), timer.getFrequency()));
+			timersDTO.add(new ConfigTimerDTO(timer.getIdTimer(), timer.getName(), timer.getFrequency()));
 		}
 		
 		return timersDTO;
@@ -175,20 +168,20 @@ public class AdminServicesManager {
 	 * @param timerDTO The Identifier of the timer configured in the service
 	 * @return List with the service configuration which its timer matches with the parameter timerId
 	 */
-	public List<ServiceDTO> getServicesByTimer(final TimerDTO timerDTO) {
+	public List<ConfigServiceDTO> getServicesByTimer(final ConfigTimerDTO timerDTO) {
 
-		final List<ServiceDTO> servicesTimer = new ArrayList<ServiceDTO>();
+		final List<ConfigServiceDTO> servicesTimer = new ArrayList<ConfigServiceDTO>();
 				
 		final TimerMonitoriza timer = new TimerMonitoriza();
 		timer.setIdTimer(timerDTO.getIdTimer());
 		//timer.setName(timerDTO.getName());
 		final List<ServiceMonitoriza> servicesByTimer = StreamSupport.stream(serviceService.getAllByTimer(timer).spliterator(), false)
 				.collect(Collectors.toList());
-		ServiceDTO serviceDTO = null;
+		ConfigServiceDTO serviceDTO = null;
 		
 		for (ServiceMonitoriza service : servicesByTimer) {
 									
-			serviceDTO = new ServiceDTO(service.getIdService(), service.getName(), service.getTimer().getName(), service.getTimeout(), service.getNameWsdl(), service.getDegradedThreshold(), service.getLostThreshold().toString(), getDirectoryPath(service.getIdService(), service.getName()), isAfirmaPlatform(service.getPlatform().getPlatformType().getName()), service.getServiceType(), service.getPlatform().getIdPlatform());
+			serviceDTO = new ConfigServiceDTO(service.getIdService(), service.getName(), service.getTimer().getName(), service.getTimeout(), service.getNameWsdl(), service.getDegradedThreshold(), service.getLostThreshold().toString(), getDirectoryPath(service.getIdService(), service.getName()), isAfirmaPlatform(service.getPlatform().getPlatformType().getName()), service.getServiceType(), service.getPlatform().getIdPlatform());
 					
 			// Base URL de cada plataforma sin tener en cuenta ningún contexto. Servirá para construir la URL de invocación OCSP y RFC3161.
 			serviceDTO.setBaseUrl(getBaseUrl(service.getPlatform()));
@@ -252,11 +245,11 @@ public class AdminServicesManager {
 	 * @param idTimer Timer database identifier
 	 * @return Data transfer object with timer data.
 	 */
-	public TimerDTO getTimerById(final Long idTimer) {
+	public ConfigTimerDTO getTimerById(final Long idTimer) {
 		
 		final TimerMonitoriza timer = timerService.getTimerMonitorizaById(idTimer);
 		
-		return new TimerDTO(timer.getIdTimer(), timer.getName(), timer.getFrequency());
+		return new ConfigTimerDTO(timer.getIdTimer(), timer.getName(), timer.getFrequency());
 	}
 
 	/**

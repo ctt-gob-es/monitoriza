@@ -15,21 +15,22 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.form.TimerForm.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.AlarmDTO.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 10/10/2018.
+ * @version 1.0, 24/10/2018.
  */
-package es.gob.monitoriza.form;
+package es.gob.monitoriza.persistence.configuration.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import es.gob.monitoriza.rest.exception.CheckItFirst;
-import es.gob.monitoriza.rest.exception.ThenCheckIt;
+import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
+import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
+import es.gob.monitoriza.utilidades.NumberConstants;
 
 /**
  * <p>
@@ -40,9 +41,9 @@ import es.gob.monitoriza.rest.exception.ThenCheckIt;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.2, 10/10/2018.
+ * @version 1.0, 24/10/2018.
  */
-public class AlarmForm {
+public class AlarmDTO {
 
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input
@@ -54,7 +55,7 @@ public class AlarmForm {
 	 * Attribute that represents . 
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.alarm.name.notempty}")
-	@Size(min = 3, max = 254, groups = ThenCheckIt.class)
+	@Size(min = NumberConstants.NUM3, max = NumberConstants.NUM254, groups = ThenCheckIt.class)
 	private String name;
 
 	/**
@@ -91,11 +92,10 @@ public class AlarmForm {
 	}
 
 	/**
-	 * @param idAlarm
-	 *            the idAlarm to set
+	 * @param idAlarmParam the idAlarm to set
 	 */
-	public void setIdAlarm(Long idAlarm) {
-		this.idAlarm = idAlarm;
+	public void setIdAlarm(Long idAlarmParam) {
+		this.idAlarm = idAlarmParam;
 	}
 
 	/**
@@ -106,11 +106,10 @@ public class AlarmForm {
 	}
 
 	/**
-	 * @param name
-	 *            the name to set
+	 * @param nameParam the name to set
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setName(String nameParam) {
+		this.name = nameParam;
 	}
 
 	/**
@@ -121,11 +120,11 @@ public class AlarmForm {
 	}
 
 	/**
-	 * @param blockedTime
+	 * @param blockedTimeParam
 	 *            the blockedTime to set
 	 */
-	public void setBlockedTime(Long blockedTime) {
-		this.blockedTime = blockedTime;
+	public void setBlockedTime(Long blockedTimeParam) {
+		this.blockedTime = blockedTimeParam;
 	}
 
 	/**
@@ -136,11 +135,11 @@ public class AlarmForm {
 	}
 
 	/**
-	 * @param degradedConcat
+	 * @param degradedConcatParam
 	 *            the degradedConcat to set
 	 */
-	public void setDegradedConcat(String degradedConcat) {
-		this.degradedConcat = degradedConcat;
+	public void setDegradedConcat(String degradedConcatParam) {
+		this.degradedConcat = degradedConcatParam;
 	}
 
 	/**
@@ -151,11 +150,11 @@ public class AlarmForm {
 	}
 
 	/**
-	 * @param downConcat
+	 * @param downConcatParam
 	 *            the downConcat to set
 	 */
-	public void setDownConcat(String downConcat) {
-		this.downConcat = downConcat;
+	public void setDownConcat(String downConcatParam) {
+		this.downConcat = downConcatParam;
 	}
 
 	/**
@@ -166,10 +165,10 @@ public class AlarmForm {
 	}
 
 	/**
-	 * @param emailsDegraded the emailsDegraded to set
+	 * @param emailsDegradedParam the emailsDegraded to set
 	 */
-	public void setEmailsDegraded(String emailsDegraded) {
-		this.emailsDegraded = emailsDegraded;
+	public void setEmailsDegraded(String emailsDegradedParam) {
+		this.emailsDegraded = emailsDegradedParam;
 	}
 
 	/**
@@ -180,10 +179,10 @@ public class AlarmForm {
 	}
 
 	/**
-	 * @param emailsDown the emailsDown to set
+	 * @param emailsDownParam the emailsDown to set
 	 */
-	public void setEmailsDown(String emailsDown) {
-		this.emailsDown = emailsDown;
+	public void setEmailsDown(String emailsDownParam) {
+		this.emailsDown = emailsDownParam;
 	}
 
 	

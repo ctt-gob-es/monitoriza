@@ -15,23 +15,23 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.form.PickListElement.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.vo.PickListElementVO.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>1 jun. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 1 jun. 2018.
+ * @version 1.0, 28/10/2018.
  */
-package es.gob.monitoriza.form;
+package es.gob.monitoriza.vo;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
 /** 
  * <p>Class that represents an element of the picklist view component.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 1 jun. 2018.
+ * @version 1.0, 28/10/2018.
  */
-public class PickListElement {
+public class PickListElementVO {
 	
 	/**
 	 * Attribute that represents the picklist element identifier. 
@@ -46,55 +46,55 @@ public class PickListElement {
 	/**
 	 * Constructor method for the class PickListElement.java. 
 	 */
-	public PickListElement() {
+	public PickListElementVO() {
 		
 	}
 				
 	/**
 	 * Constructor method for the class PickListElement.java.
-	 * @param id
-	 * @param text 
+	 * @param idParam Identifier of the picklist element
+	 * @param textParam textParam of the picklist element
 	 */
-	public PickListElement(String id, String text) {
+	public PickListElementVO(String idParam, String textParam) {
 		super();
-		this.id = id;
-		this.text = text;
+		this.id = idParam;
+		this.text = textParam;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Gets the value of the attribute {@link #id}.
+	 * @return the value of the attribute {@link #id}.
 	 */
-	@JsonView(PickListForm.View.class)
+	@JsonView(PickListVO.View.class)
 	public String getId() {
 		return id;
 	}
 
 	
 	/**
-	 * 
-	 * @param id
+	 * Sets the value of the attribute {@link #id}.
+	 * @param idParam The value for the attribute {@link #id}.
 	 */
-	public void setId(String id) {
-		this.id = id;
+	public void setId(String idParam) {
+		this.id = idParam;
 	}
 
 	/**
-	 * 
-	 * @return
+	 * Gets the value of the attribute {@link #text}.
+	 * @return the value of the attribute {@link #text}.
 	 */
-	@JsonView(PickListForm.View.class)
+	@JsonView(PickListVO.View.class)
 	public String getText() {
 		return text;
 	}
 
 	
 	/**
-	 * 
-	 * @param text
+	 * Sets the value of the attribute {@link #text}.
+	 * @param textParam The value for the attribute {@link #text}.
 	 */
-	public void setText(String text) {
-		this.text = text;
+	public void setText(String textParam) {
+		this.text = textParam;
 	}
 		
 }

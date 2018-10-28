@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -32,10 +32,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import es.gob.monitoriza.form.CertificateForm;
-import es.gob.monitoriza.form.UserForm;
-import es.gob.monitoriza.form.UserFormEdit;
-import es.gob.monitoriza.form.UserFormPassword;
+import es.gob.monitoriza.persistence.configuration.dto.CertificateDTO;
+import es.gob.monitoriza.persistence.configuration.dto.UserDTO;
+import es.gob.monitoriza.persistence.configuration.dto.UserEditDTO;
+import es.gob.monitoriza.persistence.configuration.dto.UserPasswordDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 import es.gob.monitoriza.service.IUserMonitorizaService;
 
@@ -48,7 +48,7 @@ import es.gob.monitoriza.service.IUserMonitorizaService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  *
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 @Controller
 public class UserController {
@@ -70,8 +70,8 @@ public class UserController {
 	 */
 	@RequestMapping(value = "useradmin")
 	public String index(final Model model) {
-		model.addAttribute("userFormPassword", new UserFormPassword());
-		model.addAttribute("userformEdit", new UserFormEdit());
+		model.addAttribute("userFormPassword", new UserPasswordDTO());
+		model.addAttribute("userformEdit", new UserEditDTO());
 		return "fragments/useradmin.html";
 	}
 
@@ -85,7 +85,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "adduser", method = RequestMethod.POST)
 	public String addUser(final Model model) {
-		model.addAttribute("userform", new UserForm());
+		model.addAttribute("userform", new UserDTO());
 		model.addAttribute("accion", "add");
 		return "modal/userForm";
 	}
@@ -99,7 +99,7 @@ public class UserController {
 	@RequestMapping(value = "menupass")
 	public String menuPass(@RequestParam("username") final String username, final Model model) {
 		UserMonitoriza userMonitoriza = userService.getUserMonitorizaByLogin(username);
-		UserFormPassword userFormPassword = new UserFormPassword();
+		UserPasswordDTO userFormPassword = new UserPasswordDTO();
 
 		userFormPassword.setIdUserMonitorizaPass(userMonitoriza.getIdUserMonitoriza());
 
@@ -116,7 +116,7 @@ public class UserController {
 	@RequestMapping(value = "menuedit")
 	public String menuEdit(@RequestParam("username") final String username, final Model model) {
 		UserMonitoriza userMonitoriza = userService.getUserMonitorizaByLogin(username);
-		UserFormEdit userFormEdit = new UserFormEdit();
+		UserEditDTO userFormEdit = new UserEditDTO();
 
 		userFormEdit.setIdUserMonitorizaEdit(userMonitoriza.getIdUserMonitoriza());
 		userFormEdit.setNameEdit(userMonitoriza.getName());
@@ -151,7 +151,7 @@ public class UserController {
 	 */
 	@RequestMapping(value = "addcertuser", method = RequestMethod.POST)
 	public String addcertuserForm(final Model model) {
-		model.addAttribute("certUserForm", new CertificateForm());
+		model.addAttribute("certUserForm", new CertificateDTO());
 		model.addAttribute("accion", "add");
 		return "modal/certUserForm";
 	}

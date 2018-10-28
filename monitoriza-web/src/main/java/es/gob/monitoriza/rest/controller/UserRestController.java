@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -42,9 +42,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -63,11 +61,11 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
-import es.gob.monitoriza.form.UserForm;
-import es.gob.monitoriza.form.UserFormEdit;
-import es.gob.monitoriza.form.UserFormPassword;
 import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.persistence.configuration.dto.UserDTO;
+import es.gob.monitoriza.persistence.configuration.dto.UserEditDTO;
+import es.gob.monitoriza.persistence.configuration.dto.UserPasswordDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
@@ -78,7 +76,6 @@ import es.gob.monitoriza.service.IStatusCertificateService;
 import es.gob.monitoriza.service.ISystemCertificateService;
 import es.gob.monitoriza.service.IUserMonitorizaService;
 import es.gob.monitoriza.service.IValidServiceService;
-import es.gob.monitoriza.utilidades.NumberConstants;
 import es.gob.monitoriza.utilidades.StatusCertificateEnum;
 import es.gob.monitoriza.utilidades.UtilsCertificate;
 import es.gob.monitoriza.utilidades.UtilsXml;
@@ -94,7 +91,7 @@ import es.gob.monitoriza.webservice.ClientManager;
  * Application for monitoring services of @firma suite systems.
  * </p>
  *
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 @RestController
 public class UserRestController {
@@ -217,9 +214,8 @@ public class UserRestController {
 	 */
 	@RequestMapping(value = "/saveuser", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
-	public @ResponseBody DataTablesOutput<UserMonitoriza> save(@Validated(OrderedValidation.class) @RequestBody final UserForm userForm, final BindingResult bindingResult) {
+	public @ResponseBody DataTablesOutput<UserMonitoriza> save(@Validated(OrderedValidation.class) @RequestBody final UserDTO userForm, final BindingResult bindingResult) {
 		DataTablesOutput<UserMonitoriza> dtOutput = new DataTablesOutput<UserMonitoriza>();
-		UserMonitoriza userMonitoriza = null;
 		List<UserMonitoriza> listNewUser = new ArrayList<UserMonitoriza>();
 
 		if (bindingResult.hasErrors()) {
@@ -231,29 +227,8 @@ public class UserRestController {
 			dtOutput.setError(json.toString());
 		} else {
 			try {
-				if (userForm.getIdUserMonitoriza() != null) {
-					userMonitoriza = userService.getUserMonitorizaById(userForm.getIdUserMonitoriza());
-				} else {
-					userMonitoriza = new UserMonitoriza();
-				}
-				if (!StringUtils.isEmpty(userForm.getPassword())) {
-					String pwd = userForm.getPassword();
-					BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
-					String hashPwd = bcpe.encode(pwd);
-
-					userMonitoriza.setPassword(hashPwd);
-				}
-
-				userMonitoriza.setLogin(userForm.getLogin());
-				userMonitoriza.setAttemptsNumber(NumberConstants.NUM0);
-				userMonitoriza.setEmail(userForm.getEmail());
-				userMonitoriza.setIsBlocked(Boolean.FALSE);
-				userMonitoriza.setLastAccess(null);
-				userMonitoriza.setLastIpAccess(null);
-				userMonitoriza.setName(userForm.getName());
-				userMonitoriza.setSurnames(userForm.getSurnames());
-
-				UserMonitoriza user = userService.saveUserMonitoriza(userMonitoriza);
+				
+				UserMonitoriza user = userService.saveUserMonitoriza(userForm);
 
 				listNewUser.add(user);
 			} catch (Exception e) {
@@ -269,16 +244,15 @@ public class UserRestController {
 	}
 
 	/**
-	 * Method that saves a user.
+	 * Method that updates a user.
 	 * @param userForm UserForm
 	 * @param bindingResult  BindingResult
 	 * @return DataTablesOutput<UserMonitoriza> users
 	 */
 	@RequestMapping(value = "/saveuseredit", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
-	public @ResponseBody DataTablesOutput<UserMonitoriza> saveEdit(@Validated(OrderedValidation.class) @RequestBody final UserFormEdit userForm, final BindingResult bindingResult) {
+	public @ResponseBody DataTablesOutput<UserMonitoriza> saveEdit(@Validated(OrderedValidation.class) @RequestBody final UserEditDTO userForm, final BindingResult bindingResult) {
 		DataTablesOutput<UserMonitoriza> dtOutput = new DataTablesOutput<>();
-		UserMonitoriza userMonitoriza = null;
 		List<UserMonitoriza> listNewUser = new ArrayList<UserMonitoriza>();
 
 		if (bindingResult.hasErrors()) {
@@ -290,21 +264,8 @@ public class UserRestController {
 			dtOutput.setError(json.toString());
 		} else {
 			try {
-				if (userForm.getIdUserMonitorizaEdit() != null) {
-					userMonitoriza = userService.getUserMonitorizaById(userForm.getIdUserMonitorizaEdit());
-				} else {
-					userMonitoriza = new UserMonitoriza();
-				}
-				userMonitoriza.setLogin(userForm.getLoginEdit());
-				userMonitoriza.setAttemptsNumber(NumberConstants.NUM0);
-				userMonitoriza.setEmail(userForm.getEmailEdit());
-				userMonitoriza.setIsBlocked(Boolean.FALSE);
-				userMonitoriza.setLastAccess(null);
-				userMonitoriza.setLastIpAccess(null);
-				userMonitoriza.setName(userForm.getNameEdit());
-				userMonitoriza.setSurnames(userForm.getSurnamesEdit());
-
-				UserMonitoriza user = userService.saveUserMonitoriza(userMonitoriza);
+				
+				UserMonitoriza user = userService.updateUserMonitoriza(userForm);
 
 				listNewUser.add(user);
 			} catch (Exception e) {
@@ -326,10 +287,9 @@ public class UserRestController {
 	 * @return String result
 	 */
 	@RequestMapping(value = "/saveuserpassword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public String savePassword(@Validated(OrderedValidation.class) @RequestBody final UserFormPassword userFormPassword, final BindingResult bindingResult) {
+	public String savePassword(@Validated(OrderedValidation.class) @RequestBody final UserPasswordDTO userFormPassword, final BindingResult bindingResult) {
 		String result = "";
-		UserMonitoriza userMonitoriza = userService.getUserMonitorizaById(userFormPassword.getIdUserMonitorizaPass());
-
+		
 		if (bindingResult.hasErrors()) {
 			JSONObject json = new JSONObject();
 			for (FieldError o: bindingResult.getFieldErrors()) {
@@ -337,25 +297,8 @@ public class UserRestController {
 			}
 			result = json.toString();
 		} else {
-			String oldPwd = userFormPassword.getOldPassword();
-			String pwd = userFormPassword.getPassword();
-
-			BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
-			String hashPwd = bcpe.encode(pwd);
-
-			try {
-				if (bcpe.matches(oldPwd, userMonitoriza.getPassword())) {
-					userMonitoriza.setPassword(hashPwd);
-
-					userService.saveUserMonitoriza(userMonitoriza);
-					result = "0";
-				} else {
-					result = "-1";
-				}
-			} catch (Exception e) {
-				result = "-2";
-				throw e;
-			}
+			
+			result = userService.changeUserMonitorizaPassword(userFormPassword);
 		}
 
 		return result;
@@ -368,8 +311,8 @@ public class UserRestController {
 	 * @return String result
 	 */
 	@RequestMapping(value = "/menueditsave", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public String saveEditMenu(@Validated(OrderedValidation.class) @RequestBody final UserFormEdit userForm, final BindingResult bindingResult) {
-		UserMonitoriza userMonitoriza = null;
+	public String saveEditMenu(@Validated(OrderedValidation.class) @RequestBody final UserEditDTO userForm, final BindingResult bindingResult) {
+		
 		String result = "";
 
 		if (bindingResult.hasErrors()) {
@@ -380,21 +323,8 @@ public class UserRestController {
 			result = json.toString();
 		} else {
 			try {
-				if (userForm.getIdUserMonitorizaEdit() != null) {
-					userMonitoriza = userService.getUserMonitorizaById(userForm.getIdUserMonitorizaEdit());
-				} else {
-					userMonitoriza = new UserMonitoriza();
-				}
-				userMonitoriza.setLogin(userForm.getLoginEdit());
-				userMonitoriza.setAttemptsNumber(NumberConstants.NUM0);
-				userMonitoriza.setEmail(userForm.getEmailEdit());
-				userMonitoriza.setIsBlocked(Boolean.FALSE);
-				userMonitoriza.setLastAccess(null);
-				userMonitoriza.setLastIpAccess(null);
-				userMonitoriza.setName(userForm.getNameEdit());
-				userMonitoriza.setSurnames(userForm.getSurnamesEdit());
-
-				userService.saveUserMonitoriza(userMonitoriza);
+				
+				userService.updateUserMonitoriza(userForm);
 
 				result = "0";
 			} catch (Exception e) {
@@ -410,6 +340,7 @@ public class UserRestController {
 	 * Method that maps the list users web requests to the controller and forwards the list of users
 	 * to the view.
 	 * @param input Holder object for datatable attributes.
+	 * @param idUserMonitoriza Identifier of the user.
 	 * @return String that represents the name of the view to forward.
 	 */
 	@JsonView(DataTablesOutput.View.class)
@@ -518,12 +449,11 @@ public class UserRestController {
 	 * @param systermCertId Identifier of the system certificate to be deleted.
 	 * @param index Row index of the datatable.
 	 * @return String that represents the name of the view to redirect.
-	 * @throws CryptographyException
-	 * @throws IOException
+	 * @throws CryptographyException Error related with the management of the keystore
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deletecertuser", method = RequestMethod.POST)
-	public String deleteCertUser(@RequestParam("id") final Long systermCertId, @RequestParam("index") final String index) throws CryptographyException, IOException {
+	public String deleteCertUser(@RequestParam("id") final Long systermCertId, @RequestParam("index") final String index) throws CryptographyException {
 
 		SystemCertificate systemCertificate = certService.getSystemCertificateById(systermCertId);
 		Keystore keystoreUser = keystoreService.getKeystoreById(Keystore.ID_USER_STORE);
@@ -560,7 +490,7 @@ public class UserRestController {
 	}
 
 	/**
-	 * Set certService
+	 * Set certService.
 	 * @param certServiceP set certService
 	 */
 	public void setCertService(final ISystemCertificateService certServiceP) {
@@ -577,7 +507,7 @@ public class UserRestController {
 
 	/**
 	 * Set keystoreService.
-	 * @param keystoreServiceP
+	 * @param keystoreServiceP set keystoreService
 	 */
 	public void setKeystoreService(final IKeystoreService keystoreServiceP) {
 		this.keystoreService = keystoreServiceP;
@@ -641,10 +571,10 @@ public class UserRestController {
 
 	/**
 	 * Set context.
-	 * @param context set context
+	 * @param contextP set context
 	 */
-	public void setContext(ServletContext context) {
-		this.context = context;
+	public void setContext(ServletContext contextP) {
+		this.context = contextP;
 	}
 
 }

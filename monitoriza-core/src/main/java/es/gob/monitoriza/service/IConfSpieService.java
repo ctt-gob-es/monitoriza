@@ -20,10 +20,11 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.service;
 
+import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ConfSpie;
 
 /**
@@ -36,7 +37,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.ConfSpie;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 public interface IConfSpieService {
 
@@ -50,8 +51,7 @@ public interface IConfSpieService {
 	/**
 	 * Method that gets confSpie by ID of ConfSpie.
 	 * 
-	 * @param idConfSpie
-	 *            Id of ConfSpie
+	 * @param idConfSpie Identifier of ConfSpie
 	 * @return {@link ConfSpie} an object that represents the ConfSpie.
 	 */
 	ConfSpie getConfSpieById(Long idConfSpie);
@@ -59,17 +59,15 @@ public interface IConfSpieService {
 	/**
 	 * Method that saves ConfSpie.
 	 * 
-	 * @param ConfSpie
-	 *            to update.
-	 * @return {@link ConfSpie} an object that represents the ConfSpie.
+	 * @param confSpie to update.
+	 * @return {@link ConfSpieDTO} an object that represents the ConfSpie.
 	 */
-	ConfSpie saveConfSpie(ConfSpie confSpie);
+	ConfSpie saveConfSpie(ConfSpieDTO confSpie);
 
 	/**
 	 * Method that delete a ConfSpie.
 	 * 
-	 * @param idConfSpie
-	 *            Id of ConfSpie
+	 * @param idConfSpie Identifier of ConfSpie
 	 */
 	void deleteConfSpie(Long idConfSpie);
 

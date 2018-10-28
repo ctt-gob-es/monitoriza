@@ -20,13 +20,15 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 17/10/2018.
+ * @version 1.4, 28/10/2018.
  */
 package es.gob.monitoriza.service;
 
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
+import es.gob.monitoriza.persistence.configuration.dto.AfirmaDTO;
+import es.gob.monitoriza.persistence.configuration.dto.TsaDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 
@@ -36,8 +38,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitori
  * @version 1.3, 17/10/2018.
  */
 public interface IPlatformService {
-	
-	
+		
 	/**
 	 * Method that obtains the configuration for a platform by its identifier.
 	 * @param platformId The platform identifier.
@@ -47,23 +48,16 @@ public interface IPlatformService {
 	
 	/**
 	 * Method that obtains a platform type by its identifier.
-	 * @param afirmaId The platform type identifier.
+	 * @param platformId The platform type identifier.
 	 * @return {@link CPlatformType}
 	 */
-	CPlatformType getPlatformTypeById(Long afirmaId);
-			
-	/**
-	 * Method that stores @firma configuration in the persistence.
-	 * @param afirma a {@link PlatformMonitoriza} with the information of the platform configuration.
-	 * @return {@link PlatformMonitoriza} The @firma configuration. 
-	 */
-	PlatformMonitoriza savePlatform(PlatformMonitoriza afirma);
+	CPlatformType getPlatformTypeById(Long platformId);
 			
 	/**
 	 * Method that deletes a @firma configuration in the persistence.
-	 * @param afirmaId {@link Integer} that represents the user identifier to delete.
+	 * @param platformId {@link Integer} that represents the user identifier to delete.
 	 */
-	void deletePlatformById(Long afirmaId);
+	void deletePlatformById(Long platformId);
 	
 	/**
 	 * Method that deletes a @firma configuration in the persistence.
@@ -97,5 +91,19 @@ public interface IPlatformService {
 	 * @return A set of DataTable rows that matches the query.
 	 */
 	DataTablesOutput<PlatformMonitoriza> findAllTsa(DataTablesInput input);
+	
+	/**
+	 * Method that stores @firma configuration in the persistence and updates corresponding scheduled timers.
+	 * @param afirmaDto a {@link AfirmaDTO} with the information of the platform configuration.
+	 * @return {@link PlatformMonitoriza} The @firma configuration. 
+	 */
+	PlatformMonitoriza savePlatformAfirma(AfirmaDTO afirmaDto);
+	
+	/**
+	 * Method that stores TS@ configuration in the persistence and updates corresponding scheduled timers.
+	 * @param tsaDto a {@link TsaDTO} with the information of the platform configuration.
+	 * @return {@link PlatformMonitoriza} The @firma configuration. 
+	 */
+	PlatformMonitoriza savePlatformTsa(TsaDTO tsaDto);
 
 }

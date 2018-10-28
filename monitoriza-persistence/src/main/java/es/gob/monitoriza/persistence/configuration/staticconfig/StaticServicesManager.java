@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 28/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.staticconfig;
 
@@ -36,13 +36,13 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.i18n.IPersistenceLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that manages the configuration of the @firma/ts@ services from static properties file.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 28/10/2018.
  */
 public final class StaticServicesManager {
 
@@ -87,17 +87,17 @@ public final class StaticServicesManager {
 	 * Method that gets the services configuration from persistence (database or static properties file).
 	 * @return List<ServiceDTO>
 	 */
-	public static List<ServiceDTO> getServices() {
+	public static List<ConfigServiceDTO> getServices() {
 		
 		boolean addService;
 
-		List<ServiceDTO> services = new ArrayList<ServiceDTO>();
+		List<ConfigServiceDTO> services = new ArrayList<ConfigServiceDTO>();
 
 		Set<Entry<Object, Object>> allProperties = StaticMonitorizaProperties.getAllProperties();
 
 		Iterator<Entry<Object, Object>> itProp = allProperties.iterator();
 
-		ServiceDTO service = null;
+		ConfigServiceDTO service = null;
 		
 		String basePath = StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY);
 		
@@ -115,23 +115,23 @@ public final class StaticServicesManager {
 
 					String serviceId = keyArray[1];
 
-					if (services.contains(new ServiceDTO(serviceId))) {
+					if (services.contains(new ConfigServiceDTO(serviceId))) {
 
 						if (keyArray[2].equals(SERVICE_TIMER_PROPERTY)) {
-							services.get(services.indexOf(new ServiceDTO(serviceId))).setTimerName((String) pair.getValue());
+							services.get(services.indexOf(new ConfigServiceDTO(serviceId))).setTimerName((String) pair.getValue());
 						} else if (keyArray[2].equals(SERVICE_TIMEOUT_PROPERTY)) {
-							services.get(services.indexOf(new ServiceDTO(serviceId))).setTimeout(Long.parseLong((String)pair.getValue()));
+							services.get(services.indexOf(new ConfigServiceDTO(serviceId))).setTimeout(Long.parseLong((String)pair.getValue()));
 						} else if (keyArray[2].equals(SERVICE_WSDL_PROPERTY)) {
-							services.get(services.indexOf(new ServiceDTO(serviceId))).setWsdl((String) pair.getValue());
+							services.get(services.indexOf(new ConfigServiceDTO(serviceId))).setWsdl((String) pair.getValue());
 						} else if (keyArray[2].equals(SERVICE_DEGRADED_THRESHOLD_PROPERTY)) {
-							services.get(services.indexOf(new ServiceDTO(serviceId))).setDegradedThreshold(Long.parseLong((String) pair.getValue()));
+							services.get(services.indexOf(new ConfigServiceDTO(serviceId))).setDegradedThreshold(Long.parseLong((String) pair.getValue()));
 						} else if (keyArray[2].equals(SERVICE_LOST_THRESHOLD_PROPERTY)) {
-							services.get(services.indexOf(new ServiceDTO(serviceId))).setLostThreshold((String) pair.getValue());
+							services.get(services.indexOf(new ConfigServiceDTO(serviceId))).setLostThreshold((String) pair.getValue());
 						} 
 												
 					} else {
 
-						service = new ServiceDTO(serviceId);
+						service = new ConfigServiceDTO(serviceId);
 						if (keyArray[2].equals(SERVICE_TIMER_PROPERTY)) {
 							service.setTimerName((String) pair.getValue());
 						} else if (keyArray[2].equals(SERVICE_TIMEOUT_PROPERTY)) {
@@ -177,15 +177,15 @@ public final class StaticServicesManager {
 	 * @param timerName The name of the timer configured in the service
 	 * @return List with the service configuration which its timer matches with the parameter timerId
 	 */
-	public static List<ServiceDTO> getServicesByTimer(final String timerName) {
+	public static List<ConfigServiceDTO> getServicesByTimer(final String timerName) {
 
-		final List<ServiceDTO> servicesTimer = new ArrayList<ServiceDTO>();
+		final List<ConfigServiceDTO> servicesTimer = new ArrayList<ConfigServiceDTO>();
 
-		Iterator<ServiceDTO> itServices = getServices().iterator();
+		Iterator<ConfigServiceDTO> itServices = getServices().iterator();
 
 		while (itServices.hasNext()) {
 
-			ServiceDTO service = (ServiceDTO) itServices.next();
+			ConfigServiceDTO service = (ConfigServiceDTO) itServices.next();
 
 			if (service.getTimerName().equals(timerName)) {
 
@@ -203,15 +203,15 @@ public final class StaticServicesManager {
 	 * @param serviceId Service identifier
 	 * @return ServiceDTO object that represents the service found
 	 */
-	public static ServiceDTO getServiceById(final String serviceId) {
+	public static ConfigServiceDTO getServiceById(final String serviceId) {
 				
-		Iterator<ServiceDTO> itServices = getServices().iterator();
+		Iterator<ConfigServiceDTO> itServices = getServices().iterator();
 		boolean found = Boolean.FALSE;
 
-		ServiceDTO service = null;
+		ConfigServiceDTO service = null;
 		while (itServices.hasNext() && !found) {
 			
-			service = (ServiceDTO) itServices.next();
+			service = (ConfigServiceDTO) itServices.next();
 
 			if (service.getServiceId().equals(serviceId)) {
 

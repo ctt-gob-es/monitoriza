@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>3 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 3 abr. 2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.validator;
 
@@ -29,14 +29,14 @@ import org.springframework.stereotype.Component;
 import org.springframework.validation.Errors;
 import org.springframework.validation.Validator;
 
-import es.gob.monitoriza.form.UserForm;
+import es.gob.monitoriza.persistence.configuration.dto.UserDTO;
 import es.gob.monitoriza.service.IUserMonitorizaService;
 
 
 /** 
- * <p>Class .</p>
+ * <p>Validator class for user inputs.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 3 abr. 2018.
+ * @version 1.1, 28/10/2018.
  */
 @Component
 public class UserValidator implements Validator {
@@ -53,7 +53,7 @@ public class UserValidator implements Validator {
 	 */
 	@Override
 	public boolean supports(Class<?> arg0) {
-		return UserForm.class.isAssignableFrom(arg0);
+		return UserDTO.class.isAssignableFrom(arg0);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class UserValidator implements Validator {
 	 */
 	@Override
 	public void validate(Object target, Errors errors) {
-		UserForm userForm = (UserForm) target;
+		UserDTO userForm = (UserDTO) target;
 
 		if (userService.getUserMonitorizaByLogin(userForm.getLogin()) != null) {
             errors.rejectValue("login", "Ya existe un usuario con ese login");

@@ -257,4 +257,9 @@ public interface StaticConstants {
 	 */
 	public static final String MONITORIZA_VIP_STATUS_SERVLET = "monitoriza.vip.status.servlet";
 	
+	/**
+	 * Constant attribute that represents the property key monitoriza.spie.connections. 
+	 */
+	public static final String MONITORIZA_SPIE_CONNECTIONS = "monitoriza.spie.connections";
+	
 }

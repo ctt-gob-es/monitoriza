@@ -20,19 +20,32 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.service.impl;
+
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import es.gob.monitoriza.persistence.configuration.dto.AfirmaDTO;
+import es.gob.monitoriza.persistence.configuration.dto.TsaDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
+import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.persistence.configuration.model.repository.CPlatformTypeRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.PlatformRepository;
+import es.gob.monitoriza.persistence.configuration.model.repository.ServiceMonitorizaRepository;
+import es.gob.monitoriza.persistence.configuration.model.repository.SystemCertificateRepository;
+import es.gob.monitoriza.persistence.configuration.model.repository.TimerScheduledRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.PlatformDatatableRepository;
 import es.gob.monitoriza.persistence.configuration.model.specification.CPlatformTypeSpecification;
 import es.gob.monitoriza.service.IPlatformService;
@@ -41,7 +54,7 @@ import es.gob.monitoriza.service.IPlatformService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for PlatformAfirma.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 @Service
 public class PlatformService implements IPlatformService {
@@ -56,7 +69,25 @@ public class PlatformService implements IPlatformService {
 	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
 	 */
 	@Autowired
-    private CPlatformTypeRepository typeRepository; 
+    private CPlatformTypeRepository typeRepository;
+	
+	/**
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 */
+	@Autowired
+    private SystemCertificateRepository certRepository; 
+	
+	/**
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 */
+	@Autowired
+    private TimerScheduledRepository scheduledRepository; 
+	
+	/**
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 */
+	@Autowired
+    private ServiceMonitorizaRepository serviceRepository; 
 	
 	/**
 	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
@@ -71,15 +102,6 @@ public class PlatformService implements IPlatformService {
 	@Override
 	public PlatformMonitoriza getPlatformById(Long afirmaId) {
 		return repository.findByIdPlatform(afirmaId);
-	}
-
-	/**
-	 * {@inheritDoc}
-	 * @see es.gob.monitoriza.service.IPlatformService#savePlatform(es.gob.monitoriza.persistence.configuration.model.entity.PlatformAfirma)
-	 */
-	@Override
-	public PlatformMonitoriza savePlatform(PlatformMonitoriza afirma) {
-		return repository.save(afirma);
 	}
 
 	/**
@@ -157,6 +179,164 @@ public class PlatformService implements IPlatformService {
 	@Override
 	public void deletePlatformById(Long afirmaId) {
 		repository.deleteById(afirmaId);
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IPlatformService#savePlatformAfirma(es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza)
+	 */
+	@Override
+	@Transactional
+	public PlatformMonitoriza savePlatformAfirma(AfirmaDTO afirmaDto) {
+		
+		PlatformMonitoriza platformAfirma = null;
+		boolean afirmaHaCambiado = false;
+		
+		if (afirmaDto.getIdPlatform() != null) {
+			platformAfirma = repository.findByIdPlatform(afirmaDto.getIdPlatform());
+			afirmaHaCambiado = isAfirmaUpdatedForm(afirmaDto, platformAfirma);
+		} else {
+			platformAfirma = new PlatformMonitoriza();
+		}
+
+		platformAfirma.setHost(afirmaDto.getHost());
+		platformAfirma.setName(afirmaDto.getName());
+		platformAfirma.setOcspContext(afirmaDto.getOcspContext());
+		platformAfirma.setPort(afirmaDto.getPort());
+		platformAfirma.setIsSecure(afirmaDto.getIsSecure());
+		platformAfirma.setServiceContext(afirmaDto.getServiceContext());
+		CPlatformType afirmaType = new CPlatformType();
+		afirmaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
+		platformAfirma.setPlatformType(afirmaType);
+
+		PlatformMonitoriza afirma = repository.save(platformAfirma);
+				
+		// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
+		if (afirmaHaCambiado && platformAfirma.getIdPlatform() != null) {
+			
+			updateScheduledTimerFromPlatform(platformAfirma);
+		}
+		
+		return afirma;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IPlatformService#savePlatformTsa(es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza)
+	 */
+	@Override
+	@Transactional
+	public PlatformMonitoriza savePlatformTsa(TsaDTO tsaDto) {
+		
+		PlatformMonitoriza platformTsa = null;
+		boolean tsaHaCambiado = false;
+		
+		if (tsaDto.getIdPlatform() != null) {
+			platformTsa = repository.findByIdPlatform(tsaDto.getIdPlatform());
+			tsaHaCambiado = isTsaUpdatedForm(tsaDto, platformTsa);
+		} else {
+			platformTsa = new PlatformMonitoriza();
+		}
+
+		platformTsa.setHost(tsaDto.getHost());
+		platformTsa.setName(tsaDto.getName());
+		platformTsa.setPort(tsaDto.getPort());
+		platformTsa.setIsSecure(tsaDto.getIsSecure());
+		platformTsa.setServiceContext(tsaDto.getServiceContext());
+		CPlatformType afirmaType = new CPlatformType();
+		afirmaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA);
+		platformTsa.setPlatformType(afirmaType);
+		platformTsa.setRfc3161Context(tsaDto.getRfc3161Context());
+		platformTsa.setRfc3161Port(tsaDto.getRfc3161Port());
+		platformTsa.setUseRfc3161Auth(tsaDto.getUseRfc3161Auth());
+		platformTsa.setRfc3161Certificate(certRepository.findByIdSystemCertificate(tsaDto.getRfc3161Certificate()));
+		
+		if (tsaDto.getRfc3161Certificate() == null || tsaDto.getRfc3161Certificate().longValue() == -1) {
+			platformTsa.setUseRfc3161Auth(false);
+		}
+				
+		PlatformMonitoriza tsa = repository.save(platformTsa);
+		
+		// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
+		if (tsaHaCambiado && platformTsa.getIdPlatform() != null) {
+			
+			updateScheduledTimerFromPlatform(platformTsa);
+		}
+		
+		// Se construye objeto vacío para evitar warning de datatables
+		if (!tsaDto.getUseRfc3161Auth()) {
+			platformTsa.setRfc3161Certificate(new SystemCertificate());
+		}
+		
+		return tsa;
+	}
+	
+	/**
+	 * Method that checks if there are changes between the afirma form and the persisted platform.
+	 * @param afirmaForm Object that represents the backing form for the @firma platform
+	 * @param platform Object that represents the persisted @firma platform 
+	 * @return true if the data of the form has been updated
+	 */
+	private boolean isAfirmaUpdatedForm(AfirmaDTO afirmaForm, PlatformMonitoriza platform) {
+		
+		return !(afirmaForm.getIsSecure().equals(platform.getIsSecure()) &&
+				 afirmaForm.getHost().equals(platform.getHost()) &&
+				 afirmaForm.getName().equals(platform.getName()) &&
+				 afirmaForm.getOcspContext().equals(platform.getOcspContext()) &&
+				 afirmaForm.getPort().equals(platform.getPort()) &&
+				 afirmaForm.getIsSecure().equals(platform.getIsSecure()) &&
+				 afirmaForm.getServiceContext().equals(platform.getServiceContext()));
+		
+	}
+	
+	/**
+	 * Method that checks if there are changes between the TS@ form and the persisted platform.
+	 * @param tsaForm Object that represents the backing form for the @firma platform
+	 * @param platform Object that represents the platform
+	 * @return true if the data of the form has been updated
+	 */
+	private boolean isTsaUpdatedForm(TsaDTO tsaForm, PlatformMonitoriza platform) {
+		
+		boolean changeAuthRFC3161 = false;
+		
+		if (platform.getRfc3161Certificate() == null ) {
+			
+			changeAuthRFC3161 = tsaForm.getRfc3161Certificate() != null;
+			
+		} else {
+			
+			changeAuthRFC3161 = !platform.getRfc3161Certificate().getIdSystemCertificate().equals(tsaForm.getRfc3161Certificate());
+		}
+		
+		return !(tsaForm.getIsSecure().equals(platform.getIsSecure()) &&
+				tsaForm.getHost().equals(platform.getHost()) &&
+				tsaForm.getName().equals(platform.getName()) &&
+				!changeAuthRFC3161 &&
+				tsaForm.getRfc3161Context().equals(platform.getRfc3161Context()) &&
+				tsaForm.getRfc3161Port().equals(platform.getRfc3161Port()) &&
+				tsaForm.getPort().equals(platform.getPort()) &&
+				tsaForm.getIsSecure().equals(platform.getIsSecure()) &&
+				tsaForm.getServiceContext().equals(platform.getServiceContext()));
+		
+	}
+	
+	/**
+	 * Method that sets the scheduled timers of the services which uses this platform as updated.
+	 * @param platform Object that represents the platform
+	 */
+	private void updateScheduledTimerFromPlatform(PlatformMonitoriza platform) {
+				
+		List<ServiceMonitoriza> servicesUsingThisPlatform = StreamSupport.stream(serviceRepository.findByPlatformIdPlatform(platform.getIdPlatform()).spliterator(), false).collect(Collectors.toList());
+		
+		TimerScheduled scheduled = null;
+		for (ServiceMonitoriza service : servicesUsingThisPlatform) {
+			
+			scheduled =  scheduledRepository.findByTimerIdTimer(service.getTimer().getIdTimer());
+			scheduled.setUpdated(false);
+			scheduledRepository.save(scheduled);
+			
+		}
 		
 	}
 

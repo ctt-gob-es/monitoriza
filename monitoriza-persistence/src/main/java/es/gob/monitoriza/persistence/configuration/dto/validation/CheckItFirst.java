@@ -15,20 +15,20 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.rest.exception.CheckItFirst.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>4 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 4 abr. 2018.
+ * @version 1.0, 28/10/2018.
  */
-package es.gob.monitoriza.rest.exception;
+package es.gob.monitoriza.persistence.configuration.dto.validation;
 
 
 /** 
- * <p>Class .</p>
+ * <p>Ordered validatin interface.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 4 abr. 2018.
+ * @version 1.0, 28/10/2018.
  */
 public interface CheckItFirst {
 

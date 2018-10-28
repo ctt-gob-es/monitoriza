@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 17/10/2018.
+ * @version 1.5, 28/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -50,18 +50,11 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.form.AfirmaForm;
-import es.gob.monitoriza.form.TsaForm;
-import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
+import es.gob.monitoriza.persistence.configuration.dto.AfirmaDTO;
+import es.gob.monitoriza.persistence.configuration.dto.TsaDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
-import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IPlatformService;
-import es.gob.monitoriza.service.IServiceMonitorizaService;
-import es.gob.monitoriza.service.ISystemCertificateService;
-import es.gob.monitoriza.service.ITimerScheduledService;
 
 /**
  * <p>
@@ -73,7 +66,7 @@ import es.gob.monitoriza.service.ITimerScheduledService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.4, 17/10/2018..
+ * @version 1.5, 28/10/2018..
  */
 @RestController
 public class PlatformRestController {
@@ -89,27 +82,7 @@ public class PlatformRestController {
 	 */
 	@Autowired
 	private IPlatformService platformService;
-	
-	/**
-	 * Attribute that represents the service object for accessing the
-	 * repository.
-	 */
-	@Autowired
-	private IServiceMonitorizaService serviceService;
-	
-	/**
-	 * Attribute that represents the service object for accessing the
-	 * repository.
-	 */
-	@Autowired
-	private ITimerScheduledService scheduledService;
-	
-	/**
-	 * Attribute that represents the service object for accessing the
-	 * repository.
-	 */
-	@Autowired
-	private ISystemCertificateService sysCertService;
+		
 
 	/**
 	 * Method that maps the list users web requests to the controller and
@@ -154,18 +127,21 @@ public class PlatformRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deleteplatform", method = RequestMethod.POST)
 	public String deleteAfirma(@RequestParam("id") Long platformId, @RequestParam("index") String index) {
+		
+		String rowIndex = index;
+		
 		try {
 			PlatformMonitoriza platform = platformService.getPlatformById(platformId);
 			platformService.deletePlatform(platform);
 		} catch (Exception e) {
-			index = "-1";
+			rowIndex = GeneralConstants.ROW_INDEX_ERROR;
 		}
-		return index;
+		return rowIndex;
 	}
 
 	/**
 	 * Method that maps the save user web request to the controller and saves it
-	 * in the persistence.
+	 * in the persistence. It also updates the scheduled timers.
 	 * 
 	 * @param afirmaForm
 	 *            Object that represents the backing platform form.
@@ -176,12 +152,10 @@ public class PlatformRestController {
 	@RequestMapping(value = "/saveafirma", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
 	public @ResponseBody DataTablesOutput<PlatformMonitoriza> saveAfirma(
-			@Validated(OrderedValidation.class) @RequestBody AfirmaForm afirmaForm, BindingResult bindingResult) {
+			@Validated(OrderedValidation.class) @RequestBody AfirmaDTO afirmaForm, BindingResult bindingResult) {
 		DataTablesOutput<PlatformMonitoriza> dtOutput = new DataTablesOutput<>();
-		PlatformMonitoriza platformAfirma = null;
 		List<PlatformMonitoriza> listNewAfirma = new ArrayList<PlatformMonitoriza>();
-		boolean afirmaHaCambiado = false;
-		
+				
 		if (bindingResult.hasErrors()) {
 			listNewAfirma = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
 					.collect(Collectors.toList());
@@ -192,31 +166,9 @@ public class PlatformRestController {
 			dtOutput.setError(json.toString());
 		} else {
 			try {
-				if (afirmaForm.getIdPlatform() != null) {
-					platformAfirma = platformService.getPlatformById(afirmaForm.getIdPlatform());
-					afirmaHaCambiado = isAfirmaUpdatedForm(afirmaForm, platformAfirma);
-				} else {
-					platformAfirma = new PlatformMonitoriza();
-				}
-		
-				platformAfirma.setHost(afirmaForm.getHost());
-				platformAfirma.setName(afirmaForm.getName());
-				platformAfirma.setOcspContext(afirmaForm.getOcspContext());
-				platformAfirma.setPort(afirmaForm.getPort());
-				platformAfirma.setIsSecure(afirmaForm.getIsSecure());
-				platformAfirma.setServiceContext(afirmaForm.getServiceContext());
-				CPlatformType afirmaType = new CPlatformType();
-				afirmaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
-				platformAfirma.setPlatformType(afirmaType);
-		
-				PlatformMonitoriza afirma = platformService.savePlatform(platformAfirma);
-				listNewAfirma.add(afirma);
 				
-				// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
-				if (afirmaHaCambiado && platformAfirma.getIdPlatform() != null) {
-					
-					updateScheduledTimerFromPlatform(platformAfirma);
-				}
+				PlatformMonitoriza platformAfirma = platformService.savePlatformAfirma(afirmaForm);
+				listNewAfirma.add(platformAfirma);
 				
 			}catch(Exception e) {
 				listNewAfirma = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
@@ -233,7 +185,7 @@ public class PlatformRestController {
 	
 	/**
 	 * Method that maps the save user web request to the controller and saves it
-	 * in the persistence.
+	 * in the persistence. It also updates the scheduled timers.
 	 * 
 	 * @param tsaForm
 	 *            Object that represents the backing platform form.
@@ -244,12 +196,10 @@ public class PlatformRestController {
 	@RequestMapping(value = "/savetsa", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
 	public @ResponseBody DataTablesOutput<PlatformMonitoriza> saveTsa(
-			@Validated(OrderedValidation.class) @RequestBody TsaForm tsaForm, BindingResult bindingResult) {
+			@Validated(OrderedValidation.class) @RequestBody TsaDTO tsaForm, BindingResult bindingResult) {
 		DataTablesOutput<PlatformMonitoriza> dtOutput = new DataTablesOutput<>();
-		PlatformMonitoriza platformTsa = null;
 		List<PlatformMonitoriza> listNewTsa = new ArrayList<PlatformMonitoriza>();
-		boolean tsaHaCambiado = false;
-		
+				
 		if (bindingResult.hasErrors()) {
 			listNewTsa = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
 					.collect(Collectors.toList());
@@ -260,44 +210,10 @@ public class PlatformRestController {
 			dtOutput.setError(json.toString());
 		} else {
 			try {
-				if (tsaForm.getIdPlatform() != null) {
-					platformTsa = platformService.getPlatformById(tsaForm.getIdPlatform());
-					tsaHaCambiado = isTsaUpdatedForm(tsaForm, platformTsa);
-				} else {
-					platformTsa = new PlatformMonitoriza();
-				}
-		
-				platformTsa.setHost(tsaForm.getHost());
-				platformTsa.setName(tsaForm.getName());
-				platformTsa.setPort(tsaForm.getPort());
-				platformTsa.setIsSecure(tsaForm.getIsSecure());
-				platformTsa.setServiceContext(tsaForm.getServiceContext());
-				CPlatformType afirmaType = new CPlatformType();
-				afirmaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA);
-				platformTsa.setPlatformType(afirmaType);
-				platformTsa.setRfc3161Context(tsaForm.getRfc3161Context());
-				platformTsa.setRfc3161Port(tsaForm.getRfc3161Port());
-				platformTsa.setUseRfc3161Auth(tsaForm.getUseRfc3161Auth());
-				platformTsa.setRfc3161Certificate(sysCertService.getSystemCertificateById(tsaForm.getRfc3161Certificate()));
-				
-				if (tsaForm.getRfc3161Certificate() == null || tsaForm.getRfc3161Certificate().longValue() == -1) {
-					platformTsa.setUseRfc3161Auth(false);
-				}
 						
-				PlatformMonitoriza tsa = platformService.savePlatform(platformTsa);
+				PlatformMonitoriza tsa = platformService.savePlatformTsa(tsaForm);
 																
-				listNewTsa.add(tsa);
-				
-				// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
-				if (tsaHaCambiado && platformTsa.getIdPlatform() != null) {
-					
-					updateScheduledTimerFromPlatform(platformTsa);
-				}
-				
-				// Se construye objeto vacío para evitar warning de datatables
-				if (!tsaForm.getUseRfc3161Auth()) {
-					platformTsa.setRfc3161Certificate(new SystemCertificate());
-				}
+				listNewTsa.add(tsa);				
 				
 			}catch(Exception e) {
 				listNewTsa = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
@@ -312,72 +228,4 @@ public class PlatformRestController {
 
 	}
 	
-	/**
-	 * Method that sets the scheduled timers of the services which uses this platform as updated
-	 * @param platform Object that represents the platform
-	 */
-	private void updateScheduledTimerFromPlatform(PlatformMonitoriza platform) {
-		
-		List<ServiceMonitoriza> servicesUsingThisPlatform = StreamSupport.stream(serviceService.getAllByPlatform(platform).spliterator(), false).collect(Collectors.toList());
-		
-		TimerScheduled scheduled = null;
-		for (ServiceMonitoriza service : servicesUsingThisPlatform) {
-			
-			scheduled = scheduledService.getTimerScheduledByIdTimer(service.getTimer().getIdTimer());
-			scheduled.setUpdated(false);
-			scheduledService.saveTimerScheduled(scheduled);
-			
-		}
-		
-	}
-	
-	/**
-	 * Method thar checks if there are changes between the afirma form and the persisted platform.
-	 * @param afirmaForm Object that represents the backing form for the @firma platform
-	 * @param platform Object that represents the persisted @firma platform 
-	 * @return true if the data of the form has been updated
-	 */
-	private boolean isAfirmaUpdatedForm(AfirmaForm afirmaForm, PlatformMonitoriza platform) {
-		
-		return !(afirmaForm.getIsSecure().equals(platform.getIsSecure()) &&
-				 afirmaForm.getHost().equals(platform.getHost()) &&
-				 afirmaForm.getName().equals(platform.getName()) &&
-				 afirmaForm.getOcspContext().equals(platform.getOcspContext()) &&
-				 afirmaForm.getPort().equals(platform.getPort()) &&
-				 afirmaForm.getIsSecure().equals(platform.getIsSecure()) &&
-				 afirmaForm.getServiceContext().equals(platform.getServiceContext()));
-		
-	}
-	
-	/**
-	 * Method that checks if there are changes between the TS@ form and the persisted platform.
-	 * @param tsaForm Object that represents the backing form for the @firma platform
-	 * @param platform Object that represents the platform
-	 * @return true if the data of the form has been updated
-	 */
-	private boolean isTsaUpdatedForm(TsaForm tsaForm, PlatformMonitoriza platform) {
-		
-		boolean changeAuthRFC3161 = false;
-		
-		if (platform.getRfc3161Certificate() == null ) {
-			
-			changeAuthRFC3161 = tsaForm.getRfc3161Certificate() != null;
-			
-		} else {
-			
-			changeAuthRFC3161 = !platform.getRfc3161Certificate().getIdSystemCertificate().equals(tsaForm.getRfc3161Certificate());
-		}
-		
-		return !(tsaForm.getIsSecure().equals(platform.getIsSecure()) &&
-				tsaForm.getHost().equals(platform.getHost()) &&
-				tsaForm.getName().equals(platform.getName()) &&
-				!changeAuthRFC3161 &&
-				tsaForm.getRfc3161Context().equals(platform.getRfc3161Context()) &&
-				tsaForm.getRfc3161Port().equals(platform.getRfc3161Port()) &&
-				tsaForm.getPort().equals(platform.getPort()) &&
-				tsaForm.getIsSecure().equals(platform.getIsSecure()) &&
-				tsaForm.getServiceContext().equals(platform.getServiceContext()));
-		
-	}
-
 }

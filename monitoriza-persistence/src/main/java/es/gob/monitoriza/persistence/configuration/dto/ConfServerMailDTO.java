@@ -15,14 +15,14 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.form.ConfServerMailForm.java.</p>
+ * <b>File:</b><p>ees.gob.monitoriza.persistence.configuration.dto.ConfServerMailDTO.java.</p>
  * <b>Description:</b><p>Class that represents the backing form for adding/editing a user.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16 oct. 2018.
+ * @version 1.0, 28/10/2018.
  */
-package es.gob.monitoriza.form;
+package es.gob.monitoriza.persistence.configuration.dto;
 
 /**
  * <p>
@@ -33,9 +33,9 @@ package es.gob.monitoriza.form;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 16 oct. 2018.
+ * @version 1.0, 28/10/2018
  */
-public class ConfServerMailForm {
+public class ConfServerMailDTO {
 
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input in

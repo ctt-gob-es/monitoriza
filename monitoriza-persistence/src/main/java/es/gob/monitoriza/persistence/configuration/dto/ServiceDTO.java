@@ -1,6 +1,7 @@
+/* 
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
- * This program is licensed and may be used, modified and redistributed under the terms
+ * This program is licensed and may be used, modified and redistributed under the  terms
  * of the European Public License (EUPL), either version 1.1 or (at your option)
  * any later version as soon as they are approved by the European Commission.
  * Unless required by applicable law or agreed to in writing, software
@@ -14,336 +15,195 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.AfirmaServicesNames.java.</p>
- * <b>Description:</b><p>Class for transferring service data from persistence.</p>
- * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * <b>Date:</b><p>22 ene. 2018.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.ServiceForm.java.</p>
+ * <b>Description:</b><p> .</p>
+  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 20/09/2018.
+ * @version 1.0, 24/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
-import java.util.List;
-import java.util.Objects;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 
-/** 
- * <p>Data transfer object that encapsulates the information for service configuration.</p>
- * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 22 ene. 2018.
- */
-/** 
- * <p>Data transfer object class that encapsulates the information of the services.</p>
- * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 20/09/2018.
+import org.springframework.web.multipart.MultipartFile;
+
+import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
+import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
+import es.gob.monitoriza.utilidades.NumberConstants;
+
+/**
+ * <p>
+ * Class that represents the backing form for adding/editing a service.
+ * </p>
+ * <b>Project:</b>
+ * <p>
+ * Application for monitoring services of @firma suite systems.
+ * </p>
+ * 
+ * @version 1.0, 24/10/2018.
  */
 public class ServiceDTO {
 	
 	/**
-	 * Attribute that represents the service identifier. 
+	 * Constant string that represents the name of the mapped form in the template view. 
 	 */
-	private Long serviceId;
+	public static final String FORM_OBJECT_VALUE = "serviceForm";
 	
 	/**
-	 * Attribute that represents the service name. 
+	 * Constant string that represents the identifier of the field "Endpoint" in the form of the template view. 
 	 */
-	private String serviceName;
+	public static final String FIELD_ENDPOINT = "nameWsdl";
 	
 	/**
-	 * Attribute that represents the timer identifier for this service. 
+	 * Constant string that represents the identifier of the field "file" in the form of the template view. 
 	 */
-	private String timerName;
-	
+	public static final String FIELD_FILE = "file";
+
 	/**
-	 * Attribute that represents the timeout (milliseconds) for this service. 
+	 * Attribute that represents the object ID.
 	 */
+	private Long idService;
+
+	/**
+	 * Attribute that represents the name of the service.
+	 */
+	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.service.name.notempty}")
+	@Size(min = NumberConstants.NUM1, max = NumberConstants.NUM30, groups = ThenCheckIt.class)
+	private String name;
+
+	/**
+	 * Attribute that represents the time interval in milliseconds that must
+	 * pass before the request for this service is cancelled.
+	 */
+	@NotNull(message = "{form.valid.service.timeout.notempty}")
 	private Long timeout;
-	
+
 	/**
-	 * Attribute that represents the name of the service. 
+	 * Attribute that represents the name of the service in the WSDL endpoint
+	 * path.
 	 */
-	private String wsdl;
-	
+	private String nameWsdl;
+
 	/**
-	 * Attribute that represents the context path for the OCSP services in the platform associated to the service. 
+	 * Attribute that represents the average time in milliseconds that a service
+	 * request must take to be considered degraded.
 	 */
-	private String ocspContext;
-	
-	/**
-	 * Attribute that represents the context path for the RFC3161 services in the platform associated to the service. 
-	 */
-	private String rfc3161Context;
-	
-	/**
-	 * Attribute that indicate if the TS@ platform associated uses authentication for the RFC3161 service. 
-	 */
-	private Boolean useRfc3161Auth;
-	
-	/**
-	 * Attribute that represents the certificate selected for RFC3161 service authentication in TS@ platform. 
-	 */
-	private String rfc3161Cert;
-	
-	/**
-	 * Attribute that represents the password for the RFC3161 keystore. 
-	 */
-	private String rfc3161Password;
-	
-	/**
-	 * Attribute that represents the threshold response time in milliseconds above which the service is considered degraded. 
-	 */
+	@NotNull(message = "{form.valid.service.degradedThreshold.notempty}")
 	private Long degradedThreshold;
+
+	/**
+	 * Attribute that represents the average time in milliseconds that a service
+	 * request must take to be considered lost.
+	 */
+	@NotNull(message = "{form.valid.service.lostThreshold.notempty}")
+	private Long lostThreshold;
+
+	/**
+	 * Attribute that represents the timer configured to this service.
+	 */
+	@NotNull(message = "{form.valid.service.timer.notempty}")
+	private Long timer;
+
+	/**
+	 * Attribute that represents the alarm configured to this service.
+	 */
+	 @NotNull(message="{form.valid.service.alarm.notempty}")
+	 private Long alarm;
+
+	/**
+	 * Attribute that represents the platform that could be configured to this
+	 * service.
+	 */
+	@NotNull(message = "{form.valid.service.platform.notempty}")
+	private Long platform;
 	
 	/**
-	 * Attribute that represents the threshold percentage of lost requests (degraded or timed out)
-	 * above which is necessary to call the next confirmation group. 
+	 * Attribute that represents the uploaded file of the system certificate. 
 	 */
-	private String lostThreshold;
+	private MultipartFile file;
+		
+	/**
+	 * Attribute that represents the identifier of the request file. 
+	 */
+	private Long idFile;
 	
 	/**
-	 * Attribute that represents the path in which the requests are stored. 
+	 * Attribute that represents the file content as a base 64 String. 
 	 */
-	private String directoryPath;
-	
+	private String fileData;
+
 	/**
-	 * Attribute that represents a flag that indicates if the service belongs to the @firma (true) platform or ts@ platform (false). 
+	 * Attribute that represents the type of service selected.
 	 */
-	private boolean afirmaService;
-	
-	/**
-	 * Attribute that represents the url for SOAP service invocation. 
-	 */
-	private String soapUrl;
-	
-	/**
-	 * Attribute that represents the base url of the platform. 
-	 */
-	private String baseUrl;
-	
-	/**
-	 * Attribute that represents the type of the service. 
-	 */
+	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.service.serviceType.notempty}")
+	@Size(min = NumberConstants.NUM1, max = NumberConstants.NUM30, groups = ThenCheckIt.class)
 	private String serviceType;
 	
 	/**
-	 * Attribute that represents the identifier for the platform of this service. 
+	 * Gets the value of the attribute {@link #idService}.
+	 * @return the value of the attribute {@link #idService}.
 	 */
-	private Long idPlatform;
-	
-	/**
-	 * Attribute that represents the time in milliseconds that the alarm associated to this service will
-	 * be blocked.
-	 */
-	private Long blockTimeAlarm;
-	
-	/**
-	 * Attribute that represents the list of mail addresses to which send alarms when the service is degraded. 
-	 */
-	private List<String> listMailDegraded;
-	
-	/**
-	 * Attribute that represents the list of mail addresses to which send alarms when the service is down. 
-	 */
-	private List<String> listMailDown;
-	
-	
-	/**
-	 * Constructor method for the class DTOService.java.
-	 * @param serviceId 
-	 */
-	public ServiceDTO(final String serviceName) {
-		this.serviceName = serviceName;
-	}
-		
-	
-	/**
-	 * Constructor method for the class ServiceDTO.java.
-	 * @param serviceId
-	 * @param serviceName
-	 * @param timerId
-	 * @param timeout
-	 * @param wsdl
-	 * @param degradedThreshold
-	 * @param lostThreshold
-	 * @param directoryPath
-	 * @param afirmaService 
-	 */
-	public ServiceDTO(Long serviceId, String serviceName, String timerName, Long timeout, String wsdl, Long degradedThreshold, String lostThreshold, String directoryPath, boolean afirmaService, String serviceType, Long idPlatform) {
-		super();
-		this.serviceId = serviceId;
-		this.serviceName = serviceName;
-		this.timerName = timerName;
-		this.timeout = timeout;
-		this.wsdl = wsdl;
-		this.degradedThreshold = degradedThreshold;
-		this.lostThreshold = lostThreshold;
-		this.directoryPath = directoryPath;
-		this.afirmaService = afirmaService;
-		this.serviceType = serviceType;
-		this.idPlatform = idPlatform;
+	public Long getIdService() {
+		return idService;
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #serviceId} 
-	 * @return the value of the attribute {@link #serviceId}
+	 * Sets the value of the attribute {@link #idService}.
+	 * @param idServiceParam the value for the attribute {@link #idService} to set.
 	 */
-	public Long getServiceId() {
-		return serviceId;
-	}
-	
-	/**
-	 * Sets the value of the attribute {@link #serviceId} 
-	 * @param serviceId the value for the attribute {@link #serviceId} to set.
-	 */
-	public void setServiceId(final Long serviceId) {
-		this.serviceId = serviceId;
+	public void setIdService(Long idServiceParam) {
+		this.idService = idServiceParam;
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #serviceName} 
-	 * @return the value of the attribute {@link #serviceName}
-	 */	
-	public String getServiceName() {
-		return serviceName;
+	 * Gets the value of the attribute {@link #name}.
+	 * @return the value of the attribute {@link #name}.
+	 */
+	public String getName() {
+		return name;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #serviceName} 
-	 * @param serviceId the value for the attribute {@link #serviceName} to set.
+	 * Sets the value of the attribute {@link #name}.
+	 * @param nameParam the value for the attribute {@link #name} to set.
 	 */
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
+	public void setName(String nameParam) {
+		this.name = nameParam;
 	}
 
-	/**
-	 * Gets the value of the attribute {@link #timerName}.
-	 * @return the value of the attribute {@link #timerName}.
-	 */
-	public String getTimerName() {
-		return timerName;
-	}
-
-	
-	/**
-	 * Sets the value of the attribute {@link #timerName}.
-	 * @param timerId the value for the attribute {@link #timerName} to set.
-	 */
-	public void setTimerName(final String timerName) {
-		this.timerName = timerName;
-	}
-
-	
 	/**
 	 * Gets the value of the attribute {@link #timeout}.
-	 * @return the value of the attribute {@link #timerName}.
+	 * @return the value of the attribute {@link #timeout}.
 	 */
 	public Long getTimeout() {
 		return timeout;
 	}
 
-	
 	/**
 	 * Sets the value of the attribute {@link #timeout}.
-	 * @param timeout the value for the attribute {@link #timeout} to set.
+	 * @param timeoutParam the value for the attribute {@link #timeout} to set.
 	 */
-	public void setTimeout(final Long timeout) {
-		this.timeout = timeout;
-	}
-			
-	
-	/**
-	 * Gets the value of the attribute {@link #wsdl}.
-	 * @return the value of the attribute {@link #wsdl}.
-	 */
-	public String getWsdl() {
-		return wsdl;
-	}
-	
-	/**
-	 * Sets the value of the attribute {@link #wsdl}.
-	 * @param wsdl the value for the attribute {@link #wsdl} to set.
-	 */
-	public void setWsdl(final String wsdl) {
-		this.wsdl = wsdl;
-	}
-			
-	/**
-	 * Gets the value of the attribute {@link #ocspContext}.
-	 * @return the value of the attribute {@link #ocspContext}.
-	 */
-	public String getOcspContext() {
-		return ocspContext;
+	public void setTimeout(Long timeoutParam) {
+		this.timeout = timeoutParam;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #ocspContext}.
-	 * @param ocspContext the value for the attribute {@link #ocspContext} to set.
+	 * Gets the value of the attribute {@link #nameWsdl}.
+	 * @return the value of the attribute {@link #nameWsdl}.
 	 */
-	public void setOcspContext(String ocspContext) {
-		this.ocspContext = ocspContext;
+	public String getNameWsdl() {
+		return nameWsdl;
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #rfc3161Context}.
-	 * @return the value of the attribute {@link #rfc3161Context}.
+	 * Sets the value of the attribute {@link #nameWsdl}.
+	 * @param nameWsdlParam the value for the attribute {@link #nameWsdl} to set.
 	 */
-	public String getRfc3161Context() {
-		return rfc3161Context;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #rfc3161Context}.
-	 * @param rfc3161Context the value for the attribute {@link #rfc3161Context} to set.
-	 */
-	public void setRfc3161Context(String rfc3161Context) {
-		this.rfc3161Context = rfc3161Context;
-	}
-				
-	/**
-	 * Gets the value of the attribute {@link #useRfc3161Auth}.
-	 * @return the value of the attribute {@link #useRfc3161Auth}.
-	 */
-	public Boolean getUseRfc3161Auth() {
-		return useRfc3161Auth;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #useRfc3161Auth}.
-	 * @param useRfc3161Auth the value for the attribute {@link #useRfc3161Auth} to set.
-	 */
-	public void setUseRfc3161Auth(Boolean useRfc3161Auth) {
-		this.useRfc3161Auth = useRfc3161Auth;
-	}
-
-	/**
-	 * Gets the value of the attribute {@link #rfc3161Cert}.
-	 * @return the value of the attribute {@link #rfc3161Cert}.
-	 */
-	public String getRfc3161Cert() {
-		return rfc3161Cert;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #rfc3161Cert}.
-	 * @param rfc3161Cert the value for the attribute {@link #rfc3161Cert} to set.
-	 */
-	public void setRfc3161Cert(String rfc3161Cert) {
-		this.rfc3161Cert = rfc3161Cert;
-	}
-			
-	/**
-	 * Gets the value of the attribute {@link #rfc3161Password}.
-	 * @return the value of the attribute {@link #rfc3161Password}.
-	 */
-	public String getRfc3161Password() {
-		return rfc3161Password;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #rfc3161Password}.
-	 * @param rfc3161Password the value for the attribute {@link #rfc3161Password} to set.
-	 */
-	public void setRfc3161Password(String rfc3161Password) {
-		this.rfc3161Password = rfc3161Password;
+	public void setNameWsdl(String nameWsdlParam) {
+		this.nameWsdl = nameWsdlParam;
 	}
 
 	/**
@@ -353,205 +213,142 @@ public class ServiceDTO {
 	public Long getDegradedThreshold() {
 		return degradedThreshold;
 	}
-	
+
 	/**
 	 * Sets the value of the attribute {@link #degradedThreshold}.
-	 * @param degradedThreshold the value for the attribute {@link #degradedThreshold} to set.
+	 * @param degradedThresholdParam the value for the attribute {@link #degradedThreshold} to set.
 	 */
-	public void setDegradedThreshold(final Long degradedThreshold) {
-		this.degradedThreshold = degradedThreshold;
+	public void setDegradedThreshold(Long degradedThresholdParam) {
+		this.degradedThreshold = degradedThresholdParam;
 	}
-			
+
 	/**
 	 * Gets the value of the attribute {@link #lostThreshold}.
 	 * @return the value of the attribute {@link #lostThreshold}.
 	 */
-	public String getLostThreshold() {
+	public Long getLostThreshold() {
 		return lostThreshold;
 	}
-	
+
 	/**
 	 * Sets the value of the attribute {@link #lostThreshold}.
-	 * @param lostThreshold the value for the attribute {@link #lostThreshold} to set.
+	 * @param lostThresholdParam the value for the attribute {@link #lostThreshold} to set.
 	 */
-	public void setLostThreshold(final String lostThreshold) {
-		this.lostThreshold = lostThreshold;
-	}
-	
-	
-	/**
-	 * Gets the value of the attribute {@link #directoryPath}.
-	 * @return the value of the attribute {@link #directoryPath}.
-	 */
-	public String getDirectoryPath() {
-		return directoryPath;
+	public void setLostThreshold(Long lostThresholdParam) {
+		this.lostThreshold = lostThresholdParam;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #directoryPath}.
-	 * @param directoryPath the value for the attribute {@link #directoryPath} to set.
+	 * Gets the value of the attribute {@link #timer}.
+	 * @return the value of the attribute {@link #timer}.
 	 */
-	public void setDirectoryPath(final String directoryPath) {
-		this.directoryPath = directoryPath;
-	}
-		
-	/**
-	 * Gets the value of the attribute {@link #afirmaService}
-	 * @return the value of the attribute {@link #afirmaService}.
-	 */
-	public boolean isAfirmaService() {
-		return afirmaService;
-	}
-	
-	/**
-	 * Sets the value of the attribute {@link #afirmaService}.
-	 * @param afirmaService the value for the attribute {@link #afirmaService} to set.
-	 */
-	public void setAfirmaService(boolean afirmaService) {
-		this.afirmaService = afirmaService;
-	}
-	
-	/**
-	 * Gets the value of the attribute {@link #soapUrl}
-	 * @return the value of the attribute {@link #soapUrl}.
-	 */
-	public String getSoapUrl() {
-		return soapUrl;
+	public Long getTimer() {
+		return timer;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #soapUrl}.
-	 * @param afirmaService the value for the attribute {@link #soapUrl} to set.
+	 * Sets the value of the attribute {@link #timer}.
+	 * @param timerParam the value for the attribute {@link #timer} to set.
 	 */
-	public void setSoapUrl(String connectionUrl) {
-		this.soapUrl = connectionUrl;
-	}
-				
-	
-	/**
-	 * Gets the value of the attribute {@link #baseUrl}
-	 * @return the value of the attribute {@link #baseUrl}.
-	 */
-	public String getBaseUrl() {
-		return baseUrl;
-	}
-	
-	/**
-	 * Sets the value of the attribute {@link #baseUrl}.
-	 * @param afirmaService the value for the attribute {@link #baseUrl} to set.
-	 */
-	public void setBaseUrl(String baseUrl) {
-		this.baseUrl = baseUrl;
+	public void setTimer(Long timerParam) {
+		this.timer = timerParam;
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #serviceType}
+	 * Gets the value of the attribute {@link #platform}.
+	 * @return the value of the attribute {@link #platform}.
+	 */
+	public Long getPlatform() {
+		return platform;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #platform}.
+	 * @param platformParam the value for the attribute {@link #platform} to set.
+	 */
+	public void setPlatform(Long platformParam) {
+		this.platform = platformParam;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #serviceType}.
 	 * @return the value of the attribute {@link #serviceType}.
-	 */	
+	 */
 	public String getServiceType() {
 		return serviceType;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #serviceType}.
-	 * @param afirmaService the value for the attribute {@link #serviceType} to set.
+	 * @param serviceTypeParam the value for the attribute {@link #serviceType} to set.
 	 */
-	public void setServiceType(String serviceType) {
-		this.serviceType = serviceType;
-	}
-		
-	/**
-	 * Gets the value of the attribute {@link #idPlatform}
-	 * @return the value of the attribute {@link #idPlatform}.
-	 */	
-	public Long getIdPlatform() {
-		return idPlatform;
+	public void setServiceType(String serviceTypeParam) {
+		this.serviceType = serviceTypeParam;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #idPlatform}.
-	 * @param afirmaService the value for the attribute {@link #idPlatform} to set.
+	 * Gets the value of the attribute {@link #alarm}.
+	 * @return the value of the attribute {@link #alarm}.
 	 */
-	public void setIdPlatform(Long idPlatform) {
-		this.idPlatform = idPlatform;
+	public Long getAlarm() {
+		return alarm;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #alarm}.
+	 * @param alarmParam the value for the attribute {@link #alarm} to set.
+	 */
+	public void setAlarm(Long alarmParam) {
+		this.alarm = alarmParam;
+	}
+	
+	/**
+	 * Gets the value of the attribute {@link #file}.
+	 * @return the value of the attribute {@link #file}.
+	 */	
+	public MultipartFile getFile() {
+		return file;
+	}
+	
+	/**
+	 * Sets the value of the attribute {@link #file}.
+	 * @param sslCertificate the value for the attribute {@link #file} to set.
+	 */
+	public void setFile(final MultipartFile sslCertificate) {
+		this.file = sslCertificate;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #idFile}.
+	 * @return the value of the attribute {@link #idFile}.
+	 */
+	public Long getIdFile() {
+		return idFile;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #idFile}.
+	 * @param idFileParam the value for the attribute {@link #idFile} to set.
+	 */
+	public void setIdFile(Long idFileParam) {
+		this.idFile = idFileParam;
+	}
+	
+	/**
+	 * Gets the value of the attribute {@link #fileData}.
+	 * @return the value of the attribute {@link #fileData}.
+	 */
+	public String getFileData() {
+		return fileData;
+	}
+	
+	/**
+	 * Sets the value of the attribute {@link #fileData}.
+	 * @param fileDataParam the value for the attribute {@link #fileData} to set.
+	 */
+	public void setFileData(String fileDataParam) {
+		this.fileData = fileDataParam;
 	}
 	
 	
-	/**
-	 * Gets the value of the attribute {@link #blockTimeAlarm}
-	 * @return the value of the attribute {@link #blockTimeAlarm}.
-	 */	
-	public Long getBlockTimeAlarm() {
-		return blockTimeAlarm;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #blockTimeAlarm}.
-	 * @param afirmaService the value for the attribute {@link #blockTimeAlarm} to set.
-	 */
-	public void setBlockTimeAlarm(Long blockTimeAlarm) {
-		this.blockTimeAlarm = blockTimeAlarm;
-	}
-
-	/**
-	 * Gets the value of the attribute {@link #listMailDegraded}
-	 * @return the value of the attribute {@link #listMailDegraded}.
-	 */	
-	public List<String> getListMailDegraded() {
-		return listMailDegraded;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #listMailDegraded}.
-	 * @param afirmaService the value for the attribute {@link #listMailDegraded} to set.
-	 */
-	public void setListMailDegraded(List<String> listMailDegraded) {
-		this.listMailDegraded = listMailDegraded;
-	}
-
-	/**
-	 * Gets the value of the attribute {@link #listMailDown}
-	 * @return the value of the attribute {@link #listMailDown}.
-	 */	
-	public List<String> getListMailDown() {
-		return listMailDown;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #listMailDown}.
-	 * @param afirmaService the value for the attribute {@link #listMailDown} to set.
-	 */	
-	public void setListMailDown(List<String> listMailDown) {
-		this.listMailDown = listMailDown;
-	}
-
-
-	/**
-	 * {@inheritDoc}
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
-	@Override
-    public boolean equals(final Object o) {
-
-        if (o == this) {
-        	return true;
-        }
-        if (!(o instanceof ServiceDTO)) {
-            return false;
-        }
-        ServiceDTO service = (ServiceDTO) o;
-        
-        return serviceId.equals(service.getServiceId());
-    }
-
-    /**
-     * {@inheritDoc}
-     * @see java.lang.Object#hashCode()
-     */
-    @Override
-    public int hashCode() {
-        return Objects.hash(serviceId);
-    }
-		
-
 }

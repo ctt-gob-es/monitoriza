@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>29 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 10/10/2018.
+ * @version 1.4, 28/10/2018.
  */
 package es.gob.monitoriza.invoker.rfc3161;
 
@@ -53,14 +53,14 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.utilidades.FileUtils;
 import es.gob.monitoriza.utilidades.UtilsResource;
 
 /** 
  * <p>Class that manages and performs the request of a service via RFC3161.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 10/10/2018.
+ * @version 1.4, 28/10/2018.
  */
 public class Rfc3161Invoker {
 	
@@ -99,7 +99,7 @@ public class Rfc3161Invoker {
 	 * If there is some configuration or communication problem, this value will be null.
 	 * @throws InvokerException If the method fails.
 	 */
-	public static Long sendRequest(final File requestFile, final ServiceDTO service, final KeyStore ssl, final KeyStore authRfc3161) throws InvokerException {
+	public static Long sendRequest(final File requestFile, final ConfigServiceDTO service, final KeyStore ssl, final KeyStore authRfc3161) throws InvokerException {
 		LOGGER.debug(Language.getResMonitoriza(IStatusLogMessages.STATUS009));
 		
 		Long tiempoTotal = null;
@@ -209,7 +209,7 @@ public class Rfc3161Invoker {
 	 * @param service Configured RFC3161 service
 	 * @return URL of the RFC3161 service in TS@
 	 */
-	private static URL getRFC3161TSAURLFromWebAdmin(ServiceDTO service) throws InvokerException {
+	private static URL getRFC3161TSAURLFromWebAdmin(ConfigServiceDTO service) throws InvokerException {
 					
 		StringBuffer tsaURL = new StringBuffer();
 		tsaURL.append(service.getBaseUrl()).append(service.getRfc3161Context());

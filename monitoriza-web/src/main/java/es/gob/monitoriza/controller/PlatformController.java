@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 17/10/2018.
+ * @version 1.4, 28/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -37,8 +37,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.form.AfirmaForm;
-import es.gob.monitoriza.form.TsaForm;
+import es.gob.monitoriza.persistence.configuration.dto.AfirmaDTO;
+import es.gob.monitoriza.persistence.configuration.dto.TsaDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.service.IPlatformService;
@@ -47,7 +47,7 @@ import es.gob.monitoriza.service.ISystemCertificateService;
 /** 
  * <p>Class that manages the requests related to the Platform administration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 17/10/2018.
+ * @version 1.4, 28/10/2018.
  */
 @Controller
 public class PlatformController {
@@ -98,7 +98,7 @@ public class PlatformController {
 	 */
 	@RequestMapping(value = "addafirma", method = RequestMethod.POST)
     public String addAfirma(Model model){
-		model.addAttribute("afirmaform", new AfirmaForm());
+		model.addAttribute("afirmaform", new AfirmaDTO());
 		return "modal/afirmaForm";
     }	
 	
@@ -113,7 +113,7 @@ public class PlatformController {
 		List<SystemCertificate> listCertificates = StreamSupport.stream(sysCertService.getAllAuth().spliterator(), false)
 				.collect(Collectors.toList());				
 		
-		model.addAttribute("tsaform", new TsaForm());
+		model.addAttribute("tsaform", new TsaDTO());
 		model.addAttribute("authcerts", listCertificates);
 		return "modal/tsaForm";
     }	
@@ -128,7 +128,7 @@ public class PlatformController {
     @RequestMapping(value = "editafirma", method = RequestMethod.POST)
     public String editAfirma(@RequestParam("id") Long afirmaId, Model model){
     	PlatformMonitoriza afirma = platformService.getPlatformById(afirmaId);
-    	AfirmaForm afirmaForm = new AfirmaForm();
+    	AfirmaDTO afirmaForm = new AfirmaDTO();
     	
     	afirmaForm.setHost(afirma.getHost());
     	afirmaForm.setIdPlatform(afirmaId);
@@ -155,7 +155,7 @@ public class PlatformController {
     	List<SystemCertificate> listCertificates = StreamSupport.stream(sysCertService.getAllAuth().spliterator(), false)
 				.collect(Collectors.toList());				
 		
-    	TsaForm tsaForm = new TsaForm();
+    	TsaDTO tsaForm = new TsaDTO();
     	
     	tsaForm.setHost(tsa.getHost());
     	tsaForm.setIdPlatform(tsaId);

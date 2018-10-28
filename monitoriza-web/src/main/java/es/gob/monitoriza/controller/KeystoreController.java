@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>14 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1 10/10/2018.
+ * @version 1.2 28/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -36,14 +36,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartFile;
 
-import es.gob.monitoriza.form.CertificateForm;
+import es.gob.monitoriza.persistence.configuration.dto.CertificateDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.service.ISystemCertificateService;
 
 /**
  * <p>Class that maps the request for the keystores forms to the controller.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 @Controller
 public class KeystoreController {
@@ -93,7 +93,7 @@ public class KeystoreController {
 	@RequestMapping(value = "addssl")
 	public String addSsl(final Model model) {
 
-		model.addAttribute("sslform", new CertificateForm());
+		model.addAttribute("sslform", new CertificateDTO());
 
 		return "modal/sslForm.html";
 	}
@@ -132,7 +132,7 @@ public class KeystoreController {
 	@RequestMapping(value = "loadssl", method = RequestMethod.POST)
 	public String loadssl(@RequestParam("file") final MultipartFile file, final Model model) throws IOException {
 
-		CertificateForm sslForm = new CertificateForm();
+		CertificateDTO sslForm = new CertificateDTO();
 
 		sslForm.setCertBytes(file.getBytes());
 		sslForm.setFile(file);
@@ -153,7 +153,7 @@ public class KeystoreController {
 	@RequestMapping(value = "editcert", method = RequestMethod.POST)
 	public String editSsl(@RequestParam("id") final Long certId, final Model model) {
 		SystemCertificate sysCert = sysCertService.getSystemCertificateById(certId);
-		CertificateForm certForm = new CertificateForm();
+		CertificateDTO certForm = new CertificateDTO();
 
 		certForm.setAlias(sysCert.getAlias());
 		certForm.setIssuer(sysCert.getIssuer());

@@ -20,19 +20,22 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>09/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 09/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.service;
+
+import java.util.List;
 
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
+import es.gob.monitoriza.persistence.configuration.dto.NodeDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 09/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 public interface INodeMonitorizaService {
 	
@@ -48,7 +51,7 @@ public interface INodeMonitorizaService {
 	 * @param node a {@link NodeMonitoriza} with the information of the node configuration.
 	 * @return {@link NodeMonitoriza} The node configuration. 
 	 */
-	NodeMonitoriza savePlatform(NodeMonitoriza node);
+	NodeMonitoriza saveNode(NodeMonitoriza node);
 			
 	/**
 	 * Method that deletes a node configuration in the persistence.
@@ -69,11 +72,32 @@ public interface INodeMonitorizaService {
 	 * @return A set of DataTable rows that matches the query.
 	 */
 	DataTablesOutput<NodeMonitoriza> findAllTsa(DataTablesInput input);
+		
+	/**
+	 * Method that obtains all nodes of the specified platform type.
+	 * @param idPlatformType Identifier of the platform type.
+	 * @return {@link List<NodeMonitoriza>} of nodes that belongs to the specified platform
+	 */
+	List<NodeMonitoriza> getByPlatformType(Long idPlatformType);
 	
 	/**
 	 * Method that returns all nodes.
 	 * @return Iterable<NodeMonitoriza>
 	 */
 	Iterable<NodeMonitoriza> getAllNode();
+	
+	/**
+	 * Method that stores a @Firma node configuration in the persistence.
+	 * @param node a {@link NodeDTO} with the information of the node configuration.
+	 * @return {@link NodeMonitoriza} The node configuration. 
+	 */
+	NodeMonitoriza saveNodeAfirma(NodeDTO node);
+	
+	/**
+	 * Method that stores a TS@ node configuration in the persistence.
+	 * @param node a {@link NodeDTO} with the information of the node configuration.
+	 * @return {@link NodeMonitoriza} The node configuration. 
+	 */
+	NodeMonitoriza saveNodeTsa(NodeDTO node);
 
 }

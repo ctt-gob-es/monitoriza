@@ -15,14 +15,14 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.form.ConfServerMailForm.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO.java.</p>
  * <b>Description:</b><p>Class that represents the backing form for adding/editing a user.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16 oct. 2018.
+ * @version 1.0, 28/10/2018.
  */
-package es.gob.monitoriza.form;
+package es.gob.monitoriza.persistence.configuration.dto;
 
 import java.sql.Time;
 import java.util.List;
@@ -36,9 +36,9 @@ import java.util.List;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 16 oct. 2018.
+ * @version 1.0, 28/10/2018.
  */
-public class ConfSpieForm {
+public class ConfSpieDTO {
 
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input in
@@ -75,6 +75,34 @@ public class ConfSpieForm {
 	 * Attribute that represents the method validations.
 	 */
 	private List<String> methodValidations;
+		
+	/**
+	 * Constructor method for the class ConfSpieDTO.java. 
+	 */
+	public ConfSpieDTO() {
+		super();
+	}
+
+	/**
+	 * Constructor method for the class ConfSpieDTO.java.
+	 * @param idConfSpieParam Parameter for {@link idConfSpie}
+	 * @param percentAcceptParam Parameter for {@link percentAccept}
+	 * @param frequencyAFirmaParam Parameter for {@link frequencyAFirma}
+	 * @param frequencyTsaParam Parameter for {@link frequencyTsa}
+	 * @param frequencyAFirmaTimeParam Parameter for {@link frequencyAFirmaTime}
+	 * @param frequencyTsaTimeParam Parameter for {@link frequencyTsaTime}
+	 * @param methodValidationsParam Parameter for {@link methodValidations}
+	 */
+	public ConfSpieDTO(Long idConfSpieParam, Long percentAcceptParam, Long frequencyAFirmaParam, Long frequencyTsaParam, Time frequencyAFirmaTimeParam, Time frequencyTsaTimeParam, List<String> methodValidationsParam) {
+		super();
+		this.idConfSpie = idConfSpieParam;
+		this.percentAccept = percentAcceptParam;
+		this.frequencyAFirma = frequencyAFirmaParam;
+		this.frequencyTsa = frequencyTsaParam;
+		this.frequencyAFirmaTime = frequencyAFirmaTimeParam;
+		this.frequencyTsaTime = frequencyTsaTimeParam;
+		this.methodValidations = methodValidationsParam;
+	}
 
 	/**
 	 * @return the idConfSpie
@@ -84,11 +112,11 @@ public class ConfSpieForm {
 	}
 
 	/**
-	 * @param idConfSpie
+	 * @param idConfSpieParam
 	 *            the idConfSpie to set
 	 */
-	public void setIdConfSpie(Long idConfSpie) {
-		this.idConfSpie = idConfSpie;
+	public void setIdConfSpie(Long idConfSpieParam) {
+		this.idConfSpie = idConfSpieParam;
 	}
 
 	/**
@@ -99,11 +127,11 @@ public class ConfSpieForm {
 	}
 
 	/**
-	 * @param percentAccept
+	 * @param percentAcceptParam
 	 *            the percentAccept to set
 	 */
-	public void setPercentAccept(Long percentAccept) {
-		this.percentAccept = percentAccept;
+	public void setPercentAccept(Long percentAcceptParam) {
+		this.percentAccept = percentAcceptParam;
 	}
 
 	/**
@@ -114,11 +142,11 @@ public class ConfSpieForm {
 	}
 
 	/**
-	 * @param frequencyAfirma
+	 * @param frequencyAFirmaParam
 	 *            the frequencyAfirma to set
 	 */
-	public void setFrequencyAFirma(Long frequencyAFirma) {
-		this.frequencyAFirma = frequencyAFirma;
+	public void setFrequencyAFirma(Long frequencyAFirmaParam) {
+		this.frequencyAFirma = frequencyAFirmaParam;
 	}
 
 	/**
@@ -129,11 +157,11 @@ public class ConfSpieForm {
 	}
 
 	/**
-	 * @param frequencyTsa
+	 * @param frequencyTsaParam
 	 *            the frequencyTsa to set
 	 */
-	public void setFrequencyTsa(Long frequencyTsa) {
-		this.frequencyTsa = frequencyTsa;
+	public void setFrequencyTsa(Long frequencyTsaParam) {
+		this.frequencyTsa = frequencyTsaParam;
 	}
 
 	/**
@@ -144,11 +172,11 @@ public class ConfSpieForm {
 	}
 
 	/**
-	 * @param methodValidations
+	 * @param methodValidationsParam
 	 *            the methodValidations to set
 	 */
-	public void setMethodValidations(List<String> methodValidations) {
-		this.methodValidations = methodValidations;
+	public void setMethodValidations(List<String> methodValidationsParam) {
+		this.methodValidations = methodValidationsParam;
 	}
 
 	/**
@@ -159,11 +187,11 @@ public class ConfSpieForm {
 	}
 
 	/**
-	 * @param frequencyAFirmaTime
+	 * @param frequencyAFirmaTimeParam
 	 *            the frequencyAFirmaTime to set
 	 */
-	public void setFrequencyAFirmaTime(Time frequencyAFirmaTime) {
-		this.frequencyAFirmaTime = frequencyAFirmaTime;
+	public void setFrequencyAFirmaTime(Time frequencyAFirmaTimeParam) {
+		this.frequencyAFirmaTime = frequencyAFirmaTimeParam;
 	}
 
 	/**
@@ -174,11 +202,11 @@ public class ConfSpieForm {
 	}
 
 	/**
-	 * @param frequencyTsaTime
+	 * @param frequencyTsaTimeParam
 	 *            the frequencyTsaTime to set
 	 */
-	public void setFrequencyTsaTime(Time frequencyTsaTime) {
-		this.frequencyTsaTime = frequencyTsaTime;
+	public void setFrequencyTsaTime(Time frequencyTsaTimeParam) {
+		this.frequencyTsaTime = frequencyTsaTimeParam;
 	}
 
 }

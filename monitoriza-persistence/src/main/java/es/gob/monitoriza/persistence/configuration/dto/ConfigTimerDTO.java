@@ -15,57 +15,54 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.form.TimerForm.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.TimerDTO.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>8 may. 2018.</p>
+ * <b>Date:</b><p>7 ago. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 8 may. 2018.
+ * @version 1.0, 29/08/2018.
  */
-package es.gob.monitoriza.form;
+package es.gob.monitoriza.persistence.configuration.dto;
 
-import java.sql.Time;
 
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.Size;
-
-import es.gob.monitoriza.rest.exception.CheckItFirst;
-import es.gob.monitoriza.rest.exception.ThenCheckIt;
-
-/**
- * <p>
- * Class .
- * </p>
- * <b>Project:</b>
- * <p>
- * Application for monitoring services of @firma suite systems.
- * </p>
- * 
- * @version 1.0, 8 may. 2018.
+/** 
+ * <p>Class Data transfer object that encapsulates the information for timer configuration..</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.0, 29/08/2018.
  */
-public class TimerForm {
-
+public class ConfigTimerDTO {
+	
 	/**
-	 * Attribute that represents the value of the primary key as a hidden input
-	 * in the form.
+	 * Attribute that represents the object ID.
 	 */
 	private Long idTimer;
-
+	
 	/**
-	 * Attribute that represents the name of the timer.
+	 * Attribute that represents the name of the timer. 
 	 */
-	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.timer.name.notempty}")
-	@Size(min = 5, max = 30, groups = ThenCheckIt.class)
 	private String name;
-
+	
+	/**
+	 * Attribute that represents. 
+	 */
 	private Long frequency;
-
-	private Time frequencyTime;
+		
+	/**
+	 * Constructor method for the class TimerDTO.java.
+	 * @param idTimer Timer identifier
+	 * @param name Timer name 
+	 * @param frequency Frequency for the timer
+	 */
+	public ConfigTimerDTO(Long idTimer, String name, Long frequency) {
+		super();
+		this.idTimer = idTimer;
+		this.name = name;
+		this.frequency = frequency;
+	}
 
 	/**
 	 * Gets the value of the attribute {@link #idTimer}.
-	 * 
-	 * @return the value of the attribute {@link #idTimer}.
+	 * @return the value of the attribute {@link #idTimer}
 	 */
 	public Long getIdTimer() {
 		return idTimer;
@@ -73,9 +70,7 @@ public class TimerForm {
 
 	/**
 	 * Sets the value of the attribute {@link #idTimer}.
-	 * 
-	 * @param isBlockedParam
-	 *            The value for the attribute {@link #idTimer}.
+	 * @param idTimer the value for the attribute {@link #idTimer} to set.
 	 */
 	public void setIdTimer(Long idTimer) {
 		this.idTimer = idTimer;
@@ -83,8 +78,7 @@ public class TimerForm {
 
 	/**
 	 * Gets the value of the attribute {@link #name}.
-	 * 
-	 * @return the value of the attribute {@link #name}.
+	 * @return the value of the attribute {@link #name}
 	 */
 	public String getName() {
 		return name;
@@ -92,18 +86,15 @@ public class TimerForm {
 
 	/**
 	 * Sets the value of the attribute {@link #name}.
-	 * 
-	 * @param isBlockedParam
-	 *            The value for the attribute {@link #name}.
+	 * @param name the value for the attribute {@link #name} to set.
 	 */
 	public void setName(String name) {
 		this.name = name;
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #frequency}.
-	 * 
-	 * @return the value of the attribute {@link #frequency}.
+	 * Gets the value of the attribute {@link #frequency}. 
+	 * @return the value of the attribute {@link #frequency}
 	 */
 	public Long getFrequency() {
 		return frequency;
@@ -111,27 +102,10 @@ public class TimerForm {
 
 	/**
 	 * Sets the value of the attribute {@link #frequency}.
-	 * 
-	 * @param isBlockedParam
-	 *            The value for the attribute {@link #frequency}.
+	 * @param frequency the value for the attribute {@link #frequency} to set.
 	 */
 	public void setFrequency(Long frequency) {
 		this.frequency = frequency;
 	}
-
-	/**
-	 * @return the frequencyTime
-	 */
-	public Time getFrequencyTime() {
-		return frequencyTime;
-	}
-
-	/**
-	 * @param frequencyTime
-	 *            the frequencyTime to set
-	 */
-	public void setFrequencyTime(Time frequencyTime) {
-		this.frequencyTime = frequencyTime;
-	}
-
+	
 }

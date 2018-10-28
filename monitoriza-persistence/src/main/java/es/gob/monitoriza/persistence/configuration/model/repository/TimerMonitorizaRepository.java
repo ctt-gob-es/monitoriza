@@ -20,18 +20,21 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 
 /** 
  * <p>Interface that provides CRUD functionality for the TimerMonitoriza entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 20 abr. 2018.
+ * @version 1.1, 28/10/2018.
  */
 public interface TimerMonitorizaRepository extends JpaRepository<TimerMonitoriza, Long> {
 	
@@ -41,5 +44,13 @@ public interface TimerMonitorizaRepository extends JpaRepository<TimerMonitoriza
 	 * @return Object that represents a service from the persistence. 
 	 */
 	TimerMonitoriza findByIdTimer(Long id);
+	
+	/**
+	 * Method that obtains all timers that has at least one service that uses RFC3161 authentication.
+	 * @return List<TimerMonitoriza>
+	 */
+	@Query("SELECT tm FROM ServiceMonitoriza sm JOIN sm.timer tm JOIN sm.platform pm JOIN pm.platformType pt WHERE pt.idPlatformType = 2 AND pm.useRfc3161Auth = true")
+	List<TimerMonitoriza> findTimersAnyServiceUsingRFC3161Auth();
+	
 
 }

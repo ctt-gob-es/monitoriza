@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>09/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 09/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -33,14 +33,14 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.form.NodeForm;
+import es.gob.monitoriza.persistence.configuration.dto.NodeDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 import es.gob.monitoriza.service.INodeMonitorizaService;
 
 /** 
  * <p>Class that manages the requests related to the Node administration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 09/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 @Controller
 public class NodeController {
@@ -85,7 +85,7 @@ public class NodeController {
 	 */
 	@RequestMapping(value = "addafirmanode", method = RequestMethod.POST)
     public String addNodeAfirma(Model model){
-		model.addAttribute("nodeafirmaform", new NodeForm());
+		model.addAttribute("nodeafirmaform", new NodeDTO());
 		return "modal/nodeAfirmaForm";
     }	
 	
@@ -96,7 +96,7 @@ public class NodeController {
 	 */
 	@RequestMapping(value = "addtsanode", method = RequestMethod.POST)
     public String addNodeTsa(Model model){
-		model.addAttribute("nodetsaform", new NodeForm());
+		model.addAttribute("nodetsaform", new NodeDTO());
 		return "modal/nodeTsaForm";
     }	
 	
@@ -110,7 +110,7 @@ public class NodeController {
     @RequestMapping(value = "editafirmanode", method = RequestMethod.POST)
     public String editNodeAfirma(@RequestParam("id") Long nodeId, Model model){
     	NodeMonitoriza node = nodeService.getNodeById(nodeId);
-    	NodeForm nodeForm = new NodeForm();
+    	NodeDTO nodeForm = new NodeDTO();
     	
     	nodeForm.setHost(node.getHost());
     	nodeForm.setCheckAfirma(node.getCheckAfirma());
@@ -139,7 +139,7 @@ public class NodeController {
     @RequestMapping(value = "edittsanode", method = RequestMethod.POST)
     public String editNodeTsa(@RequestParam("id") Long nodeId, Model model){
     	NodeMonitoriza node = nodeService.getNodeById(nodeId);
-    	NodeForm nodeForm = new NodeForm();
+    	NodeDTO nodeForm = new NodeDTO();
     	
     	nodeForm.setHost(node.getHost());
     	nodeForm.setCheckAfirma(node.getCheckAfirma());

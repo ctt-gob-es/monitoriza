@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -50,10 +50,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.form.NodeForm;
-import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
+import es.gob.monitoriza.persistence.configuration.dto.NodeDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.INodeMonitorizaService;
 
@@ -61,7 +59,7 @@ import es.gob.monitoriza.service.INodeMonitorizaService;
  * <p>Class that manages the REST requests related to the Node administration
  * and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 @RestController
 public class NodeRestController {
@@ -121,12 +119,11 @@ public class NodeRestController {
 	@RequestMapping(value = "/saveafirmanode", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
 	public @ResponseBody DataTablesOutput<NodeMonitoriza> saveAfirmaNode(
-			@Validated(OrderedValidation.class) @RequestBody NodeForm nodeAfirmaForm, BindingResult bindingResult) {
+			@Validated(OrderedValidation.class) @RequestBody NodeDTO nodeAfirmaForm, BindingResult bindingResult) {
 		DataTablesOutput<NodeMonitoriza> dtOutput = new DataTablesOutput<>();
-		NodeMonitoriza nodeAfirma = null;
-		List<NodeMonitoriza> listNewAfirma = new ArrayList<NodeMonitoriza>();
-		//boolean afirmaHaCambiado = false;
 		
+		List<NodeMonitoriza> listNewAfirma = new ArrayList<NodeMonitoriza>();
+				
 		if (bindingResult.hasErrors()) {
 			listNewAfirma = StreamSupport.stream(nodeService.getAllNode().spliterator(), false)
 					.collect(Collectors.toList());
@@ -137,35 +134,11 @@ public class NodeRestController {
 			dtOutput.setError(json.toString());
 		} else {
 			try {
-				if (nodeAfirmaForm.getIdNode() != null) {
-					nodeAfirma = nodeService.getNodeById(nodeAfirmaForm.getIdNode());
-					//afirmaHaCambiado = isAfirmaUpdatedForm(nodeAfirmaForm, nodeAfirma);
-				} else {
-					nodeAfirma = new NodeMonitoriza();
-				}
+				
 		
-				nodeAfirma.setHost(nodeAfirmaForm.getHost());
-				nodeAfirma.setName(nodeAfirmaForm.getName());
-				nodeAfirma.setPort(nodeAfirmaForm.getPort());
-				nodeAfirma.setIsSecure(nodeAfirmaForm.getIsSecure());
-				nodeAfirma.setCheckEmergencyDB(nodeAfirmaForm.getCheckEmergencyDB());
-				nodeAfirma.setCheckHsm(nodeAfirmaForm.getCheckHsm());
-				nodeAfirma.setCheckServices(nodeAfirmaForm.getCheckServices());
-				nodeAfirma.setCheckTsa(nodeAfirmaForm.getCheckTsa());
-				nodeAfirma.setCheckValidMethod(nodeAfirmaForm.getCheckValidMethod());
-				CPlatformType afirmaType = new CPlatformType();
-				afirmaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
-				nodeAfirma.setNodeType(afirmaType);
-		
-				NodeMonitoriza afirma = nodeService.savePlatform(nodeAfirma);
+				NodeMonitoriza afirma = nodeService.saveNodeAfirma(nodeAfirmaForm);
 				listNewAfirma.add(afirma);
-				
-				// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
-//				if (afirmaHaCambiado && nodeAfirma.getIdPlatform() != null) {
-//					
-//					updateScheduledTimerFromPlatform(nodeAfirma);
-//				}
-				
+									
 			}catch(Exception e) {
 				listNewAfirma = StreamSupport.stream(nodeService.getAllNode().spliterator(), false)
 						.collect(Collectors.toList());
@@ -190,14 +163,13 @@ public class NodeRestController {
 	@RequestMapping(value = "/savetsanode", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
 	public @ResponseBody DataTablesOutput<NodeMonitoriza> saveTsaNode(
-			@Validated(OrderedValidation.class) @RequestBody NodeForm nodeTsaForm, BindingResult bindingResult) {
+			@Validated(OrderedValidation.class) @RequestBody NodeDTO nodeTsaForm, BindingResult bindingResult) {
 		DataTablesOutput<NodeMonitoriza> dtOutput = new DataTablesOutput<>();
-		NodeMonitoriza nodeTsa = null;
-		List<NodeMonitoriza> listNewAfirma = new ArrayList<NodeMonitoriza>();
-		//boolean afirmaHaCambiado = false;
 		
+		List<NodeMonitoriza> listNewTsa = new ArrayList<NodeMonitoriza>();
+				
 		if (bindingResult.hasErrors()) {
-			listNewAfirma = StreamSupport.stream(nodeService.getAllNode().spliterator(), false)
+			listNewTsa = StreamSupport.stream(nodeService.getAllNode().spliterator(), false)
 					.collect(Collectors.toList());
 			JSONObject json = new JSONObject();
 			for (FieldError o : bindingResult.getFieldErrors()) {
@@ -206,42 +178,18 @@ public class NodeRestController {
 			dtOutput.setError(json.toString());
 		} else {
 			try {
-				if (nodeTsaForm.getIdNode() != null) {
-					nodeTsa = nodeService.getNodeById(nodeTsaForm.getIdNode());
-					//afirmaHaCambiado = isAfirmaUpdatedForm(nodeAfirmaForm, nodeAfirma);
-				} else {
-					nodeTsa = new NodeMonitoriza();
-				}
-		
-				nodeTsa.setHost(nodeTsaForm.getHost());
-				nodeTsa.setName(nodeTsaForm.getName());
-				nodeTsa.setPort(nodeTsaForm.getPort());
-				nodeTsa.setIsSecure(nodeTsaForm.getIsSecure());
-				nodeTsa.setCheckEmergencyDB(nodeTsaForm.getCheckEmergencyDB());
-				nodeTsa.setCheckHsm(nodeTsaForm.getCheckHsm());
-				nodeTsa.setCheckAfirma(nodeTsaForm.getCheckAfirma());
-				
-				CPlatformType tsaType = new CPlatformType();
-				tsaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA);
-				nodeTsa.setNodeType(tsaType);
-		
-				NodeMonitoriza afirma = nodeService.savePlatform(nodeTsa);
-				listNewAfirma.add(afirma);
-				
-				// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
-//				if (afirmaHaCambiado && nodeAfirma.getIdPlatform() != null) {
-//					
-//					updateScheduledTimerFromPlatform(nodeAfirma);
-//				}
+						
+				NodeMonitoriza tsaNode = nodeService.saveNodeTsa(nodeTsaForm);
+				listNewTsa.add(tsaNode);			
 				
 			}catch(Exception e) {
-				listNewAfirma = StreamSupport.stream(nodeService.getAllNode().spliterator(), false)
+				listNewTsa = StreamSupport.stream(nodeService.getAllNode().spliterator(), false)
 						.collect(Collectors.toList());
 				throw e;
 			}
 		}
 		
-		dtOutput.setData(listNewAfirma);
+		dtOutput.setData(listNewTsa);
 
 		return dtOutput;
 
@@ -258,12 +206,15 @@ public class NodeRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deletenode", method = RequestMethod.POST)
 	public String deleteNode(@RequestParam("id") Long nodeId, @RequestParam("index") String index) {
+		
+		String rowIndex = index;
+		
 		try {
 			nodeService.deleteNodeById(nodeId);
 		} catch (Exception e) {
-			index = "-1";
+			rowIndex = GeneralConstants.ROW_INDEX_ERROR;
 		}
-		return index;
+		return rowIndex;
 	}
 
 }

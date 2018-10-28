@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.service;
 
@@ -29,6 +29,7 @@ import java.util.Set;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
+import es.gob.monitoriza.persistence.configuration.dto.MailDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 
@@ -42,14 +43,14 @@ import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriz
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 28/10/2018.
  */
 public interface IMailMonitorizaService {
 
 	/**
 	 * Method that obtains the configuration for mail by its identifier.
 	 * 
-	 * @param mailId
+	 * @param mailId Identifier of the mail.
 	 * @return {@link MailMonitoriza}
 	 */
 	MailMonitoriza getMailMonitorizaById(Long mailId);
@@ -57,18 +58,15 @@ public interface IMailMonitorizaService {
 	/**
 	 * Method that stores a timer in the persistence.
 	 * 
-	 * @param user
-	 *            a {@link ServiceMonitoriza} with the information of the
-	 *            service.
+	 * @param mailDto a {@link MailDTO} with the information of the mail.
 	 * @return {@link ServiceMonitoriza} The service.
 	 */
-	MailMonitoriza saveMailMonitoriza(MailMonitoriza mail);
+	MailMonitoriza saveMailMonitoriza(MailDTO mailDto);
 
 	/**
 	 * Method that deletes a timer in the persistence.
 	 * 
-	 * @param serviceId
-	 *            {@link Integer} that represents the user identifier to delete.
+	 * @param timerId {@link Long} that represents the user identifier to delete.
 	 */
 	void deleteMailMonitoriza(Long timerId);
 
@@ -81,7 +79,7 @@ public interface IMailMonitorizaService {
 	Iterable<MailMonitoriza> getAllMailMonitoriza();
 
 	/**
-	 * Method that gets all the mails from the persistence for populating a datatable
+	 * Method that gets all the mails from the persistence for populating a datatable.
 	 * @param input DataTable input configuration object
 	 * @return DataTablesOutput object for drawing the datatable.
 	 */

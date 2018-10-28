@@ -20,18 +20,19 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>30 ago. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 30 ago. 2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.service;
 
 import java.util.List;
 
+import es.gob.monitoriza.persistence.configuration.dto.ValidServiceDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
 
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 30 ago. 2018.
+ * @version 1.1, 28/10/2018.
  */
 public interface IValidServiceService {
 	
@@ -50,8 +51,8 @@ public interface IValidServiceService {
 
 	/**
 	 * Method that stores a valid service in the persistence.
-	 * @param valid service a {@link ValidService} with the information of the valid service.
+	 * @param validService a {@link ValidServiceDTO} with the information of the valid service.
 	 * @return {@link ValidService} The valid service.
 	 */
-	ValidService saveValidService(ValidService validService);
+	ValidService saveValidService(ValidServiceDTO validService);
 }

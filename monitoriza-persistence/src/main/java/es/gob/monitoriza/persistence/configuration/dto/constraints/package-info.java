@@ -16,4 +16,4 @@
 /**
  * Package that provides the class that stores a service configuration.
  */
-package es.gob.monitoriza.constraints.impl;
+package es.gob.monitoriza.persistence.configuration.dto.constraints;

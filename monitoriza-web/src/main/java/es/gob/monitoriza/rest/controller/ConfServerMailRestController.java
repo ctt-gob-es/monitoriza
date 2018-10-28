@@ -20,14 +20,13 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,7 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import es.gob.monitoriza.form.ConfServerMailForm;
+import es.gob.monitoriza.persistence.configuration.dto.ConfServerMailDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ConfServerMail;
 import es.gob.monitoriza.service.IConfServerMailService;
 
@@ -50,7 +49,7 @@ import es.gob.monitoriza.service.IConfServerMailService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 @RestController
 public class ConfServerMailRestController {
@@ -73,9 +72,10 @@ public class ConfServerMailRestController {
 	 * @return {@link ConfServerMail}
 	 */
 	@RequestMapping(value = "/saveconfservermail", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public @ResponseBody ConfServerMail save(@RequestBody ConfServerMailForm confServerMailForm,
+	public @ResponseBody ConfServerMail save(@RequestBody ConfServerMailDTO confServerMailForm,
 			BindingResult bindingResult) {
-		ConfServerMail confMail, result = new ConfServerMail();
+		
+		ConfServerMail result = new ConfServerMail();
 
 		if (bindingResult.hasErrors()) {
 			JSONObject json = new JSONObject();
@@ -84,24 +84,9 @@ public class ConfServerMailRestController {
 			}
 		} else {
 			try {
-				if (confServerMailForm.getIdConfServerMail() != null) {
-					confMail = confServerMailService.getConfServerMailById(confServerMailForm.getIdConfServerMail());
-				} else {
-					confMail = new ConfServerMail();
-				}
-				BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
-				String pwd = confServerMailForm.getPasswordMail();
-				String hashPwd = bc.encode(pwd);
-
-				confMail.setIssuerMail(confServerMailForm.getIssuerMail());
-				confMail.setHostMail(confServerMailForm.getHostMail());
-				confMail.setPortMail(confServerMailForm.getPortMail());
-				confMail.setTslMail(confServerMailForm.getTslMail());
-				confMail.setAuthenticationMail(confServerMailForm.getAuthenticationMail());
-				confMail.setUserMail(confServerMailForm.getUserMail());
-				confMail.setPasswordMail(hashPwd);
-
-				result = confServerMailService.saveConfServerMail(confMail);
+				
+				result = confServerMailService.saveConfServerMail(confServerMailForm);
+				
 			} catch (Exception e) {
 				throw e;
 			}

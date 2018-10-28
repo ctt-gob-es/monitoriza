@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>29 ago. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 29 ago. 2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -38,9 +38,9 @@ import org.hibernate.annotations.Parameter;
 import es.gob.monitoriza.utilidades.NumberConstants;
 
 /** 
- * <p>Class .</p>
+ * <p>* Class that maps the <i>C_AUTHENTICATION_TYPE</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 29 ago. 2018.
+ * @version 1.1, 28/10/2018.
  */
 @Entity
 @Table(name = "C_AUTHENTICATION_TYPE")

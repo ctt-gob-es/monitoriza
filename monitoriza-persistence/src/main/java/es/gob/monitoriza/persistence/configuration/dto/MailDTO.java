@@ -15,33 +15,34 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.form.TimerForm.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.MailDTO.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 8 may. 2018.
+ * @version 1.0, 28/10/2018.
  */
-package es.gob.monitoriza.form;
+package es.gob.monitoriza.persistence.configuration.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import es.gob.monitoriza.rest.exception.CheckItFirst;
-import es.gob.monitoriza.rest.exception.ThenCheckIt;
+import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
+import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
+import es.gob.monitoriza.utilidades.NumberConstants;
 
 /**
  * <p>
- * Class .
+ * Class Class that represents the transfer object and backing form for e-mail configuration.
  * </p>
  * <b>Project:</b>
  * <p>
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 8 may. 2018.
+ * @version 1.0, 28/10/2018.
  */
-public class MailForm {
+public class MailDTO {
 
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input
@@ -49,8 +50,11 @@ public class MailForm {
 	 */
 	private Long idMail;
 
+	/**
+	 * Attribute that represents a e-mail address. 
+	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.mail.emailAddress.notempty}")
-	@Size(min = 3, max = 254, groups = ThenCheckIt.class)
+	@Size(min = NumberConstants.NUM3, max = NumberConstants.NUM254, groups = ThenCheckIt.class)
 	private String emailAddress;
 
 	/**
@@ -61,8 +65,7 @@ public class MailForm {
 	}
 
 	/**
-	 * @param idMail
-	 *            the idMail to set
+	 * @param idMail the idMail to set
 	 */
 	public void setIdMail(Long idMail) {
 		this.idMail = idMail;

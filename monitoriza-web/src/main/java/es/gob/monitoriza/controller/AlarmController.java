@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>18 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 18/10/2018.
+ * @version 1.3, 28/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -38,9 +38,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.form.AlarmForm;
-import es.gob.monitoriza.form.ConfAlarmForm;
-import es.gob.monitoriza.form.MailForm;
+import es.gob.monitoriza.persistence.configuration.dto.AlarmDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ConfAlarmDTO;
+import es.gob.monitoriza.persistence.configuration.dto.MailDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.Alarm;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
@@ -57,7 +57,7 @@ import es.gob.monitoriza.service.IMailMonitorizaService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.2, 18/10/2018.
+ * @version 1.3, 28/10/2018.
  */
 @Controller
 public class AlarmController {
@@ -100,8 +100,8 @@ public class AlarmController {
 		List<AlarmMonitoriza> alarms = new ArrayList<AlarmMonitoriza>();
 		Set<MailMonitoriza> emailsDegradeds = new HashSet<MailMonitoriza>();
 		Set<MailMonitoriza> emailsDowns = new HashSet<MailMonitoriza>();
-		MailForm mailForm = new MailForm();
-		AlarmForm alarmForm = new AlarmForm();
+		MailDTO mailForm = new MailDTO();
+		AlarmDTO alarmForm = new AlarmDTO();
 
 		mails = StreamSupport.stream(mailService.getAllMailMonitoriza().spliterator(), false)
 				.collect(Collectors.toList());
@@ -134,7 +134,7 @@ public class AlarmController {
 	public String confAlarmAdmin(Model model) {
 		List<Alarm> alarms = new ArrayList<Alarm>();
 		List<MailMonitoriza> mails = new ArrayList<MailMonitoriza>();
-		ConfAlarmForm alarmForm = new ConfAlarmForm();
+		ConfAlarmDTO alarmForm = new ConfAlarmDTO();
 
 		alarms = StreamSupport.stream(alarmService.getAllAlarm().spliterator(), false).collect(Collectors.toList());
 		mails = StreamSupport.stream(mailService.getAllMailMonitoriza().spliterator(), false)

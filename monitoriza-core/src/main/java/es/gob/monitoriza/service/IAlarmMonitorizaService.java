@@ -20,16 +20,16 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.service;
 
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
+import es.gob.monitoriza.persistence.configuration.dto.AlarmDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 
 /**
  * <p>
@@ -41,14 +41,14 @@ import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriz
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 28/10/2018.
  */
 public interface IAlarmMonitorizaService {
 
 	/**
 	 * Method that obtains the configuration for mail by its identifier.
 	 * 
-	 * @param mailId
+	 * @param alarmId Identifier of the alarm.
 	 * @return {@link AlarmMonitoriza}
 	 */
 	AlarmMonitoriza getAlarmMonitorizaById(Long alarmId);
@@ -56,18 +56,15 @@ public interface IAlarmMonitorizaService {
 	/**
 	 * Method that stores a timer in the persistence.
 	 * 
-	 * @param user
-	 *            a {@link ServiceMonitoriza} with the information of the
-	 *            service.
+	 * @param alarm a {@link AlarmDTO} with the information of the service.
 	 * @return {@link AlarmMonitoriza} The service.
 	 */
-	AlarmMonitoriza saveAlarmMonitoriza(AlarmMonitoriza alarm);
+	AlarmMonitoriza saveAlarmMonitoriza(AlarmDTO alarmDto);
 
 	/**
 	 * Method that deletes a alarm in the persistence.
 	 * 
-	 * @param serviceId
-	 *            {@link Integer} that represents the user identifier to delete.
+	 * @param alarmId {@link Long} that represents the user identifier to delete.
 	 */
 	void deleteAlarmMonitoriza(Long alarmId);
 
@@ -81,7 +78,7 @@ public interface IAlarmMonitorizaService {
 	
 	/**
 	 * Method that gets all the timer from the persistence.
-	 * 
+	 * @param mail {@link MailMonitoriza} 
 	 * @return a {@link Iterable<AlarmMonitoriza>} with the information of all
 	 *         services.
 	 */
@@ -89,9 +86,9 @@ public interface IAlarmMonitorizaService {
 	
 	/**
 	 * Method that finds all alarms in the persistence.
-	 * @param input
-	 * @return
-	 */
+	 * @param input DataTablesInput with datatable configuration
+	 * @return DataTablesOutput<AlarmMonitoriza>
+	 */ 
 	DataTablesOutput<AlarmMonitoriza> findAll(DataTablesInput input);
 
 }

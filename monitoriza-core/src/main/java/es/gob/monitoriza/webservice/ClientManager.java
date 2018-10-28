@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>1 ago. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 1 ago. 2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.webservice;
 
@@ -49,11 +49,12 @@ import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
 import es.gob.monitoriza.service.IKeystoreService;
+import es.gob.monitoriza.utilidades.NumberConstants;
 
 /** 
  * <p>Class ClientManager.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 1 ago. 2018.
+ * @version 1.1, 28/10/2018.
  */
 @Service
 public class ClientManager {
@@ -151,7 +152,7 @@ public class ClientManager {
 			Call call = (Call) service.createCall();
 			call.setTargetEndpointAddress(url);
 			call.setOperationName(new QName(NAME_SPACE_URI, LOCAL_PART));
-			call.setTimeout(1000000);
+			call.setTimeout(NumberConstants.NUM1000000);
 			if (requestHandler != null) {
 				call.setClientHandlers(requestHandler,null);
 			}

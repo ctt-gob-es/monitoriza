@@ -39,6 +39,18 @@
 			<artifactId>spring-data-jpa-datatables</artifactId>
 			<version>5.0.0</version>
 		</dependency>
+		<dependency>
+		    <groupId>commons-beanutils</groupId>
+		    <artifactId>commons-beanutils</artifactId>
+		    <version>1.9.3</version>
+		</dependency>
+		<!-- Importación de MultipartFile para DTOs -->
+		<dependency>
+		    <groupId>org.springframework</groupId>
+		    <artifactId>spring-web</artifactId>
+		    <version>5.0.4.RELEASE</version>
+		    <scope>provided</scope>
+		</dependency>
 	</dependencies>
 	<build>
 		<resources>

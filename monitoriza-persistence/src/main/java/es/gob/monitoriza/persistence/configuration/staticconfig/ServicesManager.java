@@ -26,18 +26,18 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.staticconfig;
 
 import java.util.List;
 
-import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 
 /** 
  * <p>Interface that provides the methods for managing the configuration of the @firma/ts@ services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 public interface ServicesManager {
 	
@@ -45,13 +45,13 @@ public interface ServicesManager {
 	 * Method that gets the services configuration from persistence (database or static properties file).
 	 * @return the List<ServiceDTO> containing the services
 	 */
-	List<ServiceDTO> getServices();
+	List<ConfigServiceDTO> getServices();
 	
 	/**
 	 * Method that gets the services  from persistence (database or static properties file).
 	 * @param timerId The Identifier of the timer configured in the service
 	 * @return List with the service configuration which its timer matches with the parameter timerId
 	 */
-	List<ServiceDTO> getServicesByTimer(String timerId);
+	List<ConfigServiceDTO> getServicesByTimer(String timerId);
 
 }

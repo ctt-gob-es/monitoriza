@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 12/09/2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -35,7 +35,7 @@ import es.gob.monitoriza.service.ITimerScheduledService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for TimerScheduled.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 12/09/2018.
+ * @version 1.1 28/10/2018.
  */
 @Service
 public class TimerScheduledService implements ITimerScheduledService {
@@ -113,7 +113,17 @@ public class TimerScheduledService implements ITimerScheduledService {
 	 */
 	@Override
 	public void emptyTimersScheduled() {
-		repository.deleteAll();		
+		repository.deleteAll();	
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.ITimerScheduledService#setAllScheduledTimersNotUpdated()
+	 */
+	@Override
+	public void setAllScheduledTimersNotUpdated() {
+		repository.setAllNotUpdated();
+		
 	}
 
 }

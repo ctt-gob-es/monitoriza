@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 12/09/2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.service;
 
@@ -29,34 +29,34 @@ import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 12/09/2018.
+ * @version 1.1, 28/10/2018.
  */
 public interface ITimerScheduledService {
 	
 	/**
 	 * Method that obtains the configuration for timer by its identifier.
-	 * @param userId The platform identifier.
+	 * @param timerId The platform identifier.
 	 * @return {@link TimerScheduled}
 	 */
 	TimerScheduled getTimerScheduledById(Long timerId);
 	
 	/**
 	 * Method that obtains the configuration for timer by its identifier.
-	 * @param userId The platform identifier.
+	 * @param timerIdTimer The platform identifier.
 	 * @return {@link TimerScheduled}
 	 */
 	TimerScheduled getTimerScheduledByIdTimer(Long timerIdTimer);
 			
 	/**
 	 * Method that stores a timer in the persistence.
-	 * @param user a {@link ServiceScheduled} with the information of the service.
+	 * @param timer a {@link ServiceScheduled} with the information of the service.
 	 * @return {@link ServiceScheduled} The service. 
 	 */
 	TimerScheduled saveTimerScheduled(TimerScheduled timer);
 			
 	/**
 	 * Method that deletes a timer in the persistence.
-	 * @param serviceId {@link Integer} that represents the user identifier to delete.
+	 * @param timerId {@link Integer} that represents the user identifier to delete.
 	 */
 	void deleteTimerScheduled(Long timerId);
 	
@@ -68,6 +68,7 @@ public interface ITimerScheduledService {
 	
 	/**
 	 * Method that gets all the timer from the persistence.
+	 * @param idTimers {@link Iterable<Long>} of identifiers
 	 * @return a {@link Iterable<TimerScheduled>} with the information of all services.
 	 */
 	Iterable<TimerScheduled> getAllTimerScheduledById(Iterable<Long> idTimers);		
@@ -76,6 +77,11 @@ public interface ITimerScheduledService {
 	 * Method that deletes all entities of TimerScheduled from persistence.
 	 */
 	void emptyTimersScheduled();
+	
+	/**
+	 * Sets all scheduled eligible for re-charging its configuration.
+	 */
+	void setAllScheduledTimersNotUpdated();
 
 
 }

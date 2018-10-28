@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.alarm;
 
@@ -29,13 +29,13 @@ import es.gob.monitoriza.alarm.types.Alarm;
 import es.gob.monitoriza.constant.ServiceStatusConstants;
 import es.gob.monitoriza.exception.AlarmException;
 import es.gob.monitoriza.i18n.IAlarmLogMessages;
-import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.utilidades.GeneralUtils;
 
 /** 
  * <p>Class that manages the alarms system of Monitoriz@.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 public class AlarmManager {
 
@@ -51,7 +51,7 @@ public class AlarmManager {
 	 * @param serviceStatus Status of the service associated to the alarm.
 	 * @throws AlarmException if the input parameters are nor correct or something in the process fails.
 	 */
-	public static void throwNewAlarm(final ServiceDTO service, final String serviceStatus, final Long tiempoMedio) throws AlarmException {
+	public static void throwNewAlarm(final ConfigServiceDTO service, final String serviceStatus, final Long tiempoMedio) throws AlarmException {
 		// Comprobamos que los parametros introducidos sean correctos.
 		if (service == null || serviceStatus == null) {
 			throw new AlarmException(IAlarmLogMessages.ERRORALAMR001);

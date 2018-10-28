@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -28,10 +28,13 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ConfSpie;
 import es.gob.monitoriza.persistence.configuration.model.repository.ConfSpieRepository;
 import es.gob.monitoriza.service.IConfSpieService;
+import es.gob.monitoriza.service.IMethodValidationService;
 
 /**
  * <p>
@@ -43,7 +46,7 @@ import es.gob.monitoriza.service.IConfSpieService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 @Service
 public class ConfSpieService implements IConfSpieService {
@@ -54,6 +57,13 @@ public class ConfSpieService implements IConfSpieService {
 	 */
 	@Autowired
 	private ConfSpieRepository repository;
+	
+	/**
+	 * Attribute that represents the injected interface that provides access
+	 * to method validation services.
+	 */
+	@Autowired
+	private IMethodValidationService methodValidationService;
 
 	/**
 	 * 
@@ -87,8 +97,26 @@ public class ConfSpieService implements IConfSpieService {
 	 * @see es.gob.valet.persistence.configuration.services.ifaces.IConfSpieService#saveConfSpie(es.gob.valet.persistence.configuration.model.entity.ConfSpie)
 	 */
 	@Override
-	public ConfSpie saveConfSpie(ConfSpie confSpie) {
-		return repository.save(confSpie);
+	@Transactional
+	public ConfSpie saveConfSpie(ConfSpieDTO confSpieDto) {
+		
+		ConfSpie confSpie, result = null;
+		
+		if (confSpieDto.getIdConfSpie() != null) {
+			confSpie = repository.findByIdConfSpie(confSpieDto.getIdConfSpie());
+		} else {
+			confSpie = new ConfSpie();
+		}
+
+		confSpie.setPercentAccept(confSpieDto.getPercentAccept());
+		confSpie.setFrequencyAfirma(confSpieDto.getFrequencyAFirma());
+		confSpie.setFrequencyTsa(confSpieDto.getFrequencyTsa());
+
+		result = repository.save(confSpie);
+		methodValidationService.createAllMethods(confSpieDto.getMethodValidations(), result);
+		
+		return result;
+		
 	}
 
 	/**
@@ -97,6 +125,7 @@ public class ConfSpieService implements IConfSpieService {
 	 * @see es.gob.valet.persistence.configuration.services.ifaces.IConfSpieService#deleteConfSpie(java.lang.Long)
 	 */
 	@Override
+	@Transactional
 	public void deleteConfSpie(Long idConfSpie) {
 		repository.deleteById(idConfSpie);
 	}

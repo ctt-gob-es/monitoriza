@@ -20,40 +20,43 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.service;
+
+import java.util.List;
 
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
+import es.gob.monitoriza.persistence.configuration.dto.TimerDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 28/102018.
  */
 public interface ITimerMonitorizaService {
 	
 	/**
 	 * Method that obtains the configuration for timer by its identifier.
-	 * @param userId The platform identifier.
+	 * @param timerId The timer identifier.
 	 * @return {@link PlatformAfirma}
 	 */
 	TimerMonitoriza getTimerMonitorizaById(Long timerId);
 			
 	/**
 	 * Method that stores a timer in the persistence.
-	 * @param user a {@link ServiceMonitoriza} with the information of the service.
+	 * @param timerDto a {@link TimerDTO} with the information of the timer.
 	 * @return {@link ServiceMonitoriza} The service. 
 	 */
-	TimerMonitoriza saveTimerMonitoriza(TimerMonitoriza timer);
+	TimerMonitoriza saveTimerMonitoriza(TimerDTO timerDto);
 			
 	/**
 	 * Method that deletes a timer in the persistence.
-	 * @param serviceId {@link Integer} that represents the user identifier to delete.
+	 * @param timerId {@link Long} that represents the user identifier to delete.
 	 */
 	void deleteTimerMonitoriza(Long timerId);
 	
@@ -65,15 +68,22 @@ public interface ITimerMonitorizaService {
 	
 	/**
 	 * Method that gets all the timer from the persistence.
+	 * @param idTimers List of timer identifiers
 	 * @return a {@link Iterable<TimerMonitoriza>} with the information of all services.
 	 */
 	Iterable<TimerMonitoriza> getAllTimerMonitorizaById(Iterable<Long> idTimers);
 		
 	/**
-	 * 
-	 * @param input
-	 * @return
+	 * Method that obtains all timers.
+	 * @param input DataTablesInput configuration object
+	 * @return DataTablesOutput<TimerMonitoriza>
 	 */
 	DataTablesOutput<TimerMonitoriza> findAll(DataTablesInput input);
+	
+	/**
+	 * Method that obtains all timers that has at least one service that uses RFC3161 authentication.
+	 * @return List<TimerMonitoriza>
+	 */
+	List<TimerMonitoriza> findTimersAnyServiceUsingRFC3161Auth();
 
 }

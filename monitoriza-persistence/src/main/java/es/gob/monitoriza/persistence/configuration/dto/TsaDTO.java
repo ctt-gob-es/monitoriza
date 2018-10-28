@@ -15,28 +15,29 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.form.UserForm.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.TsaDTO.java.</p>
  * <b>Description:</b><p>Class that represents the backing form for adding/editing a user.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.0, 28/10/2018.
  */
-package es.gob.monitoriza.form;
+package es.gob.monitoriza.persistence.configuration.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import es.gob.monitoriza.rest.exception.CheckItFirst;
-import es.gob.monitoriza.rest.exception.ThenCheckIt;
+import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
+import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
+import es.gob.monitoriza.utilidades.NumberConstants;
 
 /** 
- * <p>Class that represents the backing form for adding/editing a @firma platform.</p>
+ * <p>Class that represents the backing form for adding/editing a ts@ platform.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.0, 28/10/2018.
  */
-public class AfirmaForm {
+public class TsaDTO {
 	
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input in the form. 
@@ -47,21 +48,21 @@ public class AfirmaForm {
 	 * Attribute that represents the value of the input name of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.name.notempty}")
-    @Size(min=1, max=30, groups=ThenCheckIt.class)
+    @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM30, groups=ThenCheckIt.class)
     private String name = "";
 
 	/**
 	 * Attribute that represents the value of the input surnames of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.host.notempty}")
-    @Size(min=1, max=30, groups=ThenCheckIt.class)
+    @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM30, groups=ThenCheckIt.class)
     private String host = "";
 	
 	/**
-	 * Attribute that represents the value of the input port of the user in the form. 
+	 * Attribute that represents the value of the input username of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.port.notempty}")
-    @Size(min=1, max=5, groups=ThenCheckIt.class)
+    @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM5, groups=ThenCheckIt.class)
     private String port = "";
 	
 	/**
@@ -74,16 +75,36 @@ public class AfirmaForm {
 	 * Attribute that represents the value of the input password of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.servicecontext.notempty}")
-    @Size(min=1, max=50, groups=ThenCheckIt.class)
+    @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM50, groups=ThenCheckIt.class)
     private String serviceContext = "";
-		
+	
 	/**
 	 * Attribute that represents the value of the input email of the user in the form. 
 	 */
-	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.ocspcontext.notempty}")
-    @Size(min=1, max=50, groups=ThenCheckIt.class)
-    private String ocspContext = "";
-			
+	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.rfc3161context.notempty}")
+    @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM50, groups=ThenCheckIt.class)
+    private String rfc3161Context = "";
+	
+	/**
+	 * Attribute that represents the value of the input email of the user in the form. 
+	 */
+	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.portrfc3161.notempty}")
+    @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM5, groups=ThenCheckIt.class)
+    private String rfc3161Port = "";
+	
+	/**
+	 * Attribute that represents the value of the input isSecure of the user in the form. 
+	 */
+	@NotNull(groups=CheckItFirst.class, message="{form.valid.platform.useauth.notnull}")
+    private Boolean useRfc3161Auth = false;
+	
+	/**
+	 * Attribute that represents the identifier of the certificate for RFC3161 authentication. 
+	 */
+	@NotNull(message="{form.platform.authcert.notnull}")
+	private Long rfc3161Certificate;
+		
+				
 	/**
 	 * Gets the value of the attribute {@link #idPlatform}.
 	 * @return the value of the attribute {@link #idPlatform}.
@@ -94,7 +115,7 @@ public class AfirmaForm {
 
 	/**
 	 * Sets the value of the attribute {@link #idPlatform}.
-	 * @return the value of the attribute {@link #idPlatform}.
+	 * @param idPlatform the value of the attribute {@link #idPlatform} to set.
 	 */
 	public void setIdPlatform(Long idPlatform) {
 		this.idPlatform = idPlatform;
@@ -110,7 +131,7 @@ public class AfirmaForm {
 
 	/**
 	 * Sets the value of the attribute {@link #host}.
-	 * @param login the value for the attribute {@link #host} to set.
+	 * @param host the value for the attribute {@link #host} to set.
 	 */
 	public void setHost(String host) {
 		this.host = host;
@@ -131,8 +152,8 @@ public class AfirmaForm {
 	public void setPort(String port) {
 		this.port = port;
 	}
-	
-	/**
+		
+	 /**
 	 * Gets the value of the attribute {@link #isSecure}.
 	 * @return the value of the attribute {@link #isSecure}.
 	 */
@@ -147,7 +168,7 @@ public class AfirmaForm {
 	public void setIsSecure(Boolean isSecure) {
 		this.isSecure = isSecure;
 	}
-
+	
 	/**
 	 * Gets the value of the attribute {@link #name}.
 	 * @return the value of the attribute {@link #name}.
@@ -181,19 +202,67 @@ public class AfirmaForm {
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #ocspContext}.
-	 * @return the value of the attribute {@link #ocspContext}.
+	 * Gets the value of the attribute {@link #rfc3161Context}.
+	 * @return the value of the attribute {@link #rfc3161Context}.
 	 */
-	public String getOcspContext() {
-		return ocspContext;
+	public String getRfc3161Context() {
+		return rfc3161Context;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #rfc3161Context}.
+	 * @param rfc3161Context the value for the attribute {@link #rfc3161Context} to set.
+	 */
+	public void setRfc3161Context(String rfc3161Context) {
+		this.rfc3161Context = rfc3161Context;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #rfc3161Port}.
+	 * @return the value of the attribute {@link #rfc3161Port}.
+	 */
+	public String getRfc3161Port() {
+		return rfc3161Port;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #rfc3161Port}.
+	 * @param rfc3161Port the value for the attribute {@link #rfc3161Port} to set.
+	 */
+	public void setRfc3161Port(String rfc3161Port) {
+		this.rfc3161Port = rfc3161Port;
+	}
+			
+	/**
+	 * Gets the value of the attribute {@link #useRfc3161Auth}.
+	 * @return the value of the attribute {@link #useRfc3161Auth}.
+	 */
+	public Boolean getUseRfc3161Auth() {
+		return useRfc3161Auth;
 	}
 	
 	/**
-	 * Sets the value of the attribute {@link #ocspContext}.
-	 * @param ocspContext the value for the attribute {@link #ocspContext} to set.
+	 * Sets the value of the attribute {@link #useRfc3161Auth}.
+	 * @param useRfc3161Auth the value for the attribute {@link #useRfc3161Auth} to set.
 	 */
-	public void setOcspContext(String ocspContext) {
-		this.ocspContext = ocspContext;
+	public void setUseRfc3161Auth(Boolean useRfc3161Auth) {
+		this.useRfc3161Auth = useRfc3161Auth;
 	}
-		
+
+	/**
+	 * Gets the value of the attribute {@link #rfc3161Certificate}.
+	 * @return the value of the attribute {@link #rfc3161Certificate}.
+	 */
+	public Long getRfc3161Certificate() {
+		return rfc3161Certificate;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #rfc3161Certificate}.
+	 * @param rfc3161Certificate the value for the attribute {@link #rfc3161Certificate} to set.
+	 */
+	public void setRfc3161Certificate(Long rfc3161Certificate) {
+		this.rfc3161Certificate = rfc3161Certificate;
+	}	
+				
 }

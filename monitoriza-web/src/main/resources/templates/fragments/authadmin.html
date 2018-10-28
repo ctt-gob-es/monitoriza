@@ -293,7 +293,13 @@ $(document).ready(function() {
 		                    $('#altEditor-modal .modal-body .alert').remove();
 		                    $('#altEditor-modal').modal('hide');
 		                },
-		                error:function(){}
+		                error:function(data){
+		                	// Se oculta la capa 'cargando...'
+		                	hide();
+		                	$('#altEditor-modal .modal-body .alert').remove();
+		                	$('#altEditor-modal #deleteRowBtn').remove();
+				            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + data.responseText + '</strong></div>');
+		                }
 		            });
 		            break;
 		        default:

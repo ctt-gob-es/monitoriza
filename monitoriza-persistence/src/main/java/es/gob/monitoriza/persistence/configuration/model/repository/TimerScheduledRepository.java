@@ -20,18 +20,20 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 
 /** 
  * <p>Interface that provides CRUD functionality for the TimerScheduled entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 public interface TimerScheduledRepository extends JpaRepository<TimerScheduled, Long> {
 	
@@ -48,5 +50,12 @@ public interface TimerScheduledRepository extends JpaRepository<TimerScheduled, 
 	 * @return Object that represents a service from the persistence. 
 	 */
 	TimerScheduled findByTimerIdTimer(Long idTimer);
+	
+	/**
+	 * Sets all entities to not updated.
+	 */
+	@Modifying
+    @Query("update TimerScheduled tsch set tsch.updated = false")
+	void setAllNotUpdated();
 
 }

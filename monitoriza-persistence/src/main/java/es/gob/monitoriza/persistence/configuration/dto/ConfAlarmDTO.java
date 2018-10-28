@@ -15,14 +15,14 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.form.TimerForm.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.ConfAlarmDTO.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.0, 28/10/2018.
  */
-package es.gob.monitoriza.form;
+package es.gob.monitoriza.persistence.configuration.dto;
 
 /**
  * <p>
@@ -35,7 +35,7 @@ package es.gob.monitoriza.form;
  * 
  * @version 1.1, 12/09/2018.
  */
-public class ConfAlarmForm {
+public class ConfAlarmDTO {
 
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input in
@@ -43,14 +43,29 @@ public class ConfAlarmForm {
 	 */
 	private String idAlarm;
 
+	/**
+	 * Attribute that represents the description of the alarm. 
+	 */
 	private String description;
 
+	/**
+	 * Attribute that represents the time in which the alarm will be blocked in milliseconds. 
+	 */
 	private Long timeBlock;
 
+	/**
+	 * Attribute that indicate if the alarm service is active. 
+	 */
 	private Boolean active;
 
+	/**
+	 * Attribute that represents the list of mail addresses. 
+	 */
 	private String mails;
 
+	/**
+	 * Attribute that represents . 
+	 */
 	private String mailsConcat;
 
 	/**

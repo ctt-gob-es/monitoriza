@@ -19,19 +19,22 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>6 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.service;
 
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
+import es.gob.monitoriza.persistence.configuration.dto.UserDTO;
+import es.gob.monitoriza.persistence.configuration.dto.UserEditDTO;
+import es.gob.monitoriza.persistence.configuration.dto.UserPasswordDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 28/10/2018.
  */
 public interface IUserMonitorizaService {
 
@@ -44,17 +47,10 @@ public interface IUserMonitorizaService {
 
 	/**
 	 * Method that obtains an user by its login.
-	 * @param userId The user login.
+	 * @param login The user login.
 	 * @return {@link UserMonitoriza}
 	 */
 	UserMonitoriza getUserMonitorizaByLogin(String login);
-
-	/**
-	 * Method that stores a user in the persistence.
-	 * @param user a {@link UserMonitoriza} with the information of the user.
-	 * @return {@link UserMonitoriza} The user.
-	 */
-	UserMonitoriza saveUserMonitoriza(UserMonitoriza user);
 
 	/**
 	 * Method that deletes a user in the persistence.
@@ -69,9 +65,33 @@ public interface IUserMonitorizaService {
 	Iterable<UserMonitoriza> getAllUserMonitoriza();
 
 	/**
-	 * Method that gets all the users from the persistence for populating a datatable
+	 * Method that gets all the users from the persistence for populating a datatable.
 	 * @param input DataTable input configuration object
 	 * @return DataTablesOutput object for drawing the datatable.
 	 */
 	DataTablesOutput<UserMonitoriza> findAll(DataTablesInput input);
+	
+	/**
+	 * Method that stores a user in the persistence.
+	 * @param userDto a {@link UserDTO} with the information of the user.
+	 * @return {@link UserMonitoriza} The user.
+	 */
+	UserMonitoriza saveUserMonitoriza(UserDTO userDto);
+	
+	/**
+	 * Method that updates a user in the persistence.
+	 * @param userEditDto a {@link UserEditDTO} with the information of the user.
+	 * @return {@link UserMonitoriza} The user.
+	 */
+	UserMonitoriza updateUserMonitoriza(UserEditDTO userEditDto);
+	
+	/**
+	 * Method that change the password of a user.
+	 * @param userPasswordDto a {@link UserPasswordDTO} with the information of the user.
+	 * @return {@link String} The result of the password change:
+	 * 		0: Change success
+	 * 	   -1: Old password and new password doesn't match
+	 *     -2: Error updating the user with new password
+	 */
+	String changeUserMonitorizaPassword(UserPasswordDTO userPasswordDto);
 }

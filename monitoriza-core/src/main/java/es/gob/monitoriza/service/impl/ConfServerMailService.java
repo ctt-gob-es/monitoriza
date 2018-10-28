@@ -20,15 +20,18 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.service.impl;
 
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import es.gob.monitoriza.persistence.configuration.dto.ConfServerMailDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ConfServerMail;
 import es.gob.monitoriza.persistence.configuration.model.repository.ConfServerMailRepository;
 import es.gob.monitoriza.service.IConfServerMailService;
@@ -43,7 +46,7 @@ import es.gob.monitoriza.service.IConfServerMailService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 @Service
 public class ConfServerMailService implements IConfServerMailService {
@@ -87,8 +90,31 @@ public class ConfServerMailService implements IConfServerMailService {
 	 * @see es.gob.valet.persistence.configuration.services.ifaces.IConfServerMailService#saveConfServerMail(es.gob.valet.persistence.configuration.model.entity.ConfServerMail)
 	 */
 	@Override
-	public ConfServerMail saveConfServerMail(ConfServerMail confServerMail) {
-		return repository.save(confServerMail);
+	@Transactional
+	public ConfServerMail saveConfServerMail(ConfServerMailDTO confServerMailDto) {
+		
+		ConfServerMail confMail = new ConfServerMail();
+		
+		if (confServerMailDto.getIdConfServerMail() != null) {
+			confMail = repository.findByIdConfServerMail(confServerMailDto.getIdConfServerMail());
+		} else {
+			confMail = new ConfServerMail();
+		}
+		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+		String pwd = confServerMailDto.getPasswordMail();
+		String hashPwd = bc.encode(pwd);
+
+		confMail.setIssuerMail(confServerMailDto.getIssuerMail());
+		confMail.setHostMail(confServerMailDto.getHostMail());
+		confMail.setPortMail(confServerMailDto.getPortMail());
+		confMail.setTslMail(confServerMailDto.getTslMail());
+		confMail.setAuthenticationMail(confServerMailDto.getAuthenticationMail());
+		confMail.setUserMail(confServerMailDto.getUserMail());
+		confMail.setPasswordMail(hashPwd);
+
+		final ConfServerMail result = repository.save(confMail);
+				
+		return result;
 	}
 
 	/**
@@ -97,6 +123,7 @@ public class ConfServerMailService implements IConfServerMailService {
 	 * @see es.gob.valet.persistence.configuration.services.ifaces.IConfServerMailService#deleteConfServerMail(java.lang.Long)
 	 */
 	@Override
+	@Transactional
 	public void deleteConfServerMail(Long idConfServerMail) {
 		repository.deleteById(idConfServerMail);
 	}

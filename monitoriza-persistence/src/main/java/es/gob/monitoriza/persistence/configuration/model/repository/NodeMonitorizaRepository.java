@@ -20,9 +20,11 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>09/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 09/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
+
+import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -31,7 +33,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 /** 
  * <p>Interface that provides CRUD functionality for the NodeMonitoriza entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 09/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 public interface NodeMonitorizaRepository extends JpaRepository<NodeMonitoriza, Long> {
 	
@@ -41,5 +43,12 @@ public interface NodeMonitorizaRepository extends JpaRepository<NodeMonitoriza, 
 	 * @return Object that represents a node from the persistence. 
 	 */
 	NodeMonitoriza findByIdNode(Long id);
+	
+	/**
+	 * Method that obtains all nodes belonging to the platform specified by the platform type.
+	 * @param idPlatformType Identifier of the platform type.
+	 * @return {@link List<NodeMonitoriza>} of nodes
+	 */
+	List<NodeMonitoriza> findByNodeTypeIdPlatformType(Long idPlatformType);
 
 }

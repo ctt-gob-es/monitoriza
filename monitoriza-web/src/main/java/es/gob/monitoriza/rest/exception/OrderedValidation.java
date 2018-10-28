@@ -20,16 +20,19 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>4 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 4 abr. 2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.rest.exception;
 
 import javax.validation.GroupSequence;
 
+import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
+import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
+
 /** 
- * <p>Class .</p>
+ * <p>Class that configures the validation order for formulary input constraints.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 4 abr. 2018.
+ * @version 1.1, 28/10/2018.
  */
 @GroupSequence({ CheckItFirst.class, ThenCheckIt.class })
 public interface OrderedValidation {

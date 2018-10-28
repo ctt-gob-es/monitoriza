@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>9 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 9 oct. 2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.webservice;
 
@@ -28,7 +28,7 @@ import java.io.BufferedWriter;
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 9 oct. 2018.
+ * @version 1.1, 28/10/2018.
  */
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,6 +55,8 @@ import org.apache.axis.utils.StringUtils;
 import org.apache.axis.utils.XMLUtils;
 import org.apache.log4j.Logger;
 
+import es.gob.monitoriza.utilidades.NumberConstants;
+
 /**
 * @author elblogdeselo
 *
@@ -77,6 +79,10 @@ public class AxisSSLSocketFactory extends JSSESocketFactory implements SecureSoc
 	 */
 	private static String keystorePass;
 
+	/**
+	 * Constructor method for the class AxisSSLSocketFactory.java.
+	 * @param attributes 
+	 */
 	public AxisSSLSocketFactory(@SuppressWarnings("rawtypes") Hashtable attributes) {
 		super(attributes);
 	}
@@ -99,7 +105,7 @@ public class AxisSSLSocketFactory extends JSSESocketFactory implements SecureSoc
 	}
 	
 	/**
-     * creates a secure socket
+     * creates a secure socket.
      *
      * @param host
      * @param port
@@ -111,12 +117,11 @@ public class AxisSSLSocketFactory extends JSSESocketFactory implements SecureSoc
      */
 	@SuppressWarnings("resource")
 	@Override
-    public Socket create(
-            String host, int port, StringBuffer otherHeaders, BooleanHolder useFullURL)
+    public Socket create(String host, int port, StringBuffer otherHeaders, BooleanHolder useFullURL)
             throws Exception {
         initFactory();
         if (port == -1) {
-            port = 443;
+            port = NumberConstants.NUM443;
         }
 
         TransportClientProperties tcp = TransportClientPropertiesFactory.create("https");
@@ -132,9 +137,9 @@ public class AxisSSLSocketFactory extends JSSESocketFactory implements SecureSoc
             // Default proxy port is 80, even for https
             int tunnelPort = (tcp.getProxyPort().length() != 0)
                              ? Integer.parseInt(tcp.getProxyPort())
-                             : 80;
+                             : NumberConstants.NUM80;
             if (tunnelPort < 0)
-                tunnelPort = 80;
+                tunnelPort = NumberConstants.NUM80;
 
             // Create the regular socket connection to the proxy
             Socket tunnel = new Socket(tcp.getProxyHost(), tunnelPort);
@@ -216,7 +221,7 @@ public class AxisSSLSocketFactory extends JSSESocketFactory implements SecureSoc
 
 	/**
 	 * Method that gets a custom SSL Context. This is the main working of this class.
-	 * @return
+	 * @return Configured SSL Context
 	 */
 	protected SSLContext getContext() {
 		try {

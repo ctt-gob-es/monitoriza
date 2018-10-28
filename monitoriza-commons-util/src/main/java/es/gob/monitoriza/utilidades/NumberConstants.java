@@ -19,14 +19,14 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.utilidades;
 
 /**
  * <p>Interface that defines numeric constants for generalized usage.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 public interface NumberConstants {
 
@@ -511,6 +511,11 @@ public interface NumberConstants {
 	int NUM200 = 200;
 
 	/**
+	 * Constant attribute that represents the number 254.
+	 */
+	int NUM254 = 254;
+	
+	/**
 	 * Constant attribute that represents the number 255.
 	 */
 	int NUM255 = 255;
@@ -689,6 +694,11 @@ public interface NumberConstants {
 	 * Constant attribute that represents the number 100000.
 	 */
 	int NUM100000 = 100000;
+	
+	/**
+	 * Constant attribute that represents the number 1000000.
+	 */
+	int NUM1000000 = 1000000;
 
 	/**
 	 * Constant attribute that represents the number 100000 (type long).

@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.3, 10/10/2018.
+ * @version 1.4, 28/10/2018.
  */
 package es.gob.monitoriza.task;
 
@@ -43,8 +43,8 @@ import es.gob.monitoriza.configuration.manager.AdminServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
-import es.gob.monitoriza.persistence.configuration.dto.TimerDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ConfigTimerDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.status.StatusHolder;
@@ -54,7 +54,7 @@ import es.gob.monitoriza.timers.TimersHolder;
 /** 
  * <p>Class that initializes the timers for processing the batch of requests for each service.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.3, 10/10/2018.
+ * @version 1.4, 28/10/2018.
  */
 @Configurable
 public class MonitorizaServletTask extends HttpServlet {
@@ -73,19 +73,19 @@ public class MonitorizaServletTask extends HttpServlet {
 	 * {@inheritDoc}
 	 * @see javax.servlet.GenericServlet#init()
 	 */
+	@Override
 	public void init(final ServletConfig config) throws ServletException {
 		
 		super.init(config);
 		
 		ApplicationContext ac = (ApplicationContext) getServletConfig().getServletContext().getAttribute(WebApplicationContext.ROOT_WEB_APPLICATION_CONTEXT_ATTRIBUTE);
-
-		//scheduleTimersFromStaticConfig();
 		
 		scheduleTimersFromWebAdmin(ac);
 	}
 		
 	/**
 	 * Method that gets the configuration from the web admin database and schedules the service request batch.
+	 * @param applicationContext Spring application configuration 
 	 */
 	private void scheduleTimersFromWebAdmin(final ApplicationContext applicationContext) {
 		
@@ -96,7 +96,7 @@ public class MonitorizaServletTask extends HttpServlet {
 		// Se vacía la tabla de timers programados
 		adminServiceManager.emptyTimersScheduled();
 
-		List<TimerDTO> timers = adminServiceManager.getAllTimers();
+		List<ConfigTimerDTO> timers = adminServiceManager.getAllTimers();
 		ExecuteTimer batchTimer = null;
 
 		// Se carga una sola vez el almacén de certificados para conexión
@@ -107,9 +107,9 @@ public class MonitorizaServletTask extends HttpServlet {
 		// RFC3161.
 		KeyStore rfc3161Keystore = adminServiceManager.loadRfc3161Keystore();
 
-		for (TimerDTO timerDTO: timers) {
+		for (ConfigTimerDTO timerDTO: timers) {
 
-			List<ServiceDTO> serviciosTimer = adminServiceManager.getServicesByTimer(timerDTO);
+			List<ConfigServiceDTO> serviciosTimer = adminServiceManager.getServicesByTimer(timerDTO);
 			
 			// Sólo programo el timer si tiene algún servicio asociado
 			if (serviciosTimer != null && !serviciosTimer.isEmpty()) {
@@ -142,7 +142,7 @@ public class MonitorizaServletTask extends HttpServlet {
 		/**
 		 * Attribute that represents the list of services for the timer being executed. 
 		 */
-		private transient List<ServiceDTO> serviciosDelTimer = new ArrayList<ServiceDTO>();
+		private transient List<ConfigServiceDTO> serviciosDelTimer = new ArrayList<ConfigServiceDTO>();
 
 		/**
 		 * Attribute that represents the timer being executed. 
@@ -161,14 +161,16 @@ public class MonitorizaServletTask extends HttpServlet {
 
 		/**
 		 * Constructor method for the class MonitorizaServletTask.java.
-		 * @param timerId String that represents the identifier of the timer being executed
-		 * @param serviciosDelTimer List<DTOService> that contains the services associated to the timer
+		 * @param timerIdParam String that represents the identifier of the timer being executed
+		 * @param serviciosDelTimerParam List<DTOService> that contains the services associated to the timer
+		 * @param sslTrustStoreParam Truststore of Monitoriz@
+		 * @param rfc3161KeystoreParam Keystore for authenticating RFC3161 service
 		 */
-		public ExecuteTimer(final String timerId, final List<ServiceDTO> serviciosDelTimer, final KeyStore sslTrustStore, final KeyStore rfc3161Keystore) {
-			this.timerId = timerId;
-			this.serviciosDelTimer = serviciosDelTimer;
-			this.sslTrustStore = sslTrustStore;
-			this.rfc3161Keystore = rfc3161Keystore;
+		ExecuteTimer(final String timerIdParam, final List<ConfigServiceDTO> serviciosDelTimerParam, final KeyStore sslTrustStoreParam, final KeyStore rfc3161KeystoreParam) {
+			this.timerId = timerIdParam;
+			this.serviciosDelTimer = serviciosDelTimerParam;
+			this.sslTrustStore = sslTrustStoreParam;
+			this.rfc3161Keystore = rfc3161KeystoreParam;
 		}
 
 		/**

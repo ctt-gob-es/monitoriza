@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
@@ -36,7 +36,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 /** 
  * <p>Interface that provides CRUD functionality for the SystemCertificate entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 10/10/2018.
+ * @version 1.1 28/10/2018.
  */
 public interface SystemCertificateRepository extends JpaRepository<SystemCertificate, Long>, JpaSpecificationExecutor<SystemCertificate> {
 	
@@ -75,7 +75,7 @@ public interface SystemCertificateRepository extends JpaRepository<SystemCertifi
 	
 	/**
 	 * Method that delete all certificates of a user.
-	 * @param userMonitoriza
+	 * @param userMonitoriza UserMonitoriza entity
 	 */
 	void deleteByUserMonitoriza(UserMonitoriza userMonitoriza);
 

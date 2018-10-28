@@ -20,31 +20,56 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>30 ago. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 30 ago. 2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.service.impl;
 
 import java.util.List;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import es.gob.monitoriza.cron.ValidCertificatesJob;
+import es.gob.monitoriza.persistence.configuration.dto.ValidServiceDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
+import es.gob.monitoriza.persistence.configuration.model.repository.AuthenticationTypeRepository;
+import es.gob.monitoriza.persistence.configuration.model.repository.SystemCertificateRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.ValidServiceRepository;
 import es.gob.monitoriza.service.IValidServiceService;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that implements the communication with the operations of the persistence layer for ValidService.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 30 ago. 2018.
+ * @version 1.1, 28/10/2018.
  */
 @Service
 public class ValidServiceService implements IValidServiceService {
+	
 	/**
 	 * Attribute that represents the injected interface that provides CRUD operations for the persistence.
 	 */
 	@Autowired
 	private ValidServiceRepository repository;
+	
+	/**
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence.
+	 */
+	@Autowired
+	private AuthenticationTypeRepository repositoryAuthType;
+	
+	/**
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence.
+	 */
+	@Autowired
+	private SystemCertificateRepository repositorySysCert;	
+		
+	/**
+	 * Attribute that represents the service object for accessing the repository. 
+	 */
+	@Autowired
+	private ValidCertificatesJob validCertificatesJob;
 
 	/**
 	 * {@inheritDoc}
@@ -70,24 +95,41 @@ public class ValidServiceService implements IValidServiceService {
 	 * @see es.gob.monitoriza.service.IValidServiceService#saveValidService(es.gob.monitoriza.persistence.configuration.model.entity.ValidService)
 	 */
 	@Override
-	public ValidService saveValidService(final ValidService validService) {
-		return repository.save(validService);
+	@Transactional
+	public ValidService saveValidService(final ValidServiceDTO validServiceDto) {
+		
+		ValidService validService = null;
+		boolean runJob = Boolean.FALSE;
+		
+		if (validServiceDto.getIdValidService() != null) {
+			validService = repository.findByIdValidService(validServiceDto.getIdValidService());
+		} else {
+			validService = new ValidService();
+		}
+		validService.setApplication(validServiceDto.getApplication());
+		validService.setAuthenticationType(repositoryAuthType.findByIdAuthenticationType(validServiceDto.getAuthenticationType()));
+		validService.setHost(validServiceDto.getHost());
+		validService.setIsSecure(validServiceDto.getIsSecure());
+		
+		if (!StringUtils.equals(validService.getCronExpression(), validServiceDto.getCronExpression()) && validServiceDto.getIsEnableValidationJob()) {
+			runJob = Boolean.TRUE;
+		}
+		validService.setIsEnableValidationJob(validServiceDto.getIsEnableValidationJob());
+		validService.setCronExpression(validServiceDto.getCronExpression());
+		validService.setPass(validServiceDto.getPass());
+		validService.setPort(validServiceDto.getPort());
+		validService.setUser(validServiceDto.getUser());
+		validService.setValidServiceCertificate(repositorySysCert.findByIdSystemCertificate(validServiceDto.getValidServiceCertificate()));
+						
+		validService = repository.save(validService);
+		
+		// Si todo va bien, se ejecuta el job
+		if (runJob) {
+			validCertificatesJob.start();
+		}
+		
+		return validService;
 
 	}
-
-	/**
-	 * Get repository.
-	 * @return repository
-	 */
-	public ValidServiceRepository getRepository() {
-		return repository;
-	}
-
-	/**
-	 * Set repository.
-	 * @param repositoryP set repository
-	 */
-	public void setRepository(final ValidServiceRepository repositoryP) {
-		this.repository = repositoryP;
-	}
+	
 }

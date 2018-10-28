@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -73,29 +73,33 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
-import es.gob.monitoriza.form.CertificateForm;
-import es.gob.monitoriza.form.PickListElement;
-import es.gob.monitoriza.form.PickListForm;
 import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.persistence.configuration.dto.CertificateDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
+import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
 import es.gob.monitoriza.service.IKeystoreService;
 import es.gob.monitoriza.service.IStatusCertificateService;
 import es.gob.monitoriza.service.ISystemCertificateService;
+import es.gob.monitoriza.service.ITimerMonitorizaService;
+import es.gob.monitoriza.service.ITimerScheduledService;
 import es.gob.monitoriza.service.IValidServiceService;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 import es.gob.monitoriza.utilidades.StatusCertificateEnum;
 import es.gob.monitoriza.utilidades.UtilsCertificate;
 import es.gob.monitoriza.utilidades.UtilsXml;
+import es.gob.monitoriza.vo.PickListElementVO;
+import es.gob.monitoriza.vo.PickListVO;
 import es.gob.monitoriza.webservice.ClientManager;
 
 /** 
  * <p>Class that manages the REST requests related to the Keystore administration
  * and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 @RestController
 public class KeystoreRestController {
@@ -164,6 +168,18 @@ public class KeystoreRestController {
 	 */
 	@Autowired
 	private IValidServiceService validServiceService;
+	
+	/**
+	 * Attribute that represents the service object for accessing the repository.
+	 */
+	@Autowired
+	private ITimerScheduledService scheduledService;
+	
+	/**
+	 * Attribute that represents the service object for accessing the repository.
+	 */
+	@Autowired
+	private ITimerMonitorizaService timerService;
 
 	/**
 	 * Attribute that represents the service object for accessing the repository.
@@ -228,6 +244,7 @@ public class KeystoreRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/savessl", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
+	@Transactional
 	public @ResponseBody DataTablesOutput<SystemCertificate> saveSsl(@RequestParam(FIELD_FILE) MultipartFile file, @RequestParam(FIELD_ALIAS) String alias) throws Exception {
 
 		DataTablesOutput<SystemCertificate> dtOutput = new DataTablesOutput<>();
@@ -321,6 +338,9 @@ public class KeystoreRestController {
 
 				// Importación correcta
 				LOGGER.info(Language.getFormatResWebMonitoriza(IWebLogMessages.WEB002, new Object[ ] { alias }));
+				
+				// Al haber cambios en el almacén Truststore SSL, se procede a marcar todos los timers programados como elegibles para ser reprogramados
+				scheduledService.setAllScheduledTimersNotUpdated();
 
 			} catch (Exception e) {
 				LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB001, new Object[ ] { alias }), e);
@@ -345,14 +365,14 @@ public class KeystoreRestController {
 	 * @return PickListForm
 	 * @throws IOException
 	 */
-	@JsonView(PickListForm.View.class)
+	@JsonView(PickListVO.View.class)
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/loadauth", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public PickListForm loadauth(@RequestParam(FIELD_FILE) MultipartFile file, @RequestParam(FIELD_AUTH_PASSWORD) String password) throws IOException {
+	public PickListVO loadauth(@RequestParam(FIELD_FILE) MultipartFile file, @RequestParam(FIELD_AUTH_PASSWORD) String password) throws IOException {
 
 		byte[ ] ksBytes = null;
-		PickListForm pickList = new PickListForm();
-		List<PickListElement> listAliases = new ArrayList<>();
+		PickListVO pickList = new PickListVO();
+		List<PickListElementVO> listAliases = new ArrayList<>();
 		String error = null;
 		ksBytes = file.getBytes();
 
@@ -364,7 +384,7 @@ public class KeystoreRestController {
 			ksPassword = password;
 
 			for (String alias: keyStoreFacade.listAllAliases(ksFromDataToAdd)) {
-				listAliases.add(new PickListElement(alias, alias));
+				listAliases.add(new PickListElementVO(alias, alias));
 			}
 
 		} catch (KeyStoreException | NoSuchAlgorithmException
@@ -392,14 +412,14 @@ public class KeystoreRestController {
 	 * @return PickListForm
 	 * @throws IOException
 	 */
-	@JsonView(PickListForm.View.class)
+	@JsonView(PickListVO.View.class)
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/loadvalidservicekeystore", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public PickListForm loadValidService(@RequestParam(FIELD_FILE) MultipartFile file, @RequestParam(FIELD_VALID_SERVICE_PASSWORD) String password) throws IOException {
+	public PickListVO loadValidService(@RequestParam(FIELD_FILE) MultipartFile file, @RequestParam(FIELD_VALID_SERVICE_PASSWORD) String password) throws IOException {
 
 		byte[ ] ksBytes = null;
-		PickListForm pickList = new PickListForm();
-		List<PickListElement> listAliases = new ArrayList<>();
+		PickListVO pickList = new PickListVO();
+		List<PickListElementVO> listAliases = new ArrayList<>();
 		String error = null;
 		ksBytes = file.getBytes();
 
@@ -411,7 +431,7 @@ public class KeystoreRestController {
 			ksPassword = password;
 
 			for (String alias: keyStoreFacade.listAllAliases(ksFromDataToAdd)) {
-				listAliases.add(new PickListElement(alias, alias));
+				listAliases.add(new PickListElementVO(alias, alias));
 			}
 
 		} catch (KeyStoreException | NoSuchAlgorithmException
@@ -442,7 +462,8 @@ public class KeystoreRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/updatessl", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody DataTablesOutput<SystemCertificate> updateSsl(@RequestBody CertificateForm sslForm, BindingResult bindingResult) throws IOException {
+	@Transactional
+	public @ResponseBody DataTablesOutput<SystemCertificate> updateSsl(@RequestBody CertificateDTO sslForm, BindingResult bindingResult) throws IOException {
 
 		DataTablesOutput<SystemCertificate> dtOutput = new DataTablesOutput<>();
 
@@ -538,7 +559,11 @@ public class KeystoreRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deletessl", method = RequestMethod.POST)
+	@Transactional
 	public String deleteSsl(@RequestParam("id") Long systemCertificateId, @RequestParam("index") String index) {
+		
+		String rowIndex = index;
+		
 		try {
 			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_TRUSTSTORE_SSL));
 			SystemCertificate cert = sysCertService.getSystemCertificateById(systemCertificateId);
@@ -549,9 +574,9 @@ public class KeystoreRestController {
 			sysCertService.deleteSystemCertificate(systemCertificateId);
 
 		} catch (Exception e) {
-			index = "-1";
+			rowIndex = GeneralConstants.ROW_INDEX_ERROR;
 		}
-		return index;
+		return rowIndex;
 	}
 
 	/**
@@ -566,6 +591,9 @@ public class KeystoreRestController {
 	@RequestMapping(path = "/deleteauth", method = RequestMethod.POST)
 	@Transactional
 	public String deleteAuth(@RequestParam("id") Long systemCertificateId, @RequestParam("index") String index) {
+		
+		String rowIndex = index;
+		
 		try {
 			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161));
 			SystemCertificate cert = sysCertService.getSystemCertificateById(systemCertificateId);
@@ -576,9 +604,9 @@ public class KeystoreRestController {
 			sysCertService.deleteSystemCertificate(systemCertificateId);
 
 		} catch (Exception e) {
-			index = "-1";
+			rowIndex = GeneralConstants.ROW_INDEX_ERROR;
 		}
-		return index;
+		return rowIndex;
 	}
 
 	/**
@@ -591,7 +619,11 @@ public class KeystoreRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deletevalidservicekeystore", method = RequestMethod.POST)
+	@Transactional
 	public String deleteValidService(@RequestParam("id") Long systemCertificateId, @RequestParam("index") String index) throws Exception {
+		
+		String rowIndex = index;
+		
 		try {
 			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_VALID_SERVICE_STORE));
 			SystemCertificate cert = sysCertService.getSystemCertificateById(systemCertificateId);
@@ -602,10 +634,10 @@ public class KeystoreRestController {
 			sysCertService.deleteSystemCertificate(systemCertificateId);
 
 		} catch (Exception e) {
-			index = "-1";
+			rowIndex = GeneralConstants.ROW_INDEX_ERROR;
 			throw e;
 		}
-		return index;
+		return rowIndex;
 	}
 
 	/**
@@ -618,7 +650,7 @@ public class KeystoreRestController {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/saveauth", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
-	public @ResponseBody DataTablesOutput<SystemCertificate> saveAuth(@RequestBody List<PickListElement> aliases) throws Exception {
+	public @ResponseBody DataTablesOutput<SystemCertificate> saveAuth(@RequestBody List<PickListElementVO> aliases) throws Exception {
 
 		DataTablesOutput<SystemCertificate> dtOutput = new DataTablesOutput<>();
 
@@ -631,7 +663,7 @@ public class KeystoreRestController {
 				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161));
 				char[ ] password = ksPassword.toCharArray();
 
-				Iterator<PickListElement> aliasIt = aliases.iterator();
+				Iterator<PickListElementVO> aliasIt = aliases.iterator();
 				String alias;
 				Key key;
 				Certificate cert;
@@ -713,12 +745,28 @@ public class KeystoreRestController {
 
 						// Importación correcta
 						LOGGER.info(Language.getFormatResWebMonitoriza(IWebLogMessages.WEB001, new Object[ ] { alias }));
+						
+						// Se comprueba qué timers se ven afectados de un cambio en el keystore de autenticación
+						List<TimerMonitoriza> timersRfc3161 = timerService.findTimersAnyServiceUsingRFC3161Auth();
+						
+						if (timersRfc3161 != null && !timersRfc3161.isEmpty()) {
+							for (TimerMonitoriza timer : timersRfc3161) {
+								
+								TimerScheduled scheduled = scheduledService.getTimerScheduledByIdTimer(timer.getIdTimer());
+								
+								if (scheduled != null) {
+									
+									scheduled.setUpdated(false);
+									scheduledService.saveTimerScheduled(scheduled);
+								}
+							}
+						}
+						
 					} else {
 						LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB014, new Object[] {alias}));
 						throw new Exception(GeneralConstants.VALID_SERVICE_NOT_CONFIGURED);
 					}
 				}
-
 			}
 
 		} catch (Exception e) {
@@ -741,7 +789,7 @@ public class KeystoreRestController {
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/savevalidservicekeystore", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
 	@Transactional
-	public @ResponseBody DataTablesOutput<SystemCertificate> saveValidService(@RequestBody List<PickListElement> aliases) throws Exception {
+	public @ResponseBody DataTablesOutput<SystemCertificate> saveValidService(@RequestBody List<PickListElementVO> aliases) throws Exception {
 
 		DataTablesOutput<SystemCertificate> dtOutput = new DataTablesOutput<>();
 
@@ -754,7 +802,7 @@ public class KeystoreRestController {
 				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_VALID_SERVICE_STORE));
 				char[ ] password = ksPassword.toCharArray();
 
-				Iterator<PickListElement> aliasIt = aliases.iterator();
+				Iterator<PickListElementVO> aliasIt = aliases.iterator();
 				String alias;
 				Key key;
 				Certificate cert;
@@ -862,7 +910,8 @@ public class KeystoreRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/updateauth", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody DataTablesOutput<SystemCertificate> updateAuth(@RequestBody CertificateForm authForm, BindingResult bindingResult) throws IOException {
+	@Transactional
+	public @ResponseBody DataTablesOutput<SystemCertificate> updateAuth(@RequestBody CertificateDTO authForm, BindingResult bindingResult) throws IOException {
 
 		DataTablesOutput<SystemCertificate> dtOutput = new DataTablesOutput<>();
 
@@ -957,7 +1006,8 @@ public class KeystoreRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/updatevalidservicekeystore", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	public @ResponseBody DataTablesOutput<SystemCertificate> updateValidService(@RequestBody CertificateForm validServForm, BindingResult bindingResult) throws IOException {
+	@Transactional
+	public @ResponseBody DataTablesOutput<SystemCertificate> updateValidService(@RequestBody CertificateDTO validServForm, BindingResult bindingResult) throws IOException {
 
 		DataTablesOutput<SystemCertificate> dtOutput = new DataTablesOutput<>();
 

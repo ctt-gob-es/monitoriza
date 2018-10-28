@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>19 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 02/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -36,8 +36,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.form.ServiceForm;
-import es.gob.monitoriza.form.TimerForm;
+import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
+import es.gob.monitoriza.persistence.configuration.dto.TimerDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
@@ -56,7 +56,7 @@ import es.gob.monitoriza.service.ITimerMonitorizaService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.1, 02/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 @Controller
 public class ServiceController {
@@ -109,8 +109,8 @@ public class ServiceController {
 		List<TimerMonitoriza> timers = new ArrayList<TimerMonitoriza>();
 		List<ServiceMonitoriza> services = new ArrayList<ServiceMonitoriza>();
 		List<AlarmMonitoriza> alarms = new ArrayList<AlarmMonitoriza>();
-		ServiceForm serviceForm = new ServiceForm();
-		TimerForm timerForm = new TimerForm();
+		ServiceDTO serviceForm = new ServiceDTO();
+		TimerDTO timerForm = new TimerDTO();
 
 		platforms = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
 				.collect(Collectors.toList());

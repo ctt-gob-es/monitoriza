@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>25 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 18/10/2018.
+ * @version 1.3, 28/10/2018.
  */
 package es.gob.monitoriza.invoker.ocsp;
 
@@ -49,15 +49,15 @@ import org.apache.log4j.Logger;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.utilidades.FileUtils;
 
 /** 
  * <p>Class that performs the request of a OCSP service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 18/10/2018.
+ * @version 1.3, 28/10/2018.
  */
-public class OcspInvoker {
+public final class OcspInvoker {
 
 	/**
 	 * Attribute that represents the object that manages the log of the class.
@@ -79,7 +79,7 @@ public class OcspInvoker {
 	 * @return Long that represents the time in milliseconds that has taken to complete the request.
 	 * If there is some configuration or communication problem, this value will be null.
 	 */
-	public static Long sendRequest(final File requestFile, final ServiceDTO service, final KeyStore ssl) {
+	public static Long sendRequest(final File requestFile, final ConfigServiceDTO service, final KeyStore ssl) {
 		
 		Long tiempoTotal = null;
 		byte[ ] requestByte = FileUtils.fileToByteArray(requestFile);

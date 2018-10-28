@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16 oct. 2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -36,8 +36,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.form.ConfServerMailForm;
-import es.gob.monitoriza.form.MailForm;
+import es.gob.monitoriza.persistence.configuration.dto.ConfServerMailDTO;
+import es.gob.monitoriza.persistence.configuration.dto.MailDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ConfServerMail;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
 import es.gob.monitoriza.service.IConfServerMailService;
@@ -52,7 +52,7 @@ import es.gob.monitoriza.service.IMailMonitorizaService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 @Controller
 public class ConfServerMailController {
@@ -87,9 +87,9 @@ public class ConfServerMailController {
 	@RequestMapping(value = "confmailadmin")
 	public String mailAdmin(Model model) {
 		List<MailMonitoriza> mails = new ArrayList<MailMonitoriza>();
-		MailForm mailForm = new MailForm();
+		MailDTO mailForm = new MailDTO();
 		ConfServerMail confServerMail = new ConfServerMail();
-		ConfServerMailForm confServerMailForm = new ConfServerMailForm();
+		ConfServerMailDTO confServerMailForm = new ConfServerMailDTO();
 
 		mails = StreamSupport.stream(mailService.getAllMailMonitoriza().spliterator(), false)
 				.collect(Collectors.toList());

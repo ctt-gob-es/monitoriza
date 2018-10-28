@@ -15,23 +15,23 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.form.UserForm.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.UserEditDTO.java.</p>
  * <b>Description:</b><p>Class that represents the backing form for adding/editing a user.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 8 mar. 2018.
+ * @version 1.0, 28/10/2018.
  */
-package es.gob.monitoriza.form;
+package es.gob.monitoriza.persistence.configuration.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import es.gob.monitoriza.constraints.FieldMatch;
-import es.gob.monitoriza.rest.exception.CheckItFirst;
-import es.gob.monitoriza.rest.exception.ThenCheckIt;
+import es.gob.monitoriza.persistence.configuration.dto.constraints.FieldMatch;
+import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
+import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
+import es.gob.monitoriza.utilidades.NumberConstants;
 
-@FieldMatch(first = "password", second = "confirmPassword", message = "{form.valid.user.password.confirm}")
 /**
  * <p>
  * Class that represents the backing form for adding/editing a user.
@@ -41,9 +41,10 @@ import es.gob.monitoriza.rest.exception.ThenCheckIt;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 8 mar. 2018.
+ * @version 1.0, 28/10/2018.
  */
-public class UserFormEdit {
+@FieldMatch(first = "password", second = "confirmPassword", message = "{form.valid.user.password.confirm}")
+public class UserEditDTO {
 
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input
@@ -56,7 +57,7 @@ public class UserFormEdit {
 	 * form.
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.user.name.notempty}")
-	@Size(min = 1, max = 15, groups = ThenCheckIt.class)
+	@Size(min = NumberConstants.NUM1, max = NumberConstants.NUM15, groups = ThenCheckIt.class)
 	private String nameEdit = "";
 
 	/**
@@ -64,7 +65,7 @@ public class UserFormEdit {
 	 * the form.
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.user.surnames.notempty}")
-	@Size(min = 1, max = 30, groups = ThenCheckIt.class)
+	@Size(min = NumberConstants.NUM1, max = NumberConstants.NUM30, groups = ThenCheckIt.class)
 	private String surnamesEdit = "";
 
 	/**
@@ -72,7 +73,7 @@ public class UserFormEdit {
 	 * the form.
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.user.login.notempty}")
-	@Size(min = 5, max = 30, groups = ThenCheckIt.class)
+	@Size(min = NumberConstants.NUM5, max = NumberConstants.NUM30, groups = ThenCheckIt.class)
 	private String loginEdit = "";
 
 	/**
@@ -80,7 +81,7 @@ public class UserFormEdit {
 	 * form.
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.user.email.notempty}")
-	@Size(min = 3, max = 254, groups = ThenCheckIt.class)
+	@Size(min = NumberConstants.NUM3, max = NumberConstants.NUM254, groups = ThenCheckIt.class)
 	private String emailEdit = "";
 
 	/**
@@ -93,12 +94,11 @@ public class UserFormEdit {
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #idUserMonitoriza}.
-	 * 
-	 * @return the value of the attribute {@link #idUserMonitoriza}.
+	 * Gets the value of the attribute {@link #idUserMonitorizaEdit}.
+	 * @param idUserMonitorizaEditParam the idUserMonitorizaEdit to set
 	 */
-	public void setIdUserMonitorizaEdit(Long idUserMonitorizaEdit) {
-		this.idUserMonitorizaEdit = idUserMonitorizaEdit;
+	public void setIdUserMonitorizaEdit(Long idUserMonitorizaEditParam) {
+		this.idUserMonitorizaEdit = idUserMonitorizaEditParam;
 	}
 
 	/**
@@ -109,10 +109,10 @@ public class UserFormEdit {
 	}
 
 	/**
-	 * @param nameEdit the nameEdit to set
+	 * @param nameEditParam the nameEdit to set
 	 */
-	public void setNameEdit(String nameEdit) {
-		this.nameEdit = nameEdit;
+	public void setNameEdit(String nameEditParam) {
+		this.nameEdit = nameEditParam;
 	}
 
 	/**
@@ -123,10 +123,10 @@ public class UserFormEdit {
 	}
 
 	/**
-	 * @param surnamesEdit the surnamesEdit to set
+	 * @param surnamesEditParam the surnamesEdit to set
 	 */
-	public void setSurnamesEdit(String surnamesEdit) {
-		this.surnamesEdit = surnamesEdit;
+	public void setSurnamesEdit(String surnamesEditParam) {
+		this.surnamesEdit = surnamesEditParam;
 	}
 
 	/**
@@ -137,10 +137,10 @@ public class UserFormEdit {
 	}
 
 	/**
-	 * @param loginEdit the loginEdit to set
+	 * @param loginEditParam the loginEdit to set
 	 */
-	public void setLoginEdit(String loginEdit) {
-		this.loginEdit = loginEdit;
+	public void setLoginEdit(String loginEditParam) {
+		this.loginEdit = loginEditParam;
 	}
 
 	/**
@@ -151,10 +151,10 @@ public class UserFormEdit {
 	}
 
 	/**
-	 * @param emailEdit the emailEdit to set
+	 * @param emailEditParam the emailEdit to set
 	 */
-	public void setEmailEdit(String emailEdit) {
-		this.emailEdit = emailEdit;
+	public void setEmailEdit(String emailEditParam) {
+		this.emailEdit = emailEditParam;
 	}
 
 	

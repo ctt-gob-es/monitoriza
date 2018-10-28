@@ -15,24 +15,25 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.form.UserForm.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.UserPasswordDTO.java.</p>
  * <b>Description:</b><p>Class that represents the backing form for adding/editing a user.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 8 mar. 2018.
+ * @version 1.0, 28/10/2018.
  */
-package es.gob.monitoriza.form;
+package es.gob.monitoriza.persistence.configuration.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
-import es.gob.monitoriza.constraints.FieldMatch;
-import es.gob.monitoriza.rest.exception.CheckItFirst;
-import es.gob.monitoriza.rest.exception.ThenCheckIt;
+import es.gob.monitoriza.persistence.configuration.dto.constraints.FieldMatch;
+import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
+import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
+import es.gob.monitoriza.utilidades.NumberConstants;
 
-@FieldMatch(first = "password", second = "confirmPassword", message = "{form.valid.user.password.confirm}")
+
 /**
  * <p>
  * Class that represents the backing form for adding/editing a user.
@@ -42,9 +43,10 @@ import es.gob.monitoriza.rest.exception.ThenCheckIt;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 8 mar. 2018.
+ * @version 1.0, 28/10/2018.
  */
-public class UserFormPassword {
+@FieldMatch(first = "password", second = "confirmPassword", message = "{form.valid.user.password.confirm}")
+public class UserPasswordDTO {
 
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input
@@ -57,7 +59,7 @@ public class UserFormPassword {
 	 * the form.
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.user.password.notempty}")
-	@Size(min = 7, max = 30, groups = ThenCheckIt.class)
+	@Size(min = NumberConstants.NUM7, max = NumberConstants.NUM30, groups = ThenCheckIt.class)
 	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "{form.valid.user.password.noPattern}", groups = ThenCheckIt.class)
 	private String password = "";
 
@@ -66,9 +68,12 @@ public class UserFormPassword {
 	 * the form.
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.user.confirmPassword.notempty}")
-	@Size(min = 7, max = 30, groups = ThenCheckIt.class)
+	@Size(min = NumberConstants.NUM7, max = NumberConstants.NUM30, groups = ThenCheckIt.class)
 	private String confirmPassword = "";
 
+	/**
+	 * Attribute that represents the password being changed. 
+	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.user.oldPassword.notempty}")
 	private String oldPassword = "";
 
@@ -82,12 +87,12 @@ public class UserFormPassword {
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #idUserMonitoriza}.
+	 * Gets the value of the attribute {@link #idUserMonitorizaPass}.
 	 * 
-	 * @return the value of the attribute {@link #idUserMonitoriza}.
+	 * @param idUserMonitorizaPassParam the value for the attribute {@link #idUserMonitorizaPass} to set.
 	 */
-	public void setIdUserMonitorizaPass(Long idUserMonitorizaPass) {
-		this.idUserMonitorizaPass = idUserMonitorizaPass;
+	public void setIdUserMonitorizaPass(Long idUserMonitorizaPassParam) {
+		this.idUserMonitorizaPass = idUserMonitorizaPassParam;
 	}
 
 	/**
@@ -102,11 +107,11 @@ public class UserFormPassword {
 	/**
 	 * Sets the value of the attribute {@link #password}.
 	 * 
-	 * @param password
+	 * @param passwordParam
 	 *            the value for the attribute {@link #password} to set.
 	 */
-	public void setPassword(String password) {
-		this.password = password;
+	public void setPassword(String passwordParam) {
+		this.password = passwordParam;
 	}
 
 	/**
@@ -117,11 +122,11 @@ public class UserFormPassword {
 	}
 
 	/**
-	 * @param confirmPassword
+	 * @param confirmPasswordParam
 	 *            the confirmPassword to set
 	 */
-	public void setConfirmPassword(String confirmPassword) {
-		this.confirmPassword = confirmPassword;
+	public void setConfirmPassword(String confirmPasswordParam) {
+		this.confirmPassword = confirmPasswordParam;
 	}
 
 	/**
@@ -132,11 +137,11 @@ public class UserFormPassword {
 	}
 
 	/**
-	 * @param oldPassword
+	 * @param oldPasswordParam
 	 *            the oldPassword to set
 	 */
-	public void setOldPassword(String oldPassword) {
-		this.oldPassword = oldPassword;
+	public void setOldPassword(String oldPasswordParam) {
+		this.oldPassword = oldPasswordParam;
 	}
 
 }

@@ -20,14 +20,13 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.6, 18/10/2018.
+ * @version 1.7, 28/10/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -62,22 +61,19 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.exception.RequestFileNotFoundException;
-import es.gob.monitoriza.form.ServiceForm;
-import es.gob.monitoriza.form.TimerForm;
 import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
+import es.gob.monitoriza.persistence.configuration.dto.TimerDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.RequestServiceFile;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
-import es.gob.monitoriza.service.IAlarmMonitorizaService;
 import es.gob.monitoriza.service.IPlatformService;
 import es.gob.monitoriza.service.IRequestServiceFileService;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
 import es.gob.monitoriza.service.ITimerMonitorizaService;
-import es.gob.monitoriza.service.ITimerScheduledService;
 import es.gob.monitoriza.utilidades.FileUtils;
 import es.gob.monitoriza.utilidades.NumberConstants;
 
@@ -91,7 +87,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.6, 18/10/2018.
+ * @version 1.7, 28/10/2018.
  */
 @RestController
 public class ServiceRestController {
@@ -120,21 +116,7 @@ public class ServiceRestController {
 	 * repository.
 	 */
 	@Autowired
-	private ITimerScheduledService scheduledService;
-
-	/**
-	 * Attribute that represents the service object for accessing the
-	 * repository.
-	 */
-	@Autowired
 	private IPlatformService platformService;
-
-	/**
-	 * Attribute that represents the service object for accessing the
-	 * repository.
-	 */
-	@Autowired
-	private IAlarmMonitorizaService alarmService;
 	
 	/**
 	 * Attribute that represents the service object for accessing the
@@ -246,9 +228,9 @@ public class ServiceRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@Transactional
 	public @ResponseBody DataTablesOutput<TimerMonitoriza> saveTimer(
-			@Validated(OrderedValidation.class) @RequestBody TimerForm timerForm, BindingResult bindingResult) {
+			@Validated(OrderedValidation.class) @RequestBody TimerDTO timerForm, BindingResult bindingResult) {
 		DataTablesOutput<TimerMonitoriza> dtOutput = new DataTablesOutput<>();
-		TimerMonitoriza timerMonitoriza = null;
+		
 		List<TimerMonitoriza> listNewTimer = new ArrayList<TimerMonitoriza>();
 
 		if (bindingResult.hasErrors()) {
@@ -261,33 +243,15 @@ public class ServiceRestController {
 			dtOutput.setError(json.toString());
 		} else {
 			try {
-				if (timerForm.getIdTimer() != null) {
-					timerMonitoriza = timerService.getTimerMonitorizaById(timerForm.getIdTimer());
-				} else {
-					timerMonitoriza = new TimerMonitoriza();
-				}
-
-				timerMonitoriza.setFrequency(timerForm.getFrequency());
-				timerMonitoriza.setName(timerForm.getName());
-				TimerMonitoriza timer = timerService.saveTimerMonitoriza(timerMonitoriza);
-								
-				// Sólo se actualiza la tarea programada del timer, si éste exsistía ya.
-				// Un nuevo timer sin servicios no debe ser contemplado.
-				if (timerForm.getIdTimer() != null) {
-					
-					TimerScheduled scheduled = scheduledService.getTimerScheduledByIdTimer(timerForm.getIdTimer());
-					// Actualizar en bd (tabla TIMER_SCHEDULED) el timer poniendo IS_UPDATED a false
-					if (scheduled != null) {
-    					scheduled.setUpdated(false);
-    					scheduledService.saveTimerScheduled(scheduled);
-					}
-				} 
 				
-				listNewTimer.add(timer);
+				TimerMonitoriza timerMonitoriza = timerService.saveTimerMonitoriza(timerForm);
+				
+				listNewTimer.add(timerMonitoriza);
+				
 			} catch (Exception e) {
 				listNewTimer = StreamSupport.stream(timerService.getAllTimerMonitoriza().spliterator(), false)
 						.collect(Collectors.toList());
-				dtOutput.setError("-1");
+				dtOutput.setError(GeneralConstants.ROW_INDEX_ERROR);
 				throw e;
 			}
 		}
@@ -308,27 +272,21 @@ public class ServiceRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@Transactional
 	public @ResponseBody DataTablesOutput<ServiceMonitoriza> saveService(
-			@Validated(OrderedValidation.class) @RequestPart("serviceForm") ServiceForm serviceForm, @RequestPart("file") MultipartFile file, BindingResult bindingResult) {
+			@Validated(OrderedValidation.class) @RequestPart("serviceForm") ServiceDTO serviceForm, @RequestPart("file") MultipartFile file, BindingResult bindingResult) {
 		
 		DataTablesOutput<ServiceMonitoriza> dtOutput = new DataTablesOutput<>();
-		ServiceMonitoriza serviceMonitoriza = null;
 		List<ServiceMonitoriza> listNewService = new ArrayList<ServiceMonitoriza>();
-		boolean elServicioHaCambiado = false;
-		boolean nuevoTimerSeleccionado = false;
-		TimerMonitoriza nuevoTimer = null;
-		RequestServiceFile requestFile = new RequestServiceFile();
-		serviceForm.setFile(file);
-		
+				
 		// Se controla manualmente el error 'requerido' para el campo nameWsdl, ya que depende del tipo de servicio
 		if (serviceForm.getServiceType().equalsIgnoreCase(GeneralConstants.SOAP_SERVICE)) {
 			
 			if ("".equals(serviceForm.getNameWsdl())) {
-				FieldError wsdlFieldError = new FieldError(ServiceForm.FORM_OBJECT_VALUE, ServiceForm.FIELD_ENDPOINT, "El campo 'Endpoint' es obligatorio.");
+				FieldError wsdlFieldError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_ENDPOINT, "El campo 'Endpoint' es obligatorio.");
 				bindingResult.addError(wsdlFieldError);
 			}
 			
-			if (serviceForm.getNameWsdl() != null && (serviceForm.getNameWsdl().length() < 1 || serviceForm.getNameWsdl().length() > 30)) {
-				FieldError wsdlFieldError = new FieldError(ServiceForm.FORM_OBJECT_VALUE, ServiceForm.FIELD_ENDPOINT, "El tamaño debe estar entre 1 y 30.");
+			if (serviceForm.getNameWsdl() != null && (serviceForm.getNameWsdl().length() < 1 || serviceForm.getNameWsdl().length() > NumberConstants.NUM30)) {
+				FieldError wsdlFieldError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_ENDPOINT, "El tamaño debe estar entre 1 y 30.");
 				bindingResult.addError(wsdlFieldError);
 			}
 			
@@ -339,12 +297,12 @@ public class ServiceRestController {
 		// requisitos de la petición (no acepta null) / Error: "Required request part 'file' is not present".
 		if ((file == null || file.isEmpty()) && serviceForm.getIdFile() == null) {
 			
-			FieldError fileNullError = new FieldError(ServiceForm.FORM_OBJECT_VALUE, ServiceForm.FIELD_FILE, "El campo 'Archivo de peticiones' es obligatorio.");
+			FieldError fileNullError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_FILE, "El campo 'Archivo de peticiones' es obligatorio.");
 			bindingResult.addError(fileNullError);
 			
 		} else if (!file.isEmpty() && !checkAllowedFormat(file)) {
 			
-			FieldError fileTypeError = new FieldError(ServiceForm.FORM_OBJECT_VALUE, ServiceForm.FIELD_FILE, "El archivo de peticiones debe tener formato ZIP.");
+			FieldError fileTypeError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_FILE, "El archivo de peticiones debe tener formato ZIP.");
 			bindingResult.addError(fileTypeError);
 		}				
 					
@@ -356,83 +314,19 @@ public class ServiceRestController {
 				json.put(o.getField() + "_span", o.getDefaultMessage());
 			}
 			dtOutput.setError(json.toString());
+			
 		} else {
 			try {
-				
-				// Si es una edición, se recupera el servicio original de la persistencia
-				// para comprobar si existen cambios respecto a los datos del formulario.
-				if (serviceForm.getIdService() != null) {
-					serviceMonitoriza = serviceService.getServiceMonitorizaById(serviceForm.getIdService());
-					elServicioHaCambiado = isServiceUpdatedForm(serviceForm, serviceMonitoriza);
-					
-					// Si se ha seleccionado un nuevo timer, habrá que reprogamar el original y el nuevo.
-					nuevoTimerSeleccionado = !serviceForm.getTimer().equals(serviceMonitoriza.getTimer().getIdTimer());
-					
-					if (nuevoTimerSeleccionado) {
-						nuevoTimer = serviceMonitoriza.getTimer();
-					}
-					
-				} else {
-					serviceMonitoriza = new ServiceMonitoriza();
-				}
-								
-				serviceMonitoriza.setDegradedThreshold(serviceForm.getDegradedThreshold());
-				serviceMonitoriza.setLostThreshold(serviceForm.getLostThreshold());
-				serviceMonitoriza.setName(serviceForm.getName());
-				serviceMonitoriza.setNameWsdl(serviceForm.getNameWsdl());
-				serviceMonitoriza.setAlarm(alarmService.getAlarmMonitorizaById(serviceForm.getAlarm()));
-				serviceMonitoriza.setPlatform(platformService.getPlatformById(serviceForm.getPlatform()));
-				serviceMonitoriza.setTimeout(serviceForm.getTimeout());
-				serviceMonitoriza.setTimer(timerService.getTimerMonitorizaById(serviceForm.getTimer()));
-				serviceMonitoriza.setServiceType(serviceForm.getServiceType());
-				
-				// Se añade/modifica el fichero de peticiones
-				if (file != null && !file.isEmpty()) {
-					
-					requestFile.setIdRequestServiceFile(serviceForm.getIdFile());
-					requestFile.setFilename(file.getOriginalFilename());
-					requestFile.setContentType(file.getContentType());
-					requestFile.setFiledata(file.getBytes());
-					serviceMonitoriza.setRequestFile(requestFile);
-				}
-							
-				ServiceMonitoriza service = serviceService.saveServiceMonitoriza(serviceMonitoriza);
+						
+				// Se almacena el servicio y se comprueba si es necesario actualizar el timer programado
+				ServiceMonitoriza service = serviceService.saveServiceMonitoriza(serviceForm, file);
 							
 				listNewService.add(service);	
-						
-				// Si el servicio ha cambiado o es nuevo, hay que gestionar la programación de timer asociado
-				if (elServicioHaCambiado || serviceForm.getIdService() == null) {
-					
-    				// Actualizar en bd (tabla TIMER_SCHEDULED) el timer poniendo IS_UPDATED a false
-    				TimerScheduled scheduled = scheduledService.getTimerScheduledByIdTimer(serviceForm.getTimer());
-    				
-    				// Si el timer asociado aún no ha sido programado, se añade para que la tarea programada lo haga.
-    				if (scheduled == null) {
-    					scheduled = new TimerScheduled();
-    					scheduled.setTimer(timerService.getTimerMonitorizaById(serviceForm.getTimer()));
-    				}
-    				
-    				// En cualquier caso, se pondrá la bandera a false para que la tarea lo procese
-    				scheduled.setUpdated(false);
-    				scheduledService.saveTimerScheduled(scheduled);    			
-    
-    				// Si además lo que se ha cambiado es el timer asociado al servicio, hay que actualizar el nuevo timer seleccionado y el antiguo.
-    				if (nuevoTimerSeleccionado) {
-    					
-    					TimerScheduled scheduledOld = scheduledService.getTimerScheduledByIdTimer(nuevoTimer.getIdTimer());
-    
-    					// Si el antiguo timer nunca había sido programado, se ignora el cambio
-    					if (scheduledOld != null) {
-    						scheduledOld.setUpdated(false);
-    						scheduledService.saveTimerScheduled(scheduledOld);
-    					}
-    				}
-				}			
 					
 			} catch (Exception e) {
 				listNewService = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false)
 						.collect(Collectors.toList());
-				dtOutput.setError("-1");
+				dtOutput.setError(GeneralConstants.ROW_INDEX_ERROR);
 			}
 		}
 		
@@ -443,7 +337,7 @@ public class ServiceRestController {
 
 
 	/**
-	 * Method that deletes a timer from persistence.
+	 * Method that deletes a timer from persistence and updates the scheduled timers.
 	 * @param timerId Identifier of the timer to be deleted
 	 * @param index Index of the row in the data table
 	 * @return The index of the row (timer) to be deleted, -1 in case of error.
@@ -451,22 +345,21 @@ public class ServiceRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deletetimer", method = RequestMethod.POST)
 	@Transactional
-	public String deleteTimer(@RequestParam("id") Long timerId, @RequestParam("index") String index) {
+	public String deleteTimer(final @RequestParam("id") Long timerId, final @RequestParam("index") String index) {
+		
+		String indexResult = index;
+		
 		try {
-			timerService.deleteTimerMonitoriza(timerId);
-						
-			TimerScheduled scheduled = scheduledService.getTimerScheduledByIdTimer(timerId);
-			scheduled.setUpdated(false);
-			scheduledService.saveTimerScheduled(scheduled);    	
+			timerService.deleteTimerMonitoriza(timerId);		
 			
 		} catch (Exception e) {
-			index = "-1";
+			indexResult = GeneralConstants.ROW_INDEX_ERROR;
 		}
-		return index;
+		return indexResult;
 	}
 
 	/**
-	 * Method that deletes a service from persistence.
+	 * Method that deletes a service from persistence and updates the scheduled timer.
 	 * @param idService Identifier of the service to be deleted
 	 * @param index Index of the row in the data table
 	 * @return The index of the row (service) to be deleted, -1 in case of error.
@@ -475,46 +368,20 @@ public class ServiceRestController {
 	@RequestMapping(path = "/deleteservice", method = RequestMethod.POST)
 	@Transactional
 	public String deleteservice(@RequestParam("id") Long idService, @RequestParam("index") String index) {
+		
+		String indexResult = index;
+		
 		try {
-				
-			ServiceMonitoriza service = serviceService.getServiceMonitorizaById(idService);
+			
 			serviceService.deleteServiceMonitoriza(idService);
-						
-			TimerScheduled scheduled = scheduledService.getTimerScheduledByIdTimer(service.getTimer().getIdTimer());
-			scheduled.setUpdated(false);
-			scheduledService.saveTimerScheduled(scheduled);    	
 			
 		} catch (EmptyResultDataAccessException e) {
-			index = "-1";
+			indexResult = GeneralConstants.ROW_INDEX_ERROR;
 			throw e;
 		}
-		return index;
+		return indexResult;
 	}
-	
-	/**
-	 * Method that checks if there are changes between the service form and the persisted service.
-	 * @param serviceForm Form object for the service.
-	 * @param service Entity object for the service.
-	 * @return true if there are changes between the service form and the persisted service.
-	 * @throws IOException 
-	 */
-	private boolean isServiceUpdatedForm(final ServiceForm serviceForm, final ServiceMonitoriza service) throws IOException {
 		
-		boolean filesAreEquals = serviceForm.getFile().isEmpty() || Arrays.equals(serviceForm.getFile().getBytes(), service.getRequestFile().getFiledata());
-						
-		return !(serviceForm.getAlarm().equals(service.getAlarm().getIdAlarm()) 
-				&& serviceForm.getDegradedThreshold().equals(service.getDegradedThreshold())
-				&& serviceForm.getLostThreshold().equals(service.getLostThreshold())
-				&& serviceForm.getName().equals(service.getName())
-				&& serviceForm.getNameWsdl().equals(service.getNameWsdl())
-				&& serviceForm.getPlatform().equals(service.getPlatform().getIdPlatform())
-				&& serviceForm.getServiceType().equals(service.getServiceType())
-				&& serviceForm.getTimeout().equals(service.getTimeout())
-				&& serviceForm.getTimer().equals(service.getTimer().getIdTimer())
-				&& filesAreEquals);
-		
-	}
-	
 	/**
 	 * Method to discard non zip files. 
 	 * @param file Multipart file to check
@@ -550,11 +417,11 @@ public class ServiceRestController {
 		
 	
 	/**
-	 * Method that copy to the response the contents of the file requested
+	 * Method that copy to the response the contents of the file requested.
 	 * @param idFile Identifier of the file to download
 	 * @param response HttpServletResponse
-	 * @throws IOException
-	 * @throws RequestFileNotFoundException
+	 * @throws IOException Exception launched if there is an error copying the file to the response 
+	 * @throws RequestFileNotFoundException Exception launched if there is no file in persistence with the passed identifier
 	 */
 	@RequestMapping(value = "/downloadFile", produces = "application/zip")
 	public void downloadFile(@RequestParam("idFile") Long idFile, HttpServletResponse response) throws IOException, RequestFileNotFoundException {

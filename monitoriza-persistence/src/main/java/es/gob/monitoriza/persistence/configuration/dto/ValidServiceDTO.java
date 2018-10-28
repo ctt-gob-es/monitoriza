@@ -15,28 +15,29 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.form.ValidServiceForm.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.ValidServiceDTO.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>29 ago. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 29 ago. 2018.
+ * @version 1.0, 28/10/2018.
  */
-package es.gob.monitoriza.form;
+package es.gob.monitoriza.persistence.configuration.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
-import es.gob.monitoriza.rest.exception.CheckItFirst;
-import es.gob.monitoriza.rest.exception.ThenCheckIt;
+import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
+import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
+import es.gob.monitoriza.utilidades.NumberConstants;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that represents the data transfer object and backing form for the validation service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 29 ago. 2018.
+ * @version 1.0, 28/10/2018.
  */
-public class ValidServiceForm {
+public class ValidServiceDTO {
 	
 	
 	/**
@@ -48,21 +49,21 @@ public class ValidServiceForm {
 	 * Attribute that represents the value of the input application of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.validservice.application.notempty}")
-    @Size(min=1, max=30, groups=ThenCheckIt.class)
+    @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM30, groups=ThenCheckIt.class)
     private String application = "";
 
 	/**
 	 * Attribute that represents the value of the input host of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.validservice.host.notempty}")
-    @Size(min=1, max=30, groups=ThenCheckIt.class)
+    @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM30, groups=ThenCheckIt.class)
     private String host = "";
 	
 	/**
 	 * Attribute that represents the value of the input port of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.validservice.port.notempty}")
-    @Size(min=1, max=5, groups=ThenCheckIt.class)
+    @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM5, groups=ThenCheckIt.class)
     private String port = "";
 	
 	/**
@@ -94,7 +95,7 @@ public class ValidServiceForm {
 	/**
 	 * Attribute that represents the cron expression to process validation job. 
 	 */
-	@Size(min=0, max=100, groups=ThenCheckIt.class)
+	@Size(min=NumberConstants.NUM0, max=NumberConstants.NUM100, groups=ThenCheckIt.class)
 	private String cronExpression;
 	
 	/**
@@ -113,10 +114,10 @@ public class ValidServiceForm {
 
 	/**
 	 * Sets the value of the attribute {@link #idValidService}.
-	 * @return the value of the attribute {@link #idValidService}.
+	 * @param idValidServiceParam value of the attribute {@link #idValidService} to set.
 	 */
-	public void setIdValidService(Long idValidService) {
-		this.idValidService = idValidService;
+	public void setIdValidService(Long idValidServiceParam) {
+		this.idValidService = idValidServiceParam;
 	}
 	
 	/**
@@ -129,10 +130,10 @@ public class ValidServiceForm {
 	
 	/**
 	 * Sets the value of the attribute {@link #application}.
-	 * @param application the value for the attribute {@link #application} to set.
+	 * @param applicationParam the value for the attribute {@link #application} to set.
 	 */
-	public void setApplication(String application) {
-		this.application = application;
+	public void setApplication(String applicationParam) {
+		this.application = applicationParam;
 	}
 	
 	/**
@@ -145,10 +146,10 @@ public class ValidServiceForm {
 
 	/**
 	 * Sets the value of the attribute {@link #host}.
-	 * @param login the value for the attribute {@link #host} to set.
+	 * @param hostParam the value for the attribute {@link #host} to set.
 	 */
-	public void setHost(String host) {
-		this.host = host;
+	public void setHost(String hostParam) {
+		this.host = hostParam;
 	}
 
 	/**
@@ -161,10 +162,10 @@ public class ValidServiceForm {
 
 	/**
 	 * Sets the value of the attribute {@link #port}.
-	 * @param port the value for the attribute {@link #port} to set.
+	 * @param portParam the value for the attribute {@link #port} to set.
 	 */
-	public void setPort(String port) {
-		this.port = port;
+	public void setPort(String portParam) {
+		this.port = portParam;
 	}
 	
 	/**
@@ -177,10 +178,10 @@ public class ValidServiceForm {
 
 	/**
 	 * Sets the value of the attribute {@link #isSecure}.
-	 * @param isSecure the value for the attribute {@link #isSecure} to set.
+	 * @param isSecureParam the value for the attribute {@link #isSecure} to set.
 	 */
-	public void setIsSecure(Boolean isSecure) {
-		this.isSecure = isSecure;
+	public void setIsSecure(Boolean isSecureParam) {
+		this.isSecure = isSecureParam;
 	}
 	
 	/**
@@ -193,10 +194,10 @@ public class ValidServiceForm {
 
 	/**
 	 * Sets the value of the attribute {@link #isEnableValidationJob}.
-	 * @param isEnableValidationJob the value for the attribute {@link #isEnableValidationJob} to set.
+	 * @param isEnableValidationJobParam the value for the attribute {@link #isEnableValidationJob} to set.
 	 */
-	public void setIsEnableValidationJob(Boolean isEnableValidationJob) {
-		this.isEnableValidationJob = isEnableValidationJob;
+	public void setIsEnableValidationJob(Boolean isEnableValidationJobParam) {
+		this.isEnableValidationJob = isEnableValidationJobParam;
 	}
 	
 	/**
@@ -209,10 +210,10 @@ public class ValidServiceForm {
 
 	/**
 	 * Sets the value of the attribute {@link #cronExpression}.
-	 * @param cronExpression the value for the attribute {@link #cronExpression} to set.
+	 * @param cronExpressionParam the value for the attribute {@link #cronExpression} to set.
 	 */
-	public void setCronExpression(String cronExpression) {
-		this.cronExpression = cronExpression;
+	public void setCronExpression(String cronExpressionParam) {
+		this.cronExpression = cronExpressionParam;
 	}
 	
 	/**
@@ -225,10 +226,10 @@ public class ValidServiceForm {
 	
 	/**
 	 * Sets the value of the attribute {@link #user}.
-	 * @param user the value for the attribute {@link #user} to set.
+	 * @param userParam the value for the attribute {@link #user} to set.
 	 */
-	public void setUser(String user) {
-		this.user = user;
+	public void setUser(String userParam) {
+		this.user = userParam;
 	}
 	
 	/**
@@ -241,10 +242,10 @@ public class ValidServiceForm {
 	
 	/**
 	 * Sets the value of the attribute {@link #pass}.
-	 * @param pass the value for the attribute {@link #pass} to set.
+	 * @param passParam the value for the attribute {@link #pass} to set.
 	 */
-	public void setPass(String pass) {
-		this.pass = pass;
+	public void setPass(String passParam) {
+		this.pass = passParam;
 	}
 	
 	/**
@@ -257,10 +258,10 @@ public class ValidServiceForm {
 	
 	/**
 	 * Sets the value of the attribute {@link #authenticationType}.
-	 * @param authenticationType the value for the attribute {@link #authenticationType} to set.
+	 * @param authenticationTypeParam the value for the attribute {@link #authenticationType} to set.
 	 */
-	public void setAuthenticationType(Long authenticationType) {
-		this.authenticationType = authenticationType;
+	public void setAuthenticationType(Long authenticationTypeParam) {
+		this.authenticationType = authenticationTypeParam;
 	}
 
 	/**
@@ -273,9 +274,9 @@ public class ValidServiceForm {
 
 	/**
 	 * Sets the value of the attribute {@link #validServiceCertificate}.
-	 * @param validServiceCertificate the value for the attribute {@link #validServiceCertificate} to set.
+	 * @param validServiceCertificateParam the value for the attribute {@link #validServiceCertificate} to set.
 	 */
-	public void setValidServiceCertificate(Long validServiceCertificate) {
-		this.validServiceCertificate = validServiceCertificate;
+	public void setValidServiceCertificate(Long validServiceCertificateParam) {
+		this.validServiceCertificate = validServiceCertificateParam;
 	}
 }

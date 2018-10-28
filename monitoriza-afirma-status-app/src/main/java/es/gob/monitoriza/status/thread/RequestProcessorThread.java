@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.3, 18/10/2018.
+ * @version 1.4, 28/10/2018.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -55,15 +55,16 @@ import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.invoker.ocsp.OcspInvoker;
 import es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker;
 import es.gob.monitoriza.invoker.soap.HttpSoapInvoker;
-import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.status.RunningServices;
 import es.gob.monitoriza.status.StatusUptodate;
+import es.gob.monitoriza.utilidades.NumberConstants;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.3, 18/10/2018.
+ * @version 1.4, 28/10/2018.
  */
 public final class RequestProcessorThread implements Runnable {
 
@@ -75,7 +76,7 @@ public final class RequestProcessorThread implements Runnable {
 	/**
 	 * Attribute that represents the Object that holds the configuration for the service being processed in this thread. 
 	 */
-	private ServiceDTO service;
+	private ConfigServiceDTO service;
 
 	/**
 	 * Attribute that represents the reference to the Map where the status of each service are stored. 
@@ -94,15 +95,17 @@ public final class RequestProcessorThread implements Runnable {
 
 	/**
 	 * Private constructor method for the class RequestProcessor.java. 
-	 * @param service DTOService that represents the service being processed in this thread.
-	 * @param statusHolder Reference to the Map that holds the current status for the processed services. 
+	 * @param serviceParam DTOService that represents the service being processed in this thread.
+	 * @param statusHolderParam Reference to the Map that holds the current status for the processed services. 
+	 * @param sslTrustStoreParam Truststore of Monitoriz@
+	 * @param rfc3161KeystoreParam Keystore for authenticating RFC3161 service
 	 */
-	public RequestProcessorThread(final ServiceDTO service, final Map<String, StatusUptodate> statusHolder, final KeyStore sslTrustStore, final KeyStore rfc3161Keystore) {
+	public RequestProcessorThread(final ConfigServiceDTO serviceParam, final Map<String, StatusUptodate> statusHolderParam, final KeyStore sslTrustStoreParam, final KeyStore rfc3161KeystoreParam) {
 
-		this.service = service;
-		this.statusHolder = statusHolder;
-		ssl = sslTrustStore;
-		authClient = rfc3161Keystore;
+		this.service = serviceParam;
+		this.statusHolder = statusHolderParam;
+		ssl = sslTrustStoreParam;
+		authClient = rfc3161KeystoreParam;
 	}
 
 	/**
@@ -163,7 +166,7 @@ public final class RequestProcessorThread implements Runnable {
 								// request o
 								// se considera perdida,
 								// se aumenta el nº de requests perdidas.
-								if (isServiceRequestLost(service, tiempoTotal)) {
+								if (isServiceRequestLost(tiempoTotal)) {
 									totalRequestsLost++;
 									// En otro caso, se añade el tiempo de la
 									// request al
@@ -173,7 +176,7 @@ public final class RequestProcessorThread implements Runnable {
 								}
 								
 								// Se almacena el resultado parcial para la petición del grupo actual
-								partialRequestResult.put(request.getAbsolutePath(), isServiceRequestLost(service, tiempoTotal)? "Sin respuesta" : tiempoTotal.toString());
+								partialRequestResult.put(request.getAbsolutePath(), isServiceRequestLost(tiempoTotal)? "Sin respuesta" : tiempoTotal.toString());
 								
 							}
 
@@ -185,7 +188,7 @@ public final class RequestProcessorThread implements Runnable {
 							tiempoMedio = totalTimes / (totalRequests - totalRequestsLost);
 						}
 						// Calcular % de perdidas para el grupo principal
-						perdidas = Math.round((float) (totalRequestsLost / totalRequests) * 100.0f);
+						perdidas = Math.round((float) (totalRequestsLost / totalRequests) * NumberConstants.NUM100);
 
 						// Si se cumplen las condiciones, se obtiene el posible
 						// próximo grupo de confirmación...
@@ -222,7 +225,7 @@ public final class RequestProcessorThread implements Runnable {
 				// hay más grupos de confirmación,
 				// pasamos a calcular el estado del servicio con los datos
 				// obtenidos.
-				StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(service, tiempoMedio, perdidas), tiempoMedio, LocalDateTime.now(), partialRequestResult);
+				StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(tiempoMedio, perdidas), tiempoMedio, LocalDateTime.now(), partialRequestResult);
 				statusHolder.put(service.getServiceName(), statusUptodate);
 
 			} catch (InvokerException e) {
@@ -239,14 +242,14 @@ public final class RequestProcessorThread implements Runnable {
 	/**
 	 * Method that gets the status of a service from its resulting execution average time and throws an alarm
 	 * if the status is not OK.
-	 * @param serviceName Object with the configuration attributes for this service.
 	 * @param tiempoMedio Long that represents the resulting average time for executing a batch of requests for this service.
+	 * @param perdidas Number of lost requests
 	 * @return String that represents the status of the service:
 	 * 			- CORRECTO
 	 * 			- DEGRADADO
 	 * 			- CAIDO
 	 */
-	private String calcularEstadoDelServicio(final ServiceDTO service, final Long tiempoMedio, final Integer perdidas) {
+	private String calcularEstadoDelServicio(final Long tiempoMedio, final Integer perdidas) {
 
 		String estado = null;
 		boolean sendAlarm = Boolean.parseBoolean(StaticMonitorizaProperties.getProperty(StaticConstants.ALARM_ACTIVE));
@@ -273,11 +276,10 @@ public final class RequestProcessorThread implements Runnable {
 
 	/**
 	 * Method that gets a boolean that indicates if the request for a service is considered lost.
-	 * @param service DTOService that contains configuration data for the service.
 	 * @param tiempoTotal Time in milliseconds that has taken to complete the service request.
 	 * @return true if the request is considered lost, false if the request is in time.
 	 */
-	private boolean isServiceRequestLost(final ServiceDTO service, final Long tiempoTotal) {
+	private boolean isServiceRequestLost(final Long tiempoTotal) {
 
 		boolean resultado = Boolean.FALSE;
 
@@ -290,18 +292,18 @@ public final class RequestProcessorThread implements Runnable {
 
 	/**
 	 * Gets the {@link service}.
-	 * @return {@link ServiceDTO}.
+	 * @return {@link ConfigServiceDTO}.
 	 */
-	public ServiceDTO getService() {
+	public ConfigServiceDTO getService() {
 		return service;
 	}
 
 	/**
 	 * Sets the {@link service}.
-	 * @param service
+	 * @param serviceParam ServiceDTO containing its configuration
 	 */
-	public void setService(ServiceDTO service) {
-		this.service = service;
+	public void setService(ConfigServiceDTO serviceParam) {
+		this.service = serviceParam;
 	}
 
 	/**
@@ -314,10 +316,10 @@ public final class RequestProcessorThread implements Runnable {
 
 	/**
 	 * Sets the {@link currentstatusHolder}.
-	 * @param currentstatusHolder
+	 * @param currentstatusHolder Current status holder
 	 */
-	public void setStatusHolder(Map<String, StatusUptodate> statusHolder) {
-		this.statusHolder = statusHolder;
+	public void setStatusHolder(Map<String, StatusUptodate> currentstatusHolder) {
+		this.statusHolder = currentstatusHolder;
 	}	
 
 }

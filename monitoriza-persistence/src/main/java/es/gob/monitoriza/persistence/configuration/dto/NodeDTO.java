@@ -15,23 +15,23 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.form.NodeForm.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.NodeDTO.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>15/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 15/10/2018.
+ * @version 1.0, 28/10/2018.
  */
-package es.gob.monitoriza.form;
+package es.gob.monitoriza.persistence.configuration.dto;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 
 /** 
  * <p>Class that represents the backing form for adding/editing a SPIE node.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 15/10/2018.
+ * @version 1.0, 28/10/2018.
  */
-public class NodeForm {
+public class NodeDTO {
 	
 	/**
 	 * Attribute that represents the object ID.
@@ -103,10 +103,10 @@ public class NodeForm {
 	
 	/**
 	 * Sets the value of the attribute {@link #idNode}.
-	 * @param idNode The value for the attribute {@link #idNode}.
+	 * @param idNodeParam The value for the attribute {@link #idNode}.
 	 */
-	public void setIdNode(final Long idNode) {
-		this.idNode = idNode;
+	public void setIdNode(final Long idNodeParam) {
+		this.idNode = idNodeParam;
 	}
 
 	/**
@@ -119,10 +119,10 @@ public class NodeForm {
 
 	/**
 	 * Sets the value of the attribute {@link #name}.
-	 * @param name The value for the attribute {@link #name}.
+	 * @param nameParam The value for the attribute {@link #name}.
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setName(String nameParam) {
+		this.name = nameParam;
 	}
 
 	/**
@@ -135,10 +135,10 @@ public class NodeForm {
 
 	/**
 	 * Sets the value of the attribute {@link #host}.
-	 * @param host The value for the attribute {@link #host}.
+	 * @param hostParam The value for the attribute {@link #host}.
 	 */
-	public void setHost(String host) {
-		this.host = host;
+	public void setHost(String hostParam) {
+		this.host = hostParam;
 	}
 
 	/**
@@ -151,10 +151,10 @@ public class NodeForm {
 
 	/**
 	 * Sets the value of the attribute {@link #port}.
-	 * @param port The value for the attribute {@link #port}.
+	 * @param portParam The value for the attribute {@link #port}.
 	 */
-	public void setPort(String port) {
-		this.port = port;
+	public void setPort(String portParam) {
+		this.port = portParam;
 	}
 
 	/**
@@ -167,10 +167,10 @@ public class NodeForm {
 
 	/**
 	 * Sets the value of the attribute {@link #type}.
-	 * @param type The value for the attribute {@link #type}.
+	 * @param typeParam The value for the attribute {@link #type}.
 	 */
-	public void setType(Long type) {
-		this.type = type;
+	public void setType(Long typeParam) {
+		this.type = typeParam;
 	}
 
 	/**
@@ -183,10 +183,10 @@ public class NodeForm {
 
 	/**
 	 * Sets the value of the attribute {@link #checkEmergencyDB}.
-	 * @param checkEmergencyDB The value for the attribute {@link #checkEmergencyDB}.
+	 * @param checkEmergencyDBParam The value for the attribute {@link #checkEmergencyDB}.
 	 */
-	public void setCheckEmergencyDB(Boolean checkEmergencyDB) {
-		this.checkEmergencyDB = checkEmergencyDB;
+	public void setCheckEmergencyDB(Boolean checkEmergencyDBParam) {
+		this.checkEmergencyDB = checkEmergencyDBParam;
 	}
 
 	/**
@@ -199,10 +199,10 @@ public class NodeForm {
 
 	/**
 	 * Sets the value of the attribute {@link #checkTsa}.
-	 * @param checkTsa The value for the attribute {@link #checkTsa}.
+	 * @param checkTsaParam The value for the attribute {@link #checkTsa}.
 	 */
-	public void setCheckTsa(Boolean checkTsa) {
-		this.checkTsa = checkTsa;
+	public void setCheckTsa(Boolean checkTsaParam) {
+		this.checkTsa = checkTsaParam;
 	}
 
 	/**
@@ -215,10 +215,10 @@ public class NodeForm {
 
 	/**
 	 * Sets the value of the attribute {@link #checkAfirma}.
-	 * @param checkAfirma The value for the attribute {@link #checkAfirma}.
+	 * @param checkAfirmaParam The value for the attribute {@link #checkAfirma}.
 	 */
-	public void setCheckAfirma(Boolean checkAfirma) {
-		this.checkAfirma = checkAfirma;
+	public void setCheckAfirma(Boolean checkAfirmaParam) {
+		this.checkAfirma = checkAfirmaParam;
 	}
 
 	/**
@@ -231,10 +231,10 @@ public class NodeForm {
 
 	/**
 	 * Sets the value of the attribute {@link #checkHsm}.
-	 * @param checkHsm The value for the attribute {@link #checkHsm}.
+	 * @param checkHsmParam The value for the attribute {@link #checkHsm}.
 	 */
-	public void setCheckHsm(Boolean checkHsm) {
-		this.checkHsm = checkHsm;
+	public void setCheckHsm(Boolean checkHsmParam) {
+		this.checkHsm = checkHsmParam;
 	}
 
 	/**
@@ -247,10 +247,10 @@ public class NodeForm {
 
 	/**
 	 * Sets the value of the attribute {@link #checkServices}.
-	 * @param checkServices The value for the attribute {@link #checkServices}.
+	 * @param checkServicesParam The value for the attribute {@link #checkServices}.
 	 */
-	public void setCheckServices(Boolean checkServices) {
-		this.checkServices = checkServices;
+	public void setCheckServices(Boolean checkServicesParam) {
+		this.checkServices = checkServicesParam;
 	}
 
 	/**
@@ -263,10 +263,10 @@ public class NodeForm {
 
 	/**
 	 * Sets the value of the attribute {@link #checkValidMethod}.
-	 * @param checkValidMethod The value for the attribute {@link #checkValidMethod}.
+	 * @param checkValidMethodParam The value for the attribute {@link #checkValidMethod}.
 	 */
-	public void setCheckValidMethod(Boolean checkValidMethod) {
-		this.checkValidMethod = checkValidMethod;
+	public void setCheckValidMethod(Boolean checkValidMethodParam) {
+		this.checkValidMethod = checkValidMethodParam;
 	}
 
 	/**
@@ -279,10 +279,10 @@ public class NodeForm {
 
 	/**
 	 * Sets the value of the attribute {@link #isSecure}.
-	 * @param isSecure The value for the attribute {@link #isSecure}.
+	 * @param isSecureParam The value for the attribute {@link #isSecure}.
 	 */
-	public void setIsSecure(Boolean isSecure) {
-		this.isSecure = isSecure;
+	public void setIsSecure(Boolean isSecureParam) {
+		this.isSecure = isSecureParam;
 	}
 
 	/**

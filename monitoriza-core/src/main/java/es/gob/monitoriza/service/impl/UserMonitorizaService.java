@@ -19,24 +19,31 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>6 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 6 mar. 2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
+import es.gob.monitoriza.persistence.configuration.dto.UserDTO;
+import es.gob.monitoriza.persistence.configuration.dto.UserEditDTO;
+import es.gob.monitoriza.persistence.configuration.dto.UserPasswordDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.UserMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.UserDatatableRepository;
 import es.gob.monitoriza.service.IUserMonitorizaService;
+import es.gob.monitoriza.utilidades.NumberConstants;
 
 /**
  * <p>Class that implements the communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 6 mar. 2018.
+ * @version 1.1, 28/10/2018.
  */
 @Service
 public class UserMonitorizaService implements IUserMonitorizaService {
@@ -61,22 +68,13 @@ public class UserMonitorizaService implements IUserMonitorizaService {
 	public UserMonitoriza getUserMonitorizaById(final Long userId) {
 		return repository.findByIdUserMonitoriza(userId);
 	}
-
-	/**
-	 * {@inheritDoc}
-	 * @see es.gob.monitoriza.service.IUserMonitorizaService#saveUserMonitoriza(es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza)
-	 */
-	@Override
-	public UserMonitoriza saveUserMonitoriza(final UserMonitoriza user) {
-		return repository.save(user);
-
-	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 * @see es.gob.monitoriza.service.IUserMonitorizaService#deleteUserMonitoriza(java.lang.Long)
 	 */
 	@Override
+	@Transactional
 	public void deleteUserMonitoriza(final Long userId) {
 		repository.deleteById(userId);
 
@@ -111,35 +109,100 @@ public class UserMonitorizaService implements IUserMonitorizaService {
 	}
 
 	/**
-	 * Get repository.
-	 * @return repository
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IUserMonitorizaService#saveUserMonitoriza(es.gob.monitoriza.persistence.configuration.dto.UserDTO)
 	 */
-	public UserMonitorizaRepository getRepository() {
-		return repository;
+	@Override
+	@Transactional
+	public UserMonitoriza saveUserMonitoriza(UserDTO userDto) {
+		
+		UserMonitoriza userMonitoriza = null;
+		
+		if (userDto.getIdUserMonitoriza() != null) {
+			userMonitoriza = repository.findByIdUserMonitoriza(userDto.getIdUserMonitoriza());
+		} else {
+			userMonitoriza = new UserMonitoriza();
+		}
+		if (!StringUtils.isEmpty(userDto.getPassword())) {
+			String pwd = userDto.getPassword();
+			BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
+			String hashPwd = bcpe.encode(pwd);
+
+			userMonitoriza.setPassword(hashPwd);
+		}
+
+		userMonitoriza.setLogin(userDto.getLogin());
+		userMonitoriza.setAttemptsNumber(NumberConstants.NUM0);
+		userMonitoriza.setEmail(userDto.getEmail());
+		userMonitoriza.setIsBlocked(Boolean.FALSE);
+		userMonitoriza.setLastAccess(null);
+		userMonitoriza.setLastIpAccess(null);
+		userMonitoriza.setName(userDto.getName());
+		userMonitoriza.setSurnames(userDto.getSurnames());
+		
+		return repository.save(userMonitoriza);
 	}
 
 	/**
-	 * Set repository.
-	 * @param repositoryP set repository
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IUserMonitorizaService#updateUserMonitoriza(es.gob.monitoriza.persistence.configuration.dto.UserDTO)
 	 */
-	public void setRepository(final UserMonitorizaRepository repositoryP) {
-		this.repository = repositoryP;
+	@Override
+	@Transactional
+	public UserMonitoriza updateUserMonitoriza(UserEditDTO userDto) {
+		
+		UserMonitoriza userMonitoriza = null;
+		
+		if (userDto.getIdUserMonitorizaEdit() != null) {
+			userMonitoriza = repository.findByIdUserMonitoriza(userDto.getIdUserMonitorizaEdit());
+		} else {
+			userMonitoriza = new UserMonitoriza();
+		}
+		userMonitoriza.setLogin(userDto.getLoginEdit());
+		userMonitoriza.setAttemptsNumber(NumberConstants.NUM0);
+		userMonitoriza.setEmail(userDto.getEmailEdit());
+		userMonitoriza.setIsBlocked(Boolean.FALSE);
+		userMonitoriza.setLastAccess(null);
+		userMonitoriza.setLastIpAccess(null);
+		userMonitoriza.setName(userDto.getNameEdit());
+		userMonitoriza.setSurnames(userDto.getSurnamesEdit());
+
+		return repository.save(userMonitoriza);
 	}
 
 	/**
-	 * Get dtRepository.
-	 * @return dtRepository
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IUserMonitorizaService#changeUserMonitorizaPassword(es.gob.monitoriza.persistence.configuration.dto.UserPasswordDTO)
 	 */
-	public UserDatatableRepository getDtRepository() {
-		return dtRepository;
-	}
+	@Override
+	@Transactional
+	public String changeUserMonitorizaPassword(UserPasswordDTO userPasswordDto) {
+		
+		UserMonitoriza userMonitoriza = repository.findByIdUserMonitoriza(userPasswordDto.getIdUserMonitorizaPass());
+		String result = null;
+		
+		String oldPwd = userPasswordDto.getOldPassword();
+		String pwd = userPasswordDto.getPassword();
 
-	/**
-	 * Set dtRepository
-	 * @param dtRepositoryP set dtRepository
-	 */
-	public void setDtRepository(final UserDatatableRepository dtRepositoryP) {
-		this.dtRepository = dtRepositoryP;
+		BCryptPasswordEncoder bcpe = new BCryptPasswordEncoder();
+		String hashPwd = bcpe.encode(pwd);
+
+		try {
+			if (bcpe.matches(oldPwd, userMonitoriza.getPassword())) {
+				userMonitoriza.setPassword(hashPwd);
+
+				repository.save(userMonitoriza);
+				result = "0";
+			} else {
+				result = "-1";
+			}
+		} catch (Exception e) {
+			result = "-2";
+			throw e;
+		}
+		
+		return result;
+		
 	}
 
 }

@@ -20,10 +20,11 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.service;
 
+import es.gob.monitoriza.persistence.configuration.dto.ConfServerMailDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ConfServerMail;
 
 /**
@@ -36,7 +37,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.ConfServerMail;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 public interface IConfServerMailService {
 
@@ -59,11 +60,10 @@ public interface IConfServerMailService {
 	/**
 	 * Method that saves ConfServerMail.
 	 * 
-	 * @param ConfServerMail
-	 *            to update.
-	 * @return {@link ConfServerMail} an object that represents the ConfServerMail.
+	 * @param confServerMailDto DTO object with the configuration of the mail server.
+	 * @return {@link ConfServerMailDTO} an object that represents the ConfServerMail.
 	 */
-	ConfServerMail saveConfServerMail(ConfServerMail confServerMail);
+	ConfServerMail saveConfServerMail(ConfServerMailDTO confServerMailDto);
 
 	/**
 	 * Method that delete a ConfServerMail.

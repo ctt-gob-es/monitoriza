@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>28 ago. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 package es.gob.monitoriza.controller;
 
@@ -28,7 +28,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -44,9 +43,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.cron.ValidCertificatesJob;
 import es.gob.monitoriza.enums.AuthenticationTypeEnum;
-import es.gob.monitoriza.form.ValidServiceForm;
 import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.persistence.configuration.dto.ValidServiceDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
@@ -57,7 +56,7 @@ import es.gob.monitoriza.service.IValidServiceService;
 /** 
  * <p>Class that maps the request for the validation service form to the controller.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 28/10/2018.
  */
 @Controller
 public class ValidationServiceController {
@@ -102,7 +101,7 @@ public class ValidationServiceController {
 	@RequestMapping(value = "validservicecertificate")
 	public String validService(Model model) {
 
-		ValidServiceForm validService = new ValidServiceForm();
+		ValidServiceDTO validService = new ValidServiceDTO();
 
 		model.addAttribute("authenticationTypes", authenticationTypeService.getAllAuthenticationTypes());
 
@@ -134,32 +133,15 @@ public class ValidationServiceController {
 	 * @param validServiceForm Object that maps the HTML form
 	 * @param bindingResult Object that maps the validation errors in the form
 	 * @return ValidService persisted
+	 * @throws Exception Error saving the validation service
 	 */
 	@RequestMapping(value = "/savevalidservice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public @ResponseBody ValidService saveValidService(@Validated(OrderedValidation.class) @RequestBody final ValidServiceForm validServiceForm, final BindingResult bindingResult) throws Exception{
+	public @ResponseBody ValidService saveValidService(@Validated(OrderedValidation.class) @RequestBody final ValidServiceDTO validServiceForm, final BindingResult bindingResult) throws Exception{
 
 		ValidService validService = null;
-		boolean runJob = Boolean.FALSE;
+		
 		if (!bindingResult.hasErrors()) {
 			try {
-				if (validServiceForm.getIdValidService() != null) {
-					validService = validServiceService.getValidServiceById(validServiceForm.getIdValidService());
-				} else {
-					validService = new ValidService();
-				}
-				validService.setApplication(validServiceForm.getApplication());
-				validService.setAuthenticationType(authenticationTypeService.getAuthenticationTypeById(validServiceForm.getAuthenticationType()));
-				validService.setHost(validServiceForm.getHost());
-				validService.setIsSecure(validServiceForm.getIsSecure());
-				if (!StringUtils.equals(validService.getCronExpression(), validServiceForm.getCronExpression()) && validServiceForm.getIsEnableValidationJob()) {
-					runJob = Boolean.TRUE;
-				}
-				validService.setIsEnableValidationJob(validServiceForm.getIsEnableValidationJob());
-				validService.setCronExpression(validServiceForm.getCronExpression());
-				validService.setPass(validServiceForm.getPass());
-				validService.setPort(validServiceForm.getPort());
-				validService.setUser(validServiceForm.getUser());
-				validService.setValidServiceCertificate(sysCertService.getSystemCertificateById(validServiceForm.getValidServiceCertificate()));
 				
 				if (validServiceForm.getAuthenticationType().equals(AuthenticationTypeEnum.CERTIFICATE.getId())) {
 					if (validServiceForm.getValidServiceCertificate().intValue() == -1) {
@@ -167,18 +149,15 @@ public class ValidationServiceController {
 						throw new Exception("NoCertForAuthentication");
 					}
 				}
-				
-				
-				validService = validServiceService.saveValidService(validService);
+								
+				validService = validServiceService.saveValidService(validServiceForm);
 
 			} catch (Exception e) {
 				LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB010), e.getCause());
 				throw e;
 			}
 		}
-		if (runJob) {
-			validCertificatesJob.start();
-		}
+		
 		return validService;
 	}
 
@@ -192,10 +171,10 @@ public class ValidationServiceController {
 
 	/**
 	 * Set authenticationTypeService.
-	 * @param authenticationTypeService set authenticationTypeService
+	 * @param authenticationTypeServiceParam set authenticationTypeService
 	 */
-	public void setAuthenticationTypeService(IAuthenticationTypeService authenticationTypeService) {
-		this.authenticationTypeService = authenticationTypeService;
+	public void setAuthenticationTypeService(IAuthenticationTypeService authenticationTypeServiceParam) {
+		this.authenticationTypeService = authenticationTypeServiceParam;
 	}
 
 	/**
@@ -208,10 +187,10 @@ public class ValidationServiceController {
 
 	/**
 	 * Set validServiceService.
-	 * @param validServiceService set validServiceService
+	 * @param validServiceServiceParam set validServiceService
 	 */
-	public void setValidServiceService(IValidServiceService validServiceService) {
-		this.validServiceService = validServiceService;
+	public void setValidServiceService(IValidServiceService validServiceServiceParam) {
+		this.validServiceService = validServiceServiceParam;
 	}
 
 	/**
@@ -224,10 +203,10 @@ public class ValidationServiceController {
 
 	/**
 	 * Set sysCertService.
-	 * @param sysCertService set sysCertService
+	 * @param sysCertServiceParam set sysCertService
 	 */
-	public void setSysCertService(ISystemCertificateService sysCertService) {
-		this.sysCertService = sysCertService;
+	public void setSysCertService(ISystemCertificateService sysCertServiceParam) {
+		this.sysCertService = sysCertServiceParam;
 	}
 
 	/**
@@ -240,10 +219,10 @@ public class ValidationServiceController {
 
 	/**
 	 * Set validCertificatesJob.
-	 * @param validCertificatesJob set validCertificatesJob
+	 * @param validCertificatesJobParam set validCertificatesJob
 	 */
-	public void setValidCertificatesJob(ValidCertificatesJob validCertificatesJob) {
-		this.validCertificatesJob = validCertificatesJob;
+	public void setValidCertificatesJob(ValidCertificatesJob validCertificatesJobParam) {
+		this.validCertificatesJob = validCertificatesJobParam;
 	}
 
 }

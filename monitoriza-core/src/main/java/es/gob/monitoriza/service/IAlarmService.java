@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>17 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 17/10/2018.
+ * @version 1.1, 28/10/2018.
  */
 package es.gob.monitoriza.service;
 
@@ -29,6 +29,7 @@ import java.util.List;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
+import es.gob.monitoriza.persistence.configuration.dto.ConfAlarmDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.Alarm;
 
 /**
@@ -41,7 +42,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.Alarm;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 28/09/2018.
  */
 public interface IAlarmService {
 
@@ -61,7 +62,7 @@ public interface IAlarmService {
 
 	/**
 	* Method that saves Alarm.
-	* @param Alarm to update.
+	* @param alarm Alarm to update.
 	* @return {@link Alarm} an object that represents the Alarm.
 	*/
 	Alarm saveAlarm(Alarm alarm);
@@ -79,5 +80,12 @@ public interface IAlarmService {
 	 * @return {@link DataTablesOutput}
 	 */
 	DataTablesOutput<Alarm> getAllAlarm(DataTablesInput input);
+	
+	/**
+	 * Method that saves an Alarm and Mail addresses in the persistence.
+	 * @param alarmDto DTO containing alarm data
+	 * @return Alarm saved
+	 */
+	Alarm saveAlarm(ConfAlarmDTO alarmDto);
 
 }
