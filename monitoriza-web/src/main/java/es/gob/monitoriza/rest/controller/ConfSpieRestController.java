@@ -73,7 +73,7 @@ public class ConfSpieRestController {
 	@RequestMapping(value = "/saveconfspie", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public @ResponseBody ConfSpie save(@RequestBody ConfSpieDTO confSpieForm, BindingResult bindingResult) {
 		
-		ConfSpie result = new ConfSpie();;
+		ConfSpie result = new ConfSpie();
 
 		if (bindingResult.hasErrors()) {
 			JSONObject json = new JSONObject();

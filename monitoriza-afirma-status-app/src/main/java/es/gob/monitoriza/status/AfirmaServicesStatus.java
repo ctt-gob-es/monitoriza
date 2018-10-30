@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.2, 17/10/2018.
+ * @version 1.3, 30/10/2018.
  */
 package es.gob.monitoriza.status;
 
@@ -61,7 +61,7 @@ import es.gob.monitoriza.response.ResponseMonitoriza;
 /** 
  * <p>Class that gets the status for the @firma/ts@ services through servlet call</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.2, 17/10/2018.
+ * @version 1.3, 30/10/2018.
  */
 public class AfirmaServicesStatus extends HttpServlet {
 
@@ -115,7 +115,7 @@ public class AfirmaServicesStatus extends HttpServlet {
 					
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.setCharacterEncoding("UTF-8");
-			response.addHeader("Server:", "Servidor Monitoriz@");
+			response.addHeader("Server:", "Servidor VIP onitoriz@");
 				
 			if (adminFilter == null) {
     			responseBytes = ResponseMonitoriza.render(platformFilter, adminFilter).getBytes();

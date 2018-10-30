@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21 jun. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 18/10/2018.
+ * @version 1.3, 30/10/2018.
  */
 package es.gob.monitoriza.status;
 
@@ -32,7 +32,7 @@ import es.gob.monitoriza.constant.GeneralConstants;
 /** 
  * <p>Class that stores the last results for a service invocation.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 18/10/2018.
+ * @version 1.3, 30/10/2018.
  */
 public class StatusUptodate {
 	
@@ -65,15 +65,17 @@ public class StatusUptodate {
 
 	/**
 	 * Constructor method for the class StatusUptodate.java.
-	 * @param statusValue
-	 * @param statusUptodate 
+	 * @param statusValueParam
+	 * @param averageTimeParam 
+	 * @param statusUptodateParam
+	 * @param partialRequestResultParam
 	 */
-	public StatusUptodate(final String statusValue, final Long averageTime, final LocalDateTime statusUptodate, final Map<String,String> partialRequestResult) {
+	public StatusUptodate(final String statusValueParam, final Long averageTimeParam, final LocalDateTime statusUptodateParam, final Map<String,String> partialRequestResultParam) {
 		super();
-		this.statusValue = statusValue;
-		this.averageTime = averageTime;
-		this.statusUptodate = statusUptodate;
-		this.partialRequestResult = partialRequestResult;
+		this.statusValue = statusValueParam;
+		this.averageTime = averageTimeParam;
+		this.statusUptodate = statusUptodateParam;
+		this.partialRequestResult = partialRequestResultParam;
 	}
 
 	/**
@@ -86,10 +88,10 @@ public class StatusUptodate {
 
 	/**
 	 * Sets the value of the attribute {@link #statusValue}.
-	 * @param statusValue the value for the attribute {@link #statusValue} to set.
+	 * @param statusValueParam the value for the attribute {@link #statusValue} to set.
 	 */
-	public void setStatusValue(String statusValue) {
-		this.statusValue = statusValue;
+	public void setStatusValue(String statusValueParam) {
+		this.statusValue = statusValueParam;
 	}
 	
 	/**
@@ -102,10 +104,10 @@ public class StatusUptodate {
 
 	/**
 	 * Sets the value of the attribute {@link #averageTime}.
-	 * @param averageTime the value for the attribute {@link #averageTime} to set.
+	 * @param averageTimeParam the value for the attribute {@link #averageTime} to set.
 	 */
-	public void setAverageTime(final Long averageTime) {
-		this.averageTime = averageTime;
+	public void setAverageTime(final Long averageTimeParam) {
+		this.averageTime = averageTimeParam;
 	}
 
 	/**
@@ -118,10 +120,10 @@ public class StatusUptodate {
 
 	/**
 	 * Sets the value of the attribute {@link #statusUptodate}.
-	 * @param statusUptodate the value for the attribute {@link #statusUptodate} to set.
+	 * @param statusUptodateParam the value for the attribute {@link #statusUptodate} to set.
 	 */
-	public void setStatusUptodate(LocalDateTime statusUptodate) {
-		this.statusUptodate = statusUptodate;
+	public void setStatusUptodate(LocalDateTime statusUptodateParam) {
+		this.statusUptodate = statusUptodateParam;
 	}
 
 	/**
@@ -134,10 +136,10 @@ public class StatusUptodate {
 
 	/**
 	 * Sets the value of the attribute {@link #partialRequestResult}.
-	 * @param partialRequestResult the value for the attribute {@link #partialRequestResult} to set.
+	 * @param partialRequestResultParam the value for the attribute {@link #partialRequestResult} to set.
 	 */
-	public void setPartialRequestResult(Map<String, String> partialRequestResult) {
-		this.partialRequestResult = partialRequestResult;
+	public void setPartialRequestResult(Map<String, String> partialRequestResultParam) {
+		this.partialRequestResult = partialRequestResultParam;
 	}
 	
 	/**

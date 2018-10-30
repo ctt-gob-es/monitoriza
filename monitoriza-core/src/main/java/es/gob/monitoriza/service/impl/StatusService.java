@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 18/10/2018.
+ * @version 1.3, 30/10/2018.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -41,22 +41,25 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.google.gson.Gson;
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
+import es.gob.monitoriza.exception.StatusVipResponseException;
 import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.RowStatusDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusDTO;
 import es.gob.monitoriza.service.IStatusService;
+import es.gob.monitoriza.utilidades.NumberConstants;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /**
  * <p>Class that implements the communication with the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.2, 18/10/2018.
+ * @version 1.3, 30/10/2018.
  */
 @Service
 public class StatusService implements IStatusService {
@@ -73,11 +76,23 @@ public class StatusService implements IStatusService {
 	@Override
 	public StatusDTO completeStatus() {
 				
+		StatusDTO status = new StatusDTO();
+		
 		Type listType = new TypeToken<StatusDTO>() {}.getType();
+				
+		String jsonFromServlet;
 		
-		String jsonFromServlet = getRequestFromStatusServlet();
-		
-		StatusDTO status = new Gson().fromJson(jsonFromServlet, listType);
+		try {
+			jsonFromServlet = getRequestFromStatusServlet();
+			status = new Gson().fromJson(jsonFromServlet, listType);
+		} catch (StatusVipResponseException svre) {
+			status.setError(svre.getMessage());
+		} catch (JsonSyntaxException e) {
+			String errorJson = Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB018);
+			LOGGER.error(errorJson);
+			status.setError(errorJson);
+			
+		}				
 
 		status.setData(checkStatus(status.getData()));
 
@@ -115,8 +130,9 @@ public class StatusService implements IStatusService {
 	/**
 	 * Method that calls the status servlet.
 	 * @return String that represents the status information in JSON format
+	 * @throws StatusVipResponseException 
 	 */
-	private String getRequestFromStatusServlet() {
+	private String getRequestFromStatusServlet() throws StatusVipResponseException {
 		
 		HttpClient httpclient = HttpClients.createDefault();
 		HttpGet httpget = new HttpGet(StaticMonitorizaProperties.getProperty(StaticConstants.MONITORIZA_VIP_STATUS_SERVLET));
@@ -137,9 +153,14 @@ public class StatusService implements IStatusService {
 			    } 
 			}
 						
+			if (response.getStatusLine().getStatusCode() / NumberConstants.NUM100 != 2) {
+				String error = Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB017, new Object[]{response.getStatusLine().getStatusCode()});
+				LOGGER.error(error);
+				throw new StatusVipResponseException(error);
+			}
+						
 		} catch (IOException e) {
-			LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB016, new Object[]{ httpget.getURI() }));
-			e.printStackTrace();
+			LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB016, new Object[]{ httpget.getURI()}), e);
 		}
 		
 		return result;

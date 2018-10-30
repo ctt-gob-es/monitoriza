@@ -25,7 +25,11 @@
             	<div class="bgc-white bd bdrs-3 p-20 mB-20">
 					<div class="container-fluid">
 						<input type="button" th:value="#{button.view.refresh}" class="btn btn-primary" onClick="window.location.reload()">
-						<div class="masonry-sizer col-md-12">
+						<br>
+						<div th:if="${status.error != ''}" class="masonry-sizer col-md-12">
+							<div id="errorModalService" class="alert alert-danger" role="alert"><strong th:text=${status.error}></strong></div>
+						</div>
+						<div th:if="${status.error == ''}" class="masonry-sizer col-md-12"> 
 							<table id="statusTable" class="display"
 								style="cellspacing: 0; width: 100%;">
 								<thead>
