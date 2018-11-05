@@ -58,6 +58,12 @@
 		    <groupId>com.sun.xml.wss</groupId>
 		    <artifactId>xws-security</artifactId>
 		    <version>3.0</version>
+		    <exclusions>
+            <exclusion>
+                <groupId>javax.xml.crypto</groupId>
+                <artifactId>xmldsig</artifactId>
+            </exclusion>
+        </exclusions>
 		</dependency>
 		<dependency>
 		    <groupId>org.apache.axis</groupId>
