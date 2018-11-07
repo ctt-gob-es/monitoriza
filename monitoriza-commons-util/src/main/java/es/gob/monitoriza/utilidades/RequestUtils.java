@@ -1,0 +1,57 @@
+/*******************************************************************************
+ * Copyright (C) 2018 MINHAFP, Gobierno de España
+ * This program is licensed and may be used, modified and redistributed under the  terms
+ * of the European Public License (EUPL), either version 1.1 or (at your option)
+ * any later version as soon as they are approved by the European Commission.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and
+ * more details.
+ * You should have received a copy of the EUPL1.1 license
+ * along with this program; if not, you may find it at
+ * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
+ ******************************************************************************/
+
+/** 
+ * <b>File:</b><p>es.gob.monitoriza.utilidades.PetitionUtils.java.</p>
+ * <b>Description:</b><p> Utilities class that contents method related with SOAP requests and XML content.</p>
+ * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Date:</b><p>10/1/2018.</p>
+ * @author Gobierno de España.
+ * @version 1.0, 10/1/2018.
+ */
+package es.gob.monitoriza.utilidades;
+
+import es.gob.monitoriza.constant.GeneralConstants;
+
+/** 
+ * <p> Utilities class that contents method related with SOAP requests and XML content.</p>
+ * * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
+ * @version 1.0, 12/01/2018.
+ */
+public final class RequestUtils {
+	
+	/**
+	 * Constructor method for the class PetitionUtils.java. 
+	 */
+	private RequestUtils() {
+	}
+
+
+	/**
+	 * Method that gets the Id of the message given its name. The file name must follow the format XXXXX_NNNNNNNNN.xml
+	 * 
+	 * @param name File name.
+	 * @return the Id of the message or null if the file name doesn't follow the format.
+	 */
+	public static String getTransacctionIdGivenFileName(String name) {
+		StringBuilder sb = new StringBuilder(name);
+		Integer index = sb.indexOf(GeneralConstants.SEPARATOR);
+		sb.delete(0, index + 1);
+		index = sb.indexOf(GeneralConstants.DOT);
+		sb.delete(index, sb.length());
+		return sb.toString();
+	}
+	
+}

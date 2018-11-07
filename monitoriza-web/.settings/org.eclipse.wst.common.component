@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?><project-modules id="moduleCoreId" project-version="1.5.0">
+    <wb-module deploy-name="monitoriza-web">
+        <wb-resource deploy-path="/" source-path="/target/m2e-wtp/web-resources"/>
+        <wb-resource deploy-path="/" source-path="/src/main/webapp" tag="defaultRootSource"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/java"/>
+        <wb-resource deploy-path="/WEB-INF/classes" source-path="/src/main/resources"/>
+        <dependent-module archiveName="monitoriza-core-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/monitoriza-core/monitoriza-core">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="monitoriza-persistence-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/monitoriza-persistence/monitoriza-persistence">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="monitoriza-commons-util-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/monitoriza-commons-util/monitoriza-commons-util">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module archiveName="monitoriza-i18n-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/monitoriza-i18n/monitoriza-i18n">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module deploy-path="/" handle="module:/overlay/var/M2_REPO/es/gob/monitoriza/monitoriza-clave-web/1.0/monitoriza-clave-web-1.0.war?unpackFolder=target/m2e-wtp/overlays&amp;includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
+            <dependency-type>consumes</dependency-type>
+        </dependent-module>
+        <dependent-module deploy-path="/" handle="module:/overlay/slf/?includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
+            <dependency-type>consumes</dependency-type>
+        </dependent-module>
+        <property name="context-root" value="monitoriza-web"/>
+        <property name="java-output-path" value="/monitoriza-web/target/classes"/>
+    </wb-module>
+</project-modules>

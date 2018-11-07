@@ -1,0 +1,10 @@
+es\gob\monitoriza\i18n\ICoreLogMessages.class
+es\gob\monitoriza\i18n\IPersistenceLogMessages.class
+es\gob\monitoriza\i18n\Language$1.class
+es\gob\monitoriza\i18n\utils\UtilsTomcat.class
+es\gob\monitoriza\i18n\IStatusLogMessages.class
+es\gob\monitoriza\i18n\IWebLogMessages.class
+es\gob\monitoriza\i18n\Language.class
+es\gob\monitoriza\i18n\IAlarmLogMessages.class
+es\gob\monitoriza\i18n\ICommonsUtilLogMessages.class
+es\gob\monitoriza\i18n\IAlarmMailText.class
