@@ -16,7 +16,10 @@
         <dependent-module archiveName="monitoriza-i18n-1.0.jar" deploy-path="/WEB-INF/lib" handle="module:/resource/monitoriza-i18n/monitoriza-i18n">
             <dependency-type>uses</dependency-type>
         </dependent-module>
-        <dependent-module deploy-path="/" handle="module:/overlay/var/M2_REPO/es/gob/monitoriza/monitoriza-clave-web/1.0/monitoriza-clave-web-1.0.war?unpackFolder=target/m2e-wtp/overlays&amp;includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
+        <dependent-module archiveName="monitoriza-clave-web-1.0.war" deploy-path="/WEB-INF/lib" handle="module:/resource/monitoriza-clave-web/monitoriza-clave-web">
+            <dependency-type>uses</dependency-type>
+        </dependent-module>
+        <dependent-module deploy-path="/" handle="module:/overlay/prj/monitoriza-clave-web?includes=**/**&amp;excludes=META-INF/MANIFEST.MF">
             <dependency-type>consumes</dependency-type>
         </dependent-module>
         <dependent-module deploy-path="/" handle="module:/overlay/slf/?includes=**/**&amp;excludes=META-INF/MANIFEST.MF">

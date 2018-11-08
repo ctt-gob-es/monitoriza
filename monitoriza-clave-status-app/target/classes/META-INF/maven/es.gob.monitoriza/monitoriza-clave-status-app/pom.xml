@@ -9,7 +9,8 @@
 		<version>1.0</version>
 	</parent>
 	<artifactId>monitoriza-clave-status-app</artifactId>
-	<name>monitoriza-web Cl@ve</name>
+	<name>Monitorización Cl@ve</name>
+	<description>Agentes de monitorización para el sistema de identificación Cl@ve</description>
 	<packaging>jar</packaging>
 
 	<dependencies>
@@ -44,7 +45,7 @@
 			<artifactId>eidas-encryption</artifactId>
 			<version>1.4.3</version>
 		</dependency>
-				<dependency>
+		<dependency>
 			<groupId>clave</groupId>
 			<artifactId>eidas-configmodule</artifactId>
 			<version>1.4.3</version>
