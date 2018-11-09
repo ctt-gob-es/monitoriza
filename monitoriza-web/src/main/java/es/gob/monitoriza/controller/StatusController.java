@@ -18,18 +18,21 @@
  * <b>File:</b><p>es.gob.monitoriza.controller.StatusController.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>8 oct. 2018.</p>
+ * <b>Date:</b><p>8/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 09/11/2018.
  */
 package es.gob.monitoriza.controller;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import es.gob.monitoriza.persistence.configuration.dto.StatusDTO;
+import es.gob.monitoriza.persistence.configuration.dto.StatusSpieDTO;
+import es.gob.monitoriza.persistence.configuration.dto.StatusVipDTO;
 import es.gob.monitoriza.service.IStatusService;
 
 /**
@@ -41,7 +44,7 @@ import es.gob.monitoriza.service.IStatusService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 09/11/2018.
  */
 @Controller
 public class StatusController {
@@ -59,14 +62,19 @@ public class StatusController {
 	 * 
 	 * @param model
 	 *            Holder object for model attributes.
+	 * @param request Request object
 	 * @return String that represents the name of the view to forward.
 	 */
 	@RequestMapping(value = "status")
-	public String status(Model model) {
+	public String status(final Model model, final HttpServletRequest request) {
 
-		StatusDTO statusDto = statusService.completeStatus();
+		StatusVipDTO statusVipDto = statusService.completeStatusVip();
+		StatusSpieDTO statusSpieDto = statusService.completeStatusSpie();
 
-		model.addAttribute("status", statusDto);
+		model.addAttribute("statusVip", statusVipDto);
+		model.addAttribute("statusSpie", statusSpieDto);
+		model.addAttribute("spieAvgDetails", statusService.getSpieAvgTimesDetails(statusSpieDto.getData()));
+		model.addAttribute("summary", statusService.getSummaryStatus(statusVipDto, statusSpieDto, request.getLocale()));
 
 		return "fragments/status.html";
 	}

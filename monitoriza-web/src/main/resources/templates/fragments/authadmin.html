@@ -298,7 +298,7 @@ $(document).ready(function() {
 		                	hide();
 		                	$('#altEditor-modal .modal-body .alert').remove();
 		                	$('#altEditor-modal #deleteRowBtn').remove();
-				            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + data.responseText + '</strong></div>');
+				            $('#altEditor-modal .modal-body').append('<div class="alert alert-danger" role="alert"><strong>' + data.responseJSON.message + '</strong></div>');
 		                }
 		            });
 		            break;

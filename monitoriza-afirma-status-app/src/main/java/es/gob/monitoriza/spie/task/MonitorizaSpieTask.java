@@ -1,0 +1,141 @@
+/* 
+/*******************************************************************************
+ * Copyright (C) 2018 MINHAFP, Gobierno de España
+ * This program is licensed and may be used, modified and redistributed under the  terms
+ * of the European Public License (EUPL), either version 1.1 or (at your option)
+ * any later version as soon as they are approved by the European Commission.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and
+ * more details.
+ * You should have received a copy of the EUPL1.1 license
+ * along with this program; if not, you may find it at
+ * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
+ ******************************************************************************/
+
+/** 
+ * <b>File:</b><p>es.gob.monitoriza.spie.task.MonitorizaSpieTask.java.</p>
+ * <b>Description:</b><p> .</p>
+  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Date:</b><p>25/10/2018.</p>
+ * @author Gobierno de España.
+ * @version 1.0, 25/10/2018.
+ */
+package es.gob.monitoriza.spie.task;
+
+import java.util.Timer;
+import java.util.TimerTask;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+
+import org.apache.log4j.Logger;
+
+import es.gob.monitoriza.configuration.manager.AdminSpieManager;
+import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.i18n.IStatusLogMessages;
+import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
+import es.gob.monitoriza.spie.status.StatusSpieHolder;
+import es.gob.monitoriza.spie.thread.RequestLauncherSpie;
+import es.gob.monitoriza.spring.config.ApplicationContextProvider;
+
+
+/** 
+ * <p>Class .</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.0, 25/10/2018.
+ */
+public class MonitorizaSpieTask extends HttpServlet {
+
+	/**
+	 * Attribute that represents the serial number. 
+	 */
+	private static final long serialVersionUID = -7514164022124720290L;
+		
+	/**
+	 * Attribute that represents the object that manages the log of the class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	
+	/**
+	 * {@inheritDoc}
+	 * @see javax.servlet.GenericServlet#init()
+	 */
+	@Override
+	public void init(final ServletConfig config) throws ServletException {
+		
+		super.init(config);
+					
+		scheduleSpieFromWebAdmin();
+	}
+
+	/**
+	 * Method that gets the SPIE configuration from the web admin database and schedules the service request batch.
+	 */
+	private void scheduleSpieFromWebAdmin() {
+		
+		AdminSpieManager adminSpieManager = ApplicationContextProvider.getApplicationContext().getBean("adminSpieManager", AdminSpieManager.class);
+				
+		// Se vacía la tabla de timers programados
+		adminSpieManager.emptySpieScheduled();
+		
+		final ConfSpieDTO confSpie = adminSpieManager.getSpieConfiguration();
+						
+		scheduleSpieAfirma(confSpie.getFrequencyAFirma());
+		
+	}
+
+	/**
+	 * Method that schedules a timer task for requesting SPIE from @Firma.
+	 * @param afirmaFrequency Period on the launcher
+	 */
+	private void scheduleSpieAfirma(final Long afirmaFrequency) {
+		Timer timer = new Timer();
+		ExecuteTimer batchTimer = new ExecuteTimer(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
+		timer.schedule(batchTimer, 0, afirmaFrequency);
+			
+		
+	}
+	
+	/**
+	 * <p>Timer class that process the batch of requests for testing the services.</p>
+	 * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
+	 * @version 1.0, 25/10/2018.
+	 */
+	private class ExecuteTimer extends TimerTask {
+		
+		/**
+		 * Attribute that represents . 
+		 */
+		private transient Long platformType;
+	
+		/**
+		 * Constructor method for the class MonitorizaSpieTask.java.
+		 * @param platformTypeParam Name of the timer
+		 */
+		ExecuteTimer(final Long platformTypeParam) {
+			this.platformType = platformTypeParam;
+		}
+
+		/**
+		 * {@inheritDoc}
+		 * @see java.util.TimerTask#run()
+		 */
+		@Override
+		public void run() {
+
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS001, new Object[ ] { platformType }));
+			
+			RequestLauncherSpie rlt = new RequestLauncherSpie();
+			
+			rlt.startInvoker(StatusSpieHolder.getInstance().getCurrentStatusHolder(), platformType);
+
+		}
+
+	}
+
+}

@@ -31,14 +31,14 @@ import com.fasterxml.jackson.annotation.JsonView;
 /** 
  * <p>Class that represents a row of the datatable status semaphore.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 18/10/2018.
+ * @version 1.0, 31/10/2018.
  */
-public class RowStatusDTO {
+public class RowStatusVipDTO {
 	
 	/**
 	 * Attribute that represents the status of the service. 
 	 */
-	private Long statusAux;
+	private Integer statusAux;
 	
 	/**
 	 * Attribute that represents the status of the service. 
@@ -70,103 +70,103 @@ public class RowStatusDTO {
 	 * Gets the value of the attribute {@link #statusAux}.
 	 * @return the value of the attribute {@link #statusAux}.
 	 */
-	@JsonView(StatusDTO.View.class)
-	public Long getStatusAux() {
+	@JsonView(StatusVipDTO.View.class)
+	public Integer getStatusAux() {
 		return statusAux;
 	}
 
 	
 	/**
 	 * Sets the value of the attribute {@link #statusAux}.
-	 * @param statusAux the value for the attribute {@link #statusAux} to set.
+	 * @param statusAuxParam the value for the attribute {@link #statusAux} to set.
 	 */
-	public void setStatusAux(Long statusAux) {
-		this.statusAux = statusAux;
+	public void setStatusAux(Integer statusAuxParam) {
+		this.statusAux = statusAuxParam;
 	}
 
 	/**
 	 * Gets the value of the attribute {@link #status}.
 	 * @return the value of the attribute {@link #status}.
 	 */
-	@JsonView(StatusDTO.View.class)
+	@JsonView(StatusVipDTO.View.class)
 	public String getStatus() {
 		return status;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #status}.
-	 * @param status the value for the attribute {@link #status} to set.
+	 * @param statusParam the value for the attribute {@link #status} to set.
 	 */
-	public void setStatus(final String status) {
-		this.status = status;
+	public void setStatus(final String statusParam) {
+		this.status = statusParam;
 	}
 
 	/**
 	 * Gets the value of the attribute {@link #service}.
 	 * @return the value of the attribute {@link #service}.
 	 */
-	@JsonView(StatusDTO.View.class)
+	@JsonView(StatusVipDTO.View.class)
 	public String getService() {
 		return service;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #service}.
-	 * @param service the value for the attribute {@link #service} to set.
+	 * @param serviceParam the value for the attribute {@link #service} to set.
 	 */
-	public void setService(final String service) {
-		this.service = service;
+	public void setService(final String serviceParam) {
+		this.service = serviceParam;
 	}
 
 	/**
 	 * Gets the value of the attribute {@link #averageTime}.
 	 * @return the value of the attribute {@link #averageTime}.
 	 */
-	@JsonView(StatusDTO.View.class)
+	@JsonView(StatusVipDTO.View.class)
 	public String getAverageTime() {
 		return averageTime;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #averageTime}.
-	 * @param averageTime the value for the attribute {@link #averageTime} to set.
+	 * @param averageTimeParam the value for the attribute {@link #averageTime} to set.
 	 */
-	public void setAverageTime(final String averageTime) {
-		this.averageTime = averageTime;
+	public void setAverageTime(final String averageTimeParam) {
+		this.averageTime = averageTimeParam;
 	}
 
 	/**
 	 * Gets the value of the attribute {@link #samplingTime}.
 	 * @return the value of the attribute {@link #samplingTime}.
 	 */
-	@JsonView(StatusDTO.View.class)
+	@JsonView(StatusVipDTO.View.class)
 	public String getSamplingTime() {
 		return samplingTime;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #samplingTime}.
-	 * @param samplingTime the value for the attribute {@link #samplingTime} to set.
+	 * @param samplingTimeParam the value for the attribute {@link #samplingTime} to set.
 	 */
-	public void setSamplingTime(final String samplingTime) {
-		this.samplingTime = samplingTime;
+	public void setSamplingTime(final String samplingTimeParam) {
+		this.samplingTime = samplingTimeParam;
 	}
 
 	/**
 	 * Gets the value of the attribute {@link #partialRequestResult}.
 	 * @return the value of the attribute {@link #partialRequestResult}.
 	 */
-	@JsonView(StatusDTO.View.class)
+	@JsonView(StatusVipDTO.View.class)
 	public Map<String, String> getPartialRequestResult() {
 		return partialRequestResult;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #partialRequestResult}.
-	 * @param momentoMuestreo the value for the attribute {@link #partialRequestResult} to set.
+	 * @param partialRequestResultParam the value for the attribute {@link #partialRequestResult} to set.
 	 */
-	public void setPartialRequestResult(final Map<String, String> partialRequestResult) {
-		this.partialRequestResult = partialRequestResult;
+	public void setPartialRequestResult(final Map<String, String> partialRequestResultParam) {
+		this.partialRequestResult = partialRequestResultParam;
 	}
 
 }

@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.repository.SystemCertificateRepository.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>16 may. 2018.</p>
+ * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 09/11/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
@@ -28,6 +28,7 @@ import java.math.BigInteger;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.stereotype.Repository;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
@@ -36,8 +37,9 @@ import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 /** 
  * <p>Interface that provides CRUD functionality for the SystemCertificate entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1 28/10/2018.
+ * @version 1.3, 09/11/2018.
  */
+@Repository
 public interface SystemCertificateRepository extends JpaRepository<SystemCertificate, Long>, JpaSpecificationExecutor<SystemCertificate> {
 	
 	/**

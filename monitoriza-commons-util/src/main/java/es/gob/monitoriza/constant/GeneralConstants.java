@@ -19,14 +19,14 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.6, 28/10/2018.
+ * @version 1.7, 09/11/2018.
  */
 package es.gob.monitoriza.constant;
 
 /** 
  * <p>Interface that contains general constants.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.6, 28/10/2018.
+ * @version 1.7, 09/11/2018.
  */
 public interface GeneralConstants {
 	
@@ -109,6 +109,16 @@ public interface GeneralConstants {
 	 * Constant that represents the slash character '\n'.
 	 */
 	public static final String LINE_FEED = "\n";
+	
+	/**
+	 * Attribute that represents the bracket character '('. 
+	 */
+	public static final String OPEN_BRACKET = "(";
+	
+	/**
+	 * Attribute that represents the bracket character ')'. 
+	 */
+	public static final String CLOSE_BRACKET = ")";
 	
 	/**
 	 * Attribute that represents the service identifier for SOAP services. 

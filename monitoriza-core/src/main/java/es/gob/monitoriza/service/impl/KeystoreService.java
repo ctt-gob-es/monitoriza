@@ -18,24 +18,31 @@
  * <b>File:</b><p>es.gob.monitoriza.service.impl.KeystoreService.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>16 may. 2018.</p>
+ * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 09/11/2018.
  */
 package es.gob.monitoriza.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
+import es.gob.monitoriza.crypto.exception.CryptographyException;
+import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
+import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.repository.KeystoreRepository;
+import es.gob.monitoriza.persistence.configuration.model.repository.SystemCertificateRepository;
 import es.gob.monitoriza.service.IKeystoreService;
 
 
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for Keystore.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 10/10/2018.
+ * @version 1.2, 09/11/2018.
  */
 @Service
 public class KeystoreService implements IKeystoreService {
@@ -44,7 +51,13 @@ public class KeystoreService implements IKeystoreService {
 	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
 	 */
 	@Autowired
-    private KeystoreRepository repository; 
+    private KeystoreRepository repository;
+	
+	/**
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 */
+	@Autowired
+    private SystemCertificateRepository syscertRepository;
 
 	/**
 	 * {@inheritDoc}
@@ -75,11 +88,35 @@ public class KeystoreService implements IKeystoreService {
 
 	/**
 	 * {@inheritDoc}
+	 * @throws CryptographyException 
 	 * @see es.gob.monitoriza.service.IKeystoreService#saveKeystore()
 	 */
 	@Override
+	@Transactional
+	public void delete(Long systemCertificateId, Long idKeystore) throws CryptographyException, DataIntegrityViolationException {
+		
+		IKeystoreFacade keyStoreFacade = new KeystoreFacade(repository.findByIdKeystore(idKeystore));
+		SystemCertificate cert = syscertRepository.findByIdSystemCertificate(systemCertificateId);
+		
+		Keystore ko = keyStoreFacade.deleteCertificate(cert.getAlias());
+		
+		ko.setVersion(ko.getVersion() + 1L);
+				
+		repository.save(ko);
+		repository.flush();
+		
+		syscertRepository.delete(cert);
+		syscertRepository.flush();
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IKeystoreService#saveKeystore(es.gob.monitoriza.persistence.configuration.model.entity.Keystore)
+	 */
+	@Override
 	public Keystore saveKeystore(Keystore keystore) {
-		keystore.setVersion(keystore.getVersion() + 1L);
+		
 		return repository.save(keystore);
 	}
 	
