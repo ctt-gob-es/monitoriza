@@ -14,6 +14,6 @@
  ******************************************************************************/
 
 /**
- * Package that provides the class which manages HTTP connections.
+ * Package that provides the class that stores a service configuration.
  */
-package es.gob.monitoriza.invoker.http;
+package es.gob.monitoriza.controller;
