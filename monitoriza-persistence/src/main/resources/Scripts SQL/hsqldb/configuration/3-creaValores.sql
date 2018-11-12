@@ -20,13 +20,6 @@ Insert into USER_MONITORIZA
    (ID_PLATFORM_TYPE, NAME)
  Values
    (2, 'TS@');
-   
-   Insert into C_PLATFORM_TYPE
-   (ID_PLATFORM_TYPE, NAME)
- Values
-   (3, 'Cl@ve');
-
-
 
 -- TABLA KEYSTORE
     
@@ -108,3 +101,13 @@ Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_005', 'Nodo de @firma en 
 Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_006', 'Nodo de TS@ sin conexión con HSM');
 Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_007', 'Nodo de TS@ sin conexión con @firma');
 Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_008', 'Nodo de TS@ en modo de emergencia');
+
+ -- TABLA SPIE_TYPE 
+Insert into SPIE_TYPE (ID_SPIE_TYPE, TOKENNAME, CONTEXT, ID_PLATFORM_TYPE, SEMAPHORE_LEVEL) Values (1, 'HSM Connection', '/spie/checkStatusInf?opCodes=4', 1, 1);
+Insert into SPIE_TYPE (ID_SPIE_TYPE, TOKENNAME, CONTEXT, ID_PLATFORM_TYPE, SEMAPHORE_LEVEL) Values (2, 'Emergency mode', '/spie/checkStatusInf?opCodes=2', 1, 1);
+Insert into SPIE_TYPE (ID_SPIE_TYPE, TOKENNAME, CONTEXT, ID_PLATFORM_TYPE, SEMAPHORE_LEVEL) Values (3, 'TS@ Connection', '/spie/checkStatusInf?opCodes=5', 1, 2);
+Insert into SPIE_TYPE (ID_SPIE_TYPE, TOKENNAME, CONTEXT, ID_PLATFORM_TYPE, SEMAPHORE_LEVEL) Values (4, 'Validation methods', '/spie/checkStatusInf?opCodes=6', 1, 1);
+Insert into SPIE_TYPE (ID_SPIE_TYPE, TOKENNAME, CONTEXT, ID_PLATFORM_TYPE, SEMAPHORE_LEVEL) Values (5, 'Response times', '/spie/checkStatusInf?opCodes=7', 1, 1);
+Insert into SPIE_TYPE (ID_SPIE_TYPE, TOKENNAME, CONTEXT, ID_PLATFORM_TYPE, SEMAPHORE_LEVEL) Values (6, 'HSM Connection', '/spie/checkStatusInf?opCodes=4', 2, 1);
+Insert into SPIE_TYPE (ID_SPIE_TYPE, TOKENNAME, CONTEXT, ID_PLATFORM_TYPE, SEMAPHORE_LEVEL) Values (7, 'Emergency mode', '/spie/checkStatusInf?opCodes=2', 2, 1);
+Insert into SPIE_TYPE (ID_SPIE_TYPE, TOKENNAME, CONTEXT, ID_PLATFORM_TYPE, SEMAPHORE_LEVEL) Values (8, '@Firma Connection', '/spie/checkStatusInf?opCodes=5', 2, 2);

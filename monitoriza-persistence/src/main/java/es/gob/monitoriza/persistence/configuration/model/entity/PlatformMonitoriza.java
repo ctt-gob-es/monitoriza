@@ -444,7 +444,4 @@ public class PlatformMonitoriza implements Serializable {
 		this.rfc3161Certificate = rfc3161Certificate;
 	}
 	
-	
-	
-
 }

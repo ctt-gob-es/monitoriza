@@ -18,13 +18,12 @@
  * <b>File:</b><p>es.gob.monitoriza.controller.UserRestController.java.</p>
  * <b>Description:</b><p> .</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>21 mar. 2018.</p>
+ * <b>Date:</b><p>21/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 09/11/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
-import java.io.IOException;
 import java.math.BigInteger;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
@@ -91,7 +90,7 @@ import es.gob.monitoriza.webservice.ClientManager;
  * Application for monitoring services of @firma suite systems.
  * </p>
  *
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 09/11/2018.
  */
 @RestController
 public class UserRestController {

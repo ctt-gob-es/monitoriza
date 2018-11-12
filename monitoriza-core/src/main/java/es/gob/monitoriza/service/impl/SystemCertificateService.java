@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.service.impl.SystemCertificateService.java.</p>
  * <b>Description:</b><p> .</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>16 may. 2018.</p>
+ * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16 may. 2018.
+ * @version 1.1, 09/11/2018.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -41,9 +41,9 @@ import es.gob.monitoriza.persistence.configuration.model.specification.UserMonit
 import es.gob.monitoriza.service.ISystemCertificateService;
 
 /**
- * <p>Class .</p>
+ * <p>Class that implements the communication with the operations of the persistence layer for System Certificate.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 16 may. 2018.
+ * @version 1.1, 09/11/2018.
  */
 @Service
 public class SystemCertificateService implements ISystemCertificateService {
@@ -115,7 +115,7 @@ public class SystemCertificateService implements ISystemCertificateService {
 	 */
 	@Override
 	public SystemCertificate saveSystemCertificate(final SystemCertificate cert) {
-
+	
 		return repository.save(cert);
 	}
 
@@ -126,7 +126,13 @@ public class SystemCertificateService implements ISystemCertificateService {
 	@Override
 	public void deleteSystemCertificate(final Long certId) {
 
-		repository.deleteById(certId);
+		try {
+			repository.deleteById(certId);
+			repository.flush();
+		}
+		catch (Exception e) {
+			System.out.println("Puedo capturar!");
+		}
 
 	}
 	

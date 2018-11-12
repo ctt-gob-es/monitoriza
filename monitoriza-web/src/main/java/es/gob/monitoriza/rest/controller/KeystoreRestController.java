@@ -17,10 +17,10 @@
 /** 
  * <b>File:</b><p>es.gob.monitoriza.rest.controller.KeystoreRestController.java.</p>
  * <b>Description:</b><p> .</p>
-  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>16 may. 2018.</p>
+ * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 09/11/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -42,6 +42,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
@@ -49,6 +50,8 @@ import org.apache.axis.utils.ByteArray;
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.MessageSource;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.HttpStatus;
@@ -71,9 +74,12 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
+import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
+import es.gob.monitoriza.exception.RepositoryDeleteException;
 import es.gob.monitoriza.i18n.IWebLogMessages;
+import es.gob.monitoriza.i18n.IWebViewMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.CertificateDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
@@ -99,7 +105,7 @@ import es.gob.monitoriza.webservice.ClientManager;
  * <p>Class that manages the REST requests related to the Keystore administration
  * and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 09/11/2018.
  */
 @RestController
 public class KeystoreRestController {
@@ -192,6 +198,12 @@ public class KeystoreRestController {
 	 */
 	@Autowired
 	private ServletContext context;
+	
+	/**
+	 * Attribute that represents the view message wource. 
+	 */
+	@Autowired
+	private MessageSource messageSource;
 
 	/**
 	 * Method that maps the list users web requests to the controller and forwards the list of users
@@ -555,28 +567,27 @@ public class KeystoreRestController {
 	 * 
 	 * @param systemCertificateId Identifier of the ssl certificate to be deleted.
 	 * @param index Row index of the datatable.
-	 * @return String that represents the name of the view to redirect.
+	 * @param request Object containing the HTTP servlet request information
+	 * @throws RepositoryDeleteException Error deleting the SSL certificate from persistence 
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deletessl", method = RequestMethod.POST)
-	@Transactional
-	public String deleteSsl(@RequestParam("id") Long systemCertificateId, @RequestParam("index") String index) {
+	public void deleteSsl(@RequestParam("id") Long systemCertificateId, @RequestParam("index") String index, HttpServletRequest request) throws RepositoryDeleteException {
 		
-		String rowIndex = index;
+		String error = null;
 		
 		try {
-			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_TRUSTSTORE_SSL));
-			SystemCertificate cert = sysCertService.getSystemCertificateById(systemCertificateId);
-
-			Keystore ko = keyStoreFacade.deleteCertificate(cert.getAlias());
-
-			keystoreService.saveKeystore(ko);
-			sysCertService.deleteSystemCertificate(systemCertificateId);
-
-		} catch (Exception e) {
-			rowIndex = GeneralConstants.ROW_INDEX_ERROR;
+			
+			keystoreService.delete(systemCertificateId, Keystore.ID_TRUSTSTORE_SSL);
+		
+		} catch (CryptographyException e) {
+			error = messageSource.getMessage(IWebViewMessages.ERROR_AUTH_DELETE_CRYPTO, null, request.getLocale());
+			throw new RepositoryDeleteException(error);
+		} catch (DataIntegrityViolationException dive) {
+			error = messageSource.getMessage(IWebViewMessages.ERROR_AUTH_DELETE_USED, null, request.getLocale());
+			throw new RepositoryDeleteException(error);
 		}
-		return rowIndex;
+				
 	}
 
 	/**
@@ -585,28 +596,27 @@ public class KeystoreRestController {
 	 * 
 	 * @param systemCertificateId Identifier of the ssl certificate to be deleted.
 	 * @param index Row index of the datatable.
-	 * @return String that represents the name of the view to redirect.
+	 * @param request Object containing the HTTP servlet request information
+	 * @throws RepositoryDeleteException Error deleting the RFC3161 certificate from persistence
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deleteauth", method = RequestMethod.POST)
-	@Transactional
-	public String deleteAuth(@RequestParam("id") Long systemCertificateId, @RequestParam("index") String index) {
+	public void deleteAuth(@RequestParam("id") Long systemCertificateId, @RequestParam("index") String index, HttpServletRequest request) throws RepositoryDeleteException {
 		
-		String rowIndex = index;
-		
+		String error = null;
+
 		try {
-			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161));
-			SystemCertificate cert = sysCertService.getSystemCertificateById(systemCertificateId);
 
-			Keystore ko = keyStoreFacade.deleteCertificate(cert.getAlias());
+			keystoreService.delete(systemCertificateId, Keystore.ID_AUTHCLIENT_RFC3161);
 
-			keystoreService.saveKeystore(ko);
-			sysCertService.deleteSystemCertificate(systemCertificateId);
-
-		} catch (Exception e) {
-			rowIndex = GeneralConstants.ROW_INDEX_ERROR;
+		} catch (CryptographyException e) {
+			error = messageSource.getMessage(IWebViewMessages.ERROR_AUTH_DELETE_CRYPTO, null, request.getLocale());
+			throw new RepositoryDeleteException(error);
+		} catch (DataIntegrityViolationException dive) {
+			error = messageSource.getMessage(IWebViewMessages.ERROR_AUTH_DELETE_USED, null, request.getLocale());
+			throw new RepositoryDeleteException(error);
 		}
-		return rowIndex;
+		
 	}
 
 	/**
@@ -615,29 +625,27 @@ public class KeystoreRestController {
 	 * 
 	 * @param systemCertificateId Identifier of the ssl certificate to be deleted.
 	 * @param index Row index of the datatable.
-	 * @return String that represents the name of the view to redirect.
+	 * @param request Object containing the HTTP servlet request information
+	 * @throws RepositoryDeleteException Error deleting the validation service certificate from persistence
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deletevalidservicekeystore", method = RequestMethod.POST)
 	@Transactional
-	public String deleteValidService(@RequestParam("id") Long systemCertificateId, @RequestParam("index") String index) throws Exception {
+	public void deleteValidService(@RequestParam("id") Long systemCertificateId, @RequestParam("index") String index, HttpServletRequest request) throws RepositoryDeleteException {
 		
-		String rowIndex = index;
-		
+		String error = null;
+
 		try {
-			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_VALID_SERVICE_STORE));
-			SystemCertificate cert = sysCertService.getSystemCertificateById(systemCertificateId);
 
-			Keystore ko = keyStoreFacade.deleteCertificate(cert.getAlias());
+			keystoreService.delete(systemCertificateId, Keystore.ID_VALID_SERVICE_STORE);
 
-			keystoreService.saveKeystore(ko);
-			sysCertService.deleteSystemCertificate(systemCertificateId);
-
-		} catch (Exception e) {
-			rowIndex = GeneralConstants.ROW_INDEX_ERROR;
-			throw e;
+		} catch (CryptographyException e) {
+			error = messageSource.getMessage(IWebViewMessages.ERROR_AUTH_DELETE_CRYPTO, null, request.getLocale());
+			throw new RepositoryDeleteException(error);
+		} catch (DataIntegrityViolationException dive) {
+			error = messageSource.getMessage(IWebViewMessages.ERROR_AUTH_DELETE_USED, null, request.getLocale());
+			throw new RepositoryDeleteException(error);
 		}
-		return rowIndex;
 	}
 
 	/**

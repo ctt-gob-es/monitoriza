@@ -20,24 +20,53 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 09/11/2018.
  */
 package es.gob.monitoriza.service;
 
-import es.gob.monitoriza.persistence.configuration.dto.StatusDTO;
+import java.util.List;
+import java.util.Locale;
+
+import es.gob.monitoriza.persistence.configuration.dto.AvgTimesServiceDTO;
+import es.gob.monitoriza.persistence.configuration.dto.RowStatusSpieDTO;
+import es.gob.monitoriza.persistence.configuration.dto.StatusSpieDTO;
+import es.gob.monitoriza.persistence.configuration.dto.StatusVipDTO;
+import es.gob.monitoriza.persistence.configuration.dto.SummaryStatusDTO;
 
 /**
  * <p>Interface that provides communication with the status servlet.
  * </p><b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 09/11/2018.
  */
 public interface IStatusService {
 
 	/**
 	 * Method that get the service status from the status servlet.
-	 * @return StatusDTO
+	 * @return StatusVipDTO
 	 */
-	StatusDTO completeStatus();
+	StatusVipDTO completeStatusVip();
+	
+	/**
+	 * Method that get the service status from the status servlet.
+	 * @return StatusSpieDTO
+	 */
+	StatusSpieDTO completeStatusSpie();
+	
+	/**
+	 * Method that gets the response details from average times SPIE.
+	 * @param spieStatus List<RowStatusSpieDTO> of SPIE status results
+	 * @return List<AvgTimesServiceDTO> corresponding to the details of average service times SPIE
+	 */
+	List<AvgTimesServiceDTO> getSpieAvgTimesDetails(List<RowStatusSpieDTO> spieStatus);
+	
+	/**
+	 * Method that gets the summary information of the status alerts from both VIP and SPIE.
+	 * @param statusVip {@link #StatusVipDTO} with VIP alerts
+	 * @param statusSpie {@link #StatusSpieDTO} with VIP alerts
+	 * @param locale Request locale
+	 * @return {@link #List<SummaryStatusDTO>} with summary alerts
+	 */
+	List<SummaryStatusDTO> getSummaryStatus(StatusVipDTO statusVip, StatusSpieDTO statusSpie, Locale locale);
 
 }

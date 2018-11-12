@@ -1,0 +1,2 @@
+
+"%JAVA_HOME%\bin\java.exe" -cp ..\lib\hsqldb-2.4.1.jar org.hsqldb.server.Server --database.0 file:C:\servidores\Monitoriza\apache-tomcat-8.5.24\conf\database\MonitorizaConfigDB --dbname.0 MonitorizaConfigDB --remote_open true --address localhost --port 9333

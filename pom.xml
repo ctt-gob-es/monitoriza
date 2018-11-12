@@ -1,0 +1,341 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+	<!-- Información del proyecto. -->
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>es.gob.monitoriza</groupId>
+	<artifactId>monitoriza-parent</artifactId>
+	<version>1.0</version>
+	<packaging>pom</packaging>
+	<name>monitoriza-parent</name>
+	<description>monitoriz@ parent project</description>
+
+	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+		<project.build.jdk>1.8</project.build.jdk>
+		<built.by>@Firma Team</built.by>
+		<monitoriza.version>${project.version}</monitoriza.version>
+		<monitoriza.project.name>Monitoriz@</monitoriza.project.name>
+		<java.1.8.version>1.8.0_131</java.1.8.version>
+		<!-- Para la correcta ejecución maven, establecer la variable java.1.8.home hacia la ruta absoluta de donde se disponga la jdk -->
+		<java.home>${java.1.8.home}</java.home>
+		<java.version>${java.1.8.version}</java.version>
+		<spring.version>2.0.0.RELEASE</spring.version>
+		<!-- Actualizados spring-data y spring-rest para evitar vulnerabilidad cve-2018-1273 -->
+		<spring.data.version>2.0.1.RELEASE</spring.data.version>
+		<spring.rest.version>2.0.1.RELEASE</spring.rest.version>
+		<hibernate.version>5.2.13.Final</hibernate.version>
+		<plugin.javadoc.skip>true</plugin.javadoc.skip>
+	</properties>
+
+	<modules>
+		<module>monitoriza-afirma-status-app</module>
+		<module>monitoriza-alarm</module>
+		<module>monitoriza-commons-util</module>
+		<module>monitoriza-i18n</module>
+		<module>monitoriza-persistence</module>
+		<module>monitoriza-web</module>
+		<module>monitoriza-core</module>
+  </modules>
+
+	<dependencyManagement>
+		<dependencies>
+			<!-- Módulos de Monitoriz@ -->
+			<dependency>
+				<groupId>es.gob.monitoriza</groupId>
+				<artifactId>monitoriza-commons-util</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>es.gob.monitoriza</groupId>
+				<artifactId>monitoriza-i18n</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>es.gob.monitoriza</groupId>
+				<artifactId>monitoriza-alarm</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>es.gob.monitoriza</groupId>
+				<artifactId>monitoriza-persistence</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>es.gob.monitoriza</groupId>
+				<artifactId>monitoriza-core</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<!-- Módulos de Monitoriz@ -->
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>servlet-api</artifactId>
+				<version>2.5</version>
+			</dependency>
+			<dependency>
+				<groupId>log4j</groupId>
+				<artifactId>log4j</artifactId>
+				<version>1.2.16</version>
+			</dependency>
+			<!-- Spring Boot 2 -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-web</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-data-jpa</artifactId>
+				<version>${spring.data.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-security</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-thymeleaf</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-data-rest</artifactId>
+				<version>${spring.rest.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-validation</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.thymeleaf.extras</groupId>
+				<artifactId>thymeleaf-extras-springsecurity4</artifactId>
+				<version>3.0.2.RELEASE</version>
+			</dependency>
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-tomcat</artifactId>
+				<version>${spring.version}</version>
+			</dependency>
+			<!-- Spring Boot 2 -->
+			<!-- Hibernate 5 -->
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-core</artifactId>
+				<version>${hibernate.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-infinispan</artifactId>
+				<version>${hibernate.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-entitymanager</artifactId>
+				<version>${hibernate.version}</version>
+			</dependency>
+			<!-- Hibernate 5 -->
+		</dependencies>
+	</dependencyManagement>
+
+	<dependencies>
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>3.8.1</version>
+			<scope>test</scope>
+		</dependency>
+
+	</dependencies>
+	<build>
+		<!-- Definición de los plugins genéricos -->
+		<plugins>
+			<!-- Plugin para generar la fecha de empaquetado que se incluirá en el 
+				manifest. -->
+			<plugin>
+				<groupId>com.keyboardsamurais.maven</groupId>
+				<artifactId>maven-timestamp-plugin</artifactId>
+				<version>1.0</version>
+				<configuration>
+					<propertyName>timestamp</propertyName>
+					<timestampPattern>dd/MM/yyyy HH:mm</timestampPattern>
+				</configuration>
+				<executions>
+					<execution>
+						<phase>clean</phase>
+						<goals>
+							<goal>create</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.6.1</version>
+				<configuration>
+					<source>${project.build.jdk}</source>
+					<target>${project.build.jdk}</target>
+					<verbose>false</verbose>
+					<fork>true</fork>
+					<executable>${java.home}/bin/javac</executable>
+					<compilerVersion>${project.build.jdk}</compilerVersion>
+					<encoding>${project.build.sourceEncoding}</encoding>
+					<debug>${maven.compiler.debug}</debug>
+					<debuglevel>lines,vars,source</debuglevel>
+					<compilerArgs>
+						<arg>-XDignore.symbol.file</arg>
+						<arg>-Djava.endorsed.dirs=${project.build.directory}/endorsed</arg>
+					</compilerArgs>
+				</configuration>
+			</plugin>
+			<!-- Plugin para generar las fuentes -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-source-plugin</artifactId>
+				<version>2.2.1</version>
+				<configuration>
+					<skipSource>${plugin.source.skip}</skipSource>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-sources</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<!-- Plugin para generar el javadoc -->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-javadoc-plugin</artifactId>
+				<version>2.9</version>
+				<configuration>
+					<skip>${plugin.javadoc.skip}</skip>
+				</configuration>
+				<executions>
+					<execution>
+						<id>attach-javadocs</id>
+						<goals>
+							<goal>jar</goal>
+						</goals>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-site-plugin</artifactId>
+				<version>3.6</version>
+				<configuration>
+					<locales>es,en</locales>
+				</configuration>
+			</plugin>
+		</plugins>
+		<pluginManagement>
+			<plugins>
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.apache.maven.plugins
+										</groupId>
+										<artifactId>
+											maven-dependency-plugin
+										</artifactId>
+										<versionRange>
+											[2.2,)
+										</versionRange>
+										<goals>
+											<goal>copy</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore/>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+	</build>
+	<!-- **************************************************************** -->
+	<!-- CONFIGURACIÓN REPOSITORIOS MAVEN: JBOSS Y MAVEN CENTRAL -->
+	<repositories>
+		<repository>
+			<id>jboss-public-repository-group</id>
+			<name>JBoss Public Maven Repository Group</name>
+			<url>http://repository.jboss.org/nexus/content/groups/public</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>Maven-Central-Repository</id>
+			<name>Maven Central Repository</name>
+			<url>http://central.maven.org/maven2/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
+	</repositories>
+	<pluginRepositories>
+		<pluginRepository>
+			<id>jboss-public-repository-group</id>
+			<name>JBoss Public Maven Repository Group</name>
+			<url>http://repository.jboss.org/nexus/content/groups/public</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</pluginRepository>
+	</pluginRepositories>
+	<!-- **************************************************************** -->
+
+	<!-- **************************************************************** -->
+	<!-- CONFIGURACIÓN REPOSITORIOS MAVEN: ARTIFACTORY RED SARA -->
+	<!-- Se debe habilitar en el settings.xml de Maven la configuración de servers 
+		con usuario y password para los id MINHAP-central y MINHAP-snapshots -->
+	<!-- <repositories> <repository> <snapshots> <enabled>false</enabled> </snapshots> 
+		<id>MINHAP-central</id> <name>libs-release</name> <url>https://artefactos.scae.redsara.es/artifactory/libs-release</url> 
+		</repository> <repository> <snapshots /> <id>MINHAP-snapshots</id> <name>libs-snapshot</name> 
+		<url>https://artefactos.scae.redsara.es/artifactory/libs-snapshot</url> </repository> 
+		</repositories> <pluginRepositories> <pluginRepository> <snapshots> <enabled>false</enabled> 
+		</snapshots> <id>MINHAP-central</id> <name>plugins-release</name> <url>https://artefactos.scae.redsara.es/artifactory/plugins-release</url> 
+		<releases> <enabled>true</enabled> <updatePolicy>always</updatePolicy> </releases> 
+		</pluginRepository> <pluginRepository> <snapshots /> <id>MINHAP-snapshots</id> 
+		<name>plugins-snapshot</name> <url>https://artefactos.scae.redsara.es/artifactory/plugins-snapshot</url> 
+		</pluginRepository> </pluginRepositories> -->
+	<!-- **************************************************************** -->
+</project>

@@ -32,16 +32,9 @@ import org.springframework.web.servlet.LocaleResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 import org.springframework.web.servlet.i18n.SessionLocaleResolver;
 
-/**
- * <p>
- * Class that enables and configures Localization for the Monitoriz@
- * application.
- * </p>
- * <b>Project:</b>
- * <p>
- * Application for monitoring services of @firma suite systems.
- * </p>
- * 
+/** 
+ * <p>Class that enables and configures Localization for the Monitoriz@ application.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 14 mar. 2018.
  */
 @Configuration
@@ -49,9 +42,9 @@ public class WebLocalizedConfig implements WebMvcConfigurer {
 
 	@Bean
 	public LocaleResolver localeResolver() {
-		SessionLocaleResolver slr = new SessionLocaleResolver();
-		slr.setDefaultLocale(new Locale("es", "ES"));
-		return slr;
+	    SessionLocaleResolver slr = new SessionLocaleResolver();
+	    slr.setDefaultLocale(new Locale("es", "ES"));
+	    return slr;
 	}
-
+		
 }

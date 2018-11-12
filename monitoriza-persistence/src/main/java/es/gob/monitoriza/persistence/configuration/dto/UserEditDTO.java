@@ -157,6 +157,4 @@ public class UserEditDTO {
 		this.emailEdit = emailEditParam;
 	}
 
-	
-
 }

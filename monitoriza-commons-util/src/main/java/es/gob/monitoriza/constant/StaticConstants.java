@@ -20,14 +20,14 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>30 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 10/10/2018.
+ * @version 1.4, 09/11/2018.
  */
 package es.gob.monitoriza.constant;
 
 /** 
  * <p>Interface that contains the static constants for the static configuration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1., 10/10/2018.
+ * @version 1.4, 09/11/2018.
  */
 public interface StaticConstants {
 	
@@ -261,5 +261,10 @@ public interface StaticConstants {
 	 * Constant attribute that represents the property key monitoriza.spie.connections. 
 	 */
 	public static final String MONITORIZA_SPIE_CONNECTIONS = "monitoriza.spie.connections";
+	
+	/**
+	 * Constant attribute that represents the property key monitoriza.spie.status.servlet. 
+	 */
+	public static final String MONITORIZA_SPIE_STATUS_SERVLET = "monitoriza.spie.status.servlet";
 	
 }

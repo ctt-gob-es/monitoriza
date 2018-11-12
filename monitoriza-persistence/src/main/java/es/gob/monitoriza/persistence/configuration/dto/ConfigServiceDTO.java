@@ -17,9 +17,9 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO.java.</p>
  * <b>Description:</b><p>Class for transferring service data from persistence.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * <b>Date:</b><p>22 ene. 2018.</p>
+ * <b>Date:</b><p>22/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 28/09/2018.
+ * @version 1.1, 09/11/2018.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -27,14 +27,9 @@ import java.util.List;
 import java.util.Objects;
 
 /** 
- * <p>Data transfer object that encapsulates the information for service configuration.</p>
- * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 22 ene. 2018.
- */
-/** 
  * <p>Data transfer object class that encapsulates the information of the services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * version 1.0, 28/09/2018.
+ * @version 1.1, 09/11/2018.
  */
 public class ConfigServiceDTO {
 	
@@ -207,7 +202,7 @@ public class ConfigServiceDTO {
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #serviceName} 
+	 * Sets the value of the attribute {@link #serviceName}.
 	 * @param serviceId the value for the attribute {@link #serviceName} to set.
 	 */
 	public void setServiceName(String serviceName) {

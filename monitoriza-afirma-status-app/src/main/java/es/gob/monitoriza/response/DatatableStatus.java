@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>04/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 30/10/2018.
  */
 package es.gob.monitoriza.response;
 
@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 /** 
  * <p>Class that represents the output of the status servlet y JSON format.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 30/10/2018.
  */
 public class DatatableStatus {
 	
@@ -62,10 +62,10 @@ public class DatatableStatus {
 	
 	/**
 	 * Sets the value of the attribute {@link #data}.
-	 * @param data the value for the attribute {@link #data} to set.
+	 * @param dataParam the value for the attribute {@link #data} to set.
 	 */
-	public void setData(final List<ResponsePOJO> data) {
-		this.data = data;
+	public void setData(final List<ResponsePOJO> dataParam) {
+		this.data = dataParam;
 	}
 
 	/**
@@ -78,10 +78,10 @@ public class DatatableStatus {
 
 	/**
 	 * Sets the value of the attribute {@link #error}.
-	 * @param error the value for the attribute {@link #error} to set.
+	 * @param errorParam the value for the attribute {@link #error} to set.
 	 */
-	public void setError(final String error) {
-		this.error = error;
+	public void setError(final String errorParam) {
+		this.error = errorParam;
 	}
 
 

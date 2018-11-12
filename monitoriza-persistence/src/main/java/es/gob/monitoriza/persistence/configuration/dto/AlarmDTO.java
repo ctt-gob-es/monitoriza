@@ -185,6 +185,4 @@ public class AlarmDTO {
 		this.emailsDown = emailsDownParam;
 	}
 
-	
-
 }

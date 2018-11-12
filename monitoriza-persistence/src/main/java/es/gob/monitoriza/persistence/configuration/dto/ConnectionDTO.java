@@ -236,6 +236,4 @@ public class ConnectionDTO {
 		this.rfc3161Port = rfc3161Port;
 	}
 	
-	
-	
 }

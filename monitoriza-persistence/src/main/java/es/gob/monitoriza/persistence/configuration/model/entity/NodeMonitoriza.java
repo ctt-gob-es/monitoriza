@@ -429,6 +429,5 @@ public class NodeMonitoriza implements Serializable {
 		// CHECKSTYLE:ON
 		this.checkValidMethod = checkValidMethod;
 	}
-	
 
 }

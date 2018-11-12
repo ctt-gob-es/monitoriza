@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>04/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 30/10/2018.
  */
 package es.gob.monitoriza.response;
 
@@ -38,9 +38,9 @@ import es.gob.monitoriza.utilidades.GeneralUtils;
 /** 
  * <p>Class that builds the JSON response for servlet admin calls.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 30/10/2018.
  */
-public class ResponseJsonMonitoriza {
+public final class ResponseJsonMonitoriza {
 	
 	/**
 	 * Constructor method for the class ResponseJsonMonitoriza.java. 
@@ -50,7 +50,7 @@ public class ResponseJsonMonitoriza {
 	}
 	
 	/**
-	 * Method that populates the status servlet response and serializes it to JSON string
+	 * Method that populates the status servlet response and serializes it to JSON string.
 	 * @return String that represents the status response in JSON format.
 	 * @throws JsonProcessingException
 	 */

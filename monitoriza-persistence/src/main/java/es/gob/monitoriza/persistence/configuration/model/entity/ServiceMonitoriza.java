@@ -396,6 +396,4 @@ public class ServiceMonitoriza implements Serializable {
 		this.requestFile = requestFile;
 	}
 
-			
-
 }

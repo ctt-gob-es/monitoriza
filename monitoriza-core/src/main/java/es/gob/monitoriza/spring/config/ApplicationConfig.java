@@ -31,16 +31,9 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.datatables.repository.DataTablesRepositoryFactoryBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
-/**
- * <p>
- * Spring configuration class that sets the configuration of Spring components,
- * entities and repositories.
- * </p>
- * <b>Project:</b>
- * <p>
- * Application for monitoring services of @firma suite systems.
- * </p>
- * 
+/** 
+ * <p>Spring configuration class that sets the configuration of Spring components, entities and repositories.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 7 mar. 2018.
  */
 @Configuration
@@ -48,5 +41,4 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 @ComponentScan("es.gob.monitoriza")
 @EntityScan("es.gob.monitoriza.persistence.configuration.model.entity")
 @EnableJpaRepositories(repositoryFactoryBeanClass = DataTablesRepositoryFactoryBean.class, basePackages = "es.gob.monitoriza.persistence.configuration.model.repository")
-public class ApplicationConfig {
-}
+public class ApplicationConfig {}

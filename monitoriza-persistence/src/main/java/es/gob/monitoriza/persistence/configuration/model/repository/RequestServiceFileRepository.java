@@ -20,19 +20,21 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>26/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 26/09/2018.
+ * @version 1.1, 09/11/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.RequestServiceFile;
 
 /** 
  * <p>Interface that provides CRUD functionality for the RequestServiceFileRepository entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 26/09/2018.
+ * @version 1.1, 09/11/2018.
  */
+@Repository
 public interface RequestServiceFileRepository extends JpaRepository<RequestServiceFile, Long> {
 
 }
