@@ -29,6 +29,7 @@ C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monit
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\webservice\DSSCertificate.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\impl\AlarmMonitorizaService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\impl\NodeMonitorizaService.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\impl\SpieScheduledService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\impl\package-info.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\impl\UserDetailServiceImpl.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\configuration\manager\package-info.java
@@ -42,6 +43,7 @@ C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monit
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\IValidServiceService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\IConfSpieService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\impl\MethodValidationService.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\ISpieScheduledService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\impl\ConfSpieService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\crypto\utils\WSCryptoConfiguration.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\trust\WSAuthSSLX509TrustManager.java
@@ -66,4 +68,5 @@ C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monit
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\IUserMonitorizaService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\IAlarmService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\impl\RequestServiceFileService.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\configuration\manager\AdminSpieManager.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\IServiceMonitorizaService.java

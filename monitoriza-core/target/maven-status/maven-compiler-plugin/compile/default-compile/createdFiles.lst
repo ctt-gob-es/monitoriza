@@ -3,12 +3,15 @@ es\gob\monitoriza\service\impl\UserMonitorizaService.class
 es\gob\monitoriza\service\IValidServiceService.class
 es\gob\monitoriza\keystore\KeystoreVersionFileManager.class
 es\gob\monitoriza\service\impl\SystemCertificateService.class
+es\gob\monitoriza\service\ISpieScheduledService.class
 es\gob\monitoriza\configuration\manager\AdminServicesManager.class
 es\gob\monitoriza\service\impl\ConfServerMailService.class
 es\gob\monitoriza\service\impl\StatusService$1.class
 es\gob\monitoriza\service\impl\ValidServiceService.class
 es\gob\monitoriza\spring\config\SchedulingWebConfig.class
 es\gob\monitoriza\keystore\KeystoreNameVersionStamp.class
+es\gob\monitoriza\service\impl\SpieScheduledService.class
+es\gob\monitoriza\configuration\manager\AdminSpieManager.class
 es\gob\monitoriza\service\IUserMonitorizaService.class
 es\gob\monitoriza\cron\SchedulerObjectInterface.class
 es\gob\monitoriza\service\IConfServerMailService.class
@@ -51,6 +54,7 @@ es\gob\monitoriza\service\impl\StatusCertificateService.class
 es\gob\monitoriza\service\INodeMonitorizaService.class
 es\gob\monitoriza\service\IServiceMonitorizaService.class
 es\gob\monitoriza\service\impl\UserDetailServiceImpl.class
+es\gob\monitoriza\service\impl\StatusService$2.class
 es\gob\monitoriza\service\impl\TimerScheduledService.class
 es\gob\monitoriza\spring\config\StaticContextInitializer.class
 es\gob\monitoriza\handler\ClientHandler.class
