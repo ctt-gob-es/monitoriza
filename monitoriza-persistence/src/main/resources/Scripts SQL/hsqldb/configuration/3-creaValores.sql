@@ -20,6 +20,11 @@ Insert into USER_MONITORIZA
    (ID_PLATFORM_TYPE, NAME)
  Values
    (2, 'TS@');
+   
+   Insert into C_PLATFORM_TYPE
+   (ID_PLATFORM_TYPE, NAME)
+ Values
+   (3, 'Cl@ve');
 
 -- TABLA KEYSTORE
     

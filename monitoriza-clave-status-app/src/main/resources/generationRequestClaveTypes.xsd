@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:mcl="urn:es:gob:monitoriza:clave:http:request:1.0.0"
-	targetNamespace="urn:es:gob:monitoriza:clave:http:request:1.0.0"
+	xmlns:mcl="urn:es:gob:monitoriza:invoker:http:messages:1.0.0"
+	targetNamespace="urn:es:gob:monitoriza:invoker:http:messages:1.0.0"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xsd:annotation>
 		<xsd:documentation>
@@ -38,18 +38,18 @@
 		</xsd:sequence>
 	</xsd:complexType>
 	
-	<xsd:complexType name="KeyStoreType">
+	<xsd:complexType name="AuthenticationMutualType">
 		<xsd:annotation>
-			<xsd:documentation>Configuración del proxy
+			<xsd:documentation>Configuración de la autenticación mutua
 			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:sequence>
-			<xsd:element name="pathKeyStore" type="xsd:string" minOccurs="0">
+			<xsd:element name="path" type="xsd:string" minOccurs="0">
 				<xsd:annotation>
 					<xsd:documentation>Dirección del almacenamiento de las claves. Opcional</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="base64TrustStore" type="xsd:string" minOccurs="0">
+			<xsd:element name="base64" type="xsd:string" minOccurs="0">
 				<xsd:annotation>
 					<xsd:documentation>Base64 del almacenamiento de las claves. Opcional.</xsd:documentation>
 				</xsd:annotation>
@@ -59,79 +59,43 @@
 					<xsd:documentation>Contraseña del almacenamiento de las claves.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="typeKeysStore" type="xsd:string">
+			<xsd:element name="typeKeyStore" type="xsd:string">
 				<xsd:annotation>
 					<xsd:documentation>Tipo del almacenamiento de las claves.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
         </xsd:sequence>
-    </xsd:complexType>
-    
-    <xsd:complexType name="TrustStoreType">
-		<xsd:annotation>
-			<xsd:documentation>Configuración del proxy
-			</xsd:documentation>
-		</xsd:annotation>
-		<xsd:sequence>
-			<xsd:element name="pathTrustStore" type="xsd:string" minOccurs="0">
-				<xsd:annotation>
-					<xsd:documentation>Dirección del almacen de confianza. Opcional.</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="base64TrustStore" type="xsd:string" minOccurs="0">
-				<xsd:annotation>
-					<xsd:documentation>Base64 del almacen de confianza. Opcional.</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="passwordTrustStore" type="xsd:string">
-				<xsd:annotation>
-					<xsd:documentation>Contraseña del almacen de confianza.</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="typeTrustStore" type="xsd:string">
-				<xsd:annotation>
-					<xsd:documentation>Tipo del almacen de confianza.</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-        </xsd:sequence>
-    </xsd:complexType>
-	
-	<xsd:complexType name="AutenticacionMutuaType">
-		<xsd:annotation>
-			<xsd:documentation>Configuración de la autenticación mutua
-			</xsd:documentation>
-		</xsd:annotation>
-		<xsd:sequence>
-			<xsd:element name="keyStore" type="mcl:KeyStoreType">
-				<xsd:annotation>
-					<xsd:documentation>Configuración del almacenamiento de las claves.</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="trustStore" type="mcl:TrustStoreType">
-				<xsd:annotation>
-					<xsd:documentation>Configuración del almacen de confianza.</xsd:documentation>
-				</xsd:annotation>
-			</xsd:element>
-		</xsd:sequence>
 	</xsd:complexType>
 	
-	<xsd:complexType name="OthersParamsType">
+	<xsd:complexType name="ParamType">
 		<xsd:annotation>
-			<xsd:documentation>Configuración de los otros parámetros
-			</xsd:documentation>
+			<xsd:documentation>Tipo que define un parámetro mediante su identificador y su valor.</xsd:documentation>
 		</xsd:annotation>
-		<xsd:sequence>
-			<xsd:element name="nombreParametro" type="xsd:string">
-				<xsd:annotation>
-					<xsd:documentation>Nombre del parámetro.</xsd:documentation>
+        <xsd:sequence>
+        	<xsd:element name="id" type="xsd:string" >
+        		<xsd:annotation>
+					<xsd:documentation>Identificador del parámetro.</xsd:documentation>
 				</xsd:annotation>
-			</xsd:element>
-			<xsd:element name="valorParametro" type="xsd:string">
-				<xsd:annotation>
+        	</xsd:element>
+        	<xsd:element name="value" type="xsd:string">
+        		<xsd:annotation>
 					<xsd:documentation>Valor del parámetro.</xsd:documentation>
 				</xsd:annotation>
-			</xsd:element>
-		</xsd:sequence>
+        	</xsd:element>
+       	</xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="ParamsType">
+		<xsd:annotation>
+            <xsd:documentation>Tipo que define la relación de parámetros.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="param" type="mcl:ParamType" maxOccurs="unbounded">
+            	<xsd:annotation>
+            		<xsd:documentation>Un parámetros de la relación de parámetros.</xsd:documentation>
+        		</xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
 	</xsd:complexType>
 	
 	<xsd:complexType name="SamlRequestType">
@@ -162,31 +126,54 @@
 			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
-
-	<xsd:complexType name="RegisterClaveRequestType">
+	
+	<xsd:complexType name="ConnectionType">
 		<xsd:annotation>
-			<xsd:documentation>Petición de la operación de registro de reservas de trabajos de digitalización.
+			<xsd:documentation>Configuración de la conexión de la petición. Opcional.
 			</xsd:documentation>
 		</xsd:annotation>
 		<xsd:sequence>
-			<xsd:element name="relayState" type="xsd:string">
-        		<xsd:annotation>
-					<xsd:documentation>Identificador del estado de la patición HTTP.</xsd:documentation>
-				</xsd:annotation>
-        	</xsd:element>
-        	<xsd:element name="proxy" type="mcl:ProxyConfType" minOccurs="0">
+			<xsd:element name="proxy" type="mcl:ProxyConfType" minOccurs="0">
         		<xsd:annotation>
 					<xsd:documentation>Configuración del proxy. Opcional.</xsd:documentation>
 				</xsd:annotation>
         	</xsd:element>
-        	<xsd:element name="autenticacionMutua" type="mcl:AutenticacionMutuaType" minOccurs="0">
+        	<xsd:element name="authenticationMutual" type="mcl:AuthenticationMutualType" minOccurs="0">
         		<xsd:annotation>
 					<xsd:documentation>Configuración de la autenticación mutua. Opcional.</xsd:documentation>
 				</xsd:annotation>
         	</xsd:element>
-        	<xsd:element name="otrosParametros" type="mcl:OthersParamsType" minOccurs="0">
+        </xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="HttpRequestType">
+		<xsd:annotation>
+			<xsd:documentation>Configuración de la conexión de la petición. Opcional.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="headers" type="mcl:ParamsType" minOccurs="0">
         		<xsd:annotation>
 					<xsd:documentation>Configuración de los otros parámetros. Opcional.</xsd:documentation>
+				</xsd:annotation>
+        	</xsd:element>
+        	<xsd:element name="params" type="mcl:ParamsType" minOccurs="0">
+        		<xsd:annotation>
+					<xsd:documentation>Configuración de los otros parámetros. Opcional.</xsd:documentation>
+				</xsd:annotation>
+        	</xsd:element>
+        </xsd:sequence>
+	</xsd:complexType>
+	
+	<xsd:complexType name="RequestType">
+		<xsd:annotation>
+			<xsd:documentation>Configuración de la conexión de la petición. Opcional.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="httpRequest" type="mcl:HttpRequestType" minOccurs="0">
+        		<xsd:annotation>
+					<xsd:documentation>Configuración de la peticion http. Opcional.</xsd:documentation>
 				</xsd:annotation>
         	</xsd:element>
         	<xsd:element name="samlRequest" type="mcl:SamlRequestType">
@@ -194,10 +181,29 @@
 					<xsd:documentation>Configuración de la petición Saml encapsulada en la patición HTTP.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
+        </xsd:sequence>
+	</xsd:complexType>
+
+	<xsd:complexType name="RegisterClaveRequestType">
+		<xsd:annotation>
+			<xsd:documentation>Petición de la operación de registro de reservas de trabajos de digitalización.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="connection" type="mcl:ConnectionType" minOccurs="0">
+        		<xsd:annotation>
+					<xsd:documentation>Configuración de la conexión de la petición. Opcional.</xsd:documentation>
+				</xsd:annotation>
+        	</xsd:element>
+			<xsd:element name="request" type="mcl:RequestType" minOccurs="0">
+        		<xsd:annotation>
+					<xsd:documentation>Configuración de la petición. Opcional.</xsd:documentation>
+				</xsd:annotation>
+        	</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 
-	<xsd:element name="registerClaveRequest" type="mcl:RegisterClaveRequestType">
+	<xsd:element name="claveAgentConf" type="mcl:RegisterClaveRequestType">
 		<xsd:annotation>
 			<xsd:documentation>Petición hacia la pasarela de cl@ve.</xsd:documentation>
 		</xsd:annotation>

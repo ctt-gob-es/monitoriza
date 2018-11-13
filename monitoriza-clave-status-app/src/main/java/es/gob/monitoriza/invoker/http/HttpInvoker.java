@@ -27,32 +27,31 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.net.URLConnection;
-import java.net.URLStreamHandler;
+import java.io.UnsupportedEncodingException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
+import java.security.UnrecoverableKeyException;
 import java.security.cert.CertificateException;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
-import javax.net.ssl.SSLSocketFactory;
-import javax.net.ssl.TrustManagerFactory;
 
-import org.apache.log4j.Logger;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.SSLContextBuilder;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.message.BasicNameValuePair;
 
-import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.i18n.IStatusLogMessages;
-import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.invoker.http.saml.Constants;
 import es.gob.monitoriza.invoker.http.saml.SpProtocolEngineFactory;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
@@ -86,11 +85,6 @@ import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
  */
 public class HttpInvoker {
 
-	/**
-	 * Attribute that represents the object that manages the log of the class.
-	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
-
 	private static String samlRequest;
 
 	private static String nodeServiceUrl = "";
@@ -100,6 +94,7 @@ public class HttpInvoker {
 
 	private static String providerName = "";
 	private static String spApplication = "";
+	private static String spType = "";
 
 	private static String returnUrl = "";
 	private static String eidasloa = LevelOfAssurance.LOW.stringValue();
@@ -122,33 +117,23 @@ public class HttpInvoker {
 	 * @return Long that represents the time in milliseconds that has taken to
 	 *         complete the request. If there is some configuration or
 	 *         communication problem, this value will be null.
-	 * @throws IOException 
-	 * @throws SamlEngineConfigurationException 
+	 * @throws IOException
+	 * @throws SamlEngineConfigurationException
 	 */
-	public static Long sendRequest(final File file, final ConfigServiceDTO service, final KeyStore ssl) throws IOException, SamlEngineConfigurationException {
-		
-//		ProtocolEngineNoMetadataI protocolEngine = null;
-		
-		ProtocolEngineNoMetadataI protocolEngine = SpProtocolEngineFactory
-				.getSpProtocolEngine(Constants.SP_CONF);
-//		
-//		ProtocolEngineConfigurationFactoryNoMetadata protocolEngineConfigurationFactory = 
-//        		new ProtocolEngineConfigurationFactoryNoMetadata("MonitorizaSamlEngine.xml", null,
-//        				"C:\\servidores\\Monitoriza\\peticionesClave\\config\\");
-//		
-//		protocolEngine = protocolEngineConfigurationFactory.getConfiguration("MonitorizaNoMetadata");
-		
-//		ProtocolEngineFactory protocolEngineFactory = new ProtocolEngineFactory(
-//                new ProtocolEngineConfigurationFactory("MonitorizaSamlEngine.xml", null, null));
-		
+	public static Long sendRequest(final File file, final ConfigServiceDTO service, final KeyStore ssl)
+			throws IOException, SamlEngineConfigurationException {
+
+		ProtocolEngineNoMetadataI protocolEngine = SpProtocolEngineFactory.getSpProtocolEngine(Constants.SP_CONF);
+
 		Properties prop = new Properties();
 		prop.loadFromXML(new FileInputStream(file));
-		providerName = prop.getProperty("provider.name");
-		spApplication = prop.getProperty("monitoriza.aplication");
-		returnUrl = prop.getProperty("monitoriza.return"); 
+		providerName = prop.getProperty("samlRequest.providerName");
+		spApplication = prop.getProperty("samlRequest.SPApplication");
+		spType = prop.getProperty("samlRequest.SPType");
+		returnUrl = prop.getProperty("samlRequest.assertionConsumerServiceURL");
 
 		forceAuthCheck = false;
-		nodeServiceUrl = (service.getBaseUrl());
+		nodeServiceUrl = (service.getBaseUrl() + service.getSoapUrl() + service.getWsdl());
 
 		ImmutableAttributeMap.Builder reqAttrMapBuilder = new ImmutableAttributeMap.Builder();
 
@@ -156,7 +141,8 @@ public class HttpInvoker {
 				new AttributeDefinition.Builder<String>().nameUri("http://es.minhafp.clave/RelayState")
 						.friendlyName("RelayState").personType(PersonType.NATURAL_PERSON).required(false)
 						.uniqueIdentifier(true)
-						.xmlType("http://eidas.europa.eu/attributes/naturalperson", "PersonIdentifierType", "eidas-natural")
+						.xmlType("http://eidas.europa.eu/attributes/naturalperson", "PersonIdentifierType",
+								"eidas-natural")
 						.attributeValueMarshaller(new StringAttributeValueMarshaller()).build(),
 				SecureRandomXmlIdGenerator.INSTANCE.generateIdentifier(8));
 
@@ -164,6 +150,7 @@ public class HttpInvoker {
 		EidasAuthenticationRequestNoMetadata.Builder reqBuilder = new EidasAuthenticationRequestNoMetadata.Builder();
 		reqBuilder.destination(nodeServiceUrl);
 		reqBuilder.providerName(providerName);
+		reqBuilder.spType(spType);
 		reqBuilder.requestedAttributes(reqAttrMapBuilder.build());
 		if (LevelOfAssurance.getLevel(eidasloa) == null) {
 			reqBuilder.levelOfAssurance(LevelOfAssurance.LOW.stringValue());
@@ -198,148 +185,65 @@ public class HttpInvoker {
 		samlRequest = EidasStringUtil.encodeToBase64(binaryRequestMessage.getMessageBytes());
 
 		Long tiempoTotal = null;
-		byte[] requestByte = samlRequest.getBytes();
+		LocalTime beforeCall = null;
+		String[] s = service.getBaseUrl().split(":");
 
 		try {
-
-			// Establecemos el timeout de la conexión y de la lectura
-			URL endpoint = new URL(new URL(service.getBaseUrl()), service.getOcspContext(), new URLStreamHandler() {
-
-				@Override
-				protected URLConnection openConnection(URL url) throws IOException {
-					URL target = new URL(url.toString());
-					URLConnection connection = target.openConnection();
-
-					if (connection instanceof HttpsURLConnection) {
-
-						String msgError = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS004);
-
-						try {
-
-							TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-							SSLContext ctx = SSLContext.getInstance("SSL");
-							tmf.init(ssl);
-							ctx.init(null, tmf.getTrustManagers(), null);
-							SSLSocketFactory factory = ctx.getSocketFactory();
-							((HttpsURLConnection) connection).setSSLSocketFactory(factory);
-
-						} catch (NoSuchAlgorithmException | KeyStoreException | KeyManagementException e) {
-
-							LOGGER.error(msgError, e);
-
-						}
-
-						((HttpsURLConnection) connection).setHostnameVerifier(new NameVerifier());
-
-					}
-
-					return (connection);
-				}
-
-			});
-
-			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS008, new Object[] { endpoint }));
-
-			HttpURLConnection con = (HttpURLConnection) endpoint.openConnection();
-			con.setDoOutput(true);
-			con.setDoInput(true);
-			con.setInstanceFollowRedirects(false);
-			con.setRequestMethod("POST");
-			con.setConnectTimeout(service.getTimeout().intValue());
-			con.setReadTimeout(service.getTimeout().intValue());
-			con.setRequestProperty("Content-Type", "application/http-request");
-			con.setRequestProperty("Accept", "application/http-response");
-			con.setRequestProperty("charset", "utf-8");
-			con.setRequestProperty("Content-Length", Integer.toString(requestByte.length));
-			con.setUseCaches(false);
-
-			// Se escribe la petición HTTP en la conexión
-			OutputStream os = con.getOutputStream();
-			os.write(requestByte);
-			os.flush();
-			os.close();
-
-			LocalTime beforeCall = LocalTime.now();
-			// Conexión...
-			con.connect();
-			// Comprobamos que la conexión se estableció correctamente
-			if (con.getResponseCode() / 100 != 2) {
-				// Si hay algún problema de conexión, considero la petición como
-				// perdida...
-				LOGGER.error(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS005));
+			CloseableHttpClient client;
+			if(s[0].equals("http")) {			
+				client = HttpClients.createDefault();
+				
 			} else {
-				// Lectura...
-				con.getContent();
-				LocalTime afterCall = LocalTime.now();
-				tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY)
-						- beforeCall.getLong(ChronoField.MILLI_OF_DAY);
+				// load the keystore containing the client certificate - keystore type is probably jks or pkcs12 
+				final KeyStore keystore = KeyStore.getInstance(prop.getProperty("authenticationMutua.typeKeystore")); 
+				InputStream keystoreInput = new FileInputStream(new File(prop.getProperty("authenticationMutua.pathKeystore")));
+				// get the keystore as an InputStream from somewhere 
+				keystore.load(keystoreInput, prop.getProperty("authenticationMutua.passwordKeystore").toCharArray()); 
+				
+				SSLContext sslContext = new SSLContextBuilder().loadKeyMaterial(keystore, prop.getProperty("authenticationMutua.passwordKeystore").toCharArray()).build();
+				
+				SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext,
+				          new String[]{"TLSv1.2", "TLSv1.1"},
+				          null,
+				          SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+				
+				client = HttpClients.custom().setSSLSocketFactory(sslsf).build(); 
 			}
+			HttpPost httpPost = new HttpPost(nodeServiceUrl);
+			
+			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			params.add(new BasicNameValuePair("SAMLRequest", samlRequest));
+			params.add(new BasicNameValuePair("RelayState", SecureRandomXmlIdGenerator.INSTANCE.generateIdentifier(8)));
 
+			httpPost.setEntity(new UrlEncodedFormEntity(params));
+			beforeCall = LocalTime.now();
+			//CloseableHttpResponse response = client.execute(httpPost);
+			client.execute(httpPost);
+		} catch (
+
+		UnsupportedEncodingException e) {
+			e.printStackTrace();
+			beforeCall = LocalTime.now();
+		} catch (ClientProtocolException e) {
+			e.printStackTrace();
 		} catch (IOException e) {
-
-			LOGGER.error(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS005), e);
+			e.printStackTrace();
+		} catch (KeyStoreException e) {
+			e.printStackTrace();
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+		} catch (CertificateException e) {
+			e.printStackTrace();
+		} catch (KeyManagementException e) {
+			e.printStackTrace();
+		} catch (UnrecoverableKeyException e) {
+			e.printStackTrace();
+		} finally {
+			LocalTime afterCall = LocalTime.now();
+			tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
 		}
 
 		return tiempoTotal;
 	}
-
-	/**
-	 * <p>
-	 * Private class that allows to verify the host of the HTTPS service.
-	 * </p>
-	 * <b>Project:</b>
-	 * <p>
-	 * Application for monitoring services of @firma suite systems.
-	 * </p>
-	 * 
-	 * @version 1.0, 02/05/2018.
-	 */
-	private static class NameVerifier implements HostnameVerifier {
-
-		/**
-		 * {@inheritDoc}
-		 * 
-		 * @see javax.net.ssl.HostnameVerifier#verify(java.lang.String,
-		 *      javax.net.ssl.SSLSession)
-		 */
-		public boolean verify(final String hostname, final SSLSession session) {
-			return true;
-		}
-	}
-	
-	public static void main(String[] args) throws SamlEngineConfigurationException {
-		try {
-			File f = new File(
-					"C:/Users/samuel.zuluaga/Desktop/workspaceMonitorizaManu/monitoriza/config/monitoriza.xml");
-			ConfigServiceDTO s = new ConfigServiceDTO("");
-			s.setBaseUrl("https://localhost:8443/EidasNode/ServiceProvider");
-			KeyStore k = loadSslTruststore();
-
-			sendRequest(f, s, k);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
-
-	private static KeyStore loadSslTruststore() {
-
-		String msgError = null;
-		KeyStore cer = null;
-
-		try (InputStream readStream = new FileInputStream("C:/Trabajo/truststoreWS.jks");) {
-			// Accedemos al almacén de confianza SSL
-			// msgError =
-			// Language.getResMonitoriza(LogMessages.ERROR_ACCESS_CERTIFICATE_SSL);
-			cer = KeyStore.getInstance("JKS");
-
-			cer.load(readStream, "12345".toCharArray());
-
-		} catch (IOException | KeyStoreException | CertificateException | NoSuchAlgorithmException ex) {
-			LOGGER.error(msgError, ex);
-		}
-
-		return cer;
-	}
-		 
 
 }
