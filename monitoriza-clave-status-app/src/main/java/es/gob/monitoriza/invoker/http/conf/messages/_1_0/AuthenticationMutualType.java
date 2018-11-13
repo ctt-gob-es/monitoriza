@@ -2,11 +2,11 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantaci�n de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Todas las modificaciones realizadas en este archivo se perder�n si se vuelve a compilar el esquema de origen. 
-// Generado el: 2018.11.13 a las 12:45:14 PM CET 
+// Generado el: 2018.11.13 a las 02:46:44 PM CET 
 //
 
 
-package es.gob.monitoriza.invoker.http.conf.messages;
+package es.gob.monitoriza.invoker.http.conf.messages._1_0;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
@@ -15,22 +15,22 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * Configuraci�n del proxy
+ * Configuraci�n de la autenticaci�n mutua
  * 			
  * 
- * <p>Clase Java para ProxyConfType complex type.
+ * <p>Clase Java para AuthenticationMutualType complex type.
  * 
  * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * 
  * <pre>
- * &lt;complexType name="ProxyConfType">
+ * &lt;complexType name="AuthenticationMutualType">
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="host" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="port" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="user" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="password" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="path" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="base64" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/>
+ *         &lt;element name="passwordKeyStore" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="typeKeyStore" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -40,117 +40,115 @@ import javax.xml.bind.annotation.XmlType;
  * 
  */
 @XmlAccessorType(XmlAccessType.FIELD)
-@XmlType(name = "ProxyConfType", propOrder = {
-    "host",
-    "port",
-    "user",
-    "password"
+@XmlType(name = "AuthenticationMutualType", propOrder = {
+    "path",
+    "base64",
+    "passwordKeyStore",
+    "typeKeyStore"
 })
-public class ProxyConfType {
+public class AuthenticationMutualType {
 
+    protected String path;
+    protected String base64;
     @XmlElement(required = true)
-    protected String host;
+    protected String passwordKeyStore;
     @XmlElement(required = true)
-    protected String port;
-    @XmlElement(required = true)
-    protected String user;
-    @XmlElement(required = true)
-    protected String password;
+    protected String typeKeyStore;
 
     /**
-     * Obtiene el valor de la propiedad host.
+     * Obtiene el valor de la propiedad path.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getHost() {
-        return host;
+    public String getPath() {
+        return path;
     }
 
     /**
-     * Define el valor de la propiedad host.
+     * Define el valor de la propiedad path.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setHost(String value) {
-        this.host = value;
+    public void setPath(String value) {
+        this.path = value;
     }
 
     /**
-     * Obtiene el valor de la propiedad port.
+     * Obtiene el valor de la propiedad base64.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getPort() {
-        return port;
+    public String getBase64() {
+        return base64;
     }
 
     /**
-     * Define el valor de la propiedad port.
+     * Define el valor de la propiedad base64.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setPort(String value) {
-        this.port = value;
+    public void setBase64(String value) {
+        this.base64 = value;
     }
 
     /**
-     * Obtiene el valor de la propiedad user.
+     * Obtiene el valor de la propiedad passwordKeyStore.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getUser() {
-        return user;
+    public String getPasswordKeyStore() {
+        return passwordKeyStore;
     }
 
     /**
-     * Define el valor de la propiedad user.
+     * Define el valor de la propiedad passwordKeyStore.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setUser(String value) {
-        this.user = value;
+    public void setPasswordKeyStore(String value) {
+        this.passwordKeyStore = value;
     }
 
     /**
-     * Obtiene el valor de la propiedad password.
+     * Obtiene el valor de la propiedad typeKeyStore.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getPassword() {
-        return password;
+    public String getTypeKeyStore() {
+        return typeKeyStore;
     }
 
     /**
-     * Define el valor de la propiedad password.
+     * Define el valor de la propiedad typeKeyStore.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setPassword(String value) {
-        this.password = value;
+    public void setTypeKeyStore(String value) {
+        this.typeKeyStore = value;
     }
 
 }

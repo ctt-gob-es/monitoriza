@@ -2,11 +2,11 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantaci�n de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Todas las modificaciones realizadas en este archivo se perder�n si se vuelve a compilar el esquema de origen. 
-// Generado el: 2018.11.13 a las 12:45:14 PM CET 
+// Generado el: 2018.11.13 a las 02:46:44 PM CET 
 //
 
 
-package es.gob.monitoriza.invoker.http.conf.messages;
+package es.gob.monitoriza.invoker.http.conf.messages._1_0;
 
 import javax.xml.bind.JAXBElement;
 import javax.xml.bind.annotation.XmlElementDecl;
@@ -17,7 +17,7 @@ import javax.xml.namespace.QName;
 /**
  * This object contains factory methods for each 
  * Java content interface and Java element interface 
- * generated in the es.gob.monitoriza.invoker.http.messages._1_0 package. 
+ * generated in the es.gob.monitoriza.invoker.http.conf.messages._1_0 package. 
  * <p>An ObjectFactory allows you to programatically 
  * construct new instances of the Java representation 
  * for XML content. The Java representation of XML 
@@ -31,10 +31,10 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _ClaveAgentConf_QNAME = new QName("urn:es:gob:monitoriza:invoker:http:messages:1.0.0", "claveAgentConf");
+    private final static QName _ClaveAgentConf_QNAME = new QName("urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0", "claveAgentConf");
 
     /**
-     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: es.gob.monitoriza.invoker.http.messages._1_0
+     * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: es.gob.monitoriza.invoker.http.conf.messages._1_0
      * 
      */
     public ObjectFactory() {
@@ -116,7 +116,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link RegisterClaveRequestType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "urn:es:gob:monitoriza:invoker:http:messages:1.0.0", name = "claveAgentConf")
+    @XmlElementDecl(namespace = "urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0", name = "claveAgentConf")
     public JAXBElement<RegisterClaveRequestType> createClaveAgentConf(RegisterClaveRequestType value) {
         return new JAXBElement<RegisterClaveRequestType>(_ClaveAgentConf_QNAME, RegisterClaveRequestType.class, null, value);
     }

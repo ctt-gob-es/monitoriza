@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:mcl="urn:es:gob:monitoriza:invoker:http:messages:1.0.0"
-	targetNamespace="urn:es:gob:monitoriza:invoker:http:messages:1.0.0"
+	xmlns:mcl="urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0"
+	targetNamespace="urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0"
 	elementFormDefault="qualified" attributeFormDefault="unqualified">
 	<xsd:annotation>
 		<xsd:documentation>
@@ -98,6 +98,16 @@
         </xsd:sequence>
 	</xsd:complexType>
 	
+	<xsd:simpleType name="SPRequestType">
+        <xsd:annotation>
+            <xsd:documentation>Tipo de peticion a la SP.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="public"/>
+            <xsd:enumeration value="private"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+	
 	<xsd:complexType name="SamlRequestType">
 		<xsd:annotation>
 			<xsd:documentation>Configuración de la petición Saml
@@ -109,7 +119,7 @@
 					<xsd:documentation>Direccion del servicio de confianza de la petición Saml.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="destination" type="xsd:string">
+			<xsd:element name="SPApplication" type="xsd:string">
 				<xsd:annotation>
 					<xsd:documentation>Dirección destino de la petición Saml.</xsd:documentation>
 				</xsd:annotation>
@@ -119,7 +129,7 @@
 					<xsd:documentation>Nombre del proveedor de la petición Saml.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="SPType" type="xsd:string">
+			<xsd:element name="SPType" type="mcl:SPRequestType">
 				<xsd:annotation>
 					<xsd:documentation>Tipo del proveedor del servicio de la petición Saml.</xsd:documentation>
 				</xsd:annotation>
@@ -203,7 +213,7 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
-	<xsd:element name="claveAgentConf" type="mcl:RegisterClaveRequestType">
+	<xsd:element name="ClaveAgentConf" type="mcl:RegisterClaveRequestType">
 		<xsd:annotation>
 			<xsd:documentation>Petición hacia la pasarela de cl@ve.</xsd:documentation>
 		</xsd:annotation>

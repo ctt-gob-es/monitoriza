@@ -6,7 +6,7 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import es.gob.monitoriza.invoker.http.conf.messages.RegisterClaveRequestType;
+import es.gob.monitoriza.invoker.http.conf.messages._1_0.RegisterClaveRequestType;
 
 public class Utilities {
 

@@ -2,14 +2,15 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantaci�n de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Todas las modificaciones realizadas en este archivo se perder�n si se vuelve a compilar el esquema de origen. 
-// Generado el: 2018.11.13 a las 12:45:14 PM CET 
+// Generado el: 2018.11.13 a las 02:46:44 PM CET 
 //
 
 
-package es.gob.monitoriza.invoker.http.conf.messages;
+package es.gob.monitoriza.invoker.http.conf.messages._1_0;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -26,8 +27,8 @@ import javax.xml.bind.annotation.XmlType;
  *   &lt;complexContent>
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
- *         &lt;element name="connection" type="{urn:es:gob:monitoriza:invoker:http:messages:1.0.0}ConnectionType" minOccurs="0"/>
- *         &lt;element name="request" type="{urn:es:gob:monitoriza:invoker:http:messages:1.0.0}RequestType" minOccurs="0"/>
+ *         &lt;element name="connection" type="{urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0}ConnectionType" minOccurs="0"/>
+ *         &lt;element name="request" type="{urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0}RequestType" minOccurs="0"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -36,6 +37,7 @@ import javax.xml.bind.annotation.XmlType;
  * 
  * 
  */
+@XmlRootElement(name="ClaveAgentConf")
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "RegisterClaveRequestType", propOrder = {
     "connection",

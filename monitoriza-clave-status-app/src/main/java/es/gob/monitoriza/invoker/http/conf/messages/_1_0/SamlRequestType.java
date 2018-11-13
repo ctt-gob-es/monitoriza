@@ -2,15 +2,16 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantaci�n de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Todas las modificaciones realizadas en este archivo se perder�n si se vuelve a compilar el esquema de origen. 
-// Generado el: 2018.11.13 a las 12:45:14 PM CET 
+// Generado el: 2018.11.13 a las 02:46:44 PM CET 
 //
 
 
-package es.gob.monitoriza.invoker.http.conf.messages;
+package es.gob.monitoriza.invoker.http.conf.messages._1_0;
 
 import javax.xml.bind.annotation.XmlAccessType;
 import javax.xml.bind.annotation.XmlAccessorType;
 import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlSchemaType;
 import javax.xml.bind.annotation.XmlType;
 
 
@@ -28,9 +29,9 @@ import javax.xml.bind.annotation.XmlType;
  *     &lt;restriction base="{http://www.w3.org/2001/XMLSchema}anyType">
  *       &lt;sequence>
  *         &lt;element name="assertionConsumerServiceURL" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="destination" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="SPApplication" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="providerName" type="{http://www.w3.org/2001/XMLSchema}string"/>
- *         &lt;element name="SPType" type="{http://www.w3.org/2001/XMLSchema}string"/>
+ *         &lt;element name="SPType" type="{urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0}SPRequestType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -42,7 +43,7 @@ import javax.xml.bind.annotation.XmlType;
 @XmlAccessorType(XmlAccessType.FIELD)
 @XmlType(name = "SamlRequestType", propOrder = {
     "assertionConsumerServiceURL",
-    "destination",
+    "spApplication",
     "providerName",
     "spType"
 })
@@ -50,12 +51,13 @@ public class SamlRequestType {
 
     @XmlElement(required = true)
     protected String assertionConsumerServiceURL;
-    @XmlElement(required = true)
-    protected String destination;
+    @XmlElement(name = "SPApplication", required = true)
+    protected String spApplication;
     @XmlElement(required = true)
     protected String providerName;
     @XmlElement(name = "SPType", required = true)
-    protected String spType;
+    @XmlSchemaType(name = "string")
+    protected SPRequestType spType;
 
     /**
      * Obtiene el valor de la propiedad assertionConsumerServiceURL.
@@ -82,27 +84,27 @@ public class SamlRequestType {
     }
 
     /**
-     * Obtiene el valor de la propiedad destination.
+     * Obtiene el valor de la propiedad spApplication.
      * 
      * @return
      *     possible object is
      *     {@link String }
      *     
      */
-    public String getDestination() {
-        return destination;
+    public String getSPApplication() {
+        return spApplication;
     }
 
     /**
-     * Define el valor de la propiedad destination.
+     * Define el valor de la propiedad spApplication.
      * 
      * @param value
      *     allowed object is
      *     {@link String }
      *     
      */
-    public void setDestination(String value) {
-        this.destination = value;
+    public void setSPApplication(String value) {
+        this.spApplication = value;
     }
 
     /**
@@ -134,10 +136,10 @@ public class SamlRequestType {
      * 
      * @return
      *     possible object is
-     *     {@link String }
+     *     {@link SPRequestType }
      *     
      */
-    public String getSPType() {
+    public SPRequestType getSPType() {
         return spType;
     }
 
@@ -146,10 +148,10 @@ public class SamlRequestType {
      * 
      * @param value
      *     allowed object is
-     *     {@link String }
+     *     {@link SPRequestType }
      *     
      */
-    public void setSPType(String value) {
+    public void setSPType(SPRequestType value) {
         this.spType = value;
     }
 
