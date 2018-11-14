@@ -178,6 +178,8 @@ public class ServiceRestController {
 
 			serviceTypes.add(GeneralConstants.SOAP_SERVICE.toUpperCase());
 			serviceTypes.add(GeneralConstants.RFC3161_SERVICE.toUpperCase());
+		} else {
+			serviceTypes.add(GeneralConstants.HTTP_SERVICE.toUpperCase());
 		}
 
 		return serviceTypes;
