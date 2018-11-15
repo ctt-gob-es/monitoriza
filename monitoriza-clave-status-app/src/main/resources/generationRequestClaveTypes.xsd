@@ -107,6 +107,33 @@
             <xsd:enumeration value="private"/>
         </xsd:restriction>
     </xsd:simpleType>
+    
+    <xsd:simpleType name="AttributeType">
+        <xsd:annotation>
+            <xsd:documentation>Tipo de atributo de la SAML.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="familyName"/>
+            <xsd:enumeration value="firstName"/>
+            <xsd:enumeration value="birthDateOfBirth"/>
+            <xsd:enumeration value="personIdentifier"/>
+            <xsd:enumeration value="birthName"/>
+            <xsd:enumeration value="placeOfBirth"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:complexType name="AttributesType">
+		<xsd:annotation>
+            <xsd:documentation>Tipo que define la relación de atributos de una peticion SAML.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:sequence>
+            <xsd:element name="attribute" type="mcl:AttributeType" maxOccurs="unbounded">
+            	<xsd:annotation>
+            		<xsd:documentation>Un atributo de la relación de atributos.</xsd:documentation>
+        		</xsd:annotation>
+            </xsd:element>
+        </xsd:sequence>
+	</xsd:complexType>
 	
 	<xsd:complexType name="SamlRequestType">
 		<xsd:annotation>
