@@ -24,10 +24,7 @@
 package es.gob.monitoriza.invoker.http;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.security.KeyManagementException;
 import java.security.KeyStore;
 import java.security.KeyStoreException;
@@ -37,21 +34,30 @@ import java.security.cert.CertificateException;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
-import java.util.Properties;
+import java.util.Map;
 
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.xml.bind.JAXBException;
 
 import org.apache.http.NameValuePair;
-import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContextBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
+import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.exception.InvokerException;
+import es.gob.monitoriza.invoker.http.conf.messages._1_0.ParamType;
+import es.gob.monitoriza.invoker.http.conf.messages._1_0.RegisterClaveRequestType;
+import es.gob.monitoriza.invoker.http.conf.util.Utilities;
 import es.gob.monitoriza.invoker.http.saml.Constants;
 import es.gob.monitoriza.invoker.http.saml.SpProtocolEngineFactory;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
@@ -59,7 +65,6 @@ import eu.eidas.auth.commons.EidasStringUtil;
 import eu.eidas.auth.commons.attribute.AttributeDefinition;
 import eu.eidas.auth.commons.attribute.ImmutableAttributeMap;
 import eu.eidas.auth.commons.attribute.PersonType;
-import eu.eidas.auth.commons.attribute.impl.StringAttributeValueMarshaller;
 import eu.eidas.auth.commons.protocol.IRequestMessageNoMetadata;
 import eu.eidas.auth.commons.protocol.eidas.LevelOfAssurance;
 import eu.eidas.auth.commons.protocol.eidas.LevelOfAssuranceComparison;
@@ -71,6 +76,7 @@ import eu.eidas.auth.engine.configuration.SamlEngineConfigurationException;
 import eu.eidas.auth.engine.xml.opensaml.SAMLEngineUtils;
 import eu.eidas.auth.engine.xml.opensaml.SecureRandomXmlIdGenerator;
 import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
+
 
 /**
  * <p>
@@ -85,32 +91,70 @@ import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
  */
 public class HttpInvoker {
 
-	private static String samlRequest;
-
-	private static String nodeServiceUrl = "";
-
-	private static boolean forceAuthCheck = true;
-	private static String nameIDPolicy = SamlNameIdFormat.UNSPECIFIED.getNameIdFormat();
-
-	private static String providerName = "";
-	private static String spApplication = "";
-	private static String spType = "";
-
-	private static String returnUrl = "";
-	private static String eidasloa = LevelOfAssurance.LOW.stringValue();
-
 	/**
-	 * Constructor method for the class HttpInvoker.java.
+	 * Attribute that represents the object that manages the log of the class.
 	 */
-	public HttpInvoker() {
+	private static final Logger LOGGER = LoggerFactory.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	
+	private static final Boolean FORCE_AUTH_CHECK_DEF_VALUE = Boolean.TRUE;
+	private static final String NAME_ID_POLICY_DEF_VALUE = SamlNameIdFormat.UNSPECIFIED.getNameIdFormat();
+	private static final String EIDAS_LOA_DEF_VALUE = LevelOfAssurance.LOW.stringValue();
 
+	
+	private static final ImmutableAttributeMap.Builder reqAttrMapBuilder;
+	
+	static {		
+		reqAttrMapBuilder = new ImmutableAttributeMap.Builder();
+		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/CurrentFamilyName")
+    			.friendlyName("FamilyName")
+    			.personType(PersonType.NATURAL_PERSON)
+    			.required(true)
+    			.uniqueIdentifier(true)
+    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "CurrentFamilyNameType", "eidas-natural")
+    			.build());
+		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/CurrentGivenName")
+    			.friendlyName("FirstName")
+    			.personType(PersonType.NATURAL_PERSON)
+    			.required(true)
+    			.uniqueIdentifier(true)
+    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "CurrentGivenNameType", "eidas-natural")
+    			.build());
+		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/DateOfBirt")
+    			.friendlyName("DateOfBirth")
+    			.personType(PersonType.NATURAL_PERSON)
+    			.required(true)
+    			.uniqueIdentifier(true)
+    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "DateOfBirthType", "eidas-natural")
+    			.build());
+		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/PersonIdentifier")
+    			.friendlyName("PersonIdentifier")
+    			.personType(PersonType.NATURAL_PERSON)
+    			.required(true)
+    			.uniqueIdentifier(true)
+    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "PersonIdentifierType", "eidas-natural")
+    			.build());
+		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/legalperson/LegalName")
+    			.friendlyName("LegalName")
+    			.personType(PersonType.LEGAL_PERSON)
+    			.required(true)
+    			.uniqueIdentifier(true)
+    			.xmlType("http://eidas.europa.eu/attributes/legalperson", "LegalNameType", "eidas-legal")
+    			.build());
+		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/legalperson/LegalPersonIdentifier")
+    			.friendlyName("LegalPersonIdentifier")
+    			.personType(PersonType.LEGAL_PERSON)
+    			.required(true)
+    			.uniqueIdentifier(true)
+    			.xmlType("http://eidas.europa.eu/attributes/legalperson", "LegalPersonIdentifierType", "eidas-legal")
+    			.build());
 	}
+
 
 	/**
 	 * Method that sends a request and get the response message.
 	 * 
-	 * @param requestFile
-	 *            request file which contents the HTTP message.
+	 * @param file
+	 *            request file which contents the HTTP configuration.
 	 * @param service
 	 *            DTOService that contains the configuration data for the
 	 *            service.
@@ -119,131 +163,137 @@ public class HttpInvoker {
 	 *         communication problem, this value will be null.
 	 * @throws IOException
 	 * @throws SamlEngineConfigurationException
+	 * @throws JAXBException 
 	 */
-	public static Long sendRequest(final File file, final ConfigServiceDTO service, final KeyStore ssl)
-			throws IOException, SamlEngineConfigurationException {
-
-		ProtocolEngineNoMetadataI protocolEngine = SpProtocolEngineFactory.getSpProtocolEngine(Constants.SP_CONF);
-
-		Properties prop = new Properties();
-		prop.loadFromXML(new FileInputStream(file));
-		providerName = prop.getProperty("samlRequest.providerName");
-		spApplication = prop.getProperty("samlRequest.SPApplication");
-		spType = prop.getProperty("samlRequest.SPType");
-		returnUrl = prop.getProperty("samlRequest.assertionConsumerServiceURL");
-
-		forceAuthCheck = false;
-		nodeServiceUrl = (service.getBaseUrl() + service.getSoapUrl() + service.getWsdl());
-
-		ImmutableAttributeMap.Builder reqAttrMapBuilder = new ImmutableAttributeMap.Builder();
-
-		reqAttrMapBuilder.putPrimaryValues(
-				new AttributeDefinition.Builder<String>().nameUri("http://es.minhafp.clave/RelayState")
-						.friendlyName("RelayState").personType(PersonType.NATURAL_PERSON).required(false)
-						.uniqueIdentifier(true)
-						.xmlType("http://eidas.europa.eu/attributes/naturalperson", "PersonIdentifierType",
-								"eidas-natural")
-						.attributeValueMarshaller(new StringAttributeValueMarshaller()).build(),
-				SecureRandomXmlIdGenerator.INSTANCE.generateIdentifier(8));
-
-		// build the request
-		EidasAuthenticationRequestNoMetadata.Builder reqBuilder = new EidasAuthenticationRequestNoMetadata.Builder();
-		reqBuilder.destination(nodeServiceUrl);
-		reqBuilder.providerName(providerName);
-		reqBuilder.spType(spType);
-		reqBuilder.requestedAttributes(reqAttrMapBuilder.build());
-		if (LevelOfAssurance.getLevel(eidasloa) == null) {
-			reqBuilder.levelOfAssurance(LevelOfAssurance.LOW.stringValue());
-		} else {
-			reqBuilder.levelOfAssurance(eidasloa);
-		}
-
-		reqBuilder.levelOfAssuranceComparison(LevelOfAssuranceComparison.fromString("minimum").stringValue());
-
-		if (nameIDPolicy != null) {
-			reqBuilder.nameIdFormat(nameIDPolicy);
-		} else {
-			reqBuilder.nameIdFormat(SamlNameIdFormat.UNSPECIFIED.getNameIdFormat());
-		}
-
-		reqBuilder.binding(EidasSamlBinding.EMPTY.getName());
-		reqBuilder.assertionConsumerServiceURL(returnUrl);
-		reqBuilder.forceAuth(forceAuthCheck);
-
-		reqBuilder.spApplication(spApplication);
-
-		IRequestMessageNoMetadata binaryRequestMessage = null;
-		EidasAuthenticationRequestNoMetadata authRequest = null;
-		try {
-			reqBuilder.id(SAMLEngineUtils.generateNCName());
-			authRequest = reqBuilder.build();
-			binaryRequestMessage = protocolEngine.generateRequestMessage(authRequest, true);
-		} catch (EIDASSAMLEngineException e) {
-
-		}
-
-		samlRequest = EidasStringUtil.encodeToBase64(binaryRequestMessage.getMessageBytes());
-
+	public static Long sendRequest(final File file, final ConfigServiceDTO service, final KeyStore ssl) throws InvokerException {
+		CloseableHttpClient httpClient;
 		Long tiempoTotal = null;
 		LocalTime beforeCall = null;
-		String[] s = service.getBaseUrl().split(":");
-
+		RegisterClaveRequestType requestConf;
+		String samlRequest;
+		
 		try {
-			CloseableHttpClient client;
-			if(s[0].equals("http")) {			
-				client = HttpClients.createDefault();
-				
-			} else {
-				// load the keystore containing the client certificate - keystore type is probably jks or pkcs12 
-				final KeyStore keystore = KeyStore.getInstance(prop.getProperty("authenticationMutua.typeKeystore")); 
-				InputStream keystoreInput = new FileInputStream(new File(prop.getProperty("authenticationMutua.pathKeystore")));
-				// get the keystore as an InputStream from somewhere 
-				keystore.load(keystoreInput, prop.getProperty("authenticationMutua.passwordKeystore").toCharArray()); 
-				
-				SSLContext sslContext = new SSLContextBuilder().loadKeyMaterial(keystore, prop.getProperty("authenticationMutua.passwordKeystore").toCharArray()).build();
-				
-				SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext,
-				          new String[]{"TLSv1.2", "TLSv1.1"},
-				          null,
-				          SSLConnectionSocketFactory.getDefaultHostnameVerifier());
-				
-				client = HttpClients.custom().setSSLSocketFactory(sslsf).build(); 
+			requestConf = Utilities.transformJabx(file);
+			samlRequest = generateSamlRequest(requestConf, service);
+			
+			LOGGER.debug("Petición SAML generada: " + samlRequest);
+			
+			HttpPost httpPost = new HttpPost(service.getSoapUrl() + service.getWsdl());
+			
+			for(ParamType paramH: requestConf.getRequest().getHttpRequest().getHeaders().getParam()) {
+				if(paramH != null) {
+					httpPost.addHeader(paramH.getId(), paramH.getValue());
+				}
 			}
-			HttpPost httpPost = new HttpPost(nodeServiceUrl);
 			
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
+			for(ParamType param: requestConf.getRequest().getHttpRequest().getParams().getParam()) {
+				if(param != null) {
+					params.add(new BasicNameValuePair(param.getId(), param.getValue()));
+				}	
+			}
+			
 			params.add(new BasicNameValuePair("SAMLRequest", samlRequest));
 			params.add(new BasicNameValuePair("RelayState", SecureRandomXmlIdGenerator.INSTANCE.generateIdentifier(8)));
 
 			httpPost.setEntity(new UrlEncodedFormEntity(params));
 			beforeCall = LocalTime.now();
-			//CloseableHttpResponse response = client.execute(httpPost);
-			client.execute(httpPost);
-		} catch (
-
-		UnsupportedEncodingException e) {
-			e.printStackTrace();
-			beforeCall = LocalTime.now();
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
+			
+			httpClient =  createHttpClient(requestConf, service);
+			httpClient.execute(httpPost);
+		} catch(JAXBException e) {
+			throw new InvokerException("Error al cargar el archivo xml de configuración" + e.getMessage(),e);
+		} catch (EIDASSAMLEngineException e) {
+			throw new InvokerException("Error al generar la petición SAML"+ e.getMessage(),e);
 		} catch (IOException e) {
-			e.printStackTrace();
+			throw new InvokerException("Error al crear la conexión con el servicio "+ e.getMessage(),e);
 		} catch (KeyStoreException e) {
-			e.printStackTrace();
+			throw new InvokerException("Error al cargar el keystore proporcionado"+ e.getMessage(),e);
 		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+			throw new InvokerException("Error al generar la implementación de HTTPClient"+ e.getMessage(),e);
 		} catch (CertificateException e) {
-			e.printStackTrace();
+			throw new InvokerException("Error al generar la implementación de HTTPClient"+ e.getMessage(),e);
 		} catch (KeyManagementException e) {
-			e.printStackTrace();
+			throw new InvokerException("Error al generar la implementación de HTTPClient"+ e.getMessage(),e);
 		} catch (UnrecoverableKeyException e) {
-			e.printStackTrace();
+			throw new InvokerException("Error al generar la implementación de HTTPClient"+ e.getMessage(),e);
 		} finally {
 			LocalTime afterCall = LocalTime.now();
 			tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
 		}
-
+		
 		return tiempoTotal;
 	}
 
+	private static String generateSamlRequest(final RegisterClaveRequestType requestConf, final ConfigServiceDTO service) throws EIDASSAMLEngineException {
+		String res = null;
+		ProtocolEngineNoMetadataI protocolEngine = SpProtocolEngineFactory.getSpProtocolEngine(Constants.SP_CONF);
+		
+		
+		
+		String providerName = requestConf.getRequest().getSamlRequest().getProviderName();
+		LOGGER.debug("Provider name: " + providerName);
+		String spApplication = requestConf.getRequest().getSamlRequest().getSPApplication();
+		LOGGER.debug("SP application: " + spApplication);
+		String spType = requestConf.getRequest().getSamlRequest().getSPType().toString();
+		LOGGER.debug("Sp type: " + spType);
+		String returnUrl = requestConf.getRequest().getSamlRequest().getAssertionConsumerServiceURL();
+		LOGGER.debug("URL de retorno: " + returnUrl);
+
+		String destination = (service.getSoapUrl() + service.getWsdl());
+		LOGGER.debug("URL de destino: " + destination);
+
+		// build the request
+		EidasAuthenticationRequestNoMetadata.Builder reqBuilder = new EidasAuthenticationRequestNoMetadata.Builder();
+		reqBuilder.destination(destination);
+		reqBuilder.providerName(providerName);
+		reqBuilder.spType(spType);
+		reqBuilder.requestedAttributes(reqAttrMapBuilder.build());
+		reqBuilder.levelOfAssurance(EIDAS_LOA_DEF_VALUE);
+		
+		reqBuilder.levelOfAssuranceComparison(LevelOfAssuranceComparison.fromString("minimum").stringValue());
+
+		reqBuilder.nameIdFormat(NAME_ID_POLICY_DEF_VALUE);
+
+		reqBuilder.binding(EidasSamlBinding.EMPTY.getName());
+		reqBuilder.assertionConsumerServiceURL(returnUrl);
+		reqBuilder.forceAuth(FORCE_AUTH_CHECK_DEF_VALUE);
+
+		reqBuilder.spApplication(spApplication);
+
+		IRequestMessageNoMetadata binaryRequestMessage = null;
+		EidasAuthenticationRequestNoMetadata authRequest = null;
+		
+		reqBuilder.id(SAMLEngineUtils.generateNCName());
+		authRequest = reqBuilder.build();
+		binaryRequestMessage = protocolEngine.generateRequestMessage(authRequest, true);
+		
+		res = EidasStringUtil.encodeToBase64(binaryRequestMessage.getMessageBytes());
+		
+		return res;
+	}
+	
+	private static CloseableHttpClient createHttpClient(final RegisterClaveRequestType requestConf, final ConfigServiceDTO service) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, KeyManagementException, UnrecoverableKeyException {
+		CloseableHttpClient res;
+		
+		String[] s = service.getBaseUrl().split(":");
+		
+		if(s[0].equals("http")) {			
+			res = HttpClients.createDefault();
+		} else {
+			KeyStore keystore = Utilities.LoadKeystore(requestConf.getConnection().getAuthenticationMutual().getPath().toString(), 
+					requestConf.getConnection().getAuthenticationMutual().getPasswordKeyStore().toString(),
+					requestConf.getConnection().getAuthenticationMutual().getTypeKeyStore().toString());
+			KeyManagerFactory tmf = KeyManagerFactory.getInstance("SunX509");
+			tmf.init(keystore, requestConf.getConnection().getAuthenticationMutual().getPasswordKeyStore().toCharArray());
+			SSLContext sslContext = SSLContext.getInstance("SSL");
+			sslContext.init(tmf.getKeyManagers(), null, null);
+			
+			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[]{"TLSv1.2", "TLSv1.1"}, null, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+			
+			res = HttpClients.custom().setSSLSocketFactory(sslsf).build(); 
+		}
+		
+		return res;
+	}
 }

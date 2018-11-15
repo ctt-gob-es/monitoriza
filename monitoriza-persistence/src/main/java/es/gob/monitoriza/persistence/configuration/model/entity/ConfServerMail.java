@@ -224,7 +224,7 @@ public class ConfServerMail {
 	/**
 	 * @return the tsl
 	 */
-	@Column(name = "TSL", nullable = false, precision = NumberConstants.NUM1)
+	@Column(name = "TLS", nullable = false, precision = NumberConstants.NUM1)
 	public Boolean getTslMail() {
 		return tslMail;
 	}

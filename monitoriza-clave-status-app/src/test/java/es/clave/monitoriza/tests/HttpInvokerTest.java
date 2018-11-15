@@ -24,7 +24,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -32,10 +35,6 @@ import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
-import org.apache.http.conn.ssl.SSLContextBuilder;
-import org.apache.http.conn.ssl.SSLContexts;
-import org.apache.http.conn.ssl.TrustSelfSignedStrategy;
-import org.apache.http.conn.ssl.TrustStrategy;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.message.BasicNameValuePair;
@@ -256,23 +255,44 @@ public class HttpInvokerTest {
 			InputStream keystoreInput = new FileInputStream(new File("C:\\Users\\samuel.zuluaga\\Desktop\\PF_ACTIVO_EIDAS.p12"));
 			// TODO get the keystore as an InputStream from somewhere 
 			keystore.load(keystoreInput, "G5cp,fYC9gje".toCharArray()); 
+			KeyManagerFactory tmf = KeyManagerFactory.getInstance("SunX509");
+			tmf.init(keystore, "G5cp,fYC9gje".toCharArray());
+//			if(Autenticacion mutua) {
+//				InputStream inKs = new FileInputStream(direccion);
+//				KeyStore ks = KeyStore.getInstance("pkcs12");
+//				String pass = "password";
+//				ks.load(inKs, pass.toCharArray());
+//				KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+//				kmf.init(ks, pass.toCharArray());
+//				
+//				SSLContext sslContext = SSLContext.getInstance("SSL");
+//				sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
+//			}else {
+//				SSLContext sslContext = SSLContext.getInstance("SSL");
+//				sslContext.init(null, tmf.getTrustManagers(), null);
+
+
+//			SSLContext sslContext = new SSLContextBuilder().loadKeyMaterial(keystore, "G5cp,fYC9gje".toCharArray()).build();
 			
-			SSLContext sslContext = new SSLContextBuilder().loadKeyMaterial(keystore, "G5cp,fYC9gje".toCharArray()).build();
+			SSLContext sslContext = SSLContext.getInstance("SSL");
+			sslContext.init(tmf.getKeyManagers(), null, null);
+			
 			
 			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext,
 			          new String[]{"TLSv1.2", "TLSv1.1"},
 			          null,
 			          SSLConnectionSocketFactory.getDefaultHostnameVerifier());
 			
-			CloseableHttpClient client = HttpClients.custom().setSSLSocketFactory(sslsf).build(); 
+			CloseableHttpClient client = HttpClients.custom().setSSLSocketFactory(sslsf).build();			
 			
 			//CloseableHttpClient client = HttpClients.createDefault();
 			HttpPost httpPost = new HttpPost("https://localhost:4443/IdP2/AuthenticateCitizen");
-			//httpPost.addHeader("Referer", "www.ejemplo.com");
+			//httpPost.addHeader("Country", "ES");
 
 			List<NameValuePair> params = new ArrayList<NameValuePair>();
 			params.add(new BasicNameValuePair("SAMLRequest", samlRequest));
 			params.add(new BasicNameValuePair("RelayState", relayState));
+			//params.add(new BasicNameValuePair("Country", "ES"));
 
 			httpPost.setEntity(new UrlEncodedFormEntity(params));
 			beforeCall = LocalTime.now();
@@ -292,7 +312,10 @@ public class HttpInvokerTest {
 			e.printStackTrace();
 		} catch (KeyManagementException e) {
 			e.printStackTrace();
-		} catch (UnrecoverableKeyException e) {
+		}/* catch (UnrecoverableKeyException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/ catch (UnrecoverableKeyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} finally {
