@@ -14,31 +14,43 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * <p>Clase Java para SPRequestType.
+ * <p>Clase Java para AttributeType.
  * 
  * <p>El siguiente fragmento de esquema especifica el contenido que se espera que haya en esta clase.
  * <p>
  * <pre>
- * &lt;simpleType name="SPRequestType">
+ * &lt;simpleType name="AttributeType">
  *   &lt;restriction base="{http://www.w3.org/2001/XMLSchema}string">
- *     &lt;enumeration value="public"/>
- *     &lt;enumeration value="private"/>
+ *     &lt;enumeration value="familyName"/>
+ *     &lt;enumeration value="firstName"/>
+ *     &lt;enumeration value="birthDateOfBirth"/>
+ *     &lt;enumeration value="personIdentifier"/>
+ *     &lt;enumeration value="birthName"/>
+ *     &lt;enumeration value="placeOfBirth"/>
  *   &lt;/restriction>
  * &lt;/simpleType>
  * </pre>
  * 
  */
-@XmlType(name = "SPRequestType")
+@XmlType(name = "AttributeType")
 @XmlEnum
-public enum SPRequestType {
+public enum AttributeType {
 
-    @XmlEnumValue("public")
-    PUBLIC("public"),
-    @XmlEnumValue("private")
-    PRIVATE("private");
+    @XmlEnumValue("familyName")
+    FAMILY_NAME("familyName"),
+    @XmlEnumValue("firstName")
+    FIRST_NAME("firstName"),
+    @XmlEnumValue("birthDateOfBirth")
+    BIRTH_DATE_OF_BIRTH("birthDateOfBirth"),
+    @XmlEnumValue("personIdentifier")
+    PERSON_IDENTIFIER("personIdentifier"),
+    @XmlEnumValue("birthName")
+    BIRTH_NAME("birthName"),
+    @XmlEnumValue("placeOfBirth")
+    PLACE_OF_BIRTH("placeOfBirth");
     private final String value;
 
-    SPRequestType(String v) {
+    AttributeType(String v) {
         value = v;
     }
 
@@ -46,8 +58,8 @@ public enum SPRequestType {
         return value;
     }
 
-    public static SPRequestType fromValue(String v) {
-        for (SPRequestType c: SPRequestType.values()) {
+    public static AttributeType fromValue(String v) {
+        for (AttributeType c: AttributeType.values()) {
             if (c.value.equals(v)) {
                 return c;
             }

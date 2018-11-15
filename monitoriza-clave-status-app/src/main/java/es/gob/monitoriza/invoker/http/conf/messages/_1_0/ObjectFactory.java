@@ -1,8 +1,8 @@
 //
-// Este archivo ha sido generado por la arquitectura JavaTM para la implantaciï¿½n de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
+// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Todas las modificaciones realizadas en este archivo se perderï¿½n si se vuelve a compilar el esquema de origen. 
-// Generado el: 2018.11.13 a las 02:46:44 PM CET 
+// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
+// Generado el: 2018.11.15 a las 11:03:34 AM CET 
 //
 
 
@@ -31,7 +31,7 @@ import javax.xml.namespace.QName;
 @XmlRegistry
 public class ObjectFactory {
 
-    private final static QName _ClaveAgentConf_QNAME = new QName("urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0", "claveAgentConf");
+    private final static QName _ClaveAgentConf_QNAME = new QName("urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0", "ClaveAgentConf");
 
     /**
      * Create a new ObjectFactory that can be used to create new instances of schema derived classes for package: es.gob.monitoriza.invoker.http.conf.messages._1_0
@@ -97,6 +97,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link AttributesType }
+     * 
+     */
+    public AttributesType createAttributesType() {
+        return new AttributesType();
+    }
+
+    /**
      * Create an instance of {@link ParamType }
      * 
      */
@@ -116,7 +124,7 @@ public class ObjectFactory {
      * Create an instance of {@link JAXBElement }{@code <}{@link RegisterClaveRequestType }{@code >}}
      * 
      */
-    @XmlElementDecl(namespace = "urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0", name = "claveAgentConf")
+    @XmlElementDecl(namespace = "urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0", name = "ClaveAgentConf")
     public JAXBElement<RegisterClaveRequestType> createClaveAgentConf(RegisterClaveRequestType value) {
         return new JAXBElement<RegisterClaveRequestType>(_ClaveAgentConf_QNAME, RegisterClaveRequestType.class, null, value);
     }
