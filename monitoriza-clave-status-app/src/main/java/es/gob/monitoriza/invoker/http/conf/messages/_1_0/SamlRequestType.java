@@ -2,7 +2,7 @@
 // Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
 // Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
-// Generado el: 2018.11.15 a las 11:03:34 AM CET 
+// Generado el: 2018.11.15 a las 12:33:07 PM CET 
 //
 
 
@@ -32,6 +32,7 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="SPApplication" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="providerName" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *         &lt;element name="SPType" type="{urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0}SPRequestType"/>
+ *         &lt;element name="attributes" type="{urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0}AttributesType"/>
  *       &lt;/sequence>
  *     &lt;/restriction>
  *   &lt;/complexContent>
@@ -45,7 +46,8 @@ import javax.xml.bind.annotation.XmlType;
     "assertionConsumerServiceURL",
     "spApplication",
     "providerName",
-    "spType"
+    "spType",
+    "attributes"
 })
 public class SamlRequestType {
 
@@ -58,6 +60,8 @@ public class SamlRequestType {
     @XmlElement(name = "SPType", required = true)
     @XmlSchemaType(name = "string")
     protected SPRequestType spType;
+    @XmlElement(required = true)
+    protected AttributesType attributes;
 
     /**
      * Obtiene el valor de la propiedad assertionConsumerServiceURL.
@@ -153,6 +157,30 @@ public class SamlRequestType {
      */
     public void setSPType(SPRequestType value) {
         this.spType = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad attributes.
+     * 
+     * @return
+     *     possible object is
+     *     {@link AttributesType }
+     *     
+     */
+    public AttributesType getAttributes() {
+        return attributes;
+    }
+
+    /**
+     * Define el valor de la propiedad attributes.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link AttributesType }
+     *     
+     */
+    public void setAttributes(AttributesType value) {
+        this.attributes = value;
     }
 
 }
