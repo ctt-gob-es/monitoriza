@@ -161,6 +161,11 @@
 					<xsd:documentation>Tipo del proveedor del servicio de la petición Saml.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
+			<xsd:element name="attributes" type="mcl:AttributesType">
+				<xsd:annotation>
+					<xsd:documentation>Listado de atributos.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
 		</xsd:sequence>
 	</xsd:complexType>
 	
