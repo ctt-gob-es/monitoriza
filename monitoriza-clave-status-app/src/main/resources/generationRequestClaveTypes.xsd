@@ -115,10 +115,10 @@
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="familyName"/>
             <xsd:enumeration value="firstName"/>
-            <xsd:enumeration value="birthDateOfBirth"/>
+            <xsd:enumeration value="dateOfBirth"/>
             <xsd:enumeration value="personIdentifier"/>
-            <xsd:enumeration value="birthName"/>
-            <xsd:enumeration value="placeOfBirth"/>
+            <xsd:enumeration value="legalName"/>
+            <xsd:enumeration value="legalPersonIdentifier"/>
         </xsd:restriction>
     </xsd:simpleType>
     
