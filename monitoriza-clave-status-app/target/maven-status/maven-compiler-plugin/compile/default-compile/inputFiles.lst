@@ -1,8 +1,8 @@
-<<<<<<< HEAD
 C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\ConnectionType.java
 C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\package-info.java
 C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\RegisterClaveRequestType.java
 C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\SPRequestType.java
+C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\AttributeType.java
 C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\ProxyConfType.java
 C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\HttpInvoker.java
 C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\ObjectFactory.java
@@ -18,29 +18,7 @@ C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-stat
 C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\saml\SpProtocolEngine.java
 C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\HttpRequestType.java
 C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\saml\SpProtocolEngineFactory.java
+C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\AttributesType.java
 C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\AuthenticationMutualType.java
 C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\ParamType.java
 C:\Users\samuel.zuluaga\Desktop\bitbucket\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\package-info.java
-=======
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\saml\SpProtocolEngineI.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\saml\SPUtil.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\SPRequestType.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\AuthenticationMutualType.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\ParamsType.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\HttpRequestType.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\saml\Constants.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\ObjectFactory.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\ProxyConfType.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\package-info.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\util\Utilities.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\HttpInvoker.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\package-info.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\SamlRequestType.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\saml\SpEidasProtocolProcessor.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\ConnectionType.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\RequestType.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\ParamType.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\conf\messages\_1_0\RegisterClaveRequestType.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\saml\SpProtocolEngine.java
-C:\Trabajo\proyectos\clave_monitoriza\monitoriza-clave-status-app\src\main\java\es\gob\monitoriza\invoker\http\saml\SpProtocolEngineFactory.java
->>>>>>> 966808e39dd6db0c77639f4d90f57798f18938f1

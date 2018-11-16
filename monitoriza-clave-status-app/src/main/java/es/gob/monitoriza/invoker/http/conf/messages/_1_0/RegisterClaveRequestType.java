@@ -1,7 +1,7 @@
 //
-// Este archivo ha sido generado por la arquitectura JavaTM para la implantaci髇 de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
+// Este archivo ha sido generado por la arquitectura JavaTM para la implantaci贸n de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Todas las modificaciones realizadas en este archivo se perder醤 si se vuelve a compilar el esquema de origen. 
+// Todas las modificaciones realizadas en este archivo se perder谩n si se vuelve a compilar el esquema de origen. 
 // Generado el: 2018.11.15 a las 01:46:28 PM CET 
 //
 
@@ -14,7 +14,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * Petici髇 de la operaci髇 de registro de reservas de trabajos de digitalizaci髇.
+ * Petici贸n de la operaci贸n de registro de reservas de trabajos de digitalizaci贸n.
  * 			
  * 
  * <p>Clase Java para RegisterClaveRequestType complex type.

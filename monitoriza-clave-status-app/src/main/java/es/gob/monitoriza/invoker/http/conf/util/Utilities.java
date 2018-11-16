@@ -27,7 +27,6 @@ public class Utilities {
 	}
 
 	public static KeyStore LoadKeystore(String path, String password, String type) throws NoSuchAlgorithmException, CertificateException, IOException, KeyStoreException {
-
 		// load the keystore containing the client certificate - keystore type
 		// is probably jks or pkcs12
 		final KeyStore keystore = KeyStore.getInstance(type);

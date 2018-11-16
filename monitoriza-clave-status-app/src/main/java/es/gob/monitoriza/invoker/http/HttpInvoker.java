@@ -34,10 +34,7 @@ import java.security.cert.CertificateException;
 import java.time.LocalTime;
 import java.time.temporal.ChronoField;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -55,6 +52,7 @@ import org.slf4j.LoggerFactory;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.exception.InvokerException;
+import es.gob.monitoriza.invoker.http.conf.messages._1_0.AttributeType;
 import es.gob.monitoriza.invoker.http.conf.messages._1_0.ParamType;
 import es.gob.monitoriza.invoker.http.conf.messages._1_0.RegisterClaveRequestType;
 import es.gob.monitoriza.invoker.http.conf.util.Utilities;
@@ -99,56 +97,6 @@ public class HttpInvoker {
 	private static final Boolean FORCE_AUTH_CHECK_DEF_VALUE = Boolean.TRUE;
 	private static final String NAME_ID_POLICY_DEF_VALUE = SamlNameIdFormat.UNSPECIFIED.getNameIdFormat();
 	private static final String EIDAS_LOA_DEF_VALUE = LevelOfAssurance.LOW.stringValue();
-
-	
-	private static final ImmutableAttributeMap.Builder reqAttrMapBuilder;
-	
-	static {		
-		reqAttrMapBuilder = new ImmutableAttributeMap.Builder();
-		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/CurrentFamilyName")
-    			.friendlyName("FamilyName")
-    			.personType(PersonType.NATURAL_PERSON)
-    			.required(true)
-    			.uniqueIdentifier(true)
-    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "CurrentFamilyNameType", "eidas-natural")
-    			.build());
-		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/CurrentGivenName")
-    			.friendlyName("FirstName")
-    			.personType(PersonType.NATURAL_PERSON)
-    			.required(true)
-    			.uniqueIdentifier(true)
-    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "CurrentGivenNameType", "eidas-natural")
-    			.build());
-		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/DateOfBirt")
-    			.friendlyName("DateOfBirth")
-    			.personType(PersonType.NATURAL_PERSON)
-    			.required(true)
-    			.uniqueIdentifier(true)
-    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "DateOfBirthType", "eidas-natural")
-    			.build());
-		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/PersonIdentifier")
-    			.friendlyName("PersonIdentifier")
-    			.personType(PersonType.NATURAL_PERSON)
-    			.required(true)
-    			.uniqueIdentifier(true)
-    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "PersonIdentifierType", "eidas-natural")
-    			.build());
-		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/legalperson/LegalName")
-    			.friendlyName("LegalName")
-    			.personType(PersonType.LEGAL_PERSON)
-    			.required(true)
-    			.uniqueIdentifier(true)
-    			.xmlType("http://eidas.europa.eu/attributes/legalperson", "LegalNameType", "eidas-legal")
-    			.build());
-		reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/legalperson/LegalPersonIdentifier")
-    			.friendlyName("LegalPersonIdentifier")
-    			.personType(PersonType.LEGAL_PERSON)
-    			.required(true)
-    			.uniqueIdentifier(true)
-    			.xmlType("http://eidas.europa.eu/attributes/legalperson", "LegalPersonIdentifierType", "eidas-legal")
-    			.build());
-	}
-
 
 	/**
 	 * Method that sends a request and get the response message.
@@ -225,11 +173,21 @@ public class HttpInvoker {
 		return tiempoTotal;
 	}
 
+	/**
+	 * Method that generate the SAML request
+	 * @param requestConf
+	 * 					request configuration for the SAML request
+	 * @param service
+	 * 				service configuration from Monitoriza
+	 * @return String
+	 * 				return the SAML request generate
+	 * @throws EIDASSAMLEngineException
+	 */
 	private static String generateSamlRequest(final RegisterClaveRequestType requestConf, final ConfigServiceDTO service) throws EIDASSAMLEngineException {
 		String res = null;
 		ProtocolEngineNoMetadataI protocolEngine = SpProtocolEngineFactory.getSpProtocolEngine(Constants.SP_CONF);
 		
-		
+		ImmutableAttributeMap.Builder reqAttrMapBuilder = ReqAtributos(requestConf);
 		
 		String providerName = requestConf.getRequest().getSamlRequest().getProviderName();
 		LOGGER.debug("Provider name: " + providerName);
@@ -273,6 +231,21 @@ public class HttpInvoker {
 		return res;
 	}
 	
+	/**
+	 * Method that create the HttpClient for the connection
+	 * @param requestConf
+	 * 					configuration for the creation of the connection
+	 * @param service
+	 * 				configuration of Monitoriza for the creation of the connection
+	 * @return CloseableHttpClient
+	 * 							return the CloseableHttpClient required for the connection
+	 * @throws KeyStoreException
+	 * @throws NoSuchAlgorithmException
+	 * @throws CertificateException
+	 * @throws IOException
+	 * @throws KeyManagementException
+	 * @throws UnrecoverableKeyException
+	 */
 	private static CloseableHttpClient createHttpClient(final RegisterClaveRequestType requestConf, final ConfigServiceDTO service) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, KeyManagementException, UnrecoverableKeyException {
 		CloseableHttpClient res;
 		
@@ -295,5 +268,68 @@ public class HttpInvoker {
 		}
 		
 		return res;
+	}
+	
+	/**
+	 * Method that adds the required attributes 
+	 * @param requestConf
+	 * 					parameter that provides the attributes
+	 * @return ImmutableAttributeMap.Builder
+	 * 										return the map with the required attributes
+	 */
+	private static ImmutableAttributeMap.Builder ReqAtributos(RegisterClaveRequestType requestConf) {
+		ImmutableAttributeMap.Builder reqAttrMapBuilder = new ImmutableAttributeMap.Builder();
+		for(AttributeType attr:  requestConf.getRequest().getSamlRequest().getAttributes().getAttribute()) {
+			if(attr == AttributeType.FAMILY_NAME) {
+				reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/CurrentFamilyName")
+		    			.friendlyName("FamilyName")
+		    			.personType(PersonType.NATURAL_PERSON)
+		    			.required(true)
+		    			.uniqueIdentifier(true)
+		    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "CurrentFamilyNameType", "eidas-natural")
+		    			.build());
+			} else if(attr == AttributeType.FIRST_NAME) {
+				reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/CurrentGivenName")
+		    			.friendlyName("FirstName")
+		    			.personType(PersonType.NATURAL_PERSON)
+		    			.required(true)
+		    			.uniqueIdentifier(true)
+		    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "CurrentGivenNameType", "eidas-natural")
+		    			.build());
+			} else if(attr == AttributeType.DATE_OF_BIRTH) {
+				reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/DateOfBirt")
+		    			.friendlyName("DateOfBirth")
+		    			.personType(PersonType.NATURAL_PERSON)
+		    			.required(true)
+		    			.uniqueIdentifier(true)
+		    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "DateOfBirthType", "eidas-natural")
+		    			.build());
+			} else if(attr == AttributeType.PERSON_IDENTIFIER) {
+				reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/PersonIdentifier")
+		    			.friendlyName("PersonIdentifier")
+		    			.personType(PersonType.NATURAL_PERSON)
+		    			.required(true)
+		    			.uniqueIdentifier(true)
+		    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "PersonIdentifierType", "eidas-natural")
+		    			.build());
+			} else if(attr == AttributeType.LEGAL_NAME) {
+				reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/legalperson/LegalName")
+		    			.friendlyName("LegalName")
+		    			.personType(PersonType.LEGAL_PERSON)
+		    			.required(true)
+		    			.uniqueIdentifier(true)
+		    			.xmlType("http://eidas.europa.eu/attributes/legalperson", "LegalNameType", "eidas-legal")
+		    			.build());
+			}else if(attr == AttributeType.LEGAL_PERSON_IDENTIFIER) {
+				reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/legalperson/LegalPersonIdentifier")
+		    			.friendlyName("LegalPersonIdentifier")
+		    			.personType(PersonType.LEGAL_PERSON)
+		    			.required(true)
+		    			.uniqueIdentifier(true)
+		    			.xmlType("http://eidas.europa.eu/attributes/legalperson", "LegalPersonIdentifierType", "eidas-legal")
+		    			.build());
+			}
+		}
+		return reqAttrMapBuilder;
 	}
 }

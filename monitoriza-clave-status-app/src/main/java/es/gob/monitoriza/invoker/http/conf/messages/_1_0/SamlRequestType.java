@@ -1,7 +1,7 @@
 //
-// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
+// Este archivo ha sido generado por la arquitectura JavaTM para la implantaciÃ³n de la referencia de enlace (JAXB) XML v2.2.8-b130911.1802 
 // Visite <a href="http://java.sun.com/xml/jaxb">http://java.sun.com/xml/jaxb</a> 
-// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
+// Todas las modificaciones realizadas en este archivo se perderÃ¡n si se vuelve a compilar el esquema de origen. 
 // Generado el: 2018.11.15 a las 01:46:28 PM CET 
 //
 
@@ -16,7 +16,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * Configuración de la petición Saml
+ * ConfiguraciÃ³n de la peticiÃ³n Saml
  * 			
  * 
  * <p>Clase Java para SamlRequestType complex type.
