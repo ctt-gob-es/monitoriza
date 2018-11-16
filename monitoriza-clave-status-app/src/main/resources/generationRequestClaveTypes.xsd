@@ -9,6 +9,8 @@
 		</xsd:documentation>
 	</xsd:annotation>
 
+	<!-- Configuración de los atributos de conexión de la  petición -->
+	
 	<xsd:complexType name="ProxyConfType">
 		<xsd:annotation>
 			<xsd:documentation>Configuración del proxy
@@ -67,6 +69,59 @@
         </xsd:sequence>
 	</xsd:complexType>
 	
+	<xsd:complexType name="ConnectionType">
+		<xsd:annotation>
+			<xsd:documentation>Configuración de la conexión de la petición. Opcional.
+			</xsd:documentation>
+		</xsd:annotation>
+		<xsd:sequence>
+			<xsd:element name="proxy" type="mcl:ProxyConfType" minOccurs="0">
+        		<xsd:annotation>
+					<xsd:documentation>Configuración del proxy. Opcional.</xsd:documentation>
+				</xsd:annotation>
+        	</xsd:element>
+        	<xsd:element name="authenticationMutual" type="mcl:AuthenticationMutualType" minOccurs="0">
+        		<xsd:annotation>
+					<xsd:documentation>Configuración de la autenticación mutua. Opcional.</xsd:documentation>
+				</xsd:annotation>
+        	</xsd:element>
+        </xsd:sequence>
+	</xsd:complexType>
+	
+	<!-- Fin configuración de los atributos de conexión de la  petición -->
+	
+	<!-- Configuración de la petición -->
+	
+	<!-- Enumerados de la petición -->
+	
+	<xsd:simpleType name="SPRequestType">
+        <xsd:annotation>
+            <xsd:documentation>Tipo de peticion a la SP.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="public"/>
+            <xsd:enumeration value="private"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <xsd:simpleType name="AttributeType">
+        <xsd:annotation>
+            <xsd:documentation>Tipo que define los atributos que pueden ser solicitados en una petición SAML.</xsd:documentation>
+        </xsd:annotation>
+        <xsd:restriction base="xsd:string">
+            <xsd:enumeration value="familyName"/>
+            <xsd:enumeration value="firstName"/>
+            <xsd:enumeration value="dateOfBirth"/>
+            <xsd:enumeration value="personIdentifier"/>
+            <xsd:enumeration value="legalName"/>
+            <xsd:enumeration value="legalPersonIdentifier"/>
+        </xsd:restriction>
+    </xsd:simpleType>
+    
+    <!-- Fin enumerados de la petición -->
+	
+	<!-- Configuración de los parámetros de la petición -->
+	
 	<xsd:complexType name="ParamType">
 		<xsd:annotation>
 			<xsd:documentation>Tipo que define un parámetro mediante su identificador y su valor.</xsd:documentation>
@@ -97,30 +152,6 @@
             </xsd:element>
         </xsd:sequence>
 	</xsd:complexType>
-	
-	<xsd:simpleType name="SPRequestType">
-        <xsd:annotation>
-            <xsd:documentation>Tipo de peticion a la SP.</xsd:documentation>
-        </xsd:annotation>
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="public"/>
-            <xsd:enumeration value="private"/>
-        </xsd:restriction>
-    </xsd:simpleType>
-    
-    <xsd:simpleType name="AttributeType">
-        <xsd:annotation>
-            <xsd:documentation>Tipo de atributo de la SAML.</xsd:documentation>
-        </xsd:annotation>
-        <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="familyName"/>
-            <xsd:enumeration value="firstName"/>
-            <xsd:enumeration value="dateOfBirth"/>
-            <xsd:enumeration value="personIdentifier"/>
-            <xsd:enumeration value="legalName"/>
-            <xsd:enumeration value="legalPersonIdentifier"/>
-        </xsd:restriction>
-    </xsd:simpleType>
     
     <xsd:complexType name="AttributesType">
 		<xsd:annotation>
@@ -156,36 +187,17 @@
 					<xsd:documentation>Nombre del proveedor de la petición Saml.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="SPType" type="mcl:SPRequestType">
+			<xsd:element name="SPType" type="mcl:SPRequestType" minOccurs="0">
 				<xsd:annotation>
 					<xsd:documentation>Tipo del proveedor del servicio de la petición Saml.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="attributes" type="mcl:AttributesType">
+			<xsd:element name="attributes" type="mcl:AttributesType" minOccurs="0">
 				<xsd:annotation>
 					<xsd:documentation>Listado de atributos.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
 		</xsd:sequence>
-	</xsd:complexType>
-	
-	<xsd:complexType name="ConnectionType">
-		<xsd:annotation>
-			<xsd:documentation>Configuración de la conexión de la petición. Opcional.
-			</xsd:documentation>
-		</xsd:annotation>
-		<xsd:sequence>
-			<xsd:element name="proxy" type="mcl:ProxyConfType" minOccurs="0">
-        		<xsd:annotation>
-					<xsd:documentation>Configuración del proxy. Opcional.</xsd:documentation>
-				</xsd:annotation>
-        	</xsd:element>
-        	<xsd:element name="authenticationMutual" type="mcl:AuthenticationMutualType" minOccurs="0">
-        		<xsd:annotation>
-					<xsd:documentation>Configuración de la autenticación mutua. Opcional.</xsd:documentation>
-				</xsd:annotation>
-        	</xsd:element>
-        </xsd:sequence>
 	</xsd:complexType>
 	
 	<xsd:complexType name="HttpRequestType">
@@ -225,11 +237,14 @@
 			</xsd:element>
         </xsd:sequence>
 	</xsd:complexType>
+	
+	<!-- Fin configuración de los parámetros de la petición -->
+	
+	<!-- Fin configuración de la petición -->
 
-	<xsd:complexType name="RegisterClaveRequestType">
+	<xsd:complexType name="ClaveAgentConfType">
 		<xsd:annotation>
-			<xsd:documentation>Petición de la operación de registro de reservas de trabajos de digitalización.
-			</xsd:documentation>
+			<xsd:documentation>Define la configuración para el envio de una petición SAML sin metadatos, mediante HTTP, al sistema de identificación Cl@ve (Pasarela o IdP).</xsd:documentation>
 		</xsd:annotation>
 		<xsd:sequence>
 			<xsd:element name="connection" type="mcl:ConnectionType" minOccurs="0">
@@ -245,9 +260,9 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
-	<xsd:element name="ClaveAgentConf" type="mcl:RegisterClaveRequestType">
+ 	<xsd:element name="claveAgentConf" type="mcl:ClaveAgentConfType">
 		<xsd:annotation>
-			<xsd:documentation>Petición hacia la pasarela de cl@ve.</xsd:documentation>
+			<xsd:documentation>Configuración para el envio de una petición SAML sin metadatos, mediante HTTP, al sistema de identificación Cl@ve (Pasarela o IdP).</xsd:documentation>
 		</xsd:annotation>
 	</xsd:element>
 
