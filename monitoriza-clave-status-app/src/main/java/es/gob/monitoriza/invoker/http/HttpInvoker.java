@@ -52,9 +52,9 @@ import org.slf4j.LoggerFactory;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.exception.InvokerException;
-import es.gob.monitoriza.invoker.http.conf.messages._1_0.AttributeType;
-import es.gob.monitoriza.invoker.http.conf.messages._1_0.ParamType;
-import es.gob.monitoriza.invoker.http.conf.messages._1_0.RegisterClaveRequestType;
+import es.gob.monitoriza.invoker.http.conf.messages.AttributeType;
+import es.gob.monitoriza.invoker.http.conf.messages.ParamType;
+import es.gob.monitoriza.invoker.http.conf.messages.ClaveAgentConfType;
 import es.gob.monitoriza.invoker.http.conf.util.Utilities;
 import es.gob.monitoriza.invoker.http.saml.Constants;
 import es.gob.monitoriza.invoker.http.saml.SpProtocolEngineFactory;
@@ -87,16 +87,7 @@ import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
  * 
  * @version 1.2, 18/10/2018.
  */
-public class HttpInvoker {
-
-	/**
-	 * Attribute that represents the object that manages the log of the class.
-	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
-	
-	private static final Boolean FORCE_AUTH_CHECK_DEF_VALUE = Boolean.TRUE;
-	private static final String NAME_ID_POLICY_DEF_VALUE = SamlNameIdFormat.UNSPECIFIED.getNameIdFormat();
-	private static final String EIDAS_LOA_DEF_VALUE = LevelOfAssurance.LOW.stringValue();
+public class HttpInvoker extends AbstractHttpInvoker {
 
 	/**
 	 * Method that sends a request and get the response message.
@@ -109,20 +100,18 @@ public class HttpInvoker {
 	 * @return Long that represents the time in milliseconds that has taken to
 	 *         complete the request. If there is some configuration or
 	 *         communication problem, this value will be null.
-	 * @throws IOException
-	 * @throws SamlEngineConfigurationException
-	 * @throws JAXBException 
+	 * @throws InvokerException TODO
 	 */
 	public static Long sendRequest(final File file, final ConfigServiceDTO service, final KeyStore ssl) throws InvokerException {
 		CloseableHttpClient httpClient;
 		Long tiempoTotal = null;
 		LocalTime beforeCall = null;
-		RegisterClaveRequestType requestConf;
+		ClaveAgentConfType requestConf;
 		String samlRequest;
 		
 		try {
 			requestConf = Utilities.transformJabx(file);
-			samlRequest = generateSamlRequest(requestConf, service);
+			samlRequest = AbstractHttpInvoker.generateSamlRequest(requestConf, service);
 			
 			LOGGER.debug("Petición SAML generada: " + samlRequest);
 			
@@ -173,163 +162,4 @@ public class HttpInvoker {
 		return tiempoTotal;
 	}
 
-	/**
-	 * Method that generate the SAML request
-	 * @param requestConf
-	 * 					request configuration for the SAML request
-	 * @param service
-	 * 				service configuration from Monitoriza
-	 * @return String
-	 * 				return the SAML request generate
-	 * @throws EIDASSAMLEngineException
-	 */
-	private static String generateSamlRequest(final RegisterClaveRequestType requestConf, final ConfigServiceDTO service) throws EIDASSAMLEngineException {
-		String res = null;
-		ProtocolEngineNoMetadataI protocolEngine = SpProtocolEngineFactory.getSpProtocolEngine(Constants.SP_CONF);
-		
-		ImmutableAttributeMap.Builder reqAttrMapBuilder = ReqAtributos(requestConf);
-		
-		String providerName = requestConf.getRequest().getSamlRequest().getProviderName();
-		LOGGER.debug("Provider name: " + providerName);
-		String spApplication = requestConf.getRequest().getSamlRequest().getSPApplication();
-		LOGGER.debug("SP application: " + spApplication);
-		String spType = requestConf.getRequest().getSamlRequest().getSPType().toString();
-		LOGGER.debug("Sp type: " + spType);
-		String returnUrl = requestConf.getRequest().getSamlRequest().getAssertionConsumerServiceURL();
-		LOGGER.debug("URL de retorno: " + returnUrl);
-
-		String destination = (service.getSoapUrl() + service.getWsdl());
-		LOGGER.debug("URL de destino: " + destination);
-
-		// build the request
-		EidasAuthenticationRequestNoMetadata.Builder reqBuilder = new EidasAuthenticationRequestNoMetadata.Builder();
-		reqBuilder.destination(destination);
-		reqBuilder.providerName(providerName);
-		reqBuilder.spType(spType);
-		reqBuilder.requestedAttributes(reqAttrMapBuilder.build());
-		reqBuilder.levelOfAssurance(EIDAS_LOA_DEF_VALUE);
-		
-		reqBuilder.levelOfAssuranceComparison(LevelOfAssuranceComparison.fromString("minimum").stringValue());
-
-		reqBuilder.nameIdFormat(NAME_ID_POLICY_DEF_VALUE);
-
-		reqBuilder.binding(EidasSamlBinding.EMPTY.getName());
-		reqBuilder.assertionConsumerServiceURL(returnUrl);
-		reqBuilder.forceAuth(FORCE_AUTH_CHECK_DEF_VALUE);
-
-		reqBuilder.spApplication(spApplication);
-
-		IRequestMessageNoMetadata binaryRequestMessage = null;
-		EidasAuthenticationRequestNoMetadata authRequest = null;
-		
-		reqBuilder.id(SAMLEngineUtils.generateNCName());
-		authRequest = reqBuilder.build();
-		binaryRequestMessage = protocolEngine.generateRequestMessage(authRequest, true);
-		
-		res = EidasStringUtil.encodeToBase64(binaryRequestMessage.getMessageBytes());
-		
-		return res;
-	}
-	
-	/**
-	 * Method that create the HttpClient for the connection
-	 * @param requestConf
-	 * 					configuration for the creation of the connection
-	 * @param service
-	 * 				configuration of Monitoriza for the creation of the connection
-	 * @return CloseableHttpClient
-	 * 							return the CloseableHttpClient required for the connection
-	 * @throws KeyStoreException
-	 * @throws NoSuchAlgorithmException
-	 * @throws CertificateException
-	 * @throws IOException
-	 * @throws KeyManagementException
-	 * @throws UnrecoverableKeyException
-	 */
-	private static CloseableHttpClient createHttpClient(final RegisterClaveRequestType requestConf, final ConfigServiceDTO service) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, KeyManagementException, UnrecoverableKeyException {
-		CloseableHttpClient res;
-		
-		String[] s = service.getBaseUrl().split(":");
-		
-		if(s[0].equals("http")) {			
-			res = HttpClients.createDefault();
-		} else {
-			KeyStore keystore = Utilities.LoadKeystore(requestConf.getConnection().getAuthenticationMutual().getPath().toString(), 
-					requestConf.getConnection().getAuthenticationMutual().getPasswordKeyStore().toString(),
-					requestConf.getConnection().getAuthenticationMutual().getTypeKeyStore().toString());
-			KeyManagerFactory tmf = KeyManagerFactory.getInstance("SunX509");
-			tmf.init(keystore, requestConf.getConnection().getAuthenticationMutual().getPasswordKeyStore().toCharArray());
-			SSLContext sslContext = SSLContext.getInstance("SSL");
-			sslContext.init(tmf.getKeyManagers(), null, null);
-			
-			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[]{"TLSv1.2", "TLSv1.1"}, null, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
-			
-			res = HttpClients.custom().setSSLSocketFactory(sslsf).build(); 
-		}
-		
-		return res;
-	}
-	
-	/**
-	 * Method that adds the required attributes 
-	 * @param requestConf
-	 * 					parameter that provides the attributes
-	 * @return ImmutableAttributeMap.Builder
-	 * 										return the map with the required attributes
-	 */
-	private static ImmutableAttributeMap.Builder ReqAtributos(RegisterClaveRequestType requestConf) {
-		ImmutableAttributeMap.Builder reqAttrMapBuilder = new ImmutableAttributeMap.Builder();
-		for(AttributeType attr:  requestConf.getRequest().getSamlRequest().getAttributes().getAttribute()) {
-			if(attr == AttributeType.FAMILY_NAME) {
-				reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/CurrentFamilyName")
-		    			.friendlyName("FamilyName")
-		    			.personType(PersonType.NATURAL_PERSON)
-		    			.required(true)
-		    			.uniqueIdentifier(true)
-		    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "CurrentFamilyNameType", "eidas-natural")
-		    			.build());
-			} else if(attr == AttributeType.FIRST_NAME) {
-				reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/CurrentGivenName")
-		    			.friendlyName("FirstName")
-		    			.personType(PersonType.NATURAL_PERSON)
-		    			.required(true)
-		    			.uniqueIdentifier(true)
-		    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "CurrentGivenNameType", "eidas-natural")
-		    			.build());
-			} else if(attr == AttributeType.DATE_OF_BIRTH) {
-				reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/DateOfBirt")
-		    			.friendlyName("DateOfBirth")
-		    			.personType(PersonType.NATURAL_PERSON)
-		    			.required(true)
-		    			.uniqueIdentifier(true)
-		    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "DateOfBirthType", "eidas-natural")
-		    			.build());
-			} else if(attr == AttributeType.PERSON_IDENTIFIER) {
-				reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/PersonIdentifier")
-		    			.friendlyName("PersonIdentifier")
-		    			.personType(PersonType.NATURAL_PERSON)
-		    			.required(true)
-		    			.uniqueIdentifier(true)
-		    			.xmlType("http://eidas.europa.eu/attributes/naturalperson", "PersonIdentifierType", "eidas-natural")
-		    			.build());
-			} else if(attr == AttributeType.LEGAL_NAME) {
-				reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/legalperson/LegalName")
-		    			.friendlyName("LegalName")
-		    			.personType(PersonType.LEGAL_PERSON)
-		    			.required(true)
-		    			.uniqueIdentifier(true)
-		    			.xmlType("http://eidas.europa.eu/attributes/legalperson", "LegalNameType", "eidas-legal")
-		    			.build());
-			}else if(attr == AttributeType.LEGAL_PERSON_IDENTIFIER) {
-				reqAttrMapBuilder.put(new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/legalperson/LegalPersonIdentifier")
-		    			.friendlyName("LegalPersonIdentifier")
-		    			.personType(PersonType.LEGAL_PERSON)
-		    			.required(true)
-		    			.uniqueIdentifier(true)
-		    			.xmlType("http://eidas.europa.eu/attributes/legalperson", "LegalPersonIdentifierType", "eidas-legal")
-		    			.build());
-			}
-		}
-		return reqAttrMapBuilder;
-	}
 }

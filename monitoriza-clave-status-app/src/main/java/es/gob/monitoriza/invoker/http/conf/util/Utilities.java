@@ -13,17 +13,18 @@ import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 
-import es.gob.monitoriza.invoker.http.conf.messages._1_0.RegisterClaveRequestType;
+import es.gob.monitoriza.invoker.http.conf.messages.ClaveAgentConfType;
 
 public class Utilities {
 
-	public static RegisterClaveRequestType transformJabx(File file) throws JAXBException {
+	public static ClaveAgentConfType transformJabx(File file) throws JAXBException {
 
-		JAXBContext jc = JAXBContext.newInstance(RegisterClaveRequestType.class);
+		//JAXBContext jc = JAXBContext.newInstance("es.gob.monitoriza.invoker.http.conf.messages");
+		JAXBContext jc = JAXBContext.newInstance(ClaveAgentConfType.class);
 		Unmarshaller u = jc.createUnmarshaller();
-		Object o = u.unmarshal(file);
+		ClaveAgentConfType res = (ClaveAgentConfType) u.unmarshal(file);
 
-		return (RegisterClaveRequestType) o;
+		return res;
 	}
 
 	public static KeyStore LoadKeystore(String path, String password, String type) throws NoSuchAlgorithmException, CertificateException, IOException, KeyStoreException {

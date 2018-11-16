@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<jaxb:bindings
+    version="2.1"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:xs="http://www.w3.org/2001/XMLSchema"
+	xmlns:mcl="urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0">
+
+	<jaxb:bindings scd="x-schema::mcl" xmlns:mcl="urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0" >
+        <jaxb:schemaBindings>
+            <jaxb:package name="es.gob.monitoriza.invoker.http.conf.messages"/>
+        </jaxb:schemaBindings>      
+    </jaxb:bindings>
+	
+</jaxb:bindings>

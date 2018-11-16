@@ -7,6 +7,7 @@ import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLEncoder;
 import java.security.KeyManagementException;
@@ -28,6 +29,7 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
+import javax.xml.bind.JAXBException;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -42,6 +44,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.invoker.http.conf.messages.ClaveAgentConfType;
+import es.gob.monitoriza.invoker.http.conf.util.Utilities;
 import es.gob.monitoriza.invoker.http.saml.Constants;
 import es.gob.monitoriza.invoker.http.saml.SpProtocolEngineFactory;
 import eu.eidas.auth.commons.EidasStringUtil;
@@ -75,16 +79,25 @@ public class HttpInvokerTest {
 
 	public static void main(String[] args) {
 		try {
-			sendRequest(new File(
-					"C:\\Users\\samuel.zuluaga\\Desktop\\workspaceMonitorizaManu\\monitoriza\\config\\monitoriza.xml"));
+			URL xmlFileUrl = HttpInvokerTest.class.getResource("/monitoriza.xml");
+			File xmlFile = new File(xmlFileUrl.toURI());
+			sendRequest(xmlFile);
 		} catch (SamlEngineConfigurationException e) {
 			e.printStackTrace();
 		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (URISyntaxException e) {
 			e.printStackTrace();
 		}
 	}
 
 	public static Long sendRequest(final File file) throws IOException, SamlEngineConfigurationException {
+		
+		try {
+			ClaveAgentConfType requestConf = Utilities.transformJabx(file);
+		} catch (JAXBException e1) {
+			e1.printStackTrace();
+		}
 
 		String samlRequest;
 

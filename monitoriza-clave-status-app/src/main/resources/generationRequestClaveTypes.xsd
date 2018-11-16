@@ -156,12 +156,12 @@
 					<xsd:documentation>Nombre del proveedor de la petición Saml.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="SPType" type="mcl:SPRequestType">
+			<xsd:element name="SPType" type="mcl:SPRequestType" minOccurs="0">
 				<xsd:annotation>
 					<xsd:documentation>Tipo del proveedor del servicio de la petición Saml.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
-			<xsd:element name="attributes" type="mcl:AttributesType">
+			<xsd:element name="attributes" type="mcl:AttributesType" minOccurs="0">
 				<xsd:annotation>
 					<xsd:documentation>Listado de atributos.</xsd:documentation>
 				</xsd:annotation>
@@ -244,10 +244,10 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
-<!-- 	<xsd:element name="claveAgentConf" type="mcl:ClaveAgentConfType">
+ 	<xsd:element name="claveAgentConf" type="mcl:ClaveAgentConfType">
 		<xsd:annotation>
 			<xsd:documentation>Configuración para el envio de una petición SAML sin metadatos, mediante HTTP, al sistema de identificación Cl@ve (Pasarela o IdP).</xsd:documentation>
 		</xsd:annotation>
-	</xsd:element> -->
+	</xsd:element>
 
 </xsd:schema>
