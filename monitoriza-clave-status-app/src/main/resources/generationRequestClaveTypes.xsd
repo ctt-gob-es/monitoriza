@@ -110,7 +110,7 @@
     
     <xsd:simpleType name="AttributeType">
         <xsd:annotation>
-            <xsd:documentation>Tipo de atributo de la SAML.</xsd:documentation>
+            <xsd:documentation>Tipo que define los atributos que pueden ser solicitados en una petición SAML.</xsd:documentation>
         </xsd:annotation>
         <xsd:restriction base="xsd:string">
             <xsd:enumeration value="familyName"/>
@@ -226,10 +226,9 @@
         </xsd:sequence>
 	</xsd:complexType>
 
-	<xsd:complexType name="RegisterClaveRequestType">
+	<xsd:complexType name="ClaveAgentConfType">
 		<xsd:annotation>
-			<xsd:documentation>Petición de la operación de registro de reservas de trabajos de digitalización.
-			</xsd:documentation>
+			<xsd:documentation>Define la configuración para el envio de una petición SAML sin metadatos, mediante HTTP, al sistema de identificación Cl@ve (Pasarela o IdP).</xsd:documentation>
 		</xsd:annotation>
 		<xsd:sequence>
 			<xsd:element name="connection" type="mcl:ConnectionType" minOccurs="0">
@@ -245,10 +244,10 @@
 		</xsd:sequence>
 	</xsd:complexType>
 
-	<xsd:element name="ClaveAgentConf" type="mcl:RegisterClaveRequestType">
+<!-- 	<xsd:element name="claveAgentConf" type="mcl:ClaveAgentConfType">
 		<xsd:annotation>
-			<xsd:documentation>Petición hacia la pasarela de cl@ve.</xsd:documentation>
+			<xsd:documentation>Configuración para el envio de una petición SAML sin metadatos, mediante HTTP, al sistema de identificación Cl@ve (Pasarela o IdP).</xsd:documentation>
 		</xsd:annotation>
-	</xsd:element>
+	</xsd:element> -->
 
 </xsd:schema>
