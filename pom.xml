@@ -19,7 +19,7 @@
 		<monitoriza.project.name>Monitoriz@</monitoriza.project.name>
 		<java.1.8.version>1.8.0_131</java.1.8.version>
 		<!-- Para la correcta ejecución maven, establecer la variable java.1.8.home hacia la ruta absoluta de donde se disponga la jdk -->
-		<java.1.8.home>C:\Trabajo\Software\Java\jdk1.8.0_131</java.1.8.home>
+		<java.1.8.home>C:\Program Files\Java\jdk1.8.0_131</java.1.8.home>
 		<java.home>${java.1.8.home}</java.home>
 		<java.version>${java.1.8.version}</java.version>
 		<spring.version>2.0.0.RELEASE</spring.version>

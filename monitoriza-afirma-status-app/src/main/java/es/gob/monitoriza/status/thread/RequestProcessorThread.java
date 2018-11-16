@@ -43,6 +43,8 @@ import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.bind.JAXBException;
+
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.alarm.AlarmManager;
@@ -56,6 +58,7 @@ import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.invoker.ocsp.OcspInvoker;
 import es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker;
 import es.gob.monitoriza.invoker.soap.HttpSoapInvoker;
+import es.gob.monitoriza.invoker.http.Constants;
 import es.gob.monitoriza.invoker.http.HttpInvoker;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.status.RunningServices;
@@ -160,8 +163,8 @@ public final class RequestProcessorThread implements Runnable {
 									tiempoTotal = Rfc3161Invoker.sendRequest(request, service, ssl, authClient);
 								} else if(service.getServiceType().equalsIgnoreCase(GeneralConstants.SOAP_SERVICE)) {
 									tiempoTotal = HttpSoapInvoker.sendRequest(request, service, ssl);
-								} else {
-									tiempoTotal = HttpInvoker.sendRequest(request, service, ssl);
+								} else if(service.getServiceType().equalsIgnoreCase(GeneralConstants.HTTP_SERVICE)){									
+									tiempoTotal = HttpInvoker.sendRequest(request, service, ssl);									
 								}
 
 								totalRequests++;
@@ -232,12 +235,9 @@ public final class RequestProcessorThread implements Runnable {
 				StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(tiempoMedio, perdidas), tiempoMedio, LocalDateTime.now(), partialRequestResult);
 				statusHolder.put(service.getServiceName(), statusUptodate);
 
-			} catch (InvokerException | IOException e) {
+			} catch (InvokerException e) {
 				RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
 				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS002, new Object[ ] { service.getServiceName() }), e);
-			} catch (SamlEngineConfigurationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
 			}
 
 		}
