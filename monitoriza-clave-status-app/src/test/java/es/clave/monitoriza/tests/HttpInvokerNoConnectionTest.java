@@ -21,7 +21,7 @@
  * @author Gobierno de España.
  * @version 1.2, 18/10/2018.
  */
-package es.gob.monitoriza.invoker.http;
+package es.clave.monitoriza.tests;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,13 +42,11 @@ import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
-import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -56,6 +54,7 @@ import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
 
 import es.gob.monitoriza.exception.InvokerException;
+import es.gob.monitoriza.invoker.http.AbstractHttpInvoker;
 import es.gob.monitoriza.invoker.http.conf.messages.ClaveAgentConfType;
 import es.gob.monitoriza.invoker.http.conf.messages.ParamType;
 import es.gob.monitoriza.invoker.http.conf.util.Utilities;
@@ -75,7 +74,7 @@ import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
  * 
  * @version 1.2, 18/10/2018.
  */
-public class HttpInvoker extends AbstractHttpInvoker {
+public class HttpInvokerNoConnectionTest extends AbstractHttpInvoker {
 
 	/**
 	 * Method that sends a request and get the response message.
@@ -140,29 +139,25 @@ public class HttpInvoker extends AbstractHttpInvoker {
 			    context.setCredentialsProvider(credsProvider);
 			    httpClient = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).setRoutePlanner(routePlanner).build();
 			}
-			httpClient.execute(httpPost);
+			return 0L;
+			//No se testea la conexión, dado que son pruebas unitarias
 		} catch(JAXBException e) {
-			throw new InvokerException("Error al cargar el archivo xml de configuración" + e.getMessage(),e);
+			throw new InvokerException("Error al cargar el archivo xml de configuración " + e.getMessage(),e);
 		} catch (EIDASSAMLEngineException e) {
-			throw new InvokerException("Error al generar la petición SAML"+ e.getMessage(),e);
+			throw new InvokerException("Error al generar la petición SAML "+ e.getMessage(),e);
 		} catch (IOException e) {
 			throw new InvokerException("Error al crear la conexión con el servicio "+ e.getMessage(),e);
 		} catch (KeyStoreException e) {
-			throw new InvokerException("Error al cargar el keystore proporcionado"+ e.getMessage(),e);
+			throw new InvokerException("Error al cargar el keystore proporcionado "+ e.getMessage(),e);
 		} catch (NoSuchAlgorithmException e) {
-			throw new InvokerException("Error al generar la implementación de HTTPClient"+ e.getMessage(),e);
+			throw new InvokerException("Error al generar la implementación de HTTPClient "+ e.getMessage(),e);
 		} catch (CertificateException e) {
-			throw new InvokerException("Error al generar la implementación de HTTPClient"+ e.getMessage(),e);
+			throw new InvokerException("Error al generar la implementación de HTTPClient "+ e.getMessage(),e);
 		} catch (KeyManagementException e) {
-			throw new InvokerException("Error al generar la implementación de HTTPClient"+ e.getMessage(),e);
+			throw new InvokerException("Error al generar la implementación de HTTPClient "+ e.getMessage(),e);
 		} catch (UnrecoverableKeyException e) {
-			throw new InvokerException("Error al generar la implementación de HTTPClient"+ e.getMessage(),e);
-		} finally {
-			LocalTime afterCall = LocalTime.now();
-			tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
+			throw new InvokerException("Error al generar la implementación de HTTPClient "+ e.getMessage(),e);
 		}
-		
-		return tiempoTotal;
 	}
 
 }
