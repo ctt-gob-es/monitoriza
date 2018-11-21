@@ -1,39 +1,134 @@
 package es.clave.monitoriza.tests;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
+import java.security.KeyStore;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Unmarshaller;
+import org.junit.Before;
+import org.junit.Test;
 
-import es.gob.monitoriza.invoker.http.conf.messages.ClaveAgentConfType;
+import es.gob.monitoriza.exception.InvokerException;
+import es.gob.monitoriza.invoker.http.AbstractHttpInvoker;
+import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 
-public class UtilitiesTest {
+public class UtilitiesTest extends AbstractHttpInvoker {
 
-	public static void main(String[] args) {
+	KeyStore ssl;
+	ConfigServiceDTO service;
+
+	@Before
+	public void initialize() {
+		ssl = null;
+		service = new ConfigServiceDTO("servicio");
+		service.setBaseUrl("http://");
+		service.setSoapUrl("http://localhost:8888/EidasNode");
+		service.setWsdl("/ServiceProvider");
+	}
+
+	/**
+	 * This test is to validate the correct generation of SAML request.
+	 */
+	@Test
+	public void testSamlRequestGenerate() {
+		//File file = new File(UtilitiesTest.class.getResource("/Test/monitorizaOriginal.xml").toString());
+		File file = new File("C:\\Users\\samuel.zuluaga\\Desktop\\Test\\monitorizaOriginal.xml");
 		try {
-			ClaveAgentConfType rcrt = transformJabx(new File("C:\\Trabajo\\monitoriza.xml"));
-			System.out.println(rcrt);
-		} catch (JAXBException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			HttpInvokerNoConnectionTest.sendRequest(file, service, ssl);
+		} catch (InvokerException e1) {
+			e1.printStackTrace();
 		}
 	}
-	
-	public static ClaveAgentConfType transformJabx(File file) throws JAXBException, FileNotFoundException {
 
-		InputStream is = new FileInputStream( file );
-		JAXBContext jc = JAXBContext.newInstance(ClaveAgentConfType.class);
-		Unmarshaller u = jc.createUnmarshaller();
-		Object o = u.unmarshal(is);
-		
-		return (ClaveAgentConfType) o;
+	/**
+	 * This test is to validate the generation of SAML request without the
+	 * provider name.
+	 * 
+	 * @throws InvokerException
+	 */
+	@Test(expected = InvokerException.class)
+	public void testSamlRequestNoProviderName() throws InvokerException {
+
+		File file = new File("C:\\Users\\samuel.zuluaga\\Desktop\\Test\\monitorizaNoProviderName.xml");
+		HttpInvokerNoConnectionTest.sendRequest(file, service, ssl);
+
 	}
+	
+	/**
+	 * This test is to validate the generation of SAML request without attributes.
+	 * 
+	 * @throws InvokerException
+	 */
+	@Test
+	public void testSamlRequestNoAttributes() throws InvokerException {
 
+		File file = new File("C:\\Users\\samuel.zuluaga\\Desktop\\Test\\monitorizaNoAttributes.xml");
+		HttpInvokerNoConnectionTest.sendRequest(file, service, ssl);
+
+	}
+	
+	/**
+	 * This test is to validate the generation of SAML request with an invalid proxy port.
+	 * 
+	 * @throws InvokerException
+	 */
+	@Test(expected = InvokerException.class)
+	public void testSamlRequestErrorProxyPort() throws InvokerException {
+
+		File file = new File("C:\\Users\\samuel.zuluaga\\Desktop\\Test\\monitorizaErrorProxyPort.xml");
+		HttpInvokerNoConnectionTest.sendRequest(file, service, ssl);
+
+	}
+	
+	/**
+	 * This test is to validate the generation of SAML request with an invalid sp type.
+	 * 
+	 * @throws InvokerException
+	 */
+	@Test
+	public void testSamlRequestErrorSpType() throws InvokerException {
+
+		File file = new File("C:\\Users\\samuel.zuluaga\\Desktop\\Test\\monitorizaErrorSpType.xml");
+		HttpInvokerNoConnectionTest.sendRequest(file, service, ssl);
+
+	}
+	
+	/**
+	 * This test validates the loading of a file that is not a xml.
+	 * 
+	 * @throws InvokerException
+	 */
+	@Test(expected = InvokerException.class)
+	public void testLoadDifferentFile() throws InvokerException {
+
+		File file = new File("C:\\Users\\samuel.zuluaga\\Desktop\\Test\\prueba.docx");
+		HttpInvokerNoConnectionTest.sendRequest(file, service, ssl);
+
+	}
+	
+	/**
+	 * This test validates the loading keystores.
+	 * 
+	 * @throws InvokerException
+	 */
+	@Test
+	public void testHttpsKeystore() throws InvokerException {
+		
+		service.setBaseUrl("https://");
+		File file = new File("C:\\Users\\samuel.zuluaga\\Desktop\\Test\\monitorizaOriginal.xml");
+		HttpInvokerNoConnectionTest.sendRequest(file, service, ssl);
+
+	}
+	
+	/**
+	 * This test validates the loading keystores with a different password.
+	 * 
+	 * @throws InvokerException
+	 */
+	@Test(expected = InvokerException.class)
+	public void testIncorrectKeystorePassword() throws InvokerException {
+		
+		service.setBaseUrl("https://");
+		File file = new File("C:\\Users\\samuel.zuluaga\\Desktop\\Test\\monitorizaDifferentPass.xml");
+		HttpInvokerNoConnectionTest.sendRequest(file, service, ssl);
+
+	}
 }

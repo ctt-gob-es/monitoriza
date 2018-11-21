@@ -36,42 +36,30 @@ import java.time.temporal.ChronoField;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.net.ssl.KeyManagerFactory;
-import javax.net.ssl.SSLContext;
 import javax.xml.bind.JAXBException;
 
+import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.NTCredentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.client.protocol.HttpClientContext;
+import org.apache.http.conn.params.ConnRoutePNames;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.exception.InvokerException;
-import es.gob.monitoriza.invoker.http.conf.messages.AttributeType;
-import es.gob.monitoriza.invoker.http.conf.messages.ParamType;
 import es.gob.monitoriza.invoker.http.conf.messages.ClaveAgentConfType;
+import es.gob.monitoriza.invoker.http.conf.messages.ParamType;
 import es.gob.monitoriza.invoker.http.conf.util.Utilities;
-import es.gob.monitoriza.invoker.http.saml.Constants;
-import es.gob.monitoriza.invoker.http.saml.SpProtocolEngineFactory;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
-import eu.eidas.auth.commons.EidasStringUtil;
-import eu.eidas.auth.commons.attribute.AttributeDefinition;
-import eu.eidas.auth.commons.attribute.ImmutableAttributeMap;
-import eu.eidas.auth.commons.attribute.PersonType;
-import eu.eidas.auth.commons.protocol.IRequestMessageNoMetadata;
-import eu.eidas.auth.commons.protocol.eidas.LevelOfAssurance;
-import eu.eidas.auth.commons.protocol.eidas.LevelOfAssuranceComparison;
-import eu.eidas.auth.commons.protocol.eidas.impl.EidasAuthenticationRequestNoMetadata;
-import eu.eidas.auth.commons.protocol.impl.EidasSamlBinding;
-import eu.eidas.auth.commons.protocol.impl.SamlNameIdFormat;
-import eu.eidas.auth.engine.ProtocolEngineNoMetadataI;
-import eu.eidas.auth.engine.configuration.SamlEngineConfigurationException;
-import eu.eidas.auth.engine.xml.opensaml.SAMLEngineUtils;
 import eu.eidas.auth.engine.xml.opensaml.SecureRandomXmlIdGenerator;
 import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
 
@@ -136,7 +124,22 @@ public class HttpInvoker extends AbstractHttpInvoker {
 			httpPost.setEntity(new UrlEncodedFormEntity(params));
 			beforeCall = LocalTime.now();
 			
-			httpClient =  createHttpClient(requestConf, service);
+			httpClient =  createHttpClient(requestConf, service, ssl);
+			if(requestConf.getConnection().getProxy() != null) {
+				if(!requestConf.getConnection().getProxy().getPort().matches("\\d\\d\\d\\d")) {
+					throw new EIDASSAMLEngineException("El puerto introducido es erróneo.");
+				}
+				HttpHost proxy = new HttpHost(requestConf.getConnection().getProxy().getHost(), Integer.parseInt(requestConf.getConnection().getProxy().getPort()));
+				DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+				Credentials credentials = new UsernamePasswordCredentials(requestConf.getConnection().getProxy().getUser(),requestConf.getConnection().getProxy().getPassword());
+				
+				CredentialsProvider credsProvider = new BasicCredentialsProvider();
+			    credsProvider.setCredentials(AuthScope.ANY, credentials);
+			    
+			    HttpClientContext context = HttpClientContext.create();
+			    context.setCredentialsProvider(credsProvider);
+			    httpClient = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).setRoutePlanner(routePlanner).build();
+			}
 			httpClient.execute(httpPost);
 		} catch(JAXBException e) {
 			throw new InvokerException("Error al cargar el archivo xml de configuración" + e.getMessage(),e);

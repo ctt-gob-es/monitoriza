@@ -30,6 +30,7 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.annotation.XmlRootElement;
 
 import org.apache.http.NameValuePair;
 import org.apache.http.client.ClientProtocolException;
@@ -92,7 +93,6 @@ public class HttpInvokerTest {
 	}
 
 	public static Long sendRequest(final File file) throws IOException, SamlEngineConfigurationException {
-		
 		try {
 			ClaveAgentConfType requestConf = Utilities.transformJabx(file);
 		} catch (JAXBException e1) {
