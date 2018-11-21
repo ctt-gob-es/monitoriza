@@ -394,7 +394,7 @@ COMMENT ON COLUMN "ALARM"."ACTIVE" IS 'Valor que representa si la alarma se encu
 -- R_ALARM_MAIL
 CREATE TABLE "R_ALARM_MAIL"(
   "ID_MAIL" NUMERIC(19,0) NOT NULL, 
-  "ID_ALARM" NUMERIC(19,0) NOT NULL 
+  "ID_ALARM" VARCHAR(100) NOT NULL 
 );
 COMMENT ON COLUMN "R_ALARM_MAIL"."ID_ALARM" IS 'Identificador de la alarma.';
 COMMENT ON COLUMN "R_ALARM_MAIL"."ID_MAIL" IS 'Identificador de la dirección de correo electrónico.';

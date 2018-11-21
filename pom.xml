@@ -26,6 +26,7 @@
 		<!-- Actualizados spring-data y spring-rest para evitar vulnerabilidad cve-2018-1273 -->
 		<spring.data.version>2.0.1.RELEASE</spring.data.version>
 		<spring.rest.version>2.0.1.RELEASE</spring.rest.version>
+		<spring-security.version>5.0.9.RELEASE</spring-security.version>
 		<hibernate.version>5.2.13.Final</hibernate.version>
 		<plugin.javadoc.skip>true</plugin.javadoc.skip>
 	</properties>

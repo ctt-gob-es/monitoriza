@@ -1,6 +1,0 @@
-<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
-<properties>
-    <entry key="provider.name">DEMO-SP_NIF</entry>
-    <entry key="monitoriza.aplication">SPApp</entry>
-    <entry key="monitoriza.return">http://localhost:8888/SP2/ReturnPage</entry>
-</properties>

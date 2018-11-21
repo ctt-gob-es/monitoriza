@@ -211,6 +211,9 @@ public class ServiceRestController {
 		case GeneralConstants.RFC3161_SERVICE:
 			baseEndpoint.append(platform.getRfc3161Context());
 			break;
+		case GeneralConstants.HTTP_SERVICE:
+			baseEndpoint.append(platform.getServiceContext());
+			break;
 		default:
 			break;
 		}

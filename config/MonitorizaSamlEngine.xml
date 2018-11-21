@@ -31,7 +31,7 @@
         <configuration name="ProtocolProcessorConf">
             <!-- Specific ExtensionProcessor module -->
             <parameter name="class"
-                       value="es.gob.monitoriza.invoker.http.util.SpEidasProtocolProcessor"/>
+                       value="es.gob.monitoriza.invoker.http.saml.SpEidasProtocolProcessor"/>
             <parameter name="coreAttributeRegistryFile"
                        value="saml-engine-eidas-attributes.xml" />
             <parameter name="additionalAttributeRegistryFile"
