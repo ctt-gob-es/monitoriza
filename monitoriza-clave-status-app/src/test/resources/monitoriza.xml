@@ -1,10 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mcl:claveAgentConf xmlns:mcl="urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0" >
+<mcl:claveAgentConf
+	xmlns:mcl="urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0 generationRequestClaveTypes.xsd ">
   <mcl:connection>    
     <mcl:authenticationMutual>
       <mcl:passwordKeyStore>G5cp,fYC9gje</mcl:passwordKeyStore>
       <mcl:typeKeyStore>jks</mcl:typeKeyStore>
-	  <mcl:path>C:\\Trabajo\\Software\\CertificadosPruebas\\PF_ACTIVO_EIDAS.p12</mcl:path>
+<!--  <mcl:path>C:\\Trabajo\\Software\\CertificadosPruebas\\PF_ACTIVO_EIDAS.p12</mcl:path> -->
     </mcl:authenticationMutual>
   </mcl:connection>
   <mcl:request>

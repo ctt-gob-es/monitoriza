@@ -42,13 +42,11 @@ import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.Credentials;
-import org.apache.http.auth.NTCredentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.conn.params.ConnRoutePNames;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
@@ -62,7 +60,6 @@ import es.gob.monitoriza.invoker.http.conf.util.Utilities;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import eu.eidas.auth.engine.xml.opensaml.SecureRandomXmlIdGenerator;
 import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
-
 
 /**
  * <p>
@@ -83,85 +80,104 @@ public class HttpInvoker extends AbstractHttpInvoker {
 	 * @param file
 	 *            request file which contents the HTTP configuration.
 	 * @param service
-	 *            DTOService that contains the configuration data for the
-	 *            service.
+	 *            DTOService that contains the configuration data for the service.
 	 * @return Long that represents the time in milliseconds that has taken to
-	 *         complete the request. If there is some configuration or
-	 *         communication problem, this value will be null.
-	 * @throws InvokerException TODO
+	 *         complete the request. If there is some configuration or communication
+	 *         problem, this value will be null.
+	 * @throws InvokerException
+	 *             TODO
 	 */
-	public static Long sendRequest(final File file, final ConfigServiceDTO service, final KeyStore ssl) throws InvokerException {
+	public static Long sendRequest(final File file, final ConfigServiceDTO service, final KeyStore ssl)
+			throws InvokerException {
 		CloseableHttpClient httpClient;
 		Long tiempoTotal = null;
 		LocalTime beforeCall = null;
 		ClaveAgentConfType requestConf;
 		String samlRequest;
-		
+		List<NameValuePair> params = new ArrayList<NameValuePair>();
+		HttpPost httpPost;
+
 		try {
 			requestConf = Utilities.transformJabx(file);
 			samlRequest = AbstractHttpInvoker.generateSamlRequest(requestConf, service);
-			
 			LOGGER.debug("Petición SAML generada: " + samlRequest);
-			
-			HttpPost httpPost = new HttpPost(service.getSoapUrl() + service.getWsdl());
-			
-			for(ParamType paramH: requestConf.getRequest().getHttpRequest().getHeaders().getParam()) {
-				if(paramH != null) {
-					httpPost.addHeader(paramH.getId(), paramH.getValue());
+
+			httpPost = new HttpPost(service.getSoapUrl() + service.getWsdl());
+			LOGGER.debug("URL generada: " + httpPost);
+
+			// Comprobamos si tenemos petición HTTP
+			if (requestConf.getRequest().getHttpRequest() != null) {
+				// Comprobacion parametros de la cabecera de la peticion HTTP
+				if (requestConf.getRequest().getHttpRequest().getHeaders() != null) {
+					for (ParamType paramH : requestConf.getRequest().getHttpRequest().getHeaders().getParam()) {
+						if (paramH != null) {
+							httpPost.addHeader(paramH.getId(), paramH.getValue());
+						}
+					}
+				}
+
+				// Comprobacion parametros de la peticion HTTP
+				if (requestConf.getRequest().getHttpRequest().getParams() != null) {
+					for (ParamType param : requestConf.getRequest().getHttpRequest().getParams().getParam()) {
+						if (param != null) {
+							params.add(new BasicNameValuePair(param.getId(), param.getValue()));
+						}
+					}
 				}
 			}
-			
-			List<NameValuePair> params = new ArrayList<NameValuePair>();
-			for(ParamType param: requestConf.getRequest().getHttpRequest().getParams().getParam()) {
-				if(param != null) {
-					params.add(new BasicNameValuePair(param.getId(), param.getValue()));
-				}	
-			}
-			
+
 			params.add(new BasicNameValuePair("SAMLRequest", samlRequest));
 			params.add(new BasicNameValuePair("RelayState", SecureRandomXmlIdGenerator.INSTANCE.generateIdentifier(8)));
 
 			httpPost.setEntity(new UrlEncodedFormEntity(params));
 			beforeCall = LocalTime.now();
-			
-			httpClient =  createHttpClient(requestConf, service, ssl);
-			if(requestConf.getConnection().getProxy() != null) {
-				if(!requestConf.getConnection().getProxy().getPort().matches("\\d\\d\\d\\d")) {
+
+			httpClient = createHttpClient(requestConf, service, ssl);
+			if (requestConf.getConnection().getProxy() != null) {
+				if (!requestConf.getConnection().getProxy().getPort().matches("\\d\\d\\d\\d")) {
 					throw new EIDASSAMLEngineException("El puerto introducido es erróneo.");
 				}
-				HttpHost proxy = new HttpHost(requestConf.getConnection().getProxy().getHost(), Integer.parseInt(requestConf.getConnection().getProxy().getPort()));
+				HttpHost proxy = new HttpHost(requestConf.getConnection().getProxy().getHost(),
+						Integer.parseInt(requestConf.getConnection().getProxy().getPort()));
 				DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
-				Credentials credentials = new UsernamePasswordCredentials(requestConf.getConnection().getProxy().getUser(),requestConf.getConnection().getProxy().getPassword());
-				
+				Credentials credentials = new UsernamePasswordCredentials(
+						requestConf.getConnection().getProxy().getUser(),
+						requestConf.getConnection().getProxy().getPassword());
+
 				CredentialsProvider credsProvider = new BasicCredentialsProvider();
-			    credsProvider.setCredentials(AuthScope.ANY, credentials);
-			    
-			    HttpClientContext context = HttpClientContext.create();
-			    context.setCredentialsProvider(credsProvider);
-			    httpClient = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).setRoutePlanner(routePlanner).build();
+				credsProvider.setCredentials(AuthScope.ANY, credentials);
+
+				HttpClientContext context = HttpClientContext.create();
+				context.setCredentialsProvider(credsProvider);
+				httpClient = HttpClients.custom().setDefaultCredentialsProvider(credsProvider)
+						.setRoutePlanner(routePlanner).build();
 			}
+
 			httpClient.execute(httpPost);
-		} catch(JAXBException e) {
-			throw new InvokerException("Error al cargar el archivo xml de configuración" + e.getMessage(),e);
+
+		} catch (JAXBException e) {
+			throw new InvokerException("Error al cargar el archivo xml de configuración" + e.getMessage(), e);
 		} catch (EIDASSAMLEngineException e) {
-			throw new InvokerException("Error al generar la petición SAML"+ e.getMessage(),e);
+			throw new InvokerException("Error al generar la petición SAML" + e.getMessage(), e);
 		} catch (IOException e) {
-			throw new InvokerException("Error al crear la conexión con el servicio "+ e.getMessage(),e);
+			throw new InvokerException("Error al crear la conexión con el servicio " + e.getMessage(), e);
 		} catch (KeyStoreException e) {
-			throw new InvokerException("Error al cargar el keystore proporcionado"+ e.getMessage(),e);
+			throw new InvokerException("Error al cargar el keystore proporcionado" + e.getMessage(), e);
 		} catch (NoSuchAlgorithmException e) {
-			throw new InvokerException("Error al generar la implementación de HTTPClient"+ e.getMessage(),e);
+			throw new InvokerException("Error al generar la implementación de HTTPClient" + e.getMessage(), e);
 		} catch (CertificateException e) {
-			throw new InvokerException("Error al generar la implementación de HTTPClient"+ e.getMessage(),e);
+			throw new InvokerException("Error al generar la implementación de HTTPClient" + e.getMessage(), e);
 		} catch (KeyManagementException e) {
-			throw new InvokerException("Error al generar la implementación de HTTPClient"+ e.getMessage(),e);
+			throw new InvokerException("Error al generar la implementación de HTTPClient" + e.getMessage(), e);
 		} catch (UnrecoverableKeyException e) {
-			throw new InvokerException("Error al generar la implementación de HTTPClient"+ e.getMessage(),e);
+			throw new InvokerException("Error al generar la implementación de HTTPClient" + e.getMessage(), e);
+		} catch (NullPointerException e) {
+			throw new InvokerException(e.getMessage());
 		} finally {
 			LocalTime afterCall = LocalTime.now();
 			tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
 		}
-		
+
 		return tiempoTotal;
 	}
 

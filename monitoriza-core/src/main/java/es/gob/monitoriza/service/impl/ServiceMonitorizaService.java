@@ -259,7 +259,8 @@ public class ServiceMonitorizaService implements IServiceMonitorizaService {
 		if (elServicioHaCambiado || serviceDto.getIdService() == null) {
 			
 			// Actualizar en bd (tabla TIMER_SCHEDULED) el timer poniendo IS_UPDATED a false
-			TimerScheduled scheduled = repositoryScheduled.findByIdTimerScheduled(serviceDto.getTimer());			
+							
+			TimerScheduled scheduled = repositoryScheduled.findByTimerIdTimer(serviceDto.getTimer());		
 			
 			// Si el timer asociado aún no ha sido programado, se añade para que la tarea programada lo haga.
 			if (scheduled == null) {

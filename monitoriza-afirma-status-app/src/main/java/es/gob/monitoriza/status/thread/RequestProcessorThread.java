@@ -228,16 +228,19 @@ public final class RequestProcessorThread implements Runnable {
 				}
 				while (necesarioConfirmar);
 
+				
+
+			} catch (InvokerException e) {
+				RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
+				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS002, new Object[ ] { service.getServiceName() }), e);
+			} finally {
+				
 				// Si se ha obtenido una respuesta definitiva (no perdida/degradada) o no
 				// hay más grupos de confirmación,
 				// pasamos a calcular el estado del servicio con los datos
 				// obtenidos.
 				StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(tiempoMedio, perdidas), tiempoMedio, LocalDateTime.now(), partialRequestResult);
 				statusHolder.put(service.getServiceName(), statusUptodate);
-
-			} catch (InvokerException e) {
-				RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
-				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS002, new Object[ ] { service.getServiceName() }), e);
 			}
 
 		}

@@ -35,7 +35,7 @@
 	</entry>
 	<!-- signing response assertion true/false (default false) -->
 	<entry key="response.sign.assertions">false</entry>
-	<entry key="keyStorePath">../KeyStore.jks</entry>
+	<entry key="keyStorePath">KeyStore.jks</entry>
 	<entry key="keyStorePassword">local-demo</entry>
 	<entry key="keyPassword">local-demo</entry>
 	<entry key="issuer">CN=local-demo-cert, OU=DIGIT, O=European Comission, L=Brussels, ST=Spain, C=ES</entry>

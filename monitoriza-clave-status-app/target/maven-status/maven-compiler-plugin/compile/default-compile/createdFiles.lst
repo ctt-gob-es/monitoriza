@@ -19,10 +19,9 @@ es\gob\monitoriza\invoker\http\Constants.class
 es\gob\monitoriza\invoker\http\conf\messages\ConnectionType.class
 es\gob\monitoriza\invoker\http\saml\SpProtocolEngineFactory.class
 es\gob\monitoriza\invoker\http\saml\SpProtocolEngineFactory$1.class
-org.codehaus.plexus.compiler.javac.JavacCompiler7243477004062983313arguments
 es\gob\monitoriza\invoker\http\conf\messages\AuthenticationMutualType.class
 es\gob\monitoriza\invoker\http\saml\SpProtocolEngine.class
 es\gob\monitoriza\invoker\http\conf\messages\ClaveAgentConfType.class
 es\gob\monitoriza\invoker\http\conf\messages\HttpRequestType.class
-javac.bat
 es\gob\monitoriza\invoker\http\conf\messages\AttributeType.class
+es\gob\monitoriza\invoker\http\exception\InvokerHttpException.class
