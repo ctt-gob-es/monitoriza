@@ -264,7 +264,8 @@ public abstract class AbstractHttpInvoker {
 				.build();
 
 		if (s[0].equals("http")) {
-			res = HttpClients.createDefault();
+			//res = HttpClients.createDefault();
+			res = HttpClientBuilder.create().setDefaultRequestConfig(config).build();
 		} else {
 			KeyStore keystore = Utilities.LoadKeystore(
 					requestConf.getConnection().getAuthenticationMutual().getPath().toString(),
