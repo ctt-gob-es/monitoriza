@@ -133,26 +133,27 @@ public class HttpInvoker extends AbstractHttpInvoker {
 			beforeCall = LocalTime.now();
 
 			httpClient = createHttpClient(requestConf, service, ssl);
-			if (requestConf.getConnection().getProxy() != null) {
-				if (!requestConf.getConnection().getProxy().getPort().matches("\\d\\d\\d\\d")) {
-					throw new EIDASSAMLEngineException("El puerto introducido es erróneo.");
+			if (requestConf.getConnection() != null) {
+				if (requestConf.getConnection().getProxy() != null) {
+					if (!requestConf.getConnection().getProxy().getPort().matches("\\d\\d\\d\\d")) {
+						throw new InvokerException("El puerto introducido es erróneo.");
+					}
+					HttpHost proxy = new HttpHost(requestConf.getConnection().getProxy().getHost(),
+							Integer.parseInt(requestConf.getConnection().getProxy().getPort()));
+					DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+					Credentials credentials = new UsernamePasswordCredentials(
+							requestConf.getConnection().getProxy().getUser(),
+							requestConf.getConnection().getProxy().getPassword());
+	
+					CredentialsProvider credsProvider = new BasicCredentialsProvider();
+					credsProvider.setCredentials(AuthScope.ANY, credentials);
+	
+					HttpClientContext context = HttpClientContext.create();
+					context.setCredentialsProvider(credsProvider);
+					httpClient = HttpClients.custom().setDefaultCredentialsProvider(credsProvider)
+							.setRoutePlanner(routePlanner).build();
 				}
-				HttpHost proxy = new HttpHost(requestConf.getConnection().getProxy().getHost(),
-						Integer.parseInt(requestConf.getConnection().getProxy().getPort()));
-				DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
-				Credentials credentials = new UsernamePasswordCredentials(
-						requestConf.getConnection().getProxy().getUser(),
-						requestConf.getConnection().getProxy().getPassword());
-
-				CredentialsProvider credsProvider = new BasicCredentialsProvider();
-				credsProvider.setCredentials(AuthScope.ANY, credentials);
-
-				HttpClientContext context = HttpClientContext.create();
-				context.setCredentialsProvider(credsProvider);
-				httpClient = HttpClients.custom().setDefaultCredentialsProvider(credsProvider)
-						.setRoutePlanner(routePlanner).build();
 			}
-
 			httpClient.execute(httpPost);
 
 		} catch (JAXBException e) {
