@@ -150,9 +150,9 @@ public final class StaticServicesManager {
 							service.setDirectoryPath(basePath.concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(serviceId));
 							
 							if (serviceId.contains(GeneralConstants.RFC3161_SERVICE) || serviceId.contains(GeneralConstants.TIMESTAMP_SERVICE)) {
-								service.setAfirmaService(Boolean.FALSE);
+								service.setPlatform(GeneralConstants.PLATFORM_TSA);
 							} else {
-								service.setAfirmaService(Boolean.TRUE);
+								service.setPlatform(GeneralConstants.PLATFORM_AFIRMA);
 							}
 							
 							services.add(service);
