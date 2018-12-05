@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>25 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 28/10/2018.
+ * @version 1.4, 05/12/2018.
  */
 package es.gob.monitoriza.invoker.ocsp;
 
@@ -47,15 +47,17 @@ import javax.net.ssl.TrustManagerFactory;
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.utilidades.FileUtils;
+import es.gob.monitoriza.utilidades.NumberConstants;
 
 /** 
  * <p>Class that performs the request of a OCSP service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 28/10/2018.
+ * @version 1.4, 05/12/2018.
  */
 public final class OcspInvoker {
 
@@ -79,7 +81,7 @@ public final class OcspInvoker {
 	 * @return Long that represents the time in milliseconds that has taken to complete the request.
 	 * If there is some configuration or communication problem, this value will be null.
 	 */
-	public static Long sendRequest(final File requestFile, final ConfigServiceDTO service, final KeyStore ssl) {
+	public static Long sendRequest(final File requestFile, final ConfigServiceDTO service, final KeyStore ssl) throws InvokerException {
 		
 		Long tiempoTotal = null;
 		byte[ ] requestByte = FileUtils.fileToByteArray(requestFile);
@@ -148,7 +150,7 @@ public final class OcspInvoker {
 			// Conexión...
 			con.connect();
 			// Comprobamos que la conexión se estableció correctamente
-			if (con.getResponseCode() / 100 != 2) {
+			if (con.getResponseCode() / NumberConstants.NUM100 != 2) {
 				// Si hay algún problema de conexión, considero la petición como perdida...
 				LOGGER.error(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS005));
 			}
@@ -161,7 +163,9 @@ public final class OcspInvoker {
 		
 		} catch (IOException e) {
 
-			LOGGER.error(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS005), e);
+			String msgError = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS005);
+			LOGGER.error(msgError, e);
+			throw new InvokerException(msgError,e.getCause());
 		}
 		
 

@@ -17,9 +17,9 @@
  * <b>File:</b><p>es.gob.monitoriza.invoker.soap.HttpSoapInvoker.java.</p>
  * <b>Description:</b><p>Class that performs the request of a service via HTTP SOAP.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
- * <b>Date:</b><p>22 ene. 2018.</p>
+ * <b>Date:</b><p>22/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 28/10/2018.
+ * @version 1.4, 05/12/2018.
  */
 package es.gob.monitoriza.invoker.soap;
 
@@ -53,6 +53,7 @@ import javax.xml.soap.SOAPMessage;
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
@@ -61,7 +62,7 @@ import es.gob.monitoriza.utilidades.FileUtils;
 /** 
  * <p>Class that performs the request of a service via HTTP SOAP.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 28/10/2018.
+ * @version 1.4, 05/12/2018.
  */
 public class HttpSoapInvoker {
 	
@@ -78,7 +79,7 @@ public class HttpSoapInvoker {
 	 * @return Long that represents the time in milliseconds that has taken to complete the request.
 	 * If there is some configuration or communication problem, this value will be null.
 	 */
-	public static Long sendRequest(final File requestFile, final ConfigServiceDTO service, final KeyStore ssl) {
+	public static Long sendRequest(final File requestFile, final ConfigServiceDTO service, final KeyStore ssl) throws InvokerException {
 		// Obtenemos el contenido del fichero
 		String soapMsg = FileUtils.readFile(requestFile);
 		Long tiempoTotal = null;
@@ -155,10 +156,14 @@ public class HttpSoapInvoker {
 			tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
 												
 		} catch (IOException | SOAPException e) {
-			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS012, new Object[ ] { service.isAfirmaService()?GeneralConstants.PLATFORM_AFIRMA:GeneralConstants.PLATFORM_TSA}), e);
+			
+			String msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS012, new Object[ ] { service.getPlatform()});
+			LOGGER.error(msgError, e);
+			throw new InvokerException(msgError,e.getCause());
 
 		} catch (IllegalArgumentException | SecurityException e) {
 			LOGGER.error(e.getMessage());
+			throw new InvokerException(e);
 		} 
 		
 		return tiempoTotal;
