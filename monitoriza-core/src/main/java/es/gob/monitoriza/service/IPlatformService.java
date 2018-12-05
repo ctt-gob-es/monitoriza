@@ -67,6 +67,12 @@ public interface IPlatformService {
 	
 	/**
 	 * Method that gets all the platform configuration from the persistence.
+	 * @return a {@link Iterable<CPlatformType>} with the information of all users.
+	 */
+	Iterable<CPlatformType> getAllPlatformType();
+	
+	/**
+	 * Method that gets all the platform configuration from the persistence.
 	 * @return a {@link Iterable<PlatformMonitoriza>} with the information of all users.
 	 */
 	Iterable<PlatformMonitoriza> getAllPlatform();

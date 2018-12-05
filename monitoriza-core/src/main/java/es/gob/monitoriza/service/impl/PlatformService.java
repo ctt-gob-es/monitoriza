@@ -256,7 +256,7 @@ public class PlatformService implements IPlatformService {
 			platformTsa.setUseRfc3161Auth(false);
 		}
 				
-		PlatformMonitoriza tsa = repository.save(platformTsa);
+		PlatformMonitoriza tsa = repository.saveAndFlush(platformTsa);
 		
 		// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
 		if (tsaHaCambiado && platformTsa.getIdPlatform() != null) {
@@ -264,12 +264,26 @@ public class PlatformService implements IPlatformService {
 			updateScheduledTimerFromPlatform(platformTsa);
 		}
 		
+		// Se construye un nuevo objeto para devolver a la vista
+		PlatformMonitoriza tsaView = new PlatformMonitoriza();
+		
+		tsaView.setHost(tsa.getHost());
+		tsaView.setName(tsa.getName());
+		tsaView.setPort(tsa.getPort());
+		tsaView.setIsSecure(tsa.getIsSecure());
+		tsaView.setServiceContext(tsa.getServiceContext());
+		tsaView.setPlatformType(tsa.getPlatformType());
+		tsaView.setRfc3161Context(tsa.getRfc3161Context());
+		tsaView.setRfc3161Port(tsa.getRfc3161Port());
+		tsaView.setUseRfc3161Auth(tsa.getUseRfc3161Auth());
+		tsaView.setRfc3161Certificate(tsa.getRfc3161Certificate());
+		
 		// Se construye objeto vacío para evitar warning de datatables
 		if (!tsaDto.getUseRfc3161Auth()) {
-			platformTsa.setRfc3161Certificate(new SystemCertificate());
+			tsaView.setRfc3161Certificate(new SystemCertificate());
 		}
 		
-		return tsa;
+		return tsaView;
 	}
 	
 	/**
@@ -338,6 +352,16 @@ public class PlatformService implements IPlatformService {
 			
 		}
 		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IPlatformService#getAllPlatformType()
+	 */
+	@Override
+	public Iterable<CPlatformType> getAllPlatformType() {
+		
+		return typeRepository.findAll();
 	}
 
 }
