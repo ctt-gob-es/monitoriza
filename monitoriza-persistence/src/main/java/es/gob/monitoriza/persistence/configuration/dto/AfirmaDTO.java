@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 24/10/2018.
+ * @version 1.1, 05/12/2018.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -35,7 +35,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
 /** 
  * <p>Class that represents the transfer object and backing form for @firma platform.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 24/10/2018.
+ * @version 1.1, 05/12/2018.
  */
 public class AfirmaDTO {
 	
@@ -61,8 +61,8 @@ public class AfirmaDTO {
 	/**
 	 * Attribute that represents the value of the input port of the user in the form. 
 	 */
-	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.port.notempty}")
-    @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM5, groups=ThenCheckIt.class)
+	//@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.port.notempty}")
+    @Size(min=NumberConstants.NUM0, max=NumberConstants.NUM5, groups=ThenCheckIt.class)
     private String port = "";
 	
 	/**
