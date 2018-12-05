@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 09/11/2018.
+ * @version 1.4, 05/12/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -105,7 +105,7 @@ import es.gob.monitoriza.webservice.ClientManager;
  * <p>Class that manages the REST requests related to the Keystore administration
  * and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 09/11/2018.
+ * @version 1.4, 05/12/2018.
  */
 @RestController
 public class KeystoreRestController {
@@ -535,7 +535,7 @@ public class KeystoreRestController {
 				sysCert.setIssuer(sslForm.getIssuer());
 				sysCert.setSubject(sslForm.getSubject());
 				sysCert.setSerialNumber(sslForm.getSerialNumber());
-				sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(sslForm.getIdSystemCertificate()));
+				sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(oldCert.getStatusCertificate().getIdStatusCertificate()));
 
 				sysCert.setKeystore(ko);
 				sysCert.setKey(false);
@@ -981,7 +981,7 @@ public class KeystoreRestController {
 				sysCert.setKeystore(ko);
 				sysCert.setKey(true);
 				sysCert.setSerialNumber(authForm.getSerialNumber());
-				sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(authForm.getIdStatusCertificate()));
+				sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(oldCert.getStatusCertificate().getIdStatusCertificate()));
 
 				// Añade el certificado a la persistencia
 				sysCertService.saveSystemCertificate(sysCert);
