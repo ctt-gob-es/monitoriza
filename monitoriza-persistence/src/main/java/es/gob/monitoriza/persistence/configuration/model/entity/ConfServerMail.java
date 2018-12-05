@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.entity.ConfServerMail.java.</p>
  * <b>Description:</b><p>Class that maps the <i>CONF_SERVER_MAIL</i> database table as a Plain Old Java Object</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>10 oct. 2018.</p>
+ * <b>Date:</b><p>10/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 05/12/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -45,7 +45,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 05/12/2018.
  */
 @Entity
 @Table(name = "CONF_SERVER_MAIL")
@@ -224,7 +224,7 @@ public class ConfServerMail {
 	/**
 	 * @return the tsl
 	 */
-	@Column(name = "TSL", nullable = false, precision = NumberConstants.NUM1)
+	@Column(name = "TLS", nullable = false, precision = NumberConstants.NUM1)
 	public Boolean getTslMail() {
 		return tslMail;
 	}
