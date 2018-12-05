@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 09/11/2018.
+ * @version 1.5, 05/12/2018.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -71,7 +72,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <p>Class that implements the communication with the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.4, 09/11/2018.
+ * @version 1.5, 05/12/2018.
  */
 @Service
 public class StatusService implements IStatusService {
@@ -283,10 +284,12 @@ public class StatusService implements IStatusService {
 		
 		List<SummaryStatusDTO> summaryList = new ArrayList<>();
 		SummaryStatusDTO summary = null;
-		Integer semaphVip = SemaphoreEnum.GREEN.getId();
+		Integer semaphVip = null;
 		String description = null;
 		
 		for (RowStatusVipDTO vip : statusVip.getData()) {
+			
+			semaphVip = SemaphoreEnum.GREEN.getId();
 						
 			switch (vip.getStatus()) {
 				case ServiceStatusConstants.CAIDO:
