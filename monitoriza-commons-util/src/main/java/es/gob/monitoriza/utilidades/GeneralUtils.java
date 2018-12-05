@@ -82,8 +82,9 @@ public class GeneralUtils {
 	public static String getSystemName(final String serviceId) {
 		
 		String nombreSistema;
+		String serviceName = serviceId.toLowerCase();
 		
-		if (serviceId.contains(GeneralConstants.RFC3161_SERVICE) || serviceId.contains(GeneralConstants.TIMESTAMP_SERVICE)) {
+		if (serviceName.contains(GeneralConstants.RFC3161_SERVICE) || serviceName.contains(GeneralConstants.TIMESTAMP_SERVICE)) {
 			nombreSistema = GeneralConstants.PLATFORM_TSA;
 		} else {
 			nombreSistema = GeneralConstants.PLATFORM_AFIRMA;
