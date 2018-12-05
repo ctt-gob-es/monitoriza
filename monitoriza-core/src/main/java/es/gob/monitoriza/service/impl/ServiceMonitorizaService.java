@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 05/12/2018.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -61,7 +61,7 @@ import es.gob.monitoriza.service.IServiceMonitorizaService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 05/12/2018.
  */
 @Service
 public class ServiceMonitorizaService implements IServiceMonitorizaService {
@@ -257,9 +257,8 @@ public class ServiceMonitorizaService implements IServiceMonitorizaService {
 		
 		// Si el servicio ha cambiado o es nuevo, hay que gestionar la programación de timer asociado (un servicio nunca debería estar en más de un timer)
 		if (elServicioHaCambiado || serviceDto.getIdService() == null) {
-			
-			// Actualizar en bd (tabla TIMER_SCHEDULED) el timer poniendo IS_UPDATED a false
-			TimerScheduled scheduled = repositoryScheduled.findByIdTimerScheduled(serviceDto.getTimer());			
+						
+			TimerScheduled scheduled = repositoryScheduled.findByTimerIdTimer(serviceDto.getTimer());			
 			
 			// Si el timer asociado aún no ha sido programado, se añade para que la tarea programada lo haga.
 			if (scheduled == null) {
