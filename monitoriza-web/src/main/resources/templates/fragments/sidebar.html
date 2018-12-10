@@ -44,6 +44,65 @@
 	                <span class="title" th:text="#{menu.inicio}"></span>
 	              </a>
 	            </li>
+	            <!-- Consultas -->
+                
+                <li class="nav-item dropdown">
+	              <a id="aQueriesAdmin" class="dropdown-toggle" href="javascript:void(0);">
+	                <span class="icon-holder">
+	                  <i class="c-black-500 ti-control-play"></i>
+	                </span>
+	                <span class="title" th:text="#{menu.admin.queries}"></span>
+	                <span class="arrow"><i class="ti-angle-right"></i></span>
+	              </a> 
+				   <ul class="dropdown-menu">
+						<li>
+							<a id="aQueriesVipTimeRangeAdmin" class='sidebar-link' href="#">
+							    <span class="title" th:text="#{menu.admin.queries.vip.time}"></span>
+								<script th:inline="javascript">
+		                 			var actionQueryVipTimeRange = /*[[@{/queryviptimerange}]]*/;
+		                 			$('#aQueriesVipTimeRangeAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionQueryVipTimeRange, 'optionReplacement', 'GET', null, true); return false;});
+		               			</script>
+	               			</a>
+	               		</li>
+	               		<!-- <li>
+							<a id="aQueriesVipDateRangeAdmin" class='sidebar-link' href="#">
+								<span class="title" th:text="#{menu.admin.queries.vip.date}"></span>
+								<script th:inline="javascript">
+		                 			var actionQueryVipDateRange = /*[[@{/queryviptimerange}]]*/;
+		                 			$('#aConfServerAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionQueryVipDateRange, 'optionReplacement', 'GET', null, true); return false;});
+		               			</script>
+	               			</a>
+	               		</li> -->
+				   </ul>
+				</li>
+                <!-- Fin Consultas -->
+                
+                <!-- Estadisticas -->
+                
+                <!-- <li class="nav-item dropdown">
+	              <a id="aStatsAdmin" class="dropdown-toggle" href="javascript:void(0);">
+	                <span class="icon-holder">
+	                  <i class="c-black-500 ti-stats-up"></i>
+	                </span>
+	                <span class="title" th:text="#{menu.admin.stats}"></span>
+	                <span class="arrow"><i class="ti-angle-right"></i></span>
+	              </a> 
+				   <ul class="dropdown-menu">
+						<li>
+							<a id="aStatsVipAdmin" class='sidebar-link' href="#">
+							    <span class="title" th:text="#{menu.admin.stats.vip}"></span>
+								<script th:inline="javascript">
+		                 			var actionStatsVip = /*[[@{/statsvip}]]*/;
+		                 			$('#aStatsVipAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionStatsVip, 'optionReplacement', 'GET', null, true); return false;});
+		               			</script>
+	               			</a>
+	               		</li>
+	               		
+				   </ul>
+				</li> -->
+                
+                <!-- Fin estadisticas -->
+                                
 	            <li class="nav-item">
 	              <a id="aUserAdmin" class='sidebar-link' href="#">
 	                <span class="icon-holder">
@@ -197,7 +256,7 @@
                    </ul>
                 </li>
                 <!-- FIN SPIE -->
-	            
+                
 	            <li class="nav-item dropdown">
 	              <a id="aGlobalConfAdmin" class="dropdown-toggle" href="javascript:void(0);">
 	                <span class="icon-holder">

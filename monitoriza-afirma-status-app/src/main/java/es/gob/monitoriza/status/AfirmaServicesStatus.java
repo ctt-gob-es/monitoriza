@@ -115,7 +115,7 @@ public class AfirmaServicesStatus extends HttpServlet {
 					
 			response.setStatus(HttpServletResponse.SC_OK);
 			response.setCharacterEncoding("UTF-8");
-			response.addHeader("Server:", "Servidor VIP onitoriz@");
+			response.addHeader("Server:", "Servidor VIP monitoriz@");
 				
 			if (adminFilter == null) {
     			responseBytes = ResponseMonitoriza.render(platformFilter, adminFilter).getBytes();
