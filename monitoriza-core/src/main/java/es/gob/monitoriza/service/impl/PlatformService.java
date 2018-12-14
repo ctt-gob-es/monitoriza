@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.service.impl.PlatformAfirmaService.java.</p>
  * <b>Description:</b><p>Class that implements the communication with the operations of the persistence layer for PlatformAfirma.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>10 abr. 2018.</p>
+ * <b>Date:</b><p>14 dic. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 14/12/2018.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -339,6 +339,16 @@ public class PlatformService implements IPlatformService {
 			
 		}
 		
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IPlatformService#getAllPlatformType()
+	 */
+	@Override
+	public Iterable<CPlatformType> getAllPlatformType() {
+		
+		return typeRepository.findAll();
 	}
 	
 	/**

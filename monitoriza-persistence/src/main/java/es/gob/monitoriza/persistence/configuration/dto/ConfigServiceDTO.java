@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 09/11/2018.
+ * @version 1.2, 05/12/2018.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -29,7 +29,7 @@ import java.util.Objects;
 /** 
  * <p>Data transfer object class that encapsulates the information of the services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 09/11/2018.
+ * @version 1.2, 05/12/2018.
  */
 public class ConfigServiceDTO {
 	
@@ -98,12 +98,7 @@ public class ConfigServiceDTO {
 	 * Attribute that represents the path in which the requests are stored. 
 	 */
 	private String directoryPath;
-	
-	/**
-	 * Attribute that represents a flag that indicates if the service belongs to the @firma (true) platform or ts@ platform (false). 
-	 */
-	private boolean afirmaService;
-	
+		
 	/**
 	 * Attribute that represents the url for SOAP service invocation. 
 	 */
@@ -120,9 +115,9 @@ public class ConfigServiceDTO {
 	private String serviceType;
 	
 	/**
-	 * Attribute that represents the identifier for the platform of this service. 
+	 * Attribute that represents the platform of this service. 
 	 */
-	private Long idPlatform;
+	private String platform;
 	
 	/**
 	 * Attribute that represents the time in milliseconds that the alarm associated to this service will
@@ -162,7 +157,7 @@ public class ConfigServiceDTO {
 	 * @param directoryPath
 	 * @param afirmaService 
 	 */
-	public ConfigServiceDTO(Long serviceId, String serviceName, String timerName, Long timeout, String wsdl, Long degradedThreshold, String lostThreshold, String directoryPath, boolean afirmaService, String serviceType, Long idPlatform) {
+	public ConfigServiceDTO(Long serviceId, String serviceName, String timerName, Long timeout, String wsdl, Long degradedThreshold, String lostThreshold, String directoryPath, String platform, String serviceType, Long idPlatform) {
 		super();
 		this.serviceId = serviceId;
 		this.serviceName = serviceName;
@@ -172,13 +167,12 @@ public class ConfigServiceDTO {
 		this.degradedThreshold = degradedThreshold;
 		this.lostThreshold = lostThreshold;
 		this.directoryPath = directoryPath;
-		this.afirmaService = afirmaService;
 		this.serviceType = serviceType;
-		this.idPlatform = idPlatform;
+		this.platform = platform;
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #serviceId} 
+	 * Gets the value of the attribute {@link #serviceId}.
 	 * @return the value of the attribute {@link #serviceId}
 	 */
 	public Long getServiceId() {
@@ -186,7 +180,7 @@ public class ConfigServiceDTO {
 	}
 	
 	/**
-	 * Sets the value of the attribute {@link #serviceId} 
+	 * Sets the value of the attribute {@link #serviceId}. 
 	 * @param serviceId the value for the attribute {@link #serviceId} to set.
 	 */
 	public void setServiceId(final Long serviceId) {
@@ -194,7 +188,7 @@ public class ConfigServiceDTO {
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #serviceName} 
+	 * Gets the value of the attribute {@link #serviceName}. 
 	 * @return the value of the attribute {@link #serviceName}
 	 */	
 	public String getServiceName() {
@@ -391,23 +385,7 @@ public class ConfigServiceDTO {
 	}
 		
 	/**
-	 * Gets the value of the attribute {@link #afirmaService}
-	 * @return the value of the attribute {@link #afirmaService}.
-	 */
-	public boolean isAfirmaService() {
-		return afirmaService;
-	}
-	
-	/**
-	 * Sets the value of the attribute {@link #afirmaService}.
-	 * @param afirmaService the value for the attribute {@link #afirmaService} to set.
-	 */
-	public void setAfirmaService(boolean afirmaService) {
-		this.afirmaService = afirmaService;
-	}
-	
-	/**
-	 * Gets the value of the attribute {@link #soapUrl}
+	 * Gets the value of the attribute {@link #soapUrl}.
 	 * @return the value of the attribute {@link #soapUrl}.
 	 */
 	public String getSoapUrl() {
@@ -424,7 +402,7 @@ public class ConfigServiceDTO {
 				
 	
 	/**
-	 * Gets the value of the attribute {@link #baseUrl}
+	 * Gets the value of the attribute {@link #baseUrl}.
 	 * @return the value of the attribute {@link #baseUrl}.
 	 */
 	public String getBaseUrl() {
@@ -440,7 +418,7 @@ public class ConfigServiceDTO {
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #serviceType}
+	 * Gets the value of the attribute {@link #serviceType}.
 	 * @return the value of the attribute {@link #serviceType}.
 	 */	
 	public String getServiceType() {
@@ -456,24 +434,24 @@ public class ConfigServiceDTO {
 	}
 		
 	/**
-	 * Gets the value of the attribute {@link #idPlatform}
-	 * @return the value of the attribute {@link #idPlatform}.
+	 * Gets the value of the attribute {@link #platform}.
+	 * @return the value of the attribute {@link #platform}.
 	 */	
-	public Long getIdPlatform() {
-		return idPlatform;
+	public String getPlatform() {
+		return platform;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #idPlatform}.
-	 * @param afirmaService the value for the attribute {@link #idPlatform} to set.
+	 * Sets the value of the attribute {@link #platform}.
+	 * @param platformParam the value for the attribute {@link #platform} to set.
 	 */
-	public void setIdPlatform(Long idPlatform) {
-		this.idPlatform = idPlatform;
+	public void setPlatform(String platformParam) {
+		this.platform = platformParam;
 	}
 	
 	
 	/**
-	 * Gets the value of the attribute {@link #blockTimeAlarm}
+	 * Gets the value of the attribute {@link #blockTimeAlarm}.
 	 * @return the value of the attribute {@link #blockTimeAlarm}.
 	 */	
 	public Long getBlockTimeAlarm() {
@@ -489,7 +467,7 @@ public class ConfigServiceDTO {
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #listMailDegraded}
+	 * Gets the value of the attribute {@link #listMailDegraded}.
 	 * @return the value of the attribute {@link #listMailDegraded}.
 	 */	
 	public List<String> getListMailDegraded() {
@@ -505,7 +483,7 @@ public class ConfigServiceDTO {
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #listMailDown}
+	 * Gets the value of the attribute {@link #listMailDown}.
 	 * @return the value of the attribute {@link #listMailDown}.
 	 */	
 	public List<String> getListMailDown() {

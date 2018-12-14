@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 ene. 2018.</p>
  * @author Gobierno de España.
- *  @version 1.7, 28/10/2018.
+ * @version 1.8, 05/12/2018
  */
 package es.gob.monitoriza.configuration.manager;
 
@@ -58,6 +58,7 @@ import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigTimerDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.DailyVipMonitorig;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
@@ -65,6 +66,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.RequestServiceFi
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
+import es.gob.monitoriza.service.IDailyVipMonitoringService;
 import es.gob.monitoriza.service.IKeystoreService;
 import es.gob.monitoriza.service.IRequestServiceFileService;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
@@ -77,7 +79,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <p>Class that manages the configuration of the @firma/ts@ services from database persistence
  *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- *  @version 1.7, 28/10/2018.
+ *  @version 1.8, 05/12/2018
  */
 @Service("adminServicesManager")
 public class AdminServicesManager {
@@ -126,6 +128,12 @@ public class AdminServicesManager {
 	 */
 	@Autowired
 	private IRequestServiceFileService fileService;
+	
+	/**
+	 * Attribute that represents the service object for accessing the repository.
+	 */
+	@Autowired
+	private IDailyVipMonitoringService dailyService;
 	
 	/**
 	 * Method that gets all timers from database.
@@ -181,7 +189,7 @@ public class AdminServicesManager {
 		
 		for (ServiceMonitoriza service : servicesByTimer) {
 									
-			serviceDTO = new ConfigServiceDTO(service.getIdService(), service.getName(), service.getTimer().getName(), service.getTimeout(), service.getNameWsdl(), service.getDegradedThreshold(), service.getLostThreshold().toString(), getDirectoryPath(service.getIdService(), service.getName()), isAfirmaPlatform(service.getPlatform().getPlatformType().getName()), service.getServiceType(), service.getPlatform().getIdPlatform());
+			serviceDTO = new ConfigServiceDTO(service.getIdService(), service.getName(), service.getTimer().getName(), service.getTimeout(), service.getNameWsdl(), service.getDegradedThreshold(), service.getLostThreshold().toString(), getDirectoryPath(service.getIdService(), service.getName()), service.getPlatform().getPlatformType().getName(), service.getServiceType(), service.getPlatform().getIdPlatform());
 					
 			// Base URL de cada plataforma sin tener en cuenta ningún contexto. Servirá para construir la URL de invocación OCSP y RFC3161.
 			serviceDTO.setBaseUrl(getBaseUrl(service.getPlatform()));
@@ -265,17 +273,6 @@ public class AdminServicesManager {
 		return basePath.concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(serviceId.toString()).concat(GeneralConstants.SEPARATOR).concat(serviceName);
 				
 	}
-
-	/**
-	 * Method that determines if the service belongs to @Firma or TS@ platform.
-	 * @param platformTypeName String that represents the platform type
-	 * @return true if the service belongs to @Firma, false if the service belongs to TS@.
-	 */
-	private boolean isAfirmaPlatform(final String platformTypeName) {
-		
-		return GeneralConstants.PLATFORM_AFIRMA.equals(platformTypeName);
-	}
-	
 	
 	/**
 	 * Method that returns the base URL connection with the platform, considering host, port, etc.
@@ -459,6 +456,13 @@ public class AdminServicesManager {
 		AdminServicesManager.scheduledTimers = scheduledTimers;
 	}
 	
+	/**
+	 * Method that stores a {@link #DailyVipMonitorig} in persistence.
+	 * @param daily {@link #DailyVipMonitorig} to save
+	 */
+	public void saveDailyVip(DailyVipMonitorig daily) {
 	
+		dailyService.saveDailyVipMonitoring(daily);
+	}
 		
 }

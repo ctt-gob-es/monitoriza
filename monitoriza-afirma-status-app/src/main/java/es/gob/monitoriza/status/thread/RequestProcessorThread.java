@@ -32,22 +32,20 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.4, 28/10/2018.
+ * @version 1.5, 05/12/2018.
  */
 package es.gob.monitoriza.status.thread;
 
 import java.io.File;
-import java.io.IOException;
 import java.security.KeyStore;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.xml.bind.JAXBException;
-
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.alarm.AlarmManager;
+import es.gob.monitoriza.configuration.manager.AdminServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.ServiceStatusConstants;
 import es.gob.monitoriza.constant.StaticConstants;
@@ -58,19 +56,18 @@ import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.invoker.ocsp.OcspInvoker;
 import es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker;
 import es.gob.monitoriza.invoker.soap.HttpSoapInvoker;
-import es.gob.monitoriza.invoker.http.Constants;
-import es.gob.monitoriza.invoker.http.HttpInvoker;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.DailyVipMonitorig;
+import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.status.RunningServices;
 import es.gob.monitoriza.status.StatusUptodate;
 import es.gob.monitoriza.utilidades.NumberConstants;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
-import eu.eidas.auth.engine.configuration.SamlEngineConfigurationException;
 
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.4, 28/10/2018.
+ * @version 1.5, 05/12/2018.
  */
 public final class RequestProcessorThread implements Runnable {
 
@@ -117,6 +114,7 @@ public final class RequestProcessorThread implements Runnable {
 	/**
 	 * Method that launch requests for a service and process the status. 
 	 */
+	@Override
 	public void run() {
 		
 		RunningServices.getInstance();
@@ -161,10 +159,8 @@ public final class RequestProcessorThread implements Runnable {
 									tiempoTotal = OcspInvoker.sendRequest(request, service, ssl);
 								} else if (service.getServiceType().equalsIgnoreCase(GeneralConstants.RFC3161_SERVICE)) {
 									tiempoTotal = Rfc3161Invoker.sendRequest(request, service, ssl, authClient);
-								} else if(service.getServiceType().equalsIgnoreCase(GeneralConstants.SOAP_SERVICE)) {
+								} else {
 									tiempoTotal = HttpSoapInvoker.sendRequest(request, service, ssl);
-								} else if(service.getServiceType().equalsIgnoreCase(GeneralConstants.HTTP_SERVICE)){									
-									tiempoTotal = HttpInvoker.sendRequest(request, service, ssl);									
 								}
 
 								totalRequests++;
@@ -228,10 +224,8 @@ public final class RequestProcessorThread implements Runnable {
 				}
 				while (necesarioConfirmar);
 
-				
-
 			} catch (InvokerException e) {
-				RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
+				
 				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS002, new Object[ ] { service.getServiceName() }), e);
 			} finally {
 				
@@ -241,11 +235,13 @@ public final class RequestProcessorThread implements Runnable {
 				// obtenidos.
 				StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(tiempoMedio, perdidas), tiempoMedio, LocalDateTime.now(), partialRequestResult);
 				statusHolder.put(service.getServiceName(), statusUptodate);
+				saveDailyVipMonitoring(service.getServiceName(), service.getPlatform(), statusUptodate);
+				RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
 			}
 
 		}
 		
-	RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
+	
 
 	}
 
@@ -282,6 +278,26 @@ public final class RequestProcessorThread implements Runnable {
 		}
 
 		return estado;
+	}
+	
+	/**
+	 * 
+	 * @param service
+	 * @param platform
+	 * @param status
+	 */
+	private void saveDailyVipMonitoring(String service, String platform, StatusUptodate status) {
+		
+		DailyVipMonitorig daily = new DailyVipMonitorig();
+		
+		daily.setPlatform(platform);
+		daily.setSamplingTime(status.getStatusUptodate());
+		daily.setService(service);
+		daily.setStatus(status.getStatusValue());
+		
+		AdminServicesManager adminServicesManager = ApplicationContextProvider.getApplicationContext().getBean("adminServicesManager", AdminServicesManager.class);	
+		
+		adminServicesManager.saveDailyVip(daily);
 	}
 
 	/**

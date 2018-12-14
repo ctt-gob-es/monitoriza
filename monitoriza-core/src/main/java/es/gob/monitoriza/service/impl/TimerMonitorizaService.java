@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 13/12/2018.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -45,7 +45,7 @@ import es.gob.monitoriza.service.ITimerMonitorizaService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for ServiceMonitoriza.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 13/12/2018.
  */
 @Service
 public class TimerMonitorizaService implements ITimerMonitorizaService {
@@ -121,9 +121,7 @@ public class TimerMonitorizaService implements ITimerMonitorizaService {
 	@Override
 	@Transactional(noRollbackFor = EmptyResultDataAccessException.class)
 	public void deleteTimerMonitoriza(Long timerId) {
-		
-		repositoryTimer.deleteById(timerId);
-		
+						
 		if (timerId != null) {
 			try {
 				
@@ -132,9 +130,12 @@ public class TimerMonitorizaService implements ITimerMonitorizaService {
 						
 				TimerScheduled scheduled = repositoryScheduled.findByTimerIdTimer(timerMonitoriza.getIdTimer());
 						
-				scheduled.setUpdated(false);
+				// Se actualiza el estado del timer programado
+				if (scheduled != null) {
+					scheduled.setUpdated(false);
 				
-				repositoryScheduled.save(scheduled);
+					repositoryScheduled.save(scheduled);
+				}	
 						
 			} catch (Exception e) {
 				throw e;

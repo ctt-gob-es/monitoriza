@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>17/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 10/12/2018.
  */
 package es.gob.monitoriza.spring.config;
 
@@ -29,6 +29,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -37,9 +38,11 @@ import org.springframework.scheduling.TriggerContext;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
+import org.springframework.scheduling.support.CronTrigger;
 
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.task.TimerScheduledCheckerTask;
+import es.gob.monitoriza.task.VipStatisticsTask;
 import es.gob.monitoriza.utilidades.NumberConstants;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
@@ -47,7 +50,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <p>Class that configures the spring scheduled task for checking the status of the timers
  * allowing to to get the fixed rate parameter at running time.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 10/12/2018.
  */
 @Configuration
 @EnableScheduling
@@ -67,8 +70,17 @@ public class SchedulingConfig implements SchedulingConfigurer {
 	 * @return {@link TimerScheduledCheckerTask} 
 	 */
 	@Bean
-    public TimerScheduledCheckerTask checker() {
+    public TimerScheduledCheckerTask scheduledChecker() {
         return new TimerScheduledCheckerTask();
+    }
+	
+	/**
+	 * Method that creates a new TimerScheduledCheckerTask instance.
+	 * @return {@link TimerScheduledCheckerTask} 
+	 */
+	@Bean
+    public VipStatisticsTask statDumper() {
+        return new VipStatisticsTask();
     }
 
     /**
@@ -78,10 +90,12 @@ public class SchedulingConfig implements SchedulingConfigurer {
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
         taskRegistrar.setScheduler(taskExecutor());
+        
+        // Se añade la tarea para comprobar el estado de los timers programados
         taskRegistrar.addTriggerTask(
                 new Runnable() {
                     @Override public void run() {
-                    	checker().checkIfScheduledTimersHaveChanged();
+                    	scheduledChecker().checkIfScheduledTimersHaveChanged();
                     }
                 },
                 new Trigger() {
@@ -94,6 +108,16 @@ public class SchedulingConfig implements SchedulingConfigurer {
                     }
                 }
         );
+                
+        
+        // Se añade la tarea para volcar los datos diarios de monitorización
+		taskRegistrar.addTriggerTask(new Runnable() {
+
+			@Override
+			public void run() {
+				statDumper().dumpAndDeleteMonitoringData();
+			}
+		}, new CronTrigger(StaticMonitorizaProperties.getProperty(StaticConstants.CRON_DUMP_VIP_MONITORING)) );
     }
 
 }
