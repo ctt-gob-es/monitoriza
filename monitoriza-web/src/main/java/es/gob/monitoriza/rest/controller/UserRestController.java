@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 09/11/2018.
+ * @version 1.4, 05/12/2018.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -90,7 +90,7 @@ import es.gob.monitoriza.webservice.ClientManager;
  * Application for monitoring services of @firma suite systems.
  * </p>
  *
- * @version 1.3, 09/11/2018.
+ * @version 1.4, 05/12/2018.
  */
 @RestController
 public class UserRestController {
@@ -402,7 +402,14 @@ public class UserRestController {
 					LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB005), e.getCause());
 				}
 				
-				Long statusCertificateId = UtilsCertificate.processStatusCertificate(result);
+				Long statusCertificateId = null;
+				
+				if (result == null) {
+					statusCertificateId = StatusCertificateEnum.UNKNOWN.getId();
+				} else {
+					statusCertificateId = UtilsCertificate.processStatusCertificate(result);
+				}
+								
 				boolean validResult = Boolean.FALSE;
 				if (statusCertificateId.equals(StatusCertificateEnum.VALID.getId()) || statusCertificateId.equals(StatusCertificateEnum.UNKNOWN.getId())) {
 					validResult = Boolean.TRUE;

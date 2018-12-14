@@ -109,7 +109,6 @@ public class AdminSpieManager {
 	@Autowired
 	private SpieTypeRepository spieRepository;
 		
-	
 	/**
 	 * Get the general configuration for monitoring the SPIE.
 	 * @return {@link ConfSpie}
@@ -158,6 +157,7 @@ public class AdminSpieManager {
 	
 	/**
 	 * Method that obtains all nodes of the specified platform type.
+	 * @param idPlatform Platform identifier
 	 * @return {@link List<NodeMonitoriza>} of nodes that belongs to the specified platform
 	 */
 	public List<NodeMonitoriza> getNodesByPlatform(final Long idPlatform) {
@@ -166,9 +166,14 @@ public class AdminSpieManager {
 		
 	}
 	
+	/**
+	 * Method that gets a {@link #SpieType} from persistence.
+	 * @param idSpieType SpieType identifier
+	 * @return {@link #SpieType}
+	 */
 	public SpieType getSpieTypeById(final Long idSpieType) {
 		
 		return spieRepository.findByIdSpieType(idSpieType);
 	}
-	
+		
 }

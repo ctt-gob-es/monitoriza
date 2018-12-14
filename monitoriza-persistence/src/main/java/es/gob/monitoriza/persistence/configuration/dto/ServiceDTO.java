@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.ServiceForm.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>20 abr. 2018.</p>
+ * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 24/10/2018.
+ * @version 1.1, 05/12/2018.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -43,7 +43,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 24/10/2018.
+ * @version 1.1, 05/12/2018.
  */
 public class ServiceDTO {
 	
@@ -71,7 +71,7 @@ public class ServiceDTO {
 	 * Attribute that represents the name of the service.
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.service.name.notempty}")
-	@Size(min = NumberConstants.NUM1, max = NumberConstants.NUM30, groups = ThenCheckIt.class)
+	@Size(min = NumberConstants.NUM1, max = NumberConstants.NUM100, groups = ThenCheckIt.class)
 	private String name;
 
 	/**
@@ -349,6 +349,5 @@ public class ServiceDTO {
 	public void setFileData(String fileDataParam) {
 		this.fileData = fileDataParam;
 	}
-	
-	
+		
 }

@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>29 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 28/10/2018.
+ * @version 1.5, 05/12/2018.
  */
 package es.gob.monitoriza.invoker.rfc3161;
 
@@ -60,7 +60,7 @@ import es.gob.monitoriza.utilidades.UtilsResource;
 /** 
  * <p>Class that manages and performs the request of a service via RFC3161.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 28/10/2018.
+ * @version 1.5, 05/12/2018.
  */
 public class Rfc3161Invoker {
 	
@@ -197,6 +197,7 @@ public class Rfc3161Invoker {
 			
 		} catch (IOException | NoSuchAlgorithmException  | KeyStoreException | UnrecoverableKeyException | KeyManagementException | CertificateException e) {
 			LOGGER.error(msgError, e);
+			throw new InvokerException(msgError,e.getCause());
 		} finally {
 			UtilsResource.safeCloseOutputStream(out);
 		}
@@ -205,7 +206,7 @@ public class Rfc3161Invoker {
 	}
 		
 	/**
-	 * Method that gets the URL of the configured RFC3161 service in TS@
+	 * Method that gets the URL of the configured RFC3161 service in TS@.
 	 * @param service Configured RFC3161 service
 	 * @return URL of the RFC3161 service in TS@
 	 */

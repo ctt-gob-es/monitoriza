@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.0, 05/02/2018.
+ * @version 1.1, 10/12/2018.
  */
 package es.gob.monitoriza.response;
 
@@ -63,32 +63,32 @@ import j2html.tags.Tag;
 /**
  * <p>Class that builds the global HTML response for the Monitoriz@ servlet call.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 05/02/2018.
+ * @version 1.1, 10/12/2018.
  */
 public class ResponseMonitoriza {
 	
 	/**
-	 * Constant attribute that represents
+	 * Constant attribute that represents.
 	 */
 	public static final String RESULT_OK = "OK";
 	
 	/**
-	 * Attribute that represents the name for this operation test
+	 * Attribute that represents the name for this operation test.
 	 */
 	public static final String OPERATION_NAME = "Status for @firma platform services";
 
 	/**
-	 * Attribute that represents the column header name for the schema
+	 * Attribute that represents the column header name for the schema.
 	 */
 	public static final String HEADER_SERVICE_NAME = "Service Name";
 
 	/**
-	 * Attribute that represents the column header name for the test result
+	 * Attribute that represents the column header name for the test result.
 	 */
 	public static final String HEADER_RESULT_STATUS = "Status";
 	
 	/**
-	 * Attribute that represents the column header name for the test result
+	 * Attribute that represents the column header name for the test result.
 	 */
 	public static final String HEADER_RESULT_STATUS_UPTODATE = "Last update";
 	
@@ -108,12 +108,12 @@ public class ResponseMonitoriza {
 	public static final String HEADER_RESULT_REQUEST_TIME = "Request time";
 	
 	/**
-	 * Attribute that represents the column header name for the test result
+	 * Attribute that represents the column header name for the test result.
 	 */
 	public static final String CAPTION_LAST_REFRESH_DATETIME = "Last refresh time: ";
 	
 	/**
-	 * Attribute that represents the column header name for the test result
+	 * Attribute that represents the column header name for the test result.
 	 */
 	public static final String HEADER_SYSTEM_NAME = "System";
 	
@@ -126,7 +126,8 @@ public class ResponseMonitoriza {
 			
 	/**
 	 * Method that renders the HTML code for the result response.
-	 * @param operations List that represents response results for the requested tests.
+	 * @param platformFilter String argument for filtering the results by system name
+	 * @param adminFilter String argument to enable admin mode, returning the response in JSON format.
 	 * @return String that represents the HTML code of the result
 	 * @throws Exception
 	 */
@@ -265,9 +266,9 @@ public class ResponseMonitoriza {
 		
 		if (platformFilter == null) {
 			resultado = Boolean.TRUE;
-		} else if (platformFilter.equals(GeneralConstants.PARAMETER_TSA) && (serviceId.contains(GeneralConstants.RFC3161_SERVICE) || serviceId.contains(GeneralConstants.TIMESTAMP_SERVICE))) {
+		} else if (platformFilter.equals(GeneralConstants.PARAMETER_TSA) && (serviceId.toLowerCase().contains(GeneralConstants.RFC3161_SERVICE) || serviceId.toLowerCase().contains(GeneralConstants.TIMESTAMP_SERVICE))) {
 			resultado = Boolean.TRUE;
-		} else if (platformFilter.equals(GeneralConstants.PARAMETER_AFIRMA) && !serviceId.contains(GeneralConstants.RFC3161_SERVICE) && !serviceId.contains(GeneralConstants.TIMESTAMP_SERVICE)) {
+		} else if (platformFilter.equals(GeneralConstants.PARAMETER_AFIRMA) && !serviceId.toLowerCase().contains(GeneralConstants.RFC3161_SERVICE) && !serviceId.toLowerCase().contains(GeneralConstants.TIMESTAMP_SERVICE)) {
 			resultado = Boolean.TRUE;
 		} else {
 			resultado = Boolean.FALSE;

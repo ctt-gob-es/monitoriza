@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 28/10/2018.
+ * @version 1.5, 05/12/2018.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -49,7 +49,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
 /** 
  * <p>Class that maps the <i>PLATFORM_MONITORIZA</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 28/10/2018.
+ * @version 1.5, 05/12/2018.
  */
 @Entity
 @Table(name = "PLATFORM_MONITORIZA")
@@ -252,7 +252,7 @@ public class PlatformMonitoriza implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	@Column(name = "PORT", nullable = false, length = NumberConstants.NUM10)
+	@Column(name = "PORT", nullable = true, length = NumberConstants.NUM10)
 	@JsonView(DataTablesOutput.View.class)
 	public String getPort() {
 		// CHECKSTYLE:ON
@@ -427,7 +427,7 @@ public class PlatformMonitoriza implements Serializable {
 	// because Hibernate JPA needs not final access methods.
 	@ManyToOne(fetch = FetchType.EAGER)
 	@Fetch(FetchMode.SELECT)
-	@JoinColumn(name = "RFC3161_AUTH_CERTIFICATE", nullable = false)
+	@JoinColumn(name = "RFC3161_AUTH_CERTIFICATE", nullable = true)
 	@JsonView(DataTablesOutput.View.class)	
 	public SystemCertificate getRfc3161Certificate() {
 		// CHECKSTYLE:On

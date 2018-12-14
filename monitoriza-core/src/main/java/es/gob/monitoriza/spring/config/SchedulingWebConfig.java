@@ -64,7 +64,7 @@ public class SchedulingWebConfig {
 	private IValidServiceService validServiceService;
 	
 	/**
-	 * Method that creates a new instance of {@link ScheduledExecutorService}
+	 * Method that creates a new instance of {@link ScheduledExecutorService}.
 	 * @return {@link Executor}
 	 */
 	@Bean(destroyMethod = "shutdown")

@@ -54,14 +54,17 @@ public class TimerScheduledCheckerTask {
 	 * Attribute that represents . 
 	 */
 	@Autowired
-	ITimerScheduledService scheduledService;
+	private ITimerScheduledService scheduledService;
 	
 	/**
 	 * Attribute that represents . 
 	 */
 	@Autowired
-	MonitorizaTaskManager taskManager;
+	private MonitorizaTaskManager taskManager;
 
+	/**
+	 * 
+	 */
 	public void checkIfScheduledTimersHaveChanged() {
 		
 		LOGGER.info("Se comprueba si existen timers pendientes de actualizar");
