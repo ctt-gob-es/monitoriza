@@ -63,9 +63,11 @@ C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monit
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\handler\AbstractCommonHandler.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\webservice\ClientManager.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\configuration\manager\AdminServicesManager.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\IDailyVipMonitoringService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\webservice\AxisSSLSocketFactory.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\crypto\keystore\package-info.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\IUserMonitorizaService.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\impl\DailyVipMonitoringService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\IAlarmService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\impl\RequestServiceFileService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\configuration\manager\AdminSpieManager.java

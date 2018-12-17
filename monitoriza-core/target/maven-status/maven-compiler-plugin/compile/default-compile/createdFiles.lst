@@ -15,6 +15,7 @@ es\gob\monitoriza\configuration\manager\AdminSpieManager.class
 es\gob\monitoriza\service\IUserMonitorizaService.class
 es\gob\monitoriza\cron\SchedulerObjectInterface.class
 es\gob\monitoriza\service\IConfServerMailService.class
+es\gob\monitoriza\service\impl\DailyVipMonitoringService.class
 es\gob\monitoriza\crypto\keystore\KeystoreFactory.class
 es\gob\monitoriza\service\impl\RequestServiceFileService.class
 es\gob\monitoriza\service\ITimerScheduledService.class
@@ -28,6 +29,7 @@ es\gob\monitoriza\service\impl\NodeMonitorizaService.class
 es\gob\monitoriza\service\IAuthenticationTypeService.class
 es\gob\monitoriza\service\impl\KeystoreService.class
 es\gob\monitoriza\service\impl\MailMonitorizaService.class
+es\gob\monitoriza\service\IDailyVipMonitoringService.class
 es\gob\monitoriza\webservice\DSSCertificate.class
 es\gob\monitoriza\handler\AbstractCommonHandler.class
 es\gob\monitoriza\service\IRequestServiceFileService.class

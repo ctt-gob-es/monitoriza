@@ -19,8 +19,10 @@ C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\go
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\dto\package-info.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\repository\ConfSpieRepository.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\entity\NodeMonitoriza.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\repository\datatable\DailyVipDataTableRepository.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\entity\UserMonitoriza.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\repository\SpieScheduledRepository.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\dto\DailyVipDTO.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\repository\datatable\AlarmDataTablesRepository.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\repository\AlarmMonitorizaRepository.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\dto\ConfServerMailDTO.java
@@ -40,6 +42,7 @@ C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\go
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\specification\KeystoreSpecification.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\dto\MailDTO.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\dto\TimerDTO.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\entity\DailyVipMonitorig.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\specification\TimerSpecification.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\entity\PlatformMonitoriza.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\dto\AlarmDTO.java
@@ -53,6 +56,7 @@ C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\go
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\repository\KeystoreRepository.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\entity\ConfServerMail.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\entity\SpieType.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\entity\VipStatistics.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\repository\StatusCertificateRepository.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\entity\TimerMonitoriza.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\repository\ValidServiceRepository.java
@@ -65,6 +69,7 @@ C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\go
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\repository\datatable\StatusCertificateDatatableRepository.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\dto\constraints\impl\FieldMatchValidator.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\repository\datatable\TimerMonitorizaDatatableRepository.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\repository\DailyVipMonitoringRepository.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\dto\RowStatusVipDTO.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\staticconfig\package-info.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\repository\PlatformRepository.java
@@ -73,6 +78,7 @@ C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\go
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\dto\ConfigTimerDTO.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\repository\datatable\package-info.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\entity\AuthenticationType.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\model\repository\VipStatisticsRepository.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\dto\NodeDTO.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\dto\StatusVipDTO.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-persistence\src\main\java\es\gob\monitoriza\persistence\configuration\dto\validation\CheckItFirst.java

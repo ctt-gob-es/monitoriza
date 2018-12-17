@@ -3,6 +3,7 @@ C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monito
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\rest\exception\OrderedValidation.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\rest\controller\ServiceRestController.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\validator\UserValidator.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\controller\StatsVipController.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\spring\config\MultiFieldAuthenticationProvider.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\spring\config\MultiFieldLoginUserDetails.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\spring\config\WebLocalizedConfig.java
@@ -11,6 +12,7 @@ C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monito
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\rest\exception\FieldError.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\spring\config\MultiFieldAuthenticationFilter.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\rest\controller\UserRestController.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\rest\controller\QueryVipRestController.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\rest\controller\ConfSpieRestController.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\controller\KeystoreController.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\rest\controller\package-info.java
@@ -27,6 +29,7 @@ C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monito
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\vo\package-info.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\rest\exception\RestResponseEntityExceptionHandler.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\controller\ServiceController.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\controller\QueryVipController.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\rest\controller\AlarmRestController.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\controller\StatusController.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-web\src\main\java\es\gob\monitoriza\spring\config\SuccessHandler.java

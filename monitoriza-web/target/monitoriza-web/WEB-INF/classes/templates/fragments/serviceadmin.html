@@ -11,7 +11,7 @@
 					<div class="form-row">
 						<div class="form-group col-md-6"><label for="nameService"
 							th:text="#{form.service.name}"></label> <span id="nameService_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> <input type="text"
-							class="form-control" id="nameService" th:field="*{name}" required>
+							class="form-control" id="nameService" th:field="*{name}" max="100" required>
 					</div>
 						<div class="form-group col-md-6"><label for="platform" th:text="#{form.service.platform}"></label>
 						 <select id="platform" class="form-control" th:field="*{platform}" required>
@@ -152,20 +152,24 @@
 				cellspacing="0" width="100%">
 				<thead>
 					<tr>
-						<!-- Columna oculta para el identificador de la plataforma -->
+						<!-- Columna oculta para el identificador del servicio -->
 						<th></th>
 						<th th:text="#{table.service.name}"></th>
 						<th th:text="#{table.service.timeout}"></th>
 						<th th:text="#{table.service.endpoint}"></th>
+						<!-- Columna oculta para el identificador de la plataforma -->
 						<th></th>
 						<th th:text="#{table.service.platform}"></th>
+						<!-- Columna oculta para el identificador del timer -->
 						<th></th>
 						<th th:text="#{table.service.timer}"></th>
 						<th th:text="#{table.service.udegraded}"></th>
 						<th th:text="#{table.service.ulost}"></th>
 						<th th:text="#{table.service.serviceType}"></th>
+						<!-- Columna oculta para el identificador de la alarma -->
 						<th></th>
 						<th th:text="#{table.service.alarm}"></th>
+						<!-- Columna oculta para el nombre del fichero -->
 						<th></th>
 						<th th:text="#{table.service.file}"></th>
 					</tr>
@@ -176,31 +180,11 @@
 </div>
 
 <script th:inline="javascript">
-function platformChange(idPlatform, servTyp){
-	var urlLoadServiceTypes = /*[[@{/loadservicetype}]]*/;
-	var selectServiceTypeText = /*[[#{form.service.select.servicetype}]]*/;
-	
-	$.ajax(urlLoadServiceTypes,{
-		data:$.param({'idPlatform':idPlatform}),
-		type:'GET',
-		success: function(data){
-			var html = '<option value="">' + selectServiceTypeText + '</option>';
-			var len = data.length;
-			for ( var i = 0; i < len; i++) {
-				html += '<option value="' + data[i] + '">'
-						+ data[i] + '</option>';
-			}
-			html += '</option>';
-			$('#serviceTypes').html(html);
-			$('#endpoint').attr('value', '');
-			
-			$("#platform").val(idPlatform);
-			$("#serviceTypes").val(servTyp);
-		},
-		error:function(){}
-	});
-	
-}
+
+//Carga los tipos de servicio al seleccionar una plataforma
+var urlLoadServiceTypes = /*[[@{/loadservicetype}]]*/;
+var selectServiceTypeText = /*[[#{form.service.select.servicetype}]]*/;
+
 function typeServiceChange(idPlatform, serviceType){
 	var urlLoadBaseEndpoint = /*[[@{/loadbaseendpoint}]]*/;
 	
@@ -216,9 +200,7 @@ function typeServiceChange(idPlatform, serviceType){
 }
 $(document).ready(function() {
 		
-	// Carga los tipos de servicio al seleccionar una plataforma
-	var urlLoadServiceTypes = /*[[@{/loadservicetype}]]*/;
-	var selectServiceTypeText = /*[[#{form.service.select.servicetype}]]*/;
+	
 	$('#platform').change(
 	        function() {
 	            $.getJSON(urlLoadServiceTypes, {
@@ -239,14 +221,17 @@ $(document).ready(function() {
 	// Establece la base del endpoint al seleccionar tipo de servicio (+ plataforma previamente)
 	var urlLoadBaseEndpoint = /*[[@{/loadbaseendpoint}]]*/;
 	$('#serviceTypes').change(
+				
 	        function() {
+				hide();
+			
 	            $.getJSON(urlLoadBaseEndpoint, {
 	            	idPlatform : $('#platform').val(),
 	            	serviceType : $('#serviceTypes').val()
 	            }, function(data) {
 	               $('#endpoint').attr('value', data.response);
 	               
-	               checkIfDisabledEndpoint(data.response);
+	               checkIfDisabledEndpoint($('#serviceTypes').val());
 	               
 	            });
 	        });
@@ -281,13 +266,11 @@ $(document).ready(function() {
                 var idTimer = d.data()[0].timer.idTimer
                 var degradedThresholdValue = d.data()[0][a[8].id]
                 var lostThresholdValue = d.data()[0][a[9].id]
-                var serviceTypes = d.data()[0][a[10].id]
+                var serviceType = d.data()[0][a[10].id]
                 
                 if (d.data()[0].requestFile != null) {
 					var fileName = d.data()[0].requestFile.filename
                 }
-				
-				checkIfDisabledEndpoint(serviceTypes);
 				
 				var idAlarm = d.data()[0].alarm.idAlarm
 				var idFile;
@@ -298,22 +281,26 @@ $(document).ready(function() {
 					idFile = d.data()[0].requestFile.idRequestServiceFile;
 				}				
 								
-                $("#idService").val(idService);
+				$("#idService").val(idService);
 				$("#idFile").val(idFile);
                 $("#nameService").val(nameService);
                 $("#timeout").val(timeoutValue);
+                $("#platform").val(idPlatform);
                 $("#nameWsdl").val(nameWsdl);
-				platformChange(idPlatform, serviceTypes);
-				typeServiceChange(idPlatform, serviceTypes);
+                loadEditServiceTypes(idPlatform);
+                //$("#serviceTypes").val(serviceType);
+                $("#serviceTypes").val(serviceType).change();
+                typeServiceChange(idPlatform, serviceType);
                 $("#timer").val(idTimer);
                 $("#uDegraded").val(degradedThresholdValue);
                 $("#uLost").val(lostThresholdValue);
                 $("#alarm").val(idAlarm);
 				$("#idFile").val(idFile);
 				
-				
 				$(".custom-file-label").attr('data-content', fileName);
 				$(".custom-file-label").text(fileName);
+				
+				checkIfDisabledEndpoint(serviceType);
                 
 			}
 	    }, {extend: 'selected',text: 'Eliminar',name: 'delete'}],
@@ -752,6 +739,25 @@ $(document).ready(function() {
 	});
 	
 });	
+
+function loadEditServiceTypes(idPlatform) {
+	
+	$.getJSON(urlLoadServiceTypes, {
+    	idPlatform : idPlatform
+    }, function(data) {
+        var html = '<option value="">' + selectServiceTypeText + '</option>';
+        var len = data.length;
+        for ( var i = 0; i < len; i++) {
+            html += '<option value="' + data[i] + '">'
+                    + data[i] + '</option>';
+        }
+        html += '</option>';
+        $('#serviceTypes').html(html);
+        
+    });
+	
+}
+
 function cleanForm(f){
 	
 	$(f + ' *').filter(':input').each(function(){
@@ -813,10 +819,14 @@ function millisecondToTime(s){
 }
 function checkIfDisabledEndpoint(serviceTypes) {
 	
+	hide();
+	
 	if (serviceTypes.includes('OCSP') || serviceTypes.includes('RFC3161')) {
 		
 		$("#nameWsdl").removeAttr("required");
 		$("#nameWsdl").prop('readonly', true);
+		$("#nameWsdl").val('');
+
 	} else {
 		$("#nameWsdl").prop('required',true);
 		$("#nameWsdl").prop('readonly', false);

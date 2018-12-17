@@ -26,9 +26,11 @@ es\gob\monitoriza\persistence\configuration\model\repository\MethodValidationRep
 es\gob\monitoriza\persistence\configuration\model\specification\TimerSpecification.class
 es\gob\monitoriza\persistence\configuration\model\repository\UserMonitorizaRepository.class
 es\gob\monitoriza\persistence\configuration\dto\CertificateDTO.class
+es\gob\monitoriza\persistence\configuration\model\entity\VipStatistics.class
 es\gob\monitoriza\persistence\configuration\model\repository\datatable\UserDatatableRepository.class
 es\gob\monitoriza\persistence\configuration\staticconfig\ServicesManager.class
 es\gob\monitoriza\persistence\configuration\dto\constraints\FieldMatch$List.class
+es\gob\monitoriza\persistence\configuration\model\repository\datatable\DailyVipDataTableRepository.class
 es\gob\monitoriza\persistence\configuration\dto\StatusDTO$View.class
 es\gob\monitoriza\persistence\configuration\dto\constraints\FieldMatch.class
 es\gob\monitoriza\persistence\configuration\dto\RowStatusDTO.class
@@ -44,6 +46,7 @@ es\gob\monitoriza\persistence\configuration\model\entity\CPlatformType.class
 es\gob\monitoriza\persistence\configuration\staticconfig\ConnectionManager.class
 es\gob\monitoriza\persistence\configuration\dto\UserPasswordDTO.class
 es\gob\monitoriza\persistence\configuration\model\repository\SpieTypeRepository.class
+es\gob\monitoriza\persistence\configuration\model\entity\DailyVipMonitorig.class
 es\gob\monitoriza\persistence\configuration\model\entity\ConfSpie.class
 es\gob\monitoriza\persistence\configuration\model\repository\ConfServerMailRepository.class
 es\gob\monitoriza\persistence\configuration\dto\ClaveDTO.class
@@ -59,6 +62,7 @@ es\gob\monitoriza\persistence\configuration\dto\StatusVipDTO.class
 es\gob\monitoriza\persistence\configuration\dto\validation\ThenCheckIt.class
 es\gob\monitoriza\persistence\configuration\model\repository\RequestServiceFileRepository.class
 es\gob\monitoriza\persistence\configuration\model\repository\SystemCertificateRepository.class
+es\gob\monitoriza\persistence\configuration\dto\DailyVipDTO.class
 es\gob\monitoriza\persistence\configuration\dto\ServiceDTO.class
 es\gob\monitoriza\persistence\configuration\dto\StatusSpieDTO$View.class
 es\gob\monitoriza\persistence\configuration\model\repository\ConfSpieRepository.class
@@ -68,7 +72,9 @@ es\gob\monitoriza\persistence\configuration\model\repository\ValidServiceReposit
 es\gob\monitoriza\persistence\configuration\dto\TimerDTO.class
 es\gob\monitoriza\persistence\configuration\model\repository\datatable\SystemCertificateDatatableRepository.class
 es\gob\monitoriza\persistence\configuration\dto\NodeDTO.class
+es\gob\monitoriza\persistence\configuration\model\repository\VipStatisticsRepository.class
 es\gob\monitoriza\persistence\configuration\dto\RowStatusSpieDTO.class
+es\gob\monitoriza\persistence\configuration\model\repository\DailyVipMonitoringRepository.class
 es\gob\monitoriza\persistence\configuration\dto\AfirmaDTO.class
 es\gob\monitoriza\persistence\configuration\model\repository\datatable\AlarmDataTablesRepository.class
 es\gob\monitoriza\persistence\configuration\model\entity\UserMonitoriza.class

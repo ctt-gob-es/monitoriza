@@ -1,3 +1,4 @@
+es\gob\monitoriza\controller\QueryVipController.class
 es\gob\monitoriza\rest\controller\PlatformRestController.class
 es\gob\monitoriza\spring\config\MultiFieldLoginUserDetails.class
 es\gob\monitoriza\rest\controller\ServiceRestController.class
@@ -10,6 +11,7 @@ es\gob\monitoriza\controller\StatusController.class
 es\gob\monitoriza\rest\exception\RestResponseEntityExceptionHandler.class
 es\gob\monitoriza\rest\controller\ConfServerMailRestController.class
 es\gob\monitoriza\spring\config\MultiFieldAuthenticationFilter.class
+es\gob\monitoriza\rest\controller\QueryVipRestController.class
 es\gob\monitoriza\rest\exception\ValidationExceptionHandler.class
 es\gob\monitoriza\spring\SpringBootWebApplication.class
 es\gob\monitoriza\spring\config\MultiFieldAuthenticationProvider.class
@@ -21,6 +23,7 @@ es\gob\monitoriza\rest\exception\FieldError.class
 es\gob\monitoriza\controller\WebAdminController.class
 es\gob\monitoriza\controller\KeystoreController.class
 es\gob\monitoriza\rest\controller\NodeRestController.class
+es\gob\monitoriza\controller\StatsVipController.class
 es\gob\monitoriza\controller\ConfServerMailController.class
 es\gob\monitoriza\rest\controller\UserRestController.class
 es\gob\monitoriza\controller\UserController.class
