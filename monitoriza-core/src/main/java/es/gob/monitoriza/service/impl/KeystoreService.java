@@ -17,7 +17,7 @@
 /** 
  * <b>File:</b><p>es.gob.monitoriza.service.impl.KeystoreService.java.</p>
  * <b>Description:</b><p> .</p>
-  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
  * @version 1.2, 09/11/2018.
@@ -116,7 +116,6 @@ public class KeystoreService implements IKeystoreService {
 	 */
 	@Override
 	public Keystore saveKeystore(Keystore keystore) {
-		
 		return repository.save(keystore);
 	}
 	

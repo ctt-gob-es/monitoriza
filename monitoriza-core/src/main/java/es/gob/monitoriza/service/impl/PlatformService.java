@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.service.impl.PlatformAfirmaService.java.</p>
  * <b>Description:</b><p>Class that implements the communication with the operations of the persistence layer for PlatformAfirma.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>10 abr. 2018.</p>
+ * <b>Date:</b><p>14 dic. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 14/12/2018.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.gob.monitoriza.persistence.configuration.dto.AfirmaDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ClaveDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TsaDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
@@ -256,7 +257,7 @@ public class PlatformService implements IPlatformService {
 			platformTsa.setUseRfc3161Auth(false);
 		}
 				
-		PlatformMonitoriza tsa = repository.saveAndFlush(platformTsa);
+		PlatformMonitoriza tsa = repository.save(platformTsa);
 		
 		// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
 		if (tsaHaCambiado && platformTsa.getIdPlatform() != null) {
@@ -264,26 +265,12 @@ public class PlatformService implements IPlatformService {
 			updateScheduledTimerFromPlatform(platformTsa);
 		}
 		
-		// Se construye un nuevo objeto para devolver a la vista
-		PlatformMonitoriza tsaView = new PlatformMonitoriza();
-		
-		tsaView.setHost(tsa.getHost());
-		tsaView.setName(tsa.getName());
-		tsaView.setPort(tsa.getPort());
-		tsaView.setIsSecure(tsa.getIsSecure());
-		tsaView.setServiceContext(tsa.getServiceContext());
-		tsaView.setPlatformType(tsa.getPlatformType());
-		tsaView.setRfc3161Context(tsa.getRfc3161Context());
-		tsaView.setRfc3161Port(tsa.getRfc3161Port());
-		tsaView.setUseRfc3161Auth(tsa.getUseRfc3161Auth());
-		tsaView.setRfc3161Certificate(tsa.getRfc3161Certificate());
-		
 		// Se construye objeto vacío para evitar warning de datatables
 		if (!tsaDto.getUseRfc3161Auth()) {
-			tsaView.setRfc3161Certificate(new SystemCertificate());
+			platformTsa.setRfc3161Certificate(new SystemCertificate());
 		}
 		
-		return tsaView;
+		return tsa;
 	}
 	
 	/**
@@ -353,7 +340,7 @@ public class PlatformService implements IPlatformService {
 		}
 		
 	}
-
+	
 	/**
 	 * {@inheritDoc}
 	 * @see es.gob.monitoriza.service.IPlatformService#getAllPlatformType()
@@ -362,6 +349,50 @@ public class PlatformService implements IPlatformService {
 	public Iterable<CPlatformType> getAllPlatformType() {
 		
 		return typeRepository.findAll();
+	}
+	
+	/**
+	 * Method that returns a list of platforms to be showed in DataTable.
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IPlatformService#findAllTsa(org.springframework.data.jpa.datatables.mapping.DataTablesInput)
+	 */
+	@Override
+	public DataTablesOutput<PlatformMonitoriza> findAllByPlatFormType(DataTablesInput input, Long platformTypeId) {
+		CPlatformType platformType = new CPlatformType();
+		platformType.setIdPlatformType(platformTypeId);
+		CPlatformTypeSpecification byPlatformType = new CPlatformTypeSpecification(platformType);
+		
+		return dtRepository.findAll(input, byPlatformType);
+	}
+	
+	/**
+	 * Method that stores Cl@ve configuration in the persistence and updates corresponding scheduled timers.
+	 * @param claveDto a {@link ClaveDTO} with the information of the platform configuration.
+	 * @param platformTypeId with the information of the platform type.
+	 * @return {@link PlatformMonitoriza} The cl@ve configuration.
+	 */
+	@Override
+	public PlatformMonitoriza savePlatformClave(ClaveDTO claveDto, Long platformTypeId) {
+		PlatformMonitoriza platformClave = null;
+		
+		if (claveDto.getIdPlatform() != null) {
+			platformClave = repository.findByIdPlatform(claveDto.getIdPlatform());
+		} else {
+			platformClave = new PlatformMonitoriza();
+		}
+
+		platformClave.setHost(claveDto.getHost());
+		platformClave.setName(claveDto.getName());
+		platformClave.setPort(claveDto.getPort());
+		platformClave.setIsSecure(claveDto.getIsSecure());
+		platformClave.setServiceContext(claveDto.getServiceContext());
+		CPlatformType claveType = new CPlatformType();
+		claveType.setIdPlatformType(platformTypeId);
+		platformClave.setPlatformType(claveType);
+
+		PlatformMonitoriza clave = repository.save(platformClave);
+		
+		return clave;
 	}
 
 }

@@ -147,5 +147,4 @@ public class TimerMonitoriza implements Serializable {
 		this.frequency = frequency;
 	}
 	
-
 }

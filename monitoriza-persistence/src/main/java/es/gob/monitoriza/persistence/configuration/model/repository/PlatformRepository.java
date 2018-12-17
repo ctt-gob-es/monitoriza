@@ -46,5 +46,4 @@ public interface PlatformRepository extends JpaRepository<PlatformMonitoriza, Lo
 	 */
 	PlatformMonitoriza findByIdPlatform(Long id);
 	
-
 }

@@ -32,30 +32,30 @@ package es.gob.monitoriza.rest.exception;
  */
 public class GlobalError {
 	
-	 private String code;
+	private String code;
 
-	    public GlobalError(String code) {
-	        this.code = code;
-	    }
+    public GlobalError(String code) {
+        this.code = code;
+    }
 
-	    public String getCode() {
-	        return code;
-	    }
+    public String getCode() {
+        return code;
+    }
 
-	    @Override
-	    public boolean equals(Object o) {
-	        if (this == o) return true;
-	        if (o == null || getClass() != o.getClass()) return false;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
 
-	        GlobalError that = (GlobalError) o;
+        GlobalError that = (GlobalError) o;
 
-	        return code != null ? code.equals(that.code) : that.code == null;
+        return code != null ? code.equals(that.code) : that.code == null;
 
-	    }
+    }
 
-	    @Override
-	    public int hashCode() {
-	        return code != null ? code.hashCode() : 0;
-	    }
+    @Override
+    public int hashCode() {
+        return code != null ? code.hashCode() : 0;
+    }
 
 }

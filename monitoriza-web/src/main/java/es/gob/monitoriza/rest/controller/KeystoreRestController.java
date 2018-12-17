@@ -17,7 +17,7 @@
 /** 
  * <b>File:</b><p>es.gob.monitoriza.rest.controller.KeystoreRestController.java.</p>
  * <b>Description:</b><p> .</p>
-  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
  * @version 1.4, 05/12/2018.

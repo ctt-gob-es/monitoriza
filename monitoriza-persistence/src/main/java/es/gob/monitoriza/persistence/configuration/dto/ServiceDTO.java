@@ -349,6 +349,5 @@ public class ServiceDTO {
 	public void setFileData(String fileDataParam) {
 		this.fileData = fileDataParam;
 	}
-	
-	
+		
 }

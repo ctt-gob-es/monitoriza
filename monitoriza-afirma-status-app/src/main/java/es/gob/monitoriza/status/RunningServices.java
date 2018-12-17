@@ -79,6 +79,4 @@ public final class RunningServices {
 		RunningServices.requestsRunning = requestsRunning;
 	}
 	
-	
-
 }

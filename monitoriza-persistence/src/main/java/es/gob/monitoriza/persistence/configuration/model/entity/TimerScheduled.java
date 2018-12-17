@@ -149,5 +149,4 @@ public class TimerScheduled implements Serializable {
 		this.updated = updated;
 	}
 	
-
 }

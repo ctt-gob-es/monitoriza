@@ -262,4 +262,9 @@ public interface GeneralConstants {
 	 * Attribute that represents the row index value for the datatable in case of error.
 	 */
 	public static final String ROW_INDEX_ERROR = "-1";
+	
+	/**
+	 * Attribute that represents the service identifier for HTTP services. 
+	 */
+	public static final String HTTP_SERVICE = "http";
 }

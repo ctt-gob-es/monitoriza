@@ -64,6 +64,11 @@
 			<groupId>es.gob.monitoriza</groupId>
 			<artifactId>monitoriza-core</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>es.gob.monitoriza</groupId>
+			<artifactId>monitoriza-clave-status-app</artifactId>
+			<version>1.0</version>
+		</dependency>
 	</dependencies>
 	<build>
 		<finalName>monitoriza-afirma-status-app</finalName>

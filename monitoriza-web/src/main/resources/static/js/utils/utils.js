@@ -52,6 +52,4 @@ $(document).ready(function() {
 	    window.dispatchEvent(window.EVENT);
 	  });  
   
-  
-  
 } );

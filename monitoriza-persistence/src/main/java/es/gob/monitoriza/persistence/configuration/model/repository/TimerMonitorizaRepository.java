@@ -54,5 +54,4 @@ public interface TimerMonitorizaRepository extends JpaRepository<TimerMonitoriza
 	@Query("SELECT tm FROM ServiceMonitoriza sm JOIN sm.timer tm JOIN sm.platform pm JOIN pm.platformType pt WHERE pt.idPlatformType = 2 AND pm.useRfc3161Auth = true")
 	List<TimerMonitoriza> findTimersAnyServiceUsingRFC3161Auth();
 	
-
 }
