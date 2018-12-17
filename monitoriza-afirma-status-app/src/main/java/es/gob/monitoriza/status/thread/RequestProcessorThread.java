@@ -53,9 +53,9 @@ import es.gob.monitoriza.exception.AlarmException;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.invoker.http.HttpInvoker;
 import es.gob.monitoriza.invoker.ocsp.OcspInvoker;
 import es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker;
-import es.gob.monitoriza.invoker.soap.HttpSoapInvoker;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.DailyVipMonitorig;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
@@ -159,9 +159,9 @@ public final class RequestProcessorThread implements Runnable {
 									tiempoTotal = OcspInvoker.sendRequest(request, service, ssl);
 								} else if (service.getServiceType().equalsIgnoreCase(GeneralConstants.RFC3161_SERVICE)) {
 									tiempoTotal = Rfc3161Invoker.sendRequest(request, service, ssl, authClient);
-								} else {
-									tiempoTotal = HttpSoapInvoker.sendRequest(request, service, ssl);
-								}
+								} else if(service.getServiceType().equalsIgnoreCase(GeneralConstants.HTTP_SERVICE)){									
+									tiempoTotal = HttpInvoker.sendRequest(request, service, ssl);									
+ 								}
 
 								totalRequests++;
 

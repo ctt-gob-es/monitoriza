@@ -216,6 +216,11 @@
 					<xsd:documentation>Configuración de los otros parámetros. Opcional.</xsd:documentation>
 				</xsd:annotation>
         	</xsd:element>
+        	<xsd:element name="result" type="xsd:string">
+        		<xsd:annotation>
+					<xsd:documentation>Lista de codigos HTTP esperados en la respuesta.</xsd:documentation>
+				</xsd:annotation>
+        	</xsd:element>
         </xsd:sequence>
 	</xsd:complexType>
 	
