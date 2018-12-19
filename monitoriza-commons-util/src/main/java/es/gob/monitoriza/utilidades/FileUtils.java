@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>21/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.3, 10/10/2018.
+ * @version 1.4, 19/12/2018.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -34,9 +34,11 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.Formatter;
 import java.util.List;
@@ -46,6 +48,8 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
+
+import javax.security.auth.login.Configuration;
 
 import org.apache.log4j.Logger;
 
@@ -57,7 +61,7 @@ import es.gob.monitoriza.i18n.Language;
 /** 
  * <p>Utilities class for Files.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.2, 10/10/2018.
+ * @version 1.4, 19/12/2018.
  */
 public final class FileUtils {
 
@@ -409,6 +413,39 @@ public final class FileUtils {
 	        }
 	    }
 	    return directoryToBeDeleted.delete();
+	}
+	
+	/**
+	 * Loops over a path and deletes all directories inside beginning with a prefix
+	 * @param pathRoot Root directory
+	 * @param startName Prefix of the directories to be deleted
+	 * @return true if all the files where deleted 
+	 */
+	public static boolean deleteAllDirectoriesBeginnigWith(final String pathRoot, final String startName) {
+		
+		File filePath = new File(pathRoot);
+        File[] allFiles = filePath.listFiles();
+        boolean deleted = false;
+
+		for (File file: allFiles) {
+			if (file.isDirectory()) {
+				String fileName = file.getName();
+
+				if (fileName.startsWith(startName)) {
+					
+					if (deleteDirectory(file)) {
+						deleted = true;
+					} else {
+						deleted = false;
+						break;
+					}
+				}
+								
+			}
+
+		}
+		
+		return deleted;
 	}
 		
 }

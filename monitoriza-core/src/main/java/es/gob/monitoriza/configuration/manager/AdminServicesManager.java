@@ -18,9 +18,9 @@
  * <b>Description:</b>
  * <p>Class that manages the configuration of the @firma/ts@ services from static properties file.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
- * <b>Date:</b><p>19 ene. 2018.</p>
+ * <b>Date:</b><p>19/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.8, 05/12/2018
+ * @version 1.9, 19/12/2018
  */
 package es.gob.monitoriza.configuration.manager;
 
@@ -79,7 +79,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <p>Class that manages the configuration of the @firma/ts@ services from database persistence
  *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- *  @version 1.8, 05/12/2018
+ *  @version 1.9, 19/12/2018
  */
 @Service("adminServicesManager")
 public class AdminServicesManager {
@@ -231,10 +231,16 @@ public class AdminServicesManager {
     				targetFolder.append(StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY)).append(GeneralConstants.DOUBLE_PATH_SEPARATOR).append(serviceDTO.getServiceId()).append(GeneralConstants.SEPARATOR).append(serviceDTO.getServiceName()).append(GeneralConstants.DOUBLE_PATH_SEPARATOR);
     				
     				// El primer paso es eliminar la existente para este servicio
-    				File directoryToBeDeleted = new java.io.File(targetFolder.toString());
-    				if (directoryToBeDeleted.exists()) {
-    					FileUtils.deleteDirectory(directoryToBeDeleted);
-    				}
+    				// File directoryToBeDeleted = new java.io.File(targetFolder.toString());
+    				// if (directoryToBeDeleted.exists()) {
+    				//	FileUtils.deleteDirectory(directoryToBeDeleted);
+    				// }
+    				
+    				// Es necesario borrar todos las carpetas que comiencen por el identificador del servicio.
+    				// Esto es debido a que si se modifica el nombre del servicio, ya no se conoce el nombre
+    				// original y sería imposible eliminar la carpeta "id_nombre_original".
+    				FileUtils.deleteAllDirectoriesBeginnigWith(StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY), String.valueOf(serviceDTO.getServiceId()).concat(GeneralConstants.SEPARATOR));    				
+    				
     				// Se descomprime el ZIP extraído de base de datos en el destino configurado
     				FileUtils.unZipFileWithSubFolders(file.getFiledata(), file.getFilename(), targetFolder.toString());
     			} catch (RequestFileNotFoundException e) {
