@@ -34,11 +34,10 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.Charset;
-import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Formatter;
 import java.util.List;
@@ -48,8 +47,6 @@ import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
-
-import javax.security.auth.login.Configuration;
 
 import org.apache.log4j.Logger;
 
@@ -292,15 +289,14 @@ public final class FileUtils {
 	 * @throws IOException
 	 */
 	public static void unZipFileWithSubFolders(final byte[] fileBytes, final String fileName, final String targetFolder) throws IOException {
-		try {
+		
 			
 			String tempFilePath = new StringBuffer().append(StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY))
 													.append(GeneralConstants.DOUBLE_PATH_SEPARATOR)
 													.append(fileName).toString();
 			
 			// Se escribe temporalmente el fichero en el sistema de archivos
-			writeFile(fileBytes, tempFilePath);
-			
+			writeFile(fileBytes, tempFilePath);			
 			
             // Se abre el fichero zip
             ZipFile zipFile = new ZipFile(tempFilePath);
@@ -337,9 +333,7 @@ public final class FileUtils {
             zipFile.close();
             
             deleteFile(tempFilePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
    }
 
 	
@@ -446,6 +440,26 @@ public final class FileUtils {
 		}
 		
 		return deleted;
+	}
+	
+	/**
+	 * Deletes the content of a directory given its path as String.
+	 * @param pathRoot String that represents the system directory to be emptied
+	 * @throws IOException Exception launched if there is an error.
+	 */
+	public static void deleteAllRecursively(final String pathRoot) throws IOException {
+		
+		File filePath = new File(pathRoot);
+        File[] allFiles = filePath.listFiles();
+		
+        for (File file: allFiles) {
+        	
+        	Files.walk(file.toPath())
+    	    .sorted(Comparator.reverseOrder())
+    	    .map(Path::toFile)
+    	    .forEach(File::delete);
+        }
+				
 	}
 		
 }

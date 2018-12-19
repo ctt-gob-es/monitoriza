@@ -20,10 +20,11 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.4, 28/10/2018.
+ * @version 1.5, 19/12/2018.
  */
 package es.gob.monitoriza.task;
 
+import java.io.IOException;
 import java.security.KeyStore;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,6 +42,8 @@ import org.springframework.web.context.WebApplicationContext;
 
 import es.gob.monitoriza.configuration.manager.AdminServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.StaticConstants;
+import es.gob.monitoriza.i18n.ICoreLogMessages;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
@@ -50,6 +53,8 @@ import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.status.StatusHolder;
 import es.gob.monitoriza.status.thread.RequestLauncher;
 import es.gob.monitoriza.timers.TimersHolder;
+import es.gob.monitoriza.utilidades.FileUtils;
+import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that initializes the timers for processing the batch of requests for each service.</p>
@@ -95,6 +100,11 @@ public class MonitorizaServletTask extends HttpServlet {
 		
 		// Se vacía la tabla de timers programados
 		adminServiceManager.emptyTimersScheduled();
+		try {
+			FileUtils.deleteAllRecursively(StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY));
+		} catch (IOException e) {
+			LOGGER.error(Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE014, new Object[]{StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY)}), e);
+		}
 
 		List<ConfigTimerDTO> timers = adminServiceManager.getAllTimers();
 		ExecuteTimer batchTimer = null;
