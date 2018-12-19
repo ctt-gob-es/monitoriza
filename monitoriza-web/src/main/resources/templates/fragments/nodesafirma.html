@@ -87,6 +87,7 @@ $(document).ready(function() {
 						var port = row.port;
 						var isSecure = row.isSecure;
 						var protocol;
+						var url;
 						
 						if (isSecure == true) {
 							protocol = 'https';
@@ -94,7 +95,16 @@ $(document).ready(function() {
 							protocol = 'http';
 						}
 						
-	        			return protocol + "://" + host + ":" + port
+						if (port == null || port == '' || port == 'undefined')
+	        			{
+	        				url = protocol + "://" + host;
+	        			} else 
+	        			{
+	        				url = protocol + "://" + host + ":" + port;
+	        			}
+						
+						
+						return url;
 	        		} else {
 						return 'N/A';
 					}
