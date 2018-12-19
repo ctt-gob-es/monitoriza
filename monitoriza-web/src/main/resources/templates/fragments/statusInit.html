@@ -57,8 +57,7 @@
 									</tbody>
 								</table>
 							</div>
-							<!-- Fin tabla resumen -->
-						
+							<!-- Fin tabla resumen -->						
 						
 						<!-- Tabla de resultados VIP -->
 						<h4 class="c-grey-900 mB-20" th:text="#{table.status.vip.title}"></h4>
@@ -126,23 +125,23 @@
 									</thead>
 									<tbody>
 										<tr th:each="stSpie : ${statusSpie.data}">
-											<td th:if="${stSpie.statusValue eq 2}">
-												<i class="c-red-500 ti-control-record"></i>
-											</td>
-											<td th:if="${stSpie.statusValue eq 1}">
-												<i class="c-yellow-500 ti-control-record"></i>
-											</td>
-											<td th:if="${stSpie.statusValue eq 0}">
-												<i class="c-green-500 ti-control-record"></i>
-											</td>
-											<td th:if="${stSpie.statusValue eq null}" th:text="#{error.spie.connection}" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></td>
+											<td th:if="${stSpie.statusValue eq 2}"><i
+												class="c-red-500 ti-control-record"></i></td>
+											<td th:if="${stSpie.statusValue eq 1}"><i
+												class="c-yellow-500 ti-control-record"></i></td>
+											<td th:if="${stSpie.statusValue eq 0}"><i
+												class="c-green-500 ti-control-record"></i></td>
+											<td th:if="${stSpie.statusValue eq null}"
+												th:text="#{error.spie.connection}"
+												class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></td>
 											<td th:text="${stSpie.statusValue}"></td>
 											<td th:text="${stSpie.system}"></td>
 											<td th:text="${stSpie.nodeName}"></td>
 											<td th:text="${stSpie.nodeAddress}"></td>
 											<td th:text="${stSpie.spieService}"></td>
 											<td th:text="${stSpie.partialRequestResult}"></td>
-											<td th:if="${stSpie.partialRequestResult != null}"><i class='c-blue-500 ti-search'></i></td>
+											<td th:if="${stSpie.partialRequestResult != null}"><i
+												class='c-blue-500 ti-search'></i></td>
 											<td th:if="${stSpie.partialRequestResult == null}">-</td>
 										</tr>
 									</tbody>
@@ -172,6 +171,44 @@ tr.shown td.details-control {
 <script th:inline="javascript">
 
 $(document).ready(function() {
+		
+	// Tabla de resumen
+	
+	var tableSummary = $('#summaryTable').DataTable({
+		"pagingType" : "full_numbers",
+		"initComplete" : function(settings, json) {
+			//eliminamos el scroll inferior
+			$('#summaryTable_wrapper .dataTables_scrollBody').css("overflow-x", "hidden");
+			$('#summaryTable_length').addClass("hidden");
+			//$('#statusSpieTable_filter').addClass("hidden");
+			$('#summaryTable_info').addClass("hidden");
+			$('#summaryTable_paginate').addClass("hidden");
+		},
+		"language": {
+	        "url": "js/datatables/i18n/spanish.json",
+	        select: {
+	            rows: {
+	                _: "%d filas seleccionadas",
+	                1: "1 fila seleccionada"
+	            }
+	          }
+	     },
+		"columnDefs" : [ 
+			{
+				"targets" : [ 1 ],
+				"visible" : false,
+				"searchable" : false
+			}
+		],
+		"order" : [ 1, 'desc' ],
+		responsive : {
+			details : {
+				type : 'column',
+				target : -1
+			}
+		}
+
+	});
 	
 	var tableVipInterval = $('#statusVipTable').DataTable({
 		"pagingType" : "full_numbers",
@@ -309,35 +346,14 @@ $(document).ready(function() {
             tr.addClass('shown');
         }
     });
-	
-	// Tabla de resumen
-	
-	var tableSummary = $('#summaryTable').DataTable({
-		"pagingType" : "full_numbers",
-		"initComplete" : function(settings, json) {
-			//eliminamos el scroll inferior
-			$('#summaryTable_wrapper .dataTables_scrollBody').css("overflow-x", "hidden");
-			$('#summaryTable_length').addClass("hidden");
-			//$('#statusSpieTable_filter').addClass("hidden");
-			$('#summaryTable_info').addClass("hidden");
-			$('#summaryTable_paginate').addClass("hidden");
-		},
-		"columnDefs" : [ 
-			{
-				"targets" : [ 1 ],
-				"visible" : false,
-				"searchable" : false
-			}
-		],
-		"order" : [ 1, 'desc' ],
-		responsive : {
-			details : {
-				type : 'column',
-				target : -1
-			}
+		
+	var actionStatus = /*[[@{/status}]]*/;
+	setInterval(function(){
+		if (tableSummary.table.length > 0 && tableVipInterval.table.length > 0 && tableSpieInterval.table.length > 0) {
+			loadIntoAjax(null, actionStatus, 'optionReplacement', 'GET', null, true);
 		}
-
-	});
+		
+	}, 15000);
 });
 
 function formatVip ( d ) {
@@ -406,13 +422,6 @@ function formatSpie ( d ) {
     
     return result;
 }
-
-setInterval(function(){
-	var tableVipInterval = $('#statusVipTable').DataTable();
-	if (tableVipInterval.table.length > 0){
-		location.reload()
-	}
-}, 10000);
 
 
 
