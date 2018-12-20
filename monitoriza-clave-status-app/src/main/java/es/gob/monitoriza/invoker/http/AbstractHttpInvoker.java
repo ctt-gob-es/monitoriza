@@ -33,20 +33,29 @@ import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
+import org.apache.http.HttpHost;
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.Credentials;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
+import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.constant.StaticConstants;
+import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.invoker.http.conf.messages.AttributeType;
 import es.gob.monitoriza.invoker.http.conf.messages.ClaveAgentConfType;
 import es.gob.monitoriza.invoker.http.conf.util.Utilities;
@@ -89,8 +98,7 @@ public abstract class AbstractHttpInvoker {
 	/**
 	 * Attribute that represents the configuration of the SAML request.
 	 */
-	protected final static ProtocolEngineNoMetadataI protocolEngine = SpProtocolEngineFactory
-			.getSpProtocolEngine(Constants.SP_CONF);
+	protected final static ProtocolEngineNoMetadataI protocolEngine = SpProtocolEngineFactory.getSpProtocolEngine(Constants.SP_CONF);
 	/**
 	 * Attribute that represent the force authn of the SAML request.
 	 */
@@ -132,42 +140,12 @@ public abstract class AbstractHttpInvoker {
 	protected static AttributeDefinition legalPersonIdentifier;
 
 	static {
-		familyName = new AttributeDefinition.Builder<String>()
-				.nameUri("http://eidas.europa.eu/attributes/naturalperson/CurrentFamilyName").friendlyName("FamilyName")
-				.personType(PersonType.NATURAL_PERSON).required(true).transliterationMandatory(true)
-				.uniqueIdentifier(false)
-				.xmlType("http://eidas.europa.eu/attributes/naturalperson", "CurrentFamilyNameType", "eidas-natural")
-				.attributeValueMarshaller(new StringAttributeValueMarshaller()).build();
-		firstName = new AttributeDefinition.Builder<String>()
-				.nameUri("http://eidas.europa.eu/attributes/naturalperson/CurrentGivenName").friendlyName("FirstName")
-				.personType(PersonType.NATURAL_PERSON).required(true).transliterationMandatory(true)
-				.uniqueIdentifier(false)
-				.xmlType("http://eidas.europa.eu/attributes/naturalperson", "CurrentGivenNameType", "eidas-natural")
-				.attributeValueMarshaller(new StringAttributeValueMarshaller()).build();
-		dateOfBirth = new AttributeDefinition.Builder<String>()
-				.nameUri("http://eidas.europa.eu/attributes/naturalperson/DateOfBirt").friendlyName("DateOfBirth")
-				.personType(PersonType.NATURAL_PERSON).required(true).transliterationMandatory(true)
-				.uniqueIdentifier(false)
-				.xmlType("http://eidas.europa.eu/attributes/naturalperson", "DateOfBirthType", "eidas-natural")
-				.attributeValueMarshaller(new StringAttributeValueMarshaller()).build();
-		personIdentifier = new AttributeDefinition.Builder<String>()
-				.nameUri("http://eidas.europa.eu/attributes/naturalperson/PersonIdentifier")
-				.friendlyName("PersonIdentifier").personType(PersonType.NATURAL_PERSON).required(true)
-				.transliterationMandatory(true).uniqueIdentifier(false)
-				.xmlType("http://eidas.europa.eu/attributes/naturalperson", "PersonIdentifierType", "eidas-natural")
-				.attributeValueMarshaller(new StringAttributeValueMarshaller()).build();
-		legalName = new AttributeDefinition.Builder<String>()
-				.nameUri("http://eidas.europa.eu/attributes/legalperson/LegalName").friendlyName("LegalName")
-				.personType(PersonType.LEGAL_PERSON).required(true).transliterationMandatory(true)
-				.uniqueIdentifier(false)
-				.xmlType("http://eidas.europa.eu/attributes/legalperson", "LegalNameType", "eidas-legal")
-				.attributeValueMarshaller(new StringAttributeValueMarshaller()).build();
-		legalPersonIdentifier = new AttributeDefinition.Builder<String>()
-				.nameUri("http://eidas.europa.eu/attributes/legalperson/LegalPersonIdentifier")
-				.friendlyName("LegalPersonIdentifier").personType(PersonType.LEGAL_PERSON).required(true)
-				.transliterationMandatory(true).uniqueIdentifier(false)
-				.xmlType("http://eidas.europa.eu/attributes/legalperson", "LegalPersonIdentifierType", "eidas-legal")
-				.attributeValueMarshaller(new StringAttributeValueMarshaller()).build();
+		familyName = new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/CurrentFamilyName").friendlyName("FamilyName").personType(PersonType.NATURAL_PERSON).required(true).transliterationMandatory(true).uniqueIdentifier(false).xmlType("http://eidas.europa.eu/attributes/naturalperson", "CurrentFamilyNameType", "eidas-natural").attributeValueMarshaller(new StringAttributeValueMarshaller()).build();
+		firstName = new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/CurrentGivenName").friendlyName("FirstName").personType(PersonType.NATURAL_PERSON).required(true).transliterationMandatory(true).uniqueIdentifier(false).xmlType("http://eidas.europa.eu/attributes/naturalperson", "CurrentGivenNameType", "eidas-natural").attributeValueMarshaller(new StringAttributeValueMarshaller()).build();
+		dateOfBirth = new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/DateOfBirt").friendlyName("DateOfBirth").personType(PersonType.NATURAL_PERSON).required(true).transliterationMandatory(true).uniqueIdentifier(false).xmlType("http://eidas.europa.eu/attributes/naturalperson", "DateOfBirthType", "eidas-natural").attributeValueMarshaller(new StringAttributeValueMarshaller()).build();
+		personIdentifier = new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/naturalperson/PersonIdentifier").friendlyName("PersonIdentifier").personType(PersonType.NATURAL_PERSON).required(true).transliterationMandatory(true).uniqueIdentifier(false).xmlType("http://eidas.europa.eu/attributes/naturalperson", "PersonIdentifierType", "eidas-natural").attributeValueMarshaller(new StringAttributeValueMarshaller()).build();
+		legalName = new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/legalperson/LegalName").friendlyName("LegalName").personType(PersonType.LEGAL_PERSON).required(true).transliterationMandatory(true).uniqueIdentifier(false).xmlType("http://eidas.europa.eu/attributes/legalperson", "LegalNameType", "eidas-legal").attributeValueMarshaller(new StringAttributeValueMarshaller()).build();
+		legalPersonIdentifier = new AttributeDefinition.Builder<String>().nameUri("http://eidas.europa.eu/attributes/legalperson/LegalPersonIdentifier").friendlyName("LegalPersonIdentifier").personType(PersonType.LEGAL_PERSON).required(true).transliterationMandatory(true).uniqueIdentifier(false).xmlType("http://eidas.europa.eu/attributes/legalperson", "LegalPersonIdentifierType", "eidas-legal").attributeValueMarshaller(new StringAttributeValueMarshaller()).build();
 	}
 
 	/**
@@ -180,8 +158,7 @@ public abstract class AbstractHttpInvoker {
 	 * @return String return the SAML request generate
 	 * @throws EIDASSAMLEngineException
 	 */
-	protected static String generateSamlRequest(final ClaveAgentConfType requestConf, final ConfigServiceDTO service)
-			throws EIDASSAMLEngineException {
+	protected static String generateSamlRequest(final ClaveAgentConfType requestConf, final ConfigServiceDTO service) throws EIDASSAMLEngineException {
 		String res = null;
 		String spType;
 
@@ -248,41 +225,56 @@ public abstract class AbstractHttpInvoker {
 	 * @throws IOException
 	 * @throws KeyManagementException
 	 * @throws UnrecoverableKeyException
+	 * @throws InvokerException 
 	 */
-	protected static CloseableHttpClient createHttpClient(final ClaveAgentConfType requestConf,
-			final ConfigServiceDTO service, final KeyStore ssl) throws KeyStoreException, NoSuchAlgorithmException,
-			CertificateException, IOException, KeyManagementException, UnrecoverableKeyException {
+	protected static CloseableHttpClient createHttpClient(final ClaveAgentConfType requestConf, final ConfigServiceDTO service, final KeyStore ssl) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, KeyManagementException, UnrecoverableKeyException, InvokerException {
 		CloseableHttpClient res;
-		String[] s = service.getBaseUrl().split(":");
+		KeyManager[ ] keyManagers = null;
+		String[ ] s = service.getBaseUrl().split(":");
 
-		RequestConfig config = RequestConfig.custom()
-				.setConnectTimeout(
-						Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_CONNECT_TIMEOUT)))
-				.setConnectionRequestTimeout(Integer
-						.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_CONNECTION_REQUEST_TIMEOUT)))
-				.setSocketTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_SOCKET_TIMEOUT)))
-				.build();
+		RequestConfig config = RequestConfig.custom().setConnectTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_CONNECT_TIMEOUT))).setConnectionRequestTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_CONNECTION_REQUEST_TIMEOUT))).setSocketTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_SOCKET_TIMEOUT))).build();
+
+		if (requestConf.getConnection() != null) {
+			if (requestConf.getConnection().getProxy() != null) {
+				if (!requestConf.getConnection().getProxy().getPort().matches("\\d\\d\\d\\d")) {
+					throw new InvokerException("El puerto introducido es erróneo.");
+				}
+				HttpHost proxy = new HttpHost(requestConf.getConnection().getProxy().getHost(), Integer.parseInt(requestConf.getConnection().getProxy().getPort()));
+				DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
+				Credentials credentials = new UsernamePasswordCredentials(requestConf.getConnection().getProxy().getUser(), requestConf.getConnection().getProxy().getPassword());
+
+				CredentialsProvider credsProvider = new BasicCredentialsProvider();
+				credsProvider.setCredentials(AuthScope.ANY, credentials);
+
+				HttpClientContext context = HttpClientContext.create();
+				context.setCredentialsProvider(credsProvider);
+				res = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).setRoutePlanner(routePlanner).build();
+			}
+		}
 
 		if (s[0].equals("http")) {
-			//res = HttpClients.createDefault();
+			// res = HttpClients.createDefault();
 			res = HttpClientBuilder.create().setDefaultRequestConfig(config).build();
 		} else {
-			KeyStore keystore = Utilities.LoadKeystore(
-					requestConf.getConnection().getAuthenticationMutual().getPath().toString(),
-					requestConf.getConnection().getAuthenticationMutual().getPasswordKeyStore().toString(),
-					requestConf.getConnection().getAuthenticationMutual().getTypeKeyStore().toString());
-			KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-			kmf.init(keystore,
-					requestConf.getConnection().getAuthenticationMutual().getPasswordKeyStore().toCharArray());
 			TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
 			tmf.init(ssl);
-
 			SSLContext sslContext = SSLContext.getInstance("SSL");
-			sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), null);
 
-			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext,
-					new String[] { "TLSv1.2", "TLSv1.1" }, null,
-					SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+			// Configuración para autenticación mutua, en caso de haber sido
+			// establecida
+			if (requestConf.getConnection() != null && requestConf.getConnection().getAuthenticationMutual() != null) {
+				KeyStore keystore = Utilities.LoadKeystore(
+				                                           requestConf.getConnection().getAuthenticationMutual().getPath().toString(), 
+				                                           requestConf.getConnection().getAuthenticationMutual().getPasswordKeyStore().toString(), 
+				                                           requestConf.getConnection().getAuthenticationMutual().getTypeKeyStore().toString());
+				KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
+				kmf.init(keystore, requestConf.getConnection().getAuthenticationMutual().getPasswordKeyStore().toCharArray());
+				keyManagers = kmf.getKeyManagers();
+
+			}
+			sslContext.init(keyManagers, tmf.getTrustManagers(), null);
+
+			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[ ] { "TLSv1.2", "TLSv1.1" }, null, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
 
 			res = HttpClientBuilder.create().setDefaultRequestConfig(config).setSSLSocketFactory(sslsf).build();
 		}
@@ -304,7 +296,7 @@ public abstract class AbstractHttpInvoker {
 		if (requestConf.getRequest().getSamlRequest().getAttributes() == null)
 			res = new ImmutableAttributeMap.Builder().putAll(reqAttrList).build();
 		else {
-			for (AttributeType attr : requestConf.getRequest().getSamlRequest().getAttributes().getAttribute()) {
+			for (AttributeType attr: requestConf.getRequest().getSamlRequest().getAttributes().getAttribute()) {
 				if (attr == AttributeType.FAMILY_NAME) {
 					reqAttrList.add(familyName);
 				} else if (attr == AttributeType.FIRST_NAME) {

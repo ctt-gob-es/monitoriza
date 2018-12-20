@@ -16,10 +16,10 @@
 /** 
  * <b>File:</b><p>es.gob.monitoriza.invoker.http.HttpInvoker.java.</p>
  * <b>Description:</b><p>Class that performs the request of a HTTP service.</p>
-  * <b>Project:</b><p>Application for monitoring services of Cl@ve suite systems</p>
- * <b>Date:</b><p>25 ene. 2018.</p>
+ * <b>Project:</b><p>Application for monitoring services of Cl@ve suite systems</p>
+ * <b>Date:</b><p>18 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 18/10/2018.
+ * @version 1.3, 18/12/2018.
  */
 package es.gob.monitoriza.invoker.http;
 
@@ -38,22 +38,16 @@ import java.util.List;
 
 import javax.xml.bind.JAXBException;
 
-import org.apache.http.HttpHost;
 import org.apache.http.NameValuePair;
-import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
-import org.apache.http.auth.UsernamePasswordCredentials;
-import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
-import org.apache.http.client.protocol.HttpClientContext;
-import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
 import org.apache.http.message.BasicNameValuePair;
 
 import es.gob.monitoriza.exception.InvokerException;
+import es.gob.monitoriza.i18n.IStatusLogMessages;
+import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.invoker.http.conf.messages.ClaveAgentConfType;
 import es.gob.monitoriza.invoker.http.conf.messages.ParamType;
 import es.gob.monitoriza.invoker.http.conf.util.Utilities;
@@ -70,7 +64,7 @@ import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
  * Application for monitoring services of Cl@ve suite systems.
  * </p>
  * 
- * @version 1.2, 18/10/2018.
+ * @version 1.3, 18/12/2018.
  */
 public class HttpInvoker extends AbstractHttpInvoker {
 
@@ -133,28 +127,27 @@ public class HttpInvoker extends AbstractHttpInvoker {
 			beforeCall = LocalTime.now();
 
 			httpClient = createHttpClient(requestConf, service, ssl);
-			if (requestConf.getConnection() != null) {
-				if (requestConf.getConnection().getProxy() != null) {
-					if (!requestConf.getConnection().getProxy().getPort().matches("\\d\\d\\d\\d")) {
-						throw new InvokerException("El puerto introducido es erróneo.");
-					}
-					HttpHost proxy = new HttpHost(requestConf.getConnection().getProxy().getHost(),
-							Integer.parseInt(requestConf.getConnection().getProxy().getPort()));
-					DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
-					Credentials credentials = new UsernamePasswordCredentials(
-							requestConf.getConnection().getProxy().getUser(),
-							requestConf.getConnection().getProxy().getPassword());
-	
-					CredentialsProvider credsProvider = new BasicCredentialsProvider();
-					credsProvider.setCredentials(AuthScope.ANY, credentials);
-	
-					HttpClientContext context = HttpClientContext.create();
-					context.setCredentialsProvider(credsProvider);
-					httpClient = HttpClients.custom().setDefaultCredentialsProvider(credsProvider)
-							.setRoutePlanner(routePlanner).build();
+			CloseableHttpResponse httpResponse = httpClient.execute(httpPost);
+			
+			// Comprobamos que la conexión se estableció correctamente
+			String result = requestConf.getRequest().getHttpRequest().getResult();
+			String[] resultSplit = result.split(",");
+			Boolean resultCodeResponse = false;
+			
+			for(int i=0; i<resultSplit.length; i++) {
+				if (httpResponse.getStatusLine().getStatusCode() == Integer.parseInt(resultSplit[i])) {
+					resultCodeResponse = true;
 				}
 			}
-			httpClient.execute(httpPost);
+			
+			if (!resultCodeResponse) {
+				// Si hay algún problema de conexión, considero la petición como perdida...
+				LOGGER.error(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS005));
+				tiempoTotal = null;
+			} else {
+				LocalTime afterCall = LocalTime.now();
+				tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
+			}
 
 		} catch (JAXBException e) {
 			throw new InvokerException("Error al cargar el archivo xml de configuración" + e.getMessage(), e);
@@ -174,9 +167,6 @@ public class HttpInvoker extends AbstractHttpInvoker {
 			throw new InvokerException("Error al generar la implementación de HTTPClient" + e.getMessage(), e);
 		} catch (NullPointerException e) {
 			throw new InvokerException(e.getMessage());
-		} finally {
-			LocalTime afterCall = LocalTime.now();
-			tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
 		}
 
 		return tiempoTotal;
