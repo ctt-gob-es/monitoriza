@@ -140,5 +140,10 @@ public interface ICoreLogMessages {
 	 * Constant attribute that represents the name of the property <code>errorcore013</code> belonging to the file status/monitoriza_xx_YY.properties.
 	 */
 	String ERRORCORE013 = "errorcore013";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>errorcore013</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORCORE014 = "errorcore014";
 
 }
