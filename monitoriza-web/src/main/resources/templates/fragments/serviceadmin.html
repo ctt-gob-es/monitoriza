@@ -99,7 +99,7 @@
 					<input type='hidden' class='primarykey' id="fileData" th:field="*{fileData}">
 
 					<button id="serviceBtn" type="submit" class="btn btn-primary" th:text="#{button.save}"></button>
-					<button id="cleanServiceBtn" class="btn btn-primary" onclick="cleanForm('#serviceForm');" th:text="#{button.cleanForm}"></button>
+					<button id="cleanServiceBtn" class="btn btn-primary" onclick="cleanServiceForm();" th:text="#{button.cleanForm}"></button>
 				</form>
 		</div>
 	</div>
@@ -287,9 +287,7 @@ $(document).ready(function() {
                 $("#timeout").val(timeoutValue);
                 $("#platform").val(idPlatform);
                 $("#nameWsdl").val(nameWsdl);
-                loadEditServiceTypes(idPlatform);
-                //$("#serviceTypes").val(serviceType);
-                $("#serviceTypes").val(serviceType).change();
+                loadEditServiceTypes(idPlatform, serviceType);
                 typeServiceChange(idPlatform, serviceType);
                 $("#timer").val(idTimer);
                 $("#uDegraded").val(degradedThresholdValue);
@@ -696,8 +694,14 @@ $(document).ready(function() {
 						});
 					  });
 				  }else{
-					  $("#serviceForm")[0].reset();
-					  cleanForm('#serviceForm');
+					 // Es necesario hacer la limpieza del formulario por partes,
+					 // ya que de otra manera se producen fallos de funcionamiento
+					 // en los combos.
+					 $('#serviceForm').trigger("reset");
+					 $('#endpoint').attr('value', '');
+					 $('#serviceTypes').val('-1');
+					 $(".custom-file-label").attr('data-content', '');
+					 $(".custom-file-label").text('');
 					  $('#serviceForm *').filter('span').each(function(){
 							$(this).text('');
 						});
@@ -740,16 +744,22 @@ $(document).ready(function() {
 	
 });	
 
-function loadEditServiceTypes(idPlatform) {
+function loadEditServiceTypes(idPlatform, serviceType) {
 	
 	$.getJSON(urlLoadServiceTypes, {
     	idPlatform : idPlatform
     }, function(data) {
-        var html = '<option value="">' + selectServiceTypeText + '</option>';
+        var html = '<option value="-1">' + selectServiceTypeText + '</option>';
         var len = data.length;
         for ( var i = 0; i < len; i++) {
-            html += '<option value="' + data[i] + '">'
+        	if (serviceType == data[i]) {
+            	html += '<option selected="selected" value="' + data[i] + '">'
                     + data[i] + '</option>';
+        	} else {
+        		html += '<option value="' + data[i] + '">'
+                + data[i] + '</option>';
+        	}
+                    
         }
         html += '</option>';
         $('#serviceTypes').html(html);
@@ -774,6 +784,21 @@ function cleanForm(f){
 		$(this).value = -1;
 	});
 }
+
+
+function cleanServiceForm() {
+	
+	// Es necesario hacer la limpieza del formulario por partes,
+	 // ya que de otra manera se producen fallos de funcionamiento
+	 // en los combos.
+	 $('#serviceForm').trigger("reset");
+	 $('#endpoint').attr('value', '');
+	 $('#serviceTypes').val('-1');
+	 $(".custom-file-label").attr('data-content', '');
+	 $(".custom-file-label").text('');
+	
+}
+
 function checkTypeTime(id){
 	var numValue =  $(id)[0].value;
 	if (numValue.indexOf(':') != -1){

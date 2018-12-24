@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>21/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.3, 10/10/2018.
+ * @version 1.4, 19/12/2018.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -37,6 +37,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Comparator;
 import java.util.Enumeration;
 import java.util.Formatter;
 import java.util.List;
@@ -57,7 +58,7 @@ import es.gob.monitoriza.i18n.Language;
 /** 
  * <p>Utilities class for Files.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.2, 10/10/2018.
+ * @version 1.4, 19/12/2018.
  */
 public final class FileUtils {
 
@@ -288,15 +289,14 @@ public final class FileUtils {
 	 * @throws IOException
 	 */
 	public static void unZipFileWithSubFolders(final byte[] fileBytes, final String fileName, final String targetFolder) throws IOException {
-		try {
+		
 			
 			String tempFilePath = new StringBuffer().append(StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY))
 													.append(GeneralConstants.DOUBLE_PATH_SEPARATOR)
 													.append(fileName).toString();
 			
 			// Se escribe temporalmente el fichero en el sistema de archivos
-			writeFile(fileBytes, tempFilePath);
-			
+			writeFile(fileBytes, tempFilePath);			
 			
             // Se abre el fichero zip
             ZipFile zipFile = new ZipFile(tempFilePath);
@@ -333,9 +333,7 @@ public final class FileUtils {
             zipFile.close();
             
             deleteFile(tempFilePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+        
    }
 
 	
@@ -409,6 +407,59 @@ public final class FileUtils {
 	        }
 	    }
 	    return directoryToBeDeleted.delete();
+	}
+	
+	/**
+	 * Loops over a path and deletes all directories inside beginning with a prefix
+	 * @param pathRoot Root directory
+	 * @param startName Prefix of the directories to be deleted
+	 * @return true if all the files where deleted 
+	 */
+	public static boolean deleteAllDirectoriesBeginnigWith(final String pathRoot, final String startName) {
+		
+		File filePath = new File(pathRoot);
+        File[] allFiles = filePath.listFiles();
+        boolean deleted = false;
+
+		for (File file: allFiles) {
+			if (file.isDirectory()) {
+				String fileName = file.getName();
+
+				if (fileName.startsWith(startName)) {
+					
+					if (deleteDirectory(file)) {
+						deleted = true;
+					} else {
+						deleted = false;
+						break;
+					}
+				}
+								
+			}
+
+		}
+		
+		return deleted;
+	}
+	
+	/**
+	 * Deletes the content of a directory given its path as String.
+	 * @param pathRoot String that represents the system directory to be emptied
+	 * @throws IOException Exception launched if there is an error.
+	 */
+	public static void deleteAllRecursively(final String pathRoot) throws IOException {
+		
+		File filePath = new File(pathRoot);
+        File[] allFiles = filePath.listFiles();
+		
+        for (File file: allFiles) {
+        	
+        	Files.walk(file.toPath())
+    	    .sorted(Comparator.reverseOrder())
+    	    .map(Path::toFile)
+    	    .forEach(File::delete);
+        }
+				
 	}
 		
 }
