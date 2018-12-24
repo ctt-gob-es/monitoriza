@@ -27,14 +27,14 @@
 					<xsd:documentation>Identificador del puerto.</xsd:documentation>
 				</xsd:annotation>
         	</xsd:element>
-        	<xsd:element name="user" type="xsd:string">
+        	<xsd:element name="user" type="xsd:string" minOccurs="0">
         		<xsd:annotation>
-					<xsd:documentation>Identificador del usuario.</xsd:documentation>
+					<xsd:documentation>Identificador del usuario. Opcional</xsd:documentation>
 				</xsd:annotation>
         	</xsd:element>
-        	<xsd:element name="password" type="xsd:string">
+        	<xsd:element name="password" type="xsd:string" minOccurs="0">
         		<xsd:annotation>
-					<xsd:documentation>Identificador del contraseña.</xsd:documentation>
+					<xsd:documentation>Identificador del contraseña. Opcional</xsd:documentation>
 				</xsd:annotation>
         	</xsd:element>
 		</xsd:sequence>
@@ -64,6 +64,16 @@
 			<xsd:element name="typeKeyStore" type="xsd:string">
 				<xsd:annotation>
 					<xsd:documentation>Tipo del almacenamiento de las claves.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="alias" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Alias del certificado a seleccionar del almacen de confianza.</xsd:documentation>
+				</xsd:annotation>
+			</xsd:element>
+			<xsd:element name="passwordAlias" type="xsd:string" minOccurs="0">
+				<xsd:annotation>
+					<xsd:documentation>Contraseña del alias del certificado a seleccionar del almacen de confianza.</xsd:documentation>
 				</xsd:annotation>
 			</xsd:element>
         </xsd:sequence>

@@ -79,7 +79,6 @@ public class HttpInvoker extends AbstractHttpInvoker {
 	 *         complete the request. If there is some configuration or communication
 	 *         problem, this value will be null.
 	 * @throws InvokerException
-	 *             TODO
 	 */
 	public static Long sendRequest(final File file, final ConfigServiceDTO service, final KeyStore ssl)
 			throws InvokerException {

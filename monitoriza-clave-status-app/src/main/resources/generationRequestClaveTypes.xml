@@ -1,28 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<mcl:claveAgentConf
-	xmlns:mcl="urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0 generationRequestClaveTypes.xsd ">
-	<mcl:connection>
-		<mcl:proxy>
-			<mcl:host>mcl:host</mcl:host>
-			<mcl:port>mcl:port</mcl:port>
-			<mcl:user>mcl:user</mcl:user>
-			<mcl:password>mcl:password</mcl:password>
-		</mcl:proxy>
-		<mcl:authenticationMutual>
-			<mcl:passwordKeyStore>mcl:passwordKeyStore</mcl:passwordKeyStore>
-			<mcl:typeKeyStore>mcl:typeKeyStore</mcl:typeKeyStore>
-		</mcl:authenticationMutual>
-	</mcl:connection>
-	<mcl:request>
-		<mcl:httpRequest>
-			<mcl:result>mcl:result</mcl:result>
-		</mcl:httpRequest>
-		<mcl:samlRequest>
-			<mcl:assertionConsumerServiceURL>mcl:assertionConsumerServiceURL</mcl:assertionConsumerServiceURL>
-			<mcl:SPApplication>mcl:SPApplication</mcl:SPApplication>
-			<mcl:providerName>mcl:providerName</mcl:providerName>
-		</mcl:samlRequest>
-	</mcl:request>
+<mcl:claveAgentConf xmlns:mcl="urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="urn:es:gob:monitoriza:invoker:http:conf:messages:1.0.0 generationRequestClaveTypes.xsd ">
+  <mcl:connection>
+    <mcl:proxy>
+      <mcl:host>mcl:host</mcl:host>
+      <mcl:port>mcl:port</mcl:port>
+    </mcl:proxy>
+    <mcl:authenticationMutual>
+      <mcl:passwordKeyStore>mcl:passwordKeyStore</mcl:passwordKeyStore>
+      <mcl:typeKeyStore>mcl:typeKeyStore</mcl:typeKeyStore>
+    </mcl:authenticationMutual>
+  </mcl:connection>
+  <mcl:request>
+    <mcl:httpRequest>
+      <mcl:result>mcl:result</mcl:result>
+    </mcl:httpRequest>
+    <mcl:samlRequest>
+      <mcl:assertionConsumerServiceURL>mcl:assertionConsumerServiceURL</mcl:assertionConsumerServiceURL>
+      <mcl:SPApplication>mcl:SPApplication</mcl:SPApplication>
+      <mcl:providerName>mcl:providerName</mcl:providerName>
+    </mcl:samlRequest>
+  </mcl:request>
 </mcl:claveAgentConf>

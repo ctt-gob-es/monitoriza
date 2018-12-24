@@ -1,8 +1,8 @@
 //
-// Este archivo ha sido generado por la arquitectura JavaTM para la implantacion de la referencia de enlace (JAXB) XML v2.3.0 
+// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.3.0 
 // Visite <a href="https://javaee.github.io/jaxb-v2/">https://javaee.github.io/jaxb-v2/</a> 
-// Todas las modificaciones realizadas en este archivo se perderan si se vuelve a compilar el esquema de origen. 
-// Generado el: 2018.12.18 a las 09:12:39 AM CET 
+// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
+// Generado el: 2018.12.24 a las 12:49:59 PM CET 
 //
 
 
@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * Configuracion del proxy
+ * Configuración del proxy
  * 			
  * 
  * <p>Clase Java para ProxyConfType complex type.
@@ -29,8 +29,8 @@ import javax.xml.bind.annotation.XmlType;
  *       &lt;sequence&gt;
  *         &lt;element name="host" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="port" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *         &lt;element name="user" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
- *         &lt;element name="password" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="user" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="password" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -52,9 +52,7 @@ public class ProxyConfType {
     protected String host;
     @XmlElement(required = true)
     protected String port;
-    @XmlElement(required = true)
     protected String user;
-    @XmlElement(required = true)
     protected String password;
 
     /**

@@ -1,8 +1,8 @@
 //
-// Este archivo ha sido generado por la arquitectura JavaTM para la implantacion de la referencia de enlace (JAXB) XML v2.3.0 
+// Este archivo ha sido generado por la arquitectura JavaTM para la implantación de la referencia de enlace (JAXB) XML v2.3.0 
 // Visite <a href="https://javaee.github.io/jaxb-v2/">https://javaee.github.io/jaxb-v2/</a> 
-// Todas las modificaciones realizadas en este archivo se perderan si se vuelve a compilar el esquema de origen. 
-// Generado el: 2018.12.18 a las 09:12:39 AM CET 
+// Todas las modificaciones realizadas en este archivo se perderán si se vuelve a compilar el esquema de origen. 
+// Generado el: 2018.12.24 a las 12:49:59 PM CET 
 //
 
 
@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlType;
 
 
 /**
- * Configuraci�n de la autenticacion mutua
+ * Configuración de la autenticación mutua
  * 			
  * 
  * <p>Clase Java para AuthenticationMutualType complex type.
@@ -31,6 +31,8 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="base64" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *         &lt;element name="passwordKeyStore" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
  *         &lt;element name="typeKeyStore" type="{http://www.w3.org/2001/XMLSchema}string"/&gt;
+ *         &lt;element name="alias" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
+ *         &lt;element name="passwordAlias" type="{http://www.w3.org/2001/XMLSchema}string" minOccurs="0"/&gt;
  *       &lt;/sequence&gt;
  *     &lt;/restriction&gt;
  *   &lt;/complexContent&gt;
@@ -44,7 +46,9 @@ import javax.xml.bind.annotation.XmlType;
     "path",
     "base64",
     "passwordKeyStore",
-    "typeKeyStore"
+    "typeKeyStore",
+    "alias",
+    "passwordAlias"
 })
 public class AuthenticationMutualType {
 
@@ -54,6 +58,8 @@ public class AuthenticationMutualType {
     protected String passwordKeyStore;
     @XmlElement(required = true)
     protected String typeKeyStore;
+    protected String alias;
+    protected String passwordAlias;
 
     /**
      * Obtiene el valor de la propiedad path.
@@ -149,6 +155,54 @@ public class AuthenticationMutualType {
      */
     public void setTypeKeyStore(String value) {
         this.typeKeyStore = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad alias.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getAlias() {
+        return alias;
+    }
+
+    /**
+     * Define el valor de la propiedad alias.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setAlias(String value) {
+        this.alias = value;
+    }
+
+    /**
+     * Obtiene el valor de la propiedad passwordAlias.
+     * 
+     * @return
+     *     possible object is
+     *     {@link String }
+     *     
+     */
+    public String getPasswordAlias() {
+        return passwordAlias;
+    }
+
+    /**
+     * Define el valor de la propiedad passwordAlias.
+     * 
+     * @param value
+     *     allowed object is
+     *     {@link String }
+     *     
+     */
+    public void setPasswordAlias(String value) {
+        this.passwordAlias = value;
     }
 
 }

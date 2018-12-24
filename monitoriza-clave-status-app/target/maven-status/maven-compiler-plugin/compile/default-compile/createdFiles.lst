@@ -12,6 +12,7 @@ es\gob\monitoriza\invoker\http\AbstractHttpInvoker.class
 es\gob\monitoriza\invoker\http\conf\messages\SamlRequestType.class
 es\gob\monitoriza\invoker\http\saml\SpProtocolEngineI.class
 es\gob\monitoriza\invoker\http\saml\SPUtil.class
+es\gob\monitoriza\invoker\http\conf\util\SelectByAlias.class
 es\gob\monitoriza\invoker\http\HttpInvoker.class
 es\gob\monitoriza\invoker\http\saml\SpProtocolEngineFactory$LazyHolder.class
 es\gob\monitoriza\invoker\http\conf\util\Utilities.class

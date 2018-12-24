@@ -40,17 +40,16 @@ import javax.net.ssl.TrustManagerFactory;
 
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
-import org.apache.http.auth.Credentials;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
-import org.apache.http.client.protocol.HttpClientContext;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.impl.conn.DefaultProxyRoutePlanner;
+import org.apache.http.ssl.PrivateKeyStrategy;
+import org.apache.http.ssl.SSLContextBuilder;
+import org.apache.http.ssl.SSLContexts;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -58,6 +57,7 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.invoker.http.conf.messages.AttributeType;
 import es.gob.monitoriza.invoker.http.conf.messages.ClaveAgentConfType;
+import es.gob.monitoriza.invoker.http.conf.util.SelectByAlias;
 import es.gob.monitoriza.invoker.http.conf.util.Utilities;
 import es.gob.monitoriza.invoker.http.saml.Constants;
 import es.gob.monitoriza.invoker.http.saml.SpProtocolEngineFactory;
@@ -217,8 +217,10 @@ public abstract class AbstractHttpInvoker {
 	 *            configuration for the creation of the connection
 	 * @param service
 	 *            configuration of Monitoriza for the creation of the connection
-	 * @return CloseableHttpClient return the CloseableHttpClient required for the
-	 *         connection
+	 * @param ssl
+	 *            Configuration of Keystore
+	 * @return CloseableHttpClient 
+	 * 			  return the CloseableHttpClient required for the connection
 	 * @throws KeyStoreException
 	 * @throws NoSuchAlgorithmException
 	 * @throws CertificateException
@@ -229,57 +231,193 @@ public abstract class AbstractHttpInvoker {
 	 */
 	protected static CloseableHttpClient createHttpClient(final ClaveAgentConfType requestConf, final ConfigServiceDTO service, final KeyStore ssl) throws KeyStoreException, NoSuchAlgorithmException, CertificateException, IOException, KeyManagementException, UnrecoverableKeyException, InvokerException {
 		CloseableHttpClient res;
-		KeyManager[ ] keyManagers = null;
-		String[ ] s = service.getBaseUrl().split(":");
+		CredentialsProvider credsProvider = null;
+		SSLConnectionSocketFactory sslConnectionSocketFactory = null;
+		RequestConfig reqConfig = null;
 
-		RequestConfig config = RequestConfig.custom().setConnectTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_CONNECT_TIMEOUT))).setConnectionRequestTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_CONNECTION_REQUEST_TIMEOUT))).setSocketTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_SOCKET_TIMEOUT))).build();
+		LOGGER.debug("Inicio de la creación del cliente HTTP");
+		reqConfig = getRequestConfig(requestConf);
 
 		if (requestConf.getConnection() != null) {
-			if (requestConf.getConnection().getProxy() != null) {
-				if (!requestConf.getConnection().getProxy().getPort().matches("\\d\\d\\d\\d")) {
-					throw new InvokerException("El puerto introducido es erróneo.");
-				}
+			// Proxy Credentials
+			credsProvider = createProxyCredentials(requestConf, reqConfig);
+			// Configuración canal seguro
+			sslConnectionSocketFactory = createSSLConnectionSocketFactory(service, requestConf, ssl);
+		}
+
+		// Creación petición HTTP
+		res = createRequestHttp(service, sslConnectionSocketFactory, reqConfig, credsProvider);
+
+		return res;
+	}
+
+	/**
+	 * Method setting configuration for the creation of the connection
+	 * 
+	 * @param requestConf
+	 * 				Configuration for the creation of the connection
+	 * @return RequestConfig
+	 * @throws InvokerException
+	 */
+	protected static RequestConfig getRequestConfig(final ClaveAgentConfType requestConf) throws InvokerException {
+		RequestConfig res;
+		RequestConfig.Builder builder = RequestConfig.custom().setConnectTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_CONNECT_TIMEOUT))).setConnectionRequestTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_CONNECTION_REQUEST_TIMEOUT))).setSocketTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_SOCKET_TIMEOUT)));
+
+		if (requestConf.getConnection().getProxy() != null) {
+			LOGGER.debug("Se han introducido datos de conexión con proxy.");
+			if (Integer.parseInt(requestConf.getConnection().getProxy().getPort()) < 1 || Integer.parseInt(requestConf.getConnection().getProxy().getPort()) > 65535) {
+				throw new InvokerException("El puerto introducido es erróneo.");
+			} else {
+				LOGGER.debug("Configurando la conexión por medio de proxy.");
 				HttpHost proxy = new HttpHost(requestConf.getConnection().getProxy().getHost(), Integer.parseInt(requestConf.getConnection().getProxy().getPort()));
-				DefaultProxyRoutePlanner routePlanner = new DefaultProxyRoutePlanner(proxy);
-				Credentials credentials = new UsernamePasswordCredentials(requestConf.getConnection().getProxy().getUser(), requestConf.getConnection().getProxy().getPassword());
-
-				CredentialsProvider credsProvider = new BasicCredentialsProvider();
-				credsProvider.setCredentials(AuthScope.ANY, credentials);
-
-				HttpClientContext context = HttpClientContext.create();
-				context.setCredentialsProvider(credsProvider);
-				res = HttpClients.custom().setDefaultCredentialsProvider(credsProvider).setRoutePlanner(routePlanner).build();
+				builder.setProxy(proxy);
 			}
 		}
 
-		if (s[0].equals("http")) {
-			// res = HttpClients.createDefault();
-			res = HttpClientBuilder.create().setDefaultRequestConfig(config).build();
-		} else {
-			TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-			tmf.init(ssl);
-			SSLContext sslContext = SSLContext.getInstance("SSL");
+		res = builder.build();
 
-			// Configuración para autenticación mutua, en caso de haber sido
-			// establecida
-			if (requestConf.getConnection() != null && requestConf.getConnection().getAuthenticationMutual() != null) {
-				KeyStore keystore = Utilities.LoadKeystore(
-				                                           requestConf.getConnection().getAuthenticationMutual().getPath().toString(), 
-				                                           requestConf.getConnection().getAuthenticationMutual().getPasswordKeyStore().toString(), 
-				                                           requestConf.getConnection().getAuthenticationMutual().getTypeKeyStore().toString());
-				KeyManagerFactory kmf = KeyManagerFactory.getInstance("SunX509");
-				kmf.init(keystore, requestConf.getConnection().getAuthenticationMutual().getPasswordKeyStore().toCharArray());
-				keyManagers = kmf.getKeyManagers();
+		return res;
+	}
+
+	/**
+	 * Method create request http client
+	 * 
+	 * @param service 
+	 * 				Configuration of Monitoriza for the creation of the connection
+	 * @param ssl
+	 * 				Configuration of Keystore
+	 * @param requestConf
+	 * 				Configuration for the creation of the connection
+	 * @return CloseableHttpClient
+	 * 
+	 * @throws KeyStoreException
+	 * @throws NoSuchAlgorithmException
+	 * @throws KeyManagementException
+	 */
+	private static SSLConnectionSocketFactory createSSLConnectionSocketFactory(final ConfigServiceDTO service, final ClaveAgentConfType requestConf, KeyStore ssl) throws InvokerException {
+		KeyManagerFactory kmf;
+		KeyStore keystore = null;
+		KeyManager[ ] keyManagers = null;
+		PrivateKeyStrategy pks = null;
+		SSLContext sslContext;
+		SSLContextBuilder builder = null;
+		SSLConnectionSocketFactory res = null;
+		TrustManagerFactory tmf = null;
+		String[ ] s = service.getBaseUrl().split(":");
+
+		try {
+
+			// Es conexión segura
+			if (s[0].equalsIgnoreCase("https")) {
+				// Almacen de confianza
+				tmf = TrustManagerFactory.getInstance("SunX509");
+				tmf.init(ssl);
+				// Protocolo seuro
+				sslContext = SSLContext.getInstance("SSL");
+
+				// Autenticación Mutua
+				if (requestConf.getConnection().getAuthenticationMutual() != null) {
+
+					LOGGER.debug("Configurando el keystore para la autenticación mutua.");
+
+					if (requestConf.getConnection().getAuthenticationMutual().getPath() == null && requestConf.getConnection().getAuthenticationMutual().getBase64() == null) {
+						throw new InvokerException("La autenticación mutua necesita la dirección o la base64 del almacenamiento de las claves.");
+					} else {
+						if (requestConf.getConnection().getAuthenticationMutual().getPath() != null) {
+							keystore = Utilities.loadKeystorePath(requestConf.getConnection().getAuthenticationMutual().getPath(), requestConf.getConnection().getAuthenticationMutual().getPasswordKeyStore(), requestConf.getConnection().getAuthenticationMutual().getTypeKeyStore());
+
+						} else {
+							keystore = Utilities.loadKeystoreBase64(requestConf.getConnection().getAuthenticationMutual().getBase64(), requestConf.getConnection().getAuthenticationMutual().getPasswordKeyStore(), requestConf.getConnection().getAuthenticationMutual().getTypeKeyStore());
+						}
+
+						kmf = KeyManagerFactory.getInstance("SunX509");
+						kmf.init(keystore, requestConf.getConnection().getAuthenticationMutual().getPasswordKeyStore().toCharArray());
+
+						// En el caso de estar configurado el alias a utilizar
+						// del keystore
+						if (requestConf.getConnection().getAuthenticationMutual().getAlias() != null && requestConf.getConnection().getAuthenticationMutual().getPasswordAlias() != null) {
+							LOGGER.debug("Utilizando el alias " + requestConf.getConnection().getAuthenticationMutual().getAlias() + " para la autenticación mutua.");
+							pks = new SelectByAlias(requestConf.getConnection().getAuthenticationMutual().getAlias());
+							builder = SSLContexts.custom().loadKeyMaterial(keystore, requestConf.getConnection().getAuthenticationMutual().getPasswordAlias().toCharArray(), pks);
+							sslContext = builder.build();
+						} else {
+							keyManagers = kmf.getKeyManagers();
+						}
+					}
+				}
+
+				sslContext.init(keyManagers, tmf.getTrustManagers(), null);
+
+				res = new SSLConnectionSocketFactory(sslContext, new String[ ] { "TLSv1.2", "TLSv1.1" }, null, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+			}
+		} catch (InvokerException e) {
+			throw new InvokerException(e.getMessage());
+		} catch (Exception e) {
+			throw new InvokerException("Error al crear la conexión SSL de la petición: " + e.getMessage(), e);
+		}
+		return res;
+	}
+
+	/**
+	 * Method create request http client
+	 * 
+	 * @param service 
+	 * 				Configuration of Monitoriza for the creation of the connection
+	 * @param sslsf
+	 * 				Configuration SSL connection
+	 * @param config 
+	 * 				Request config 
+	 * @return CloseableHttpClient
+	 * 
+	 * @throws KeyStoreException
+	 * @throws NoSuchAlgorithmException
+	 * @throws KeyManagementException
+	 */
+	private static CloseableHttpClient createRequestHttp(ConfigServiceDTO service, SSLConnectionSocketFactory sslsf, RequestConfig config, CredentialsProvider credsProvider) throws KeyStoreException, NoSuchAlgorithmException, KeyManagementException {
+		CloseableHttpClient res = null;
+		HttpClientBuilder httpClientBuilder;
+
+		httpClientBuilder = HttpClientBuilder.create().setDefaultRequestConfig(config);
+
+		if (sslsf != null) {
+			httpClientBuilder.setSSLSocketFactory(sslsf);
+		}
+
+		// Credenciales del proxy
+		if (credsProvider != null) {
+			httpClientBuilder.setDefaultCredentialsProvider(credsProvider);
+		}
+
+		res = httpClientBuilder.build();
+
+		return res;
+	}
+
+	/**
+	 * Method create Proxy credentials
+	 * 
+	 * @param requestConf
+	 * 				Params of request XML file
+	 * @param requestConfig
+	 * 				Request config
+	 * @return CredentialsProvider
+	 * @throws InvokerException
+	 */
+	private static CredentialsProvider createProxyCredentials(ClaveAgentConfType requestConf, RequestConfig requestConfig) throws InvokerException {
+		CredentialsProvider res = null;
+
+		if (requestConfig.getProxy() != null) {
+			if (requestConf.getConnection().getProxy().getUser() != null && requestConf.getConnection().getProxy().getPassword() == null) {
+				LOGGER.warn("Ha introducido conexión con autenticacion por medio del proxy, sin la contraseña correspondiente.");
+			} else if (requestConf.getConnection().getProxy().getUser() != null && requestConf.getConnection().getProxy().getPassword() != null) {
+				res = new BasicCredentialsProvider();
+				res.setCredentials(new AuthScope(requestConfig.getProxy()), new UsernamePasswordCredentials(requestConf.getConnection().getProxy().getUser(), requestConf.getConnection().getProxy().getPassword()));
 
 			}
-			sslContext.init(keyManagers, tmf.getTrustManagers(), null);
-
-			SSLConnectionSocketFactory sslsf = new SSLConnectionSocketFactory(sslContext, new String[ ] { "TLSv1.2", "TLSv1.1" }, null, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
-
-			res = HttpClientBuilder.create().setDefaultRequestConfig(config).setSSLSocketFactory(sslsf).build();
 		}
 
 		return res;
+
 	}
 
 	/**
