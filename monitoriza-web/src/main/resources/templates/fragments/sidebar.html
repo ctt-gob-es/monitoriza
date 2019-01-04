@@ -64,6 +64,15 @@
 		               			</script>
 	               			</a>
 	               		</li>
+	               		<li>
+							<a id="aQueriesSpieTimeRangeAdmin" class='sidebar-link' href="#">
+							    <span class="title" th:text="#{menu.admin.queries.spie.time}"></span>
+								<script th:inline="javascript">
+		                 			var actionQuerySpieTimeRange = /*[[@{/queryspietimerange}]]*/;
+		                 			$('#aQueriesSpieTimeRangeAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionQuerySpieTimeRange, 'optionReplacement', 'GET', null, true); return false;});
+		               			</script>
+	               			</a>
+	               		</li>
 	               		<!-- <li>
 							<a id="aQueriesVipDateRangeAdmin" class='sidebar-link' href="#">
 								<span class="title" th:text="#{menu.admin.queries.vip.date}"></span>

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>17/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 10/12/2018.
+ * @version 1.4, 04/01/2019.
  */
 package es.gob.monitoriza.spring.config;
 
@@ -41,6 +41,7 @@ import org.springframework.scheduling.config.ScheduledTaskRegistrar;
 import org.springframework.scheduling.support.CronTrigger;
 
 import es.gob.monitoriza.constant.StaticConstants;
+import es.gob.monitoriza.task.SpieStatisticsTask;
 import es.gob.monitoriza.task.TimerScheduledCheckerTask;
 import es.gob.monitoriza.task.VipStatisticsTask;
 import es.gob.monitoriza.utilidades.NumberConstants;
@@ -50,7 +51,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <p>Class that configures the spring scheduled task for checking the status of the timers
  * allowing to to get the fixed rate parameter at running time.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 10/12/2018.
+ * @version 1.4, 04/01/2019.
  */
 @Configuration
 @EnableScheduling
@@ -76,11 +77,20 @@ public class SchedulingConfig implements SchedulingConfigurer {
 	
 	/**
 	 * Method that creates a new TimerScheduledCheckerTask instance.
-	 * @return {@link TimerScheduledCheckerTask} 
+	 * @return {@link VipStatisticsTask} 
 	 */
 	@Bean
-    public VipStatisticsTask statDumper() {
+    public VipStatisticsTask statVipDumper() {
         return new VipStatisticsTask();
+    }
+	
+	/**
+	 * Method that creates a new TimerScheduledCheckerTask instance.
+	 * @return {@link SpieStatisticsTask} 
+	 */
+	@Bean
+    public SpieStatisticsTask statSpieDumper() {
+        return new SpieStatisticsTask();
     }
 
     /**
@@ -110,14 +120,23 @@ public class SchedulingConfig implements SchedulingConfigurer {
         );
                 
         
-        // Se añade la tarea para volcar los datos diarios de monitorización
+        // Se añade la tarea para volcar los datos de la VIP diarios de monitorización
 		taskRegistrar.addTriggerTask(new Runnable() {
 
 			@Override
 			public void run() {
-				statDumper().dumpAndDeleteMonitoringData();
+				statVipDumper().dumpAndDeleteMonitoringData();
 			}
 		}, new CronTrigger(StaticMonitorizaProperties.getProperty(StaticConstants.CRON_DUMP_VIP_MONITORING)) );
+		
+		// Se añade la tarea para volcar los datos diarios SPIE de monitorización
+		taskRegistrar.addTriggerTask(new Runnable() {
+
+			@Override
+			public void run() {
+				statSpieDumper().dumpAndDeleteMonitoringData();
+			}
+		}, new CronTrigger(StaticMonitorizaProperties.getProperty(StaticConstants.CRON_DUMP_SPIE_MONITORING)) );
     }
 
 }

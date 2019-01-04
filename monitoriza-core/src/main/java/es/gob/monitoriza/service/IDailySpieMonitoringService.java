@@ -15,7 +15,7 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.service.IDailyVipMonitoringService.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.service.IDailySpieMonitoringService.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/11/2018.</p>
@@ -29,8 +29,8 @@ import java.util.List;
 
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
-import es.gob.monitoriza.persistence.configuration.dto.DailyVipDTO;
-import es.gob.monitoriza.persistence.configuration.model.entity.DailyVipMonitorig;
+import es.gob.monitoriza.persistence.configuration.dto.DailySpieDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.DailySpieMonitorig;
 
 /** 
  * <p>Interface that provides communication with the operations of the persistence
@@ -38,20 +38,20 @@ import es.gob.monitoriza.persistence.configuration.model.entity.DailyVipMonitori
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.1, 04/01/2019.
  */
-public interface IDailyVipMonitoringService {
+public interface IDailySpieMonitoringService {
 	
 	/**
-	 * Method that gets a {@link #DailyVipMonitorig} by its identifier.
-	 * @param idDailyVip Identifier of the {@link #DailyVipMonitorig}
-	 * @return {@link #DailyVipMonitorig}
+	 * Method that gets a {@link #DailySpieMonitorig} by its identifier.
+	 * @param idDailySpie Identifier of the {@link #DailySpieMonitorig}
+	 * @return {@link #DailySpieMonitorig}
 	 */
-	DailyVipMonitorig getDailyVipMonitoringById(Long idDailyVip);
+	DailySpieMonitorig getDailySpieMonitoringById(Long idDailySpie);
 	
 	/**
-	 * Method that stores a {@link #DailyVipMonitorig} in the persistence.
-	 * @param dailyVip {@link #DailyVipMonitorig} to save
+	 * Method that stores a {@link #DailySpieMonitorig} in the persistence.
+	 * @param dailySpie {@link #DailySpieMonitorig} to save
 	 */
-	void saveDailyVipMonitoring(DailyVipMonitorig dailyVip);
+	void saveDailySpieMonitoring(DailySpieMonitorig dailySpie);
 	
 	/**
 	 * Method that gets daily monitoring between two timestamp.
@@ -59,7 +59,7 @@ public interface IDailyVipMonitoringService {
 	 * @param max Maximum range timestamp
 	 * @return DataTablesOutput<DailyVipMonitorig>
 	 */
-	DataTablesOutput<DailyVipMonitorig> findDailyVipTimeRangeDT(LocalDateTime min, LocalDateTime max);
+	DataTablesOutput<DailySpieMonitorig> findDailySpieTimeRangeDT(LocalDateTime min, LocalDateTime max);
 	
 	/**
 	 * Method that gets daily monitoring between two datetime.
@@ -69,12 +69,12 @@ public interface IDailyVipMonitoringService {
 	 * @param service String that represents the name or part of the name of the service to filter
 	 * @return List<DailyVipDTO>
 	 */
-	List<DailyVipDTO> findDailyVipTimeRange(LocalDateTime min, LocalDateTime max, String system, String service);
+	List<DailySpieDTO> findDailySpieTimeRange(LocalDateTime min, LocalDateTime max, String system, String service);
 	
 	/**
-	 * Group and dumps the data stored in the VIP daily monitoring into the VIP statistics table.
+	 * Group and dumps the data stored in the SPIE daily monitoring into the SPIE statistics table.
 	 * Then deletes older monitoring data.
 	 */
-	void dumpAndDeleteMonitoringData();
+	void dumpAndDeleteSpieMonitoringData();
 
 }

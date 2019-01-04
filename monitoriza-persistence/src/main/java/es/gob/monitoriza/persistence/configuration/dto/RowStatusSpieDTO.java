@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>11/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 18/10/2018.
+ * @version 1.2, 04/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 /** 
  * <p>Class that represents a row of the datatable status semaphore.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 31/10/2018.
+ * @version 1.2, 04/01/2019.
  */
 public class RowStatusSpieDTO {
 			
@@ -76,6 +76,14 @@ public class RowStatusSpieDTO {
 	 */
 	private LocalDateTime statusUptodate;
 	
+		
+	/**
+	 * Constructor method for the class RowStatusSpieDTO.java. 
+	 */
+	public RowStatusSpieDTO() {
+		super();
+	}
+
 	/**
 	 * Constructor method for the class StatusSpieUptodate.java.
 	 * @param systemParam {@link #system} to set
