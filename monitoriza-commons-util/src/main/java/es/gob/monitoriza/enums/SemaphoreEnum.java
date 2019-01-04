@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>08/11/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 08/11/2018.
+ * @version 1.1, 04/01/2019.
  */
 package es.gob.monitoriza.enums;
 
@@ -28,7 +28,7 @@ package es.gob.monitoriza.enums;
 /** 
  * <p>Enum that represents the semaphore values .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 08/11/2018.
+ * @version 1.1, 04/01/2019.
  */
 public enum SemaphoreEnum {
 	
@@ -69,5 +69,5 @@ public enum SemaphoreEnum {
 	public String getName() {
 		return name;
 	}
-
+	
 }

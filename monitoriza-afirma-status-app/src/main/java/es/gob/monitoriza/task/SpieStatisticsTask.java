@@ -15,32 +15,48 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.rest.controller.QueryVipRestController.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.task.VipStatisticsTask.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>13/11/2018.</p>
+ * <b>Date:</b><p>10/12/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 13/11/2018.
+ * @version 1.0, 04/01/2019.
  */
-package es.gob.monitoriza.rest.controller;
+package es.gob.monitoriza.task;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.stereotype.Component;
 
-import es.gob.monitoriza.service.IDailyVipMonitoringService;
+import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.service.IDailySpieMonitoringService;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that define the tasks related to SPIE statistics.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 13/11/2018.
+ * @version 1.0, 04/01/2019.
  */
-@RestController
-public class QueryVipRestController {
+@Component
+public class SpieStatisticsTask {
 	
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents the object that manages the log of the class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+		
+	/**
+	 * Attribute that represents the injected daily vip monitoring service. 
 	 */
 	@Autowired
-	private IDailyVipMonitoringService dailyVipService;
+	private IDailySpieMonitoringService dailyService;
+	
+	/**
+	 * Group and dumps the data stored in the SPIE daily monitoring into the SPIE statistics table.
+	 * Then deletes older monitoring data.
+	 */
+	public void dumpAndDeleteMonitoringData() {
+		
+		dailyService.dumpAndDeleteSpieMonitoringData();
+	}
 
 }

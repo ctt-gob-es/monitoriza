@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>25/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 25/10/2018.
+ * @version 1.1, 04/01/2019.
  */
 package es.gob.monitoriza.spie.task;
 
@@ -45,9 +45,9 @@ import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 
 
 /** 
- * <p>Class .</p>
+ * <p>Class that initializes the timers for processing the batch of requests for each SPIE service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 25/10/2018.
+ * @version 1.1, 04/01/2019.
  */
 public class MonitorizaSpieTask extends HttpServlet {
 
@@ -97,8 +97,6 @@ public class MonitorizaSpieTask extends HttpServlet {
 		Timer timer = new Timer();
 		ExecuteTimer batchTimer = new ExecuteTimer(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
 		timer.schedule(batchTimer, 0, afirmaFrequency);
-			
-		
 	}
 	
 	/**
@@ -109,7 +107,7 @@ public class MonitorizaSpieTask extends HttpServlet {
 	private class ExecuteTimer extends TimerTask {
 		
 		/**
-		 * Attribute that represents . 
+		 * Attribute that represents the type of the platform. 
 		 */
 		private transient Long platformType;
 	

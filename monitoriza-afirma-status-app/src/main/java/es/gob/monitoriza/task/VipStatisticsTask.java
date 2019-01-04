@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/12/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 10/12/2018.
+ * @version 1.1, 04/01/2019.
  */
 package es.gob.monitoriza.task;
 
@@ -31,9 +31,9 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.service.IDailyVipMonitoringService;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that define the tasks related to VIP statistics.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 10/12/2018.
+ * @version 1.1, 04/01/2019.
  */
 @Component
 public class VipStatisticsTask {
@@ -50,7 +50,8 @@ public class VipStatisticsTask {
 	private IDailyVipMonitoringService dailyService;
 	
 	/**
-	 * 
+	 * Group and dumps the data stored in the VIP daily monitoring into the VIP statistics table.
+	 * Then deletes older monitoring data.
 	 */
 	public void dumpAndDeleteMonitoringData() {
 		
