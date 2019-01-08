@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.service.IPlatformController.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>14 dic. 2018.</p>
+ * <b>Date:</b><p>10 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 14/12/2018.
+ * @version 1.6, 04/01/2019.
  */
 package es.gob.monitoriza.service;
 
@@ -36,7 +36,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitori
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 17/10/2018.
+ * @version 1.6, 04/01/2019.
  */
 public interface IPlatformService {
 		
@@ -68,15 +68,15 @@ public interface IPlatformService {
 	
 	/**
 	 * Method that gets all the platform configuration from the persistence.
-	 * @return a {@link Iterable<PlatformMonitoriza>} with the information of all users.
-	 */
-	Iterable<PlatformMonitoriza> getAllPlatform();
-	
-	/**
-	 * Method that gets all the platform configuration from the persistence.
 	 * @return a {@link Iterable<CPlatformType>} with the information of all users.
 	 */
 	Iterable<CPlatformType> getAllPlatformType();
+	
+	/**
+	 * Method that gets all the platform configuration from the persistence.
+	 * @return a {@link Iterable<PlatformMonitoriza>} with the information of all users.
+	 */
+	Iterable<PlatformMonitoriza> getAllPlatform();
 		
 	/**
 	 * Method that returns a list of platforms to be showed in DataTable.
@@ -112,7 +112,7 @@ public interface IPlatformService {
 	 * @return {@link PlatformMonitoriza} The @firma configuration. 
 	 */
 	PlatformMonitoriza savePlatformTsa(TsaDTO tsaDto);
-
+	
 	/**
 	 * Method that returns a list of platforms to be showed in DataTable.
 	 * @param input DataTableInput with filtering, paging and sorting configuration.
@@ -128,5 +128,5 @@ public interface IPlatformService {
 	 * @return {@link PlatformMonitoriza} The cl@ve configuration. 
 	 */
 	PlatformMonitoriza savePlatformClave(ClaveDTO claveDTO, Long platformTypeId);
-	
+
 }

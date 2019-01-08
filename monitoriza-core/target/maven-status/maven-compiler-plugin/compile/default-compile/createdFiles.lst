@@ -10,6 +10,7 @@ es\gob\monitoriza\service\impl\StatusService$1.class
 es\gob\monitoriza\service\impl\ValidServiceService.class
 es\gob\monitoriza\spring\config\SchedulingWebConfig.class
 es\gob\monitoriza\keystore\KeystoreNameVersionStamp.class
+es\gob\monitoriza\service\impl\DailySpieMonitoringService.class
 es\gob\monitoriza\service\impl\SpieScheduledService.class
 es\gob\monitoriza\configuration\manager\AdminSpieManager.class
 es\gob\monitoriza\service\IUserMonitorizaService.class
@@ -21,6 +22,7 @@ es\gob\monitoriza\service\impl\RequestServiceFileService.class
 es\gob\monitoriza\service\ITimerScheduledService.class
 es\gob\monitoriza\service\IAlarmService.class
 es\gob\monitoriza\service\IStatusCertificateService.class
+es\gob\monitoriza\service\IDailySpieMonitoringService.class
 es\gob\monitoriza\crypto\utils\CryptographyValidationUtils.class
 es\gob\monitoriza\keystore\KeystoreNameVersionFilter.class
 es\gob\monitoriza\crypto\keystore\IKeystoreFacade.class

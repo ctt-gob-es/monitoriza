@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>27/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 27/10/2018.
+ * @version 1.1, 04/01/2019.
  */
 package es.gob.monitoriza.spie.invoker;
 
@@ -47,14 +47,15 @@ import javax.net.ssl.TrustManagerFactory;
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.utilidades.NumberConstants;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that performs the request of a SPIE service via HTTP.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 27/10/2018.
+ * @version 1.1, 04/01/2019.
  */
 public final class SpieInvoker {
 	
@@ -79,7 +80,7 @@ public final class SpieInvoker {
 	 * @return Long that represents the time in milliseconds that has taken to complete the request.
 	 * If there is some configuration or communication problem, this value will be null.
 	 */
-	public static String sendRequest(final String nodeUrl, final String spieUrl, final KeyStore ssl) {
+	public static String sendRequest(final String nodeUrl, final String spieUrl, final KeyStore ssl) throws InvokerException {
 					
 		String result = null;
 		
@@ -137,7 +138,8 @@ public final class SpieInvoker {
 			// Comprobamos que la conexión se estableció correctamente
 			if (con.getResponseCode() / NumberConstants.NUM100 != 2) {
 				// Si hay algún problema de conexión, considero la petición como perdida...
-				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS016, new Object[]{con.getResponseCode()}));
+				String msg = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS016, new Object[]{con.getResponseCode()});
+				throw new InvokerException(msg);
 			}
 			else {
 				// Lectura...
@@ -152,7 +154,8 @@ public final class SpieInvoker {
 		
 		} catch (IOException e) {
 
-			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS016, new Object[]{e.getMessage()}));
+			String msg = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS016, new Object[]{e.getMessage()});
+			throw new InvokerException(msg, e);
 		}
 		
 

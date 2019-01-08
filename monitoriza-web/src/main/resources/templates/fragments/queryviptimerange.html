@@ -83,23 +83,41 @@
 	
 		  event.preventDefault();
 		  
-		  var minTime = checkTypeTime($('#minTime'));
-		  var maxTime = checkTypeTime($('#maxTime'));
-		  
-		  if (minTime != $('#minTime').val()){
-		    $("#minTime").val(minTime);
-		  }
-			
-		  $("#minTimeSeconds").val(timeToSecondsOfDay(minTime));
-		  
-		  if (maxTime != $('#maxTime').val()){
-			    $("#maxTime").val(maxTime);
-		  }
+		  if ($("#queryVipTimeForm")[0].checkValidity()) {
+			  
+			  $('#queryVipTimeForm *').filter(':input').each(function(){
+				  $("#" + $(this).attr('id')).removeClass("has-error");
+			  });
+				  			  
+			  var minTime = checkTypeTime($('#minTime'));
+			  var maxTime = checkTypeTime($('#maxTime'));
+			  
+			  if (minTime != $('#minTime').val()){
+			    $("#minTime").val(minTime);
+			  }
 				
-		  $("#maxTimeSeconds").val(timeToSecondsOfDay(maxTime));
+			  $("#minTimeSeconds").val(timeToSecondsOfDay(minTime));
+			  
+			  if (maxTime != $('#maxTime').val()){
+				    $("#maxTime").val(maxTime);
+			  }
+					
+			  $("#maxTimeSeconds").val(timeToSecondsOfDay(maxTime));
+			  
+			  var actionQuery = /*[[@{/queryviptime}]]*/;
+			  loadIntoAjax('queryVipTimeForm', actionQuery, 'queryVipTableDiv', 'GET', null, true);
+		  }	else {
 		  
-		  var actionQuery = /*[[@{/queryviptime}]]*/;
-		  loadIntoAjax('queryVipTimeForm', actionQuery, 'queryVipTableDiv', 'GET', null, true);
-		  
+			$('#queryVipTimeForm *').filter(':input').each(function(){
+		      	    
+		          if(!$(this)[0].checkValidity()){
+		      	   	$("#" + $(this).attr('id')).addClass("has-error");
+		      	  } else {
+		      	   	$("#" + $(this).attr('id')).removeClass("has-error");
+		      	  }
+	      	    
+	      	  });
+		   }  
+			 
 	});
 </script>

@@ -7,6 +7,7 @@ C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monit
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\cron\ValidCertificatesJob.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\crypto\keystore\KeystoreFacade.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\impl\AuthenticationTypeService.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\IDailySpieMonitoringService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\IKeystoreService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\spring\config\ApplicationConfig.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\IMailMonitorizaService.java
@@ -67,6 +68,7 @@ C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monit
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\webservice\AxisSSLSocketFactory.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\crypto\keystore\package-info.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\IUserMonitorizaService.java
+C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\impl\DailySpieMonitoringService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\impl\DailyVipMonitoringService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\IAlarmService.java
 C:\Trabajo\proyectos\clave_monitoriza\monitoriza-core\src\main\java\es\gob\monitoriza\service\impl\RequestServiceFileService.java

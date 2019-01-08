@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 05/12/2018.
+ * @version 1.6, 04/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -72,7 +72,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <p>Class that implements the communication with the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.5, 05/12/2018.
+ * @version 1.6, 04/01/2019.
  */
 @Service
 public class StatusService implements IStatusService {
@@ -316,8 +316,9 @@ public class StatusService implements IStatusService {
 			
 			if (!SemaphoreEnum.GREEN.getId().equals(spie.getStatusValue())) {
 				semaphSpie = spie.getStatusValue();
-				description = message.getMessage(IWebViewMessages.ERROR_SPIE_SERVICE, new Object[]{spie.getSpieService(), spie.getNodeName()}, locale);
 				
+				description = message.getMessage(IWebViewMessages.ERROR_SPIE_SERVICE, new Object[]{spie.getSpieService(), spie.getNodeName()}, locale);
+							
 				summary = new SummaryStatusDTO(semaphSpie, "SPIE", description);
 				summaryList.add(summary);
 				

@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.5, 05/12/2018.
+ * @version 1.6, 04/01/2019.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -56,6 +56,7 @@ import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.invoker.http.HttpInvoker;
 import es.gob.monitoriza.invoker.ocsp.OcspInvoker;
 import es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker;
+import es.gob.monitoriza.invoker.soap.SoapInvoker;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.DailyVipMonitorig;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
@@ -67,7 +68,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.5, 05/12/2018.
+ * @version 1.6, 04/01/2019.
  */
 public final class RequestProcessorThread implements Runnable {
 
@@ -281,10 +282,10 @@ public final class RequestProcessorThread implements Runnable {
 	}
 	
 	/**
-	 * 
-	 * @param service
-	 * @param platform
-	 * @param status
+	 * Saves the VIP status sample in persistence.
+	 * @param service VIP service being monitored
+	 * @param platform Platform of the service being monitored
+	 * @param status Status result of the service.
 	 */
 	private void saveDailyVipMonitoring(String service, String platform, StatusUptodate status) {
 		

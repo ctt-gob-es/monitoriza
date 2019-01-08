@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>05/11/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 05/11/2018.
+ * @version 1.1, 04/01/2019.
  */
 package es.gob.monitoriza.i18n;
 
@@ -28,7 +28,7 @@ package es.gob.monitoriza.i18n;
 /** 
  * <p>Interface that contains the keys to the messages for the web module that are set at server side.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 05/11/2018.
+ * @version 1.1, 04/01/2019.
  */
 public interface IWebViewMessages {
 	
@@ -54,6 +54,11 @@ public interface IWebViewMessages {
 	 * Constant attribute that represents the name of the property <code>error.spie.service</code> belonging to the file messages_xx_YY.properties.
 	 */
 	String ERROR_SPIE_SERVICE = "error.spie.service";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>error.connection.service</code> belonging to the file messages_xx_YY.properties.
+	 */
+	String ERROR_CONNECTION_SPIE = "error.connection.service";
 	
 	/***********************/
 	/** Mensajes de error **/ 

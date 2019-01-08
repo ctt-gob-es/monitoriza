@@ -19,6 +19,7 @@ es\gob\monitoriza\persistence\configuration\dto\ConnectionDTO.class
 es\gob\monitoriza\persistence\configuration\model\repository\StatusCertificateRepository.class
 es\gob\monitoriza\persistence\configuration\model\repository\datatable\PlatformDatatableRepository.class
 es\gob\monitoriza\persistence\configuration\model\entity\PlatformMonitoriza.class
+es\gob\monitoriza\persistence\configuration\dto\DailySpieDTO.class
 es\gob\monitoriza\persistence\configuration\model\repository\datatable\StatusCertificateDatatableRepository.class
 es\gob\monitoriza\persistence\configuration\model\entity\SpieType.class
 es\gob\monitoriza\persistence\configuration\dto\ConfSpieDTO.class
@@ -38,6 +39,7 @@ es\gob\monitoriza\persistence\configuration\dto\SummaryStatusDTO.class
 es\gob\monitoriza\persistence\configuration\model\entity\ValidService.class
 es\gob\monitoriza\persistence\configuration\model\repository\TimerScheduledRepository.class
 es\gob\monitoriza\persistence\configuration\model\entity\SystemCertificate.class
+es\gob\monitoriza\persistence\configuration\model\repository\SpieStatisticsRepository.class
 es\gob\monitoriza\persistence\configuration\model\entity\AuthenticationType.class
 es\gob\monitoriza\persistence\configuration\model\specification\CPlatformTypeSpecification.class
 es\gob\monitoriza\persistence\configuration\model\entity\MethodValidation.class
@@ -52,6 +54,7 @@ es\gob\monitoriza\persistence\configuration\model\repository\ConfServerMailRepos
 es\gob\monitoriza\persistence\configuration\dto\ClaveDTO.class
 es\gob\monitoriza\persistence\configuration\model\repository\CPlatformTypeRepository.class
 es\gob\monitoriza\persistence\configuration\model\repository\datatable\AlarmMonitorizaDatatableRepository.class
+es\gob\monitoriza\persistence\configuration\model\entity\DailySpieMonitorig.class
 es\gob\monitoriza\persistence\configuration\model\specification\SearchCriteria.class
 es\gob\monitoriza\persistence\configuration\model\entity\Alarm.class
 es\gob\monitoriza\persistence\configuration\model\repository\AlarmRepository.class
@@ -70,6 +73,7 @@ es\gob\monitoriza\persistence\configuration\model\repository\SpieScheduledReposi
 es\gob\monitoriza\persistence\configuration\model\entity\TimerScheduled.class
 es\gob\monitoriza\persistence\configuration\model\repository\ValidServiceRepository.class
 es\gob\monitoriza\persistence\configuration\dto\TimerDTO.class
+es\gob\monitoriza\persistence\configuration\model\entity\SpieStatistics.class
 es\gob\monitoriza\persistence\configuration\model\repository\datatable\SystemCertificateDatatableRepository.class
 es\gob\monitoriza\persistence\configuration\dto\NodeDTO.class
 es\gob\monitoriza\persistence\configuration\model\repository\VipStatisticsRepository.class
@@ -77,6 +81,7 @@ es\gob\monitoriza\persistence\configuration\dto\RowStatusSpieDTO.class
 es\gob\monitoriza\persistence\configuration\model\repository\DailyVipMonitoringRepository.class
 es\gob\monitoriza\persistence\configuration\dto\AfirmaDTO.class
 es\gob\monitoriza\persistence\configuration\model\repository\datatable\AlarmDataTablesRepository.class
+es\gob\monitoriza\persistence\configuration\model\repository\datatable\DailySpieDataTableRepository.class
 es\gob\monitoriza\persistence\configuration\model\entity\UserMonitoriza.class
 es\gob\monitoriza\persistence\configuration\model\repository\ServiceMonitorizaRepository.class
 es\gob\monitoriza\persistence\configuration\dto\StatusVipDTO$View.class
@@ -86,6 +91,7 @@ es\gob\monitoriza\persistence\configuration\staticconfig\StaticConnectionManager
 es\gob\monitoriza\persistence\configuration\dto\MailDTO.class
 es\gob\monitoriza\persistence\configuration\model\repository\datatable\TimerMonitorizaDatatableRepository.class
 es\gob\monitoriza\persistence\configuration\model\repository\PlatformRepository.class
+es\gob\monitoriza\persistence\configuration\model\repository\DailySpieMonitoringRepository.class
 es\gob\monitoriza\persistence\configuration\model\entity\ServiceMonitoriza.class
 es\gob\monitoriza\persistence\configuration\model\entity\NodeMonitoriza.class
 es\gob\monitoriza\persistence\configuration\dto\AlarmDTO.class

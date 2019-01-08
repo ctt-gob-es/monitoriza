@@ -11,7 +11,6 @@ es\gob\monitoriza\controller\StatusController.class
 es\gob\monitoriza\rest\exception\RestResponseEntityExceptionHandler.class
 es\gob\monitoriza\rest\controller\ConfServerMailRestController.class
 es\gob\monitoriza\spring\config\MultiFieldAuthenticationFilter.class
-es\gob\monitoriza\rest\controller\QueryVipRestController.class
 es\gob\monitoriza\rest\exception\ValidationExceptionHandler.class
 es\gob\monitoriza\spring\SpringBootWebApplication.class
 es\gob\monitoriza\spring\config\MultiFieldAuthenticationProvider.class

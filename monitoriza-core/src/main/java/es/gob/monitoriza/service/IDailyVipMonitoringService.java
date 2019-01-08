@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/11/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 12/11/2018.
+ * @version 1.1, 04/01/2019.
  */
 package es.gob.monitoriza.service;
 
@@ -36,7 +36,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.DailyVipMonitori
  * <p>Interface that provides communication with the operations of the persistence
  * layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 12/11/2018.
+ * @version 1.1, 04/01/2019.
  */
 public interface IDailyVipMonitoringService {
 	
@@ -72,7 +72,8 @@ public interface IDailyVipMonitoringService {
 	List<DailyVipDTO> findDailyVipTimeRange(LocalDateTime min, LocalDateTime max, String system, String service);
 	
 	/**
-	 * 
+	 * Group and dumps the data stored in the VIP daily monitoring into the VIP statistics table.
+	 * Then deletes older monitoring data.
 	 */
 	void dumpAndDeleteMonitoringData();
 

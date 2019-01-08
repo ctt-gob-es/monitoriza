@@ -20,12 +20,11 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.9, 19/12/2018
+ * @version 2.0, 04/01/2019.
  */
 package es.gob.monitoriza.configuration.manager;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.security.KeyStore;
@@ -58,6 +57,7 @@ import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigTimerDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.DailySpieMonitorig;
 import es.gob.monitoriza.persistence.configuration.model.entity.DailyVipMonitorig;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
@@ -66,6 +66,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.RequestServiceFi
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
+import es.gob.monitoriza.service.IDailySpieMonitoringService;
 import es.gob.monitoriza.service.IDailyVipMonitoringService;
 import es.gob.monitoriza.service.IKeystoreService;
 import es.gob.monitoriza.service.IRequestServiceFileService;
@@ -79,7 +80,11 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <p>Class that manages the configuration of the @firma/ts@ services from database persistence
  *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+<<<<<<< HEAD
+ *  @version 2.0, 04/01/2019.
+=======
  *  @version 1.9, 19/12/2018
+>>>>>>> 0bb460ed1efdb805406a19882710c3d1a03bccad
  */
 @Service("adminServicesManager")
 public class AdminServicesManager {
@@ -133,7 +138,13 @@ public class AdminServicesManager {
 	 * Attribute that represents the service object for accessing the repository.
 	 */
 	@Autowired
-	private IDailyVipMonitoringService dailyService;
+	private IDailyVipMonitoringService dailyVipService;
+	
+	/**
+	 * Attribute that represents the service object for accessing the repository.
+	 */
+	@Autowired
+	private IDailySpieMonitoringService dailySpieService;
 	
 	/**
 	 * Method that gets all timers from database.
@@ -434,7 +445,7 @@ public class AdminServicesManager {
 	
 	/**
 	 * Method that retrieves the password for the RFC3161 Authentication Keystore.
-	 * @return String that represetns the decodified password
+	 * @return String that represents the decodified password
 	 * @throws CryptographyException
 	 */
 	private String getRfc3161KeystorePassword() throws CryptographyException {
@@ -456,10 +467,10 @@ public class AdminServicesManager {
 
 	/**
 	 * Sets the value of the attribute {@link #scheduledTimers}.
-	 * @param scheduledTimers the value for the attribute {@link #scheduledTimers} to set.
+	 * @param scheduledTimersParam the value for the attribute {@link #scheduledTimers} to set.
 	 */
-	public static void setScheduledTimers(Map<Long, Timer> scheduledTimers) {
-		AdminServicesManager.scheduledTimers = scheduledTimers;
+	public static void setScheduledTimers(Map<Long, Timer> scheduledTimersParam) {
+		AdminServicesManager.scheduledTimers = scheduledTimersParam;
 	}
 	
 	/**
@@ -468,7 +479,16 @@ public class AdminServicesManager {
 	 */
 	public void saveDailyVip(DailyVipMonitorig daily) {
 	
-		dailyService.saveDailyVipMonitoring(daily);
+		dailyVipService.saveDailyVipMonitoring(daily);
+	}
+	
+	/**
+	 * Method that stores a {@link #DailySpieMonitorig} in persistence.
+	 * @param daily {@link #DailySpieMonitorig} to save
+	 */
+	public void saveDailySpie(DailySpieMonitorig daily) {
+	
+		dailySpieService.saveDailySpieMonitoring(daily);
 	}
 		
 }

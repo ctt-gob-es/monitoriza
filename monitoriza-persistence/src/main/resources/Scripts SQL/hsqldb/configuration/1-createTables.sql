@@ -436,6 +436,46 @@ COMMENT ON COLUMN "VIP_STATISTICS"."SERVICE" IS 'Valor que representa el nombre 
 COMMENT ON COLUMN "VIP_STATISTICS"."DATE_GROUP" IS 'Valor que indica la fecha dd/mm/aaaa en la que se agrupa el resultado para el servicio/estado';
 COMMENT ON COLUMN "VIP_STATISTICS"."STATUS_PERCENTAGE" IS 'Valor que indica el porcentaje (0-1) de servicios que se encuentran en un estado para la fecha del registro';
 
+-- Table DAILY_SPIE_MONITORING
+CREATE TABLE "DAILY_SPIE_MONITORING" ( 
+	"ID_DAILY_SPIE" NUMERIC(19) NOT NULL,
+	"STATUS" VARCHAR(100) NOT NULL,
+	"PLATFORM" VARCHAR(100) NOT NULL,
+	"NODE" VARCHAR(100) NOT NULL,
+	"SERVICE" VARCHAR(100) NOT NULL,
+	"SAMPLING_TIME" TIMESTAMP NOT NULL
+	);
+ALTER TABLE "DAILY_SPIE_MONITORING" ADD CONSTRAINT "ID_DAILY_SPIE_CONS" PRIMARY KEY ("ID_DAILY_SPIE");
+COMMENT ON TABLE "DAILY_SPIE_MONITORING" IS 'Tabla que almacena la información relativa a los estados de los servicios SPIE monitorizados en un momento determinado.';
+COMMENT ON COLUMN "DAILY_SPIE_MONITORING"."ID_DAILY_SPIE" IS 'Identificador de la tabla.';
+COMMENT ON COLUMN "DAILY_SPIE_MONITORING"."STATUS" IS 'Valor que representa el estado obtenido para un servicio en un momento determinado.';
+COMMENT ON COLUMN "DAILY_SPIE_MONITORING"."PLATFORM" IS 'Valor que representa la plataforma a la que pertenece el servicio monitorizado.';
+COMMENT ON COLUMN "DAILY_SPIE_MONITORING"."NODE" IS 'Valor que representa el nodo a la que pertenece el servicio monitorizado.';
+COMMENT ON COLUMN "DAILY_SPIE_MONITORING"."SERVICE" IS 'Valor que representa el nombre del servicio monitorizado.';
+COMMENT ON COLUMN "DAILY_SPIE_MONITORING"."SAMPLING_TIME" IS 'Valor que indica el momento de tiempo en el que se obtuvo el estado para el servicio monitorizado';
+
+
+-- Table SPIE_STATISTICS
+CREATE TABLE "SPIE_STATISTICS" ( 
+	"ID_SPIE_STATISTICS" NUMERIC(19) NOT NULL,
+	"STATUS" VARCHAR(100) NOT NULL,
+	"PLATFORM" VARCHAR(100) NOT NULL,
+	"NODE" VARCHAR(100) NOT NULL,
+	"SERVICE" VARCHAR(100) NOT NULL,
+	"DATE_GROUP" DATE NOT NULL,
+	"STATUS_PERCENTAGE" FLOAT(6)
+	);
+ALTER TABLE "SPIE_STATISTICS" ADD CONSTRAINT "ID_SPIE_STATISTICS_CONS" PRIMARY KEY ("ID_SPIE_STATISTICS");
+COMMENT ON TABLE "SPIE_STATISTICS" IS 'Tabla que almacena la información relativa a los estados de los servicios de la VIP monitorizados en un momento determinado.';
+COMMENT ON COLUMN "SPIE_STATISTICS"."ID_SPIE_STATISTICS" IS 'Identificador de la tabla.';
+COMMENT ON COLUMN "SPIE_STATISTICS"."STATUS" IS 'Valor que representa el estado obtenido para un servicio en un momento determinado.';
+COMMENT ON COLUMN "SPIE_STATISTICS"."PLATFORM" IS 'Valor que representa la plataforma a la que pertenece el servicio monitorizado.';
+COMMENT ON COLUMN "SPIE_STATISTICS"."NODE" IS 'Valor que representa el nodeo al que pertenece el servicio monitorizado.';
+COMMENT ON COLUMN "SPIE_STATISTICS"."SERVICE" IS 'Valor que representa el nombre del servicio monitorizado.';
+COMMENT ON COLUMN "SPIE_STATISTICS"."DATE_GROUP" IS 'Valor que indica la fecha dd/mm/aaaa en la que se agrupa el resultado para el servicio/estado';
+COMMENT ON COLUMN "SPIE_STATISTICS"."STATUS_PERCENTAGE" IS 'Valor que indica el porcentaje (0-1) de servicios que se encuentran en un estado para la fecha del registro';
+
+
 ALTER TABLE "SERVICE_MONITORIZA" ADD CONSTRAINT "R_TIMER_SERVICE_FK" FOREIGN KEY ("ID_TIMER_SERVICE") REFERENCES "TIMER_MONITORIZA" ("ID_TIMER");
 ALTER TABLE "SERVICE_MONITORIZA" ADD CONSTRAINT "R_ALARM_SERVICE_FK" FOREIGN KEY ("ID_ALARM_SERVICE") REFERENCES "ALARM_MONITORIZA" ("ID_ALARM");
 ALTER TABLE "SERVICE_MONITORIZA" ADD CONSTRAINT "R_PLATFORM_SERVICE_FK" FOREIGN KEY ("ID_PLATFORM_SERVICE") REFERENCES "PLATFORM_MONITORIZA" ("ID_PLATFORM");

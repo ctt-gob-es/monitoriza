@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>29/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 29/10/2018.
+ * @version 1.1, 04/01/2019.
  */
 package es.gob.monitoriza.spie.thread;
 
@@ -28,13 +28,22 @@ import java.security.KeyStore;
 import java.time.LocalDateTime;
 import java.util.Map;
 
+import org.apache.log4j.Logger;
+
+import es.gob.monitoriza.configuration.manager.AdminServicesManager;
 import es.gob.monitoriza.configuration.manager.AdminSpieManager;
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.enums.SemaphoreEnum;
+import es.gob.monitoriza.exception.InvokerException;
+import es.gob.monitoriza.i18n.IStatusLogMessages;
+import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
 import es.gob.monitoriza.persistence.configuration.dto.RowStatusSpieDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.DailySpieMonitorig;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SpieType;
+import es.gob.monitoriza.spie.html.IHtmlSpieResolver;
 import es.gob.monitoriza.spie.html.impl.HtmlAvgResponseTimeResolver;
 import es.gob.monitoriza.spie.html.impl.HtmlEmergencyModeResolver;
 import es.gob.monitoriza.spie.html.impl.HtmlHsmConnResolver;
@@ -43,14 +52,19 @@ import es.gob.monitoriza.spie.invoker.SpieInvoker;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that get the results of the SPIE services configured.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 29/10/2018.
+ * @version 1.1, 04/01/2019.
  */
 public class RequestSpieThread implements Runnable {
 	
 	/**
-	 * Attribute that represents the system trustore. 
+	 * Attribute that represents the object that manages the log of the class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	
+	/**
+	 * Attribute that represents the system truststore. 
 	 */
 	private static KeyStore ssl;
 	
@@ -112,42 +126,81 @@ public class RequestSpieThread implements Runnable {
 		
 		final ConfSpieDTO confSpie = adminSpieManager.getSpieConfiguration();
 		SpieType spieType = null;
+		RowStatusSpieDTO status = null;
+		String htmlInvokerResult = null;
+		IHtmlSpieResolver resolver = null;
 		
-		if (node.getCheckHsm() != null && node.getCheckHsm()) {
-			spieType = adminSpieManager.getSpieTypeById(SpieType.ID_CONN_HSM_AFIRMA);
-			final String htmlHsmResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
-			final HtmlHsmConnResolver hsmResult = new HtmlHsmConnResolver(spieType.getSemaphoreErrorLevel());
+		try {
+			
+		
+    		if (node.getCheckHsm() != null && node.getCheckHsm()) {
+    			spieType = adminSpieManager.getSpieTypeById(SpieType.ID_CONN_HSM_AFIRMA);
+    			resolver = new HtmlHsmConnResolver(spieType.getSemaphoreErrorLevel());
+    			htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
+        		status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, confSpie), null, LocalDateTime.now());
+        		// Se actualiza el mapa de resultados
+    			spieHolder.put(spieType.getIdSpieType(), status);
+    			// Se persiste el resultado
+    			saveDailySpieMonitoring(spieType.getTokenName(), status);
+    		}
+    		
+    		if (node.getCheckEmergencyDB() != null && node.getCheckEmergencyDB()) {
+    			spieType = adminSpieManager.getSpieTypeById(SpieType.ID_MODE_EMERGENCY_AFIRMA);
+    			resolver = new HtmlEmergencyModeResolver(spieType.getSemaphoreErrorLevel());
+    			htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
+        		status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, confSpie), null, LocalDateTime.now());
+        		// Se actualiza el mapa de resultados
+    			spieHolder.put(spieType.getIdSpieType(), status);
+    			// Se persiste el resultado
+    			saveDailySpieMonitoring(spieType.getTokenName(), status);
+    		}
+    		
+    		if (node.getCheckTsa() != null && node.getCheckTsa()) {
+    			spieType = adminSpieManager.getSpieTypeById(SpieType.ID_CONN_TSA);
+    			resolver = new HtmlTsaConnResolver(spieType.getSemaphoreErrorLevel());
+    			htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
+        		status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, confSpie), null, LocalDateTime.now());
+        		// Se actualiza el mapa de resultados
+    			spieHolder.put(spieType.getIdSpieType(), status);
+    			// Se persiste el resultado
+    			saveDailySpieMonitoring(spieType.getTokenName(), status);
+    		}
+    		
+    		htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
+    		status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, confSpie), null, LocalDateTime.now());
+    		
+    		if (node.getCheckServices() != null && node.getCheckServices()) {
+    			spieType = adminSpieManager.getSpieTypeById(SpieType.ID_RESPONSE_TIMES);
+    			final String htmlAvgResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
+    			HtmlAvgResponseTimeResolver avgResolver = new HtmlAvgResponseTimeResolver(spieType.getSemaphoreErrorLevel());
+    			status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlAvgResult, confSpie), avgResolver.getDetailResults(), LocalDateTime.now());
+    			// Se actualiza el mapa de resultados
+    			spieHolder.put(spieType.getIdSpieType(), status);
+    			// Se persiste el resultado
+    			saveDailySpieMonitoring(spieType.getTokenName(), status);
+    			
+    		}
+    		
+		} catch (InvokerException ie) {
+			
+			LOGGER.error(ie.getMessage(), ie.getCause());
 						
-			// Se actualiza el mapa de resultados
-			spieHolder.put(spieType.getIdSpieType(), new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), hsmResult.solveHtmlResult(htmlHsmResult, confSpie), null, LocalDateTime.now()));
+		} finally {
+			
+			// Si el estado es null, no se ha podido obtener respuesta del nodo.
+			// Se establece el estado de todos los SPIE configurados como "Sin acceso al nodo". 
+			if (status == null) {
+				LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS015, new Object[]{node.getName()}));
+				setAndPersistAllStatusError(spieBaseAddress);
+				
+			} else {
+				 
+    			spieHolder.put(spieType.getIdSpieType(), status);
+    			// Se persiste el resultado
+    			saveDailySpieMonitoring(spieType.getTokenName(), status);
+			}
 		}
 		
-		if (node.getCheckEmergencyDB() != null && node.getCheckEmergencyDB()) {
-			spieType = adminSpieManager.getSpieTypeById(SpieType.ID_MODE_EMERGENCY_AFIRMA);
-			final String htmlEmergencyModeResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
-			final HtmlEmergencyModeResolver emergencyResult = new HtmlEmergencyModeResolver(spieType.getSemaphoreErrorLevel());
-						
-			// Se actualiza el mapa de resultados
-			spieHolder.put(spieType.getIdSpieType(), new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), emergencyResult.solveHtmlResult(htmlEmergencyModeResult, confSpie), null, LocalDateTime.now()));
-		}
-		
-		if (node.getCheckTsa() != null && node.getCheckTsa()) {
-			spieType = adminSpieManager.getSpieTypeById(SpieType.ID_CONN_TSA);
-			final String htmlTsaResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
-			final HtmlTsaConnResolver tsaResult = new HtmlTsaConnResolver(spieType.getSemaphoreErrorLevel());
-						
-			// Se actualiza el mapa de resultados
-			spieHolder.put(spieType.getIdSpieType(), new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), tsaResult.solveHtmlResult(htmlTsaResult, confSpie), null, LocalDateTime.now()));
-		}
-		
-		if (node.getCheckServices() != null && node.getCheckServices()) {
-			spieType = adminSpieManager.getSpieTypeById(SpieType.ID_RESPONSE_TIMES);
-			final String htmlAvgResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
-			final HtmlAvgResponseTimeResolver avgResult = new HtmlAvgResponseTimeResolver(spieType.getSemaphoreErrorLevel());
-						
-			// Se actualiza el mapa de resultados
-			spieHolder.put(spieType.getIdSpieType(), new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), avgResult.solveHtmlResult(htmlAvgResult, confSpie), avgResult.getDetailResults(), LocalDateTime.now()));
-		}
 	}
 	
 	/**
@@ -156,6 +209,107 @@ public class RequestSpieThread implements Runnable {
 	 */
 	private void checkSpieTsa(final String spieBaseAddress) {
 		// TODO Auto-generated method stub
+		
+	}
+	
+	/**
+	 * Saves the SPIE status sample in persistence.
+	 * @param service SPIE service type
+	 * @param status Object that represents the status information of the SPIE
+	 */
+	private void saveDailySpieMonitoring(String service, RowStatusSpieDTO status) {
+		
+		DailySpieMonitorig daily = new DailySpieMonitorig();
+		
+		daily.setPlatform(status.getSystem());
+		daily.setSamplingTime(status.getStatusUptodate());
+		daily.setService(service);
+		daily.setStatus(getSemaphoreNameById(status.getStatusValue()));
+		daily.setNode(status.getNodeName());
+		
+		AdminServicesManager adminServicesManager = ApplicationContextProvider.getApplicationContext().getBean("adminServicesManager", AdminServicesManager.class);	
+		
+		adminServicesManager.saveDailySpie(daily);
+	}
+	
+	/**
+	 * Gets the semaphore name value by its identifier.
+	 * @param id Semaphore identifier
+	 * @return Semaphore name value
+	 */
+	private String getSemaphoreNameById(Integer id) {
+		
+		String name = null;
+		
+		if (id != null) {
+    		switch (id) {
+    			case 0:
+    				name = SemaphoreEnum.GREEN.getName();
+    				break;
+    			case 1:
+    				name = SemaphoreEnum.AMBER.getName();
+    				break;
+    			case 2:
+    				name = SemaphoreEnum.RED.getName();
+    				break;
+    			default:
+    				name = SemaphoreEnum.RED.getName();
+    				break;
+    		} 
+				
+		} else {
+			name = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS017, new Object[]{node.getName()});
+		}
+
+		return name;
+	}
+	
+	
+	/**
+	 * 
+	 * @param spieBaseAddress
+	 */
+	private void setAndPersistAllStatusError(final String spieBaseAddress) {
+		
+		SpieType spieType = null;
+		RowStatusSpieDTO status = null;
+				
+		if (node.getCheckHsm() != null && node.getCheckHsm()) {
+			spieType = adminSpieManager.getSpieTypeById(SpieType.ID_CONN_HSM_AFIRMA);
+    		status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), null, null, LocalDateTime.now());
+    		// Se actualiza el mapa de resultados
+			spieHolder.put(spieType.getIdSpieType(), status);
+			// Se persiste el resultado
+			saveDailySpieMonitoring(spieType.getTokenName(), status);
+		}
+		
+		if (node.getCheckEmergencyDB() != null && node.getCheckEmergencyDB()) {
+			spieType = adminSpieManager.getSpieTypeById(SpieType.ID_MODE_EMERGENCY_AFIRMA);
+    		status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), null, null, LocalDateTime.now());
+    		// Se actualiza el mapa de resultados
+			spieHolder.put(spieType.getIdSpieType(), status);
+			// Se persiste el resultado
+			saveDailySpieMonitoring(spieType.getTokenName(), status);
+		}
+		
+		if (node.getCheckTsa() != null && node.getCheckTsa()) {
+			spieType = adminSpieManager.getSpieTypeById(SpieType.ID_CONN_TSA);
+    		status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), null, null, LocalDateTime.now());
+    		// Se actualiza el mapa de resultados
+			spieHolder.put(spieType.getIdSpieType(), status);
+			// Se persiste el resultado
+			saveDailySpieMonitoring(spieType.getTokenName(), status);
+		}
+						
+		if (node.getCheckServices() != null && node.getCheckServices()) {
+			spieType = adminSpieManager.getSpieTypeById(SpieType.ID_RESPONSE_TIMES);
+			status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), null, null, LocalDateTime.now());
+			// Se actualiza el mapa de resultados
+			spieHolder.put(spieType.getIdSpieType(), status);
+			// Se persiste el resultado
+			saveDailySpieMonitoring(spieType.getTokenName(), status);
+			
+		}
 		
 	}
 
