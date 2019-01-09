@@ -28,7 +28,7 @@
 		</script> 
 		<input onblur="validate(this,messageHost);" type="text" id="host"
 			th:field="*{host}" style="overflow: hidden" class="form-control"
-			required pattern=".{3,30}" />
+			required pattern=".{3,50}" />
 		<div id="invalid-host" class="invalid-feedback"></div>
 	</div>
 
@@ -66,7 +66,7 @@
 		<label for="servicecontext"	class="col-form-label" th:text="#{form.platform.clave.servicecontext}"></label> 
 		<input onblur="validateHTTP();" type="text" id="serviceContext"
 			th:field="*{serviceContext}" style="overflow: hidden"
-			class="form-control" />
+			class="form-control" pattern=".{3,30}"/>
 		<div id="invalid-servicecontext" class="invalid-modal"></div>
 
 		<div style="clear: both;" /></div>
