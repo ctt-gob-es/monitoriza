@@ -263,17 +263,19 @@ public abstract class AbstractHttpInvoker {
 		RequestConfig res;
 		RequestConfig.Builder builder = RequestConfig.custom().setConnectTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_CONNECT_TIMEOUT))).setConnectionRequestTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_CONNECTION_REQUEST_TIMEOUT))).setSocketTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_SOCKET_TIMEOUT)));
 
-		if (requestConf.getConnection().getProxy() != null) {
-			LOGGER.debug("Se han introducido datos de conexión con proxy.");
-			if (Integer.parseInt(requestConf.getConnection().getProxy().getPort()) < 1 || Integer.parseInt(requestConf.getConnection().getProxy().getPort()) > 65535) {
-				throw new InvokerException("El puerto introducido es erróneo.");
-			} else {
-				LOGGER.debug("Configurando la conexión por medio de proxy.");
-				HttpHost proxy = new HttpHost(requestConf.getConnection().getProxy().getHost(), Integer.parseInt(requestConf.getConnection().getProxy().getPort()));
-				builder.setProxy(proxy);
+		if (requestConf.getConnection() != null) {
+			if (requestConf.getConnection().getProxy() != null) {
+				LOGGER.debug("Se han introducido datos de conexión con proxy.");
+				if (Integer.parseInt(requestConf.getConnection().getProxy().getPort()) < 1 || Integer.parseInt(requestConf.getConnection().getProxy().getPort()) > 65535) {
+					throw new InvokerException("El puerto introducido es erróneo.");
+				} else {
+					LOGGER.debug("Configurando la conexión por medio de proxy.");
+					HttpHost proxy = new HttpHost(requestConf.getConnection().getProxy().getHost(), Integer.parseInt(requestConf.getConnection().getProxy().getPort()));
+					builder.setProxy(proxy);
+				}
 			}
 		}
-
+		
 		res = builder.build();
 
 		return res;
