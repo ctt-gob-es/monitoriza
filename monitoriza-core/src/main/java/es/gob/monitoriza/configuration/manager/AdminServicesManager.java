@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19/01/2018.</p>
  * @author Gobierno de España.
- * @version 2.0, 04/01/2019.
+ * @version 2.1, 09/01/2019.
  */
 package es.gob.monitoriza.configuration.manager;
 
@@ -80,7 +80,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <p>Class that manages the configuration of the @firma/ts@ services from database persistence
  *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- *  @version 2.0, 04/01/2019.
+ *  @version 2.1, 09/01/2019.
  */
 @Service("adminServicesManager")
 public class AdminServicesManager {
