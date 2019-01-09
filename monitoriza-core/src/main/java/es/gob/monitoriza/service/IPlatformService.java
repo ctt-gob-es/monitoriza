@@ -28,6 +28,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import es.gob.monitoriza.persistence.configuration.dto.AfirmaDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ClaveDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TsaDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
@@ -111,5 +112,21 @@ public interface IPlatformService {
 	 * @return {@link PlatformMonitoriza} The @firma configuration. 
 	 */
 	PlatformMonitoriza savePlatformTsa(TsaDTO tsaDto);
+	
+	/**
+	 * Method that returns a list of platforms to be showed in DataTable.
+	 * @param input DataTableInput with filtering, paging and sorting configuration.
+	 * @param platformType Type of platform
+	 * @return A set of DataTable rows that matches the query.
+	 */
+	DataTablesOutput<PlatformMonitoriza> findAllByPlatFormType(DataTablesInput input, Long platformType);
+	
+	/**
+	 * Method that stores Cl@ve configuration in the persistence and updates corresponding scheduled timers.
+	 * @param claveDTO a {@link ClaveDTO} with the information of the platform configuration.
+	 * @param platformTypeId with the information of the platform type.
+	 * @return {@link PlatformMonitoriza} The cl@ve configuration. 
+	 */
+	PlatformMonitoriza savePlatformClave(ClaveDTO claveDTO, Long platformTypeId);
 
 }

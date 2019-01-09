@@ -199,9 +199,9 @@ public class AdminServicesManager {
 			serviceDTO = new ConfigServiceDTO(service.getIdService(), service.getName(), service.getTimer().getName(), service.getTimeout(), service.getNameWsdl(), service.getDegradedThreshold(), service.getLostThreshold().toString(), getDirectoryPath(service.getIdService(), service.getName()), service.getPlatform().getPlatformType().getName(), service.getServiceType(), service.getPlatform().getIdPlatform());
 					
 			// Base URL de cada plataforma sin tener en cuenta ningún contexto. Servirá para construir la URL de invocación OCSP y RFC3161.
-			serviceDTO.setBaseUrl(getBaseUrl(service.getPlatform()));
+			serviceDTO.setBaseUrl(getBaseUrl(service.getPlatform(), service.getServiceType()));
 			// URL de los servicios SOAP hasta el contexto. En la clase HttpSoapInvoker se completará con el WSDL endpoint.
-			serviceDTO.setSoapUrl(getBaseUrl(service.getPlatform()).concat(service.getPlatform().getServiceContext()));
+			serviceDTO.setSoapUrl(getBaseUrl(service.getPlatform(), service.getServiceType()).concat(service.getPlatform().getServiceContext()));
 			// Contexto OCSP que se concatenará a la baseUrl para generar la URL completa OCSP. Esta se usará en OcspInvoker.
 			serviceDTO.setOcspContext(service.getPlatform().getOcspContext());
 			// Contexto RFC3161 que se concatenará a la baseUrl para generar la URL completa RFC3161. Esta se usará en Rfc3161Invoker.
@@ -290,14 +290,23 @@ public class AdminServicesManager {
 	/**
 	 * Method that returns the base URL connection with the platform, considering host, port, etc.
 	 * @param platform Platform configuration.
+	 * @param serviceType Type of the service.
 	 * @return String that represents the base URL connection with the platform, considering host, port, etc.
 	 */
-	private String getBaseUrl(final PlatformMonitoriza platform) {
+	private String getBaseUrl(final PlatformMonitoriza platform, final String serviceType) {
 								
 		final ConnectionDTO connection = new ConnectionDTO(platform.getIsSecure(), platform.getHost(), platform.getPort(), platform.getRfc3161Port(), platform.getServiceContext(), platform.getOcspContext(), platform.getRfc3161Context());
 
 		String port = connection.getPort();
-		String protocol = connection.getSecureMode()? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP;
+		
+		String protocol = null;
+		if (serviceType.equalsIgnoreCase(GeneralConstants.RFC3161_SERVICE)) {
+			// Si el servicio es RFC3161, la conexión siempre se hará mediante HTTPS
+			protocol = GeneralConstants.SECUREMODE_HTTPS;
+		} else {
+			protocol = connection.getSecureMode()? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP;
+		}
+		
 		
 		StringBuilder url = new StringBuilder();
 							

@@ -178,6 +178,8 @@ public class ServiceRestController {
 
 			serviceTypes.add(GeneralConstants.SOAP_SERVICE.toUpperCase());
 			serviceTypes.add(GeneralConstants.RFC3161_SERVICE.toUpperCase());
+		} else {
+			serviceTypes.add(GeneralConstants.HTTP_SERVICE.toUpperCase());
 		}
 
 		return serviceTypes;
@@ -208,6 +210,9 @@ public class ServiceRestController {
 			break;
 		case GeneralConstants.RFC3161_SERVICE:
 			baseEndpoint.append(platform.getRfc3161Context());
+			break;
+		case GeneralConstants.HTTP_SERVICE:
+			baseEndpoint.append(platform.getServiceContext());
 			break;
 		default:
 			break;

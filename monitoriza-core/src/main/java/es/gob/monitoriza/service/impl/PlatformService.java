@@ -35,6 +35,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.gob.monitoriza.persistence.configuration.dto.AfirmaDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ClaveDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TsaDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
@@ -362,6 +363,51 @@ public class PlatformService implements IPlatformService {
 	public Iterable<CPlatformType> getAllPlatformType() {
 		
 		return typeRepository.findAll();
+	}
+	
+	/**
+	 * Method that returns a list of platforms to be showed in DataTable.
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IPlatformService#findAllTsa(org.springframework.data.jpa.datatables.mapping.DataTablesInput)
+	 */
+	@Override
+	public DataTablesOutput<PlatformMonitoriza> findAllByPlatFormType(DataTablesInput input, Long platformTypeId) {
+		CPlatformType platformType = new CPlatformType();
+		platformType.setIdPlatformType(platformTypeId);
+		CPlatformTypeSpecification byPlatformType = new CPlatformTypeSpecification(platformType);
+		
+		return dtRepository.findAll(input, byPlatformType);
+	}
+	
+	/**
+	 * Method that stores Cl@ve configuration in the persistence and updates corresponding scheduled timers.
+	 * 
+	 * @param claveDto a {@link ClaveDTO} with the information of the platform configuration.
+	 * @param platformTypeId with the information of the platform type.
+	 * @return {@link PlatformMonitoriza} The cl@ve configuration.
+	 */
+	@Override
+	public PlatformMonitoriza savePlatformClave(ClaveDTO claveDto, Long platformTypeId) {
+		PlatformMonitoriza platformClave = null;
+		
+		if (claveDto.getIdPlatform() != null) {
+			platformClave = repository.findByIdPlatform(claveDto.getIdPlatform());
+		} else {
+			platformClave = new PlatformMonitoriza();
+		}
+
+		platformClave.setHost(claveDto.getHost());
+		platformClave.setName(claveDto.getName());
+		platformClave.setPort(claveDto.getPort());
+		platformClave.setIsSecure(claveDto.getIsSecure());
+		platformClave.setServiceContext(claveDto.getServiceContext());
+		CPlatformType claveType = new CPlatformType();
+		claveType.setIdPlatformType(platformTypeId);
+		platformClave.setPlatformType(claveType);
+
+		PlatformMonitoriza clave = repository.save(platformClave);
+		
+		return clave;
 	}
 
 }
