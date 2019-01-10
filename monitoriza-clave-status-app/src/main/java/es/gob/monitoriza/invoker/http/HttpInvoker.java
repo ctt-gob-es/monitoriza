@@ -164,8 +164,8 @@ public class HttpInvoker extends AbstractHttpInvoker {
 			throw new InvokerException("Error al generar la implementación de HTTPClient" + e.getMessage(), e);
 		} catch (UnrecoverableKeyException e) {
 			throw new InvokerException("Error al generar la implementación de HTTPClient" + e.getMessage(), e);
-		} catch (NullPointerException e) {
-			throw new InvokerException(e.getMessage());
+		} catch (Exception e) {
+			throw new InvokerException("Error al generar la implementación de HTTPClient" + e.getMessage(), e);
 		}
 
 		return tiempoTotal;
