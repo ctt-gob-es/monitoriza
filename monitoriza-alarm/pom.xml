@@ -42,6 +42,10 @@
 			<groupId>es.gob.monitoriza</groupId>
 			<artifactId>monitoriza-persistence</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>es.gob.monitoriza</groupId>
+			<artifactId>monitoriza-core</artifactId>
+		</dependency>
 	</dependencies>
 	<build> 
 		<resources>

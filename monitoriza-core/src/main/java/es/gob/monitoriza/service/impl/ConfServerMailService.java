@@ -48,7 +48,7 @@ import es.gob.monitoriza.service.IConfServerMailService;
  * 
  * @version 1.2, 10/01/2018.
  */
-@Service
+@Service("serverMailService")
 public class ConfServerMailService implements IConfServerMailService {
 
 	/**
@@ -58,11 +58,10 @@ public class ConfServerMailService implements IConfServerMailService {
 	@Autowired
 	private ConfServerMailRepository repository;
 
+	
 	/**
-	 * 
 	 * {@inheritDoc}
-	 * 
-	 * @see es.gob.valet.persistence.configuration.services.ifaces.IConfServerMailService#getAllConfServerMail()
+	 * @see es.gob.monitoriza.service.IConfServerMailService#getAllConfServerMail()
 	 */
 	@Override
 	public ConfServerMail getAllConfServerMail() {
@@ -74,20 +73,20 @@ public class ConfServerMailService implements IConfServerMailService {
 		}
 	}
 
+	
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @see es.gob.valet.persistence.configuration.services.ifaces.IConfServerMailService#getConfServerMailById(java.lang.Long)
+	 * @see es.gob.monitoriza.service.IConfServerMailService#getConfServerMailById(java.lang.Long)
 	 */
 	@Override
 	public ConfServerMail getConfServerMailById(Long idConfServerMail) {
 		return repository.findByIdConfServerMail(idConfServerMail);
 	}
 
+	
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @see es.gob.valet.persistence.configuration.services.ifaces.IConfServerMailService#saveConfServerMail(es.gob.valet.persistence.configuration.model.entity.ConfServerMail)
+	 * @see es.gob.monitoriza.service.IConfServerMailService#saveConfServerMail(es.gob.monitoriza.persistence.configuration.dto.ConfServerMailDTO)
 	 */
 	@Override
 	@Transactional
@@ -117,10 +116,10 @@ public class ConfServerMailService implements IConfServerMailService {
 		return result;
 	}
 
+	
 	/**
 	 * {@inheritDoc}
-	 * 
-	 * @see es.gob.valet.persistence.configuration.services.ifaces.IConfServerMailService#deleteConfServerMail(java.lang.Long)
+	 * @see es.gob.monitoriza.service.IConfServerMailService#deleteConfServerMail(java.lang.Long)
 	 */
 	@Override
 	@Transactional

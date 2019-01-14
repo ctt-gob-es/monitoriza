@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.spring.config.ApplicationContextProvider.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>26/10/2018.</p>
+ * <b>Date:</b><p>14/01/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 26/10/2018.
+ * @version 1.0, 14/01/2019.
  */
 package es.gob.monitoriza.spring.config;
 
@@ -32,7 +32,7 @@ import org.springframework.stereotype.Component;
 /** 
  * <p>Class for accessing the Spring Applciation Context acrosss the application.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 26/10/2018.
+ * @version 1.0, 14/01/2019.
  */
 @Component
 public class ApplicationContextProvider implements ApplicationContextAware {
