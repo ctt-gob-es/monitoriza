@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19/01/2018.</p>
  * @author Gobierno de España.
- * @version 2.1, 09/01/2019.
+ * @version 2.2, 14/01/2019.
  */
 package es.gob.monitoriza.configuration.manager;
 
@@ -33,10 +33,8 @@ import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.Timer;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -60,7 +58,6 @@ import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.DailySpieMonitorig;
 import es.gob.monitoriza.persistence.configuration.model.entity.DailyVipMonitorig;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
-import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.RequestServiceFile;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
@@ -80,7 +77,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
  * <p>Class that manages the configuration of the @firma/ts@ services from database persistence
  *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- *  @version 2.1, 09/01/2019.
+ *  @version 2.2, 14/01/2019.
  */
 @Service("adminServicesManager")
 public class AdminServicesManager {
@@ -220,11 +217,12 @@ public class AdminServicesManager {
 				LOGGER.error(errorMsg, e);
 			}			
 			
-			serviceDTO.setBlockTimeAlarm(service.getAlarm().getBlockedTime());
-			service.getAlarm().getEmailsDegraded();
-						
-			serviceDTO.setListMailDegraded(getAddressesFromAlarm(service.getAlarm().getEmailsDegraded()));
-			serviceDTO.setListMailDown(getAddressesFromAlarm(service.getAlarm().getEmailsDown()));
+			serviceDTO.setIdAlarm(service.getAlarm().getIdAlarm());
+			
+//			serviceDTO.setBlockTimeAlarm(service.getAlarm().getBlockedTime());
+//									
+//			serviceDTO.setListMailDegraded(getAddressesFromAlarm(service.getAlarm().getEmailsDegraded()));
+//			serviceDTO.setListMailDown(getAddressesFromAlarm(service.getAlarm().getEmailsDown()));
 			
 			servicesTimer.add(serviceDTO);
 						
@@ -401,27 +399,7 @@ public class AdminServicesManager {
 
 		return cer;
 	}
-		
-	
-	/**
-	 * Method that retrieves the addresses from a MailMonitoriza object.
-	 * @param mailSet Set of mail configuration objects of Monitoriz@
-	 * @return List<String> that represents the mail addresses 
-	 */
-	private List<String> getAddressesFromAlarm(final Set<MailMonitoriza> mailSet) {
-		
-		final List<String> mailList = new ArrayList<String>();
-		
-		Iterator<MailMonitoriza> mailIterator = mailSet.iterator();
-		
-		while (mailIterator.hasNext()) {
 			
-			mailList.add(mailIterator.next().getEmailAddress());
-		}
-		
-		return mailList;
-	}
-		
 	/**
 	 * Saves a scheduled timer in database.
 	 * @param scheduled The scheduled timer to save

@@ -19,23 +19,30 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 14/01/2019.
  */
 package es.gob.monitoriza.alarm;
 
+import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import es.gob.monitoriza.alarm.types.Alarm;
 import es.gob.monitoriza.constant.ServiceStatusConstants;
 import es.gob.monitoriza.exception.AlarmException;
 import es.gob.monitoriza.i18n.IAlarmLogMessages;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
+import es.gob.monitoriza.service.impl.AlarmMonitorizaService;
+import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.utilidades.GeneralUtils;
 
 /** 
  * <p>Class that manages the alarms system of Monitoriz@.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 14/01/2019.
  */
 public class AlarmManager {
 
@@ -52,6 +59,11 @@ public class AlarmManager {
 	 * @throws AlarmException if the input parameters are nor correct or something in the process fails.
 	 */
 	public static void throwNewAlarm(final ConfigServiceDTO service, final String serviceStatus, final Long tiempoMedio) throws AlarmException {
+		
+		// Se obtiene el servicio de alarmas para cargar la configuración de bloqueo y direcciones.
+		AlarmMonitorizaService alarmMonitorizaService = ApplicationContextProvider.getApplicationContext().getBean("alarmMonitorizaService", AlarmMonitorizaService.class);
+		AlarmMonitoriza alarmMonitoriza = alarmMonitorizaService.getAlarmMonitorizaById(service.getIdAlarm());
+				
 		// Comprobamos que los parametros introducidos sean correctos.
 		if (service == null || serviceStatus == null) {
 			throw new AlarmException(IAlarmLogMessages.ERRORALAMR001);
@@ -64,14 +76,14 @@ public class AlarmManager {
 		Alarm alarm = new Alarm(service.getServiceName(), serviceStatus, tiempoMedio);
 		
 		if (serviceStatus.equals(ServiceStatusConstants.DEGRADADO)) {
-			alarm.setAddresses(service.getListMailDegraded());
+			alarm.setAddresses(getAddressesFromAlarm(alarmMonitoriza.getEmailsDegraded()));
 		} else if (serviceStatus.equals(ServiceStatusConstants.CAIDO)) {
-			alarm.setAddresses(service.getListMailDown());
+			alarm.setAddresses(getAddressesFromAlarm(alarmMonitoriza.getEmailsDown()));
 		} else {
 			throw new AlarmException(IAlarmLogMessages.ERRORALAMR002);
 		}
 		
-		alarm.setBlockedTime(service.getBlockTimeAlarm());
+		alarm.setBlockedTime(alarmMonitoriza.getBlockedTime());
 		alarm.setServiceWsdl(service.getWsdl());
 		alarm.setUmbralDegradado(service.getDegradedThreshold());
 		
@@ -79,5 +91,24 @@ public class AlarmManager {
 		// enviarla o añadirla al resumen.
 		AlarmTaskManager.sendAlarm(alarm);
 
+	}
+	
+	/**
+	 * Method that retrieves the addresses from a MailMonitoriza object.
+	 * @param mailSet Set of mail configuration objects of Monitoriz@
+	 * @return List<String> that represents the mail addresses 
+	 */
+	private static List<String> getAddressesFromAlarm(final Set<MailMonitoriza> mailSet) {
+		
+		final List<String> mailList = new ArrayList<String>();
+		
+		Iterator<MailMonitoriza> mailIterator = mailSet.iterator();
+		
+		while (mailIterator.hasNext()) {
+			
+			mailList.add(mailIterator.next().getEmailAddress());
+		}
+		
+		return mailList;
 	}
 }

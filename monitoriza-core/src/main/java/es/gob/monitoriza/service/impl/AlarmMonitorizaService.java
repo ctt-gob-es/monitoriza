@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 14/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -56,9 +56,9 @@ import es.gob.monitoriza.service.IAlarmMonitorizaService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 14/01/2019.
  */
-@Service
+@Service("alarmMonitorizaService")
 public class AlarmMonitorizaService implements IAlarmMonitorizaService {
 
 	/**
