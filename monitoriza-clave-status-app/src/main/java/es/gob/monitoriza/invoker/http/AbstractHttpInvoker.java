@@ -38,12 +38,14 @@ import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.TrustManagerFactory;
 
+import org.apache.commons.ssl.HostnameVerifier;
 import org.apache.http.HttpHost;
 import org.apache.http.auth.AuthScope;
 import org.apache.http.auth.UsernamePasswordCredentials;
 import org.apache.http.client.CredentialsProvider;
 import org.apache.http.client.config.RequestConfig;
 import org.apache.http.conn.ssl.SSLConnectionSocketFactory;
+import org.apache.http.conn.ssl.X509HostnameVerifier;
 import org.apache.http.impl.client.BasicCredentialsProvider;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClientBuilder;
@@ -306,6 +308,7 @@ public abstract class AbstractHttpInvoker {
 		SSLConnectionSocketFactory res = null;
 		TrustManagerFactory tmf = null;
 		String[ ] s = service.getBaseUrl().split(":");
+		HostnameVerifier hostnameVerifier = null;;
 
 		try {
 
@@ -350,7 +353,7 @@ public abstract class AbstractHttpInvoker {
 
 				sslContext.init(keyManagers, tmf.getTrustManagers(), null);
 
-				res = new SSLConnectionSocketFactory(sslContext, new String[ ] { "TLSv1.2", "TLSv1.1" }, null, SSLConnectionSocketFactory.getDefaultHostnameVerifier());
+				res = new SSLConnectionSocketFactory(sslContext, new String[ ] { "TLSv1.2", "TLSv1.1" }, null, hostnameVerifier.ALLOW_ALL);
 			}
 		} catch (InvokerException e) {
 			throw new InvokerException(e.getMessage());
