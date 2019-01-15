@@ -353,6 +353,7 @@ public abstract class AbstractHttpInvoker {
 
 				sslContext.init(keyManagers, tmf.getTrustManagers(), null);
 
+				// No se restringe el nombre del Host (ALLOW_ALL)
 				res = new SSLConnectionSocketFactory(sslContext, new String[ ] { "TLSv1.2", "TLSv1.1" }, null, hostnameVerifier.ALLOW_ALL);
 			}
 		} catch (InvokerException e) {
