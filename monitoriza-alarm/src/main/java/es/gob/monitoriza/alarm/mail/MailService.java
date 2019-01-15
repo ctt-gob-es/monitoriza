@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>23/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 17/10/2018.
+ * @version 1.3, 14/01/2019.
  */
 package es.gob.monitoriza.alarm.mail;
 
@@ -52,7 +52,7 @@ import es.gob.monitoriza.utilidades.MailUtils;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.2, 17/10/2018.
+ * @version 1.3, 14/01/2019.
  */
 public class MailService {
 
@@ -396,7 +396,7 @@ public class MailService {
 		Properties props = new Properties();
 		props.put("mail.smtp.port", getPort());
 		props.put("mail.smtp.starttls.enable", isTls());
-		props.put("mail.smtp.auth", "true");
+		props.put("mail.smtp.auth", isAuthentication());
 
 		Session session = Session.getInstance(props);
 		try {
@@ -425,7 +425,7 @@ public class MailService {
 			// Se intenta la conexión con el servidor de correo.
 			Transport transport = session.getTransport(GeneralConstants.SMTP);
 			transport.connect(getHost(), getUser(), getPassword());
-
+			
 			// Se efectúa el envío el mensaje
 			transport.sendMessage(msg, msg.getAllRecipients());
 			transport.close();

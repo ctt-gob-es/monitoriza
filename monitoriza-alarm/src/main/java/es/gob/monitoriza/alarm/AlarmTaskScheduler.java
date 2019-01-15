@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 17/10/2018.
+ * @version 1.4, 14/01/2019.
  */
 package es.gob.monitoriza.alarm;
 
@@ -40,13 +40,16 @@ import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.i18n.IAlarmLogMessages;
 import es.gob.monitoriza.i18n.IAlarmMailText;
 import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.persistence.configuration.model.entity.ConfServerMail;
+import es.gob.monitoriza.service.impl.ConfServerMailService;
+import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.utilidades.GeneralUtils;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that represents the scheduler for the tasks object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 17/10/2018.
+ * @version 1.4, 14/01/2019.
  */
 public class AlarmTaskScheduler {
 	
@@ -61,6 +64,11 @@ public class AlarmTaskScheduler {
 	 * @param alarmsToSend List of alarm to sent.
 	 */
 	public static void sendAlarm(List<Alarm> alarmsToSend) {
+		
+		ConfServerMailService serverMailService = ApplicationContextProvider.getApplicationContext().getBean("serverMailService", ConfServerMailService.class);
+		
+		ConfServerMail serverMail = serverMailService.getAllConfServerMail();
+		
 		List<String> destinations = new ArrayList<String>();
 		// Si la lista de alarmas no esta vacía...
 		if (alarmsToSend != null && alarmsToSend.size() > 0) {
@@ -68,13 +76,13 @@ public class AlarmTaskScheduler {
 			String serviceName = alarmsToSend.get(0).getServiceName();
 			// Obtenemos el identificador de la alarma (nombre del servicio y el estado.
 			//String[ ] serviceIdentifier = new String[ ] { alarmsToSend.get(0).getServiceName(), alarmsToSend.get(0).getServiceStatus() };
-			String issuer = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_ISSUER);
-			String host = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_HOST);
-			String port = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_PORT);
-			String authentication = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_AUTHENTICATION);
-			String tls = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_TLS);
-			String user = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_USER);
-			String password = StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_PASSWORD);
+			String issuer = serverMail.getIssuerMail();
+			String host = serverMail.getHostMail();
+			Long port = serverMail.getPortMail();
+			Boolean authentication = serverMail.getAuthenticationMail();
+			Boolean tls = serverMail.getTslMail();
+			String user = serverMail.getUserMail();
+			String password = serverMail.getPasswordMail();
 			String subject;
 			String body;
 			if (alarmsToSend.size() < 2) {
@@ -86,7 +94,7 @@ public class AlarmTaskScheduler {
 			}
 			//destinations = MailUtils.getListAddresseesForAlarm(serviceIdentifier);
 			destinations = alarmsToSend.get(0).getAddresses();
-			MailService ms = new MailService(destinations, issuer, host, Integer.valueOf(port), Boolean.valueOf(authentication), Boolean.valueOf(tls), user, password, subject.toString(), body.toString());
+			MailService ms = new MailService(destinations, issuer, host, port.intValue(), authentication, tls, user, password, subject.toString(), body.toString());
 			
 			LOGGER.info("Mensaje enviado: \nSubject: "+ subject+"\nBody: "+ body +"\nNúmero de alarmas: " + alarmsToSend.size());
 						

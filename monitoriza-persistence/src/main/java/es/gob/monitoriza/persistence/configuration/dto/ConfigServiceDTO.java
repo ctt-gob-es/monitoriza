@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 05/12/2018.
+ * @version 1.3, 14/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -29,7 +29,7 @@ import java.util.Objects;
 /** 
  * <p>Data transfer object class that encapsulates the information of the services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 05/12/2018.
+ * @version 1.3, 14/01/2019.
  */
 public class ConfigServiceDTO {
 	
@@ -135,13 +135,18 @@ public class ConfigServiceDTO {
 	 */
 	private List<String> listMailDown;
 	
+	/**
+	 * Attribute that represents the AlarmMonitoriza identifier. 
+	 */
+	private Long idAlarm;
+	
 	
 	/**
 	 * Constructor method for the class DTOService.java.
-	 * @param serviceId 
+	 * @param serviceNameParam Name of the service.
 	 */
-	public ConfigServiceDTO(final String serviceName) {
-		this.serviceName = serviceName;
+	public ConfigServiceDTO(final String serviceNameParam) {
+		this.serviceName = serviceNameParam;
 	}
 		
 	
@@ -181,10 +186,10 @@ public class ConfigServiceDTO {
 	
 	/**
 	 * Sets the value of the attribute {@link #serviceId}. 
-	 * @param serviceId the value for the attribute {@link #serviceId} to set.
+	 * @param serviceIdParam the value for the attribute {@link #serviceId} to set.
 	 */
-	public void setServiceId(final Long serviceId) {
-		this.serviceId = serviceId;
+	public void setServiceId(final Long serviceIdParam) {
+		this.serviceId = serviceIdParam;
 	}
 
 	/**
@@ -197,10 +202,10 @@ public class ConfigServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #serviceName}.
-	 * @param serviceId the value for the attribute {@link #serviceName} to set.
+	 * @param serviceNameParam the value for the attribute {@link #serviceName} to set.
 	 */
-	public void setServiceName(String serviceName) {
-		this.serviceName = serviceName;
+	public void setServiceName(String serviceNameParam) {
+		this.serviceName = serviceNameParam;
 	}
 
 	/**
@@ -214,10 +219,10 @@ public class ConfigServiceDTO {
 	
 	/**
 	 * Sets the value of the attribute {@link #timerName}.
-	 * @param timerId the value for the attribute {@link #timerName} to set.
+	 * @param timerNameParam the value for the attribute {@link #timerName} to set.
 	 */
-	public void setTimerName(final String timerName) {
-		this.timerName = timerName;
+	public void setTimerName(final String timerNameParam) {
+		this.timerName = timerNameParam;
 	}
 
 	
@@ -232,10 +237,10 @@ public class ConfigServiceDTO {
 	
 	/**
 	 * Sets the value of the attribute {@link #timeout}.
-	 * @param timeout the value for the attribute {@link #timeout} to set.
+	 * @param timeoutParam the value for the attribute {@link #timeout} to set.
 	 */
-	public void setTimeout(final Long timeout) {
-		this.timeout = timeout;
+	public void setTimeout(final Long timeoutParam) {
+		this.timeout = timeoutParam;
 	}
 			
 	
@@ -249,10 +254,10 @@ public class ConfigServiceDTO {
 	
 	/**
 	 * Sets the value of the attribute {@link #wsdl}.
-	 * @param wsdl the value for the attribute {@link #wsdl} to set.
+	 * @param wsdlParam the value for the attribute {@link #wsdl} to set.
 	 */
-	public void setWsdl(final String wsdl) {
-		this.wsdl = wsdl;
+	public void setWsdl(final String wsdlParam) {
+		this.wsdl = wsdlParam;
 	}
 			
 	/**
@@ -265,10 +270,10 @@ public class ConfigServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #ocspContext}.
-	 * @param ocspContext the value for the attribute {@link #ocspContext} to set.
+	 * @param ocspContextParam the value for the attribute {@link #ocspContext} to set.
 	 */
-	public void setOcspContext(String ocspContext) {
-		this.ocspContext = ocspContext;
+	public void setOcspContext(String ocspContextParam) {
+		this.ocspContext = ocspContextParam;
 	}
 
 	/**
@@ -281,10 +286,10 @@ public class ConfigServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #rfc3161Context}.
-	 * @param rfc3161Context the value for the attribute {@link #rfc3161Context} to set.
+	 * @param rfc3161ContextParam the value for the attribute {@link #rfc3161Context} to set.
 	 */
-	public void setRfc3161Context(String rfc3161Context) {
-		this.rfc3161Context = rfc3161Context;
+	public void setRfc3161Context(String rfc3161ContextParam) {
+		this.rfc3161Context = rfc3161ContextParam;
 	}
 				
 	/**
@@ -297,10 +302,10 @@ public class ConfigServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #useRfc3161Auth}.
-	 * @param useRfc3161Auth the value for the attribute {@link #useRfc3161Auth} to set.
+	 * @param useRfc3161AuthParam the value for the attribute {@link #useRfc3161Auth} to set.
 	 */
-	public void setUseRfc3161Auth(Boolean useRfc3161Auth) {
-		this.useRfc3161Auth = useRfc3161Auth;
+	public void setUseRfc3161Auth(Boolean useRfc3161AuthParam) {
+		this.useRfc3161Auth = useRfc3161AuthParam;
 	}
 
 	/**
@@ -313,10 +318,10 @@ public class ConfigServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #rfc3161Cert}.
-	 * @param rfc3161Cert the value for the attribute {@link #rfc3161Cert} to set.
+	 * @param rfc3161CertParam the value for the attribute {@link #rfc3161Cert} to set.
 	 */
-	public void setRfc3161Cert(String rfc3161Cert) {
-		this.rfc3161Cert = rfc3161Cert;
+	public void setRfc3161Cert(String rfc3161CertParam) {
+		this.rfc3161Cert = rfc3161CertParam;
 	}
 			
 	/**
@@ -329,10 +334,10 @@ public class ConfigServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #rfc3161Password}.
-	 * @param rfc3161Password the value for the attribute {@link #rfc3161Password} to set.
+	 * @param rfc3161PasswordParam the value for the attribute {@link #rfc3161Password} to set.
 	 */
-	public void setRfc3161Password(String rfc3161Password) {
-		this.rfc3161Password = rfc3161Password;
+	public void setRfc3161Password(String rfc3161PasswordParam) {
+		this.rfc3161Password = rfc3161PasswordParam;
 	}
 
 	/**
@@ -345,10 +350,10 @@ public class ConfigServiceDTO {
 	
 	/**
 	 * Sets the value of the attribute {@link #degradedThreshold}.
-	 * @param degradedThreshold the value for the attribute {@link #degradedThreshold} to set.
+	 * @param degradedThresholdParam the value for the attribute {@link #degradedThreshold} to set.
 	 */
-	public void setDegradedThreshold(final Long degradedThreshold) {
-		this.degradedThreshold = degradedThreshold;
+	public void setDegradedThreshold(final Long degradedThresholdParam) {
+		this.degradedThreshold = degradedThresholdParam;
 	}
 			
 	/**
@@ -361,10 +366,10 @@ public class ConfigServiceDTO {
 	
 	/**
 	 * Sets the value of the attribute {@link #lostThreshold}.
-	 * @param lostThreshold the value for the attribute {@link #lostThreshold} to set.
+	 * @param lostThresholdParam the value for the attribute {@link #lostThreshold} to set.
 	 */
-	public void setLostThreshold(final String lostThreshold) {
-		this.lostThreshold = lostThreshold;
+	public void setLostThreshold(final String lostThresholdParam) {
+		this.lostThreshold = lostThresholdParam;
 	}
 	
 	
@@ -378,10 +383,10 @@ public class ConfigServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #directoryPath}.
-	 * @param directoryPath the value for the attribute {@link #directoryPath} to set.
+	 * @param directoryPathParam the value for the attribute {@link #directoryPath} to set.
 	 */
-	public void setDirectoryPath(final String directoryPath) {
-		this.directoryPath = directoryPath;
+	public void setDirectoryPath(final String directoryPathParam) {
+		this.directoryPath = directoryPathParam;
 	}
 		
 	/**
@@ -394,10 +399,10 @@ public class ConfigServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #soapUrl}.
-	 * @param afirmaService the value for the attribute {@link #soapUrl} to set.
+	 * @param soapUrlParam the value for the attribute {@link #soapUrl} to set.
 	 */
-	public void setSoapUrl(String connectionUrl) {
-		this.soapUrl = connectionUrl;
+	public void setSoapUrl(String soapUrlParam) {
+		this.soapUrl = soapUrlParam;
 	}
 				
 	
@@ -411,10 +416,10 @@ public class ConfigServiceDTO {
 	
 	/**
 	 * Sets the value of the attribute {@link #baseUrl}.
-	 * @param afirmaService the value for the attribute {@link #baseUrl} to set.
+	 * @param baseUrlParam the value for the attribute {@link #baseUrl} to set.
 	 */
-	public void setBaseUrl(String baseUrl) {
-		this.baseUrl = baseUrl;
+	public void setBaseUrl(String baseUrlParam) {
+		this.baseUrl = baseUrlParam;
 	}
 
 	/**
@@ -427,10 +432,10 @@ public class ConfigServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #serviceType}.
-	 * @param afirmaService the value for the attribute {@link #serviceType} to set.
+	 * @param serviceTypeParam the value for the attribute {@link #serviceType} to set.
 	 */
-	public void setServiceType(String serviceType) {
-		this.serviceType = serviceType;
+	public void setServiceType(String serviceTypeParam) {
+		this.serviceType = serviceTypeParam;
 	}
 		
 	/**
@@ -460,10 +465,10 @@ public class ConfigServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #blockTimeAlarm}.
-	 * @param afirmaService the value for the attribute {@link #blockTimeAlarm} to set.
+	 * @param blockTimeAlarmParam the value for the attribute {@link #blockTimeAlarm} to set.
 	 */
-	public void setBlockTimeAlarm(Long blockTimeAlarm) {
-		this.blockTimeAlarm = blockTimeAlarm;
+	public void setBlockTimeAlarm(Long blockTimeAlarmParam) {
+		this.blockTimeAlarm = blockTimeAlarmParam;
 	}
 
 	/**
@@ -476,10 +481,10 @@ public class ConfigServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #listMailDegraded}.
-	 * @param afirmaService the value for the attribute {@link #listMailDegraded} to set.
+	 * @param listMailDegradedParam the value for the attribute {@link #listMailDegraded} to set.
 	 */
-	public void setListMailDegraded(List<String> listMailDegraded) {
-		this.listMailDegraded = listMailDegraded;
+	public void setListMailDegraded(List<String> listMailDegradedParam) {
+		this.listMailDegraded = listMailDegradedParam;
 	}
 
 	/**
@@ -492,12 +497,28 @@ public class ConfigServiceDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #listMailDown}.
-	 * @param afirmaService the value for the attribute {@link #listMailDown} to set.
+	 * @param listMailDownParam the value for the attribute {@link #listMailDown} to set.
 	 */	
-	public void setListMailDown(List<String> listMailDown) {
-		this.listMailDown = listMailDown;
+	public void setListMailDown(List<String> listMailDownParam) {
+		this.listMailDown = listMailDownParam;
 	}
-
+	
+	
+	/**
+	 * Gets the value of the attribute {@link #idAlarm}.
+	 * @return the value of the attribute {@link #idAlarm}.
+	 */	
+	public Long getIdAlarm() {
+		return idAlarm;
+	}
+	
+	/**
+	 * Sets the value of the attribute {@link #idAlarm}.
+	 * @param idAlarmParam the value for the attribute {@link #idAlarm} to set.
+	 */	
+	public void setIdAlarm(Long idAlarmParam) {
+		this.idAlarm = idAlarmParam;
+	}
 
 	/**
 	 * {@inheritDoc}
