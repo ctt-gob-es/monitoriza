@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>08/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 08/10/2018.
+ * @version 1.1, 18/01/2019.
  */
 package es.gob.monitoriza.i18n;
 
@@ -28,7 +28,7 @@ package es.gob.monitoriza.i18n;
 /** 
  * <p>Interface that contains the keys to the log messages for the commons utils module.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 08/10/2018.
+ * @version 1.1, 18/01/2019.
  */
 public interface ICommonsUtilLogMessages {
 	
@@ -90,5 +90,15 @@ public interface ICommonsUtilLogMessages {
 	 * Constant attribute that represents the name of the property <code>errorutils011</code> belonging to the file status/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS011 = "errorutils011";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>errorutils012</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORUTILS012 = "errorutils012";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>errorutils013</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORUTILS013 = "errorutils013";
 
 }
