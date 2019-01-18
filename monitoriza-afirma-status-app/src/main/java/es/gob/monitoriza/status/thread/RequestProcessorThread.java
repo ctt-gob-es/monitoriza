@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.6, 04/01/2019.
+ * @version 1.7, 18/01/2019.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -68,7 +68,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.6, 04/01/2019.
+ * @version 1.7, 18/01/2019.
  */
 public final class RequestProcessorThread implements Runnable {
 
@@ -236,7 +236,7 @@ public final class RequestProcessorThread implements Runnable {
 				// hay más grupos de confirmación,
 				// pasamos a calcular el estado del servicio con los datos
 				// obtenidos.
-				StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(tiempoMedio, perdidas), tiempoMedio, LocalDateTime.now(), partialRequestResult);
+				StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(tiempoMedio, perdidas), service.getPlatform(), tiempoMedio, LocalDateTime.now(), partialRequestResult);
 				statusHolder.put(service.getServiceName(), statusUptodate);
 				saveDailyVipMonitoring(service.getServiceName(), service.getPlatform(), statusUptodate);
 				RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);

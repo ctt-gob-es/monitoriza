@@ -19,14 +19,14 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.7, 09/11/2018.
+ * @version 1.8, 18/01/2019.
  */
 package es.gob.monitoriza.constant;
 
 /** 
  * <p>Interface that contains general constants.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.7, 09/11/2018.
+ * @version 1.8, 18/01/2019.
  */
 public interface GeneralConstants {
 	
@@ -139,7 +139,7 @@ public interface GeneralConstants {
 	 * Attribute that represents the string contained in the TimeStamp Services of TS@. 
 	 */
 	public static final String TIMESTAMP_SERVICE = "timestamp";
-		
+			
 	/**
 	 * Attribute that represents the property substring for timer configuration. 
 	 */
@@ -234,14 +234,24 @@ public interface GeneralConstants {
 	public static final String PLATFORM_TSA = "TS@";
 	
 	/**
+	 * Attribute that represents the string for identifying the cl@ve platform. 
+	 */
+	public static final String PLATFORM_CLAVE = "Cl@ve";
+	
+	/**
 	 * Attribute that represents the string for identifying the @firma filter parameter on calling the status servlet. 
 	 */
 	public static final String PARAMETER_AFIRMA = "afirma";
 	
 	/**
-	 * Attribute that represents the string for identifying the ts@ filter paramenter on callin the status servlet. 
+	 * Attribute that represents the string for identifying the ts@ filter parameter on calling the status servlet. 
 	 */
 	public static final String PARAMETER_TSA = "tsa";
+	
+	/**
+	 * Attribute that represents the string for identifying the Cl@ve filter parameter on calling the status servlet. 
+	 */
+	public static final String PARAMETER_CLAVE = "clave";
 	
 	/**
 	 * Attribute that represents the excetion if the certificate is not valid. 
