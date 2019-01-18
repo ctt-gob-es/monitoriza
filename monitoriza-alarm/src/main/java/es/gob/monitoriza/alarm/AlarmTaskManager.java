@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 10/10/2018.
+ * @version 1.4, 18/01/2019.
  */
 package es.gob.monitoriza.alarm;
 
@@ -34,7 +34,7 @@ import es.gob.monitoriza.constant.GeneralConstants;
 /** 
  * <p>Class that defines the methods in charge of send alarms or store it according to the defined block time.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 18/01/2019.
  */
 public class AlarmTaskManager {
 
@@ -102,7 +102,7 @@ public class AlarmTaskManager {
 	 * Method that gets the alarms list of a given service from the stack. 
 	 * 
 	 * @param serviceIdentifier Name of the service to search.
-	 * @return a list with the alarm assiciated to the service.
+	 * @return a list with the alarm associated to the service.
 	 */
 	public static List<Alarm> getAlarmStack(String[] serviceIdentifier){
 		return alarmStack.get(serviceIdentifier[0] + GeneralConstants.SEPARATOR + serviceIdentifier[1]);
