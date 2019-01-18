@@ -13,9 +13,9 @@
  * <b>File:</b><p>es.gob.afirma.cryptography.keystore.StandardKeystore2.java.</p>
  * <b>Description:</b><p>Class that manages all the operations related with JCE, JCEKS and PKCS#12 keystores.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI certificates and electronic signature.</p>
- * <b>Date:</b><p>03/03/2015.</p>
+ * <b>Date:</b><p>03/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 10/10/2019.
+ * @version 1.5, 18/01/2019.
  */
 package es.gob.monitoriza.crypto.keystore;
 
@@ -56,7 +56,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 /**
  * <p>Class that manages all the operations related with JCE, JCEKS and PKCS#12 keystores.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 10/10/2019.
+ * @version 1.5, 18/01/2019.
  */
 public class KeystoreFacade implements IKeystoreFacade {
 
