@@ -32,11 +32,13 @@
 
 	<modules>
 		<module>monitoriza-afirma-status-app</module>
+		<module>monitoriza-clave-status-app</module>
 		<module>monitoriza-alarm</module>
 		<module>monitoriza-commons-util</module>
 		<module>monitoriza-i18n</module>
 		<module>monitoriza-persistence</module>
 		<module>monitoriza-web</module>
+		<module>monitoriza-clave-web</module>
 		<module>monitoriza-core</module>
   </modules>
 
