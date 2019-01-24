@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 24/01/2018.
+ * @version 1.3, 18/01/2019.
  */
 package es.gob.monitoriza.alarm.types;
 
@@ -31,7 +31,7 @@ import es.gob.monitoriza.constant.GeneralConstants;
 /** 
  * <p>Class that represents the type Alarm.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 30/08/2018.
+ * @version 1.3, 18/01/2019.
  */
 public class Alarm {
 
@@ -44,6 +44,11 @@ public class Alarm {
 	 * Attribute that represents the status of the service associated to the alarm.
 	 */
 	private String serviceStatus;
+	
+	/**
+	 * Attribute that represents the status of the system associated to the alarm.
+	 */
+	private String system;
 	
 	/**
 	 * Attribute that represents the average time that has taken to the service to complete, provoking the alarm. 
@@ -68,7 +73,7 @@ public class Alarm {
 	/**
 	 * Attribute that represents the service WSDL endpoint. 
 	 */
-	private String serviceWsdl;
+	private String serviceUrl;
 	
 	/**
 	 * Attribute that represents . 
@@ -88,11 +93,12 @@ public class Alarm {
 	 * @param serviceNameParam Name of the service associated to the alarm.
 	 * @param serviceStatusParam Status of the service associated to the alarm.
 	 */
-	public Alarm(String serviceNameParam, String serviceStatusParam, Long tiempoMedio) {
-		setServiceName(serviceNameParam);
-		setServiceStatus(serviceStatusParam);
-		setAvgTime(tiempoMedio);
-		setDateOfCreation(LocalDateTime.now());
+	public Alarm(String serviceNameParam, String serviceStatusParam, Long tiempoMedio, String systemParam) {
+		this.serviceName = serviceNameParam;
+		this.serviceStatus = serviceStatusParam;
+		this.avgTime = tiempoMedio;
+		this.system = systemParam;
+		this.dateOfCreation = LocalDateTime.now();
 	}
 
 	/**
@@ -192,19 +198,19 @@ public class Alarm {
 	}
 		
 	/**
-	 * Gets the value of the attribute {@link #serviceWsdl}.
-	 * @return the value of the attribute {@link #serviceWsdl}.
+	 * Gets the value of the attribute {@link #serviceUrl}.
+	 * @return the value of the attribute {@link #serviceUrl}.
 	 */
-	public String getServiceWsdl() {
-		return serviceWsdl;
+	public String getServiceUrl() {
+		return serviceUrl;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #serviceWsdl}.
-	 * @param dateOfCreation The value for the attribute {@link #serviceWsdl}.
+	 * Sets the value of the attribute {@link #serviceUrl}.
+	 * @param serviceUrlParam The value for the attribute {@link #serviceUrl}.
 	 */
-	public void setServiceWsdl(String serviceWsdl) {
-		this.serviceWsdl = serviceWsdl;
+	public void setServiceUrl(String serviceUrlParam) {
+		this.serviceUrl = serviceUrlParam;
 	}
 			
 	/**
@@ -221,6 +227,23 @@ public class Alarm {
 	 */
 	public void setUmbralDegradado(Long umbralDegradado) {
 		this.umbralDegradado = umbralDegradado;
+	}
+	
+	
+	/**
+	 * Gets the value of the attribute {@link #system}.
+	 * @return the value of the attribute {@link #system}.
+	 */
+	public String getSystem() {
+		return system;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #system}.
+	 * @param systemParam The value for the attribute {@link #system}.
+	 */
+	public void setSystem(String systemParam) {
+		this.system = systemParam;
 	}
 
 	/**

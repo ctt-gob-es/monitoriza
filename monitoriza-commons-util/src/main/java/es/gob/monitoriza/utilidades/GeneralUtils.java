@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 18/01/2019.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -38,7 +38,7 @@ import es.gob.monitoriza.i18n.Language;
 /** 
  * <p>Class that contains general utils methods.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 18/01/2019.
  */
 public class GeneralUtils {
 	
@@ -74,24 +74,6 @@ public class GeneralUtils {
 		return values;
 	}
 	
-	/**
-	 * 
-	 * @param serviceId
-	 * @return
-	 */
-	public static String getSystemName(final String serviceId) {
-		
-		String nombreSistema;
-		String serviceName = serviceId.toLowerCase();
-		
-		if (serviceName.contains(GeneralConstants.RFC3161_SERVICE) || serviceName.contains(GeneralConstants.TIMESTAMP_SERVICE)) {
-			nombreSistema = GeneralConstants.PLATFORM_TSA;
-		} else {
-			nombreSistema = GeneralConstants.PLATFORM_AFIRMA;
-		}
-		
-		return nombreSistema;
-	}
 	
 	/**
 	 * Gets the String representation of the given local date time.

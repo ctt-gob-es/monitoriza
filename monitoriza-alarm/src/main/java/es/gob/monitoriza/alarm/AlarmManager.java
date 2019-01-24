@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 14/01/2019.
+ * @version 1.4, 18/01/2019.
  */
 package es.gob.monitoriza.alarm;
 
@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.Set;
 
 import es.gob.monitoriza.alarm.types.Alarm;
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.ServiceStatusConstants;
 import es.gob.monitoriza.exception.AlarmException;
 import es.gob.monitoriza.i18n.IAlarmLogMessages;
@@ -42,7 +43,7 @@ import es.gob.monitoriza.utilidades.GeneralUtils;
 /** 
  * <p>Class that manages the alarms system of Monitoriz@.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 14/01/2019.
+ * @version 1.4, 18/01/2019.
  */
 public class AlarmManager {
 
@@ -73,7 +74,7 @@ public class AlarmManager {
 		}
 
 		// Creamos una nueva alarma.
-		Alarm alarm = new Alarm(service.getServiceName(), serviceStatus, tiempoMedio);
+		Alarm alarm = new Alarm(service.getServiceName(), serviceStatus, tiempoMedio, service.getPlatform());
 		
 		if (serviceStatus.equals(ServiceStatusConstants.DEGRADADO)) {
 			alarm.setAddresses(getAddressesFromAlarm(alarmMonitoriza.getEmailsDegraded()));
@@ -84,7 +85,7 @@ public class AlarmManager {
 		}
 		
 		alarm.setBlockedTime(alarmMonitoriza.getBlockedTime());
-		alarm.setServiceWsdl(service.getWsdl());
+		alarm.setServiceUrl(getServiceConfigUrl(service));
 		alarm.setUmbralDegradado(service.getDegradedThreshold());
 		
 		// Enviamos la alarma al gestor de alarmas para que decida si hay que
@@ -110,5 +111,33 @@ public class AlarmManager {
 		}
 		
 		return mailList;
+	}
+	
+	/**
+	 * Method that returns the URL of the service.
+	 * @param service Configuration information of the service.
+	 * @return Complete URL of the service.
+	 */
+	private static String getServiceConfigUrl(final ConfigServiceDTO service) {
+		
+		String serviceUrl = null;
+		
+		switch (service.getServiceType().toLowerCase()) {
+			
+			case GeneralConstants.SOAP_SERVICE:
+				serviceUrl = service.getSoapUrl().concat(service.getWsdl());
+				break;
+			case GeneralConstants.OCSP_SERVICE:
+				serviceUrl = service.getBaseUrl().concat(service.getOcspContext());
+				break;
+			case GeneralConstants.RFC3161_SERVICE:
+				serviceUrl = service.getBaseUrl().concat(service.getRfc3161Context());
+				break;
+			case GeneralConstants.HTTP_SERVICE:
+				serviceUrl = service.getSoapUrl().concat(service.getWsdl());
+				break;
+		}
+		
+		return serviceUrl;
 	}
 }

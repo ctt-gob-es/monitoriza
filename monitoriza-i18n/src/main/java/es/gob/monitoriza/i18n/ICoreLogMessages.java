@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>08/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 04/01/2019.
+ * @version 1.2, 18/01/2019.
  */
 package es.gob.monitoriza.i18n;
 
@@ -28,7 +28,7 @@ package es.gob.monitoriza.i18n;
 /** 
  * <p>Interface that contains the keys to the log messages for the core module.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 04/01/2019.
+ * @version 1.2, 18/01/2019.
  */
 public interface ICoreLogMessages {
 	
@@ -145,5 +145,10 @@ public interface ICoreLogMessages {
 	 * Constant attribute that represents the name of the property <code>errorcore014</code> belonging to the file status/monitoriza_xx_YY.properties.
 	 */
 	String ERRORCORE014 = "errorcore014";
+		
+	/**
+	 * Constant attribute that represents the name of the property <code>errorcore015</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORCORE015 = "errorcore015";
 
 }

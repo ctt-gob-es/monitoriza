@@ -13,9 +13,9 @@
  * <b>File:</b><p>es.gob.afirma.cryptography.keystore.StandardKeystore2.java.</p>
  * <b>Description:</b><p>Class that manages all the operations related with JCE, JCEKS and PKCS#12 keystores.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI certificates and electronic signature.</p>
- * <b>Date:</b><p>03/03/2015.</p>
+ * <b>Date:</b><p>03/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 10/10/2019.
+ * @version 1.5, 18/01/2019.
  */
 package es.gob.monitoriza.crypto.keystore;
 
@@ -46,15 +46,17 @@ import org.apache.log4j.Logger;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.utils.CryptographyValidationUtils;
+import es.gob.monitoriza.exception.CipherException;
 import es.gob.monitoriza.i18n.ICoreLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.utilidades.AESCipher;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /**
  * <p>Class that manages all the operations related with JCE, JCEKS and PKCS#12 keystores.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 10/10/2019.
+ * @version 1.5, 18/01/2019.
  */
 public class KeystoreFacade implements IKeystoreFacade {
 
@@ -214,9 +216,8 @@ public class KeystoreFacade implements IKeystoreFacade {
 
 	/**
 	 * Method that updates an alias entry inside of a keystore.
-	 * @param alias Parameter that represents the alias of the entry to store.
-	 * @param cert Parameter that represents the certificate associated to the new entry.
-	 * @param key Parameter that represents the private key associated to the new entry.
+	 * @param oldEntryAlias Parameter that represents the alias of the entry to update.
+	 * @param newEntryAlias Parameter that represents the new value for the alias.
 	 * @throws KeyStoreException If there is some error inserting the entry into the keystore.
 	 * @throws CryptographyException If there is some error decrypting the password of the keystore.
 	 */
@@ -265,13 +266,9 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 */
 	private byte[ ] getKeystoreDecodedPassword(final String password) throws CryptographyException {
 		try {
-						
-			SecretKeySpec key = new SecretKeySpec(StaticMonitorizaProperties.getProperty(StaticConstants.AES_PASSWORD).getBytes(), StaticMonitorizaProperties.getProperty(StaticConstants.AES_ALGORITHM));
-			Cipher cipher = Cipher.getInstance(StaticMonitorizaProperties.getProperty(StaticConstants.AES_PADDING_ALG));
-			cipher.init(Cipher.DECRYPT_MODE, key);
-
-			return cipher.doFinal(Base64.decodeBase64(password == null ? keystore.getPassword() : password));
-		} catch (Exception e) {
+	
+			return AESCipher.getInstance().decryptMessage(password == null ? keystore.getPassword() : password);
+		} catch (CipherException e) {
 			String errorMsg = Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE003, new Object[ ] { keystore.getTokenName() });
 			LOGGER.error(errorMsg, e);
 			throw new CryptographyException(errorMsg, e);
@@ -348,7 +345,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 
 	/**
 	 * Calculates keystore type.
-	 *
+	 * @param nameFile Name of the keystore file.
 	 * @return string with keystore type.
 	 */
 	public String getKeystoreType(final String nameFile) {

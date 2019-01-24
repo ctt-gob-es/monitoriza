@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 14/01/2019.
+ * @version 1.5, 18/01/2019.
  */
 package es.gob.monitoriza.alarm;
 
@@ -37,19 +37,22 @@ import es.gob.monitoriza.alarm.types.Alarm;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.ServiceStatusConstants;
 import es.gob.monitoriza.constant.StaticConstants;
+import es.gob.monitoriza.exception.CipherException;
 import es.gob.monitoriza.i18n.IAlarmLogMessages;
 import es.gob.monitoriza.i18n.IAlarmMailText;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.model.entity.ConfServerMail;
 import es.gob.monitoriza.service.impl.ConfServerMailService;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
+import es.gob.monitoriza.utilidades.AESCipher;
 import es.gob.monitoriza.utilidades.GeneralUtils;
+import es.gob.monitoriza.utilidades.NumberConstants;
 import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /** 
  * <p>Class that represents the scheduler for the tasks object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 14/01/2019.
+ * @version 1.5, 18/01/2019.
  */
 public class AlarmTaskScheduler {
 	
@@ -82,7 +85,17 @@ public class AlarmTaskScheduler {
 			Boolean authentication = serverMail.getAuthenticationMail();
 			Boolean tls = serverMail.getTslMail();
 			String user = serverMail.getUserMail();
-			String password = serverMail.getPasswordMail();
+			String password = null;
+			
+			if (serverMail.getPasswordMail() != null) {
+				
+				try {
+					password = new String(AESCipher.getInstance().decryptMessage(serverMail.getPasswordMail()));
+				} catch (CipherException e) {
+					LOGGER.error(Language.getResAlarmMonitoriza(IAlarmLogMessages.ERRORALAMR004), e);
+				}
+			}
+			
 			String subject;
 			String body;
 			if (alarmsToSend.size() < 2) {
@@ -112,7 +125,7 @@ public class AlarmTaskScheduler {
 		
 		StringBuffer subject = new StringBuffer();
 		
-		subject.append(Language.getResAlarmMonitoriza(IAlarmMailText.SUBJECT_MAIL_MONITORIZA)).append(" ").append(GeneralUtils.getSystemName(alarm.getServiceName().toLowerCase())).append(GeneralConstants.EN_DASH_WITH_SPACES).append(alarm.getServiceName()).append(GeneralConstants.BLANK).append(alarm.getServiceStatus());
+		subject.append(Language.getResAlarmMonitoriza(IAlarmMailText.SUBJECT_MAIL_MONITORIZA)).append(" ").append(alarm.getSystem()).append(GeneralConstants.EN_DASH_WITH_SPACES).append(alarm.getServiceName()).append(GeneralConstants.BLANK).append(alarm.getServiceStatus());
 		
 		return subject.toString();
 	}
@@ -124,7 +137,7 @@ public class AlarmTaskScheduler {
 	 */
 	private static String generateBody(final Alarm alarm) {
 				
-		final String systemService = GeneralUtils.getSystemName(alarm.getServiceName().toLowerCase()).concat(GeneralConstants.EN_DASH_WITH_SPACES).concat(alarm.getServiceWsdl());
+		final String systemService = alarm.getSystem().concat(GeneralConstants.EN_DASH_WITH_SPACES).concat(alarm.getServiceUrl());
 		final String tiempoMedioServicio =  alarm.getUmbralDegradado() != null? alarm.getUmbralDegradado().toString(): null;
 		
 		String body = null;				
@@ -212,7 +225,7 @@ public class AlarmTaskScheduler {
 	 */
 	private static String generateSummaryBody(List<Alarm> alarmsToSent) {
 		StringBuilder body = new StringBuilder();
-		final String systemService = GeneralUtils.getSystemName(alarmsToSent.get(0).getServiceName().toLowerCase()).concat(GeneralConstants.EN_DASH_WITH_SPACES).concat(alarmsToSent.get(0).getServiceWsdl());
+		final String systemService = alarmsToSent.get(NumberConstants.NUM0).getSystem().concat(GeneralConstants.EN_DASH_WITH_SPACES).concat(alarmsToSent.get(0).getServiceName());
 		body.append(Language.getFormatResAlarmMonitoriza(IAlarmMailText.BODY_MAIL_SUMMARY, new Object[]{alarmsToSent.size(), systemService, alarmsToSent.get(0).getServiceStatus().toUpperCase()}));
 		for(Alarm alarm : alarmsToSent){
 			body.append(GeneralConstants.LINE_FEED + alarm.getDateOfCreation().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + GeneralConstants.LINE_FEED + generateBodyRow(alarm));

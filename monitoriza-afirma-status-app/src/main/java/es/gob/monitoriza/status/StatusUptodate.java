@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21 jun. 2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 30/10/2018.
+ * @version 1.4, 18/01/2019.
  */
 package es.gob.monitoriza.status;
 
@@ -32,7 +32,7 @@ import es.gob.monitoriza.constant.GeneralConstants;
 /** 
  * <p>Class that stores the last results for a service invocation.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 30/10/2018.
+ * @version 1.4, 18/01/2019.
  */
 public class StatusUptodate {
 	
@@ -45,6 +45,11 @@ public class StatusUptodate {
 	 * Attribute that represents the value of the average time taken to complete the request to the service. 
 	 */
 	private Long averageTime;
+	
+	/**
+	 * Attribute that represents the platform/system of the service. 
+	 */
+	private String platform;
 	
 	/**
 	 * Attribute that represents the time result for each request file. 
@@ -65,14 +70,16 @@ public class StatusUptodate {
 
 	/**
 	 * Constructor method for the class StatusUptodate.java.
-	 * @param statusValueParam
-	 * @param averageTimeParam 
-	 * @param statusUptodateParam
-	 * @param partialRequestResultParam
+	 * @param statusValueParam The status value.
+	 * @param platformParam The platform name.
+	 * @param averageTimeParam  The average time for the service. 
+	 * @param statusUptodateParam The sampling time.
+	 * @param partialRequestResultParam The time details for each request. 
 	 */
-	public StatusUptodate(final String statusValueParam, final Long averageTimeParam, final LocalDateTime statusUptodateParam, final Map<String,String> partialRequestResultParam) {
+	public StatusUptodate(final String statusValueParam, final String platformParam, final Long averageTimeParam, final LocalDateTime statusUptodateParam, final Map<String,String> partialRequestResultParam) {
 		super();
 		this.statusValue = statusValueParam;
+		this.platform = platformParam;
 		this.averageTime = averageTimeParam;
 		this.statusUptodate = statusUptodateParam;
 		this.partialRequestResult = partialRequestResultParam;
@@ -93,7 +100,23 @@ public class StatusUptodate {
 	public void setStatusValue(String statusValueParam) {
 		this.statusValue = statusValueParam;
 	}
-	
+		
+	/**
+	 * Gets the value of the attribute {@link #platform}.
+	 * @return the value of the attribute {@link #platform}.
+	 */
+	public String getPlatform() {
+		return platform;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #platform}.
+	 * @param platformParam the value for the attribute {@link #platform} to set.
+	 */
+	public void setPlatform(String platformParam) {
+		this.platform = platformParam;
+	}
+
 	/**
 	 * Gets the value of the attribute {@link #averageTime}.
 	 * @return the value of the attribute {@link #averageTime}.
