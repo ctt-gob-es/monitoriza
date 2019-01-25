@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 05/12/2018.
+ * @version 1.5, 25/01/2019.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -65,7 +65,7 @@ import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.UserDTO;
 import es.gob.monitoriza.persistence.configuration.dto.UserEditDTO;
 import es.gob.monitoriza.persistence.configuration.dto.UserPasswordDTO;
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
@@ -90,7 +90,7 @@ import es.gob.monitoriza.webservice.ClientManager;
  * Application for monitoring services of @firma suite systems.
  * </p>
  *
- * @version 1.4, 05/12/2018.
+ * @version 1.5, 25/01/2019.
  */
 @RestController
 public class UserRestController {
@@ -366,7 +366,7 @@ public class UserRestController {
 			dtOutput = new DataTablesOutput<SystemCertificate>();
 			byte[ ] ksBytes = file.getBytes();
 
-			Keystore keystoreUser = keystoreService.getKeystoreById(Keystore.ID_USER_STORE);
+			KeystoreMonitoriza keystoreUser = keystoreService.getKeystoreById(KeystoreMonitoriza.ID_USER_STORE);
 			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreUser);
 			X509Certificate certificate = null;
 			certificate = UtilsCertificate.getCertificate(ksBytes);
@@ -462,7 +462,7 @@ public class UserRestController {
 	public String deleteCertUser(@RequestParam("id") final Long systermCertId, @RequestParam("index") final String index) throws CryptographyException {
 
 		SystemCertificate systemCertificate = certService.getSystemCertificateById(systermCertId);
-		Keystore keystoreUser = keystoreService.getKeystoreById(Keystore.ID_USER_STORE);
+		KeystoreMonitoriza keystoreUser = keystoreService.getKeystoreById(KeystoreMonitoriza.ID_USER_STORE);
 		IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreUser);
 		keyStoreFacade.deleteCertificate(systemCertificate.getAlias());
 

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>9 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 28/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.webservice;
 
@@ -28,7 +28,7 @@ import java.io.BufferedWriter;
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 28/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +55,7 @@ import org.apache.axis.utils.StringUtils;
 import org.apache.axis.utils.XMLUtils;
 import org.apache.log4j.Logger;
 
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 
 /**
 * @author elblogdeselo

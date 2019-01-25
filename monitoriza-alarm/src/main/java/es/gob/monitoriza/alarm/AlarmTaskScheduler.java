@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 18/01/2019.
+ * @version 1.6, 25/01/2019.
  */
 package es.gob.monitoriza.alarm;
 
@@ -35,6 +35,8 @@ import org.apache.log4j.Logger;
 import es.gob.monitoriza.alarm.mail.MailService;
 import es.gob.monitoriza.alarm.types.Alarm;
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.GrayLogErrorCodes;
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.constant.ServiceStatusConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.exception.CipherException;
@@ -45,14 +47,13 @@ import es.gob.monitoriza.persistence.configuration.model.entity.ConfServerMail;
 import es.gob.monitoriza.service.impl.ConfServerMailService;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.utilidades.AESCipher;
-import es.gob.monitoriza.utilidades.GeneralUtils;
-import es.gob.monitoriza.utilidades.NumberConstants;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
+import es.gob.monitoriza.utilidades.UtilsGrayLog;
 
 /** 
  * <p>Class that represents the scheduler for the tasks object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.5, 18/01/2019.
+ * @version 1.6, 25/01/2019.
  */
 public class AlarmTaskScheduler {
 	
@@ -71,47 +72,54 @@ public class AlarmTaskScheduler {
 		ConfServerMailService serverMailService = ApplicationContextProvider.getApplicationContext().getBean("serverMailService", ConfServerMailService.class);
 		
 		ConfServerMail serverMail = serverMailService.getAllConfServerMail();
-		
-		List<String> destinations = new ArrayList<String>();
-		// Si la lista de alarmas no esta vacía...
-		if (alarmsToSend != null && alarmsToSend.size() > 0) {
-			// Obtenemos el nombre del servicio
-			String serviceName = alarmsToSend.get(0).getServiceName();
-			// Obtenemos el identificador de la alarma (nombre del servicio y el estado.
-			//String[ ] serviceIdentifier = new String[ ] { alarmsToSend.get(0).getServiceName(), alarmsToSend.get(0).getServiceStatus() };
-			String issuer = serverMail.getIssuerMail();
-			String host = serverMail.getHostMail();
-			Long port = serverMail.getPortMail();
-			Boolean authentication = serverMail.getAuthenticationMail();
-			Boolean tls = serverMail.getTslMail();
-			String user = serverMail.getUserMail();
-			String password = null;
-			
-			if (serverMail.getPasswordMail() != null) {
-				
-				try {
-					password = new String(AESCipher.getInstance().decryptMessage(serverMail.getPasswordMail()));
-				} catch (CipherException e) {
-					LOGGER.error(Language.getResAlarmMonitoriza(IAlarmLogMessages.ERRORALAMR004), e);
-				}
-			}
-			
-			String subject;
-			String body;
-			if (alarmsToSend.size() < 2) {
-				subject = generateSubject(alarmsToSend.get(0));
-				body = generateBody(alarmsToSend.get(0));
-			} else {
-				subject = Language.getResAlarmMonitoriza(IAlarmMailText.SUBJECT_MAIL_MONITORIZA).concat(" ").concat(Language.getFormatResAlarmMonitoriza(IAlarmMailText.SUMMARY_ALARM_SUBJECT_MAIL, new Object[ ] { serviceName }));
-				body = generateSummaryBody(alarmsToSend);
-			}
-			//destinations = MailUtils.getListAddresseesForAlarm(serviceIdentifier);
-			destinations = alarmsToSend.get(0).getAddresses();
-			MailService ms = new MailService(destinations, issuer, host, port.intValue(), authentication, tls, user, password, subject.toString(), body.toString());
-			
-			LOGGER.info("Mensaje enviado: \nSubject: "+ subject+"\nBody: "+ body +"\nNúmero de alarmas: " + alarmsToSend.size());
-						
-			ms.send();
+    		
+		if (serverMail != null && isMailServerValid(serverMail)) {
+    		
+    		List<String> destinations = new ArrayList<String>();
+    		// Si la lista de alarmas no esta vacía...
+    		if (alarmsToSend != null && alarmsToSend.size() > 0) {
+    			// Obtenemos el nombre del servicio
+    			String serviceName = alarmsToSend.get(0).getServiceName();
+    			// Obtenemos el identificador de la alarma (nombre del servicio y el estado.
+    			//String[ ] serviceIdentifier = new String[ ] { alarmsToSend.get(0).getServiceName(), alarmsToSend.get(0).getServiceStatus() };
+    			String issuer = serverMail.getIssuerMail();
+    			String host = serverMail.getHostMail();
+    			Long port = serverMail.getPortMail();
+    			Boolean authentication = serverMail.getAuthenticationMail();
+    			Boolean tls = serverMail.getTslMail();
+    			String user = serverMail.getUserMail();
+    			String password = null;
+    			
+    			if (serverMail.getPasswordMail() != null) {
+    				
+    				try {
+    					password = new String(AESCipher.getInstance().decryptMessage(serverMail.getPasswordMail()));
+    				} catch (CipherException e) {
+    					LOGGER.error(Language.getResAlarmMonitoriza(IAlarmLogMessages.ERRORALAMR004), e);
+    				}
+    			}
+    			
+    			String subject;
+    			String body;
+    			if (alarmsToSend.size() < 2) {
+    				subject = generateSubject(alarmsToSend.get(0));
+    				body = generateBody(alarmsToSend.get(0));
+    			} else {
+    				subject = Language.getResAlarmMonitoriza(IAlarmMailText.SUBJECT_MAIL_MONITORIZA).concat(" ").concat(Language.getFormatResAlarmMonitoriza(IAlarmMailText.SUMMARY_ALARM_SUBJECT_MAIL, new Object[ ] { serviceName }));
+    				body = generateSummaryBody(alarmsToSend);
+    			}
+    			//destinations = MailUtils.getListAddresseesForAlarm(serviceIdentifier);
+    			destinations = alarmsToSend.get(0).getAddresses();
+    			MailService ms = new MailService(destinations, issuer, host, port.intValue(), authentication, tls, user, password, subject.toString(), body.toString());
+    			
+    			LOGGER.info("Mensaje enviado: \nSubject: "+ subject+"\nBody: "+ body +"\nNúmero de alarmas: " + alarmsToSend.size());
+    						
+    			ms.send();
+    		} 
+		} else {
+			String msg = Language.getResAlarmMonitoriza(IAlarmLogMessages.ERRORALAMR005);
+			LOGGER.error(msg);
+			UtilsGrayLog.writeMessageInGrayLog(UtilsGrayLog.LEVEL_ERROR, GrayLogErrorCodes.ERROR_MAIL_SERVER_CONFIG, msg);
 		}
 
 	}
@@ -213,7 +221,7 @@ public class AlarmTaskScheduler {
 	}
 
 	public static void main(String[ ] args) {
-		System.out.println(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_HOST));
+		System.out.println(StaticMonitorizaConfig.getProperty(StaticConstants.AFIRMA_CONNECTION_HOST));
 		
 	}
 
@@ -231,6 +239,16 @@ public class AlarmTaskScheduler {
 			body.append(GeneralConstants.LINE_FEED + alarm.getDateOfCreation().format(DateTimeFormatter.ISO_LOCAL_DATE_TIME) + GeneralConstants.LINE_FEED + generateBodyRow(alarm));
 		}
 		return body.toString();
+	}
+	
+	private static Boolean isMailServerValid(final ConfServerMail serverMail) {
+		
+		return (serverMail.getHostMail() != null &&
+				serverMail.getPortMail() != null &&
+				(serverMail.getAuthenticationMail() && serverMail.getUserMail() != null) || !serverMail.getAuthenticationMail());
+				
+			
+		
 	}
 
 }

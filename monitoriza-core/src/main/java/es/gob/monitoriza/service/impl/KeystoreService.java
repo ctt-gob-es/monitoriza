@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 09/11/2018.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -32,7 +32,7 @@ import org.springframework.transaction.annotation.Transactional;
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.repository.KeystoreRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.SystemCertificateRepository;
@@ -42,7 +42,7 @@ import es.gob.monitoriza.service.IKeystoreService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for Keystore.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 09/11/2018.
+ * @version 1.2, 25/01/2019.
  */
 @Service
 public class KeystoreService implements IKeystoreService {
@@ -64,7 +64,7 @@ public class KeystoreService implements IKeystoreService {
 	 * @see es.gob.monitoriza.service.IKeystoreService#getKeystoreById(java.lang.Long)
 	 */
 	@Override
-	public Keystore getKeystoreById(Long keystoreId) {
+	public KeystoreMonitoriza getKeystoreById(Long keystoreId) {
 		return repository.findByIdKeystore(keystoreId);
 	}
 
@@ -73,7 +73,7 @@ public class KeystoreService implements IKeystoreService {
 	 * @see es.gob.monitoriza.service.IKeystoreService#getKeystoreByName(java.lang.String)
 	 */
 	@Override
-	public Keystore getKeystoreByName(String name) {
+	public KeystoreMonitoriza getKeystoreByName(String name) {
 		return repository.findByName(name);
 	}
 
@@ -82,7 +82,7 @@ public class KeystoreService implements IKeystoreService {
 	 * @see es.gob.monitoriza.service.IKeystoreService#getAllKeystore()
 	 */
 	@Override
-	public Iterable<Keystore> getAllKeystore() {
+	public Iterable<KeystoreMonitoriza> getAllKeystore() {
 		return repository.findAll();
 	}
 
@@ -98,7 +98,7 @@ public class KeystoreService implements IKeystoreService {
 		IKeystoreFacade keyStoreFacade = new KeystoreFacade(repository.findByIdKeystore(idKeystore));
 		SystemCertificate cert = syscertRepository.findByIdSystemCertificate(systemCertificateId);
 		
-		Keystore ko = keyStoreFacade.deleteCertificate(cert.getAlias());
+		KeystoreMonitoriza ko = keyStoreFacade.deleteCertificate(cert.getAlias());
 		
 		ko.setVersion(ko.getVersion() + 1L);
 				
@@ -112,10 +112,10 @@ public class KeystoreService implements IKeystoreService {
 
 	/**
 	 * {@inheritDoc}
-	 * @see es.gob.monitoriza.service.IKeystoreService#saveKeystore(es.gob.monitoriza.persistence.configuration.model.entity.Keystore)
+	 * @see es.gob.monitoriza.service.IKeystoreService#saveKeystore(es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza)
 	 */
 	@Override
-	public Keystore saveKeystore(Keystore keystore) {
+	public KeystoreMonitoriza saveKeystore(KeystoreMonitoriza keystore) {
 		
 		return repository.save(keystore);
 	}

@@ -17,9 +17,9 @@
  * <b>File:</b><p>es.gob.monitoriza.invoker.http.HttpInvoker.java.</p>
  * <b>Description:</b><p>Class that performs the request of a HTTP service.</p>
   * <b>Project:</b><p>Application for monitoring services of Cl@ve suite systems</p>
- * <b>Date:</b><p>25 ene. 2018.</p>
+ * <b>Date:</b><p>25/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 18/10/2018.
+ * @version 1.3, 25/01/2019.
  */
 package es.gob.monitoriza.invoker.http;
 
@@ -64,7 +64,7 @@ import es.gob.monitoriza.invoker.http.conf.util.Utilities;
 import es.gob.monitoriza.invoker.http.saml.Constants;
 import es.gob.monitoriza.invoker.http.saml.SpProtocolEngineFactory;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 import eu.eidas.auth.commons.EidasStringUtil;
 import eu.eidas.auth.commons.attribute.AttributeDefinition;
 import eu.eidas.auth.commons.attribute.ImmutableAttributeMap;
@@ -89,7 +89,7 @@ import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
  * Application for monitoring services of Cl@ve suite systems.
  * </p>
  * 
- * @version 1.2, 18/10/2018.
+ * @version 1.3, 25/01/2019.
  */
 public abstract class AbstractHttpInvoker {
 
@@ -263,7 +263,7 @@ public abstract class AbstractHttpInvoker {
 	 */
 	protected static RequestConfig getRequestConfig(final ClaveAgentConfType requestConf) throws InvokerException {
 		RequestConfig res;
-		RequestConfig.Builder builder = RequestConfig.custom().setConnectTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_CONNECT_TIMEOUT))).setConnectionRequestTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_CONNECTION_REQUEST_TIMEOUT))).setSocketTimeout(Integer.valueOf(StaticMonitorizaProperties.getProperty(INVOKER_HTTP_SOCKET_TIMEOUT)));
+		RequestConfig.Builder builder = RequestConfig.custom().setConnectTimeout(Integer.valueOf(StaticMonitorizaConfig.getProperty(INVOKER_HTTP_CONNECT_TIMEOUT))).setConnectionRequestTimeout(Integer.valueOf(StaticMonitorizaConfig.getProperty(INVOKER_HTTP_CONNECTION_REQUEST_TIMEOUT))).setSocketTimeout(Integer.valueOf(StaticMonitorizaConfig.getProperty(INVOKER_HTTP_SOCKET_TIMEOUT)));
 
 		if (requestConf.getConnection() != null) {
 			if (requestConf.getConnection().getProxy() != null) {

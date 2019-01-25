@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>05/11/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 05/11/2018.
+ * @version 1.1, 25/01/2019.
  */
 package es.gob.monitoriza.spie.html.impl;
 
@@ -31,16 +31,16 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.enums.SemaphoreEnum;
 import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
 import es.gob.monitoriza.spie.html.IHtmlSpieResolver;
-import es.gob.monitoriza.utilidades.NumberConstants;
 
 
 /** 
  * <p>Class that parses TS@ Connection SPIE HTML response.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 05/11/2018.
+ * @version 1.1, 25/01/2019.
  */
 public class HtmlTsaConnResolver implements IHtmlSpieResolver {
 	

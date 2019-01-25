@@ -67,7 +67,7 @@ public final class AESCipher implements Serializable {
 	 */
 	private AESCipher() throws CipherException {
 			
-		key = new SecretKeySpec(StaticMonitorizaProperties.getProperty(StaticConstants.AES_PASSWORD).getBytes(), StaticMonitorizaProperties.getProperty(StaticConstants.AES_ALGORITHM));
+		key = new SecretKeySpec(StaticMonitorizaConfig.getProperty(StaticConstants.AES_PASSWORD).getBytes(), StaticMonitorizaConfig.getProperty(StaticConstants.AES_ALGORITHM));
 		
 	}
 
@@ -82,7 +82,7 @@ public final class AESCipher implements Serializable {
 		Cipher cipher;
 		
 		try {
-			cipher = Cipher.getInstance(StaticMonitorizaProperties.getProperty(StaticConstants.AES_PADDING_ALG));
+			cipher = Cipher.getInstance(StaticMonitorizaConfig.getProperty(StaticConstants.AES_PADDING_ALG));
 			cipher.init(Cipher.ENCRYPT_MODE, key);
 			return Base64.encodeBase64(cipher.doFinal(msg.getBytes()));
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {
@@ -101,7 +101,7 @@ public final class AESCipher implements Serializable {
 		Cipher cipher;
 		
 		try {
-			cipher = Cipher.getInstance(StaticMonitorizaProperties.getProperty(StaticConstants.AES_PADDING_ALG));
+			cipher = Cipher.getInstance(StaticMonitorizaConfig.getProperty(StaticConstants.AES_PADDING_ALG));
 			cipher.init(Cipher.DECRYPT_MODE, key);
 			return cipher.doFinal(Base64.decodeBase64(msg));
 		} catch (NoSuchAlgorithmException | NoSuchPaddingException | InvalidKeyException | IllegalBlockSizeException | BadPaddingException e) {

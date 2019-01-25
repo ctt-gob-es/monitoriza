@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/12/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/01/2019.
+ * @version 1.6, 25/01/2019.
  */
 package es.gob.monitoriza.task;
 
@@ -29,12 +29,17 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.GrayLogErrorCodes;
+import es.gob.monitoriza.i18n.IStatusLogMessages;
+import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.persistence.configuration.exception.DatabaseException;
 import es.gob.monitoriza.service.IDailySpieMonitoringService;
+import es.gob.monitoriza.utilidades.UtilsGrayLog;
 
 /** 
  * <p>Class that define the tasks related to SPIE statistics.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 04/01/2019.
+ * @version 1.6, 25/01/2019.
  */
 @Component
 public class SpieStatisticsTask {
@@ -56,7 +61,13 @@ public class SpieStatisticsTask {
 	 */
 	public void dumpAndDeleteMonitoringData() {
 		
-		dailyService.dumpAndDeleteSpieMonitoringData();
+		try {
+			dailyService.dumpAndDeleteSpieMonitoringData();
+		} catch (DatabaseException e) {
+			String msg = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS021);
+			LOGGER.error(msg, e);
+			UtilsGrayLog.writeMessageInGrayLog(UtilsGrayLog.LEVEL_ERROR, GrayLogErrorCodes.ERROR_STATISTICS_SPIE_DUMP, msg);
+		}
 	}
 
 }

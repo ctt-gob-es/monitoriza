@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/12/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 04/01/2019.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.task;
 
@@ -28,12 +28,17 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.GrayLogErrorCodes;
+import es.gob.monitoriza.i18n.IStatusLogMessages;
+import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.persistence.configuration.exception.DatabaseException;
 import es.gob.monitoriza.service.IDailyVipMonitoringService;
+import es.gob.monitoriza.utilidades.UtilsGrayLog;
 
 /** 
  * <p>Class that define the tasks related to VIP statistics.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 04/01/2019.
+ * @version 1.2, 25/01/2019.
  */
 @Component
 public class VipStatisticsTask {
@@ -55,7 +60,13 @@ public class VipStatisticsTask {
 	 */
 	public void dumpAndDeleteMonitoringData() {
 		
-		dailyService.dumpAndDeleteMonitoringData();
+		try {
+			dailyService.dumpAndDeleteMonitoringData();
+		} catch (DatabaseException e) {
+			String msg = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS020);
+			LOGGER.error(msg, e);
+			UtilsGrayLog.writeMessageInGrayLog(UtilsGrayLog.LEVEL_ERROR, GrayLogErrorCodes.ERROR_STATISTICS_VIP_DUMP, msg);
+		}
 	}
 
 }

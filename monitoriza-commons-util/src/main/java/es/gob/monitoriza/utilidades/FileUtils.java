@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>21/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.4, 19/12/2018.
+ * @version 1.5, 25/01/2019.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -58,7 +58,7 @@ import es.gob.monitoriza.i18n.Language;
 /** 
  * <p>Utilities class for Files.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.4, 19/12/2018.
+ * @version 1.5, 25/01/2019.
  */
 public final class FileUtils {
 
@@ -291,7 +291,7 @@ public final class FileUtils {
 	public static void unZipFileWithSubFolders(final byte[] fileBytes, final String fileName, final String targetFolder) throws IOException {
 		
 			
-			String tempFilePath = new StringBuffer().append(StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY))
+			String tempFilePath = new StringBuffer().append(StaticMonitorizaConfig.getProperty(StaticConstants.ROOT_PATH_DIRECTORY))
 													.append(GeneralConstants.DOUBLE_PATH_SEPARATOR)
 													.append(fileName).toString();
 			

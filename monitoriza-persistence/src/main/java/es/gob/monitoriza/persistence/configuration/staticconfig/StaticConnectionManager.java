@@ -18,21 +18,21 @@
  * <b>Description:</b>
  * <p>Class that manages the configuration of the @firma/ts@ connections from static properties file.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
- * <b>Date:</b><p>30 ene. 2018.</p>
+ * <b>Date:</b><p>30/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 30 ene. 2018.
+ * @version 1.1, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.staticconfig;
 
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 
 
 /** 
  * <p>Class that manages the configuration of the @firma/ts@ connections from static properties file.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 30 ene. 2018.
+ * @version 1.1, 25/01/2019.
  */
 public class StaticConnectionManager implements ConnectionManager {
 		
@@ -45,12 +45,12 @@ public class StaticConnectionManager implements ConnectionManager {
 		
 		final ConnectionDTO aFirmaConnection = new ConnectionDTO();
 		
-		aFirmaConnection.setSecureMode(Boolean.valueOf(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_SECURE_MODE)));
-		aFirmaConnection.setHost(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_HOST));
-		aFirmaConnection.setPort(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_PORT));
-		aFirmaConnection.setSecurePort(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_HTTPS_PORT));
-		aFirmaConnection.setServiceContext(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_SERVICE_PATH));
-		aFirmaConnection.setOcspContext(StaticMonitorizaProperties.getProperty(StaticConstants.AFIRMA_CONNECTION_OCSP_PATH));
+		aFirmaConnection.setSecureMode(Boolean.valueOf(StaticMonitorizaConfig.getProperty(StaticConstants.AFIRMA_CONNECTION_SECURE_MODE)));
+		aFirmaConnection.setHost(StaticMonitorizaConfig.getProperty(StaticConstants.AFIRMA_CONNECTION_HOST));
+		aFirmaConnection.setPort(StaticMonitorizaConfig.getProperty(StaticConstants.AFIRMA_CONNECTION_PORT));
+		aFirmaConnection.setSecurePort(StaticMonitorizaConfig.getProperty(StaticConstants.AFIRMA_HTTPS_PORT));
+		aFirmaConnection.setServiceContext(StaticMonitorizaConfig.getProperty(StaticConstants.AFIRMA_CONNECTION_SERVICE_PATH));
+		aFirmaConnection.setOcspContext(StaticMonitorizaConfig.getProperty(StaticConstants.AFIRMA_CONNECTION_OCSP_PATH));
 		
 		return aFirmaConnection;
 	}
@@ -64,13 +64,13 @@ public class StaticConnectionManager implements ConnectionManager {
 
 		final ConnectionDTO tsaConnection = new ConnectionDTO();
 		
-		tsaConnection.setSecureMode(Boolean.valueOf(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_SECURE_MODE)));
-		tsaConnection.setHost(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_HOST));
-		tsaConnection.setPort(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_PORT));
-		tsaConnection.setSecurePort(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_HTTPS_PORT));
-		tsaConnection.setRfc3161Port(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_RFC3161_PORT));
-		tsaConnection.setServiceContext(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_SERVICE_PATH));
-		tsaConnection.setRfc3161Context(StaticMonitorizaProperties.getProperty(StaticConstants.TSA_CONNECTION_RFC3161_CONTEXT));
+		tsaConnection.setSecureMode(Boolean.valueOf(StaticMonitorizaConfig.getProperty(StaticConstants.TSA_CONNECTION_SECURE_MODE)));
+		tsaConnection.setHost(StaticMonitorizaConfig.getProperty(StaticConstants.TSA_CONNECTION_HOST));
+		tsaConnection.setPort(StaticMonitorizaConfig.getProperty(StaticConstants.TSA_CONNECTION_PORT));
+		tsaConnection.setSecurePort(StaticMonitorizaConfig.getProperty(StaticConstants.TSA_HTTPS_PORT));
+		tsaConnection.setRfc3161Port(StaticMonitorizaConfig.getProperty(StaticConstants.TSA_CONNECTION_RFC3161_PORT));
+		tsaConnection.setServiceContext(StaticMonitorizaConfig.getProperty(StaticConstants.TSA_CONNECTION_SERVICE_PATH));
+		tsaConnection.setRfc3161Context(StaticMonitorizaConfig.getProperty(StaticConstants.TSA_CONNECTION_RFC3161_CONTEXT));
 		
 		return tsaConnection;
 	}

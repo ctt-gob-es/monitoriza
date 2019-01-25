@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza.java.</p>
  * <b>Description:</b><p>Class that maps the <i>MAIL_MONITORIZA</i> database table as a Plain Old Java Object.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>9 abr. 2018.</p>
+ * <b>Date:</b><p>9/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 9 abr. 2018.
+ * @version 1.5, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -43,7 +43,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 
 /**
  * <p>

@@ -20,10 +20,11 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 18/01/2019.
+ * @version 1.4, 25/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -36,6 +37,7 @@ import es.gob.monitoriza.exception.CipherException;
 import es.gob.monitoriza.i18n.ICoreLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfServerMailDTO;
+import es.gob.monitoriza.persistence.configuration.exception.DatabaseException;
 import es.gob.monitoriza.persistence.configuration.model.entity.ConfServerMail;
 import es.gob.monitoriza.persistence.configuration.model.repository.ConfServerMailRepository;
 import es.gob.monitoriza.service.IConfServerMailService;
@@ -51,7 +53,7 @@ import es.gob.monitoriza.utilidades.AESCipher;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.3, 18/01/2019.
+ * @version 1.4, 25/01/2019.
  */
 @Service("serverMailService")
 public class ConfServerMailService implements IConfServerMailService {
@@ -75,7 +77,15 @@ public class ConfServerMailService implements IConfServerMailService {
 	 */
 	@Override
 	public ConfServerMail getAllConfServerMail() {
-		List<ConfServerMail> allConf = repository.findAll();
+		
+		List<ConfServerMail> allConf = new ArrayList<>();
+				
+		try {
+			allConf = repository.findAll();
+		} catch (Exception e) {
+			throw new DatabaseException(e.getMessage());
+		}
+		
 		if (!allConf.isEmpty()) {
 			return allConf.get(0);
 		} else {

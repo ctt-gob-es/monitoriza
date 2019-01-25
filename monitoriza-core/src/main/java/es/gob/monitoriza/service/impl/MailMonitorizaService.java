@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20 abr. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 28/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -37,6 +37,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.persistence.configuration.dto.MailDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
@@ -48,13 +49,12 @@ import es.gob.monitoriza.persistence.configuration.model.repository.TimerSchedul
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.MailMonitorizaDatatableRepository;
 import es.gob.monitoriza.service.IAlarmMonitorizaService;
 import es.gob.monitoriza.service.IMailMonitorizaService;
-import es.gob.monitoriza.utilidades.NumberConstants;
 
 
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for ServiceMonitoriza.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 28/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 @Service
 public class MailMonitorizaService implements IMailMonitorizaService {

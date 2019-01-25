@@ -18,9 +18,9 @@
  * <b>Description:</b>
  * <p>Class that manages the configuration of the @firma/ts@ services from static properties file.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
- * <b>Date:</b><p>19 ene. 2018.</p>
+ * <b>Date:</b><p>19/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 28/10/2018.
+ * @version 1.4, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.staticconfig;
 
@@ -37,12 +37,12 @@ import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.i18n.IPersistenceLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 
 /** 
  * <p>Class that manages the configuration of the @firma/ts@ services from static properties file.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 28/10/2018.
+ * @version 1.4, 25/01/2019.
  */
 public final class StaticServicesManager {
 
@@ -93,13 +93,13 @@ public final class StaticServicesManager {
 
 		List<ConfigServiceDTO> services = new ArrayList<ConfigServiceDTO>();
 
-		Set<Entry<Object, Object>> allProperties = StaticMonitorizaProperties.getAllProperties();
+		Set<Entry<Object, Object>> allProperties = StaticMonitorizaConfig.getAllProperties();
 
 		Iterator<Entry<Object, Object>> itProp = allProperties.iterator();
 
 		ConfigServiceDTO service = null;
 		
-		String basePath = StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY);
+		String basePath = StaticMonitorizaConfig.getProperty(StaticConstants.ROOT_PATH_DIRECTORY);
 		
 		while (itProp.hasNext()) {
 

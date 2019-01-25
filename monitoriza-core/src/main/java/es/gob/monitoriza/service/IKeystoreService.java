@@ -20,41 +20,41 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 09/11/2018.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.service;
 
 import org.springframework.dao.DataIntegrityViolationException;
 
 import es.gob.monitoriza.crypto.exception.CryptographyException;
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 09/11/2018.
+ * @version 1.2, 25/01/2019.
  */
 public interface IKeystoreService {
 	
 	/**
 	 * Method that obtains a keystore by its identifier.
 	 * @param keystoreId The keystore identifier.
-	 * @return {@link Keystore}
+	 * @return {@link KeystoreMonitoriza}
 	 */
-	Keystore getKeystoreById(Long keystoreId);
+	KeystoreMonitoriza getKeystoreById(Long keystoreId);
 	
 	/**
 	 * Method that obtains an user by its login.
 	 * @param name The keystore name.
-	 * @return {@link Keystore}
+	 * @return {@link KeystoreMonitoriza}
 	 */
-	Keystore getKeystoreByName(String name);
+	KeystoreMonitoriza getKeystoreByName(String name);
 		
 	/**
 	 * Method that gets all the users from the persistence.
 	 * @return a {@link Iterable<Keystore>} with the information of all users.
 	 */
-	Iterable<Keystore> getAllKeystore();
+	Iterable<KeystoreMonitoriza> getAllKeystore();
 	
 	/**
 	 * Deletes a certificate from persistence.
@@ -70,6 +70,6 @@ public interface IKeystoreService {
 	 * @param keystore Keystore to save
 	 * @return Keystore saved
 	 */
-	Keystore saveKeystore(Keystore keystore);
+	KeystoreMonitoriza saveKeystore(KeystoreMonitoriza keystore);
 		
 }

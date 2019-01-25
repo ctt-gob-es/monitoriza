@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.UserDTO.java.</p>
  * <b>Description:</b><p>Class that represents the backing form for adding/editing a user.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>8 mar. 2018.</p>
+ * <b>Date:</b><p>8/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 28/10/2018.
+ * @version 1.1, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -28,16 +28,16 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.persistence.configuration.dto.constraints.FieldMatch;
 import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
 import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
-import es.gob.monitoriza.utilidades.NumberConstants;
 
 
 /** 
  * <p>Class that represents the backing form for adding/editing a user.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 28/10/2018.
+ * @version 1.1, 25/01/2019.
  */
 @FieldMatch(first = "password", second = "confirmPassword", message = "{form.valid.user.password.confirm}")
 public class UserDTO {

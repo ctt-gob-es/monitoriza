@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.7, 28/10/2018.
+ * @version 1.8, 25/01/2019.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -60,6 +60,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.exception.RequestFileNotFoundException;
 import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
@@ -75,7 +76,6 @@ import es.gob.monitoriza.service.IRequestServiceFileService;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
 import es.gob.monitoriza.service.ITimerMonitorizaService;
 import es.gob.monitoriza.utilidades.FileUtils;
-import es.gob.monitoriza.utilidades.NumberConstants;
 
 /**
  * <p>
@@ -87,7 +87,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.7, 28/10/2018.
+ * @version 1.8, 25/01/2019.
  */
 @RestController
 public class ServiceRestController {

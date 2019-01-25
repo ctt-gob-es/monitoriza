@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.spring.config.MultiFieldAuthenticationProvider.java.</p>
  * <b>Description:</b><p> .</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>30 jul. 2018.</p>
+ * <b>Date:</b><p>30/07/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 30 jul. 2018.
+ * @version 1.1, 25/01/2019.
  */
 package es.gob.monitoriza.spring.config;
 
@@ -58,7 +58,7 @@ import org.springframework.util.StringUtils;
 
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.KeystoreRepository;
@@ -69,7 +69,7 @@ import es.gob.monitoriza.utilidades.UtilsCertificate;
 /**
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 30 jul. 2018.
+ * @version 1.1, 25/01/2019.
  */
 @Component
 public class MultiFieldAuthenticationProvider implements AuthenticationProvider {
@@ -141,7 +141,7 @@ public class MultiFieldAuthenticationProvider implements AuthenticationProvider 
 				X509Certificate certificate = null;
 				JcaX509CertificateConverter jcaX509CertConv = new JcaX509CertificateConverter();
 				JcaSimpleSignerInfoVerifierBuilder jcaSimpSigInfoVer = new JcaSimpleSignerInfoVerifierBuilder();
-				Keystore keystoreUser = keystoreRepo.findByIdKeystore(Keystore.ID_USER_STORE);
+				KeystoreMonitoriza keystoreUser = keystoreRepo.findByIdKeystore(KeystoreMonitoriza.ID_USER_STORE);
 				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreUser);
 				while (itSigner.hasNext()) {
 					SignerInformation signer = (SignerInformation) itSigner.next();

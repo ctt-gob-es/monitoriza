@@ -16,7 +16,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>13/02/2012.</p>
  * @author Gobierno de España.
- * @version 1.0, 13/02/2012.
+ * @version 1.0, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -33,18 +33,18 @@ import javax.persistence.Lob;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 
 /**
- * <p>Class that represents the representation of the <i>KEYSTORE</i> database table as a Plain Old Java Object.</p>
+ * Class that maps the <i>KEYSTORE</i> database table as a Plain Old Java Object.
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.0, 13/02/2012.
+ * @version 1.0, 25/01/2019.
  */
 @Cacheable
 @Entity
 @Table(name = "KEYSTORE")
-public class Keystore implements Serializable {
+public class KeystoreMonitoriza implements Serializable {
 
 	/**
 	 * Class serial version.

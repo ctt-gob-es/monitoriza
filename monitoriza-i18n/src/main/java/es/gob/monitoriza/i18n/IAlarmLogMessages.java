@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>08/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 18/01/2019.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.i18n;
 
@@ -28,7 +28,7 @@ package es.gob.monitoriza.i18n;
 /** 
  * <p>Interface that contains the keys to the log messages for the commons alarm module.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 18/01/2019.
+ * @version 1.2, 25/01/2019.
  */
 public interface IAlarmLogMessages {
 	
@@ -64,4 +64,9 @@ public interface IAlarmLogMessages {
 	 * Constant attribute that represents the name of the property <code>erroralarm004</code> belonging to the file status/monitoriza_xx_YY.properties.
 	 */
 	String ERRORALAMR004 = "erroralarm004";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>erroralarm005</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORALAMR005 = "erroralarm005";
 }

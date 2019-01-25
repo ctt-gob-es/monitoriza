@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>04/01/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/01/2019.
+ * @version 1.1, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -39,12 +39,12 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 
 /** 
  * <p>Class that maps the <i>DAILY_SPIE_MONITORING</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 04/01/2019.
+ * @version 1.1, 25/01/2019.
  */
 @Entity
 @Table(name = "DAILY_SPIE_MONITORING")

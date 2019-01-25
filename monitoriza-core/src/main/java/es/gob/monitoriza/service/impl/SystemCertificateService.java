@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 09/11/2018.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -31,7 +31,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.SystemCertificateRepository;
@@ -43,7 +43,7 @@ import es.gob.monitoriza.service.ISystemCertificateService;
 /**
  * <p>Class that implements the communication with the operations of the persistence layer for System Certificate.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 09/11/2018.
+ * @version 1.2, 25/01/2019.
  */
 @Service
 public class SystemCertificateService implements ISystemCertificateService {
@@ -88,7 +88,7 @@ public class SystemCertificateService implements ISystemCertificateService {
 	 * @return Object that represents a system certificate from the persistence. 
 	 */
 	@Override
-	public SystemCertificate getSystemCertificateByKsAndIssAndSn(Keystore keystore, String issuer, BigInteger serialNumber) {
+	public SystemCertificate getSystemCertificateByKsAndIssAndSn(KeystoreMonitoriza keystore, String issuer, BigInteger serialNumber) {
 		
 		return repository.findByKeystoreAndIssuerAndSerialNumber(keystore, issuer, serialNumber);
 		
@@ -103,7 +103,7 @@ public class SystemCertificateService implements ISystemCertificateService {
 	 * @return Object that represents a system certificate from the persistence.
 	 */
 	@Override
-	public SystemCertificate getSystemCertificateByKsAndIssAndSnAndUser(Keystore keystore, String issuer, BigInteger serialNumber, UserMonitoriza userMonitoriza) {
+	public SystemCertificate getSystemCertificateByKsAndIssAndSnAndUser(KeystoreMonitoriza keystore, String issuer, BigInteger serialNumber, UserMonitoriza userMonitoriza) {
 		
 		return repository.findByKeystoreAndIssuerAndSerialNumberAndUserMonitoriza(keystore, issuer, serialNumber, userMonitoriza);
 		
@@ -173,8 +173,8 @@ public class SystemCertificateService implements ISystemCertificateService {
 	@Override
 	public DataTablesOutput<SystemCertificate> findAllSsl(final DataTablesInput input) {
 
-		Keystore keystoreSsl = new Keystore();
-		keystoreSsl.setIdKeystore(Keystore.ID_TRUSTSTORE_SSL);
+		KeystoreMonitoriza keystoreSsl = new KeystoreMonitoriza();
+		keystoreSsl.setIdKeystore(KeystoreMonitoriza.ID_TRUSTSTORE_SSL);
 		KeystoreSpecification byKeystoreSsl = new KeystoreSpecification(keystoreSsl);
 
 		return dtRepository.findAll(input, byKeystoreSsl);
@@ -188,8 +188,8 @@ public class SystemCertificateService implements ISystemCertificateService {
 	@Override
 	public DataTablesOutput<SystemCertificate> findAllAuth(final DataTablesInput input) {
 
-		Keystore keystoreAuth = new Keystore();
-		keystoreAuth.setIdKeystore(Keystore.ID_AUTHCLIENT_RFC3161);
+		KeystoreMonitoriza keystoreAuth = new KeystoreMonitoriza();
+		keystoreAuth.setIdKeystore(KeystoreMonitoriza.ID_AUTHCLIENT_RFC3161);
 		KeystoreSpecification byKeystoreAuth = new KeystoreSpecification(keystoreAuth);
 
 		return dtRepository.findAll(input, byKeystoreAuth);
@@ -203,8 +203,8 @@ public class SystemCertificateService implements ISystemCertificateService {
 	@Override
 	public DataTablesOutput<SystemCertificate> findAllValidService(final DataTablesInput input) {
 
-		Keystore keystoreAuth = new Keystore();
-		keystoreAuth.setIdKeystore(Keystore.ID_VALID_SERVICE_STORE);
+		KeystoreMonitoriza keystoreAuth = new KeystoreMonitoriza();
+		keystoreAuth.setIdKeystore(KeystoreMonitoriza.ID_VALID_SERVICE_STORE);
 		KeystoreSpecification byKeystoreAuth = new KeystoreSpecification(keystoreAuth);
 
 		return dtRepository.findAll(input, byKeystoreAuth);
@@ -248,8 +248,8 @@ public class SystemCertificateService implements ISystemCertificateService {
 	@Override
 	public Iterable<SystemCertificate> getAllSsl() {
 
-		Keystore keystoreSsl = new Keystore();
-		keystoreSsl.setIdKeystore(Keystore.ID_TRUSTSTORE_SSL);
+		KeystoreMonitoriza keystoreSsl = new KeystoreMonitoriza();
+		keystoreSsl.setIdKeystore(KeystoreMonitoriza.ID_TRUSTSTORE_SSL);
 		KeystoreSpecification byKeystoreSsl = new KeystoreSpecification(keystoreSsl);
 
 		return repository.findAll(byKeystoreSsl);
@@ -262,8 +262,8 @@ public class SystemCertificateService implements ISystemCertificateService {
 	@Override
 	public Iterable<SystemCertificate> getAllAuth() {
 
-		Keystore keystoreAuth = new Keystore();
-		keystoreAuth.setIdKeystore(Keystore.ID_AUTHCLIENT_RFC3161);
+		KeystoreMonitoriza keystoreAuth = new KeystoreMonitoriza();
+		keystoreAuth.setIdKeystore(KeystoreMonitoriza.ID_AUTHCLIENT_RFC3161);
 		KeystoreSpecification byKeystoreAuth = new KeystoreSpecification(keystoreAuth);
 
 		return repository.findAll(byKeystoreAuth);
@@ -276,8 +276,8 @@ public class SystemCertificateService implements ISystemCertificateService {
 	@Override
 	public Iterable<SystemCertificate> getAllValidService() {
 
-		Keystore keystoreAuth = new Keystore();
-		keystoreAuth.setIdKeystore(Keystore.ID_VALID_SERVICE_STORE);
+		KeystoreMonitoriza keystoreAuth = new KeystoreMonitoriza();
+		keystoreAuth.setIdKeystore(KeystoreMonitoriza.ID_VALID_SERVICE_STORE);
 		KeystoreSpecification byKeystoreAuth = new KeystoreSpecification(keystoreAuth);
 
 		return repository.findAll(byKeystoreAuth);

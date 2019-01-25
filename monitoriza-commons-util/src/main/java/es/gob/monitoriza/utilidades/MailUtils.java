@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>23/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 25/01/2018.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -34,7 +34,7 @@ import es.gob.monitoriza.constant.ServiceStatusConstants;
 /** 
  * <p>Utilities class that contains necessary method for every class related with mails.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 25/01/2018.
+ * @version 1.2, 25/01/2019.
  */
 public final class MailUtils {
 
@@ -73,7 +73,7 @@ public final class MailUtils {
 	public static List<String> getListAddressees() {
 		List<String> res = new ArrayList<String>();
 		// Recorremos todas las propiedades
-		Set<Entry<Object, Object>> properties = StaticMonitorizaProperties.getAllProperties();
+		Set<Entry<Object, Object>> properties = StaticMonitorizaConfig.getAllProperties();
 		for (Entry<Object, Object> property: properties) {
 			// Si coincide la key de la propiedad con la expresión regular
 			// definida, lo añadimos a la lista.
@@ -104,9 +104,9 @@ public final class MailUtils {
 				return null;
 			}
 			// Obtengo la propiedad con la lista de destinatarios
-			String addrValue = StaticMonitorizaProperties.getProperty(addrKey);
+			String addrValue = StaticMonitorizaConfig.getProperty(addrKey);
 			// Obtengo la lista de destinatarios para la propiedad configurada (separadas por /)
-			String addresses = StaticMonitorizaProperties.getProperty(addrValue);
+			String addresses = StaticMonitorizaConfig.getProperty(addrValue);
 			String[ ] values = addresses.split(GeneralConstants.SLASH);
 			for (String value: values) {
 				res.add(value);

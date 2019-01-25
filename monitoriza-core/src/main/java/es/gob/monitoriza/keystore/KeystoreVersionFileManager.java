@@ -14,9 +14,9 @@
  * <b>Description:</b><p>Utility class for gets path for a keystore in a file system.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * <b>Date:</b><p>28/06/2012.</p>
+ * <b>Date:</b><p>28/06/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 05/07/2017.
+ * @version 1.6, 25/01/2019.
  */
 package es.gob.monitoriza.keystore;
 
@@ -32,15 +32,15 @@ import java.util.Map;
 
 import org.apache.log4j.Logger;
 
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.service.IKeystoreService;
-import es.gob.monitoriza.utilidades.NumberConstants;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 
 /**
  * <p>Utility class for gets path for a keystore in a file system.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.2, 05/07/2017.
+ * @version 1.6, 25/01/2019.
  */
 public final class KeystoreVersionFileManager {
 
@@ -54,7 +54,7 @@ public final class KeystoreVersionFileManager {
 	 * Constant attribute that represents the absolute path to the keystore directory #{@link KeystoreVersionFileManager#KEYSTORE_DIR}.
 	 */
 
-	private static final String ABS_PATH_KEYSTORE_DIR = StaticMonitorizaProperties.createAbsolutePath(StaticMonitorizaProperties.getTomcatServerConfigDir(), KEYSTORE_DIR);
+	private static final String ABS_PATH_KEYSTORE_DIR = StaticMonitorizaConfig.createAbsolutePath(StaticMonitorizaConfig.getTomcatServerConfigDir(), KEYSTORE_DIR);
 
 	/**
 	 * Constant attribute that represents the string with the dot character.
@@ -132,7 +132,7 @@ public final class KeystoreVersionFileManager {
 
 			// Si no es nulo, obtenemos la ruta completa al fichero.
 			if (knvs != null) {
-				result = StaticMonitorizaProperties.createAbsolutePath(ABS_PATH_KEYSTORE_DIR, knvs.getPrefix() + KeystoreNameVersionFilter.HYPHEN + knvs.getKeystoreName() + DOT + knvs.getVersion());
+				result = StaticMonitorizaConfig.createAbsolutePath(ABS_PATH_KEYSTORE_DIR, knvs.getPrefix() + KeystoreNameVersionFilter.HYPHEN + knvs.getKeystoreName() + DOT + knvs.getVersion());
 			}
 		}
 		return result;
@@ -364,9 +364,9 @@ public final class KeystoreVersionFileManager {
 				if (versionFile.compareTo(knvs.getVersion()) <= 0) {
 					File fileToDelete = new File(ABS_PATH_KEYSTORE_DIR, keystoreFile);
 					if (fileToDelete.delete()) {
-						LOGGER.debug(StaticMonitorizaProperties.createAbsolutePath(ABS_PATH_KEYSTORE_DIR, keystoreFile));
+						LOGGER.debug(StaticMonitorizaConfig.createAbsolutePath(ABS_PATH_KEYSTORE_DIR, keystoreFile));
 					} else {
-						LOGGER.debug(StaticMonitorizaProperties.createAbsolutePath(ABS_PATH_KEYSTORE_DIR, keystoreFile));
+						LOGGER.debug(StaticMonitorizaConfig.createAbsolutePath(ABS_PATH_KEYSTORE_DIR, keystoreFile));
 					}
 				}
 			}

@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.webservice.ClientManager.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>1 ago. 2018.</p>
+ * <b>Date:</b><p>1/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 28/10/2018.
+ * @version 1.3, 25/01/2019.
  */
 package es.gob.monitoriza.webservice;
 
@@ -41,20 +41,20 @@ import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.configuration.manager.AdminServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
 import es.gob.monitoriza.enums.AuthenticationTypeEnum;
 import es.gob.monitoriza.handler.ClientHandler;
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
 import es.gob.monitoriza.service.IKeystoreService;
-import es.gob.monitoriza.utilidades.NumberConstants;
 
 /** 
  * <p>Class ClientManager.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 28/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 @Service
 public class ClientManager {
@@ -117,8 +117,8 @@ public class ClientManager {
 		String response = null;
 		
 		if (validService.getIsSecure() != null && validService.getIsSecure()) {
-			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_TRUSTSTORE_SSL));
-			Keystore ksSSL = keystoreService.getKeystoreById(Keystore.ID_TRUSTSTORE_SSL);
+			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(KeystoreMonitoriza.ID_TRUSTSTORE_SSL));
+			KeystoreMonitoriza ksSSL = keystoreService.getKeystoreById(KeystoreMonitoriza.ID_TRUSTSTORE_SSL);
 			
 			KeyStore ks = adminServicesManager.loadSslTruststore();
 			
@@ -137,7 +137,7 @@ public class ClientManager {
 			requestHandler.setPassword(validService.getPass());
 		} else if (validService.getAuthenticationType().getIdAuthenticationType().equals(AuthenticationTypeEnum.CERTIFICATE.getId())) {
 			SystemCertificate certValidService = validService.getValidServiceCertificate();
-			Keystore keystoreValidService = certValidService.getKeystore();
+			KeystoreMonitoriza keystoreValidService = certValidService.getKeystore();
 			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreValidService);
 			KeyStore ksAuthValidServ = adminServicesManager.loadValidServiceKeystore();
 			X509Certificate certificateSOAP = (X509Certificate) ksAuthValidServ.getCertificate(certValidService.getAlias());

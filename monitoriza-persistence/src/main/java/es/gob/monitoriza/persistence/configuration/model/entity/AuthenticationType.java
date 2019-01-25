@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.entity.AuthenticationType.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>29 ago. 2018.</p>
+ * <b>Date:</b><p>29/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 28/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -35,12 +35,12 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 
 /** 
- * <p>* Class that maps the <i>C_AUTHENTICATION_TYPE</i> database table as a Plain Old Java Object.</p>
+ * <p>Class that maps the <i>C_AUTHENTICATION_TYPE</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 28/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 @Entity
 @Table(name = "C_AUTHENTICATION_TYPE")

@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>23/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 18/01/2019.
+ * @version 1.5, 25/01/2019.
  */
 package es.gob.monitoriza.alarm.mail;
 
@@ -53,7 +53,7 @@ import es.gob.monitoriza.utilidades.MailUtils;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.4, 18/01/2019.
+ * @version 1.5, 25/01/2019.
  */
 public class MailService {
 
@@ -110,8 +110,11 @@ public class MailService {
 	/**
 	 * Body of the email.
 	 */
-	private String bodyMsg;
+	private String bodyMsg;	
 
+	/**
+	 * Attribute that represents the {#JpaRepository} for {#ConfServerMail}. 
+	 */
 	private ConfServerMailRepository confServerMailRepository;
 
 	/**
@@ -313,6 +316,7 @@ public class MailService {
 		List<String> addresees = MailUtils.getListAddressees();
 
 		List<ConfServerMail> listConfServerMail = confServerMailRepository.findAll();
+		
 		if (!listConfServerMail.isEmpty()) {
 			ConfServerMail confServerMail = listConfServerMail.get(0);
 

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>22/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 22/10/2018.
+ * @version 1.1, 25/01/2019.
  */
 package es.gob.monitoriza.configuration.manager;
 
@@ -45,7 +45,7 @@ import es.gob.monitoriza.i18n.ICoreLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ConfSpie;
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SpieType;
 import es.gob.monitoriza.persistence.configuration.model.repository.SpieTypeRepository;
@@ -59,7 +59,7 @@ import es.gob.monitoriza.service.ISpieScheduledService;
  * <p>Class that manages the configuration of the @firma/ts@ SPIE from database persistence
  *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 22/10/2018.
+ * @version 1.1, 25/01/2019.
  */
 @Service("adminSpieManager")
 public class AdminSpieManager {
@@ -134,7 +134,7 @@ public class AdminSpieManager {
 	 */
 	public KeyStore loadSslTruststore() {
 		
-		final Keystore ks = keystoreService.getKeystoreByName(GeneralConstants.SSL_TRUST_STORE_NAME);
+		final KeystoreMonitoriza ks = keystoreService.getKeystoreByName(GeneralConstants.SSL_TRUST_STORE_NAME);
 		
 		IKeystoreFacade keyStoreFacade = new KeystoreFacade(ks);
 

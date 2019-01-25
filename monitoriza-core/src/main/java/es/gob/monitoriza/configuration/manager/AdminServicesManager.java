@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19/01/2018.</p>
  * @author Gobierno de España.
- * @version 2.2, 14/01/2019.
+ * @version 2.3 25/01/2019.
  */
 package es.gob.monitoriza.configuration.manager;
 
@@ -44,6 +44,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.GrayLogErrorCodes;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
@@ -55,9 +56,10 @@ import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigTimerDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConnectionDTO;
+import es.gob.monitoriza.persistence.configuration.exception.DatabaseException;
 import es.gob.monitoriza.persistence.configuration.model.entity.DailySpieMonitorig;
 import es.gob.monitoriza.persistence.configuration.model.entity.DailyVipMonitorig;
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.RequestServiceFile;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
@@ -71,13 +73,13 @@ import es.gob.monitoriza.service.IServiceMonitorizaService;
 import es.gob.monitoriza.service.ITimerMonitorizaService;
 import es.gob.monitoriza.service.ITimerScheduledService;
 import es.gob.monitoriza.utilidades.FileUtils;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
+import es.gob.monitoriza.utilidades.UtilsGrayLog;
 
 /** 
- * <p>Class that manages the configuration of the @firma/ts@ services from database persistence
- *    for use in the status servlet.</p>
+ * <p>Class that manages the configuration of the services from database persistence for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- *  @version 2.2, 14/01/2019.
+ *  @version 2.3, 25/01/2019.
  */
 @Service("adminServicesManager")
 public class AdminServicesManager {
@@ -213,7 +215,7 @@ public class AdminServicesManager {
 			try {
 				serviceDTO.setRfc3161Password(getRfc3161KeystorePassword());
 			} catch (CryptographyException e) {
-				String errorMsg = Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE003, new Object[ ] { keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161).getTokenName() });
+				String errorMsg = Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE003, new Object[ ] { keystoreService.getKeystoreById(KeystoreMonitoriza.ID_AUTHCLIENT_RFC3161).getTokenName() });
 				LOGGER.error(errorMsg, e);
 			}			
 			
@@ -233,7 +235,7 @@ public class AdminServicesManager {
     				file = fileService.getRequestFileById(service.getRequestFile().getIdRequestServiceFile());
     
     				StringBuffer targetFolder = new StringBuffer();
-    				targetFolder.append(StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY)).append(GeneralConstants.DOUBLE_PATH_SEPARATOR).append(serviceDTO.getServiceId()).append(GeneralConstants.SEPARATOR).append(serviceDTO.getServiceName()).append(GeneralConstants.DOUBLE_PATH_SEPARATOR);
+    				targetFolder.append(StaticMonitorizaConfig.getProperty(StaticConstants.ROOT_PATH_DIRECTORY)).append(GeneralConstants.DOUBLE_PATH_SEPARATOR).append(serviceDTO.getServiceId()).append(GeneralConstants.SEPARATOR).append(serviceDTO.getServiceName()).append(GeneralConstants.DOUBLE_PATH_SEPARATOR);
     				
     				// El primer paso es eliminar la existente para este servicio
     				// File directoryToBeDeleted = new java.io.File(targetFolder.toString());
@@ -244,7 +246,7 @@ public class AdminServicesManager {
     				// Es necesario borrar todos las carpetas que comiencen por el identificador del servicio.
     				// Esto es debido a que si se modifica el nombre del servicio, ya no se conoce el nombre
     				// original y sería imposible eliminar la carpeta "id_nombre_original".
-    				FileUtils.deleteAllDirectoriesBeginnigWith(StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY), String.valueOf(serviceDTO.getServiceId()).concat(GeneralConstants.SEPARATOR));    				
+    				FileUtils.deleteAllDirectoriesBeginnigWith(StaticMonitorizaConfig.getProperty(StaticConstants.ROOT_PATH_DIRECTORY), String.valueOf(serviceDTO.getServiceId()).concat(GeneralConstants.SEPARATOR));    				
     				
     				// Se descomprime el ZIP extraído de base de datos en el destino configurado
     				FileUtils.unZipFileWithSubFolders(file.getFiledata(), file.getFilename(), targetFolder.toString());
@@ -279,7 +281,7 @@ public class AdminServicesManager {
 	 */
 	private String getDirectoryPath(final Long serviceId, final String serviceName) {
 		
-		String basePath = StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY);
+		String basePath = StaticMonitorizaConfig.getProperty(StaticConstants.ROOT_PATH_DIRECTORY);
 		
 		return basePath.concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(serviceId.toString()).concat(GeneralConstants.SEPARATOR).concat(serviceName);
 				
@@ -323,7 +325,7 @@ public class AdminServicesManager {
 	 */
 	public KeyStore loadSslTruststore() {
 		
-		final Keystore ks = keystoreService.getKeystoreByName(GeneralConstants.SSL_TRUST_STORE_NAME);
+		final KeystoreMonitoriza ks = keystoreService.getKeystoreByName(GeneralConstants.SSL_TRUST_STORE_NAME);
 		
 		IKeystoreFacade keyStoreFacade = new KeystoreFacade(ks);
 
@@ -350,7 +352,7 @@ public class AdminServicesManager {
 	 */
 	public KeyStore loadRfc3161Keystore() {
 		
-		final Keystore ks = keystoreService.getKeystoreByName(GeneralConstants.RFC3161_KEYSTORE_NAME);
+		final KeystoreMonitoriza ks = keystoreService.getKeystoreByName(GeneralConstants.RFC3161_KEYSTORE_NAME);
 		
 		final IKeystoreFacade keyStoreFacade = new KeystoreFacade(ks);
 
@@ -378,7 +380,7 @@ public class AdminServicesManager {
 	 */
 	public KeyStore loadValidServiceKeystore() {
 
-		final Keystore ks = keystoreService.getKeystoreById(Keystore.ID_VALID_SERVICE_STORE);
+		final KeystoreMonitoriza ks = keystoreService.getKeystoreById(KeystoreMonitoriza.ID_VALID_SERVICE_STORE);
 
 		final IKeystoreFacade keyStoreFacade = new KeystoreFacade(ks);
 
@@ -429,12 +431,12 @@ public class AdminServicesManager {
 	/**
 	 * Method that retrieves the password for the RFC3161 Authentication Keystore.
 	 * @return String that represents the decodified password
-	 * @throws CryptographyException
+	 * @throws CryptographyException If the method fails
 	 */
 	private String getRfc3161KeystorePassword() throws CryptographyException {
 		
-		IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161));
-		final String encodedPassword = keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161).getPassword();
+		IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(KeystoreMonitoriza.ID_AUTHCLIENT_RFC3161));
+		final String encodedPassword = keystoreService.getKeystoreById(KeystoreMonitoriza.ID_AUTHCLIENT_RFC3161).getPassword();
 		
 		return keyStoreFacade.getKeystoreDecodedPasswordString(encodedPassword);		
 		
@@ -462,7 +464,13 @@ public class AdminServicesManager {
 	 */
 	public void saveDailyVip(DailyVipMonitorig daily) {
 	
-		dailyVipService.saveDailyVipMonitoring(daily);
+		try {
+			dailyVipService.saveDailyVipMonitoring(daily);
+		} catch (DatabaseException e) {
+			String msg = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS018);
+			LOGGER.error(msg, e);
+			UtilsGrayLog.writeMessageInGrayLog(UtilsGrayLog.LEVEL_ERROR, GrayLogErrorCodes.ERROR_STATUS_VIP_SAVE, msg);
+		}
 	}
 	
 	/**
@@ -471,7 +479,13 @@ public class AdminServicesManager {
 	 */
 	public void saveDailySpie(DailySpieMonitorig daily) {
 	
-		dailySpieService.saveDailySpieMonitoring(daily);
+		try {
+			dailySpieService.saveDailySpieMonitoring(daily);
+		} catch (DatabaseException e) {
+			String msg = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS019);
+			LOGGER.error(msg, e);
+			UtilsGrayLog.writeMessageInGrayLog(UtilsGrayLog.LEVEL_ERROR, GrayLogErrorCodes.ERROR_STATUS_SPIE_SAVE, msg);
+		}
 	}
 		
 }

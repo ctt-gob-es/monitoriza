@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 05/12/2018.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -30,9 +30,9 @@ import javax.validation.constraints.Size;
 
 import org.springframework.web.multipart.MultipartFile;
 
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
 import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
-import es.gob.monitoriza.utilidades.NumberConstants;
 
 /**
  * <p>
@@ -43,7 +43,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.1, 05/12/2018.
+ * @version 1.2, 25/01/2019.
  */
 public class ServiceDTO {
 	

@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.service;
 
@@ -29,14 +29,14 @@ import java.math.BigInteger;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 public interface ISystemCertificateService {
 
@@ -61,7 +61,7 @@ public interface ISystemCertificateService {
 	 * @param serialNumber BigInteger that represents the certificate serial number
 	 * @return Object that represents a system certificate from the persistence. 
 	 */
-	SystemCertificate getSystemCertificateByKsAndIssAndSn(Keystore keystore, String issuer, BigInteger serialNumber);
+	SystemCertificate getSystemCertificateByKsAndIssAndSn(KeystoreMonitoriza keystore, String issuer, BigInteger serialNumber);
 	
 	/**
 	  * Method that obtains a system certificate by its keystore, its issue and its serialNumber.
@@ -71,7 +71,7 @@ public interface ISystemCertificateService {
 	 * @param userMonitoriza UserMonitoriza that represents the user certificate.
 	 * @return Object that represents a system certificate from the persistence.
 	 */
-	SystemCertificate getSystemCertificateByKsAndIssAndSnAndUser(Keystore keystore, String issuer, BigInteger serialNumber, UserMonitoriza userMonitoriza);
+	SystemCertificate getSystemCertificateByKsAndIssAndSnAndUser(KeystoreMonitoriza keystore, String issuer, BigInteger serialNumber, UserMonitoriza userMonitoriza);
 
 	/**
 	 * Method that stores a user in the persistence.

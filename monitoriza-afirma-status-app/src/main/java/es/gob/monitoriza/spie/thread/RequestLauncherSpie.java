@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 feb. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 25/01/2019.
  */
 package es.gob.monitoriza.spie.thread;
 
@@ -35,6 +35,7 @@ import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.configuration.manager.AdminSpieManager;
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
@@ -44,13 +45,12 @@ import es.gob.monitoriza.persistence.configuration.dto.RowStatusSpieDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.status.RunningServices;
-import es.gob.monitoriza.utilidades.NumberConstants;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 
 /** 
  * <p>Class that manages the thread pool for processing each service in a separate thread.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 25/01/2019.
  */
 public class RequestLauncherSpie {
 
@@ -70,7 +70,7 @@ public class RequestLauncherSpie {
 		Integer threads = null;
 				
 		try {
-			threads = Integer.parseInt(StaticMonitorizaProperties.getProperty(StaticConstants.REQUEST_THREAD_POOL_SIZE));
+			threads = Integer.parseInt(StaticMonitorizaConfig.getProperty(StaticConstants.REQUEST_THREAD_POOL_SIZE));
 		} catch (NumberFormatException e) {
 			LOGGER.error(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS001), e);
 		}

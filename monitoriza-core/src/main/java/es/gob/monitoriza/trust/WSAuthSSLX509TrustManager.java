@@ -16,7 +16,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>23/04/2009.</p>
  * @author Gobierno de España.
- * @version 1.1, 26/10/2015.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.trust;
 
@@ -29,13 +29,13 @@ import javax.net.ssl.X509TrustManager;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 
 /**
  * <p>Class that manages the trusted KeyStore for the SSL connections with mutual authentication.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.1, 26/10/2015.
+ * @version 1.2, 25/01/2019.
  */
 public class WSAuthSSLX509TrustManager implements X509TrustManager {
 

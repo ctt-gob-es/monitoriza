@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>29/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 04/01/2019.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.spie.thread;
 
@@ -33,6 +33,7 @@ import org.apache.log4j.Logger;
 import es.gob.monitoriza.configuration.manager.AdminServicesManager;
 import es.gob.monitoriza.configuration.manager.AdminSpieManager;
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.GrayLogErrorCodes;
 import es.gob.monitoriza.enums.SemaphoreEnum;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
@@ -50,11 +51,12 @@ import es.gob.monitoriza.spie.html.impl.HtmlHsmConnResolver;
 import es.gob.monitoriza.spie.html.impl.HtmlTsaConnResolver;
 import es.gob.monitoriza.spie.invoker.SpieInvoker;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
+import es.gob.monitoriza.utilidades.UtilsGrayLog;
 
 /** 
  * <p>Class that get the results of the SPIE services configured.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 04/01/2019.
+ * @version 1.2, 25/01/2019.
  */
 public class RequestSpieThread implements Runnable {
 	
@@ -104,7 +106,7 @@ public class RequestSpieThread implements Runnable {
 	@Override
 	public void run() {
 				
-		// Se va a mantener map de runnig services para evitar repetir?
+		// ¿Se va a mantener map de runnig services para evitar repetir?
 
 		// Obtención de la dirección a invocar
 		final StringBuffer spieBaseAddress = new StringBuffer();
@@ -178,7 +180,6 @@ public class RequestSpieThread implements Runnable {
     			spieHolder.put(spieType.getIdSpieType(), status);
     			// Se persiste el resultado
     			saveDailySpieMonitoring(spieType.getTokenName(), status);
-    			
     		}
     		
 		} catch (InvokerException ie) {
@@ -187,18 +188,21 @@ public class RequestSpieThread implements Runnable {
 						
 		} finally {
 			
+			String msgError = null;
 			// Si el estado es null, no se ha podido obtener respuesta del nodo.
 			// Se establece el estado de todos los SPIE configurados como "Sin acceso al nodo". 
 			if (status == null) {
-				LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS015, new Object[]{node.getName()}));
+				msgError = Language.getFormatResMonitoriza(IStatusLogMessages.STATUS015, new Object[]{node.getName()});
+				LOGGER.error(msgError);
 				setAndPersistAllStatusError(spieBaseAddress);
-				
 			} else {
-				 
+				msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS020, new Object[] {spieType.getIdSpieType(), node.getName()});
     			spieHolder.put(spieType.getIdSpieType(), status);
     			// Se persiste el resultado
     			saveDailySpieMonitoring(spieType.getTokenName(), status);
 			}
+			
+			UtilsGrayLog.writeMessageInGrayLog(UtilsGrayLog.LEVEL_ERROR, GrayLogErrorCodes.ALARM_SPIE_ERROR, msgError);
 		}
 		
 	}
@@ -208,8 +212,72 @@ public class RequestSpieThread implements Runnable {
 	 * @param spieBaseAddress Node address: protocol://ip:port
 	 */
 	private void checkSpieTsa(final String spieBaseAddress) {
-		// TODO Auto-generated method stub
-		
+
+		final ConfSpieDTO confSpie = adminSpieManager.getSpieConfiguration();
+		SpieType spieType = null;
+		RowStatusSpieDTO status = null;
+		String htmlInvokerResult = null;
+		IHtmlSpieResolver resolver = null;
+
+		try {
+
+			if (node.getCheckHsm() != null && node.getCheckHsm()) {
+				spieType = adminSpieManager.getSpieTypeById(SpieType.ID_CONN_HSM_TSA);
+				resolver = new HtmlHsmConnResolver(spieType.getSemaphoreErrorLevel());
+				htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
+				status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, confSpie), null, LocalDateTime.now());
+				// Se actualiza el mapa de resultados
+				spieHolder.put(spieType.getIdSpieType(), status);
+				// Se persiste el resultado
+				saveDailySpieMonitoring(spieType.getTokenName(), status);
+			}
+
+			if (node.getCheckEmergencyDB() != null && node.getCheckEmergencyDB()) {
+				spieType = adminSpieManager.getSpieTypeById(SpieType.ID_MODE_EMERGENCY_TSA);
+				resolver = new HtmlEmergencyModeResolver(spieType.getSemaphoreErrorLevel());
+				htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
+				status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, confSpie), null, LocalDateTime.now());
+				// Se actualiza el mapa de resultados
+				spieHolder.put(spieType.getIdSpieType(), status);
+				// Se persiste el resultado
+				saveDailySpieMonitoring(spieType.getTokenName(), status);
+			}
+
+			if (node.getCheckAfirma() != null && node.getCheckAfirma()) {
+				spieType = adminSpieManager.getSpieTypeById(SpieType.ID_CONN_AFIRMA);
+				resolver = new HtmlTsaConnResolver(spieType.getSemaphoreErrorLevel());
+				htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
+				status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, confSpie), null, LocalDateTime.now());
+				// Se actualiza el mapa de resultados
+				spieHolder.put(spieType.getIdSpieType(), status);
+				// Se persiste el resultado
+				saveDailySpieMonitoring(spieType.getTokenName(), status);
+			}
+
+		} catch (InvokerException ie) {
+
+			LOGGER.error(ie.getMessage(), ie.getCause());
+
+		} finally {
+
+			String msgError = null;
+			// Si el estado es null, no se ha podido obtener respuesta del nodo.
+			// Se establece el estado de todos los SPIE configurados como "Sin
+			// acceso al nodo".
+			if (status == null) {
+				msgError = Language.getFormatResMonitoriza(IStatusLogMessages.STATUS015, new Object[ ] { node.getName() });
+				LOGGER.error(msgError);
+				setAndPersistAllStatusError(spieBaseAddress);
+			} else {
+				msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS020, new Object[ ] { spieType.getIdSpieType(), node.getName() });
+				spieHolder.put(spieType.getIdSpieType(), status);
+				// Se persiste el resultado
+				saveDailySpieMonitoring(spieType.getTokenName(), status);
+			}
+
+			UtilsGrayLog.writeMessageInGrayLog(UtilsGrayLog.LEVEL_ERROR, GrayLogErrorCodes.ALARM_SPIE_ERROR, msgError);
+		}
+
 	}
 	
 	/**
@@ -228,8 +296,8 @@ public class RequestSpieThread implements Runnable {
 		daily.setNode(status.getNodeName());
 		
 		AdminServicesManager adminServicesManager = ApplicationContextProvider.getApplicationContext().getBean("adminServicesManager", AdminServicesManager.class);	
-		
 		adminServicesManager.saveDailySpie(daily);
+		
 	}
 	
 	/**
@@ -266,8 +334,8 @@ public class RequestSpieThread implements Runnable {
 	
 	
 	/**
-	 * 
-	 * @param spieBaseAddress
+	 * Persist null status for all SPIE services when there is no response from the SPIE node.
+	 * @param spieBaseAddress Base address of the SPIE node.
 	 */
 	private void setAndPersistAllStatusError(final String spieBaseAddress) {
 		
@@ -308,7 +376,6 @@ public class RequestSpieThread implements Runnable {
 			spieHolder.put(spieType.getIdSpieType(), status);
 			// Se persiste el resultado
 			saveDailySpieMonitoring(spieType.getTokenName(), status);
-			
 		}
 		
 	}

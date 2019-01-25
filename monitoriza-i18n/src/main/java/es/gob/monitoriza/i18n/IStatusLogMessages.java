@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>08/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 04/01/2019.
+ * @version 1.4, 25/01/2019.
  */
 package es.gob.monitoriza.i18n;
 
@@ -28,7 +28,7 @@ package es.gob.monitoriza.i18n;
 /** 
  * <p>Interface that contains the keys to the log messages for the servlet status application.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 04/01/2019.
+ * @version 1.4, 25/01/2019.
  */
 public interface IStatusLogMessages {
 	
@@ -200,5 +200,30 @@ public interface IStatusLogMessages {
 	 * Constant attribute that represents the name of the property <code>errorstatus017</code> belonging to the file status/monitoriza_xx_YY.properties.
 	 */
 	String ERRORSTATUS017 = "errorstatus017";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>errorstatus018</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORSTATUS018 = "errorstatus018";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>errorstatus019</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORSTATUS019 = "errorstatus019";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>errorstatus020</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORSTATUS020 = "errorstatus020";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>errorstatus021</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORSTATUS021 = "errorstatus021";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>errorstatus022</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORSTATUS022 = "errorstatus022";
 
 }

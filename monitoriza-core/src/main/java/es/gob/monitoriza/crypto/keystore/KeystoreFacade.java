@@ -15,7 +15,7 @@
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI certificates and electronic signature.</p>
  * <b>Date:</b><p>03/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 18/01/2019.
+ * @version 1.6, 25/01/2019.
  */
 package es.gob.monitoriza.crypto.keystore;
 
@@ -37,26 +37,20 @@ import java.util.Calendar;
 import java.util.Collections;
 import java.util.List;
 
-import javax.crypto.Cipher;
-import javax.crypto.spec.SecretKeySpec;
-
-import org.apache.commons.codec.binary.Base64;
 import org.apache.log4j.Logger;
 
-import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.utils.CryptographyValidationUtils;
 import es.gob.monitoriza.exception.CipherException;
 import es.gob.monitoriza.i18n.ICoreLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.utilidades.AESCipher;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
 
 /**
  * <p>Class that manages all the operations related with JCE, JCEKS and PKCS#12 keystores.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.5, 18/01/2019.
+ * @version 1.6, 25/01/2019.
  */
 public class KeystoreFacade implements IKeystoreFacade {
 
@@ -78,7 +72,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 	/**
 	 * Attribute that represents the information about the keystore from the cache system.
 	 */
-	private Keystore keystore;
+	private KeystoreMonitoriza keystore;
 
 	/**
 	 * Attribute that represents the object that manages the log of the class.
@@ -89,7 +83,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 * Constructor method for the class KeystoreFacade.
 	 * @param keystoreParam Parameter that represents the information about the keystore from the persistence.
 	 */
-	public KeystoreFacade(final Keystore keystoreParam) {
+	public KeystoreFacade(final KeystoreMonitoriza keystoreParam) {
 		keystore = keystoreParam;
 	}
 
@@ -98,7 +92,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 * @see es.gob.afirma.cryptography.keystore.IKeystoreFacade#storeCertificate(java.lang.String, java.security.cert.Certificate, java.security.Key)
 	 */
 	@Override
-	public final Keystore storeCertificate(final String alias, final Certificate certificate, final Key key) throws CryptographyException {
+	public final KeystoreMonitoriza storeCertificate(final String alias, final Certificate certificate, final Key key) throws CryptographyException {
 		LOGGER.info(Language.getResCoreMonitoriza(ICoreLogMessages.CORE001));
 		try {
 			// Comprobamos que el certificado no sea nulo
@@ -148,7 +142,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 * @see es.gob.monitoriza.crypto.keystore.IKeystoreFacade#updateCertificate(java.lang.String, java.lang.String, java.security.cert.Certificate, java.security.Key)
 	 */
 	@Override
-	public Keystore updateCertificate(final String oldEntryAlias, final String newEntryAlias) throws CryptographyException {
+	public KeystoreMonitoriza updateCertificateAlias(final String oldEntryAlias, final String newEntryAlias) throws CryptographyException {
 		LOGGER.info(Language.getResCoreMonitoriza(ICoreLogMessages.CORE001));
 		try {
 
@@ -218,10 +212,13 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 * Method that updates an alias entry inside of a keystore.
 	 * @param oldEntryAlias Parameter that represents the alias of the entry to update.
 	 * @param newEntryAlias Parameter that represents the new value for the alias.
-	 * @throws KeyStoreException If there is some error inserting the entry into the keystore.
+	 * @throws UnrecoverableKeyException If the key cannot be recovered (e.g., the given password is wrong).
+	 * @throws KeyStoreException If the keystore has not been initialized (loaded).
+	 * @throws NoSuchAlgorithmException If the algorithm for recovering the key cannot be found.
 	 * @throws CryptographyException If there is some error decrypting the password of the keystore.
+	 * @return an object that represents the keystore.
 	 */
-	private Keystore updateEntryToKeystore(final String oldEntryAlias, final String newEntryAlias) throws UnrecoverableKeyException, KeyStoreException, NoSuchAlgorithmException, CryptographyException {
+	private KeystoreMonitoriza updateEntryToKeystore(final String oldEntryAlias, final String newEntryAlias) throws CryptographyException, NoSuchAlgorithmException, UnrecoverableKeyException, KeyStoreException {
 		char[ ] ksPass = new String(getKeystoreDecodedPassword(null)).toCharArray();
 		// Cargamos el keystore SSL desde la persistencia
 		KeyStore kstore = KeyStore.getInstance(keystore.getKeystoreType());
@@ -232,7 +229,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 				| IOException e) {
 			LOGGER.error(Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE010), e);
 		}
-
+		
 		if (kstore.containsAlias(oldEntryAlias)) {
 			if (kstore.isCertificateEntry(oldEntryAlias)) {
 				Certificate cert = kstore.getCertificate(oldEntryAlias);
@@ -251,7 +248,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 			kstore.store(baos, ksPass);
 			keystore.setKeystore(baos.toByteArray());
 		} catch (NoSuchAlgorithmException | CertificateException
-				| IOException e) {
+				| IOException | KeyStoreException e) {
 			LOGGER.error(Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE011), e);
 		}
 
@@ -293,7 +290,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 * @see es.gob.monitoriza.crypto.keystore.IKeystoreFacade#deleteCertificate(java.lang.String)
 	 */
 	@Override
-	public Keystore deleteCertificate(final String alias) throws CryptographyException {
+	public KeystoreMonitoriza deleteCertificate(final String alias) throws CryptographyException {
 
 		char[ ] ksPass = new String(getKeystoreDecodedPassword(null)).toCharArray();
 
@@ -302,8 +299,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 			KeyStore kstore = KeyStore.getInstance(keystore.getKeystoreType());
 			kstore.load(bais, ksPass);
 
-			if (kstore.containsAlias(alias)) {
-				// Si existe la entrada, la elimino
+			if (kstore.containsAlias(alias)) {				// Si existe la entrada, la elimino
 				kstore.deleteEntry(alias);
 			}
 
@@ -346,7 +342,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 	/**
 	 * Calculates keystore type.
 	 * @param nameFile Name of the keystore file.
-	 * @return string with keystore type.
+	 * @return String with keystore type.
 	 */
 	public String getKeystoreType(final String nameFile) {
 		String keyStoreType = null;
@@ -377,16 +373,16 @@ public class KeystoreFacade implements IKeystoreFacade {
 	 * Get keystore.
 	 * @return keystore
 	 */
-	public Keystore getKeystore() {
+	public KeystoreMonitoriza getKeystore() {
 		return keystore;
 	}
 
 	/**
 	 * Set keystore.
-	 * @param keystoreP set keystore
+	 * @param keystoreParam set keystore
 	 */
-	public void setKeystore(final Keystore keystoreP) {
-		this.keystore = keystoreP;
+	public void setKeystore(final KeystoreMonitoriza keystoreParam) {
+		this.keystore = keystoreParam;
 	}
 		
 }
