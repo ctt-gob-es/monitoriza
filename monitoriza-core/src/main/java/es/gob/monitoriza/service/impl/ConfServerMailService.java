@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 25/01/2019.
+ * @version 1.5, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -42,18 +42,12 @@ import es.gob.monitoriza.persistence.configuration.model.entity.ConfServerMail;
 import es.gob.monitoriza.persistence.configuration.model.repository.ConfServerMailRepository;
 import es.gob.monitoriza.service.IConfServerMailService;
 import es.gob.monitoriza.utilidades.AESCipher;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /**
- * <p>
- * Class that implements the communication with the operations of the
- * persistence layer for ConfServerMail.
- * </p>
- * <b>Project:</b>
- * <p>
- * Application for monitoring services of @firma suite systems.
- * </p>
- * 
- * @version 1.4, 25/01/2019.
+ * <p>Class that implements the communication with the operations of the persistence layer for ConfServerMail.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+  * @version 1.5, 30/01/2019.
  */
 @Service("serverMailService")
 public class ConfServerMailService implements IConfServerMailService {
@@ -123,7 +117,7 @@ public class ConfServerMailService implements IConfServerMailService {
 		String pwd = confServerMailDto.getPasswordMail();
 		String hashPwd = null;
 		
-		if (pwd != null && !"".equals(pwd)) {
+		if (pwd != null && !UtilsStringChar.EMPTY_STRING.equals(pwd)) {
 						
 			try {
 				hashPwd = new String(AESCipher.getInstance().encryptMessage(pwd));

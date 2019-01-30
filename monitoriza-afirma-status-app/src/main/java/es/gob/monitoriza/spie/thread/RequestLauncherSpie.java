@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 feb. 2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 25/01/2019.
+ * @version 1.4, 30/01/2019.
  */
 package es.gob.monitoriza.spie.thread;
 
@@ -33,7 +33,6 @@ import java.util.concurrent.TimeUnit;
 
 import org.apache.log4j.Logger;
 
-import es.gob.monitoriza.configuration.manager.AdminSpieManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.constant.StaticConstants;
@@ -43,6 +42,9 @@ import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.RowStatusSpieDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
+import es.gob.monitoriza.service.impl.KeystoreService;
+import es.gob.monitoriza.service.impl.NodeMonitorizaService;
+import es.gob.monitoriza.service.utils.IServiceNameConstants;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.status.RunningServices;
 import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
@@ -50,7 +52,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 /** 
  * <p>Class that manages the thread pool for processing each service in a separate thread.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 25/01/2019.
+ * @version 1.4, 30/01/2019.
  */
 public class RequestLauncherSpie {
 
@@ -81,12 +83,10 @@ public class RequestLauncherSpie {
 		
 		// Se crea un pool de hilos para ejecutar las peticiones de los servicios del timer
 		ExecutorService executor = Executors.newFixedThreadPool(threads);
-		
-		AdminSpieManager adminSpieManager = ApplicationContextProvider.getApplicationContext().getBean("adminSpieManager", AdminSpieManager.class);
-		
-		KeyStore ssl = adminSpieManager.loadSslTruststore();
-				
-		List<NodeMonitoriza> nodes = adminSpieManager.getNodesByPlatform(platformType);
+						
+		KeyStore ssl = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.KEYSTORE_SERVICE, KeystoreService.class).loadSslTruststore();
+						
+		List<NodeMonitoriza> nodes = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.NODE_MONITORIZA_SERVICE, NodeMonitorizaService.class).getByPlatformType(platformType);
 
 		// Se procesa cada nodo en un hilo del pool
 		for (NodeMonitoriza node: nodes) {

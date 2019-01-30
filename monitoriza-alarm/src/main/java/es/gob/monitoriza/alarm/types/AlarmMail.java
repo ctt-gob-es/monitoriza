@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 18/01/2019.
+ * @version 1.4, 30/01/2019.
  */
 package es.gob.monitoriza.alarm.types;
 
@@ -31,9 +31,9 @@ import es.gob.monitoriza.constant.GeneralConstants;
 /** 
  * <p>Class that represents the type Alarm.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 18/01/2019.
+ * @version 1.4, 30/01/2019.
  */
-public class Alarm {
+public class AlarmMail extends AlarmType {
 
 	/**
 	 * Attribute that represents the name of the service associated to the alarm.
@@ -44,62 +44,36 @@ public class Alarm {
 	 * Attribute that represents the status of the service associated to the alarm.
 	 */
 	private String serviceStatus;
-	
-	/**
-	 * Attribute that represents the status of the system associated to the alarm.
-	 */
-	private String system;
-	
-	/**
-	 * Attribute that represents the average time that has taken to the service to complete, provoking the alarm. 
-	 */
-	private Long avgTime;
-	
-	/**
-	 * Attribute that represents the creation date of the alarm.
-	 */
-	private LocalDateTime dateOfCreation;
-	
-	/**
-	 * Attribute that represents the addresses to which send this alarm. 
-	 */
-	private List<String> addresses;
-	
-	/**
-	 * Attribute that represents the time (ms) during this alarm will be blocked. 
-	 */
-	private Long blockedTime;
-	
-	/**
-	 * Attribute that represents the service WSDL endpoint. 
-	 */
-	private String serviceUrl;
-	
+		
 	/**
 	 * Attribute that represents . 
 	 */
 	private Long umbralDegradado;
 	
+	/**
+	 * Attribute that represents the name of the SPIE node.
+	 */
+	private String nodeName;
 	
 	/**
-	 * Constructor method for the class Alarm.java. 
+	 * Attribute that represents the URL of the SPIE node.
 	 */
-	public Alarm(){	
-		setDateOfCreation(LocalDateTime.now());
-	}
-	
+	private String nodeUrl;
+		
 	/**
 	 * Constructor method for the class Alarm.java.
 	 * @param serviceNameParam Name of the service associated to the alarm.
 	 * @param serviceStatusParam Status of the service associated to the alarm.
 	 */
-	public Alarm(String serviceNameParam, String serviceStatusParam, Long tiempoMedio, String systemParam) {
+	public AlarmMail(final String serviceNameParam, final String serviceStatusParam, final List<String> addressesParam, final Long blockedTimeParam, final String nodeNameParam, final String nodeUrlParam, final String subjectParam, final String bodyParam) {
+		super(LocalDateTime.now(), addressesParam, blockedTimeParam, subjectParam, bodyParam);
 		this.serviceName = serviceNameParam;
 		this.serviceStatus = serviceStatusParam;
-		this.avgTime = tiempoMedio;
-		this.system = systemParam;
-		this.dateOfCreation = LocalDateTime.now();
+		this.nodeName = nodeNameParam;
+		this.nodeUrl = nodeUrlParam;
 	}
+	
+	
 
 	/**
 	 * Gets the value of the attribute {@link #serviceName}.
@@ -132,87 +106,7 @@ public class Alarm {
 	public void setServiceStatus(String serviceStatus) {
 		this.serviceStatus = serviceStatus;
 	}
-	
-	/**
-	 * Gets the value of the attribute {@link #dateOfCreation}.
-	 * @return the value of the attribute {@link #dateOfCreation}.
-	 */
-	public LocalDateTime getDateOfCreation() {
-		return dateOfCreation;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #dateOfCreation}.
-	 * @param dateOfCreation The value for the attribute {@link #dateOfCreation}.
-	 */
-	public void setDateOfCreation(LocalDateTime dateOfCreation) {
-		this.dateOfCreation = dateOfCreation;
-	}
-			
-	/**
-	 * Gets the value of the attribute {@link #avgTime}.
-	 * @return the value of the attribute {@link #avgTime}.
-	 */
-	public Long getAvgTime() {
-		return avgTime;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #avgTime}.
-	 * @param avgTime The value for the attribute {@link #avgTime}.
-	 */
-	public void setAvgTime(Long tiempoMedio) {
-		this.avgTime = tiempoMedio;
-	}
-			
-	/**
-	 * Gets the value of the attribute {@link #addresses}.
-	 * @return the value of the attribute {@link #addresses}.
-	 */
-	public List<String> getAddresses() {
-		return addresses;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #addresses}.
-	 * @param addresses The value for the attribute {@link #addresses}.
-	 */
-	public void setAddresses(List<String> addresses) {
-		this.addresses = addresses;
-	}
-	
-	/**
-	 * Gets the value of the attribute {@link #blockedTime}.
-	 * @return the value of the attribute {@link #blockedTime}.
-	 */
-	public Long getBlockedTime() {
-		return blockedTime;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #blockedTime}.
-	 * @param blockedTime The value for the attribute {@link #blockedTime}.
-	 */
-	public void setBlockedTime(Long blockedTime) {
-		this.blockedTime = blockedTime;
-	}
-		
-	/**
-	 * Gets the value of the attribute {@link #serviceUrl}.
-	 * @return the value of the attribute {@link #serviceUrl}.
-	 */
-	public String getServiceUrl() {
-		return serviceUrl;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #serviceUrl}.
-	 * @param serviceUrlParam The value for the attribute {@link #serviceUrl}.
-	 */
-	public void setServiceUrl(String serviceUrlParam) {
-		this.serviceUrl = serviceUrlParam;
-	}
-			
+					
 	/**
 	 * Gets the value of the attribute {@link #umbralDegradado}.
 	 * @return the value of the attribute {@link #umbralDegradado}.
@@ -228,22 +122,37 @@ public class Alarm {
 	public void setUmbralDegradado(Long umbralDegradado) {
 		this.umbralDegradado = umbralDegradado;
 	}
-	
-	
+		
 	/**
-	 * Gets the value of the attribute {@link #system}.
-	 * @return the value of the attribute {@link #system}.
+	 * Gets the value of the attribute {@link #nodeName}.
+	 * @return the value of the attribute {@link #nodeName}.
 	 */
-	public String getSystem() {
-		return system;
+	public String getNodeName() {
+		return nodeName;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #system}.
-	 * @param systemParam The value for the attribute {@link #system}.
+	 * Sets the value of the attribute {@link #nodeName}.
+	 * @param nodeNameParam The value for the attribute {@link #nodeName}.
 	 */
-	public void setSystem(String systemParam) {
-		this.system = systemParam;
+	public void setNodeName(String nodeNameParam) {
+		this.nodeName = nodeNameParam;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #nodeName}.
+	 * @return the value of the attribute {@link #nodeName}.
+	 */
+	public String getNodeUrl() {
+		return nodeUrl;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #nodeUrl}.
+	 * @param nodeUrlParam The value for the attribute {@link #nodeUrl}.
+	 */
+	public void setNodeUrl(String nodeUrlParam) {
+		this.nodeUrl = nodeUrlParam;
 	}
 
 	/**

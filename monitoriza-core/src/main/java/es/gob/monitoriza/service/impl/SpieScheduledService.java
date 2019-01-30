@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -35,9 +35,9 @@ import es.gob.monitoriza.service.ISpieScheduledService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for SpieScheduled.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 30/01/2019.
  */
-@Service
+@Service("spieScheduledService")
 public class SpieScheduledService implements ISpieScheduledService {
 	
 	/**

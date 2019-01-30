@@ -10,13 +10,12 @@
  */
 
 /**
- * <b>File:</b><p>es.gob.afirma.utilidades.UtilsASN1.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.utilidades.UtilsASN1.java.</p>
  * <b>Description:</b><p> .</p>
- * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
- * certificates and electronic signature.</p>
- * <b>Date:</b><p>11/05/2012.</p>
+ * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
+ * <b>Date:</b><p>11/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 01/09/2017.
+ * @version 1.5, 30/01/2019.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -26,7 +25,7 @@ import javax.security.auth.x500.X500Principal;
  * <p>Class that contains all utilities methods used in ASN1 Objects.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.4, 01/09/2017.
+ * @version 1.5, 30/01/2019.
  */
 public final class ASN1Utilities {
 
@@ -131,9 +130,9 @@ public final class ASN1Utilities {
 	 * @return the string without unicode characters.
 	 */
 	public static String removeUNICODECharacters(String stringToProcess) {
-		String result = "";
+		String result = UtilsStringChar.EMPTY_STRING;
 		if (stringToProcess != null) {
-			result = stringToProcess.replaceAll("[^\\p{Print}]", "");
+			result = stringToProcess.replaceAll("[^\\p{Print}]", UtilsStringChar.EMPTY_STRING);
 		}
 		return result;
 	}

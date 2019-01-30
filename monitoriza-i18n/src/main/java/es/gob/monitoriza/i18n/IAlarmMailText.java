@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>08/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 08/10/2018.
+ * @version 1.1, 30/01/2019.
  */
 package es.gob.monitoriza.i18n;
 
@@ -28,7 +28,7 @@ package es.gob.monitoriza.i18n;
 /** 
  * <p>Interface that contains the keys to the mail texts for alarm service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 08/10/2018.
+ * @version 1.1, 30/01/2019.
  */
 public interface IAlarmMailText {
 	
@@ -71,5 +71,10 @@ public interface IAlarmMailText {
 	 * Constant attribute that represents the name of the property <code>summaryAlarmSent</code> belonging to the file status/monitoriza_xx_YY.properties.
 	 */
 	String SUMMARY_ALARM_SENT = "summaryAlarmSent";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>subjectAlarmSPIE</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String SUBJECT_ALARM_SPIE = "subjectAlarmSPIE";
 
 }

@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>21/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.5, 25/01/2019.
+ * @version 1.6, 30/01/2019.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -58,7 +58,7 @@ import es.gob.monitoriza.i18n.Language;
 /** 
  * <p>Utilities class for Files.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.5, 25/01/2019.
+ * @version 1.6, 30/01/2019.
  */
 public final class FileUtils {
 
@@ -214,7 +214,7 @@ public final class FileUtils {
 	 */
 	public static void writeFile(byte[ ] data, String filename)  {
 		
-		if (data != null && filename != null && !"".equals(filename)) {
+		if (data != null && filename != null && !UtilsStringChar.EMPTY_STRING.equals(filename)) {
 			
 			try (FileOutputStream fos = new FileOutputStream(new File(filename));
 					ByteArrayInputStream bais = new ByteArrayInputStream(data); ) {

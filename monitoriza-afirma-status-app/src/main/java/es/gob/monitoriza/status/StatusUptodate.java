@@ -20,19 +20,19 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21 jun. 2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 18/01/2019.
+ * @version 1.5, 30/01/2019.
  */
 package es.gob.monitoriza.status;
 
 import java.time.LocalDateTime;
 import java.util.Map;
 
-import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /** 
  * <p>Class that stores the last results for a service invocation.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 18/01/2019.
+ * @version 1.5, 30/01/2019.
  */
 public class StatusUptodate {
 	
@@ -174,8 +174,8 @@ public class StatusUptodate {
 		final StringBuffer advancedInfo = new StringBuffer();
 		
 		for (Map.Entry<String, String> entry : partialRequestResult.entrySet()) {
-			advancedInfo.append(entry.getKey()).append(GeneralConstants.SLASH).append(entry.getValue() == null?-1:entry.getValue());
-			advancedInfo.append(GeneralConstants.SEMICOLON);
+			advancedInfo.append(entry.getKey()).append(UtilsStringChar.SYMBOL_SLASH_STRING).append(entry.getValue() == null?-1:entry.getValue());
+			advancedInfo.append(UtilsStringChar.SYMBOL_SEMICOLON_STRING);
 	    }
 		
 		advancedInfo.deleteCharAt(advancedInfo.length()-1);

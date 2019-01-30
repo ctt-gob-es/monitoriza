@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>05/11/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 30/01/2019.
  */
 package es.gob.monitoriza.spie.html.impl;
 
@@ -38,16 +38,16 @@ import es.gob.monitoriza.spie.html.IHtmlSpieResolver;
 
 
 /** 
- * <p>Class that parses TS@ Connection SPIE HTML response.</p>
+ * <p>Class that parses @Firma/TS@ Connection SPIE HTML response.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 30/01/2019.
  */
-public class HtmlTsaConnResolver implements IHtmlSpieResolver {
+public class HtmlPlatformConnResolver implements IHtmlSpieResolver {
 	
 	/**
 	 * Attribute that represents the literal String of the SPIE with error status. 
 	 */
-	private static final String TSA_CONNN_ERROR = "ERROR";
+	private static final String PLATFORM_CONNN_ERROR = "ERROR";
 	
 	/**
 	 * Attribute that represents the semaphore level (1-Yellow,2-Red) to set when the SPIE returns error.
@@ -58,7 +58,7 @@ public class HtmlTsaConnResolver implements IHtmlSpieResolver {
 	 * Constructor method for the class HtmlTsaConnResolver.java.
 	 * @param semaphErrorLevelParam {@link #semaphErrorLevel}}
 	 */
-	public HtmlTsaConnResolver(Integer semaphErrorLevelParam) {
+	public HtmlPlatformConnResolver(Integer semaphErrorLevelParam) {
 		super();
 		this.semaphErrorLevel = semaphErrorLevelParam;
 	}
@@ -96,7 +96,7 @@ public class HtmlTsaConnResolver implements IHtmlSpieResolver {
     
     				// Si cualquiera de las TS@ del SPIE presenta un estado de error,
     				// se considera que el SPIE es erróneo.
-    				if (TSA_CONNN_ERROR.equals(tsaStatus)) {
+    				if (PLATFORM_CONNN_ERROR.equals(tsaStatus)) {
     					sempaphoreValue = semaphErrorLevel;
     
     				}

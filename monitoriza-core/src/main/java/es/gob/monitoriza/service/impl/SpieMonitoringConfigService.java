@@ -20,9 +20,9 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>22/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 30/01/2019.
  */
-package es.gob.monitoriza.configuration.manager;
+package es.gob.monitoriza.service.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -31,7 +31,6 @@ import java.security.KeyStore;
 import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,23 +45,21 @@ import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ConfSpie;
 import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SpieType;
 import es.gob.monitoriza.persistence.configuration.model.repository.SpieTypeRepository;
 import es.gob.monitoriza.service.IConfSpieService;
 import es.gob.monitoriza.service.IKeystoreService;
 import es.gob.monitoriza.service.IMethodValidationService;
-import es.gob.monitoriza.service.INodeMonitorizaService;
-import es.gob.monitoriza.service.ISpieScheduledService;
+import es.gob.monitoriza.service.ISpieMonitoringConfigService;
 
 /** 
  * <p>Class that manages the configuration of the @firma/ts@ SPIE from database persistence
  *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 30/01/2019.
  */
-@Service("adminSpieManager")
-public class AdminSpieManager {
+@Service("spieMonitoringConfigService")
+public class SpieMonitoringConfigService implements ISpieMonitoringConfigService {
 	
 	/**
 	 * Attribute that represents the object that manages the log of the class.
@@ -75,21 +72,7 @@ public class AdminSpieManager {
 	 */
 	@Autowired
 	private IConfSpieService spieService;
-	
-	/**
-	 * Attribute that represents the service object for accessing the service
-	 * repository.
-	 */
-	@Autowired
-	private ISpieScheduledService scheduledService;
-	
-	/**
-	 * Attribute that represents the service object for accessing the service
-	 * repository.
-	 */
-	@Autowired
-	private INodeMonitorizaService nodeService;
-	
+		
 	/**
 	 * Attribute that represents the service object for accessing the keystore
 	 * repository.
@@ -102,16 +85,17 @@ public class AdminSpieManager {
 	 */
 	@Autowired
 	private IMethodValidationService methodValidationService; 
-	
+			
 	/**
 	 * Attribute that represents the service object for accessing the repository.
 	 */
 	@Autowired
 	private SpieTypeRepository spieRepository;
+	
 		
 	/**
-	 * Get the general configuration for monitoring the SPIE.
-	 * @return {@link ConfSpie}
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.ISpieMonitoringConfigService#getSpieConfiguration()
 	 */
 	public ConfSpieDTO getSpieConfiguration() {
 		
@@ -120,17 +104,10 @@ public class AdminSpieManager {
 		return new ConfSpieDTO(confSpie.getIdConfSpie(), confSpie.getPercentAccept(), confSpie.getFrequencyAfirma(), confSpie.getFrequencyTsa(), null, null, methodValidationService.getAllMethodValidationString());
 	}
 	
-	/**
-	 * Deletes all scheduled timers in database.
-	 */
-	public void emptySpieScheduled() {
 		
-		scheduledService.emptyTimersScheduled();
-	}
-	
 	/**
-	 * Method that retrieves the keystore for SSL certificates from database.
-	 * @return Keystore containing the certificates for SSL.
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.ISpieMonitoringConfigService#loadSslTruststore()
 	 */
 	public KeyStore loadSslTruststore() {
 		
@@ -154,26 +131,15 @@ public class AdminSpieManager {
 
 		return cer;
 	}
+		
 	
 	/**
-	 * Method that obtains all nodes of the specified platform type.
-	 * @param idPlatform Platform identifier
-	 * @return {@link List<NodeMonitoriza>} of nodes that belongs to the specified platform
-	 */
-	public List<NodeMonitoriza> getNodesByPlatform(final Long idPlatform) {
-		
-		return nodeService.getByPlatformType(idPlatform);
-		
-	}
-	
-	/**
-	 * Method that gets a {@link #SpieType} from persistence.
-	 * @param idSpieType SpieType identifier
-	 * @return {@link #SpieType}
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.ISpieMonitoringConfigService#getSpieTypeById(java.lang.Long)
 	 */
 	public SpieType getSpieTypeById(final Long idSpieType) {
 		
 		return spieRepository.findByIdSpieType(idSpieType);
 	}
-		
+	
 }

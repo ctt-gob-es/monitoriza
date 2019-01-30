@@ -18,17 +18,19 @@
  * <b>File:</b><p>es.gob.monitoriza.form.ClaveForm.java.</p>
  * <b>Description:</b><p>Class that represents the backing form for adding/editing a clave platform.</p>
   * <b>Project:</b><p>Application for monitoring the services of cl@ve suite systems</p>
- * <b>Date:</b><p>25 oct. 2018.</p>
+ * <b>Date:</b><p>25/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 25/10/2018.
+ * @version 1.1, 30/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
 import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /**
  * <p>
@@ -39,7 +41,7 @@ import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
  * Application for monitoring services of cl@ve suite systems.
  * </p>
  * 
- * @version 1.0, 25/10/2018.
+ * @version 1.1, 30/01/2019.
  */
 public class ClaveDTO {
 
@@ -54,24 +56,24 @@ public class ClaveDTO {
 	 * form.
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.platform.name.notempty}")
-	@Size(min = 1, max = 30, groups = ThenCheckIt.class)
-	private String name = "";
+	@Size(min = 1, max = NumberConstants.NUM30, groups = ThenCheckIt.class)
+	private String name = UtilsStringChar.EMPTY_STRING;
 
 	/**
 	 * Attribute that represents the value of the input surnames of the user in the
 	 * form.
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.platform.host.notempty}")
-	@Size(min = 1, max = 30, groups = ThenCheckIt.class)
-	private String host = "";
+	@Size(min = 1, max = NumberConstants.NUM30, groups = ThenCheckIt.class)
+	private String host = UtilsStringChar.EMPTY_STRING;
 
 	/**
 	 * Attribute that represents the value of the input port of the user in the
 	 * form.
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.platform.port.notempty}")
-	@Size(min = 1, max = 5, groups = ThenCheckIt.class)
-	private String port = "";
+	@Size(min = 1, max = NumberConstants.NUM5, groups = ThenCheckIt.class)
+	private String port = UtilsStringChar.EMPTY_STRING;
 
 	/**
 	 * Attribute that represents the value of the input isSecure of the user in the
@@ -84,8 +86,8 @@ public class ClaveDTO {
 	 * form.
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.platform.httpcontext.notempty}")
-	@Size(min = 1, max = 50, groups = ThenCheckIt.class)
-	private String serviceContext = "";
+	@Size(min = 1, max = NumberConstants.NUM50, groups = ThenCheckIt.class)
+	private String serviceContext = UtilsStringChar.EMPTY_STRING;
 
 	/**
 	 * Gets the value of the attribute {@link #idPlatform}.
@@ -98,16 +100,14 @@ public class ClaveDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #idPlatform}.
-	 * 
-	 * @return the value of the attribute {@link #idPlatform}.
+	 * @param idPlatformParam Platform identifier
 	 */
-	public void setIdPlatform(Long idPlatform) {
-		this.idPlatform = idPlatform;
+	public void setIdPlatform(Long idPlatformParam) {
+		this.idPlatform = idPlatformParam;
 	}
 
 	/**
 	 * Gets the value of the attribute {@link #host}.
-	 * 
 	 * @return the value of the attribute {@link #host}.
 	 */
 	public String getHost() {
@@ -116,17 +116,14 @@ public class ClaveDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #host}.
-	 * 
-	 * @param login
-	 *            the value for the attribute {@link #host} to set.
+	 * @param hostParam the value for the attribute {@link #host} to set.
 	 */
-	public void setHost(String host) {
-		this.host = host;
+	public void setHost(String hostParam) {
+		this.host = hostParam;
 	}
 
 	/**
 	 * Gets the value of the attribute {@link #port}.
-	 * 
 	 * @return the value of the attribute {@link #port}.
 	 */
 	public String getPort() {
@@ -135,17 +132,14 @@ public class ClaveDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #port}.
-	 * 
-	 * @param port
-	 *            the value for the attribute {@link #port} to set.
+	 * @param portParam the value for the attribute {@link #port} to set.
 	 */
-	public void setPort(String port) {
-		this.port = port;
+	public void setPort(String portParam) {
+		this.port = portParam;
 	}
 
 	/**
 	 * Gets the value of the attribute {@link #isSecure}.
-	 * 
 	 * @return the value of the attribute {@link #isSecure}.
 	 */
 	public Boolean getIsSecure() {
@@ -154,17 +148,14 @@ public class ClaveDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #isSecure}.
-	 * 
-	 * @param isSecure
-	 *            the value for the attribute {@link #isSecure} to set.
+	 * @param isSecureParam the value for the attribute {@link #isSecure} to set.
 	 */
-	public void setIsSecure(Boolean isSecure) {
-		this.isSecure = isSecure;
+	public void setIsSecure(Boolean isSecureParam) {
+		this.isSecure = isSecureParam;
 	}
 
 	/**
 	 * Gets the value of the attribute {@link #name}.
-	 * 
 	 * @return the value of the attribute {@link #name}.
 	 */
 	public String getName() {
@@ -173,17 +164,14 @@ public class ClaveDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #name}.
-	 * 
-	 * @param name
-	 *            the value for the attribute {@link #name} to set.
+	 * @param nameParam the value for the attribute {@link #name} to set.
 	 */
-	public void setName(String name) {
-		this.name = name;
+	public void setName(String nameParam) {
+		this.name = nameParam;
 	}
 
 	/**
 	 * Gets the value of the attribute {@link #serviceContex}.
-	 * 
 	 * @return the value of the attribute {@link #serviceContex}.
 	 */
 	public String getServiceContext() {
@@ -192,12 +180,10 @@ public class ClaveDTO {
 
 	/**
 	 * Sets the value of the attribute {@link #serviceContext}.
-	 * 
-	 * @param serviceContext
-	 *            the value for the attribute {@link #serviceContext} to set.
+	 * @param serviceContextParam the value for the attribute {@link #serviceContext} to set.
 	 */
-	public void setServiceContext(String serviceContext) {
-		this.serviceContext = serviceContext;
+	public void setServiceContext(String serviceContextParam) {
+		this.serviceContext = serviceContextParam;
 	}
 
 }

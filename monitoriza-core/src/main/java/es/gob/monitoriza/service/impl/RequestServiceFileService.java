@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>26/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 26/09/2018.
+ * @version 1.1, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -38,10 +38,9 @@ import es.gob.monitoriza.service.IRequestServiceFileService;
  * <p>Class that implements the communication with the operations of the
  * persistence layer for RequestServiceFileService.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 26/09/2018.
+ * @version 1.1, 30/01/2019.
  */
-@Service
-@Transactional
+@Service("requestFileService")
 public class RequestServiceFileService implements IRequestServiceFileService {
 	
 	/**
@@ -56,6 +55,7 @@ public class RequestServiceFileService implements IRequestServiceFileService {
 	 * @see es.gob.monitoriza.service.IRequestServiceFileService#getRequestFileById(java.lang.Long)
 	 */
 	@Override
+	@Transactional
 	public RequestServiceFile getRequestFileById(Long fileId) throws RequestFileNotFoundException {
 		
 		return repository.findById(fileId).orElseThrow(() -> new RequestFileNotFoundException("File not found with id " + fileId));

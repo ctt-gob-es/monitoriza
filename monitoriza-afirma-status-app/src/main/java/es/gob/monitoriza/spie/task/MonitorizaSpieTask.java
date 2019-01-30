@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>25/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 04/01/2019.
+ * @version 1.1, 30/01/2019.
  */
 package es.gob.monitoriza.spie.task;
 
@@ -33,12 +33,13 @@ import javax.servlet.http.HttpServlet;
 
 import org.apache.log4j.Logger;
 
-import es.gob.monitoriza.configuration.manager.AdminSpieManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
+import es.gob.monitoriza.service.impl.SpieMonitoringConfigService;
+import es.gob.monitoriza.service.utils.IServiceNameConstants;
 import es.gob.monitoriza.spie.status.StatusSpieHolder;
 import es.gob.monitoriza.spie.thread.RequestLauncherSpie;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
@@ -47,7 +48,7 @@ import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 /** 
  * <p>Class that initializes the timers for processing the batch of requests for each SPIE service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 04/01/2019.
+ * @version 1.1, 30/01/2019.
  */
 public class MonitorizaSpieTask extends HttpServlet {
 
@@ -77,15 +78,11 @@ public class MonitorizaSpieTask extends HttpServlet {
 	 * Method that gets the SPIE configuration from the web admin database and schedules the service request batch.
 	 */
 	private void scheduleSpieFromWebAdmin() {
-		
-		AdminSpieManager adminSpieManager = ApplicationContextProvider.getApplicationContext().getBean("adminSpieManager", AdminSpieManager.class);
-				
-		// Se vacía la tabla de timers programados
-		adminSpieManager.emptySpieScheduled();
-		
-		final ConfSpieDTO confSpie = adminSpieManager.getSpieConfiguration();
-						
+					
+		final ConfSpieDTO confSpie =  ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SPIE_MONITORING_CONFIG_SERVICE, SpieMonitoringConfigService.class).getSpieConfiguration();
+								
 		scheduleSpieAfirma(confSpie.getFrequencyAFirma());
+		scheduleSpieTsa(confSpie.getFrequencyTsa());
 		
 	}
 
@@ -96,6 +93,16 @@ public class MonitorizaSpieTask extends HttpServlet {
 	private void scheduleSpieAfirma(final Long afirmaFrequency) {
 		Timer timer = new Timer();
 		ExecuteTimer batchTimer = new ExecuteTimer(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
+		timer.schedule(batchTimer, 0, afirmaFrequency);
+	}
+	
+	/**
+	 * Method that schedules a timer task for requesting SPIE from @Firma.
+	 * @param afirmaFrequency Period on the launcher
+	 */
+	private void scheduleSpieTsa(final Long afirmaFrequency) {
+		Timer timer = new Timer();
+		ExecuteTimer batchTimer = new ExecuteTimer(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA);
 		timer.schedule(batchTimer, 0, afirmaFrequency);
 	}
 	

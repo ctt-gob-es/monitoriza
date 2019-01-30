@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.ValidServiceDTO.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>29 ago. 2018.</p>
+ * <b>Date:</b><p>29/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 30/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -31,11 +31,12 @@ import javax.validation.constraints.Size;
 import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
 import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /** 
  * <p>Class that represents the data transfer object and backing form for the validation service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 30/01/2019.
  */
 public class ValidServiceDTO {
 	
@@ -50,21 +51,21 @@ public class ValidServiceDTO {
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.validservice.application.notempty}")
     @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM30, groups=ThenCheckIt.class)
-    private String application = "";
+    private String application = UtilsStringChar.EMPTY_STRING;
 
 	/**
 	 * Attribute that represents the value of the input host of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.validservice.host.notempty}")
     @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM30, groups=ThenCheckIt.class)
-    private String host = "";
+    private String host = UtilsStringChar.EMPTY_STRING;
 	
 	/**
 	 * Attribute that represents the value of the input port of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.validservice.port.notempty}")
     @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM5, groups=ThenCheckIt.class)
-    private String port = "";
+    private String port = UtilsStringChar.EMPTY_STRING;
 	
 	/**
 	 * Attribute that represents the value of the input isSecure of the user in the form. 
@@ -74,12 +75,12 @@ public class ValidServiceDTO {
 	/**
 	 * Attribute that represents the value of the input user of the user in the form. 
 	 */
-	private String user = "";
+	private String user = UtilsStringChar.EMPTY_STRING;
 	
 	/**
 	 * Attribute that represents the value of the input pass of the user in the form. 
 	 */
-	private String pass = "";
+	private String pass = UtilsStringChar.EMPTY_STRING;
 	
 	/**
 	 * Attribute that represents the value of the input authenticationType of the user in the form. 

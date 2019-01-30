@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 28/10/2018.
+ * @version 1.4, 30/01/2019.
  */
 package es.gob.monitoriza.task;
 
@@ -34,7 +34,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.gob.monitoriza.configuration.manager.AdminServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
@@ -42,6 +41,10 @@ import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigTimerDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.service.ITimerScheduledService;
+import es.gob.monitoriza.service.impl.KeystoreService;
+import es.gob.monitoriza.service.impl.VipMonitoringConfigService;
+import es.gob.monitoriza.service.utils.IServiceNameConstants;
+import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.status.StatusHolder;
 import es.gob.monitoriza.status.thread.RequestLauncher;
 import es.gob.monitoriza.timers.TimersHolder;
@@ -49,7 +52,7 @@ import es.gob.monitoriza.timers.TimersHolder;
 /** 
  * <p>Class that update the configuration of the scheduled services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 28/10/2018.
+ * @version 1.4, 30/01/2019.
  */
 @Service("monitorizaTaskManager")
 class MonitorizaTaskManager {
@@ -63,7 +66,7 @@ class MonitorizaTaskManager {
 	 * Attribute that represents . 
 	 */
 	@Autowired
-	private AdminServicesManager serviceManager;
+	private VipMonitoringConfigService serviceManager;
 	
 	/**
 	 * Attribute that represents . 
@@ -85,10 +88,10 @@ class MonitorizaTaskManager {
     		ExecuteTimer batchTimer = null;	
     		
     		// Se carga una sola vez el almacén de certificados para conexión segura.
-    		KeyStore sslKeystore = serviceManager.loadSslTruststore();
+    		KeyStore sslKeystore = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.KEYSTORE_SERVICE, KeystoreService.class).loadSslTruststore();
     		
     		// Se carga una sola vez el almacén de certificados para conexión segura.
-    		KeyStore rfc3161Keystore = serviceManager.loadRfc3161Keystore();
+    		KeyStore rfc3161Keystore = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.KEYSTORE_SERVICE, KeystoreService.class).loadRfc3161Keystore();
     						
     		for (ConfigTimerDTO timerDTO : timers) {
     			

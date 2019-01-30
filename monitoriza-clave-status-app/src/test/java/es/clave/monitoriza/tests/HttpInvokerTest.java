@@ -49,6 +49,7 @@ import es.gob.monitoriza.invoker.http.conf.messages.ClaveAgentConfType;
 import es.gob.monitoriza.invoker.http.conf.util.Utilities;
 import es.gob.monitoriza.invoker.http.saml.Constants;
 import es.gob.monitoriza.invoker.http.saml.SpProtocolEngineFactory;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 import eu.eidas.auth.commons.EidasStringUtil;
 import eu.eidas.auth.commons.attribute.AttributeDefinition;
 import eu.eidas.auth.commons.attribute.ImmutableAttributeMap;
@@ -101,15 +102,15 @@ public class HttpInvokerTest {
 
 		String samlRequest;
 
-		String nodeServiceUrl = "";
+		String nodeServiceUrl = UtilsStringChar.EMPTY_STRING;
 
 		boolean forceAuthCheck = true;
 		String nameIDPolicy = SamlNameIdFormat.UNSPECIFIED.getNameIdFormat();
 
-		String providerName = "";
-		String spApplication = "";
+		String providerName = UtilsStringChar.EMPTY_STRING;
+		String spApplication = UtilsStringChar.EMPTY_STRING;
 
-		String returnUrl = "";
+		String returnUrl = UtilsStringChar.EMPTY_STRING;
 		String eidasloa = LevelOfAssurance.LOW.stringValue();
 
 		ProtocolEngineNoMetadataI protocolEngine = SpProtocolEngineFactory.getSpProtocolEngine(Constants.SP_CONF);

@@ -100,14 +100,15 @@ Insert into C_AUTHENTICATION_TYPE
    (3, 'Certificado');
    
  -- TABLA ALARM 
-Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_001', 'Nodo de @firma sin conexión con TS@');
-Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_002', 'Nodo de @firma sin conexión con HSM');
-Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_003', 'Nodo de @firma con método de validación en estado no correcto');
-Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_004', 'Nodo de @firma con servicio degradado');
-Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_005', 'Nodo de @firma en modo de emergencia');
-Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_006', 'Nodo de TS@ sin conexión con HSM');
-Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_007', 'Nodo de TS@ sin conexión con @firma');
-Insert into ALARM (ID_ALARM, DESCRIPTION) Values ('ALM_008', 'Nodo de TS@ en modo de emergencia');
+Insert into ALARM (ID_ALARM, DESCRIPTION, ACTIVE) Values ('ALM_001', 'ALARMDESC001', 'Y');
+Insert into ALARM (ID_ALARM, DESCRIPTION, ACTIVE) Values ('ALM_002', 'ALARMDESC002', 'Y');
+Insert into ALARM (ID_ALARM, DESCRIPTION, ACTIVE) Values ('ALM_003', 'ALARMDESC003', 'Y');
+Insert into ALARM (ID_ALARM, DESCRIPTION, ACTIVE) Values ('ALM_004', 'ALARMDESC004', 'Y');
+Insert into ALARM (ID_ALARM, DESCRIPTION, ACTIVE) Values ('ALM_005', 'ALARMDESC005', 'Y');
+Insert into ALARM (ID_ALARM, DESCRIPTION, ACTIVE) Values ('ALM_006', 'ALARMDESC006', 'Y');
+Insert into ALARM (ID_ALARM, DESCRIPTION, ACTIVE) Values ('ALM_007', 'ALARMDESC007', 'Y');
+Insert into ALARM (ID_ALARM, DESCRIPTION, ACTIVE) Values ('ALM_008', 'ALARMDESC008', 'Y');
+Insert into ALARM (ID_ALARM, DESCRIPTION, ACTIVE) Values ('ALM_009', 'ALARMDESC009', 'Y');
 
  -- TABLA SPIE_TYPE 
 Insert into SPIE_TYPE (ID_SPIE_TYPE, TOKENNAME, CONTEXT, ID_PLATFORM_TYPE, SEMAPHORE_LEVEL) Values (1, 'HSM Connection', '/spie/checkStatusInf?opCodes=4', 1, 1);

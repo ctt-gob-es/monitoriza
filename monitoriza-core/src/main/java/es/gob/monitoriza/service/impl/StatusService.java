@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.7, 25/01/2019.
+ * @version 1.8, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -72,9 +71,9 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
  * <p>Class that implements the communication with the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.6, 25/01/2019.
+ * @version 1.8, 30/01/2019.
  */
-@Service
+@Service("statusService")
 public class StatusService implements IStatusService {
 	
 	/**

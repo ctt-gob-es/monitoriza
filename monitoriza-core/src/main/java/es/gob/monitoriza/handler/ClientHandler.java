@@ -15,12 +15,12 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.webservice.ClientHandler.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.handler.ClientHandler.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>20 sept. 2018.</p>
+ * <b>Date:</b><p>20/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 20 sept. 2018.
+ * @version 1.1, 30/01/2019.
  */
 package es.gob.monitoriza.handler;
 
@@ -51,11 +51,12 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import es.gob.monitoriza.crypto.utils.WSCryptoConfiguration;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 20 sept. 2018.
+ * @version 1.2, 30/01/2019.
  */
 public class ClientHandler extends AbstractCommonHandler {
 
@@ -82,7 +83,7 @@ public class ClientHandler extends AbstractCommonHandler {
 	/**
 	 * Attribute that indicates the current authorization method.
 	 */
-	private String securityOption = "";
+	private String securityOption = UtilsStringChar.EMPTY_STRING;
 	
 	/**
      * Attribute that represents the certificate that will be used for signing the SOAP request. 

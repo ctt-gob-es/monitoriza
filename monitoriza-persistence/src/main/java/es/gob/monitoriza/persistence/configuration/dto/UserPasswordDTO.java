@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 30/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -32,18 +32,13 @@ import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.persistence.configuration.dto.constraints.FieldMatch;
 import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
 import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 
 /**
- * <p>
- * Class that represents the backing form for adding/editing a user.
- * </p>
- * <b>Project:</b>
- * <p>
- * Application for monitoring services of @firma suite systems.
- * </p>
- * 
- * @version 1.1, 25/01/2019.
+ * <p>Class that represents the backing form for adding/editing a user.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+  * @version 1.2, 30/01/2019.
  */
 @FieldMatch(first = "password", second = "confirmPassword", message = "{form.valid.user.password.confirm}")
 public class UserPasswordDTO {
@@ -61,7 +56,7 @@ public class UserPasswordDTO {
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.user.password.notempty}")
 	@Size(min = NumberConstants.NUM7, max = NumberConstants.NUM30, groups = ThenCheckIt.class)
 	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message = "{form.valid.user.password.noPattern}", groups = ThenCheckIt.class)
-	private String password = "";
+	private String password = UtilsStringChar.EMPTY_STRING;
 
 	/**
 	 * Attribute that represents the value of the input password of the user in
@@ -69,13 +64,13 @@ public class UserPasswordDTO {
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.user.confirmPassword.notempty}")
 	@Size(min = NumberConstants.NUM7, max = NumberConstants.NUM30, groups = ThenCheckIt.class)
-	private String confirmPassword = "";
+	private String confirmPassword = UtilsStringChar.EMPTY_STRING;
 
 	/**
 	 * Attribute that represents the password being changed. 
 	 */
 	@NotBlank(groups = CheckItFirst.class, message = "{form.valid.user.oldPassword.notempty}")
-	private String oldPassword = "";
+	private String oldPassword = UtilsStringChar.EMPTY_STRING;
 
 	/**
 	 * Gets the value of the attribute {@link #idUserMonitoriza}.

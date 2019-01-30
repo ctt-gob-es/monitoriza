@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.8, 25/01/2019.
+ * @version 1.9, 30/01/2019.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -76,18 +76,12 @@ import es.gob.monitoriza.service.IRequestServiceFileService;
 import es.gob.monitoriza.service.IServiceMonitorizaService;
 import es.gob.monitoriza.service.ITimerMonitorizaService;
 import es.gob.monitoriza.utilidades.FileUtils;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /**
- * <p>
- * Class that manages the REST requests related to the Services administration
- * and JSON communication.
- * </p>
- * <b>Project:</b>
- * <p>
- * Application for monitoring services of @firma suite systems.
- * </p>
- * 
- * @version 1.8, 25/01/2019.
+ * <p>Class that manages the REST requests related to the Services administration and JSON communication.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+  * @version 1.9, 30/01/2019.
  */
 @RestController
 public class ServiceRestController {
@@ -198,7 +192,7 @@ public class ServiceRestController {
 
 		PlatformMonitoriza platform = platformService.getPlatformById(idPlatform);
 		StringBuilder baseEndpoint = new StringBuilder();
-		baseEndpoint.append("http://").append(platform.getHost()).append(GeneralConstants.COLON)
+		baseEndpoint.append("http://").append(platform.getHost()).append(UtilsStringChar.SYMBOL_COLON_STRING)
 				.append(platform.getPort());
 
 		switch (serviceType.toLowerCase()) {
@@ -285,7 +279,7 @@ public class ServiceRestController {
 		// Se controla manualmente el error 'requerido' para el campo nameWsdl, ya que depende del tipo de servicio
 		if (serviceForm.getServiceType().equalsIgnoreCase(GeneralConstants.SOAP_SERVICE)) {
 			
-			if ("".equals(serviceForm.getNameWsdl())) {
+			if (UtilsStringChar.EMPTY_STRING.equals(serviceForm.getNameWsdl())) {
 				FieldError wsdlFieldError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_ENDPOINT, "El campo 'Endpoint' es obligatorio.");
 				bindingResult.addError(wsdlFieldError);
 			}

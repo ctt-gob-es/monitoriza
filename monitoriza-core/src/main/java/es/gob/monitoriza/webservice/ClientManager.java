@@ -20,11 +20,10 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>1/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 25/01/2019.
+ * @version 1.4, 30/01/2019.
  */
 package es.gob.monitoriza.webservice;
 
-import java.net.MalformedURLException;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
@@ -39,7 +38,6 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.gob.monitoriza.configuration.manager.AdminServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
@@ -50,11 +48,14 @@ import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitori
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
 import es.gob.monitoriza.service.IKeystoreService;
+import es.gob.monitoriza.service.impl.KeystoreService;
+import es.gob.monitoriza.service.utils.IServiceNameConstants;
+import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 
 /** 
  * <p>Class ClientManager.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 25/01/2019.
+ * @version 1.4, 30/01/2019.
  */
 @Service
 public class ClientManager {
@@ -85,12 +86,6 @@ public class ClientManager {
 	@Autowired
 	private IKeystoreService keystoreService;
 
-	/**
-	 * Attribute that represents the service object for accessing the aminServicesManager.
-	 */
-	@Autowired
-	private AdminServicesManager adminServicesManager;
-
 	static {
 		// for localhost testing only
 		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
@@ -107,8 +102,10 @@ public class ClientManager {
 	/**
 	 * Method that creates the service DSSCertificate.
 	 * @param url URI
+	 * @param validService Object with the information of the validation service.
+	 * @param peticion Object array with the requests data.
 	 * @return validation result
-	 * @throws MalformedURLException exception
+	 * @throws Exception If the method fails
 	 */
 	public String getDSSCertificateServiceClientResult(String url, ValidService validService, Object[] peticion) throws Exception {
 		
@@ -120,7 +117,7 @@ public class ClientManager {
 			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(KeystoreMonitoriza.ID_TRUSTSTORE_SSL));
 			KeystoreMonitoriza ksSSL = keystoreService.getKeystoreById(KeystoreMonitoriza.ID_TRUSTSTORE_SSL);
 			
-			KeyStore ks = adminServicesManager.loadSslTruststore();
+			KeyStore ks = keystoreService.loadSslTruststore();
 			
 		    AxisSSLSocketFactory.setKeystorePass(keyStoreFacade.getKeystoreDecodedPasswordString(ksSSL.getPassword()));
 		    AxisSSLSocketFactory.setKeyStore(ks);
@@ -139,7 +136,7 @@ public class ClientManager {
 			SystemCertificate certValidService = validService.getValidServiceCertificate();
 			KeystoreMonitoriza keystoreValidService = certValidService.getKeystore();
 			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreValidService);
-			KeyStore ksAuthValidServ = adminServicesManager.loadValidServiceKeystore();
+			KeyStore ksAuthValidServ = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.KEYSTORE_SERVICE, KeystoreService.class).loadValidServiceKeystore();
 			X509Certificate certificateSOAP = (X509Certificate) ksAuthValidServ.getCertificate(certValidService.getAlias());
 			PrivateKey privateKeySOAP = (PrivateKey) ksAuthValidServ.getKey(certValidService.getAlias(), keyStoreFacade.getKeystoreDecodedPasswordString(keystoreValidService.getPassword()).toCharArray());
 			requestHandler = new ClientHandler(AuthenticationTypeEnum.CERTIFICATE.getName());
@@ -165,36 +162,4 @@ public class ClientManager {
 		return response;
 	}
 	
-	/**
-	 * Get keystoreService.
-	 * @return keystoreService
-	 */
-	public IKeystoreService getKeystoreService() {
-		return keystoreService;
-	}
-
-	/**
-	 * Set keystoreService.
-	 * @param keystoreService set keystoreService
-	 */
-	public void setKeystoreService(IKeystoreService keystoreService) {
-		this.keystoreService = keystoreService;
-	}
-
-	/**
-	 * Get adminServicesManager.
-	 * @return adminServicesManager
-	 */
-	public AdminServicesManager getAdminServicesManager() {
-		return adminServicesManager;
-	}
-
-	/**
-	 * Set adminServicesManager.
-	 * @param adminServicesManager set adminServicesManager
-	 */
-	public void setAdminServicesManager(AdminServicesManager adminServicesManager) {
-		this.adminServicesManager = adminServicesManager;
-	}
-
 }

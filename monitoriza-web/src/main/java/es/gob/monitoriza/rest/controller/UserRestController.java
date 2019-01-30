@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 25/01/2019.
+ * @version 1.6, 30/01/2019.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -77,20 +77,14 @@ import es.gob.monitoriza.service.IUserMonitorizaService;
 import es.gob.monitoriza.service.IValidServiceService;
 import es.gob.monitoriza.utilidades.StatusCertificateEnum;
 import es.gob.monitoriza.utilidades.UtilsCertificate;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 import es.gob.monitoriza.utilidades.UtilsXml;
 import es.gob.monitoriza.webservice.ClientManager;
 
 /**
- * <p>
- * Class that manages the REST requests related to the Users administration and
- * JSON communication.
- * </p>
- * <b>Project:</b>
- * <p>
- * Application for monitoring services of @firma suite systems.
- * </p>
- *
- * @version 1.5, 25/01/2019.
+ * <p>Class that manages the REST requests related to the Users administration and JSON communication.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.6, 30/01/2019.
  */
 @RestController
 public class UserRestController {
@@ -287,7 +281,7 @@ public class UserRestController {
 	 */
 	@RequestMapping(value = "/saveuserpassword", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String savePassword(@Validated(OrderedValidation.class) @RequestBody final UserPasswordDTO userFormPassword, final BindingResult bindingResult) {
-		String result = "";
+		String result = UtilsStringChar.EMPTY_STRING;
 		
 		if (bindingResult.hasErrors()) {
 			JSONObject json = new JSONObject();
@@ -312,7 +306,7 @@ public class UserRestController {
 	@RequestMapping(value = "/menueditsave", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	public String saveEditMenu(@Validated(OrderedValidation.class) @RequestBody final UserEditDTO userForm, final BindingResult bindingResult) {
 		
-		String result = "";
+		String result = UtilsStringChar.EMPTY_STRING;
 
 		if (bindingResult.hasErrors()) {
 			JSONObject json = new JSONObject();
@@ -393,7 +387,7 @@ public class UserRestController {
 				String host = validService.getHost();
 				String port = validService.getPort();
 				
-				String result ="";
+				String result =UtilsStringChar.EMPTY_STRING;
 				String endpoint = protocol + "://" + host + ":" + port + UtilsCertificate.VALID_SERVICE_ENDPOINT;
 				Object[] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
 				try {

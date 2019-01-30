@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 04/01/2019.
+ * @version 1.4, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -55,9 +55,9 @@ import es.gob.monitoriza.service.IPlatformService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for PlatformAfirma.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 04/01/2019.
+ * @version 1.4, 30/01/2019.
  */
-@Service
+@Service("platformService")
 public class PlatformService implements IPlatformService {
 	
 	/**

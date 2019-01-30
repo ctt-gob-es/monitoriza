@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 25/01/2019.
+ * @version 1.6, 30/01/2019.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -96,6 +96,7 @@ import es.gob.monitoriza.service.IValidServiceService;
 import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 import es.gob.monitoriza.utilidades.StatusCertificateEnum;
 import es.gob.monitoriza.utilidades.UtilsCertificate;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 import es.gob.monitoriza.utilidades.UtilsXml;
 import es.gob.monitoriza.vo.PickListElementVO;
 import es.gob.monitoriza.vo.PickListVO;
@@ -105,7 +106,7 @@ import es.gob.monitoriza.webservice.ClientManager;
  * <p>Class that manages the REST requests related to the Keystore administration
  * and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.5, 25/01/2019.
+ * @version 1.6, 30/01/2019.
  */
 @RestController
 public class KeystoreRestController {
@@ -291,12 +292,12 @@ public class KeystoreRestController {
 
 		String listChar = StaticMonitorizaConfig.getProperty(StaticConstants.LIST_CHARACTER_SPECIAL);
 		String[ ] characters = listChar.split(",");
-		String res = GeneralConstants.EMPTY_STRING;
+		String res = UtilsStringChar.EMPTY_STRING;
 		for (int i = 0; i < characters.length; i++) {
 			int esta = alias.indexOf(characters[i]);
 			if (esta >= 0) {
 				char special = alias.charAt(esta);
-				res += special + GeneralConstants.BLANK;
+				res += special + UtilsStringChar.SPECIAL_BLANK_SPACE_STRING;
 			}
 		}
 
@@ -502,12 +503,12 @@ public class KeystoreRestController {
 
 		String listChar = StaticMonitorizaConfig.getProperty(StaticConstants.LIST_CHARACTER_SPECIAL);
 		String[ ] characters = listChar.split(",");
-		String res = GeneralConstants.EMPTY_STRING;
+		String res = UtilsStringChar.EMPTY_STRING;
 		for (int i = 0; i < characters.length; i++) {
 			int esta = sslForm.getAlias().indexOf(characters[i]);
 			if (esta >= 0) {
 				char special = sslForm.getAlias().charAt(esta);
-				res += special + GeneralConstants.BLANK;
+				res += special + UtilsStringChar.SPECIAL_BLANK_SPACE_STRING;;
 			}
 		}
 
@@ -708,7 +709,7 @@ public class KeystoreRestController {
 						String host = validService.getHost();
 						String port = validService.getPort();
 
-						String result = "";
+						String result = UtilsStringChar.EMPTY_STRING;
 						String endpoint = protocol + "://" + host + ":" + port + UtilsCertificate.VALID_SERVICE_ENDPOINT;
 						Object[ ] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
 						try {
@@ -847,7 +848,7 @@ public class KeystoreRestController {
 						String host = validService.getHost();
 						String port = validService.getPort();
 
-						String result = "";
+						String result = UtilsStringChar.EMPTY_STRING;
 						String endpoint = protocol + "://" + host + ":" + port + UtilsCertificate.VALID_SERVICE_ENDPOINT;
 						Object[ ] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
 						try {
@@ -946,12 +947,12 @@ public class KeystoreRestController {
 
 		String listChar = StaticMonitorizaConfig.getProperty(StaticConstants.LIST_CHARACTER_SPECIAL);
 		String[ ] characters = listChar.split(",");
-		String res = GeneralConstants.EMPTY_STRING;
+		String res = UtilsStringChar.EMPTY_STRING;
 		for (int i = 0; i < characters.length; i++) {
 			int esta = authForm.getAlias().indexOf(characters[i]);
 			if (esta >= 0) {
 				char special = authForm.getAlias().charAt(esta);
-				res += special + GeneralConstants.BLANK;
+				res += special + UtilsStringChar.SPECIAL_BLANK_SPACE_STRING;;
 			}
 		}
 
@@ -1042,12 +1043,12 @@ public class KeystoreRestController {
 
 		String listChar = StaticMonitorizaConfig.getProperty(StaticConstants.LIST_CHARACTER_SPECIAL);
 		String[ ] characters = listChar.split(",");
-		String res = GeneralConstants.EMPTY_STRING;
+		String res = UtilsStringChar.EMPTY_STRING;
 		for (int i = 0; i < characters.length; i++) {
 			int esta = validServForm.getAlias().indexOf(characters[i]);
 			if (esta >= 0) {
 				char special = validServForm.getAlias().charAt(esta);
-				res += special + GeneralConstants.BLANK;
+				res += special + UtilsStringChar.SPECIAL_BLANK_SPACE_STRING;;
 			}
 		}
 

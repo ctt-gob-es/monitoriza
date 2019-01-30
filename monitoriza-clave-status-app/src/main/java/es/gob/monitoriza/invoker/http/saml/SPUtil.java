@@ -1,3 +1,27 @@
+/* 
+/*******************************************************************************
+ * Copyright (C) 2018 MINHAFP, Gobierno de España
+ * This program is licensed and may be used, modified and redistributed under the  terms
+ * of the European Public License (EUPL), either version 1.1 or (at your option)
+ * any later version as soon as they are approved by the European Commission.
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express
+ * or implied. See the License for the specific language governing permissions and
+ * more details.
+ * You should have received a copy of the EUPL1.1 license
+ * along with this program; if not, you may find it at
+ * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
+ ******************************************************************************/
+
+/** 
+ * <b>File:</b><p>es.gob.monitoriza.invoker.http.saml.SPUtil.java.</p>
+ * <b>Description:</b><p>Class </p>
+  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Date:</b><p>9/04/2018.</p>
+ * @author Gobierno de España.
+ * @version 1.0, 30/01/2019.
+ */
 package es.gob.monitoriza.invoker.http.saml;
 
 import java.io.FileReader;
@@ -17,8 +41,15 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.xml.sax.SAXException;
 
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 import eu.eidas.auth.commons.xml.DocumentBuilderFactoryUtil;
 
+/**
+ * <p>Class .</p>
+ * <b>Project:</b>
+ * <p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.0, 30/01/2019.
+ */
 public class SPUtil {
 
     SPUtil() {};
@@ -33,7 +64,6 @@ public class SPUtil {
         String envLocation = System.getenv().get(Constants.MONITORIZA_CONFIG_REPOSITORY_VRBLE);
         String configLocation = System.getProperty(Constants.MONITORIZA_CONFIG_REPOSITORY_VRBLE, envLocation);
         return configLocation;
-    	//return ((String)ApplicationContextProvider.getApplicationContext().getBean(Constants.SP_REPO_BEAN_NAME)).trim();
     }
 
     private static Properties loadConfigs(String fileName) throws IOException {
@@ -47,7 +77,7 @@ public class SPUtil {
             return SPUtil.loadConfigs(Constants.SP_PROPERTIES);
         } catch (IOException e) {
             LOG.error(e.getMessage());
-            LOG.error("", e);
+            LOG.error(UtilsStringChar.EMPTY_STRING, e);
             throw new IllegalArgumentException("Could not load configuration file" + e.getMessage());
         }
     }

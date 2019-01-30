@@ -16,11 +16,11 @@
 
 /** 
  * <b>File:</b><p>es.gob.monitoriza.cron.ValidCertificatesJob.java.</p>
- * <b>Description:</b><p> .</p>
+ * <b>Description:Class that manages the scheduled job for certificate validation</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>27 sept. 2018.</p>
+ * <b>Date:</b><p>27/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 30/01/2019.
  */
 package es.gob.monitoriza.cron;
 
@@ -57,13 +57,14 @@ import es.gob.monitoriza.service.ISystemCertificateService;
 import es.gob.monitoriza.service.IValidServiceService;
 import es.gob.monitoriza.utilidades.UtilsCertificate;
 import es.gob.monitoriza.utilidades.UtilsGrayLog;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 import es.gob.monitoriza.utilidades.UtilsXml;
 import es.gob.monitoriza.webservice.ClientManager;
 
 /** 
  * <p>Class that manages the scheduled job for certificate validation.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 30/01/2019.
  */
 @Service
 public class ValidCertificatesJob implements SchedulerObjectInterface {
@@ -142,7 +143,7 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
         }, new Trigger() {
             @Override
             public Date nextExecutionTime(TriggerContext triggerContext) {
-            	String cronExpression = "";
+            	String cronExpression = UtilsStringChar.EMPTY_STRING;
             	Date nextExec = null;
             	List<ValidService> validServices = null;
             	ValidService validService = null;
@@ -180,7 +181,7 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
 	 */
 	private void validCertificatesJobScheduled() {
 		LOGGER.info("Init validCertificatesJobScheduled");
-		String aliasCertificate = "";
+		String aliasCertificate = UtilsStringChar.EMPTY_STRING;
 		try {
 			List<ValidService> validServices = validServiceService.getAllValidServices();
 			ValidService validService = null;

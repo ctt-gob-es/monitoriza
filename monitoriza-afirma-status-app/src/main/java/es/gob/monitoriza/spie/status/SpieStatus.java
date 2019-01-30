@@ -21,7 +21,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>30/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 30/10/2018.
+ * @version 1.1, 30/01/2019.
  */
 package es.gob.monitoriza.spie.status;
 
@@ -43,12 +43,13 @@ import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.StatusSpieDTO;
 import es.gob.monitoriza.spie.response.ResponseJsonSpie;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 
 /** 
- * <p>Class .</p>
+ * <p>Class that gets the VIP status for the configured platforms services through servlet call</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 30/10/2018.
+ * @version 1.1, 30/01/2019.
  */
 public class SpieStatus extends HttpServlet {
 
@@ -68,7 +69,7 @@ public class SpieStatus extends HttpServlet {
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "");
+			response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, UtilsStringChar.EMPTY_STRING);
 			response.flushBuffer();
 		} catch (Exception e) {
 			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS013, new Object[ ] { request.getRemoteAddr() }), e);

@@ -17,9 +17,9 @@
  * <b>File:</b><p>es.gob.monitoriza.service.impl.UserMonitorizaService.java.</p>
  * <b>Description:</b><p> .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
- * <b>Date:</b><p>6 mar. 2018.</p>
+ * <b>Date:</b><p>6/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 25/01/2019.
+ * @version 1.3, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -43,9 +43,9 @@ import es.gob.monitoriza.service.IUserMonitorizaService;
 /**
  * <p>Class that implements the communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 25/01/2019.
+ * @version 1.3, 30/01/2019.
  */
-@Service
+@Service("userMonitorizaService")
 public class UserMonitorizaService implements IUserMonitorizaService {
 
 	/**
