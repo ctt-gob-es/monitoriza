@@ -22,10 +22,8 @@
 		<java.1.8.home>C:\Trabajo\Software\Java\jdk1.8.0_131</java.1.8.home>
 		<java.home>${java.1.8.home}</java.home>
 		<java.version>${java.1.8.version}</java.version>
-		<spring.version>2.0.0.RELEASE</spring.version>
-		<!-- Actualizados spring-data y spring-rest para evitar vulnerabilidad cve-2018-1273 -->
-		<spring.data.version>2.0.1.RELEASE</spring.data.version>
-		<spring.rest.version>2.0.1.RELEASE</spring.rest.version>
+		<!-- Se incrementa la versión de Spring para evitar vulnerabilidad cve-2018-1273 en spring-data y spring-rest -->
+		<spring.version>2.0.1.RELEASE</spring.version>
 		<hibernate.version>5.2.13.Final</hibernate.version>
 		<plugin.javadoc.skip>true</plugin.javadoc.skip>
 	</properties>
@@ -95,7 +93,7 @@
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-data-jpa</artifactId>
-				<version>${spring.data.version}</version>
+				<version>${spring.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
@@ -110,7 +108,7 @@
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-data-rest</artifactId>
-				<version>${spring.rest.version}</version>
+				<version>${spring.version}</version>
 			</dependency>
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
