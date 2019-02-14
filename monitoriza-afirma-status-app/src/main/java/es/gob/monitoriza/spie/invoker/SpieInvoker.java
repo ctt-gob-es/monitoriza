@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>27/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 04/01/2019.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.spie.invoker;
 
@@ -47,15 +47,15 @@ import javax.net.ssl.TrustManagerFactory;
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.utilidades.NumberConstants;
 
 /** 
  * <p>Class that performs the request of a SPIE service via HTTP.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 04/01/2019.
+ * @version 1.2, 25/01/2019.
  */
 public final class SpieInvoker {
 	

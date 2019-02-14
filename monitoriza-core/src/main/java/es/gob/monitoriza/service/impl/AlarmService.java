@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.service.impl.ServiceMonitorizaService.java.</p>
  * <b>Description:</b><p>Class that implements the communication with the operations of the persistence layer for ServiceMonitoriza.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>20 abr. 2018.</p>
+ * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -29,8 +29,6 @@ import java.util.List;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.ConfigurableBeanFactory;
-import org.springframework.context.annotation.Scope;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
@@ -55,10 +53,9 @@ import es.gob.monitoriza.service.IMailMonitorizaService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 30/01/2019.
  */
-@Service
-@Scope(value = ConfigurableBeanFactory.SCOPE_SINGLETON)
+@Service("alarmSpieService")
 public class AlarmService implements IAlarmService {
 
 	/**

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 13/12/2018.
+ * @version 1.4, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -45,9 +45,9 @@ import es.gob.monitoriza.service.ITimerMonitorizaService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for ServiceMonitoriza.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 13/12/2018.
+ * @version 1.4, 30/01/2019.
  */
-@Service
+@Service("timerMonitorizaService")
 public class TimerMonitorizaService implements ITimerMonitorizaService {
 	
 	/**

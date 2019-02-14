@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 05/12/2018.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -33,7 +33,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
 
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 
 /**
  * <p>
@@ -45,7 +45,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.1, 05/12/2018.
+ * @version 1.2, 25/01/2019.
  */
 @Entity
 @Table(name = "CONF_SERVER_MAIL")

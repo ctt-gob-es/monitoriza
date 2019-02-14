@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 05/12/2018.
+ * @version 1.6, 30/01/2019.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -82,7 +82,7 @@ import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.IWebViewMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.CertificateDTO;
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
@@ -93,9 +93,10 @@ import es.gob.monitoriza.service.ISystemCertificateService;
 import es.gob.monitoriza.service.ITimerMonitorizaService;
 import es.gob.monitoriza.service.ITimerScheduledService;
 import es.gob.monitoriza.service.IValidServiceService;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 import es.gob.monitoriza.utilidades.StatusCertificateEnum;
 import es.gob.monitoriza.utilidades.UtilsCertificate;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 import es.gob.monitoriza.utilidades.UtilsXml;
 import es.gob.monitoriza.vo.PickListElementVO;
 import es.gob.monitoriza.vo.PickListVO;
@@ -105,7 +106,7 @@ import es.gob.monitoriza.webservice.ClientManager;
  * <p>Class that manages the REST requests related to the Keystore administration
  * and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 05/12/2018.
+ * @version 1.6, 30/01/2019.
  */
 @RestController
 public class KeystoreRestController {
@@ -289,14 +290,14 @@ public class KeystoreRestController {
 			certBytes = file.getBytes();
 		}
 
-		String listChar = StaticMonitorizaProperties.getProperty(StaticConstants.LIST_CHARACTER_SPECIAL);
+		String listChar = StaticMonitorizaConfig.getProperty(StaticConstants.LIST_CHARACTER_SPECIAL);
 		String[ ] characters = listChar.split(",");
-		String res = GeneralConstants.EMPTY_STRING;
+		String res = UtilsStringChar.EMPTY_STRING;
 		for (int i = 0; i < characters.length; i++) {
 			int esta = alias.indexOf(characters[i]);
 			if (esta >= 0) {
 				char special = alias.charAt(esta);
-				res += special + GeneralConstants.BLANK;
+				res += special + UtilsStringChar.SPECIAL_BLANK_SPACE_STRING;
 			}
 		}
 
@@ -309,7 +310,7 @@ public class KeystoreRestController {
 		if (!error) {
 
 			try {
-				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_TRUSTSTORE_SSL));
+				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(KeystoreMonitoriza.ID_TRUSTSTORE_SSL));
 
 				X509Certificate cert = UtilsCertificate.getCertificate(certBytes);
 
@@ -317,7 +318,7 @@ public class KeystoreRestController {
 				String subject = UtilsCertificate.getCertificateId(cert);
 				BigInteger serialNumber = UtilsCertificate.getCertificateSerialNumber(cert);
 
-				Keystore ko = null;
+				KeystoreMonitoriza ko = null;
 
 				// Alta de certificado
 
@@ -390,7 +391,7 @@ public class KeystoreRestController {
 
 		try {
 
-			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161));
+			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(KeystoreMonitoriza.ID_AUTHCLIENT_RFC3161));
 
 			ksFromDataToAdd = KeystoreFacade.getKeystore(ksBytes, keyStoreFacade.getKeystoreType(file.getOriginalFilename()), password);
 			ksPassword = password;
@@ -437,7 +438,7 @@ public class KeystoreRestController {
 
 		try {
 
-			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_VALID_SERVICE_STORE));
+			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(KeystoreMonitoriza.ID_VALID_SERVICE_STORE));
 
 			ksFromDataToAdd = KeystoreFacade.getKeystore(ksBytes, keyStoreFacade.getKeystoreType(file.getOriginalFilename()), password);
 			ksPassword = password;
@@ -500,14 +501,14 @@ public class KeystoreRestController {
 			error = true;
 		}
 
-		String listChar = StaticMonitorizaProperties.getProperty(StaticConstants.LIST_CHARACTER_SPECIAL);
+		String listChar = StaticMonitorizaConfig.getProperty(StaticConstants.LIST_CHARACTER_SPECIAL);
 		String[ ] characters = listChar.split(",");
-		String res = GeneralConstants.EMPTY_STRING;
+		String res = UtilsStringChar.EMPTY_STRING;
 		for (int i = 0; i < characters.length; i++) {
 			int esta = sslForm.getAlias().indexOf(characters[i]);
 			if (esta >= 0) {
 				char special = sslForm.getAlias().charAt(esta);
-				res += special + GeneralConstants.BLANK;
+				res += special + UtilsStringChar.SPECIAL_BLANK_SPACE_STRING;;
 			}
 		}
 
@@ -519,11 +520,11 @@ public class KeystoreRestController {
 		if (!error) {
 
 			try {
-				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_TRUSTSTORE_SSL));
+				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(KeystoreMonitoriza.ID_TRUSTSTORE_SSL));
 
 				SystemCertificate oldCert = sysCertService.getSystemCertificateById(sslForm.getIdSystemCertificate());
 				// Acualiza el alias del certificado
-				Keystore ko = keyStoreFacade.updateCertificate(oldCert.getAlias(), sslForm.getAlias());
+				KeystoreMonitoriza ko = keyStoreFacade.updateCertificateAlias(oldCert.getAlias(), sslForm.getAlias());
 
 				// Modificamos el keystore correspondiente, añadiendo el
 				// certificado
@@ -578,7 +579,7 @@ public class KeystoreRestController {
 		
 		try {
 			
-			keystoreService.delete(systemCertificateId, Keystore.ID_TRUSTSTORE_SSL);
+			keystoreService.delete(systemCertificateId, KeystoreMonitoriza.ID_TRUSTSTORE_SSL);
 		
 		} catch (CryptographyException e) {
 			error = messageSource.getMessage(IWebViewMessages.ERROR_AUTH_DELETE_CRYPTO, null, request.getLocale());
@@ -607,7 +608,7 @@ public class KeystoreRestController {
 
 		try {
 
-			keystoreService.delete(systemCertificateId, Keystore.ID_AUTHCLIENT_RFC3161);
+			keystoreService.delete(systemCertificateId, KeystoreMonitoriza.ID_AUTHCLIENT_RFC3161);
 
 		} catch (CryptographyException e) {
 			error = messageSource.getMessage(IWebViewMessages.ERROR_AUTH_DELETE_CRYPTO, null, request.getLocale());
@@ -637,7 +638,7 @@ public class KeystoreRestController {
 
 		try {
 
-			keystoreService.delete(systemCertificateId, Keystore.ID_VALID_SERVICE_STORE);
+			keystoreService.delete(systemCertificateId, KeystoreMonitoriza.ID_VALID_SERVICE_STORE);
 
 		} catch (CryptographyException e) {
 			error = messageSource.getMessage(IWebViewMessages.ERROR_AUTH_DELETE_CRYPTO, null, request.getLocale());
@@ -668,14 +669,14 @@ public class KeystoreRestController {
 
 			if (aliases != null && !aliases.isEmpty()) {
 
-				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161));
+				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(KeystoreMonitoriza.ID_AUTHCLIENT_RFC3161));
 				char[ ] password = ksPassword.toCharArray();
 
 				Iterator<PickListElementVO> aliasIt = aliases.iterator();
 				String alias;
 				Key key;
 				Certificate cert;
-				Keystore ko = null;
+				KeystoreMonitoriza ko = null;
 				SystemCertificate sysCert = new SystemCertificate();
 
 				while (aliasIt.hasNext()) {
@@ -708,7 +709,7 @@ public class KeystoreRestController {
 						String host = validService.getHost();
 						String port = validService.getPort();
 
-						String result = "";
+						String result = UtilsStringChar.EMPTY_STRING;
 						String endpoint = protocol + "://" + host + ":" + port + UtilsCertificate.VALID_SERVICE_ENDPOINT;
 						Object[ ] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
 						try {
@@ -807,14 +808,14 @@ public class KeystoreRestController {
 
 			if (aliases != null && !aliases.isEmpty()) {
 
-				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_VALID_SERVICE_STORE));
+				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(KeystoreMonitoriza.ID_VALID_SERVICE_STORE));
 				char[ ] password = ksPassword.toCharArray();
 
 				Iterator<PickListElementVO> aliasIt = aliases.iterator();
 				String alias;
 				Key key;
 				Certificate cert;
-				Keystore ko = null;
+				KeystoreMonitoriza ko = null;
 				SystemCertificate sysCert = new SystemCertificate();
 
 				while (aliasIt.hasNext()) {
@@ -847,7 +848,7 @@ public class KeystoreRestController {
 						String host = validService.getHost();
 						String port = validService.getPort();
 
-						String result = "";
+						String result = UtilsStringChar.EMPTY_STRING;
 						String endpoint = protocol + "://" + host + ":" + port + UtilsCertificate.VALID_SERVICE_ENDPOINT;
 						Object[ ] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
 						try {
@@ -944,14 +945,14 @@ public class KeystoreRestController {
 			error = true;
 		}
 
-		String listChar = StaticMonitorizaProperties.getProperty(StaticConstants.LIST_CHARACTER_SPECIAL);
+		String listChar = StaticMonitorizaConfig.getProperty(StaticConstants.LIST_CHARACTER_SPECIAL);
 		String[ ] characters = listChar.split(",");
-		String res = GeneralConstants.EMPTY_STRING;
+		String res = UtilsStringChar.EMPTY_STRING;
 		for (int i = 0; i < characters.length; i++) {
 			int esta = authForm.getAlias().indexOf(characters[i]);
 			if (esta >= 0) {
 				char special = authForm.getAlias().charAt(esta);
-				res += special + GeneralConstants.BLANK;
+				res += special + UtilsStringChar.SPECIAL_BLANK_SPACE_STRING;;
 			}
 		}
 
@@ -963,11 +964,11 @@ public class KeystoreRestController {
 		if (!error) {
 
 			try {
-				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_AUTHCLIENT_RFC3161));
+				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(KeystoreMonitoriza.ID_AUTHCLIENT_RFC3161));
 
 				SystemCertificate oldCert = sysCertService.getSystemCertificateById(authForm.getIdSystemCertificate());
 				// Acualiza el alias del certificado
-				Keystore ko = keyStoreFacade.updateCertificate(oldCert.getAlias(), authForm.getAlias());
+				KeystoreMonitoriza ko = keyStoreFacade.updateCertificateAlias(oldCert.getAlias(), authForm.getAlias());
 
 				// Modificamos el keystore correspondiente, añadiendo el
 				// certificado
@@ -1040,14 +1041,14 @@ public class KeystoreRestController {
 			error = true;
 		}
 
-		String listChar = StaticMonitorizaProperties.getProperty(StaticConstants.LIST_CHARACTER_SPECIAL);
+		String listChar = StaticMonitorizaConfig.getProperty(StaticConstants.LIST_CHARACTER_SPECIAL);
 		String[ ] characters = listChar.split(",");
-		String res = GeneralConstants.EMPTY_STRING;
+		String res = UtilsStringChar.EMPTY_STRING;
 		for (int i = 0; i < characters.length; i++) {
 			int esta = validServForm.getAlias().indexOf(characters[i]);
 			if (esta >= 0) {
 				char special = validServForm.getAlias().charAt(esta);
-				res += special + GeneralConstants.BLANK;
+				res += special + UtilsStringChar.SPECIAL_BLANK_SPACE_STRING;;
 			}
 		}
 
@@ -1059,11 +1060,11 @@ public class KeystoreRestController {
 		if (!error) {
 
 			try {
-				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(Keystore.ID_VALID_SERVICE_STORE));
+				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(KeystoreMonitoriza.ID_VALID_SERVICE_STORE));
 
 				SystemCertificate oldCert = sysCertService.getSystemCertificateById(validServForm.getIdSystemCertificate());
 				// Acualiza el alias del certificado
-				Keystore ko = keyStoreFacade.updateCertificate(oldCert.getAlias(), validServForm.getAlias());
+				KeystoreMonitoriza ko = keyStoreFacade.updateCertificateAlias(oldCert.getAlias(), validServForm.getAlias());
 
 				// Modificamos el keystore correspondiente, añadiendo el
 				// certificado
@@ -1112,7 +1113,7 @@ public class KeystoreRestController {
 		try {
 			SystemCertificate systemCertificate = certificateService.getSystemCertificateById(idSystemCertificate);
 			IKeystoreFacade keyStoreFacade = new KeystoreFacade(systemCertificate.getKeystore());
-			Keystore ks = keystoreService.getKeystoreById(systemCertificate.getKeystore().getIdKeystore());
+			KeystoreMonitoriza ks = keystoreService.getKeystoreById(systemCertificate.getKeystore().getIdKeystore());
 			KeyStore ksCetificate = KeystoreFacade.getKeystore(ks.getKeystore(), ks.getKeystoreType(), keyStoreFacade.getKeystoreDecodedPasswordString(ks.getPassword()));
 			if (systemCertificate.getAlias() != null) {
 				Certificate cert;

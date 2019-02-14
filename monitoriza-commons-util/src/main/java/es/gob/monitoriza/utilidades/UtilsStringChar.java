@@ -10,13 +10,12 @@
  */
 
 /**
- * <b>File:</b><p>es.gob.afirma.utilidades.UtilsStringChar.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.utilidades.UtilsStringChar.java.</p>
  * <b>Description:</b><p>Class that provides functionality for managing strings and characters.</p>
- * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
- * certificates and electronic signature.</p>
- * <b>Date:</b><p>28/01/2009.</p>
+ * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
+ * <b>Date:</b><p>10/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 07/09/2016.
+ * @version 1.0, 30/01/2019.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -24,9 +23,8 @@ import org.apache.commons.codec.binary.Hex;
 
 /**
  * <p>Class that provides functionality for managing strings and characters.</p>
- * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
- * certificates and electronic signature.</p>
- * @version 1.3, 07/09/2016.
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.0, 30/01/2019.
  */
 public final class UtilsStringChar {
 
@@ -51,6 +49,11 @@ public final class UtilsStringChar {
 	 * Constant attribute that represents the string to identify the blank space character.
 	 */
 	public static final String SPECIAL_BLANK_SPACE_STRING = String.valueOf(SPECIAL_BLANK_SPACE);
+
+	/**
+	 * Constant attribute that represents the string to identify the line separator character in this system.
+	 */
+	public static final String SPECIAL_SYSTEM_LINE_SEPARATOR_STRING = System.lineSeparator();
 
 	/**
 	 * Constant attribute that represents the char to identify the line break character.
@@ -83,32 +86,77 @@ public final class UtilsStringChar {
 	public static final String SPECIAL_TABULATION_STRING = String.valueOf(SPECIAL_TABULATION);
 
 	/**
-	 * Constant attribute that represents the string to identify the symbol: <code>#</code>.
+	 * Constant attribute that represents the char to identify the symbol: <code>#</code>.
 	 */
 	public static final char SYMBOL_PAD = '#';
 
 	/**
-	 * Constant attribute that represents the string to identify the symbol: <code>:</code>.
+	 * Constant attribute that represents the string to identify the symbol: <code>#</code>.
+	 */
+	public static final String SYMBOL_PAD_STRING = String.valueOf(SYMBOL_PAD);
+
+	/**
+	 * Constant attribute that represents the char to identify the symbol: <code>&</code>.
+	 */
+	public static final char SYMBOL_AMPERSAND = '&';
+
+	/**
+	 * Constant attribute that represents the string to identify the symbol: <code>&</code>.
+	 */
+	public static final String SYMBOL_AMPERSAND_STRING = String.valueOf(SYMBOL_AMPERSAND);
+
+	/**
+	 * Constant attribute that represents the char to identify the symbol: <code>:</code>.
 	 */
 	public static final char SYMBOL_COLON = ':';
 
 	/**
-	 * Constant attribute that represents the string to identify the symbol: <code>;</code>.
+	 * Constant attribute that represents the string to identify the symbol: <code>:</code>.
+	 */
+	public static final String SYMBOL_COLON_STRING = String.valueOf(SYMBOL_COLON);
+
+	/**
+	 * Constant attribute that represents the char to identify the symbol: <code>;</code>.
 	 */
 	public static final char SYMBOL_SEMICOLON = ';';
 
 	/**
-	 * Constant attribute that represents the string to identify the symbol: <code>=</code>.
+	 * Constant attribute that represents the string to identify the symbol: <code>;</code>.
+	 */
+	public static final String SYMBOL_SEMICOLON_STRING = String.valueOf(SYMBOL_SEMICOLON);
+
+	/**
+	 * Constant attribute that represents the char to identify the symbol: <code>=</code>.
 	 */
 	public static final char SYMBOL_EQUAL = '=';
 
 	/**
-	 * Constant attribute that represents the string to identify the symbol: <code>-</code>.
+	 * Constant attribute that represents the string to identify the symbol: <code>=</code>.
 	 */
-	public static final char SYMBOL_MINUS = '-';
+	public static final String SYMBOL_EQUAL_STRING = String.valueOf(SYMBOL_EQUAL);
 
 	/**
-	 * Constant attribute that represents the string to identify the symbol: <code>,</code>.
+	 * Constant attribute that represents the char to identify the symbol: <code>-</code>.
+	 */
+	public static final char SYMBOL_HYPHEN = '-';
+
+	/**
+	 * Constant attribute that represents the string to identify the symbol: <code>-</code>.
+	 */
+	public static final String SYMBOL_HYPHEN_STRING = String.valueOf(SYMBOL_HYPHEN);
+	
+	/**
+	 * Constant attribute that represents the char to identify the symbol: <code>_</code>.
+	 */
+	public static final char SYMBOL_UNDERSCORE = '_';
+
+	/**
+	 * Constant attribute that represents the string to identify the symbol: <code>-</code>.
+	 */
+	public static final String SYMBOL_UNDERSCORE_STRING = String.valueOf(SYMBOL_UNDERSCORE);
+
+	/**
+	 * Constant attribute that represents the char to identify the symbol: <code>,</code>.
 	 */
 	public static final char SYMBOL_COMMA = ',';
 
@@ -118,11 +166,79 @@ public final class UtilsStringChar {
 	public static final String SYMBOL_COMMA_STRING = String.valueOf(SYMBOL_COMMA);
 
 	/**
+	 * Constant attribute that represents the char to identify the symbol: <code>.</code>.
+	 */
+	public static final char SYMBOL_DOT = '.';
+
+	/**
+	 * Constant attribute that represents the string to identify the symbol: <code>.</code>.
+	 */
+	public static final String SYMBOL_DOT_STRING = String.valueOf(SYMBOL_DOT);
+
+	/**
+	 * Constant attribute that represents the char to identify the symbol: <code>/</code>.
+	 */
+	public static final char SYMBOL_SLASH = '/';
+
+	/**
+	 * Constant attribute that represents the string to identify the symbol: <code>/</code>.
+	 */
+	public static final String SYMBOL_SLASH_STRING = String.valueOf(SYMBOL_SLASH);
+
+	/**
+	 * Constant attribute that represents the char to identify the symbol: <code>?</code>.
+	 */
+	public static final char SYMBOL_QUESTION_MARK = '?';
+
+	/**
+	 * Constant attribute that represents the string to identify the symbol: <code>?</code>.
+	 */
+	public static final String SYMBOL_QUESTION_MARK_STRING = String.valueOf(SYMBOL_QUESTION_MARK);
+
+	/**
+	 * Constant attribute that represents the char to identify the symbol: <code>\</code>.
+	 */
+	public static final char SYMBOL_ESCAPED_BACKSLASH = '\\';
+
+	/**
+	 * Constant attribute that represents the string to identify the symbol: <code>\</code>.
+	 */
+	public static final String SYMBOL_ESCAPED_BACKSLASH_STRING = String.valueOf(SYMBOL_ESCAPED_BACKSLASH);
+
+	/**
+	 * Constant attribute that represents the char to identify the symbol: <code>(</code>.
+	 */
+	public static final char SYMBOL_OPEN_BRACKET = '(';
+
+	/**
+	 * Constant attribute that represents the string to identify the symbol: <code>(</code>.
+	 */
+	public static final String SYMBOL_OPEN_BRACKET_STRING = String.valueOf(SYMBOL_OPEN_BRACKET);
+
+	/**
+	 * Constant attribute that represents the char to identify the symbol: <code>)</code>.
+	 */
+	public static final char SYMBOL_CLOSE_BRACKET = ')';
+
+	/**
+	 * Constant attribute that represents the string to identify the symbol: <code>)</code>.
+	 */
+	public static final String SYMBOL_CLOSE_BRACKET_STRING = String.valueOf(SYMBOL_CLOSE_BRACKET);
+
+	/**
+	 * Constant attribute that represents the char to identify the symbol: <code>*</code>.
+	 */
+	public static final char SYMBOL_ASTERISK = '*';
+
+	/**
+	 * Constant attribute that represents the string to identify the symbol: <code>*</code>.
+	 */
+	public static final String SYMBOL_ASTERISK_STRING = String.valueOf(SYMBOL_ASTERISK);
+
+	/**
 	 * Constant attribute that represents the array with all the characters defined as constants in this class.
 	 */
-	public static final char[ ] CHARACTERS_SET = new char[ ] {
-															  // UtilsStringChar.SPECIAL_BLANK_SPACE,
-	UtilsStringChar.SPECIAL_LINE_BREAK, UtilsStringChar.SPECIAL_LINE_START, UtilsStringChar.SPECIAL_TABULATION, UtilsStringChar.SYMBOL_PAD, UtilsStringChar.SYMBOL_COLON, UtilsStringChar.SYMBOL_SEMICOLON, UtilsStringChar.SYMBOL_EQUAL };
+	public static final char[ ] CHARACTERS_SET_TO_VALIDATORS = new char[ ] { UtilsStringChar.SPECIAL_LINE_BREAK, UtilsStringChar.SPECIAL_LINE_START, UtilsStringChar.SPECIAL_TABULATION, UtilsStringChar.SYMBOL_PAD, UtilsStringChar.SYMBOL_COLON, UtilsStringChar.SYMBOL_SEMICOLON, UtilsStringChar.SYMBOL_EQUAL };
 
 	/**
 	 * Constant attribute that represents the token '0'.
@@ -162,14 +278,14 @@ public final class UtilsStringChar {
 	}
 
 	/**
-	 * Method that checks whether a string contains some of the characters contained in {@link #CHARACTERS_SET} (true) or not (false).
+	 * Method that checks whether a string contains some of the characters contained in {@link #CHARACTERS_SET_TO_VALIDATORS} (true) or not (false).
 	 * @param str Parameter that represents the string to process.
-	 * @return a boolean that indicates whether a string contains some of the characters contained in {@link #CHARACTERS_SET}
+	 * @return a boolean that indicates whether a string contains some of the characters contained in {@link #CHARACTERS_SET_TO_VALIDATORS}
 	 * (true) or not (false).
 	 */
 	public static boolean containsSomeOfTheCharacterSet(String str) {
 
-		return containsSomeOfTheCharacterSetInTheSet(str, UtilsStringChar.CHARACTERS_SET);
+		return containsSomeOfTheCharacterSetInTheSet(str, UtilsStringChar.CHARACTERS_SET_TO_VALIDATORS);
 
 	}
 
@@ -214,7 +330,7 @@ public final class UtilsStringChar {
 	/**
 	 * Method that converts a byte array to a hexadecimal string.
 	 * @param data Parameter that represents the byte array to convert.
-	 * @param separate Parameter that indicates if to separate each two bytes with {@link #SYMBOL_MINUS} (true) or not (false).
+	 * @param separate Parameter that indicates if to separate each two bytes with {@link #SYMBOL_HYPHEN} (true) or not (false).
 	 * @return an string with hexadecimal format.
 	 */
 	public static String convertByteArrayToHex(byte[ ] data, boolean separate) {
@@ -233,13 +349,27 @@ public final class UtilsStringChar {
 			if (separate) {
 				numChars++;
 				if (numChars % 2 == 0 && i < c.length - 1) {
-					resultSB.append(UtilsStringChar.SYMBOL_MINUS);
+					resultSB.append(UtilsStringChar.SYMBOL_HYPHEN);
 				}
 			}
 		}
 		String result = resultSB.toString();
-		UtilsResource.cleanStringBuilder(resultSB);
+		cleanStringBuilder(resultSB);
 		return result;
+	}
+
+	/**
+	 * To free resources, this method sets the length of the input {@link StringBuilder} to
+	 * zero and then trim it.
+	 * @param sb String builder to clean. If it is <code>null</code>, this method do nothing.
+	 */
+	public static void cleanStringBuilder(StringBuilder sb) {
+
+		if (sb != null) {
+			sb.setLength(0);
+			sb.trimToSize();
+		}
+
 	}
 
 	/**

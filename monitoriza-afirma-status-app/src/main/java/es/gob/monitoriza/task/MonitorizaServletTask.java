@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.5, 19/12/2018.
+ * @version 1.7, 30/01/2019.
  */
 package es.gob.monitoriza.task;
 
@@ -40,7 +40,6 @@ import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
 
-import es.gob.monitoriza.configuration.manager.AdminServicesManager;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.i18n.ICoreLogMessages;
@@ -50,16 +49,21 @@ import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigTimerDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
+import es.gob.monitoriza.service.impl.KeystoreService;
+import es.gob.monitoriza.service.impl.TimerScheduledService;
+import es.gob.monitoriza.service.impl.VipMonitoringConfigService;
+import es.gob.monitoriza.service.utils.IServiceNameConstants;
+import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.status.StatusHolder;
 import es.gob.monitoriza.status.thread.RequestLauncher;
 import es.gob.monitoriza.timers.TimersHolder;
 import es.gob.monitoriza.utilidades.FileUtils;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 
 /** 
  * <p>Class that initializes the timers for processing the batch of requests for each service.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.4, 28/10/2018.
+ * @version 1.7, 30/01/2019.
  */
 @Configurable
 public class MonitorizaServletTask extends HttpServlet {
@@ -96,14 +100,14 @@ public class MonitorizaServletTask extends HttpServlet {
 		
 		// Se programan los timers dados de alta en la administración web
 		Timer timer = null;
-		AdminServicesManager adminServiceManager = (AdminServicesManager) applicationContext.getBean("adminServicesManager");
+		VipMonitoringConfigService adminServiceManager = applicationContext.getBean(IServiceNameConstants.VIP_MONITORING_CONFIG_SERVICE, VipMonitoringConfigService.class);
 		
 		// Se vacía la tabla de timers programados
-		adminServiceManager.emptyTimersScheduled();
+		ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.TIMER_SCHEDULED_SERVICE, TimerScheduledService.class).emptyTimersScheduled();
 		try {
-			FileUtils.deleteAllRecursively(StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY));
+			FileUtils.deleteAllRecursively(StaticMonitorizaConfig.getProperty(StaticConstants.ROOT_PATH_DIRECTORY));
 		} catch (IOException e) {
-			LOGGER.error(Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE014, new Object[]{StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY)}), e);
+			LOGGER.error(Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE014, new Object[]{StaticMonitorizaConfig.getProperty(StaticConstants.ROOT_PATH_DIRECTORY)}), e);
 		}
 
 		List<ConfigTimerDTO> timers = adminServiceManager.getAllTimers();
@@ -111,11 +115,11 @@ public class MonitorizaServletTask extends HttpServlet {
 
 		// Se carga una sola vez el almacén de certificados para conexión
 		// segura.
-		KeyStore sslKeystore = adminServiceManager.loadSslTruststore();
+		KeyStore sslKeystore = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.KEYSTORE_SERVICE, KeystoreService.class).loadSslTruststore();
 
 		// Se carga una sola vez el almacén de certificados para autenticación
 		// RFC3161.
-		KeyStore rfc3161Keystore = adminServiceManager.loadRfc3161Keystore();
+		KeyStore rfc3161Keystore = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.KEYSTORE_SERVICE, KeystoreService.class).loadRfc3161Keystore();
 
 		for (ConfigTimerDTO timerDTO: timers) {
 
@@ -136,7 +140,8 @@ public class MonitorizaServletTask extends HttpServlet {
 				timerMonitoriza.setIdTimer(timerDTO.getIdTimer());
 				scheduled.setTimer(timerMonitoriza);
 				scheduled.setUpdated(Boolean.TRUE);
-				adminServiceManager.saveTimerScheduled(scheduled);
+				ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.TIMER_SCHEDULED_SERVICE, TimerScheduledService.class).saveTimerScheduled(scheduled);
+
 			}
 		}
 	}

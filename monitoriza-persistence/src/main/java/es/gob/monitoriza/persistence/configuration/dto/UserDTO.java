@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.UserDTO.java.</p>
  * <b>Description:</b><p>Class that represents the backing form for adding/editing a user.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>8 mar. 2018.</p>
+ * <b>Date:</b><p>8/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 28/10/2018.
+ * @version 1.2, 30/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -28,16 +28,17 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.persistence.configuration.dto.constraints.FieldMatch;
 import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
 import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 
 /** 
  * <p>Class that represents the backing form for adding/editing a user.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 28/10/2018.
+ * @version 1.2, 30/01/2019.
  */
 @FieldMatch(first = "password", second = "confirmPassword", message = "{form.valid.user.password.confirm}")
 public class UserDTO {
@@ -52,21 +53,21 @@ public class UserDTO {
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.user.name.notempty}")
     @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM15, groups=ThenCheckIt.class)
-    private String name = "";
+    private String name = UtilsStringChar.EMPTY_STRING;
 
 	/**
 	 * Attribute that represents the value of the input surnames of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.user.surnames.notempty}")
     @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM30, groups=ThenCheckIt.class)
-    private String surnames = "";
+    private String surnames = UtilsStringChar.EMPTY_STRING;
 	
 	/**
 	 * Attribute that represents the value of the input username of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.user.login.notempty}")
     @Size(min=NumberConstants.NUM5, max=NumberConstants.NUM30, groups=ThenCheckIt.class)
-    private String login = "";
+    private String login = UtilsStringChar.EMPTY_STRING;
 
 	/**
 	 * Attribute that represents the value of the input password of the user in the form. 
@@ -74,21 +75,21 @@ public class UserDTO {
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.user.password.notempty}")
     @Size(min=NumberConstants.NUM7, max=NumberConstants.NUM30, groups=ThenCheckIt.class)
 	@Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)[A-Za-z\\d]{8,}$", message="{form.valid.user.password.noPattern}", groups=ThenCheckIt.class)
-    private String password = "";
+    private String password = UtilsStringChar.EMPTY_STRING;
 	
 	/**
 	 * Attribute that represents the value of the input password of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.user.confirmPassword.notempty}")
     @Size(min=NumberConstants.NUM7, max=NumberConstants.NUM30, groups=ThenCheckIt.class)
-    private String confirmPassword = "";
+    private String confirmPassword = UtilsStringChar.EMPTY_STRING;
 		
 	/**
 	 * Attribute that represents the value of the input email of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.user.email.notempty}")
     @Size(min=NumberConstants.NUM3, max=NumberConstants.NUM254, groups=ThenCheckIt.class)
-    private String email = "";
+    private String email = UtilsStringChar.EMPTY_STRING;
 			
 	/**
 	 * Gets the value of the attribute {@link #idUserMonitoriza}.

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.6, 04/01/2019.
+ * @version 1.8, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -29,7 +29,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
-import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -50,6 +49,7 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.constant.ServiceStatusConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.enums.SemaphoreEnum;
@@ -65,16 +65,15 @@ import es.gob.monitoriza.persistence.configuration.dto.StatusSpieDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusVipDTO;
 import es.gob.monitoriza.persistence.configuration.dto.SummaryStatusDTO;
 import es.gob.monitoriza.service.IStatusService;
-import es.gob.monitoriza.utilidades.NumberConstants;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 
 /**
  * <p>Class that implements the communication with the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.6, 04/01/2019.
+ * @version 1.8, 30/01/2019.
  */
-@Service
+@Service("statusService")
 public class StatusService implements IStatusService {
 	
 	/**
@@ -155,7 +154,7 @@ public class StatusService implements IStatusService {
 	private String getRequestFromStatusVip() throws StatusVipResponseException {
 		
 		HttpClient httpclient = HttpClients.createDefault();
-		HttpGet httpget = new HttpGet(StaticMonitorizaProperties.getProperty(StaticConstants.MONITORIZA_VIP_STATUS_SERVLET));
+		HttpGet httpget = new HttpGet(StaticMonitorizaConfig.getProperty(StaticConstants.MONITORIZA_VIP_STATUS_SERVLET));
 		String result = null;
 				
 		//Execute and get the response.
@@ -195,7 +194,7 @@ public class StatusService implements IStatusService {
 	private String getRequestFromStatusSpie() throws StatusSpieResponseException {
 		
 		HttpClient httpclient = HttpClients.createDefault();
-		HttpGet httpget = new HttpGet(StaticMonitorizaProperties.getProperty(StaticConstants.MONITORIZA_SPIE_STATUS_SERVLET));
+		HttpGet httpget = new HttpGet(StaticMonitorizaConfig.getProperty(StaticConstants.MONITORIZA_SPIE_STATUS_SERVLET));
 		String result = null;
 				
 		//Execute and get the response.

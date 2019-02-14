@@ -20,19 +20,32 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 09/11/2018.
+ * @version 1.3, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.KeyStore;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
+import java.security.cert.CertificateException;
+
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.i18n.ICoreLogMessages;
+import es.gob.monitoriza.i18n.IStatusLogMessages;
+import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.repository.KeystoreRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.SystemCertificateRepository;
@@ -42,10 +55,15 @@ import es.gob.monitoriza.service.IKeystoreService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for Keystore.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 09/11/2018.
+ * @version 1.3, 30/01/2019.
  */
-@Service
+@Service("keystoreService")
 public class KeystoreService implements IKeystoreService {
+	
+	/**
+	 * Attribute that represents the object that manages the log of the class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 	
 	/**
 	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
@@ -64,7 +82,7 @@ public class KeystoreService implements IKeystoreService {
 	 * @see es.gob.monitoriza.service.IKeystoreService#getKeystoreById(java.lang.Long)
 	 */
 	@Override
-	public Keystore getKeystoreById(Long keystoreId) {
+	public KeystoreMonitoriza getKeystoreById(Long keystoreId) {
 		return repository.findByIdKeystore(keystoreId);
 	}
 
@@ -73,7 +91,7 @@ public class KeystoreService implements IKeystoreService {
 	 * @see es.gob.monitoriza.service.IKeystoreService#getKeystoreByName(java.lang.String)
 	 */
 	@Override
-	public Keystore getKeystoreByName(String name) {
+	public KeystoreMonitoriza getKeystoreByName(String name) {
 		return repository.findByName(name);
 	}
 
@@ -82,7 +100,7 @@ public class KeystoreService implements IKeystoreService {
 	 * @see es.gob.monitoriza.service.IKeystoreService#getAllKeystore()
 	 */
 	@Override
-	public Iterable<Keystore> getAllKeystore() {
+	public Iterable<KeystoreMonitoriza> getAllKeystore() {
 		return repository.findAll();
 	}
 
@@ -98,7 +116,7 @@ public class KeystoreService implements IKeystoreService {
 		IKeystoreFacade keyStoreFacade = new KeystoreFacade(repository.findByIdKeystore(idKeystore));
 		SystemCertificate cert = syscertRepository.findByIdSystemCertificate(systemCertificateId);
 		
-		Keystore ko = keyStoreFacade.deleteCertificate(cert.getAlias());
+		KeystoreMonitoriza ko = keyStoreFacade.deleteCertificate(cert.getAlias());
 		
 		ko.setVersion(ko.getVersion() + 1L);
 				
@@ -112,12 +130,96 @@ public class KeystoreService implements IKeystoreService {
 
 	/**
 	 * {@inheritDoc}
-	 * @see es.gob.monitoriza.service.IKeystoreService#saveKeystore(es.gob.monitoriza.persistence.configuration.model.entity.Keystore)
+	 * @see es.gob.monitoriza.service.IKeystoreService#saveKeystore(es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza)
 	 */
 	@Override
-	public Keystore saveKeystore(Keystore keystore) {
+	public KeystoreMonitoriza saveKeystore(KeystoreMonitoriza keystore) {
 		
 		return repository.save(keystore);
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IKeystoreService#loadSslTruststore()
+	 */
+	public KeyStore loadSslTruststore() {
+		
+		final KeystoreMonitoriza ks = getKeystoreByName(GeneralConstants.SSL_TRUST_STORE_NAME);
+		
+		IKeystoreFacade keyStoreFacade = new KeystoreFacade(ks);
+
+		String msgError = null;
+		KeyStore cer = null;
+
+		try (InputStream readStream = new ByteArrayInputStream(ks.getKeystore());) {
+			// Accedemos al almacén de confianza SSL
+			msgError = Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE005);
+			cer = KeyStore.getInstance(ks.getKeystoreType());
+			cer.load(readStream, keyStoreFacade.getKeystoreDecodedPasswordString(ks.getPassword()).toCharArray());
+
+		} catch (IOException | KeyStoreException | CertificateException
+				| NoSuchAlgorithmException | CryptographyException ex) {
+			LOGGER.error(msgError, ex);
+		}
+
+		return cer;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IKeystoreService#loadRfc3161Keystore()
+	 */
+	public KeyStore loadRfc3161Keystore() {
+		
+		final KeystoreMonitoriza ks = getKeystoreByName(GeneralConstants.RFC3161_KEYSTORE_NAME);
+		
+		final IKeystoreFacade keyStoreFacade = new KeystoreFacade(ks);
+
+		String msgError = null;
+		KeyStore cer = null;
+
+		try (InputStream readStream = new ByteArrayInputStream(ks.getKeystore());) {
+			// Accedemos al almacén RFC3161
+			msgError = Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE006);
+			cer = KeyStore.getInstance(ks.getKeystoreType());
+
+			cer.load(readStream, keyStoreFacade.getKeystoreDecodedPasswordString(ks.getPassword()).toCharArray());
+
+		} catch (IOException | KeyStoreException | CertificateException
+				| NoSuchAlgorithmException | CryptographyException ex) {
+			LOGGER.error(msgError, ex);
+		}
+
+		return cer;
+	}
+	
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IKeystoreService#loadValidServiceKeystore()
+	 */
+	public KeyStore loadValidServiceKeystore() {
+
+		final KeystoreMonitoriza ks = getKeystoreById(KeystoreMonitoriza.ID_VALID_SERVICE_STORE);
+
+		final IKeystoreFacade keyStoreFacade = new KeystoreFacade(ks);
+
+		String msgError = null;
+		KeyStore cer = null;
+
+		try (InputStream readStream = new ByteArrayInputStream(ks.getKeystore());) {
+			msgError = Language.getResCoreMonitoriza(IStatusLogMessages.STATUS012);
+			cer = KeyStore.getInstance(ks.getKeystoreType());
+			cer.load(readStream, keyStoreFacade.getKeystoreDecodedPasswordString(ks.getPassword()).toCharArray());
+
+		} catch (IOException | KeyStoreException | CertificateException
+				| NoSuchAlgorithmException | CryptographyException ex) {
+			LOGGER.error(msgError, ex);
+		}
+
+		return cer;
 	}
 	
 }

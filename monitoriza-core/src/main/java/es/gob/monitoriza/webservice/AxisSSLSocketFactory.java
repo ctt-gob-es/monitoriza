@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.webservice.AxisSSLSocketFactory.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>9 oct. 2018.</p>
+ * <b>Date:</b><p>9/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 28/10/2018.
+ * @version 1.3, 30/01/2019.
  */
 package es.gob.monitoriza.webservice;
 
@@ -28,7 +28,7 @@ import java.io.BufferedWriter;
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 28/10/2018.
+ * @version 1.3, 30/01/2019.
  */
 import java.io.IOException;
 import java.io.InputStream;
@@ -55,7 +55,8 @@ import org.apache.axis.utils.StringUtils;
 import org.apache.axis.utils.XMLUtils;
 import org.apache.log4j.Logger;
 
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.constant.NumberConstants;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /**
 * @author elblogdeselo
@@ -168,10 +169,10 @@ public class AxisSSLSocketFactory extends JSSESocketFactory implements SecureSoc
 
             if (log.isDebugEnabled()) {
                 log.debug(Messages.getMessage("isNull00", "tunnelInputStream",
-                        "" + (tunnelInputStream
+                                              UtilsStringChar.EMPTY_STRING + (tunnelInputStream
                         == null)));
             }
-            String replyStr = "";
+            String replyStr = UtilsStringChar.EMPTY_STRING;
 
             // Make sure to read all the response from the proxy to prevent SSL negotiation failure
             // Response message terminated by two sequential newlines
@@ -199,7 +200,7 @@ public class AxisSSLSocketFactory extends JSSESocketFactory implements SecureSoc
                 throw new IOException(Messages.getMessage("cantTunnel00",
                         new String[]{
                             tcp.getProxyHost(),
-                            "" + tunnelPort,
+                            UtilsStringChar.EMPTY_STRING + tunnelPort,
                             replyStr}));
             }
 
@@ -208,7 +209,7 @@ public class AxisSSLSocketFactory extends JSSESocketFactory implements SecureSoc
             if (log.isDebugEnabled()) {
                 log.debug(Messages.getMessage("setupTunnel00",
                           tcp.getProxyHost(),
-                        "" + tunnelPort));
+                          UtilsStringChar.EMPTY_STRING + tunnelPort));
             }
         }
 

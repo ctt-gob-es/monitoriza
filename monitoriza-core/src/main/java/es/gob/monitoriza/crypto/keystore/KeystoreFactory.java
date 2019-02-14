@@ -16,7 +16,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>06/06/2012.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.crypto.keystore;
 
@@ -25,13 +25,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.utils.CryptographyValidationUtils;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.service.IKeystoreService;
 
 /**
  * <p>Class that manages the generation of the class which manages the keystores in the system.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 public final class KeystoreFactory {
 
@@ -58,7 +58,7 @@ public final class KeystoreFactory {
 		}
 
 		// Obtenemos el almacén de claves
-		Keystore keystore = keystoreService.getKeystoreById(idKeystoreParam);
+		KeystoreMonitoriza keystore = keystoreService.getKeystoreById(idKeystoreParam);
 		// Comprobamos que el almacén de claves no es nulo
 		CryptographyValidationUtils.checkIsNotNull(keystore, Language.getFormatResCoreMonitoriza("logKF003", new Object[ ] { idKeystoreParam }));
 

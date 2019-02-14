@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.service.impl.MethodValidationService.java.</p>
  * <b>Description:</b><p>Class that implements the communication with the operations of the persistence layer for MethodValidationMonitoriza.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>16 oct. 2018.</p>
+ * <b>Date:</b><p>16/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 16/10/2018.
+ * @version 1.1, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -37,17 +37,11 @@ import es.gob.monitoriza.service.IMethodValidationService;
 
 /**
  * <p>
- * Class that implements the communication with the operations of the
- * persistence layer for MethodValidation.
- * </p>
- * <b>Project:</b>
- * <p>
- * Application for monitoring services of @firma suite systems.
- * </p>
- * 
- * @version 1.0, 16/10/2018.
+ * Class that implements the communication with the operations of the persistence layer for MethodValidation.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+  * @version 1.5, 30/01/2019.
  */
-@Service
+@Service("methodValidationService")
 public class MethodValidationService implements IMethodValidationService {
 
 	/**

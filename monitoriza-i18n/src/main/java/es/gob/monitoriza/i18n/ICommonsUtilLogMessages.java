@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>08/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 08/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.i18n;
 
@@ -28,9 +28,53 @@ package es.gob.monitoriza.i18n;
 /** 
  * <p>Interface that contains the keys to the log messages for the commons utils module.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 08/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 public interface ICommonsUtilLogMessages {
+	
+	/*************************/
+	/** Mensajes de GrayLog **/ 
+	/*************************/
+	
+	/**
+	 * Constant attribute that represents the property key <code>UTILS_GRAYLOG_000</code> belonging to the file commonUtils/general_xx_YY.properties.
+	 */
+	String UTILS_GRAYLOG_000 = "UTILS_GRAYLOG_000";
+
+	/**
+	 * Constant attribute that represents the property key <code>UTILS_GRAYLOG_001</code> belonging to the file commonUtils/general_xx_YY.properties.
+	 */
+	String UTILS_GRAYLOG_001 = "UTILS_GRAYLOG_001";
+
+	/**
+	 * Constant attribute that represents the property key <code>UTILS_GRAYLOG_002</code> belonging to the file commonUtils/general_xx_YY.properties.
+	 */
+	String UTILS_GRAYLOG_002 = "UTILS_GRAYLOG_002";
+
+	/**
+	 * Constant attribute that represents the property key <code>UTILS_GRAYLOG_003</code> belonging to the file commonUtils/general_xx_YY.properties.
+	 */
+	String UTILS_GRAYLOG_003 = "UTILS_GRAYLOG_003";
+
+	/**
+	 * Constant attribute that represents the property key <code>UTILS_GRAYLOG_004</code> belonging to the file commonUtils/general_xx_YY.properties.
+	 */
+	String UTILS_GRAYLOG_004 = "UTILS_GRAYLOG_004";
+
+	/**
+	 * Constant attribute that represents the property key <code>UTILS_GRAYLOG_005</code> belonging to the file commonUtils/general_xx_YY.properties.
+	 */
+	String UTILS_GRAYLOG_005 = "UTILS_GRAYLOG_005";
+
+	/**
+	 * Constant attribute that represents the property key <code>UTILS_GRAYLOG_006</code> belonging to the file commonUtils/general_xx_YY.properties.
+	 */
+	String UTILS_GRAYLOG_006 = "UTILS_GRAYLOG_006";
+	
+	/**
+	 * Constant attribute that represents the property key <code>UTILS_GRAYLOG_007</code> belonging to the file commonUtils/general_xx_YY.properties.
+	 */
+	String UTILS_GRAYLOG_007 = "UTILS_GRAYLOG_007";
 	
 	/***********************/
 	/** Mensajes de error **/ 
@@ -90,5 +134,15 @@ public interface ICommonsUtilLogMessages {
 	 * Constant attribute that represents the name of the property <code>errorutils011</code> belonging to the file status/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS011 = "errorutils011";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>errorutils012</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORUTILS012 = "errorutils012";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>errorutils013</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORUTILS013 = "errorutils013";
 
 }

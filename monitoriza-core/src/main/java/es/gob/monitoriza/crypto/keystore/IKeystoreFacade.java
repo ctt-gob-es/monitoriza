@@ -16,7 +16,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>06/06/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 06/06/2018.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.crypto.keystore;
 
@@ -27,12 +27,12 @@ import java.security.cert.Certificate;
 import java.util.List;
 
 import es.gob.monitoriza.crypto.exception.CryptographyException;
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 
 /**
  * <p>Interface that defines the methods to manage operations with keystores.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 06/06/2018.
+ * @version 1.2, 25/01/2019.
  */
 public interface IKeystoreFacade {
 
@@ -44,7 +44,7 @@ public interface IKeystoreFacade {
 	 * @return the updated keystore cache object representation.
 	 * @throws CryptographyException If the method fails.
 	 */
-	Keystore storeCertificate(String alias, Certificate certificate, Key key) throws CryptographyException;
+	KeystoreMonitoriza storeCertificate(String alias, Certificate certificate, Key key) throws CryptographyException;
 
 	/**
 	 * Method that updates an entry into a keystore.
@@ -53,28 +53,28 @@ public interface IKeystoreFacade {
 	 * @return the updated keystore cache object representation.
 	 * @throws CryptographyException If the method fails.
 	 */
-	Keystore updateCertificate(String oldEntryAlias, String newEntryAlias) throws CryptographyException;
+	KeystoreMonitoriza updateCertificateAlias(String oldEntryAlias, String newEntryAlias) throws CryptographyException;
 
 	/**
-	 * Method that deletes a certificate entry from a keystore
+	 * Method that deletes a certificate entry from a keystore.
 	 * @param alias Parameter that represents the alias of the entry.
 	 * @return the updated keystore cache object representation.
-	 * @throws CryptographyException
+	 * @throws CryptographyException If the method fails.
 	 */
-	Keystore deleteCertificate(String alias) throws CryptographyException;
+	KeystoreMonitoriza deleteCertificate(String alias) throws CryptographyException;
 
 	/**
 	 * Method that gets the keystore type given a file name.
-	 * @param nameFile The keystore file name
+	 * @param nameFile The keystore file name.
 	 * @return String that represents the keystore type.
 	 */
-	String getKeystoreType(final String nameFile);
+	String getKeystoreType(String nameFile);
 
 	/**
 	 * Method that lists the aliases of the certificates stored in the given keystore.
 	 * @param keyStore The keystore whose aliases are listed.
 	 * @return List<String> that represents the list of aliases of the given Keystore
-	 * @throws KeyStoreException
+	 * @throws KeyStoreException If the method fails.
 	 */
 	List<String> listAllAliases(KeyStore keyStore) throws KeyStoreException;
 

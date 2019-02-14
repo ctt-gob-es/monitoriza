@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.1, 10/12/2018.
+ * @version 1.2, 18/01/2019.
  */
 package es.gob.monitoriza.response;
 
@@ -63,9 +63,9 @@ import j2html.tags.Tag;
 /**
  * <p>Class that builds the global HTML response for the Monitoriz@ servlet call.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/12/2018.
+ * @version 1.2, 18/01/2019.
  */
-public class ResponseMonitoriza {
+public final class ResponseMonitoriza {
 	
 	/**
 	 * Constant attribute that represents.
@@ -129,7 +129,7 @@ public class ResponseMonitoriza {
 	 * @param platformFilter String argument for filtering the results by system name
 	 * @param adminFilter String argument to enable admin mode, returning the response in JSON format.
 	 * @return String that represents the HTML code of the result
-	 * @throws Exception
+	 * @throws Exception Error during HTML render.
 	 */
 	public static String render(final String platformFilter, final String adminFilter) throws Exception {
 				
@@ -170,7 +170,7 @@ public class ResponseMonitoriza {
     
    
 	/**
-	 * Method that builds the HTML for the table for the opertaion results
+	 * Method that builds the HTML for the table for the opertaion results.
      * @param platformFilter String that represents the optional filter for showing results for a platform. 
      * @param adminFilter String that represents the optional filter for showing additional information
 	 * @return Tag that represents the table
@@ -187,7 +187,7 @@ public class ResponseMonitoriza {
 	
 	/**
 	 * Method that builds the HTML caption for the result table.
-	 * @return
+	 * @return HTML table caption.
 	 */
 	private static Tag<?> makeTableCaption() {
 
@@ -202,7 +202,8 @@ public class ResponseMonitoriza {
 
 	/**
 	 * Method that builds the HTML header for the result table.
-	 * @return
+	 * @param adminFilter Parameter for filtering the results by platform.
+	 * @return HTML table headers.
 	 */
 	private static Collection<? extends Tag<?>> makeTableHeader(final String adminFilter) {
 		List<Tag<?>> rowsHeader = new LinkedList<>();
@@ -224,7 +225,9 @@ public class ResponseMonitoriza {
 
 	/**
 	 * Method that builds the HTML for the result rows.
-	 * @return
+	 * @param platformFilter Parameter for filtering the results by platform.
+	 * @param adminFilter Parameter to return the JSON format for admin mode.
+	 * @return HTML table rows.
 	 */
 	private static Collection<? extends Tag<?>> makeTableRows(final String platformFilter, final String adminFilter) {
 		
@@ -234,11 +237,11 @@ public class ResponseMonitoriza {
 		
 		for (Map.Entry<String,StatusUptodate> entry : StatusHolder.getInstance().getCurrenttatusHolder().entrySet()) {
 			
-			if (isRequestedService(platformFilter, entry.getKey())) {
+			if (isRequestedService(platformFilter, entry.getValue().getPlatform())) {
+				statusUptodate = entry.getValue();
     			tdGroup = new LinkedList<>();
-    			tdGroup.add(td(GeneralUtils.getSystemName(entry.getKey())));
+    			tdGroup.add(td(statusUptodate.getPlatform()));
     			tdGroup.add(td(entry.getKey()));
-    			statusUptodate = entry.getValue();
     			tdGroup.add(td(statusUptodate.getStatusValue()));
     			tdGroup.add(td( GeneralUtils.getFormattedDateTime(statusUptodate.getStatusUptodate())));
     			
@@ -257,21 +260,21 @@ public class ResponseMonitoriza {
 	/**
 	 * Method that determines whether a service must be added to the response according to the platform filter.
 	 * @param platformFilter String that represents the identifier for the platform to be filtered.
-	 * @param serviceId String that represents the service identifier.
+	 * @param platformName String that represents the name of the platform to be compared with the parameter.
 	 * @return true if the service belongs to the platform being filtered.
 	 */
-	private static boolean isRequestedService(final String platformFilter, final String serviceId) {
+	private static boolean isRequestedService(final String platformFilter, final String platformName) {
 		
 		boolean resultado = Boolean.FALSE;
 		
 		if (platformFilter == null) {
 			resultado = Boolean.TRUE;
-		} else if (platformFilter.equals(GeneralConstants.PARAMETER_TSA) && (serviceId.toLowerCase().contains(GeneralConstants.RFC3161_SERVICE) || serviceId.toLowerCase().contains(GeneralConstants.TIMESTAMP_SERVICE))) {
+		} else if (platformFilter.equals(GeneralConstants.PARAMETER_TSA) && (platformName.equalsIgnoreCase(GeneralConstants.PLATFORM_TSA))) {
 			resultado = Boolean.TRUE;
-		} else if (platformFilter.equals(GeneralConstants.PARAMETER_AFIRMA) && !serviceId.toLowerCase().contains(GeneralConstants.RFC3161_SERVICE) && !serviceId.toLowerCase().contains(GeneralConstants.TIMESTAMP_SERVICE)) {
+		} else if (platformFilter.equals(GeneralConstants.PARAMETER_AFIRMA) && (platformName.equalsIgnoreCase(GeneralConstants.PLATFORM_AFIRMA))) {
 			resultado = Boolean.TRUE;
-		} else {
-			resultado = Boolean.FALSE;
+		} else if (platformFilter.equals(GeneralConstants.PARAMETER_CLAVE) && (platformName.equalsIgnoreCase(GeneralConstants.PLATFORM_CLAVE))) {
+			resultado = Boolean.TRUE;
 		}
 		
 		return resultado;

@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.entity.ValidService.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>29 ago. 2018.</p>
+ * <b>Date:</b><p>29/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 29 ago. 2018.
+ * @version 1.1, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -45,12 +45,12 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that maps the <i>VALID_SERVICE</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 29 ago. 2018.
+ * @version 1.1, 25/01/2019.
  */
 @Entity
 @Table(name = "VALID_SERVICE")

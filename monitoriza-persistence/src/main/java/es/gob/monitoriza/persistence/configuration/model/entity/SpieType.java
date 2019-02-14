@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>09/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 09/10/2018.
+ * @version 1.1, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -41,12 +41,12 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 
 /** 
  * <p>Class that maps the <i>SPIE_TYPE</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 24/10/2018.
+ * @version 1.1, 25/01/2019.
  */
 @Entity
 @Table(name = "SPIE_TYPE")
@@ -81,6 +81,21 @@ public class SpieType implements Serializable {
 	 * Attribute that represents . 
 	 */
 	public static final Long ID_RESPONSE_TIMES = 5L;
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	public static final Long ID_CONN_HSM_TSA = 6L;
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	public static final Long ID_MODE_EMERGENCY_TSA = 7L;
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	public static final Long ID_CONN_AFIRMA = 8L;
 
 	/**
 	 * Attribute that represents the object ID.

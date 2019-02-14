@@ -32,42 +32,57 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.6, 04/01/2019.
+ * @version 1.9, 30/01/2019.
  */
 package es.gob.monitoriza.status.thread;
 
 import java.io.File;
 import java.security.KeyStore;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.alarm.AlarmManager;
-import es.gob.monitoriza.configuration.manager.AdminServicesManager;
+import es.gob.monitoriza.alarm.types.AlarmMail;
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.GrayLogErrorCodes;
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.constant.ServiceStatusConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.exception.AlarmException;
 import es.gob.monitoriza.exception.InvokerException;
+import es.gob.monitoriza.i18n.IAlarmMailText;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.invoker.http.HttpInvoker;
 import es.gob.monitoriza.invoker.ocsp.OcspInvoker;
 import es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker;
 import es.gob.monitoriza.invoker.soap.SoapInvoker;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
+import es.gob.monitoriza.persistence.configuration.exception.DatabaseException;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.DailyVipMonitorig;
+import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
+import es.gob.monitoriza.service.impl.AlarmMonitorizaService;
+import es.gob.monitoriza.service.impl.DailyVipMonitoringService;
+import es.gob.monitoriza.service.utils.IServiceNameConstants;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.status.RunningServices;
 import es.gob.monitoriza.status.StatusUptodate;
-import es.gob.monitoriza.utilidades.NumberConstants;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
+import es.gob.monitoriza.utilidades.UtilsGrayLog;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.6, 04/01/2019.
+ * @version 1.9, 30/01/2019.
  */
 public final class RequestProcessorThread implements Runnable {
 
@@ -141,7 +156,7 @@ public final class RequestProcessorThread implements Runnable {
 				LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS003, new Object[ ] { serviceDir.toPath().toString(), service.getWsdl() }));
 
 				// Enviamos las peticiones del grupo principal
-				grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaProperties.getProperty(StaticConstants.GRUPO_PRINCIPAL_PATH_DIRECTORY)));
+				grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaConfig.getProperty(StaticConstants.GRUPO_PRINCIPAL_PATH_DIRECTORY)));
 
 				do {
 
@@ -159,7 +174,9 @@ public final class RequestProcessorThread implements Runnable {
 									tiempoTotal = OcspInvoker.sendRequest(request, service, ssl);
 								} else if (service.getServiceType().equalsIgnoreCase(GeneralConstants.RFC3161_SERVICE)) {
 									tiempoTotal = Rfc3161Invoker.sendRequest(request, service, ssl, authClient);
-								} else {
+								} else if(service.getServiceType().equalsIgnoreCase(GeneralConstants.HTTP_SERVICE)){									
+									tiempoTotal = HttpInvoker.sendRequest(request, service, ssl);									
+ 								} else {
 									tiempoTotal = SoapInvoker.sendRequest(request, service, ssl);
 								}
 
@@ -198,7 +215,7 @@ public final class RequestProcessorThread implements Runnable {
 						if (perdidas > Integer.parseInt(service.getLostThreshold()) || tiempoMedio > service.getDegradedThreshold()) {
 							LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS005, new Object[ ] { service.getWsdl(), perdidas, tiempoMedio == null ? "N/A": tiempoMedio }));
 							necesarioConfirmar = Boolean.TRUE;
-							grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaProperties.getProperty(StaticConstants.GRUPO_CONFIRMACION_PATH_DIRECTORY)) + groupIndex);
+							grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaConfig.getProperty(StaticConstants.GRUPO_CONFIRMACION_PATH_DIRECTORY)) + groupIndex);
 							groupIndex++;
 
 							// Al ser necesario procesar el siguiente grupo
@@ -206,7 +223,7 @@ public final class RequestProcessorThread implements Runnable {
 							// dormimos el hilo para simular la espera...
 							try {
 								LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS006, new Object[ ] { grupoAProcesar.getAbsolutePath() }));
-								Thread.sleep(Long.parseLong(StaticMonitorizaProperties.getProperty(StaticConstants.CONFIRMATION_WAIT_TIME)));
+								Thread.sleep(Long.parseLong(StaticMonitorizaConfig.getProperty(StaticConstants.CONFIRMATION_WAIT_TIME)));
 								
 							} catch (InterruptedException e) {
 								LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS007, new Object[ ] { service.getServiceName() }));
@@ -233,10 +250,12 @@ public final class RequestProcessorThread implements Runnable {
 				// hay más grupos de confirmación,
 				// pasamos a calcular el estado del servicio con los datos
 				// obtenidos.
-				StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(tiempoMedio, perdidas), tiempoMedio, LocalDateTime.now(), partialRequestResult);
+				StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(tiempoMedio, perdidas), service.getPlatform(), tiempoMedio, LocalDateTime.now(), partialRequestResult);
 				statusHolder.put(service.getServiceName(), statusUptodate);
-				saveDailyVipMonitoring(service.getServiceName(), service.getPlatform(), statusUptodate);
 				RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
+				
+				saveDailyVipMonitoring(service.getServiceName(), service.getPlatform(), statusUptodate);
+				
 			}
 
 		}
@@ -256,25 +275,47 @@ public final class RequestProcessorThread implements Runnable {
 	 * 			- CAIDO
 	 */
 	private String calcularEstadoDelServicio(final Long tiempoMedio, final Integer perdidas) {
-
+		
+				
 		String estado = null;
-		boolean sendAlarm = Boolean.parseBoolean(StaticMonitorizaProperties.getProperty(StaticConstants.ALARM_ACTIVE));
+		String grayLogErrorCode = null;
+		String subjectAlarm = null;
+		String bodyAlarm = null;
+				
+		boolean sendAlarm = Boolean.parseBoolean(StaticMonitorizaConfig.getProperty(StaticConstants.ALARM_ACTIVE));
 
 		if (tiempoMedio != null && tiempoMedio <= service.getDegradedThreshold()) {
 			estado = ServiceStatusConstants.CORRECTO;
 		} else if (tiempoMedio != null && tiempoMedio > service.getDegradedThreshold()) {
 			estado = ServiceStatusConstants.DEGRADADO;
+			grayLogErrorCode = GrayLogErrorCodes.ALARM_SERVICE_DEGRADED;
+			subjectAlarm = generateSubject(estado);
+			bodyAlarm = Language.getFormatResAlarmMonitoriza(IAlarmMailText.BODY_MAIL_ALARM_DEGRADED, new Object[ ] { service.getPlatform().concat(GeneralConstants.EN_DASH_WITH_SPACES).concat(getServiceConfigUrl(service)), tiempoMedio, service.getDegradedThreshold()});
 		} else if (tiempoMedio == null || perdidas > Integer.parseInt(service.getLostThreshold())) {
 			estado = ServiceStatusConstants.CAIDO;
+			subjectAlarm = generateSubject(estado);
+			grayLogErrorCode = GrayLogErrorCodes.ALARM_SERVICE_LOST;
+			bodyAlarm = Language.getFormatResAlarmMonitoriza(IAlarmMailText.BODY_MAIL_ALARM_LOST, new Object[ ] { service.getPlatform().concat(GeneralConstants.EN_DASH_WITH_SPACES).concat(getServiceConfigUrl(service))});
 		}
-
+		
 		// Se comprueba si es necesario lanzar alarma
 		if (!estado.equals(ServiceStatusConstants.CORRECTO) && sendAlarm) {
 			try {
-				AlarmManager.throwNewAlarm(service, estado, tiempoMedio);
+				// Se obtiene el servicio de alarmas para cargar la configuración de bloqueo y direcciones actualizadas.
+				AlarmMonitorizaService alarmMonitorizaService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.ALARM_VIP_SERVICE, AlarmMonitorizaService.class);
+				AlarmMonitoriza alarmMonitoriza = alarmMonitorizaService.getAlarmMonitorizaById(service.getIdAlarm());
+				
+				// Se informa el objeto con los datos de la alarma.
+				// Creamos una nueva alarma.
+				AlarmMail alarm = new AlarmMail(service.getServiceName(), estado, getAddressesFromAlarm(alarmMonitoriza, estado), alarmMonitoriza.getBlockedTime(), null, null, subjectAlarm, bodyAlarm);
+				
+				AlarmManager.throwNewAlarm(alarm);
 			} catch (AlarmException e) {
 				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS003, new Object[ ] { service.getServiceName(), estado }), e);
 			}
+			
+			// Registramos la alarma en GrayLog si así está configurado.
+			UtilsGrayLog.writeMessageInGrayLog(UtilsGrayLog.LEVEL_ERROR, grayLogErrorCode, bodyAlarm); 
 		}
 
 		return estado;
@@ -282,22 +323,26 @@ public final class RequestProcessorThread implements Runnable {
 	
 	/**
 	 * Saves the VIP status sample in persistence.
-	 * @param service VIP service being monitored
+	 * @param serviceName VIP service being monitored
 	 * @param platform Platform of the service being monitored
 	 * @param status Status result of the service.
 	 */
-	private void saveDailyVipMonitoring(String service, String platform, StatusUptodate status) {
+	private void saveDailyVipMonitoring(final String serviceName, final String platform, final StatusUptodate status) {
 		
 		DailyVipMonitorig daily = new DailyVipMonitorig();
 		
 		daily.setPlatform(platform);
 		daily.setSamplingTime(status.getStatusUptodate());
-		daily.setService(service);
+		daily.setService(serviceName);
 		daily.setStatus(status.getStatusValue());
-		
-		AdminServicesManager adminServicesManager = ApplicationContextProvider.getApplicationContext().getBean("adminServicesManager", AdminServicesManager.class);	
-		
-		adminServicesManager.saveDailyVip(daily);
+			
+		try {
+			ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.DAILY_VIP_MONITORING_SERVICE, DailyVipMonitoringService.class).saveDailyVipMonitoring(daily);
+		} catch (DatabaseException e) {
+			String msg = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS018);
+			LOGGER.error(msg, e);
+			UtilsGrayLog.writeMessageInGrayLog(UtilsGrayLog.LEVEL_ERROR, GrayLogErrorCodes.ERROR_STATUS_VIP_SAVE, msg);
+		}	
 	}
 
 	/**
@@ -347,5 +392,74 @@ public final class RequestProcessorThread implements Runnable {
 	public void setStatusHolder(Map<String, StatusUptodate> currentstatusHolder) {
 		this.statusHolder = currentstatusHolder;
 	}	
-
+	
+	/**
+	 * Method that returns the URL of the service.
+	 * @param service Configuration information of the service.
+	 * @return Complete URL of the service.
+	 */
+	private static String getServiceConfigUrl(final ConfigServiceDTO service) {
+		
+		String serviceUrl = null;
+		
+		switch (service.getServiceType().toLowerCase()) {
+			
+			case GeneralConstants.SOAP_SERVICE:
+				serviceUrl = service.getSoapUrl().concat(service.getWsdl());
+				break;
+			case GeneralConstants.OCSP_SERVICE:
+				serviceUrl = service.getBaseUrl().concat(service.getOcspContext());
+				break;
+			case GeneralConstants.RFC3161_SERVICE:
+				serviceUrl = service.getBaseUrl().concat(service.getRfc3161Context());
+				break;
+			case GeneralConstants.HTTP_SERVICE:
+				serviceUrl = service.getSoapUrl().concat(service.getWsdl());
+				break;
+		}
+		
+		return serviceUrl;
+	}
+	
+	/**
+	 * Method that retrieves the addresses from a MailMonitoriza object.
+	 * @param alarmMonitoriza Object with the VIP alarm configuration.
+	 * @param estado Service status.
+	 * @return List<String> that represents the mail addresses 
+	 */
+	private static List<String> getAddressesFromAlarm(final AlarmMonitoriza alarmMonitoriza, final String estado) {
+		
+		Set<MailMonitoriza> mailSet = null;
+		final List<String> mailList = new ArrayList<String>();
+		
+		if (ServiceStatusConstants.DEGRADADO.equals(estado)) {
+			mailSet = alarmMonitoriza.getEmailsDegraded();
+		} else if (ServiceStatusConstants.CAIDO.equals(estado)) {
+			mailSet = alarmMonitoriza.getEmailsDown();
+		}
+		
+		Iterator<MailMonitoriza> mailIterator = mailSet.iterator();
+		
+		while (mailIterator.hasNext()) {
+			
+			mailList.add(mailIterator.next().getEmailAddress());
+		}
+		
+		return mailList;
+	}
+	
+	/**
+	 * Method that generate the subject for single alarm mails.
+	 * @param status String that represents the result status of the service.
+	 * @return String that represents the text of the alarm mail subject.
+	 */
+	private String generateSubject(final String status) {
+		
+		StringBuffer subject = new StringBuffer();
+		
+		subject.append(service.getPlatform()).append(GeneralConstants.EN_DASH_WITH_SPACES).append(service.getServiceName()).append(UtilsStringChar.SPECIAL_BLANK_SPACE_STRING).append(status);
+		
+		return subject.toString();
+	}
+	
 }

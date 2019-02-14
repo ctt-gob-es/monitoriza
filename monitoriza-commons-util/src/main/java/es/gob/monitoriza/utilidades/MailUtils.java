@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>23/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 25/01/2018.
+ * @version 1.3, 30/01/2019.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -28,13 +28,10 @@ import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
-import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.constant.ServiceStatusConstants;
-
 /** 
  * <p>Utilities class that contains necessary method for every class related with mails.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 25/01/2018.
+ * @version 1.3, 30/01/2019.
  */
 public final class MailUtils {
 
@@ -73,7 +70,7 @@ public final class MailUtils {
 	public static List<String> getListAddressees() {
 		List<String> res = new ArrayList<String>();
 		// Recorremos todas las propiedades
-		Set<Entry<Object, Object>> properties = StaticMonitorizaProperties.getAllProperties();
+		Set<Entry<Object, Object>> properties = StaticMonitorizaConfig.getAllProperties();
 		for (Entry<Object, Object> property: properties) {
 			// Si coincide la key de la propiedad con la expresión regular
 			// definida, lo añadimos a la lista.
@@ -83,36 +80,5 @@ public final class MailUtils {
 		}
 		return res;
 	}
-
-	/**
-	 * Method that get the list of email addressees for a given service.
-	 * 
-	 * @param serviceIdentifier Name of the service associated to the alarm.
-	 * @return a list with the mails addressees.
-	 */
-	public static List<String> getListAddresseesForAlarm(String[ ] serviceIdentifier) {
-		List<String> res = new ArrayList<String>();
-		if (serviceIdentifier != null && serviceIdentifier.length == 2) {
-			String serviceName = serviceIdentifier[0];
-			String serviceStatus = serviceIdentifier[1];
-			String addrKey = null;
-			if (serviceStatus.equals(ServiceStatusConstants.DEGRADADO)) {
-				addrKey = GeneralConstants.SERVICE + GeneralConstants.DOT + serviceName.toLowerCase() + GeneralConstants.DOT + GeneralConstants.DEGRADED + GeneralConstants.DOT + GeneralConstants.MAIL_ADDRESS;
-			} else if (serviceStatus.equals(ServiceStatusConstants.CAIDO)) {
-				addrKey = GeneralConstants.SERVICE + GeneralConstants.DOT + serviceName.toLowerCase() + GeneralConstants.DOT + GeneralConstants.DOWNED + GeneralConstants.DOT + GeneralConstants.MAIL_ADDRESS;
-			} else {
-				return null;
-			}
-			// Obtengo la propiedad con la lista de destinatarios
-			String addrValue = StaticMonitorizaProperties.getProperty(addrKey);
-			// Obtengo la lista de destinatarios para la propiedad configurada (separadas por /)
-			String addresses = StaticMonitorizaProperties.getProperty(addrValue);
-			String[ ] values = addresses.split(GeneralConstants.SLASH);
-			for (String value: values) {
-				res.add(value);
-			}
-			return res;
-		}
-		return null;
-	}
+	
 }

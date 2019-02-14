@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.TsaDTO.java.</p>
  * <b>Description:</b><p>Class that represents the backing form for adding/editing a user.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>8 mar. 2018.</p>
+ * <b>Date:</b><p>8/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 05/12/2018.
+ * @version 1.3, 30/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -28,14 +28,15 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
 import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /** 
  * <p>Class that represents the backing form for adding/editing a ts@ platform.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 05/12/2018.
+ * @version 1.3, 30/01/2019.
  */
 public class TsaDTO {
 	
@@ -49,21 +50,21 @@ public class TsaDTO {
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.name.notempty}")
     @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM30, groups=ThenCheckIt.class)
-    private String name = "";
+    private String name = UtilsStringChar.EMPTY_STRING;
 
 	/**
 	 * Attribute that represents the value of the input surnames of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.host.notempty}")
     @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM30, groups=ThenCheckIt.class)
-    private String host = "";
+    private String host = UtilsStringChar.EMPTY_STRING;
 	
 	/**
 	 * Attribute that represents the value of the input username of the user in the form. 
 	 */
 	//@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.port.notempty}")
 	@Size(min=NumberConstants.NUM0, max=NumberConstants.NUM5, groups=ThenCheckIt.class)
-    private String port = "";
+    private String port = UtilsStringChar.EMPTY_STRING;
 	
 	/**
 	 * Attribute that represents the value of the input isSecure of the user in the form. 
@@ -76,21 +77,21 @@ public class TsaDTO {
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.servicecontext.notempty}")
     @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM50, groups=ThenCheckIt.class)
-    private String serviceContext = "";
+    private String serviceContext = UtilsStringChar.EMPTY_STRING;
 	
 	/**
 	 * Attribute that represents the value of the input email of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.rfc3161context.notempty}")
     @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM50, groups=ThenCheckIt.class)
-    private String rfc3161Context = "";
+    private String rfc3161Context = UtilsStringChar.EMPTY_STRING;
 	
 	/**
 	 * Attribute that represents the value of the input email of the user in the form. 
 	 */
 	@NotBlank(groups=CheckItFirst.class, message="{form.valid.platform.portrfc3161.notempty}")
     @Size(min=NumberConstants.NUM1, max=NumberConstants.NUM5, groups=ThenCheckIt.class)
-    private String rfc3161Port = "";
+    private String rfc3161Port = UtilsStringChar.EMPTY_STRING;
 	
 	/**
 	 * Attribute that represents the value of the input isSecure of the user in the form. 

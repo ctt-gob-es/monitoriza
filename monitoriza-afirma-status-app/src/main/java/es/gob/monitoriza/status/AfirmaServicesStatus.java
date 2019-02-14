@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.3, 30/10/2018.
+ * @version 1.4, 30/01/2019.
  */
 package es.gob.monitoriza.status;
 
@@ -56,12 +56,13 @@ import es.gob.monitoriza.response.DatatableStatus;
 import es.gob.monitoriza.response.ResponseErrorConnection;
 import es.gob.monitoriza.response.ResponseJsonMonitoriza;
 import es.gob.monitoriza.response.ResponseMonitoriza;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 
 /** 
- * <p>Class that gets the status for the @firma/ts@ services through servlet call</p>
+ * <p>Class that gets the VIP status for the configured platforms services through servlet call</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.3, 30/10/2018.
+ * @version 1.4, 30/01/2019.
  */
 public class AfirmaServicesStatus extends HttpServlet {
 
@@ -81,7 +82,7 @@ public class AfirmaServicesStatus extends HttpServlet {
 	 */
 	public void doPost(HttpServletRequest request, HttpServletResponse response) {
 		try {
-			response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, "");
+			response.sendError(HttpServletResponse.SC_METHOD_NOT_ALLOWED, UtilsStringChar.EMPTY_STRING);
 			response.flushBuffer();
 		} catch (Exception e) {
 			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS013, new Object[ ] { request.getRemoteAddr() }), e);

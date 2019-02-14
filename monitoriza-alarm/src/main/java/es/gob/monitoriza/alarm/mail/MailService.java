@@ -19,10 +19,11 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>23/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 14/01/2019.
+ * @version 1.5, 25/01/2019.
  */
 package es.gob.monitoriza.alarm.mail;
 
+import java.nio.charset.StandardCharsets;
 import java.util.Calendar;
 import java.util.List;
 import java.util.Properties;
@@ -52,7 +53,7 @@ import es.gob.monitoriza.utilidades.MailUtils;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.3, 14/01/2019.
+ * @version 1.5, 25/01/2019.
  */
 public class MailService {
 
@@ -109,8 +110,11 @@ public class MailService {
 	/**
 	 * Body of the email.
 	 */
-	private String bodyMsg;
+	private String bodyMsg;	
 
+	/**
+	 * Attribute that represents the {#JpaRepository} for {#ConfServerMail}. 
+	 */
 	private ConfServerMailRepository confServerMailRepository;
 
 	/**
@@ -312,6 +316,7 @@ public class MailService {
 		List<String> addresees = MailUtils.getListAddressees();
 
 		List<ConfServerMail> listConfServerMail = confServerMailRepository.findAll();
+		
 		if (!listConfServerMail.isEmpty()) {
 			ConfServerMail confServerMail = listConfServerMail.get(0);
 
@@ -362,34 +367,6 @@ public class MailService {
 	/**
 	 * Method that load from the static properties file the properties necessaries
 	 * for the mail service.
-	 */
-	// private void loadStaticParam() {
-	//
-	// String issuer =
-	// StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_ISSUER);
-	// String host =
-	// StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_HOST);
-	// String portString =
-	// StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_PORT);
-	// int port = Integer.valueOf(portString);
-	// String authString =
-	// StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_AUTHENTICATION);
-	// String tlsString =
-	// StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_TLS);
-	// boolean authentication = Boolean.valueOf(authString);
-	// boolean tls = Boolean.valueOf(tlsString);
-	// String user =
-	// StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_USER);
-	// String password =
-	// StaticMonitorizaProperties.getProperty(StaticConstants.MAIL_ATTRIBUTE_PASSWORD);
-	// new MailService(addresees, issuer, host, port, authentication, tls, user,
-	// password, null, null);
-	// }
-
-	/**
-	 * Method that sends a mail with the parameters configured in the attributes of
-	 * the class.
-	 * 
 	 * @return True if there was possible to send the mail and false if not.
 	 */
 	public boolean send() {
@@ -401,7 +378,7 @@ public class MailService {
 		Session session = Session.getInstance(props);
 		try {
 			// Creamos el mensaje
-			Message msg = new MimeMessage(session);
+			MimeMessage msg = new MimeMessage(session);
 
 			msg.setFrom(new InternetAddress(getIssuer()));
 
@@ -414,14 +391,14 @@ public class MailService {
 			msg.setRecipients(Message.RecipientType.TO, addrs);
 
 			// Modificamos el asunto
-			msg.setSubject(getSubject());
+			msg.setSubject(getSubject(), StandardCharsets.UTF_8.name());
 
 			// Actualizamos la fecha.
 			msg.setSentDate(Calendar.getInstance().getTime());
 
 			// Modificamos el cuerpo de mensaje.
-			msg.setText(getBodyMsg());
-
+			msg.setText(getBodyMsg(), StandardCharsets.UTF_8.name());
+			
 			// Se intenta la conexión con el servidor de correo.
 			Transport transport = session.getTransport(GeneralConstants.SMTP);
 			transport.connect(getHost(), getUser(), getPassword());
@@ -431,7 +408,7 @@ public class MailService {
 			transport.close();
 
 		} catch (MessagingException e) {
-			LOGGER.error(Language.getResAlarmMonitoriza(IAlarmLogMessages.ERRORALAMR003), e.getCause());
+			LOGGER.error(Language.getResAlarmMonitoriza(IAlarmLogMessages.ERRORALAMR003), e);
 			return false;
 		}
 

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>06/11/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 06/11/2018.
+ * @version 1.6, 30/01/2019.
  */
 package es.gob.monitoriza.spie.html.impl;
 
@@ -34,18 +34,18 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
-import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.enums.SemaphoreEnum;
 import es.gob.monitoriza.persistence.configuration.dto.AvgTimesServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
 import es.gob.monitoriza.spie.html.IHtmlSpieResolver;
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 
 /** 
  * <p>Class that parses average times SPIE HTML response.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 06/11/2018.
+ * @version 1.6, 30/01/2019.
  */
 public class HtmlAvgResponseTimeResolver implements IHtmlSpieResolver {
 	
@@ -147,30 +147,26 @@ public class HtmlAvgResponseTimeResolver implements IHtmlSpieResolver {
 	}
 
 	/**
-	 * Method that parses the value of the cell containing the number og transactions above maximum and its corresponding maximum.
+	 * Method that parses the value of the cell containing the number of transactions above maximum and its corresponding maximum.
 	 * @param colText Text of the cell containing the number of transactions above average time and (maximum time).
 	 * @return Long that represents the number of transactions that exceed the average time  
 	 */
 	private Long getNumOfTransAboveMax(final String colText) {
-		
-		colText.replaceAll("\\s","");
-		
-		String numOfTrans = colText.replaceAll("\\s","").substring(NumberConstants.NUM0, colText.indexOf(GeneralConstants.OPEN_BRACKET)-1);
+				
+		String numOfTrans = colText.replaceAll("\\s",UtilsStringChar.EMPTY_STRING).substring(NumberConstants.NUM0, colText.indexOf(UtilsStringChar.SYMBOL_OPEN_BRACKET_STRING)-1);
 		
 		return Long.valueOf(numOfTrans);
 		
 	}
 	
 	/**
-	 * Method that parses the value of the cell containing the number og transactions above maximum and its corresponding maximum.
+	 * Method that parses the value of the cell containing the number of transactions above maximum and its corresponding maximum.
 	 * @param colText Text of the cell containing the number of transactions above average time and (maximum time).
 	 * @return Long that represents the maximum allowed time defined in the cell  
 	 */
 	private Long getMaxAllowedTime(final String colText) {
-		
-		colText.replaceAll("\\s","");
-		
-		String maxTime = colText.replaceAll("\\s","").substring(colText.indexOf(GeneralConstants.OPEN_BRACKET), colText.indexOf(GeneralConstants.CLOSE_BRACKET)-1).replaceAll("ms", "");
+						
+		String maxTime = colText.replaceAll("\\s",UtilsStringChar.EMPTY_STRING).substring(colText.indexOf(UtilsStringChar.SYMBOL_OPEN_BRACKET_STRING), colText.indexOf(UtilsStringChar.SYMBOL_CLOSE_BRACKET_STRING)-1).replaceAll("ms", UtilsStringChar.EMPTY_STRING);
 		
 		return Long.valueOf(maxTime);
 		

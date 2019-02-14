@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/11/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 12/11/2018.
+ * @version 1.2, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -35,6 +35,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.persistence.configuration.dto.DailyVipDTO;
+import es.gob.monitoriza.persistence.configuration.exception.DatabaseException;
 import es.gob.monitoriza.persistence.configuration.model.entity.DailyVipMonitorig;
 import es.gob.monitoriza.persistence.configuration.model.repository.DailyVipMonitoringRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.VipStatisticsRepository;
@@ -45,25 +46,25 @@ import es.gob.monitoriza.service.IDailyVipMonitoringService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for DailyVipMonitorig.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 12/11/2018.
+ * @version 1.2, 30/01/2019.
  */
-@Service
+@Service("dailyVipMonitoringService")
 public class DailyVipMonitoringService implements IDailyVipMonitoringService {
 	
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents the {#JpaRepository} for {#DailyVipMonitorig}. 
 	 */
 	@Autowired
 	private DailyVipMonitoringRepository repository;
 	
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents the {#DataTablesRepository} for {#DailyVipMonitorig}. 
 	 */
 	@Autowired
 	private DailyVipDataTableRepository dtRepository;
 	
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents the {#JpaRepository} for {#VipStatistics}. 
 	 */
 	@Autowired
 	private VipStatisticsRepository statRepository;
@@ -83,10 +84,15 @@ public class DailyVipMonitoringService implements IDailyVipMonitoringService {
 	 * @see es.gob.monitoriza.service.IDailyVipMonitoringService#saveDailyVipMonitoring(es.gob.monitoriza.persistence.configuration.model.entity.DailyVipMonitorig)
 	 */
 	@Override
-	public void saveDailyVipMonitoring(DailyVipMonitorig dailyVip) {
+	@Transactional
+	public void saveDailyVipMonitoring(DailyVipMonitorig dailyVip) throws DatabaseException {
 		
-		repository.saveAndFlush(dailyVip);
-
+		try {
+			repository.saveAndFlush(dailyVip);
+		} catch (Exception e) {
+			throw new DatabaseException(e.getMessage());
+		}
+		
 	}
 
 	/**
@@ -127,9 +133,12 @@ public class DailyVipMonitoringService implements IDailyVipMonitoringService {
 	@Transactional
 	public void dumpAndDeleteMonitoringData() {
 		
-		statRepository.dumpFromDailyVipNative();
-		
-		repository.deleteOldDailyVip();
+		try {	
+			statRepository.dumpFromDailyVipNative();
+			repository.deleteOldDailyVip();
+		} catch (Exception e) {
+			throw new DatabaseException(e.getMessage());
+		}
 		
 	}
 

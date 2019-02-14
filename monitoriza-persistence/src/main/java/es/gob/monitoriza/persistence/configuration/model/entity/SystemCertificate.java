@@ -17,7 +17,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>14/02/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 05/12/2018.
+ * @version 1.3, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -40,13 +40,13 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 
 /**
  * <p>Class that represents the representation of the <i>SYSTEM_CERTIFICATE</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.2, 05/12/2018.
+ * @version 1.3, 25/01/2019.
  */
 @Entity
 @Table(name = "SYSTEM_CERTIFICATE")
@@ -70,7 +70,7 @@ public class SystemCertificate implements Serializable {
 	/**
 	 * Attribute that represents the keystore where this system certificate is stored.
 	 */
-	private Keystore keystore;
+	private KeystoreMonitoriza keystore;
 
 	/**
 	 * Attribute that represents the alias of the certificate.
@@ -272,7 +272,7 @@ public class SystemCertificate implements Serializable {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "ID_KEYSTORE", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
-	public Keystore getKeystore() {
+	public KeystoreMonitoriza getKeystore() {
 		// CHECKSTYLE:ON
 		return keystore;
 	}
@@ -283,7 +283,7 @@ public class SystemCertificate implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setKeystore(Keystore keystoreParam) {
+	public void setKeystore(KeystoreMonitoriza keystoreParam) {
 		// CHECKSTYLE:ON
 		this.keystore = keystoreParam;
 	}

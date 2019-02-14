@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>30/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 30/05/2018.
+ * @version 1.1, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.specification;
 
@@ -34,13 +34,13 @@ import javax.persistence.criteria.Root;
 
 import org.springframework.data.jpa.domain.Specification;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 
 /** 
  * <p>Class that manages keystore search criteria for system certificates.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 30/05/2018.
+ * @version 1.1 25/01/2019.
  */
 public class KeystoreSpecification implements Specification<SystemCertificate>{
 
@@ -52,14 +52,14 @@ public class KeystoreSpecification implements Specification<SystemCertificate>{
 	/**
 	 * Attribute that represents . 
 	 */
-	private Keystore criteria;
+	private KeystoreMonitoriza criteria;
 		
 	 
     /**
 	 * Constructor method for the class PlatformSpecification.java.
 	 * @param criteria 
 	 */
-	public KeystoreSpecification(Keystore criteria) {
+	public KeystoreSpecification(KeystoreMonitoriza criteria) {
 		super();
 		this.criteria = criteria;
 	}

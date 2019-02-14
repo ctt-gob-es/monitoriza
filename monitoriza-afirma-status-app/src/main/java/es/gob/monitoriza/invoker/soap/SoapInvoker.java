@@ -19,14 +19,12 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>04/01/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/01/2019.
+ * @version 1.2, 30/01/2019.
  */
 package es.gob.monitoriza.invoker.soap;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -49,17 +47,18 @@ import javax.net.ssl.TrustManagerFactory;
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.utilidades.FileUtils;
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /** 
  * <p>Class that performs the request of a SOAP service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 04/01/2019.
+ * @version 1.2, 30/01/2019.
  */
 public final class SoapInvoker {
 
@@ -184,7 +183,7 @@ public final class SoapInvoker {
 
 			String msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS012, new Object[]{service.getPlatform()});
 			LOGGER.error(msgError, e);
-			throw new InvokerException("",e.getCause());
+			throw new InvokerException(msgError,e.getCause());
 		}
 		
 

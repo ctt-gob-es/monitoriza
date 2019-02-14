@@ -16,11 +16,11 @@
 
 /** 
  * <b>File:</b><p>es.gob.monitoriza.cron.ValidCertificatesJob.java.</p>
- * <b>Description:</b><p> .</p>
+ * <b>Description:Class that manages the scheduled job for certificate validation</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>27 sept. 2018.</p>
+ * <b>Date:</b><p>27/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 10/10/2018.
+ * @version 1.2, 30/01/2019.
  */
 package es.gob.monitoriza.cron;
 
@@ -43,11 +43,12 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
+import es.gob.monitoriza.constant.GrayLogErrorCodes;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
 import es.gob.monitoriza.i18n.ICoreLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
 import es.gob.monitoriza.service.IKeystoreService;
@@ -55,13 +56,15 @@ import es.gob.monitoriza.service.IStatusCertificateService;
 import es.gob.monitoriza.service.ISystemCertificateService;
 import es.gob.monitoriza.service.IValidServiceService;
 import es.gob.monitoriza.utilidades.UtilsCertificate;
+import es.gob.monitoriza.utilidades.UtilsGrayLog;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 import es.gob.monitoriza.utilidades.UtilsXml;
 import es.gob.monitoriza.webservice.ClientManager;
 
 /** 
  * <p>Class that manages the scheduled job for certificate validation.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 10/10/2018.
+ * @version 1.2, 30/01/2019.
  */
 @Service
 public class ValidCertificatesJob implements SchedulerObjectInterface {
@@ -115,10 +118,17 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
 		super();
 	}
     
+    /**
+     * Attribute that represents the task execution result. 
+     */
     @SuppressWarnings("rawtypes")
 	private ScheduledFuture future;
 
 
+    /**
+     * {@inheritDoc}
+     * @see es.gob.monitoriza.cron.SchedulerObjectInterface#start()
+     */
     @Override
     public void start() {
         future = new ConcurrentTaskScheduler().schedule(new Runnable() {
@@ -133,7 +143,7 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
         }, new Trigger() {
             @Override
             public Date nextExecutionTime(TriggerContext triggerContext) {
-            	String cronExpression = "";
+            	String cronExpression = UtilsStringChar.EMPTY_STRING;
             	Date nextExec = null;
             	List<ValidService> validServices = null;
             	ValidService validService = null;
@@ -146,7 +156,9 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
                     CronTrigger trigger = new CronTrigger(cronExpression);
                     nextExec = trigger.nextExecutionTime(triggerContext);
             	} catch (Exception e) {
-            		LOGGER.error(Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE007), e.getCause());
+            		String msgError = Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE007);
+            		LOGGER.error(msgError, e);
+            		UtilsGrayLog.writeMessageInGrayLog(UtilsGrayLog.LEVEL_ERROR, GrayLogErrorCodes.ERROR_VALIDATION_SERVICE_CONFIG, msgError);
             	}
                 return nextExec;
             }
@@ -154,6 +166,10 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
 
     }
 
+    /**
+     * {@inheritDoc}
+     * @see es.gob.monitoriza.cron.SchedulerObjectInterface#stop()
+     */
     @Override
     public void stop() {
         future.cancel(false);
@@ -165,7 +181,7 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
 	 */
 	private void validCertificatesJobScheduled() {
 		LOGGER.info("Init validCertificatesJobScheduled");
-		String aliasCertificate = "";
+		String aliasCertificate = UtilsStringChar.EMPTY_STRING;
 		try {
 			List<ValidService> validServices = validServiceService.getAllValidServices();
 			ValidService validService = null;
@@ -177,7 +193,7 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
 					for (SystemCertificate systemCertificate: systemCertificates) {
 						String certificateBase64 = null;
 						IKeystoreFacade keyStoreFacade = new KeystoreFacade(systemCertificate.getKeystore());
-						Keystore ks = keystoreService.getKeystoreById(systemCertificate.getKeystore().getIdKeystore());
+						KeystoreMonitoriza ks = keystoreService.getKeystoreById(systemCertificate.getKeystore().getIdKeystore());
 						KeyStore ksCetificate = KeystoreFacade.getKeystore(ks.getKeystore(), ks.getKeystoreType(), keyStoreFacade.getKeystoreDecodedPasswordString(ks.getPassword()));
 						aliasCertificate = systemCertificate.getAlias();
 						if (aliasCertificate != null) {
@@ -199,11 +215,19 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
 				}
 			}
 		} catch (Exception e) {
+			
+			String msgError = null;
 			if (aliasCertificate.isEmpty()) {
-				LOGGER.error(Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE008), e.getCause());
+				msgError = Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE008);
+				LOGGER.error(msgError, e);
+				
 			} else {
-				LOGGER.error(Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE008, new Object[ ] { aliasCertificate }), e.getCause());
+				msgError = Language.getFormatResCoreMonitoriza(ICoreLogMessages.ERRORCORE008, new Object[ ] { aliasCertificate });
+				LOGGER.error(msgError, e);
 			}
+			
+			UtilsGrayLog.writeMessageInGrayLog(UtilsGrayLog.LEVEL_ERROR, GrayLogErrorCodes.ERROR_VALIDATION_SERVICE_TASK, msgError);
+			
 		}
 		LOGGER.info("End validCertificatesJobScheduled");
 	}
@@ -218,10 +242,10 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
 
 	/**
 	 * Set validServiceService.
-	 * @param validServiceService set validServiceService
+	 * @param validServiceServiceParam set {#validServiceService}
 	 */
-	public void setValidServiceService(IValidServiceService validServiceService) {
-		this.validServiceService = validServiceService;
+	public void setValidServiceService(IValidServiceService validServiceServiceParam) {
+		this.validServiceService = validServiceServiceParam;
 	}
 
 	/**
@@ -234,10 +258,10 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
 
 	/**
 	 * Set sysCertService.
-	 * @param sysCertService set sysCertService
+	 * @param sysCertServiceParam set {#sysCertService}
 	 */
-	public void setSysCertService(ISystemCertificateService sysCertService) {
-		this.sysCertService = sysCertService;
+	public void setSysCertService(ISystemCertificateService sysCertServiceParam) {
+		this.sysCertService = sysCertServiceParam;
 	}
 
 	/**
@@ -250,10 +274,10 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
 
 	/**
 	 * Set keystoreService.
-	 * @param keystoreService set keystoreService
+	 * @param keystoreServiceParam set {#keystoreService}
 	 */
-	public void setKeystoreService(IKeystoreService keystoreService) {
-		this.keystoreService = keystoreService;
+	public void setKeystoreService(IKeystoreService keystoreServiceParam) {
+		this.keystoreService = keystoreServiceParam;
 	}
 
 	/**
@@ -266,10 +290,10 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
 
 	/**
 	 * Set statusCertService.
-	 * @param statusCertService set statusCertService
+	 * @param statusCertServiceParam set {#statusCertService}
 	 */
-	public void setStatusCertService(IStatusCertificateService statusCertService) {
-		this.statusCertService = statusCertService;
+	public void setStatusCertService(IStatusCertificateService statusCertServiceParam) {
+		this.statusCertService = statusCertServiceParam;
 	}
 
 	/**
@@ -298,10 +322,10 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
 
 	/**
 	 * Set context.
-	 * @param context set context
+	 * @param contextParam set {#context}
 	 */
-	public void setContext(ServletContext context) {
-		this.context = context;
+	public void setContext(ServletContext contextParam) {
+		this.context = contextParam;
 	}
 	
 }

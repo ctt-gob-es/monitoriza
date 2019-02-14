@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.service.impl.ValidServiceService.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>30 ago. 2018.</p>
+ * <b>Date:</b><p>30/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 28/10/2018.
+ * @version 1.2, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -42,9 +42,9 @@ import es.gob.monitoriza.service.IValidServiceService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for ValidService.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 28/10/2018.
+ * @version 1.2, 30/01/2019.
  */
-@Service
+@Service("validServiceService")
 public class ValidServiceService implements IValidServiceService {
 	
 	/**

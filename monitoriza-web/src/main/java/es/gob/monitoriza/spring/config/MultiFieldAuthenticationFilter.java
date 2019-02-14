@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.spring.config.MultiFieldAuthenticationFilter.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>30 jul. 2018.</p>
+ * <b>Date:</b><p>30/07/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 30 jul. 2018.
+ * @version 1.1, 30/01/2019.
  */
 package es.gob.monitoriza.spring.config;
 
@@ -33,10 +33,12 @@ import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
+import es.gob.monitoriza.utilidades.UtilsStringChar;
+
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 30 jul. 2018.
+ * @version 1.6, 30/01/2019.
  */
 public class MultiFieldAuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 	
@@ -65,17 +67,17 @@ public class MultiFieldAuthenticationFilter extends UsernamePasswordAuthenticati
 		String signatureBase64 = obtainSignatureBase64(request);
 		
 		if (username == null) {
-			username = "";
+			username = UtilsStringChar.EMPTY_STRING;
 		}
 
 		username = username.trim();
 		
 		if (password == null) {
-			password = "";
+			password = UtilsStringChar.EMPTY_STRING;
 		}
 		
 		if (signatureBase64 == null) {
-			signatureBase64 = "";
+			signatureBase64 = UtilsStringChar.EMPTY_STRING;
 		}
 
 		UsernamePasswordAuthenticationToken authRequest = null;

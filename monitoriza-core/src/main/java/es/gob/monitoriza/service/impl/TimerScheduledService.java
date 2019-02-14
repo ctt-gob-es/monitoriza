@@ -20,13 +20,14 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 28/10/2018.
+ * @version 1.3, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.gob.monitoriza.persistence.configuration.exception.DatabaseException;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.persistence.configuration.model.repository.TimerScheduledRepository;
 import es.gob.monitoriza.service.ITimerScheduledService;
@@ -35,9 +36,9 @@ import es.gob.monitoriza.service.ITimerScheduledService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for TimerScheduled.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1 28/10/2018.
+ * @version 1.3, 30/01/2019.
  */
-@Service
+@Service("timerScheduledService")
 public class TimerScheduledService implements ITimerScheduledService {
 	
 	/**
@@ -93,7 +94,12 @@ public class TimerScheduledService implements ITimerScheduledService {
 	 */
 	@Override
 	public Iterable<TimerScheduled> getAllTimerScheduledById(Iterable<Long> idTimers) {
-		return repository.findAllById(idTimers);
+		
+		try {
+			return repository.findAllById(idTimers);
+		} catch (Exception e) {
+			throw new DatabaseException(e.getMessage());
+		}
 	}
 
 	/**

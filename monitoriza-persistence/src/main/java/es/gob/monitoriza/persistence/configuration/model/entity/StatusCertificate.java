@@ -17,7 +17,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>14/02/2012.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -35,13 +35,13 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.utilidades.NumberConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 
 /**
  * <p>Class that represents the representation of the <i>C_STATUS_CERTIFICATES</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.1, 10/10/2018.
+ * @version 1.2, 25/01/2019.
  */
 @Entity
 @Table(name = "C_STATUS_CERTIFICATES")

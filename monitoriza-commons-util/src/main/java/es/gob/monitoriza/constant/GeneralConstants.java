@@ -19,14 +19,14 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.7, 09/11/2018.
+ * @version 1.9, 30/01/2019.
  */
 package es.gob.monitoriza.constant;
 
 /** 
  * <p>Interface that contains general constants.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.7, 09/11/2018.
+ * @version 1.9, 30/01/2019.
  */
 public interface GeneralConstants {
 	
@@ -49,77 +49,17 @@ public interface GeneralConstants {
 	 * Constant attribute that represents HTTPS secure mode.
 	 */
 	public static final String SECUREMODE_HTTPS = "https";
-	
-	/**
-	 * Constant that represents the dot character '.'.
-	 */	
-	public static final String DOT = ".";
-	
-	/**
-	 * Constant that represents the comma character ','.
-	 */
-	public static final String COMMA = ",";
-	
-	/**
-	 * Constant that represents a blank space. 
-	 */
-	public static final String BLANK = " ";
-	
-	/**
-	 * Constant that represents an empty string. 
-	 */
-	public static final String EMPTY_STRING = "";
-	
-	/**
-	 * Constant that represents SEPARATOR literal. 
-	 */
-	public static final String SEPARATOR = "_";
-
-	/**
-	 * Constant that represents the En_dash character '-'.
-	 */
-	public static final String EN_DASH = "-";
-	
+		
 	/**
 	 * Constant that represents the En_dash character with spaces ' - '.
 	 */
 	public static final String EN_DASH_WITH_SPACES = " - ";
-	
-	/**
-	 * Constant that represents the colon character ':'.
-	 */
-	public static final String COLON = ":";
-	
-	/**
-	 * Constant that represents the colon character ';'.
-	 */
-	public static final String SEMICOLON = ";";
-	
+			
 	/**
 	 * Constant that represents the path separator character '//'.
 	 */
 	public static final String DOUBLE_PATH_SEPARATOR = "//";
-				
-	/**
-	 * Constant that represents the slash character '/'.
-	 */
-	public static final String SLASH = "/";
-
-	/**
-	 * Constant that represents the slash character '\n'.
-	 */
-	public static final String LINE_FEED = "\n";
-	
-	/**
-	 * Attribute that represents the bracket character '('. 
-	 */
-	public static final String OPEN_BRACKET = "(";
-	
-	/**
-	 * Attribute that represents the bracket character ')'. 
-	 */
-	public static final String CLOSE_BRACKET = ")";
-	
+			
 	/**
 	 * Attribute that represents the service identifier for SOAP services. 
 	 */
@@ -139,7 +79,7 @@ public interface GeneralConstants {
 	 * Attribute that represents the string contained in the TimeStamp Services of TS@. 
 	 */
 	public static final String TIMESTAMP_SERVICE = "timestamp";
-		
+			
 	/**
 	 * Attribute that represents the property substring for timer configuration. 
 	 */
@@ -234,14 +174,24 @@ public interface GeneralConstants {
 	public static final String PLATFORM_TSA = "TS@";
 	
 	/**
+	 * Attribute that represents the string for identifying the cl@ve platform. 
+	 */
+	public static final String PLATFORM_CLAVE = "Cl@ve";
+	
+	/**
 	 * Attribute that represents the string for identifying the @firma filter parameter on calling the status servlet. 
 	 */
 	public static final String PARAMETER_AFIRMA = "afirma";
 	
 	/**
-	 * Attribute that represents the string for identifying the ts@ filter paramenter on callin the status servlet. 
+	 * Attribute that represents the string for identifying the ts@ filter parameter on calling the status servlet. 
 	 */
 	public static final String PARAMETER_TSA = "tsa";
+	
+	/**
+	 * Attribute that represents the string for identifying the Cl@ve filter parameter on calling the status servlet. 
+	 */
+	public static final String PARAMETER_CLAVE = "clave";
 	
 	/**
 	 * Attribute that represents the excetion if the certificate is not valid. 
@@ -262,4 +212,9 @@ public interface GeneralConstants {
 	 * Attribute that represents the row index value for the datatable in case of error.
 	 */
 	public static final String ROW_INDEX_ERROR = "-1";
+
+	/**
+	 * Attribute that represents the service identifier for HTTP services. 
+	 */
+	public static final String HTTP_SERVICE = "http";
 }

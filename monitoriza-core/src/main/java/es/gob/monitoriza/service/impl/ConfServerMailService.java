@@ -20,36 +20,42 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 10/01/2018.
+ * @version 1.5, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.exception.CipherException;
+import es.gob.monitoriza.i18n.ICoreLogMessages;
+import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfServerMailDTO;
+import es.gob.monitoriza.persistence.configuration.exception.DatabaseException;
 import es.gob.monitoriza.persistence.configuration.model.entity.ConfServerMail;
 import es.gob.monitoriza.persistence.configuration.model.repository.ConfServerMailRepository;
 import es.gob.monitoriza.service.IConfServerMailService;
+import es.gob.monitoriza.utilidades.AESCipher;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /**
- * <p>
- * Class that implements the communication with the operations of the
- * persistence layer for ConfServerMail.
- * </p>
- * <b>Project:</b>
- * <p>
- * Application for monitoring services of @firma suite systems.
- * </p>
- * 
- * @version 1.2, 10/01/2018.
+ * <p>Class that implements the communication with the operations of the persistence layer for ConfServerMail.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+  * @version 1.5, 30/01/2019.
  */
 @Service("serverMailService")
 public class ConfServerMailService implements IConfServerMailService {
+	
+	/**
+	 * Attribute that represents the object that manages the log of the class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
 	 * Attribute that represents the injected interface that provides CRUD
@@ -65,7 +71,15 @@ public class ConfServerMailService implements IConfServerMailService {
 	 */
 	@Override
 	public ConfServerMail getAllConfServerMail() {
-		List<ConfServerMail> allConf = repository.findAll();
+		
+		List<ConfServerMail> allConf = new ArrayList<>();
+				
+		try {
+			allConf = repository.findAll();
+		} catch (Exception e) {
+			throw new DatabaseException(e.getMessage());
+		}
+		
 		if (!allConf.isEmpty()) {
 			return allConf.get(0);
 		} else {
@@ -99,10 +113,20 @@ public class ConfServerMailService implements IConfServerMailService {
 		} else {
 			confMail = new ConfServerMail();
 		}
-		BCryptPasswordEncoder bc = new BCryptPasswordEncoder();
+	
 		String pwd = confServerMailDto.getPasswordMail();
-		String hashPwd = bc.encode(pwd);
-
+		String hashPwd = null;
+		
+		if (pwd != null && !UtilsStringChar.EMPTY_STRING.equals(pwd)) {
+						
+			try {
+				hashPwd = new String(AESCipher.getInstance().encryptMessage(pwd));
+			} catch (CipherException e) {
+				
+				LOGGER.error(Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE015), e);
+			} 
+		}
+	
 		confMail.setIssuerMail(confServerMailDto.getIssuerMail());
 		confMail.setHostMail(confServerMailDto.getHostMail());
 		confMail.setPortMail(confServerMailDto.getPortMail());

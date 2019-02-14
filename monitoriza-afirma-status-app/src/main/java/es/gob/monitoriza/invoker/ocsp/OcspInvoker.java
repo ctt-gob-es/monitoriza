@@ -17,9 +17,9 @@
  * <b>File:</b><p>es.gob.monitoriza.invoker.ocps.OcspInvoker.java.</p>
  * <b>Description:</b><p>Class that performs the request of a OCSP service.</p>
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
- * <b>Date:</b><p>25 ene. 2018.</p>
+ * <b>Date:</b><p>25/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 05/12/2018.
+ * @version 1.5, 25/01/2019.
  */
 package es.gob.monitoriza.invoker.ocsp;
 
@@ -47,17 +47,17 @@ import javax.net.ssl.TrustManagerFactory;
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.utilidades.FileUtils;
-import es.gob.monitoriza.utilidades.NumberConstants;
 
 /** 
  * <p>Class that performs the request of a OCSP service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 05/12/2018.
+ * @version 1.5, 25/01/2019.
  */
 public final class OcspInvoker {
 

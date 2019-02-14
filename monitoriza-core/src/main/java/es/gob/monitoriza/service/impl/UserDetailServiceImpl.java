@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.service.impl.UserDetailServiceImpl.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>7 mar. 2018.</p>
+ * <b>Date:</b><p>7/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 7 mar. 2018.
+ * @version 1.1, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -37,9 +37,9 @@ import es.gob.monitoriza.persistence.configuration.model.repository.UserMonitori
 /** 
  * <p>Service for retrieving the user's authentication and authorization information from a registered user.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 7 mar. 2018.
+ * @version 1.1, 30/01/2019.
  */
-@Service
+@Service("userDetailService")
 public class UserDetailServiceImpl implements UserDetailsService  {
 	
 	/**
@@ -50,11 +50,11 @@ public class UserDetailServiceImpl implements UserDetailsService  {
 
 	/**
 	 * Constructor method for the class UserDetailServiceImpl.java.
-	 * @param repository 
+	 * @param repositoryParam {@link #UserMonitorizaRepository}
 	 */
 	@Autowired
-	public UserDetailServiceImpl(UserMonitorizaRepository repository) {
-		this.repository = repository;
+	public UserDetailServiceImpl(UserMonitorizaRepository repositoryParam) {
+		this.repository = repositoryParam;
 	}
 
     /**

@@ -17,9 +17,9 @@
  * <b>File:</b><p>es.gob.monitoriza.service.impl.UserMonitorizaService.java.</p>
  * <b>Description:</b><p> .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
- * <b>Date:</b><p>6 mar. 2018.</p>
+ * <b>Date:</b><p>6/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 28/10/2018.
+ * @version 1.3, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -31,6 +31,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.persistence.configuration.dto.UserDTO;
 import es.gob.monitoriza.persistence.configuration.dto.UserEditDTO;
 import es.gob.monitoriza.persistence.configuration.dto.UserPasswordDTO;
@@ -38,14 +39,13 @@ import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.UserMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.UserDatatableRepository;
 import es.gob.monitoriza.service.IUserMonitorizaService;
-import es.gob.monitoriza.utilidades.NumberConstants;
 
 /**
  * <p>Class that implements the communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 28/10/2018.
+ * @version 1.3, 30/01/2019.
  */
-@Service
+@Service("userMonitorizaService")
 public class UserMonitorizaService implements IUserMonitorizaService {
 
 	/**

@@ -20,16 +20,16 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 28/10/2018.
+ * @version 1.1, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
 import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
-import es.gob.monitoriza.utilidades.NumberConstants;
 
 /**
  * <p>
@@ -40,7 +40,7 @@ import es.gob.monitoriza.utilidades.NumberConstants;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 28/10/2018.
+ * @version 1.1, 25/01/2019.
  */
 public class MailDTO {
 

@@ -20,35 +20,35 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 09/11/2018.
+ * @version 1.3, 25/01/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.Keystore;
+import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 
 /** 
  * <p>Interface that provides CRUD functionality for the Keystore entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 09/11/2018.
+ * @version 1.3, 25/01/2019.
  */
 @Repository
-public interface KeystoreRepository extends JpaRepository<Keystore, Long> {
+public interface KeystoreRepository extends JpaRepository<KeystoreMonitoriza, Long> {
 	
 	/**
 	  * Method that obtains from the persistence a @firma platform identified by its primary key. 
 	 * @param id String that represents the primary key of the @firma platform in the persistence.
 	 * @return Object that represents a @firma platform from the persistence. 
 	 */
-	Keystore findByIdKeystore(Long id);
+	KeystoreMonitoriza findByIdKeystore(Long id);
 	
 	/**
 	 * Method that obtains from the persistence a @firma platform identified by its primary key. 
 	 * @param name String that represents the primary key of the @firma platform in the persistence.
 	 * @return Object that represents a @firma platform from the persistence. 
 	 */
-	Keystore findByName(String name);
+	KeystoreMonitoriza findByName(String name);
 
 }

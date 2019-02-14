@@ -15,12 +15,12 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.webservice.AbstractCommonHandler.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.handler.AbstractCommonHandler.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>20 sept. 2018.</p>
+ * <b>Date:</b><p>20/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 20 sept. 2018.
+ * @version 1.1, 30/01/2019.
  */
 package es.gob.monitoriza.handler;
 
@@ -34,10 +34,12 @@ import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.components.crypto.Crypto;
 import org.apache.ws.security.components.crypto.CryptoFactory;
 
+import es.gob.monitoriza.utilidades.UtilsStringChar;
+
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 20 sept. 2018.
+ * @version 1.2, 30/01/2019.
  */
 public class AbstractCommonHandler extends BasicHandler {
 
@@ -50,13 +52,13 @@ public class AbstractCommonHandler extends BasicHandler {
 	 * Attribute that represents the user name to authenticate the request with UserNameToken, or the alias of the private key defined to to authenticate the
 	 * request with BinarySecurityToken.
 	 */
-	private String userAlias = "";
+	private String userAlias = UtilsStringChar.EMPTY_STRING;
 
 	/**
 	 * Attribute that represents the user password to authenticate the request with UserNameToken, or the password of the private key defined to authenticate
 	 * the request with BinarySecurityToken.
 	 */
-	private String password = "";
+	private String password = UtilsStringChar.EMPTY_STRING;
 
 	/**
 	 * Attribute that represents type of password.

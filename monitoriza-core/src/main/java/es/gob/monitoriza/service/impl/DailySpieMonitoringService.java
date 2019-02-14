@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/11/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 04/01/2019.
+ * @version 1.3, 30/01/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -35,6 +35,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.persistence.configuration.dto.DailySpieDTO;
+import es.gob.monitoriza.persistence.configuration.exception.DatabaseException;
 import es.gob.monitoriza.persistence.configuration.model.entity.DailySpieMonitorig;
 import es.gob.monitoriza.persistence.configuration.model.repository.DailySpieMonitoringRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.SpieStatisticsRepository;
@@ -45,25 +46,25 @@ import es.gob.monitoriza.service.IDailySpieMonitoringService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for DailySpieMonitorig.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 04/01/2019.
+ * @version 1.3, 30/01/2019.
  */
-@Service
+@Service("dailySpieMonitoringService")
 public class DailySpieMonitoringService implements IDailySpieMonitoringService {
 	
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents the {#JpaRepository} for {#DailySpieMonitorig}. 
 	 */
 	@Autowired
 	private DailySpieMonitoringRepository repository;
 	
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents the {#DataTablesRepository} for {#DailySpieMonitorig}. 
 	 */
 	@Autowired
 	private DailySpieDataTableRepository dtRepository;
 	
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents the {#JpaRepository} for {#SpieStatistics}. 
 	 */
 	@Autowired
 	private SpieStatisticsRepository statRepository;
@@ -84,9 +85,14 @@ public class DailySpieMonitoringService implements IDailySpieMonitoringService {
 	 * @see es.gob.monitoriza.service.IDailySpieMonitoringService#saveDailySpieMonitoring(es.gob.monitoriza.persistence.configuration.model.entity.DailySpieMonitorig)
 	 */
 	@Override
+	@org.springframework.transaction.annotation.Transactional
 	public void saveDailySpieMonitoring(DailySpieMonitorig dailySpie) {
 		
-		repository.saveAndFlush(dailySpie);
+		try {
+			repository.saveAndFlush(dailySpie);
+		} catch (Exception e) {
+			throw new DatabaseException(e.getMessage());
+		}
 
 	}	
 	
@@ -128,9 +134,12 @@ public class DailySpieMonitoringService implements IDailySpieMonitoringService {
 	@Transactional
 	public void dumpAndDeleteSpieMonitoringData() {
 		
-		statRepository.dumpFromDailySpieNative();
-		
-		repository.deleteOldDailySpie();
+		try {
+			statRepository.dumpFromDailySpieNative();
+			repository.deleteOldDailySpie();
+		} catch (Exception e) {
+			throw new DatabaseException(e.getMessage());
+		}
 		
 	}
 

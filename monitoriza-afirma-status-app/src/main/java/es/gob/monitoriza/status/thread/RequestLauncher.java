@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 feb. 2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 28/10/2018.
+ * @version 1.4, 25/01/2019.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -34,6 +34,7 @@ import java.util.concurrent.TimeUnit;
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
@@ -41,13 +42,12 @@ import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.status.RunningServices;
 import es.gob.monitoriza.status.StatusUptodate;
-import es.gob.monitoriza.utilidades.NumberConstants;
-import es.gob.monitoriza.utilidades.StaticMonitorizaProperties;
+import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 
 /** 
  * <p>Class that manages the thread pool for processing each service in a separate thread.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 28/10/2018.
+ * @version 1.4, 25/01/2019.
  */
 public class RequestLauncher {
 
@@ -59,7 +59,7 @@ public class RequestLauncher {
 	/**
 	 * Attribute that represents the path where the pairs are stored.
 	 */
-	private static String requestDirectory = StaticMonitorizaProperties.getProperty(StaticConstants.ROOT_PATH_DIRECTORY);
+	private static String requestDirectory = StaticMonitorizaConfig.getProperty(StaticConstants.ROOT_PATH_DIRECTORY);
 		
 	/**
 	 * Method that performs the invocation of service by service name.
@@ -76,7 +76,7 @@ public class RequestLauncher {
 		Integer threads = null;
 				
 		try {
-			threads = Integer.parseInt(StaticMonitorizaProperties.getProperty(StaticConstants.REQUEST_THREAD_POOL_SIZE));
+			threads = Integer.parseInt(StaticMonitorizaConfig.getProperty(StaticConstants.REQUEST_THREAD_POOL_SIZE));
 		} catch (NumberFormatException e) {
 			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS001, new Object[ ] { requestDirectory }), e);
 		}
