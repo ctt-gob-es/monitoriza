@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.rest.controller.AlarmRestController.java.</p>
  * <b>Description:</b><p>Class that manages the REST requests related to the Services administration and JSON communication.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>18 oct. 2018.</p>
+ * <b>Date:</b><p>18/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 28/10/2018.
+ * @version 1.5, 15/02/2019.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -62,8 +62,6 @@ import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IAlarmMonitorizaService;
 import es.gob.monitoriza.service.IAlarmService;
 import es.gob.monitoriza.service.IMailMonitorizaService;
-import es.gob.monitoriza.service.IServiceMonitorizaService;
-import es.gob.monitoriza.service.ITimerScheduledService;
 
 /**
  * <p>
@@ -75,7 +73,7 @@ import es.gob.monitoriza.service.ITimerScheduledService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.4, 28/10/2018.
+ * @version 1.5, 15/02/2019.
  */
 @RestController
 public class AlarmRestController {
@@ -96,19 +94,7 @@ public class AlarmRestController {
 	 */
 	@Autowired
 	private IAlarmMonitorizaService alarmMonitorizaService;
-
-	/**
-	 * Attribute that represents the service object for accessing the repository.
-	 */
-	@Autowired
-	private IServiceMonitorizaService serviceService;
-
-	/**
-	 * Attribute that represents the service object for accessing the repository.
-	 */
-	@Autowired
-	private ITimerScheduledService scheduledService;
-
+	
 	/**
 	 * Attribute that represents the service object for accessing the
 	 * AlarmRespository.
