@@ -20,18 +20,22 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>27/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 27/10/2018.
+ * @version 1.0, 15/02/2018.
  */
 package es.gob.monitoriza.spie.html;
 
+import java.util.List;
+import java.util.Map;
+
+import es.gob.monitoriza.persistence.configuration.dto.AvgTimesServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
 
 /** 
  * <p>Interface for the resolvers that parses concrete HTML SPIE responses.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 27/10/2018.
+ * @version 1.0, 15/02/2018.
  */
-public interface IHtmlSpieResolver {
+public abstract class AbstractHtmlSpieResolver {
 		
 	/**
 	 * Method that parse the HTML from a SPIE and gets the status result.
@@ -39,6 +43,12 @@ public interface IHtmlSpieResolver {
 	 * @param confSpie DTO containing SPIE global configuration
 	 * @return SpieHtmlResolved representing the status of the SPIE
 	 */
-	Integer solveHtmlResult(String htmlResult, ConfSpieDTO confSpie);
+	public abstract Integer solveHtmlResult(String htmlResult, ConfSpieDTO confSpie);
+	
+	/**
+	 * Gets the {@link #detailResults}.
+	 * @return {@link Map}.
+	 */
+	public abstract List<AvgTimesServiceDTO> getDetailResults();
 
 }

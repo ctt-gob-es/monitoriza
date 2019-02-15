@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>25/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 30/01/2019.
+ * @version 1.2, 15/02/2019.
  */
 package es.gob.monitoriza.spie.task;
 
@@ -48,7 +48,7 @@ import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 /** 
  * <p>Class that initializes the timers for processing the batch of requests for each SPIE service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 30/01/2019.
+ * @version 1.2, 15/02/2019.
  */
 public class MonitorizaSpieTask extends HttpServlet {
 
@@ -137,7 +137,7 @@ public class MonitorizaSpieTask extends HttpServlet {
 			
 			RequestLauncherSpie rlt = new RequestLauncherSpie();
 			
-			rlt.startInvoker(StatusSpieHolder.getInstance().getCurrentStatusHolder(), platformType);
+			rlt.startInvoker(platformType);
 
 		}
 

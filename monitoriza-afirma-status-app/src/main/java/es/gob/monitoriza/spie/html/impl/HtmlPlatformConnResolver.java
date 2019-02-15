@@ -20,11 +20,12 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>05/11/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 30/01/2019.
+ * @version 1.3, 15/02/2019.
  */
 package es.gob.monitoriza.spie.html.impl;
 
 import java.util.Iterator;
+import java.util.List;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -33,16 +34,17 @@ import org.jsoup.select.Elements;
 
 import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.enums.SemaphoreEnum;
+import es.gob.monitoriza.persistence.configuration.dto.AvgTimesServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
-import es.gob.monitoriza.spie.html.IHtmlSpieResolver;
+import es.gob.monitoriza.spie.html.AbstractHtmlSpieResolver;
 
 
 /** 
  * <p>Class that parses @Firma/TS@ Connection SPIE HTML response.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 30/01/2019.
+ * @version 1.3, 15/02/2019.
  */
-public class HtmlPlatformConnResolver implements IHtmlSpieResolver {
+public class HtmlPlatformConnResolver extends AbstractHtmlSpieResolver {
 	
 	/**
 	 * Attribute that represents the literal String of the SPIE with error status. 
@@ -65,7 +67,7 @@ public class HtmlPlatformConnResolver implements IHtmlSpieResolver {
 
 	/**
 	 * {@inheritDoc}
-	 * @see es.gob.monitoriza.spie.html.IHtmlSpieResolver#solveHtmlResult(java.lang.String)
+	 * @see es.gob.monitoriza.spie.html.AbstractHtmlSpieResolver#solveHtmlResult(java.lang.String)
 	 */
 	@Override
 	public Integer solveHtmlResult(String htmlResult, ConfSpieDTO confSpie) {
@@ -107,6 +109,16 @@ public class HtmlPlatformConnResolver implements IHtmlSpieResolver {
 		}
 		
 		return sempaphoreValue;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.spie.html.AbstractHtmlSpieResolver#getDetailResults()
+	 */
+	@Override
+	public List<AvgTimesServiceDTO> getDetailResults() {
+		
+		return null;
 	}
 
 }

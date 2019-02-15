@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>04/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 15/02/2019.
  */
 package es.gob.monitoriza.spie.response;
 
@@ -38,7 +38,7 @@ import es.gob.monitoriza.spie.status.StatusSpieHolder;
 /** 
  * <p>Class that builds the JSON response for servlet admin calls.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 15/02/2019.
  */
 public final class ResponseJsonSpie {
 	
@@ -60,7 +60,7 @@ public final class ResponseJsonSpie {
 		StatusSpieDTO dtStatus = new StatusSpieDTO();
 		List<RowStatusSpieDTO> responseList = new ArrayList<>();
 		
-		for (Map.Entry<Long,RowStatusSpieDTO> entry : StatusSpieHolder.getInstance().getCurrentStatusHolder().entrySet()) {
+		for (Map.Entry<String,RowStatusSpieDTO> entry : StatusSpieHolder.getInstance().getCurrentStatusHolder().entrySet()) {
 										
 			responseList.add(entry.getValue());
 						

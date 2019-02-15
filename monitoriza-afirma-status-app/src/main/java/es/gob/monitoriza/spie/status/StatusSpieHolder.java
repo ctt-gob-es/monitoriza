@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.0, 16/01/2018.
+ * @version 1.1, 15/02/2019.
  */
 package es.gob.monitoriza.spie.status;
 
@@ -31,14 +31,14 @@ import es.gob.monitoriza.persistence.configuration.dto.RowStatusSpieDTO;
 /** 
  * <p>Class that stores in memory the status for the SPIEs that are being processed.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.0, 26/10/2018.
+ * @version 1.1, 15/02/2019.
  */
 public final class StatusSpieHolder {
 		
 	/**
 	 * Attribute that represents the current map of statuses for services being processed. 
 	 */
-	private Map<Long, RowStatusSpieDTO> currentStatusHolder;
+	private Map<String, RowStatusSpieDTO> currentStatusHolder;
 	
 	/**
 	 * Attribute that represents the instance for this class. 
@@ -49,7 +49,7 @@ public final class StatusSpieHolder {
 	 * Constructor method for the class StatusHolder.java. 
 	 */
 	private StatusSpieHolder() {
-		currentStatusHolder = new ConcurrentHashMap<Long, RowStatusSpieDTO>();
+		currentStatusHolder = new ConcurrentHashMap<String, RowStatusSpieDTO>();
 	}
 	
 	/**
@@ -68,7 +68,7 @@ public final class StatusSpieHolder {
 	 * Gets the {@link #currentStatusHolder}.
 	 * @return {@link Map}.
 	 */
-	public Map<Long, RowStatusSpieDTO> getCurrentStatusHolder() {
+	public Map<String, RowStatusSpieDTO> getCurrentStatusHolder() {
 		return currentStatusHolder;
 	}
 
@@ -77,7 +77,7 @@ public final class StatusSpieHolder {
 	 * Sets the {@link #currentStatusHolder}.
 	 * @param currentstatusHolderParam value for {@link #currentStatusHolder} to set
 	 */
-	public void setCurrentStatusHolder(final Map<Long, RowStatusSpieDTO> currentstatusHolderParam) {
+	public void setCurrentStatusHolder(final Map<String, RowStatusSpieDTO> currentstatusHolderParam) {
 		this.currentStatusHolder = currentstatusHolderParam;
 	}
 	
