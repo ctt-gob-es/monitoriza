@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>08/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 25/01/2019.
+ * @version 1.4, 15/02/2019.
  */
 package es.gob.monitoriza.i18n;
 
@@ -28,7 +28,7 @@ package es.gob.monitoriza.i18n;
 /** 
  * <p>Interface that contains the keys to the log messages for the core module.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 25/01/2019.
+ * @version 1.4, 15/02/2019.
  */
 public interface ICoreLogMessages {
 		
@@ -72,6 +72,7 @@ public interface ICoreLogMessages {
 	 */
 	String CORE007 = "core007";
 	
+	
 	/**
 	 * Inicialización de la plataforma
 	 */
@@ -90,6 +91,12 @@ public interface ICoreLogMessages {
 	 * Constant attribute that represents the property key <code>CORE010</code> belonging to the file messages/valet-core/general_xx_YY.properties.
 	 */
 	String CORE010 = "core010";
+	
+	
+	/**
+	 * Constant attribute that represents the property key <code>CORE011</code> belonging to the file messages/valet-core/general_xx_YY.properties.
+	 */
+	String CORE011 = "core011";
 	
 	
 	/***********************/
@@ -170,5 +177,10 @@ public interface ICoreLogMessages {
 	 * Constant attribute that represents the name of the property <code>errorcore015</code> belonging to the file status/monitoriza_xx_YY.properties.
 	 */
 	String ERRORCORE015 = "errorcore015";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>errorcore016</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORCORE016 = "errorcore016";
 
 }
