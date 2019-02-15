@@ -14,9 +14,9 @@
  * <b>Description:</b><p>Class that provides methods for managing xml.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * <b>Date:</b><p>10/05/2012.</p>
+ * <b>Date:</b><p>15/02/2019.</p>
  * @author Gobierno de España.
- * @version 1.5, 29/11/2017.
+ * @version 1.6, 15/02/2019.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -33,6 +33,7 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
+import org.apache.commons.text.StringEscapeUtils;
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 
@@ -40,7 +41,7 @@ import org.w3c.dom.Document;
  * <p>Class that provides methods for managing xml.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.5, 29/11/2017.
+ * @version 1.6, 15/02/2019.
  */
 public final class UtilsXml {
 
@@ -95,6 +96,16 @@ public final class UtilsXml {
 	    }
 		
 		return xmlString;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see org.apache.commons.text.StringEscapeUtils#escapeXml10(java.lang.String)
+	 */
+	public static String escapeXml10(String textToEscape) {
+
+		return StringEscapeUtils.escapeXml10(textToEscape);
+
 	}
 
 }

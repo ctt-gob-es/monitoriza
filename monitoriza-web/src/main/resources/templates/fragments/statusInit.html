@@ -31,7 +31,7 @@
 						<h4 class="c-grey-900 mB-20" th:text="#{table.summary.title}"></h4>
 							
 							<div class="masonry-sizer col-md-12 border border-light border-3 bg-light">
-								<table id="summaryTable" class="display"
+								<table data-page-length='50' id="summaryTable" class="display"
 									style="cellspacing: 0; width: 100%;">
 									<thead>
 										<tr>
@@ -67,7 +67,7 @@
 								</div>
 							</div>
 							<div th:if="${statusVip.error == null}" class="masonry-sizer col-md-12 border border-light border-3 bg-light">
-								<table id="statusVipTable" class="display"
+								<table data-page-length='50' id="statusVipTable" class="display"
 									style="cellspacing: 0; width: 100%;">
 									<thead>
 										<tr>
@@ -109,7 +109,7 @@
 								</div>
 							</div>
 							<div th:if="${statusSpie.error == null}" class="masonry-sizer col-md-12 border border-light border-3 bg-light">
-								<table id="statusSpieTable" class="display"
+								<table data-page-length='50' id="statusSpieTable" class="display"
 									style="cellspacing: 0; width: 100%;">
 									<thead>
 										<tr>

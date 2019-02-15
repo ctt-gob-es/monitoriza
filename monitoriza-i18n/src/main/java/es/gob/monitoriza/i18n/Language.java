@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.0, 22 dic. 2017.
+ * @version 1.1, 15/02/2019.
  */
 package es.gob.monitoriza.i18n;
 
@@ -53,7 +53,7 @@ import es.gob.monitoriza.i18n.utils.UtilsTomcat;
 /** 
  * <p>Class responsible for managing the access to language resources.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.0, 22 dic. 2017.
+ * @version 1.1, 15/02/2019.
  */
 public final class Language {
 	
@@ -118,6 +118,11 @@ public final class Language {
 	 * Constant attribute that represents the string to identify the bundle name to the file related with core logs.
 	 */
 	private static final String BUNDLENAME_COMMONUTILS = "commonsUtils.monitoriza";
+	
+	/**
+	 * Constant attribute that represents the string to identify the bundle name to the file related with core logs.
+	 */
+	private static final String BUNDLENAME_RESTGENERAL = "rest.monitoriza";
 
 	/**
 	 * Constant attribute that represents the key for the configured locale for the platform.
@@ -153,6 +158,11 @@ public final class Language {
 	 * Attribute that represents the properties for the locale for the core bundle messages.
 	 */
 	private static ResourceBundle resCommonsUtilsBundle = null;
+	
+	/**
+	 * Attribute that represents the properties for the locale for the core bundle messages.
+	 */
+	private static ResourceBundle resRestGeneralBundle = null;
 	
 
 	static {
@@ -246,6 +256,9 @@ public final class Language {
 		
 		// Se cargan los mensajes del módulo utilidades.
 		resCommonsUtilsBundle = ResourceBundle.getBundle(BUNDLENAME_COMMONUTILS, currentLocale, urlClassLoaderMessages);
+		
+		// Se cargan los mensajes del módulo rest.
+		resRestGeneralBundle = ResourceBundle.getBundle(BUNDLENAME_RESTGENERAL, currentLocale, urlClassLoaderMessages);
 
 	}
 
@@ -362,6 +375,25 @@ public final class Language {
 	 */
 	public static String getResCommonsUtilsMonitoriza(String key) {
 		return resCommonsUtilsBundle.getString(key);
+	}
+		
+	/**
+	 * Gets the message with the key and values indicated as input parameters.
+	 * @param key Key for obtain the message.
+	 * @param values Values for insert in the message.
+	 * @return String with the message well-formed.
+	 */
+	public static String getFormatResRestGeneralMonitoriza(String key, Object[ ] values) {
+		return new MessageFormat(resRestGeneralBundle.getString(key), currentLocale).format(values);
+	}
+
+	/**
+	 * Gets the message with the key indicated as input parameters.
+	 * @param key Key for obtain the message.
+	 * @return String with the message.
+	 */
+	public static String getResRestGeneralMonitoriza(String key) {
+		return resRestGeneralBundle.getString(key);
 	}
 	
 }

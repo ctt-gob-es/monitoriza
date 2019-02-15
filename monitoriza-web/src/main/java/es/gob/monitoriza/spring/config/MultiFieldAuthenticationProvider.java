@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>30/07/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 15/02/2019.
  */
 package es.gob.monitoriza.spring.config;
 
@@ -69,13 +69,13 @@ import es.gob.monitoriza.utilidades.UtilsCertificate;
 /**
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 15/02/2019.
  */
 @Component
 public class MultiFieldAuthenticationProvider implements AuthenticationProvider {
 
 	/**
-	 * Attribute that represents the keystore of users
+	 * Attribute that represents the keystore of users.
 	 */
 	public static final String USER_KEYSTORE = "UserStore";
 

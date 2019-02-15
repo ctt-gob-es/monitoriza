@@ -20,21 +20,23 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 30/01/2019.
+ * @version 1.4, 15/02/2019.
  */
 package es.gob.monitoriza.service;
 
 import java.security.KeyStore;
+import java.util.List;
 
 import org.springframework.dao.DataIntegrityViolationException;
 
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 30/01/2019.
+ * @version 1.4, 15/02/2019.
  */
 public interface IKeystoreService {
 	
@@ -91,5 +93,14 @@ public interface IKeystoreService {
 	 * @return Keystore containing the key pairs for RFC3161 authentication.
 	 */
 	KeyStore loadRfc3161Keystore();
+	
+	/**
+	 * Method that maps the save ssl certificate web request to the controller and saves it in the persistence.
+	 * @param alias String that represents the SSL certificate alias to be stored
+	 * @param sysCert byte[] that represents the certificate 
+	 * @throws Exception If the method fails
+	 * @return List<SystemCertificate>
+	 */
+	List<SystemCertificate> saveSsl(String alias, byte[] sysCert) throws Exception;
 			
 }

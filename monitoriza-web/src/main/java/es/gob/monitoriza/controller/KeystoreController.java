@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.controller.KeystoreController.java.</p>
  * <b>Description:</b><p> .</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>14 may. 2018.</p>
+ * <b>Date:</b><p>14/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.2 28/10/2018.
+ * @version 1.3 15/02/2019.
  */
 package es.gob.monitoriza.controller;
 
@@ -43,7 +43,7 @@ import es.gob.monitoriza.service.ISystemCertificateService;
 /**
  * <p>Class that maps the request for the keystores forms to the controller.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 15/02/2019.
  */
 @Controller
 public class KeystoreController {
@@ -78,6 +78,11 @@ public class KeystoreController {
 		return "fragments/authadmin.html";
 	}
 	
+	/**
+	 * Method that maps the request to the validation keystore page.
+	 * @param model Holder object for model attributes
+	 * @return String that represents the name of the view to forward.
+	 */
 	@RequestMapping(value = "keystorevalidserviceadmin")
 	public String keystoreValidServiceAdmin(final Model model) {
 
@@ -101,7 +106,6 @@ public class KeystoreController {
 	/**
 	 * Method that maps the add keystore web requests to the controller and forwards to the form
 	 * to the view.
-	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
 	@RequestMapping(value = "addauth")
@@ -113,7 +117,6 @@ public class KeystoreController {
 	/**
 	 * Method that maps the add keystore web requests to the controller and forwards to the form
 	 * to the view.
-	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
 	@RequestMapping(value = "addvalidservicekeystore")
@@ -124,9 +127,9 @@ public class KeystoreController {
 
 	/**
 	 * Method that maps the save ssl certificate web request to the controller and saves it in the persistence.
-	 * @param file
-	 * @param sslForm Object that represents the backing user form.
-	 * @return
+	 * @param file Object that rpresetns the certificate file.
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
 	 */
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "loadssl", method = RequestMethod.POST)
@@ -146,7 +149,7 @@ public class KeystoreController {
 	/**
 	 * Method that maps the edit certificate web request to the controller and loads the certificate to the
 	 * backing form.
-	 * @param sslId Identifier of the certificate to be edited.
+	 * @param certId Identifier of the certificate to be edited.
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */

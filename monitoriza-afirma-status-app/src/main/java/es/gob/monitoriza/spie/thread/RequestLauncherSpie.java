@@ -20,13 +20,12 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19 feb. 2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 30/01/2019.
+ * @version 1.5, 15/02/2019.
  */
 package es.gob.monitoriza.spie.thread;
 
 import java.security.KeyStore;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -40,7 +39,6 @@ import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
-import es.gob.monitoriza.persistence.configuration.dto.RowStatusSpieDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 import es.gob.monitoriza.service.impl.KeystoreService;
 import es.gob.monitoriza.service.impl.NodeMonitorizaService;
@@ -52,7 +50,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 /** 
  * <p>Class that manages the thread pool for processing each service in a separate thread.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 30/01/2019.
+ * @version 1.5, 15/02/2019.
  */
 public class RequestLauncherSpie {
 
@@ -63,11 +61,11 @@ public class RequestLauncherSpie {
 		
 	/**
 	 * Method that performs the invocation of service by service name.
-	 * @param statusHolder Reference to the Map that holds the current status for the processed services. 
+
 	 * @param platformType Identifier of the platform type
 	 * @throws InvokerException if the path is not correct or the directories structure is not correct.
 	 */
-	public void startInvoker(final Map<Long, RowStatusSpieDTO> statusHolder, final Long platformType) {
+	public void startInvoker(final Long platformType) {
 					
 		Integer threads = null;
 				
@@ -90,11 +88,13 @@ public class RequestLauncherSpie {
 
 		// Se procesa cada nodo en un hilo del pool
 		for (NodeMonitoriza node: nodes) {
-
-			RunningServices.getInstance();
 			
-			RequestSpieThread rpt = new RequestSpieThread(statusHolder, node, ssl);
-			executor.execute(rpt);			 			
+			if (node.getActive()) {
+    			RunningServices.getInstance();
+    			
+    			RequestSpieThread rpt = new RequestSpieThread(node, ssl);
+    			executor.execute(rpt);
+			}	
 			
 		}
 

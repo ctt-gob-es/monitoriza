@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>06/11/2018.</p>
  * @author Gobierno de España.
- * @version 1.6, 30/01/2019.
+ * @version 1.7, 15/02/2019.
  */
 package es.gob.monitoriza.spie.html.impl;
 
@@ -38,16 +38,16 @@ import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.enums.SemaphoreEnum;
 import es.gob.monitoriza.persistence.configuration.dto.AvgTimesServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
-import es.gob.monitoriza.spie.html.IHtmlSpieResolver;
+import es.gob.monitoriza.spie.html.AbstractHtmlSpieResolver;
 import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 
 /** 
  * <p>Class that parses average times SPIE HTML response.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.6, 30/01/2019.
+ * @version 1.7, 15/02/2019.
  */
-public class HtmlAvgResponseTimeResolver implements IHtmlSpieResolver {
+public class HtmlAvgResponseTimeResolver extends AbstractHtmlSpieResolver {
 	
 	/**
 	 * Attribute that represents the semaphore level to set when the SPIE returns error.
@@ -70,7 +70,7 @@ public class HtmlAvgResponseTimeResolver implements IHtmlSpieResolver {
 
 	/**
 	 * {@inheritDoc}
-	 * @see es.gob.monitoriza.spie.html.IHtmlSpieResolver#solveHtmlResult(java.lang.String)
+	 * @see es.gob.monitoriza.spie.html.AbstractHtmlSpieResolver#solveHtmlResult(java.lang.String)
 	 */
 	@Override
 	public Integer solveHtmlResult(final String htmlResult, final ConfSpieDTO confSpie) {
@@ -137,15 +137,7 @@ public class HtmlAvgResponseTimeResolver implements IHtmlSpieResolver {
 	public List<AvgTimesServiceDTO> getDetailResults() {
 		return detailResults;
 	}
-
-	/**
-	 * Sets the {@link #detailResults}.
-	 * @param detailResultsParam value for {@link #detailResults} to set
-	 */
-	public void setDetailResults(List<AvgTimesServiceDTO> detailResultsParam) {
-		this.detailResults = detailResultsParam;
-	}
-
+	
 	/**
 	 * Method that parses the value of the cell containing the number of transactions above maximum and its corresponding maximum.
 	 * @param colText Text of the cell containing the number of transactions above average time and (maximum time).
