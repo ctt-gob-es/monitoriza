@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 09/11/2018.
+ * @version 1.4, 05/03/2019.
  */
 package es.gob.monitoriza.controller;
 
@@ -34,12 +34,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import es.gob.monitoriza.persistence.configuration.dto.StatusSpieDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusVipDTO;
 import es.gob.monitoriza.service.IStatusService;
+import es.gob.monitoriza.service.ISystemNotificationService;
 
 /**
  * <p>Class that maps the request for the front view to the controller.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.3, 09/11/2018.
+ * @version 1.4, 05/03/2019.
  */
 @Controller
 public class WebAdminController {
@@ -49,6 +50,12 @@ public class WebAdminController {
 	 */
 	@Autowired
 	private IStatusService statusService;
+	
+	/**
+	 * Attribute that represents the service. 
+	 */
+	@Autowired
+	private ISystemNotificationService sysNotService;
 
 	/**
 	 * Method that maps the invalid session request.
@@ -77,7 +84,8 @@ public class WebAdminController {
 		model.addAttribute("statusSpie", statusSpieDto);
 		model.addAttribute("spieAvgDetails", statusService.getSpieAvgTimesDetails(statusSpieDto.getData()));
 		model.addAttribute("summary", statusService.getSummaryStatus(statusVipDto, statusSpieDto, request.getLocale()));
-
+		model.addAttribute("hasPendingNotifications", sysNotService.hasPendingNotifications());
+	
 		return "fragments/statusInit.html";
 	}
 

@@ -48,7 +48,6 @@ import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
 import es.gob.monitoriza.i18n.ICoreLogMessages;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
-import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;

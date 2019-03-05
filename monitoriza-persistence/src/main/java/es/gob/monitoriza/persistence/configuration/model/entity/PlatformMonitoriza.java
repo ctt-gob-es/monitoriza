@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.6, 25/01/2019.
+ * @version 1.7, 05/03/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -49,7 +49,7 @@ import es.gob.monitoriza.constant.NumberConstants;
 /** 
  * <p>Class that maps the <i>PLATFORM_MONITORIZA</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.6, 25/01/2019.
+ * @version 1.7, 05/03/2019.
  */
 @Entity
 @Table(name = "PLATFORM_MONITORIZA")
@@ -212,13 +212,13 @@ public class PlatformMonitoriza implements Serializable {
 	
 	/**
 	 * Sets the value of the attribute {@link #name}.
-	 * @param isBlockedParam The value for the attribute {@link #name}.
+	 * @param nameParam The value for the attribute {@link #name}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setName(String name) {
+	public void setName(String nameParam) {
 		// CHECKSTYLE:ON
-		this.name = name;
+		this.name = nameParam;
 	}
 
 	/**
@@ -335,13 +335,13 @@ public class PlatformMonitoriza implements Serializable {
 	
 	/**
 	 * Sets the value of the attribute {@link #rfc3161Context}.
-	 * @param isBlockedParam The value for the attribute {@link #rfc3161Context}.
+	 * @param rfc3161ContextParam The value for the attribute {@link #rfc3161Context}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setRfc3161Context(String rfc3161Context) {
+	public void setRfc3161Context(String rfc3161ContextParam) {
 		// CHECKSTYLE:ON
-		this.rfc3161Context = rfc3161Context;
+		this.rfc3161Context = rfc3161ContextParam;
 	}
 	
 	/**
@@ -359,13 +359,13 @@ public class PlatformMonitoriza implements Serializable {
 
 	/**
 	 * Sets the value of the attribute {@link #rfc3161Port}.
-	 * @param isBlockedParam The value for the attribute {@link #rfc3161Port}.
+	 * @param rfc3161PortParam The value for the attribute {@link #rfc3161Port}.
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setRfc3161Port(String rfc3161Port) {
+	public void setRfc3161Port(String rfc3161PortParam) {
 		// CHECKSTYLE:ON
-		this.rfc3161Port = rfc3161Port;
+		this.rfc3161Port = rfc3161PortParam;
 	}
 
 	/**

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>27/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 30/01/2019.
+ * @version 1.3, 05/03/2019.
  */
 package es.gob.monitoriza.cron;
 
@@ -44,17 +44,25 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.constant.GrayLogErrorCodes;
+import es.gob.monitoriza.constant.INotificationOriginIds;
+import es.gob.monitoriza.constant.INotificationPriority;
+import es.gob.monitoriza.constant.INotificationTypeIds;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
 import es.gob.monitoriza.i18n.ICoreLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
+import es.gob.monitoriza.persistence.configuration.model.entity.SystemNotification;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
 import es.gob.monitoriza.service.IKeystoreService;
 import es.gob.monitoriza.service.IStatusCertificateService;
 import es.gob.monitoriza.service.ISystemCertificateService;
+import es.gob.monitoriza.service.ISystemNotificationService;
 import es.gob.monitoriza.service.IValidServiceService;
+import es.gob.monitoriza.service.impl.SystemNotificationService;
+import es.gob.monitoriza.service.utils.IServiceNameConstants;
+import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.utilidades.UtilsCertificate;
 import es.gob.monitoriza.utilidades.UtilsGrayLog;
 import es.gob.monitoriza.utilidades.UtilsStringChar;
@@ -64,7 +72,7 @@ import es.gob.monitoriza.webservice.ClientManager;
 /** 
  * <p>Class that manages the scheduled job for certificate validation.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 30/01/2019.
+ * @version 1.3, 05/03/2019.
  */
 @Service
 public class ValidCertificatesJob implements SchedulerObjectInterface {
@@ -147,6 +155,7 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
             	Date nextExec = null;
             	List<ValidService> validServices = null;
             	ValidService validService = null;
+            	ISystemNotificationService sysNotificationService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SYSTEM_NOTIFICATION_SERVICE, SystemNotificationService.class);
             	try {
             		validServices = validServiceService.getAllValidServices();
             		if (!validServices.isEmpty()) {
@@ -155,10 +164,26 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
                 	}
                     CronTrigger trigger = new CronTrigger(cronExpression);
                     nextExec = trigger.nextExecutionTime(triggerContext);
+                    
+                    // Si la ejecución es correcta, se comprueba si hay que eliminar
+                    // el aviso correspondiente.
+                    SystemNotification sysNot = sysNotificationService.getSystemNotificationByOrigin(INotificationOriginIds.ID_CONFIG_VALIDATION_SERVICE_ORIGIN);
+                    if (sysNot != null)
+                    {
+                    	sysNotificationService.deleteSystemNotification(sysNot);
+            		}
             	} catch (Exception e) {
             		String msgError = Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE007);
             		LOGGER.error(msgError, e);
             		UtilsGrayLog.writeMessageInGrayLog(UtilsGrayLog.LEVEL_ERROR, GrayLogErrorCodes.ERROR_VALIDATION_SERVICE_CONFIG, msgError);
+            		 
+            		// Se comprueba si es necesario registrar el aviso.
+					if (sysNotificationService.getSystemNotificationByOrigin(INotificationOriginIds.ID_CONFIG_VALIDATION_SERVICE_ORIGIN) == null) {
+
+						// Se registra la notificación asociada al registro del
+						// nodo.
+						sysNotificationService.registerSystemNotification(INotificationTypeIds.ID_CONFIG_NOTIFICATION_TYPE, INotificationOriginIds.ID_CONFIG_VALIDATION_SERVICE_ORIGIN, INotificationPriority.ID_NOTIFICATION_PRIORITY_IMPORTANT, msgError);
+					}
             	}
                 return nextExec;
             }

@@ -8,6 +8,15 @@
               </li>
             </ul>
             <ul class="nav-right">
+            
+              <li th:if="${hasPendingNotifications eq true}" class="p-20 layer">
+              	<input id="idpending" type="button" th:value="#{button.view.notification.pending}" class="btn btn-danger">
+              	<script th:inline="javascript">
+	                 	var actionSysnot = /*[[@{/sysNotifications}]]*/;
+	                 	$('#idpending').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionSysnot, 'optionReplacement', 'GET', null, true); return false;});
+	            </script>
+ 			  </li>
+            
               <li class="dropdown">
                 <a href="" class="dropdown-toggle no-after peers fxw-nw ai-c lh-1" data-toggle="dropdown">
                   <div class="peer mR-10">

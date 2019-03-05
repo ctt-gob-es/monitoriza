@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/02/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 12/02/2019.
+ * @version 1.1, 05/03/2019.
  */
 package es.gob.monitoriza.rest.client;
 
@@ -46,7 +46,7 @@ import es.gob.monitoriza.rest.services.INodeRestService;
 /** 
  * <p>Class that implements a client for Monitoriz@ rest services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 12/02/2019.
+ * @version 1.1, 05/03/2019.
  */
 public class MonitorizaClient {
 	
@@ -132,37 +132,37 @@ public class MonitorizaClient {
 	 * @return {@link NodeRestStatusResponse} with the result
 	 * @throws MonitorizaRestException if the method fails
 	 */
-	public NodeRestStatusResponse unRegisterNode(String nodeName) throws MonitorizaRestException {
-		
-		LOGGER.info("Starting call to \'unRegisterNode\' method at Monitoriz@ rest service.");
-
-		NodeRestStatusResponse response = null;
-		
-		if (restService != null) {
-			
-			try {
-				response = restService.unRegisterNode(nodeName);
-			} catch (ProcessingException e) {
-				if (e.getCause().getClass().equals(UnknownHostException.class)) {
-					throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Unknown host. The address of the host could not be determined.");
-				} else if (e.getCause().getClass().equals(SocketTimeoutException.class)) {
-					throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Network connection timeout. The service didn't response after seconds configured as 'timeout'.");
-				} else if (e.getCause().getClass().equals(ConnectException.class)) {
-					throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Connection refused. Error occurred while attempting to connect a socket to a remote address and port.");
-				} else {
-					// If child exception of ProcessingException is unknown
-					throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Connection no available. There are internal processing errors on the server.");
-				}
-			} catch (NotFoundException e) {
-				throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Not found. The resource requested by client was not found on the server.");
-			} catch (Exception e) {
-				throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Connection no available.", e);
-			}
-			
-		}
-		
-		return response;
-	}
+//	public NodeRestStatusResponse unRegisterNode(String nodeName) throws MonitorizaRestException {
+//		
+//		LOGGER.info("Starting call to \'unRegisterNode\' method at Monitoriz@ rest service.");
+//
+//		NodeRestStatusResponse response = null;
+//		
+//		if (restService != null) {
+//			
+//			try {
+//				response = restService.unRegisterNode(nodeName);
+//			} catch (ProcessingException e) {
+//				if (e.getCause().getClass().equals(UnknownHostException.class)) {
+//					throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Unknown host. The address of the host could not be determined.");
+//				} else if (e.getCause().getClass().equals(SocketTimeoutException.class)) {
+//					throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Network connection timeout. The service didn't response after seconds configured as 'timeout'.");
+//				} else if (e.getCause().getClass().equals(ConnectException.class)) {
+//					throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Connection refused. Error occurred while attempting to connect a socket to a remote address and port.");
+//				} else {
+//					// If child exception of ProcessingException is unknown
+//					throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Connection no available. There are internal processing errors on the server.");
+//				}
+//			} catch (NotFoundException e) {
+//				throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Not found. The resource requested by client was not found on the server.");
+//			} catch (Exception e) {
+//				throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Connection no available.", e);
+//			}
+//			
+//		}
+//		
+//		return response;
+//	}
 	
 	
 

@@ -17,7 +17,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>14/02/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 25/01/2019.
+ * @version 1.4, 05/03/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -43,10 +43,10 @@ import com.fasterxml.jackson.annotation.JsonView;
 import es.gob.monitoriza.constant.NumberConstants;
 
 /**
- * <p>Class that represents the representation of the <i>SYSTEM_CERTIFICATE</i> database table as a Plain Old Java Object.</p>
+ * <p>Class that maps the <i>SYSTEM_CERTIFICATE</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.3, 25/01/2019.
+ * @version 1.4, 05/03/2019.
  */
 @Entity
 @Table(name = "SYSTEM_CERTIFICATE")

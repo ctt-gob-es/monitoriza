@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 may. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 28/10/2018.
+ * @version 1.2, 05/03/2019.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -33,7 +33,7 @@ package es.gob.monitoriza.persistence.configuration.dto;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.1, 12/09/2018.
+ * @version 1.2, 05/03/2019.
  */
 public class ConfAlarmDTO {
 
@@ -56,7 +56,7 @@ public class ConfAlarmDTO {
 	/**
 	 * Attribute that indicate if the alarm service is active. 
 	 */
-	private Boolean active;
+	private Boolean active = Boolean.FALSE;
 
 	/**
 	 * Attribute that represents the list of mail addresses. 

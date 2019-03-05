@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>09/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 15/02/2019.
+ * @version 1.4, 05/03/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -45,7 +45,7 @@ import es.gob.monitoriza.service.INodeMonitorizaService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for NodeMonitoriza.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 15/02/2019.
+ * @version 1.4, 05/03/2019.
  */
 @Service("nodeMonitorizaService")
 public class NodeMonitorizaService implements INodeMonitorizaService {
@@ -167,13 +167,11 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 		nodeAfirma.setName(nodeAfirmaDto.getName());
 		nodeAfirma.setPort(nodeAfirmaDto.getPort());
 		nodeAfirma.setIsSecure(nodeAfirmaDto.getIsSecure());
-		nodeAfirma.setActive(nodeAfirmaDto.getActive());
 		nodeAfirma.setCheckEmergencyDB(nodeAfirmaDto.getCheckEmergencyDB());
 		nodeAfirma.setCheckHsm(nodeAfirmaDto.getCheckHsm());
 		nodeAfirma.setCheckServices(nodeAfirmaDto.getCheckServices());
 		nodeAfirma.setCheckTsa(nodeAfirmaDto.getCheckTsa());
 		nodeAfirma.setCheckValidMethod(nodeAfirmaDto.getCheckValidMethod());
-		nodeAfirma.setActive(nodeAfirmaDto.getActive());
 		CPlatformType afirmaType = new CPlatformType();
 		afirmaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
 		nodeAfirma.setNodeType(afirmaType);
@@ -211,12 +209,10 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 		nodeTsa.setName(nodeTsaDto.getName());
 		nodeTsa.setPort(nodeTsaDto.getPort());
 		nodeTsa.setIsSecure(nodeTsaDto.getIsSecure());
-		nodeTsa.setActive(nodeTsaDto.getActive());
 		nodeTsa.setCheckEmergencyDB(nodeTsaDto.getCheckEmergencyDB());
 		nodeTsa.setCheckHsm(nodeTsaDto.getCheckHsm());
 		nodeTsa.setCheckAfirma(nodeTsaDto.getCheckAfirma());
-		nodeTsa.setActive(nodeTsaDto.getActive());
-		
+				
 		CPlatformType tsaType = new CPlatformType();
 		tsaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA);
 		nodeTsa.setNodeType(tsaType);

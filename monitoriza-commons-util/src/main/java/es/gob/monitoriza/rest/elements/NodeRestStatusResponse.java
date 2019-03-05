@@ -20,16 +20,17 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>11/02/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 11/02/2019.
+ * @version 1.1, 05/03/2019.
  */
 package es.gob.monitoriza.rest.elements;
 
 import java.io.Serializable;
+import java.time.LocalDateTime;
 
 /** 
  * <p>Class that represents the status response of invoking a node REST service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 11/02/2019.
+ * @version 1.1, 05/03/2019.
  */
 public class NodeRestStatusResponse implements Serializable {
 
@@ -47,6 +48,11 @@ public class NodeRestStatusResponse implements Serializable {
 	 * Attribute that represents the description.
 	 */
 	private String description;
+	
+	/**
+	 * Attribute that represents the time when the Node Rest Service was called. 
+	 */
+	private LocalDateTime dateTime;
 	
 	/**
 	 * Gets the value of the attribute {@link #status}.
@@ -80,4 +86,21 @@ public class NodeRestStatusResponse implements Serializable {
 		this.description = descriptionParam;
 	}
 
+	/**
+	 * Gets the value of the attribute {@link #dateTime}.
+	 * @return the value of the attribute {@link #v}.
+	 */
+	public final LocalDateTime getDateTime() {
+		return dateTime;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #dateTime}.
+	 * @param dateTimeParam The value for the attribute {@link #dateTime}.
+	 */
+	public final void setDateTime(LocalDateTime dateTimeParam) {
+		this.dateTime = dateTimeParam;
+	}
+
+	
 }

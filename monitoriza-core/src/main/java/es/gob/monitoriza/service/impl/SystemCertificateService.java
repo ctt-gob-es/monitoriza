@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 30/01/2019.
+ * @version 1.4, 05/03/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -43,7 +43,7 @@ import es.gob.monitoriza.service.ISystemCertificateService;
 /**
  * <p>Class that implements the communication with the operations of the persistence layer for System Certificate.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 30/01/2019.
+ * @version 1.4, 05/03/2019.
  */
 @Service("systemCertificateService")
 public class SystemCertificateService implements ISystemCertificateService {
@@ -131,14 +131,14 @@ public class SystemCertificateService implements ISystemCertificateService {
 			repository.flush();
 		}
 		catch (Exception e) {
-			System.out.println("Puedo capturar!");
+			//
 		}
 
 	}
 	
 	/**
-	 * Method that delete all certificates of a user.
-	 * @param userMonitoriza
+	 * Method that delete all certificates of an user.
+	 * @param userMonitoriza The {@link UserMonitoriza} to delete 
 	 */
 	public void deleteSystemCertificateByUserMonitoriza(UserMonitoriza userMonitoriza) {
 		

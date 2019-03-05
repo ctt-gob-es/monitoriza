@@ -39,7 +39,7 @@
 		<module>monitoriza-clave-web</module>
 		<module>monitoriza-core</module>
     	<module>monitoriza-rest</module>
-    <module>monitoriza-rest-client</module>
+    	<module>monitoriza-rest-client</module>
   </modules>
 
 	<dependencyManagement>

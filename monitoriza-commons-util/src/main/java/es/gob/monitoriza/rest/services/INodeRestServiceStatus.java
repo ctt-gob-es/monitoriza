@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>11/02/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 11/02/2019.
+ * @version 1.1, 05/03/2019.
  */
 package es.gob.monitoriza.rest.services;
 
@@ -28,7 +28,7 @@ package es.gob.monitoriza.rest.services;
 /** 
  * <p>Interface that defines the constants for the result status of the services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 11/02/2019.
+ * @version 1.1, 05/03/2019.
  */
 public interface INodeRestServiceStatus {
 
@@ -52,9 +52,9 @@ public interface INodeRestServiceStatus {
 	
 	/**
 	 * Constant attribute that represents the value for the result status service
-	 * when the node registration is successful and the node is only activated.
+	 * when the node registration is successful and the node is modified.
 	 */
-	Integer STATUS_NODE_REGISTER_ACTIVATED = Integer.valueOf(3);
+	Integer STATUS_NODE_REGISTER_MODIFIED = Integer.valueOf(3);
 	
 	/**
 	 * Constant attribute that represents the value for the result status service
@@ -67,4 +67,10 @@ public interface INodeRestServiceStatus {
 	 * when the indicated node doesn't exist during un-register process.  
 	 */
 	Integer STATUS_ERROR_NODE_NOT_FOUND = Integer.valueOf(5);
+	
+	/**
+	 * Constant attribute that represents the value for the result status service
+	 * when the node registration is successful and the node is created.
+	 */
+	Integer STATUS_NODE_UNREGISTER = Integer.valueOf(6);
 }

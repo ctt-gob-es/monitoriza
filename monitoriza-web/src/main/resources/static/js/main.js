@@ -344,3 +344,13 @@ function getBase64FromImageUrl(url) {
 
     img.src = url;
 }
+
+///funcion para cerrar los modales
+function closeModalButton(modalId, nameForm){
+	//se limpia posibles mensajes error de span
+	$('#'+nameForm+' *').filter('span').each(function(){
+		cleanSpan($(this).attr('id'));
+	});
+		//se limpia valores del formulario
+	$('#' + modalId).modal('hide');	
+}

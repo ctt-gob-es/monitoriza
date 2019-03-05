@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>29/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 15/02/2019.
+ * @version 1.5, 05/03/2019.
  */
 package es.gob.monitoriza.spie.thread;
 
@@ -41,6 +41,7 @@ import es.gob.monitoriza.constant.GrayLogErrorCodes;
 import es.gob.monitoriza.enums.SemaphoreEnum;
 import es.gob.monitoriza.exception.AlarmException;
 import es.gob.monitoriza.exception.InvokerException;
+import es.gob.monitoriza.i18n.IAlarmLogMessages;
 import es.gob.monitoriza.i18n.IAlarmMailText;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
@@ -70,7 +71,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that get the results of the SPIE services configured.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 15/02/2019.
+ * @version 1.5, 05/03/2019.
  */
 public class RequestSpieThread implements Runnable {
 	
@@ -386,7 +387,7 @@ public class RequestSpieThread implements Runnable {
 			// Se actualiza el mapa de resultados usando el identificador obtenido.
 			StatusSpieHolder.getInstance().getCurrentStatusHolder().put(idStatus.toString(), status);
 			// Se envía la alarma correspondiente a nodo sin conexion
-			checkStatusAndSendAlarmIfNecessary(status, alarm, Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[]{node.getName(), spieBaseAddress}));		
+			checkStatusAndSendAlarmIfNecessary(status, alarm, Language.getFormatResAlarmMonitoriza(IAlarmLogMessages.ERRORALAMR006, new Object[]{node.getName(), spieBaseAddress}));		
 		}
 				
 		return status;

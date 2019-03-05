@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Platform for detection and validation of certificates recognized in European TSL.</p>
  * <b>Date:</b><p>07/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.7, 01/02/2019.
+ * @version 1.2, 05/03/2019.
  */
 package es.gob.monitoriza.rest.services;
 
@@ -28,6 +28,7 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.time.LocalDateTime;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -41,6 +42,9 @@ import javax.ws.rs.core.MediaType;
 import org.apache.log4j.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.INotificationOriginIds;
+import es.gob.monitoriza.constant.INotificationPriority;
+import es.gob.monitoriza.constant.INotificationTypeIds;
 import es.gob.monitoriza.exception.MonitorizaRestException;
 import es.gob.monitoriza.i18n.IRestGeneralLogMessages;
 import es.gob.monitoriza.i18n.Language;
@@ -48,8 +52,10 @@ import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.rest.elements.NodeRestStatusResponse;
+import es.gob.monitoriza.service.ISystemNotificationService;
 import es.gob.monitoriza.service.impl.NodeMonitorizaService;
 import es.gob.monitoriza.service.impl.PlatformService;
+import es.gob.monitoriza.service.impl.SystemNotificationService;
 import es.gob.monitoriza.service.utils.IServiceNameConstants;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.utilidades.UtilsStringChar;
@@ -57,7 +63,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /**
  * <p>Class that represents the node restful service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 01/02/2019.
+ * @version 1.2, 05/03/2019.
  */
 @Path("/node")
 public class NodeRestService implements INodeRestService {
@@ -71,13 +77,13 @@ public class NodeRestService implements INodeRestService {
 	 * {@inheritDoc}
 	 * @see es.gob.monitoriza.rest.services.INodeRestService#registerNode(java.lang.String, java.lang.String, java.lang.String, java.lang.String)
 	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Restful needs not final access methods.
 	@Override
 	@POST
 	@Path("/registerNode")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
-	// because Restful needs not final access methods.
 	public NodeRestStatusResponse registerNode(@FormParam(PARAM_NODE_NAME) String nodeName, @FormParam(PARAM_NODE_HOST) String nodeHost, @FormParam(PARAM_NODE_PORT) String nodePort, @FormParam(PARAM_NODE_TYPE) String nodeType, @FormParam(PARAM_NODE_SECURE) Boolean nodeSecure, @FormParam(PARAM_SPIE_SELECTED) Set<String> spieSelected) throws MonitorizaRestException {
 		// CHECKSTYLE:ON
 		
@@ -99,6 +105,7 @@ public class NodeRestService implements INodeRestService {
 			result = new NodeRestStatusResponse();
 			result.setStatus(INodeRestServiceStatus.STATUS_ERROR_INPUT_PARAMETERS);
 			result.setDescription(resultCheckParams);
+			result.setDateTime(LocalDateTime.now());
 		}
 		
 		// Comprobamos que el tipo de plataforma indicada sea correcto
@@ -110,6 +117,7 @@ public class NodeRestService implements INodeRestService {
     			result = new NodeRestStatusResponse();
     			result.setStatus(INodeRestServiceStatus.STATUS_ERROR_NODETYPE_PARAMETER);
     			result.setDescription(resultCheckParams);
+    			result.setDateTime(LocalDateTime.now());
 			}
 		}
 				
@@ -129,23 +137,33 @@ public class NodeRestService implements INodeRestService {
     			status = INodeRestServiceStatus.STATUS_NODE_REGISTER_CREATED;
     			
     
-    		// Si el nodo ya existe, se activa.	
+    		// Si el nodo ya existe, se actualiza.	
     		} else {
     			
-    			node.setActive(Boolean.TRUE);
+    			Long idNode = node.getIdNode();
+    			node = prepareNodeToRegister(nodeName, nodeHost, nodePort, nodeType, nodeSecure, spieSelected);
+    			node.setIdNode(idNode);
     			msg = Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG006, new Object[ ] { nodeName });
-    			status = INodeRestServiceStatus.STATUS_NODE_REGISTER_ACTIVATED;
+    			status = INodeRestServiceStatus.STATUS_NODE_REGISTER_MODIFIED;
     		}
     		
     		try {
-    			// Se registra el nodo, ya sea desde cero o activándolo de nuevo.
+    			// Se registra el nodo, creándolo o modificándolo
     			ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.NODE_MONITORIZA_SERVICE, NodeMonitorizaService.class).saveNode(node);
     			result.setDescription(msg);
     			result.setStatus(status);
+    			result.setDateTime(LocalDateTime.now());
+    			// Se actualiza el mapa de resultados para su uso por parte del semáforo.
+    			//StatusNodeHolder.getInstance().getCurrentStatusHolder().put(nodeName, result);    			
     			
+    			ISystemNotificationService sysNotificationService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SYSTEM_NOTIFICATION_SERVICE, SystemNotificationService.class);
+    			
+    			// Se registra la notificación asociada al registro del nodo.
+    			sysNotificationService.registerSystemNotification(INotificationTypeIds.ID_NODE_NOTIFICATION_TYPE, INotificationOriginIds.ID_REST_SERVICE_NODE_ORIGIN, INotificationPriority.ID_NOTIFICATION_PRIORITY_NORMAL, msg);
+    			    			
     		}
     		catch (Exception e) {
-    			throw new MonitorizaRestException(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG011, new Object[ ] { INodeRestService.SERVICENAME_REGISTER_NODE }), e);
+    			throw new MonitorizaRestException(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG009, new Object[ ] { INodeRestService.SERVICENAME_REGISTER_NODE }), e);
     		}
 		}
 		
@@ -273,8 +291,7 @@ public class NodeRestService implements INodeRestService {
 	private NodeMonitoriza prepareNodeToRegister(final String nodeName, final String nodeHost, final String nodePort, final String nodeType, final Boolean nodeSecure, final Set<String> spieSelected) {
 		
 		NodeMonitoriza node = new NodeMonitoriza();
-		
-		node.setActive(Boolean.TRUE);
+	
 		node.setName(nodeName);
 		node.setHost(nodeHost);
 		node.setPort(nodePort);
@@ -304,14 +321,15 @@ public class NodeRestService implements INodeRestService {
 		Iterator<String> itSpie = spieSelected.iterator();
 		String check = null;
 		
-		// Se recorren los SPIEs para el nodo pasados como argumento, representados por
-		// el nobre del método que establece el valor .
+		// Se recorren los SPIEs para el nodo, pasados como argumento y representados por
+		// el nobre del método que establece el valor.
 		while (itSpie.hasNext()) {
 			
-			// Se obtiene el nombre de la propiedad de comprobación SPIE del nodo.
+			// Se obtiene el nombre de la propiedad de comprobación SPIE del nodo "checkXXX".
 			check = itSpie.next();
 			
 			try {
+				// Se invoca el método setter correspondiente "setCheckXXX(true)".
 				invokeSetter(node, check, Boolean.TRUE);
 			} catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | IntrospectionException e) {
 				// No ha sido posible ejecutar el método. Se ignora el argumento.
@@ -347,69 +365,79 @@ public class NodeRestService implements INodeRestService {
 	 * {@inheritDoc}
 	 * @see es.gob.monitoriza.rest.services.INodeRestService#unRegisterNode(java.lang.String)
 	 */
-	@POST
-	@Path("/unRegisterNode")
-	@Produces(MediaType.APPLICATION_JSON)
-	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	@Override
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Restful needs not final access methods.
-	public NodeRestStatusResponse unRegisterNode(String nodeName) throws MonitorizaRestException {
-		// CHECKSTYLE:ON
-		
-		// Indicamos la recepción del servicio junto con los parámetros de
-		// entrada.
-		LOGGER.info(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG007, new Object[ ] { nodeName }));
-
-		// Se crea el objecto que representa el resultado de la operación.
-		NodeRestStatusResponse result = null;
-
-		// Inicialmente consideramos que todo es OK para proceder.
-		boolean allIsOk = Boolean.TRUE;
-		
-		// Comprobamos los parámetros obligatorios de entrada.
-		String resultCheckParams = checkParamsUnRegisterNode(nodeName);
-		if (resultCheckParams != null) {
-			allIsOk = Boolean.FALSE;
-			LOGGER.error(resultCheckParams);
-			result = new NodeRestStatusResponse();
-			result.setStatus(INodeRestServiceStatus.STATUS_ERROR_INPUT_PARAMETERS);
-			result.setDescription(resultCheckParams);
-		}
-		
-		if (allIsOk) {
-	
-			// Se busca el nodo a des-registrar.
-			NodeMonitoriza node = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.NODE_MONITORIZA_SERVICE, NodeMonitorizaService.class).getNodeByName(nodeName);
-			
-			if (node == null) {
-				allIsOk = Boolean.FALSE;
-				LOGGER.error(resultCheckParams);
-				result = new NodeRestStatusResponse();
-				result.setStatus(INodeRestServiceStatus.STATUS_ERROR_NODE_NOT_FOUND);
-				result.setDescription(resultCheckParams);
-			} else {
-				
-				node.setActive(Boolean.TRUE);
-    			String msg = Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG006, new Object[ ] { nodeName });
-    			Integer status = INodeRestServiceStatus.STATUS_NODE_REGISTER_ACTIVATED;
-    			
-    			try {
-        			// Se registra el nodo, ya sea desde cero o activándolo de nuevo.
-        			ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.NODE_MONITORIZA_SERVICE, NodeMonitorizaService.class).saveNode(node);
-        			result.setDescription(msg);
-        			result.setStatus(status);
-        			
-        		}
-        		catch (Exception e) {
-        			throw new MonitorizaRestException(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG011, new Object[ ] { INodeRestService.SERVICENAME_UNREGISTER_NODE }), e);
-        		}
-    			
-			}
-		}
-				
-		return result;
-	}
+//	@Override
+//	@POST
+//	@Path("/unRegisterNode")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+//	public NodeRestStatusResponse unRegisterNode(@FormParam(PARAM_NODE_NAME) String nodeName) throws MonitorizaRestException {
+//		// CHECKSTYLE:ON
+//		
+//		// Indicamos la recepción del servicio junto con los parámetros de
+//		// entrada.
+//		LOGGER.info(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG007, new Object[ ] { nodeName }));
+//
+//		// Se crea el objecto que representa el resultado de la operación.
+//		NodeRestStatusResponse result = null;
+//
+//		// Inicialmente consideramos que todo es OK para proceder.
+//		boolean allIsOk = Boolean.TRUE;
+//		
+//		// Comprobamos los parámetros obligatorios de entrada.
+//		String resultCheckParams = checkParamsUnRegisterNode(nodeName);
+//		if (resultCheckParams != null) {
+//			allIsOk = Boolean.FALSE;
+//			LOGGER.error(resultCheckParams);
+//			result = new NodeRestStatusResponse();
+//			result.setStatus(INodeRestServiceStatus.STATUS_ERROR_INPUT_PARAMETERS);
+//			result.setDescription(resultCheckParams);
+//			result.setDateTime(LocalDateTime.now());
+//		}
+//		
+//		if (allIsOk) {
+//	
+//			// Se busca el nodo a des-registrar.
+//			NodeMonitoriza node = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.NODE_MONITORIZA_SERVICE, NodeMonitorizaService.class).getNodeByName(nodeName);
+//			
+//			if (node == null) {
+//				allIsOk = Boolean.FALSE;
+//				LOGGER.error(resultCheckParams);
+//				result = new NodeRestStatusResponse();
+//				result.setStatus(INodeRestServiceStatus.STATUS_ERROR_NODE_NOT_FOUND);
+//				result.setDescription(resultCheckParams);
+//				result.setDateTime(LocalDateTime.now());
+//				
+//			} else {
+//				
+//				node.setActive(Boolean.FALSE);
+//    			String msg = Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG008, new Object[ ] { nodeName });
+//    			Integer status = INodeRestServiceStatus.STATUS_NODE_UNREGISTER;
+//    			
+//    			try {
+//        			// Se registra el nodo, ya sea desde cero o activándolo de nuevo.
+//        			ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.NODE_MONITORIZA_SERVICE, NodeMonitorizaService.class).saveNode(node);
+//        			result = new NodeRestStatusResponse();
+//        			result.setDescription(msg);
+//        			result.setStatus(status);
+//        			result.setDateTime(LocalDateTime.now());
+//        			
+//        			ISystemNotificationService sysNotificationService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SYSTEM_NOTIFICATION_SERVICE, SystemNotificationService.class);
+//        			
+//        			// Se registra la notificación asociada al registro del nodo.
+//        			sysNotificationService.registerSystemNotification(INotificationTypeIds.ID_NODE_NOTIFICATION_TYPE, msg);        			
+//        			
+//        		}
+//        		catch (Exception e) {
+//        			throw new MonitorizaRestException(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG009, new Object[ ] { INodeRestService.SERVICENAME_UNREGISTER_NODE }), e);
+//        		}
+//    			
+//			}
+//		}
+//				
+//		return result;
+//	}
 	
 
 }

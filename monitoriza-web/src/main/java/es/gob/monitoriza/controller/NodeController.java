@@ -36,7 +36,6 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.persistence.configuration.dto.NodeDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 import es.gob.monitoriza.service.INodeMonitorizaService;
-import es.gob.monitoriza.service.ISpieMonitoringConfigService;
 
 /** 
  * <p>Class that manages the requests related to the Node administration.</p>

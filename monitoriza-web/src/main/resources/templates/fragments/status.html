@@ -1,6 +1,6 @@
 <div class="bgc-white bd bdrs-3 p-20 mB-20">
 	<div class="container-fluid">
-		<input type="button" th:value="#{button.view.refresh}" class="btn btn-primary" onClick="window.location.reload()">
+		<input id="idreload" type="button" th:value="#{button.view.refresh}" class="btn btn-primary" >
 
 		<!-- Tabla resumen -->
 		<h4 class="c-grey-900 mB-20 mt-5" th:text="#{table.summary.title}"></h4>
@@ -135,6 +135,9 @@ tr.shown td.details-control {
 </style>
 
 <script th:inline="javascript">
+
+var actionStatus = /*[[@{/status}]]*/;
+$('#idreload').click(function(e){e.preventDefault(); loadIntoAjax(null, actionStatus, 'optionReplacement', 'GET', null, true); return false;});
 
 $(document).ready(function() {
 	

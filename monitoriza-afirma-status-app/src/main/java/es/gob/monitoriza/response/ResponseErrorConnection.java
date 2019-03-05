@@ -17,9 +17,9 @@
  * <b>File:</b><p>es.gob.tsa.response.impl.ResponseErrorConnection.java.</p>
  * <b>Description:</b><p>Class that represents the response for a error request.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
- * <b>Date:</b><p>22 ene. 2018.</p>
+ * <b>Date:</b><p>22/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 22 ene. 2018.
+ * @version 1.1, 05/03/2019.
  */
 package es.gob.monitoriza.response;
 
@@ -39,21 +39,23 @@ import j2html.tags.Tag;
 
 /**<p>Class that represents the response for a error request.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.0, 12/02/2017.
+ * @version 1.1, 05/03/2019.
  */
-public class ResponseErrorConnection {
+public final class ResponseErrorConnection {
 
+	/**
+	 * Constant that represents the general error response when inking the status servlet . 
+	 */
 	public static final String ERROR_MESSAGE = "AN ERROR OCCURRED IN THE SERVICE INVOCATION. CHECK LOG.";
 
 	/**
 	 * Constructor method for the class ResponseErrorConnection.java. 
 	 */
-	public ResponseErrorConnection() {
+	private ResponseErrorConnection() {
 	}
 
 	/**
 	 * Method that renders the HTML code for the result response.
-	 * @param operations List that represents response results for the requested tests.
 	 * @return String that represents the HTML code of the result
 	 * @throws Exception
 	 */
@@ -72,7 +74,6 @@ public class ResponseErrorConnection {
  
     /**
      * Method that builds the HTML body for the response.
-     * @param operations List that represents response results for the requested tests. 
      * @return Tag that represents the HTML body
      */
     private static Tag<?> makeBody() {
@@ -83,7 +84,6 @@ public class ResponseErrorConnection {
    
     /**
      * Method that builds the HTML divs for each of the operation result.
-     * @param operations List that represents response results for the requested tests. 
      * @return Tag that represents the HTML divs for each of the operation result.
      */
     private static Tag<?> makeDivOperations() {
@@ -92,6 +92,10 @@ public class ResponseErrorConnection {
 		
     }
         
+	/**
+	 * Method that builds that add the captions to the HTML table.
+	 * @return Tag<?> that represents a HTML table with captions
+	 */
 	public static Tag<?> makeTableResultOperation() {
 
 		List<Tag<?>> contents = new LinkedList<>();
@@ -104,7 +108,7 @@ public class ResponseErrorConnection {
 
 	/**
 	 * Method that builds the HTML caption for the result message.
-	 * @return
+	 * @return Tag<?> that represents the table caption
 	 */
 	private static Tag<?> makeTableCaption() {
 		final StringBuffer caption = new StringBuffer();

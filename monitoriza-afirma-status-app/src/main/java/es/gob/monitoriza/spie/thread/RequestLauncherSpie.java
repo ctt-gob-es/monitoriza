@@ -18,9 +18,9 @@
  * <b>Description:</b>
  * <p>Class that manages the thread pool for processing each service in a separate thread.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
- * <b>Date:</b><p>19 feb. 2018.</p>
+ * <b>Date:</b><p>19/02/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 15/02/2019.
+ * @version 1.6, 05/03/2019.
  */
 package es.gob.monitoriza.spie.thread;
 
@@ -50,7 +50,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 /** 
  * <p>Class that manages the thread pool for processing each service in a separate thread.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.5, 15/02/2019.
+ * @version 1.6, 05/03/2019.
  */
 public class RequestLauncherSpie {
 
@@ -88,14 +88,12 @@ public class RequestLauncherSpie {
 
 		// Se procesa cada nodo en un hilo del pool
 		for (NodeMonitoriza node: nodes) {
-			
-			if (node.getActive()) {
-    			RunningServices.getInstance();
-    			
-    			RequestSpieThread rpt = new RequestSpieThread(node, ssl);
-    			executor.execute(rpt);
-			}	
-			
+
+			RunningServices.getInstance();
+
+			RequestSpieThread rpt = new RequestSpieThread(node, ssl);
+			executor.execute(rpt);
+
 		}
 
 		// Cuando se han lanzado todos los hilos, se prepara el pool para

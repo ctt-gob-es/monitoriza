@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>06/02/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 06/02/2019.
+ * @version 1.1, 05/03/2019.
  */
 package es.gob.monitoriza.rest.services;
 
@@ -39,7 +39,7 @@ import es.gob.monitoriza.rest.elements.NodeRestStatusResponse;
 /** 
  * <p>Interface that represents the registration restful service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 06/02/2019.
+ * @version 1.1, 05/03/2019.
  */
 public interface INodeRestService {
 	
@@ -102,12 +102,16 @@ public interface INodeRestService {
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	NodeRestStatusResponse registerNode(@FormParam(PARAM_NODE_NAME) String nodeName, @FormParam(PARAM_NODE_HOST) String nodeHost, @FormParam(PARAM_NODE_PORT) String nodePort, @FormParam(PARAM_NODE_TYPE) String nodeType, @FormParam(PARAM_NODE_SECURE) Boolean nodeSecure, @FormParam(PARAM_SPIE_SELECTED) Set<String> spieSelected) throws MonitorizaRestException;
 	
-	/**
-	 * Method that un-register a node in Monitoriz@. This always means a de-activation setting the attribute active to false in {@link es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza}.
-	 * @param nodeName Name of the node.
-	 * @return {@link NodeRestStatusResponse} with the result
-	 * @throws MonitorizaRestException if the method fails
-	 */
-	NodeRestStatusResponse unRegisterNode(@FormParam(PARAM_NODE_NAME) String nodeName) throws MonitorizaRestException;
+//	/**
+//	 * Method that un-register a node in Monitoriz@. This always means a de-activation setting the attribute active to false in {@link es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza}.
+//	 * @param nodeName Name of the node.
+//	 * @return {@link NodeRestStatusResponse} with the result
+//	 * @throws MonitorizaRestException if the method fails
+//	 */
+//	@POST
+//	@Path("/unRegisterNode")
+//	@Produces(MediaType.APPLICATION_JSON)
+//	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
+//	NodeRestStatusResponse unRegisterNode(@FormParam(PARAM_NODE_NAME) String nodeName) throws MonitorizaRestException;
 
 }

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>09/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 15/02/2019.
+ * @version 1.3, 05/03/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -47,7 +47,7 @@ import es.gob.monitoriza.constant.NumberConstants;
 /** 
  * <p>Class that maps the <i>NODE_AFIMRA</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 15/02/2019.
+ * @version 1.3, 05/03/2019.
  */
 @Entity
 @Table(name = "NODE_MONITORIZA")
@@ -87,11 +87,6 @@ public class NodeMonitoriza implements Serializable {
 	 * Attribute that represents the type of platform. 
 	 */
 	private CPlatformType nodeType;
-	
-	/**
-	 * Attribute that represents if the node is registered (true) or unregistered (false). 
-	 */
-	private Boolean active;
 		
 	/**
 	 * Attribute that indicates if the SPIE for emergency database connection will be checked.
@@ -285,29 +280,6 @@ public class NodeMonitoriza implements Serializable {
 		this.isSecure = isSecure;
 	}
 	
-	
-	/**
-	 * Gets the value of the attribute {@link #active}.
-	 * @return the value of the attribute {@link #active}.
-	 */
-	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
-	// because Hibernate JPA needs not final access methods.
-	@Column(name = "ACTIVE", nullable = false, precision = 1)
-	@Type(type = CONS_YES_NO)
-	@JsonView(DataTablesOutput.View.class)
-	public final Boolean getActive() {
-		return active;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #active}.
-	 * @param activeParam The value for the attribute {@link #active}.
-	 */
-	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
-	// because Hibernate JPA needs not final access methods.
-	public final void setActive(Boolean activeParam) {
-		this.active = activeParam;
-	}
 
 	/**
 	 * Gets the value of the attribute {@link #checkEmergencyDB}.

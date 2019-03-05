@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.8, 30/01/2019.
+ * @version 1.9, 05/03/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -71,7 +71,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
  * <p>Class that implements the communication with the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.8, 30/01/2019.
+ * @version 1.9, 05/03/2019.
  */
 @Service("statusService")
 public class StatusService implements IStatusService {
@@ -323,6 +323,16 @@ public class StatusService implements IStatusService {
 				
 			}
 		}
+		
+		//TODO Hay que crear un módulo a parte para gestionar las "alertas de sistema" donde irían estas notificaciones sobre nodos
+		// Se permitirá que el usuario elimine dichas alertas una vez "vistas".
+		
+//		for (Map.Entry<String,NodeRestStatusResponse> entry : StatusNodeHolder.getInstance().getCurrentStatusHolder().entrySet()) {
+//						
+//			//TODO Limpiar las entradas que lleven "demasiado" en StatusNodeHolder tiempo antes de recalcular.
+//			summary = new SummaryStatusDTO(entry.getValue().getStatus(), entry.getKey(), entry.getValue().getDescription());
+//			summaryList.add(summary);
+//		}
 		
 		return summaryList;
 	}

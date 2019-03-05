@@ -37,13 +37,38 @@
           <form id="formMenu" class="form-sidebar"> 
       	   	<ul class="sidebar-menu scrollable pos-r">
 	            <li class="nav-item mT-30 active">
-	              <a class="sidebar-link" th:href="@{/inicio}">
+	              <!-- <a class="sidebar-link" th:href="@{/inicio}">
 	                <span class="icon-holder">
 	                  <i class="c-blue-500 ti-home"></i>
 	                </span>
 	                <span class="title" th:text="#{menu.inicio}"></span>
+	              </a> -->
+	              <a id="aInicio" class='sidebar-link' href="#">
+	                <span class="icon-holder">
+	                  <i class="c-blue-500 ti-home"></i>
+	                </span>
+	                <span class="title" th:text="#{menu.inicio}"></span>
+				      <script th:inline="javascript">
+						var actionStatus = /*[[@{/status}]]*/;
+						$('#aInicio').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionStatus, 'optionReplacement', 'GET', null, true); return false;});
+			          </script>
 	              </a>
 	            </li>
+	            <!--  Avisos del sistema -->
+	            
+	            <li class="nav-item">
+	              <a id="aSysNotAdmin" class='sidebar-link' href="#">
+	                <span class="icon-holder">
+	                  <i class="c-orange-500 ti-alert"></i>
+	                </span>
+	                <span class="title" th:text="#{menu.admin.sysnot}"></span>
+	                 <script th:inline="javascript">
+	                 	var actionSysnot = /*[[@{/sysNotifications}]]*/;
+	                 	$('#aSysNotAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionSysnot, 'optionReplacement', 'GET', null, true); return false;});
+	                </script>
+	              </a>
+	            </li>
+	            
 	            <!-- Consultas -->
                 
                 <li class="nav-item dropdown">

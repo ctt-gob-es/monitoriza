@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>30/01/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 30/01/2019.
+ * @version 1.1, 05/03/2019.
  */
 package es.gob.monitoriza.service.utils;
 
@@ -28,7 +28,7 @@ package es.gob.monitoriza.service.utils;
 /** 
  * <p>Interface that contains all application service names.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 30/01/2019.
+ * @version 1.1, 05/03/2019.
  */
 public interface IServiceNameConstants {
 	
@@ -156,6 +156,10 @@ public interface IServiceNameConstants {
 	 * Constant attribute that represents the name of the service validServiceService.
 	 */
 	String VALID_SERVICE_SERVICE = "validServiceService";
-
+	
+	/**
+	 * Attribute that represents the name of the service systemNotificationService. 
+	 */
+	String SYSTEM_NOTIFICATION_SERVICE = "systemNotificationService";
 	
 }
