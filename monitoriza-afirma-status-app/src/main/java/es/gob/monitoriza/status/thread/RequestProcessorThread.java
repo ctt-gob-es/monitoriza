@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.9, 30/01/2019.
+ * @version 2.0, 14/03/2019.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -69,8 +69,12 @@ import es.gob.monitoriza.persistence.configuration.exception.DatabaseException;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.DailyVipMonitorig;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.MaintenanceService;
+import es.gob.monitoriza.persistence.configuration.model.utils.IStatusAdapter;
+import es.gob.monitoriza.service.IMaintenanceServiceService;
 import es.gob.monitoriza.service.impl.AlarmMonitorizaService;
 import es.gob.monitoriza.service.impl.DailyVipMonitoringService;
+import es.gob.monitoriza.service.impl.MaintenanceServiceService;
 import es.gob.monitoriza.service.utils.IServiceNameConstants;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.status.RunningServices;
@@ -82,7 +86,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.9, 30/01/2019.
+ * @version 2.0, 14/03/2019.
  */
 public final class RequestProcessorThread implements Runnable {
 
@@ -134,7 +138,7 @@ public final class RequestProcessorThread implements Runnable {
 		
 		RunningServices.getInstance();
 		RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.TRUE);
-
+		
 		Long tiempoTotal = null;
 		Long tiempoMedio = null;
 		Integer perdidas = null;
@@ -256,12 +260,46 @@ public final class RequestProcessorThread implements Runnable {
 				
 				saveDailyVipMonitoring(service.getServiceName(), service.getPlatform(), statusUptodate);
 				
+				manageMaintenanceService(statusUptodate);
+								
 			}
 
 		}
 		
 	
 
+	}
+
+	/**
+	 * Method that manage the maintenance status of this service.
+	 * @param statusUptodate {@link StatusUptodate} with the obtained status
+	 */
+	private void manageMaintenanceService(StatusUptodate statusUptodate) {
+		
+		// Comprobar si es necesario añadir el servicio a la tabla de mantenimiento
+		IMaintenanceServiceService maintenanceService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.MAINTENANCE_SERVICE, MaintenanceServiceService.class);
+				
+		MaintenanceService maintenance = maintenanceService.getMaintenanceServiceByService(service.getServiceName());
+		// Si el servicio no se ha añadio aún a la tabla de mantenimiento, se persiste
+		if (maintenance == null) {
+			
+			maintenance = new MaintenanceService();
+			maintenance.setIsInMaintenance(Boolean.FALSE);
+			maintenance.setService(service.getServiceName());
+			maintenance.setStatusOrigin(IStatusAdapter.vipToSemaphoreStatus(statusUptodate.getStatusValue()));
+			maintenanceService.saveMaintenanceService(maintenance);
+			
+		} else {
+			
+			// Si el estado del servicio ha cambiado desde la última vez,
+			// y estaba marcado, se elimina la marca
+			if (maintenance.getIsInMaintenance() && !maintenance.getStatusOrigin().equals(IStatusAdapter.vipToSemaphoreStatus(statusUptodate.getStatusValue()))) {
+				maintenance.setIsInMaintenance(Boolean.FALSE);
+				maintenanceService.saveMaintenanceService(maintenance);
+			}
+			
+		}
+		
 	}
 
 	/**

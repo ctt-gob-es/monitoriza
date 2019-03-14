@@ -1,0 +1,48 @@
+<h4 class="c-grey-900 mB-20" th:text="#{table.status.spie.title}"></h4>
+							<div th:if="${statusSpie.error != null}" class="masonry-sizer col-md-12"> 
+								<div id="errorModalService" class="alert alert-danger" role="alert">
+									<strong th:text=${statusSpie.error}></strong>
+								</div>
+							</div>
+							<div th:if="${statusSpie.error == null}" class="masonry-sizer col-md-12 border border-light border-3 bg-light">
+								<table data-page-length='50' id="statusSpieTable" class="display"
+									style="cellspacing: 0; width: 100%;">
+									<thead>
+										<tr>
+											<th th:text="#{table.status.spie.view}">Status Aux img</th>
+											<th></th>
+											<th th:text="#{table.status.spie.system}">System</th>
+											<th th:text="#{table.status.spie.node}">Node</th>
+											<th th:text="#{table.status.spie.node.address}">Node address</th>
+											<th th:text="#{table.status.spie.type}">SPIE type</th>
+											<th></th>
+											<th th:text="#{table.status.spie.info}">urls</th>
+											<th th:text="#{table.status.spie.mark}">mark</th>
+										</tr>
+									</thead>
+									<tbody>
+										<tr th:each="stSpie : ${statusSpie.data}">
+											<td th:if="${stSpie.statusValue eq 3}"><i
+												class="c-red-500 ti-control-record"></i></td>
+											<td th:if="${stSpie.statusValue eq 2}"><i
+												class="c-yellow-500 ti-control-record"></i></td>
+											<td th:if="${stSpie.statusValue eq 0}"><i
+												class="c-green-500 ti-control-record"></i></td>
+											<td th:if="${stSpie.statusValue eq null}"
+												th:text="#{error.spie.connection}"
+												class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></td>
+											<td th:text="${stSpie.statusValue}"></td>
+											<td th:text="${stSpie.system}"></td>
+											<td th:text="${stSpie.nodeName}"></td>
+											<td th:text="${stSpie.nodeAddress}"></td>
+											<td th:text="${stSpie.spieService}"></td>
+											<td th:text="${stSpie.partialRequestResult}"></td>
+											<td th:if="${stSpie.partialRequestResult != null}"><i
+												class='c-blue-500 ti-search'></i></td>
+											<td th:if="${stSpie.partialRequestResult == null}">-</td>
+											<td th:if="${stSpie.statusValue eq 0 || stSpie.statusValue eq 1}">-</td>
+											<td th:if="${stSpie.statusValue eq 2 || stSpie.statusValue eq 3}"><i class='c-blue-500 ti-check-box'></i></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>

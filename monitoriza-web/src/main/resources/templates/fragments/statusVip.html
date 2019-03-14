@@ -1,0 +1,42 @@
+<div th:if="${statusVip.error != null}" class="masonry-sizer col-md-12">
+				<div id="errorModalService" class="alert alert-danger" role="alert">
+					<strong th:text=${statusVip.error}></strong>
+				</div>
+			</div>
+			<div th:if="${statusVip.error == null}" class="masonry-sizer col-md-12 border border-light border-3 bg-light">
+				<table data-page-length='50' id="statusVipTable" class="display"
+					style="cellspacing: 0; width: 100%;">
+					<thead>
+						<tr>
+							<th th:text="#{table.status.vip.view}">Status Aux img</th>
+							<th></th>
+							<th th:text="#{table.status.vip.service}">Service</th>
+							<th th:text="#{table.status.vip.averageTime}">Average Time</th>
+							<th th:text="#{table.status.vip.samplingTime}">Sampling Time</th>
+							<th></th>
+							<th th:text="#{table.status.vip.info}">info</th>
+							<th th:text="#{table.status.vip.mark}">mark</th>
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="stVip : ${statusVip.data}">
+							<td th:if="${stVip.statusAux eq 3}"><i
+								class="c-blue-500 ti-hummer"></i></td>
+							<td th:if="${stVip.statusAux eq 2}"><i
+								class="c-red-500 ti-control-record"></i></td>
+							<td th:if="${stVip.statusAux eq 1}"><i
+								class="c-yellow-500 ti-control-record"></i></td>
+							<td th:if="${stVip.statusAux eq 0}"><i
+								class="c-green-500 ti-control-record"></i></td>
+							<td th:text="${stVip.statusAux}"></td>
+							<td th:text="${stVip.service}"></td>
+							<td th:text="${stVip.averageTime}"></td>
+							<td th:text="${stVip.samplingTime}"></td>
+							<td th:text="${stVip.partialRequestResult}"></td>
+							<td><i class='c-blue-500 ti-search'></i></td>
+							<td th:if="${stVip.statusAux eq 0}">-</td>
+							<td th:if="${stVip.statusAux eq 1 || stVip.statusAux eq 2}"><i class='c-blue-500 ti-check-box'></i></td>
+						</tr>
+					</tbody>
+				</table>
+			</div>

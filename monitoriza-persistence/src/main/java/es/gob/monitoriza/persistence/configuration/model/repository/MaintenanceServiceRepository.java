@@ -15,59 +15,40 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.enums.SemaphoreEnum.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.repository.MaintenanceServiceRepository.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>08/11/2018.</p>
+ * <b>Date:</b><p>14/03/2019.</p>
  * @author Gobierno de España.
- * @version 1.2, 14/03/2019.
+ * @version 1.0, 14/03/2019.
  */
-package es.gob.monitoriza.enums;
+package es.gob.monitoriza.persistence.configuration.model.repository;
 
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.stereotype.Repository;
+
+import es.gob.monitoriza.persistence.configuration.model.entity.MaintenanceService;
 
 /** 
- * <p>Enum that represents the semaphore values .</p>
+ * <p>Interface that provides CRUD functionality for the MaintenanceService entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 14/03/2019.
+ * @version 1.0, 14/03/2019.
  */
-public enum SemaphoreEnum {
+@Repository
+public interface MaintenanceServiceRepository extends JpaRepository<MaintenanceService, Long> {
 	
-	GREEN(0, "OK"), BLUE (1, "MAINTENANCE"), AMBER(2, "WARNING"), RED(3, "ERROR"), OTHER(4, "MESSAGE");
-
 	/**
-	 * Attribute that represents the enum id. 
+	  * Method that obtains from the persistence a node identified by its primary key. 
+	 * @param id String that represents the primary key of the node in the persistence.
+	 * @return Object that represents a node from the persistence. 
 	 */
-	private final Integer id;
-
-	/**
-	 * Attribute that represents the enum name. 
-	 */
-	private final String name;
-
-	/**
-	 * Constructor method for the class SemaphoreEnum.java.
-	 * @param id enum id
-	 * @param name enum name
-	 */
-	private SemaphoreEnum(Integer id, String name) {
-		this.id = id;
-		this.name = name;
-	}
-
-	/**
-	 * Get id.
-	 * @return id
-	 */
-	public Integer getId() {
-		return id;
-	}
-
-	/**
-	 * Get name.
-	 * @return name
-	 */
-	public String getName() {
-		return name;
-	}
+	MaintenanceService findByIdMaintenanceService(Long id);
 	
+	/**
+	  * Method that obtains from the persistence a node identified by its service. 
+	 * @param service String that represents the service.
+	 * @return Object that represents a node from the persistence. 
+	 */
+	MaintenanceService findByService(String service);
+
 }

@@ -35,6 +35,7 @@
 			</div>
 			<div class="modal-body">
 				<form name="altEditor-form" role="form" id="userFormEdit" th:object="${userformEdit}" th:action="@{/saveuseredit}" method="post">
+					<div id="errorSaveUser" role="alert"></div>
 					<input type='hidden' class='primarykey' id="idUserMonitorizaEdit" th:field="*{idUserMonitorizaEdit}">
 					
 					<div class="form-group-modal">
@@ -45,10 +46,9 @@
 								    var messageName = /*[[#{form.user.name.pattern}]]*/ 'default';
 								/*]]>*/
 							</script>
+							<span id="nameEdit_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 							<input onblur="validate(this,messageName);" type="text" id="nameEdit" th:field="*{nameEdit}" style="overflow:hidden" class="form-control" required pattern=".{3,15}" />
-							<div id="invalid-name" class="invalid-feedback" ></div>
-						
-						<div style="clear:both;"/>
+
 					</div>
 					
 					<div class="form-group-modal">
@@ -59,10 +59,9 @@
 								    var messageSurname = /*[[#{form.user.surnames.pattern}]]*/ 'default';
 								/*]]>*/
 							</script>
+							<span id="surnamesEdit_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 							<input onblur="validate(this,messageSurname);" type="text" id="surnamesEdit" th:field="*{surnamesEdit}" style="overflow:hidden" class="form-control" required pattern=".{3,30}"/>
-							<div id="invalid-surnames" class="invalid-feedback" ></div>
-						
-						<div style="clear:both;"/>
+							
 					</div>
 					
 					<div class="form-group-modal">
@@ -73,10 +72,9 @@
 								    var messageLogin = /*[[#{form.user.login.pattern}]]*/ 'default';
 								/*]]>*/
 							</script>
+							<span id="loginEdit_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 							<input onblur="validate(this,messageLogin);" type="text" id="loginEdit" th:field="*{loginEdit}" style="overflow:hidden" class="form-control" required pattern=".{5,30}"/>
-							<div id="invalid-login" class="invalid-feedback" ></div>
-						
-						<div style="clear:both;"/>
+							
 					</div>
 					
 					<div class="form-group-modal">
@@ -87,10 +85,9 @@
 								    var messageEmail = /*[[#{form.user.email.pattern}]]*/ 'default';
 								/*]]>*/
 							</script>
+							<span id="emailEdit_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 							<input onblur="validate(this,messageEmail);" type="email" id="emailEdit" th:field="*{emailEdit}" style="overflow:hidden" class="form-control" required/>
-							<div id="invalid-email" class="invalid-feedback" ></div>
-						
-						<div style="clear:both;"/>
+							
 					</div>
 				</form>
 			</div>
@@ -113,7 +110,7 @@
 			</div>
 			<div class="modal-body">
 				<form role="form" id="userFormPassword" th:object="${userFormPassword}" th:action="@{/saveuserpassword}" method="post">
-					
+					<div id="errorSavePassword" role="alert"></div>
 					<input type='hidden' class='primarykey' id="idUserMonitorizaPass" th:field="*{idUserMonitorizaPass}">
 					
 					<div class="form-group-modal">
@@ -155,12 +152,19 @@ $(document).ready(function() {
 	var editTemplate = /*[[@{/edituser}]]*/;
 	var addTemplate = /*[[@{/adduser}]]*/;
 	var manageCertUser = /*[[@{/managecertuser}]]*/;
+	
+	var btnAddUser =  /*[[#{btn.user.action.add}]]*/;
+	var btnEditUser =  /*[[#{btn.user.action.edit}]]*/;
+	var btnDelUser = /*[[#{btn.user.action.delete}]]*/;
+	var btnCertUser = /*[[#{btn.user.action.cert}]]*/;
+	var btnChangePassword =  /*[[#{btn.user.action.password}]]*/;
+		
 	var tbl = $('#userTable').DataTable({
 		dom: 'Bfrtip',
 	    select: 'single',
 	    responsive: true,
 	    altEditor: true,
-	    buttons: [{text: 'Agregar',name: 'add'}, 
+	    buttons: [{text: btnAddUser,name: 'add'}, 
 	    		  {extend: 'selected',text: 'Editar',name: 'editt',
 	    			  action: function ( e, dt, node, config ) {
 					  
@@ -189,8 +193,8 @@ $(document).ready(function() {
 						
 	    			  }
 	    		  }, 
-	    		  {extend: 'selected',text: 'Eliminar',name: 'delete'}, 
-	    		  {extend: 'selected',text: 'Cambiar password',name: 'changePassword',
+	    		  {extend: 'selected',text: btnDelUser,name: 'delete'}, 
+	    		  {extend: 'selected',text: btnChangePassword,name: 'changePassword',
 	    			  action: function ( e, dt, node, config ) {
 	    				  $('#modalPassword').modal('show');
 						  
@@ -208,7 +212,7 @@ $(document).ready(function() {
 	    	                
 	    				}
 					},
-					{extend: 'selected',text: 'Gestionar certificados',name: 'manageCertificates',
+					{extend: 'selected',text: btnCertUser,name: 'manageCertificates',
 		    			  action: function ( e, dt, node, config ) {
 		    				  
 							  for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({

@@ -3,15 +3,6 @@
 	<input type='hidden' class='primarykey' id="idNode" th:field="*{idNode}">
 	
 	<div class="form-group">
-		<div class="checkbox checkbox-circle checkbox-info peers ai-c cb-center">
-			<input type="checkbox" id="active" th:checked="${nodetsaform.active}" class="peer">
-				<label for="active" class="peers peer-greed js-sb ai-c">
-					<span class="peer peer-greed" th:text="#{form.node.tsa.active}"></span>
-				</label>
-		</div>
-	</div>
-	
-	<div class="form-group">
 		
 			<label for="name" class="col-form-label" th:text="#{form.node.tsa.name}"></label>
 			<script th:inline="javascript">

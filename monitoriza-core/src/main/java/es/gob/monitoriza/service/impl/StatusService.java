@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.9, 05/03/2019.
+ * @version 2.0, 14/03/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -30,6 +30,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
@@ -64,6 +65,9 @@ import es.gob.monitoriza.persistence.configuration.dto.RowStatusVipDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusSpieDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusVipDTO;
 import es.gob.monitoriza.persistence.configuration.dto.SummaryStatusDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.MaintenanceService;
+import es.gob.monitoriza.persistence.configuration.model.utils.IStatusAdapter;
+import es.gob.monitoriza.service.IMaintenanceServiceService;
 import es.gob.monitoriza.service.IStatusService;
 import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 
@@ -88,6 +92,13 @@ public class StatusService implements IStatusService {
 	private MessageSource message;
 	
 	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IMaintenanceServiceService maintenanceService;
+	
+	/**
 	 * {@inheritDoc}
 	 * @see es.gob.monitoriza.service.IStatusService#completeStatus()
 	 */
@@ -104,6 +115,7 @@ public class StatusService implements IStatusService {
 			jsonFromVip = getRequestFromStatusVip();
 			statusVip = new Gson().fromJson(jsonFromVip, listType);			
 			
+			
 		} catch (StatusVipResponseException svre) {
 			statusVip.setError(svre.getMessage());
 		} catch (JsonSyntaxException e) {
@@ -112,7 +124,8 @@ public class StatusService implements IStatusService {
 			statusVip.setError(errorJson);
 		}					
 
-		statusVip.setData(checkStatus(statusVip.getData()));
+		cleanDeletedVipServices(statusVip.getData());
+		statusVip.setData(checkStatusVip(statusVip.getData()));
 
 		return statusVip;
 	}
@@ -140,12 +153,14 @@ public class StatusService implements IStatusService {
 			String errorJson = Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB020);
 			LOGGER.error(errorJson);
 			statusSpie.setError(errorJson);
-		}					
+		}		
+		
+		cleanDeletedSpieServices(statusSpie.getData());
+		statusSpie.setData(checkStatusSpie(statusSpie.getData()));
 
 		return statusSpie;
 	}
 
-		
 	/**
 	 * Method that calls the status VIP.
 	 * @return String that represents the status information in JSON format
@@ -227,30 +242,102 @@ public class StatusService implements IStatusService {
 	}
 		
 	/**
-	 * Method that process the servlet response, setting readable values.
+	 * Method that process the VIP status response, setting readable values.
 	 * @param status List of status per service
-	 * @return List<RowStatusDTO>
+	 * @return List<RowStatusVipDTO>
 	 */
-	private List<RowStatusVipDTO> checkStatus(List<RowStatusVipDTO> status) {
-		for (RowStatusVipDTO s : status) {
-			switch (s.getStatus()) {
-			case ServiceStatusConstants.CORRECTO:
-				s.setStatusAux(SemaphoreEnum.GREEN.getId());
-				break;
-			case ServiceStatusConstants.CAIDO:
-				s.setStatusAux(SemaphoreEnum.RED.getId());
-				break;
-			case ServiceStatusConstants.DEGRADADO:
-				s.setStatusAux(SemaphoreEnum.AMBER.getId());
-				break;
-			default:
-				s.setStatusAux(SemaphoreEnum.RED.getId());
+	private List<RowStatusVipDTO> checkStatusVip(List<RowStatusVipDTO> status) {
+
+		MaintenanceService maintenance = null;
+
+		for (RowStatusVipDTO s: status) {
+
+			maintenance = maintenanceService.getMaintenanceServiceByService(s.getService());
+
+			if (maintenance != null && maintenance.getIsInMaintenance()) {
+
+				s.setStatusAux(SemaphoreEnum.BLUE.getId());
+				
+			} else if (maintenance != null) {
+
+				s.setStatusAux(IStatusAdapter.vipToSemaphoreStatus(s.getStatus()));
 			}
-			
+
 			if (s.getAverageTime() == null) {
 				s.setAverageTime("timeout");
 			}
 		}
+		return status;
+	}
+	
+	/**
+	 * Remove the deleted VIP services from the semaphore list.
+	 * @param status {@link List<RowStatusVipDTO>}
+	 */
+	private void cleanDeletedVipServices(List<RowStatusVipDTO> status) {
+		
+		MaintenanceService maintenance = null;
+		
+		for (Iterator<RowStatusVipDTO> itStatus = status.iterator(); itStatus.hasNext();) {
+			
+			maintenance = maintenanceService.getMaintenanceServiceByService(itStatus.next().getService());
+			
+			if (maintenance == null) {
+				itStatus.remove();
+			}
+			
+		}
+		
+	}
+	
+	/**
+	 * Remove the deleted SPIE services from the semaphore list.
+	 * @param status {@link List<RowStatusSpieDTO>}
+	 */
+	private void cleanDeletedSpieServices(List<RowStatusSpieDTO> status) {
+		
+		MaintenanceService maintenance = null;
+		
+		Iterator<RowStatusSpieDTO> itStatus = status.iterator();
+		String node = null;
+		String spieType = null;
+		RowStatusSpieDTO rowSpie = null;
+		
+		while (itStatus.hasNext()) {
+			
+			rowSpie = itStatus.next();
+			node = rowSpie.getNodeName();
+			spieType = rowSpie.getSpieService();
+			
+			maintenance = maintenanceService.getMaintenanceServiceByService(IStatusService.getUniqueNameStatusSpie(node, spieType));
+			
+			if (maintenance == null) {
+				itStatus.remove();
+			}
+			
+		}
+		
+	}
+	
+	/**
+	 * Method that process the SPIE response, setting the maintenance values.
+	 * @param status List of status per service
+	 * @return List<RowStatusSpieDTO>
+	 */
+	private List<RowStatusSpieDTO> checkStatusSpie(List<RowStatusSpieDTO> status) {
+
+		MaintenanceService maintenance = null;
+
+		for (RowStatusSpieDTO s: status) {
+
+			maintenance = maintenanceService.getMaintenanceServiceByService(IStatusService.getUniqueNameStatusSpie(s.getNodeName(), s.getSpieService()));
+
+			if (maintenance != null && maintenance.getIsInMaintenance()) {
+
+				s.setStatusValue(SemaphoreEnum.BLUE.getId());
+			} 
+		}
+		
 		return status;
 	}
 	
@@ -286,8 +373,12 @@ public class StatusService implements IStatusService {
 		Integer semaphVip = null;
 		String description = null;
 		
+		String uniqueName = null;
+		MaintenanceService maintenance = null;
+		
 		for (RowStatusVipDTO vip : statusVip.getData()) {
 			
+			maintenance = maintenanceService.getMaintenanceServiceByService(vip.getService());
 			semaphVip = SemaphoreEnum.GREEN.getId();
 						
 			switch (vip.getStatus()) {
@@ -303,7 +394,7 @@ public class StatusService implements IStatusService {
 					break;
 				}
 			
-			if (!SemaphoreEnum.GREEN.getId().equals(semaphVip)) {
+			if (!SemaphoreEnum.GREEN.getId().equals(semaphVip) && maintenance != null && !maintenance.getIsInMaintenance()) {
 				summary = new SummaryStatusDTO(semaphVip, "VIP", description);
 				summaryList.add(summary);
 			}
@@ -313,7 +404,10 @@ public class StatusService implements IStatusService {
 		
 		for (RowStatusSpieDTO spie : statusSpie.getData()) {
 			
-			if (!SemaphoreEnum.GREEN.getId().equals(spie.getStatusValue())) {
+			uniqueName = IStatusService.getUniqueNameStatusSpie(spie.getNodeName(), spie.getSpieService());
+			maintenance = maintenanceService.getMaintenanceServiceByService(uniqueName);
+			
+			if (!SemaphoreEnum.GREEN.getId().equals(spie.getStatusValue()) && maintenance != null && !maintenance.getIsInMaintenance() && !SemaphoreEnum.BLUE.getId().equals(spie.getStatusValue())) {
 				semaphSpie = spie.getStatusValue();
 				
 				description = message.getMessage(IWebViewMessages.ERROR_SPIE_SERVICE, new Object[]{spie.getSpieService(), spie.getNodeName()}, locale);
@@ -323,17 +417,8 @@ public class StatusService implements IStatusService {
 				
 			}
 		}
-		
-		//TODO Hay que crear un módulo a parte para gestionar las "alertas de sistema" donde irían estas notificaciones sobre nodos
-		// Se permitirá que el usuario elimine dichas alertas una vez "vistas".
-		
-//		for (Map.Entry<String,NodeRestStatusResponse> entry : StatusNodeHolder.getInstance().getCurrentStatusHolder().entrySet()) {
-//						
-//			//TODO Limpiar las entradas que lleven "demasiado" en StatusNodeHolder tiempo antes de recalcular.
-//			summary = new SummaryStatusDTO(entry.getValue().getStatus(), entry.getKey(), entry.getValue().getDescription());
-//			summaryList.add(summary);
-//		}
-		
+			
 		return summaryList;
 	}
+		
 }

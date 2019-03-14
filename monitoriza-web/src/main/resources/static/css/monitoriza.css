@@ -99,6 +99,12 @@
 
 }
 
+@media (min-width: 576px) {
+  .modal-dialog {
+    max-width: 650px;
+    margin: 1.75rem auto;
+    }
+
 /*------------------------------------------------------------------
 [ Formularios ]*/
 .required:before{
@@ -145,4 +151,15 @@
 .hidden {
     display: none !important;
     visibility: hidden;
+}
+
+/*------------------------------------------------------------------
+[ Controles en DataTables ]*/
+
+td.details-control, td.mark-control {
+    content: "\e610";
+    cursor: pointer;
+}
+tr.shown, td.details-control {
+    content: "\e610";
 }

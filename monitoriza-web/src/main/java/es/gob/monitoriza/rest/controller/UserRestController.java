@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.6, 30/01/2019.
+ * @version 1.7, 14/03/2019.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -84,7 +84,7 @@ import es.gob.monitoriza.webservice.ClientManager;
 /**
  * <p>Class that manages the REST requests related to the Users administration and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.6, 30/01/2019.
+ * @version 1.7, 14/03/2019.
  */
 @RestController
 public class UserRestController {
@@ -113,6 +113,11 @@ public class UserRestController {
 	 * Attribute that represents the user column someCertNotValid. 
 	 */
 	private static final String COLUMN_CERT_NOT_VALID = "someCertNotValid";
+	
+	/**
+	 * Constant that represents the key Json 'errorSaveUser'.
+	 */
+	private static final String KEY_JS_ERROR_SAVE_USER = "errorSaveUser";
 
 	/**
 	 * Attribute that represents the service object for accessing the
@@ -210,10 +215,10 @@ public class UserRestController {
 	public @ResponseBody DataTablesOutput<UserMonitoriza> save(@Validated(OrderedValidation.class) @RequestBody final UserDTO userForm, final BindingResult bindingResult) {
 		DataTablesOutput<UserMonitoriza> dtOutput = new DataTablesOutput<UserMonitoriza>();
 		List<UserMonitoriza> listNewUser = new ArrayList<UserMonitoriza>();
-
+		JSONObject json = new JSONObject();
+		
 		if (bindingResult.hasErrors()) {
 			listNewUser = StreamSupport.stream(userService.getAllUserMonitoriza().spliterator(), false).collect(Collectors.toList());
-			JSONObject json = new JSONObject();
 			for (FieldError o: bindingResult.getFieldErrors()) {
 				json.put(o.getField() + SPAN, o.getDefaultMessage());
 			}
@@ -225,8 +230,10 @@ public class UserRestController {
 
 				listNewUser.add(user);
 			} catch (Exception e) {
+				LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB022), e);
 				listNewUser = StreamSupport.stream(userService.getAllUserMonitoriza().spliterator(), false).collect(Collectors.toList());
-				throw e;
+				json.put(KEY_JS_ERROR_SAVE_USER, Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB022));
+				dtOutput.setError(json.toString());
 			}
 		}
 

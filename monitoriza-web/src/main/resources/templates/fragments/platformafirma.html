@@ -215,14 +215,28 @@ $(document).ready(function() {
 			                  
 			            		// Se oculta la capa 'cargando...'
 			            		hide();
+			            		var errores = JSON.parse(data.error);
+			            		if (data.error != null){
+			            			jQuery.each(errores, function(i, val) {
+									  	
+										if(i == "errorSavePlatform"){
+											var messageError = val;
+											$('#errorSavePlatform').html(messageError);
+											$('#errorSavePlatform').addClass('alert alert-danger');
+									 	 } 
+									  
+									  	$('#afirmaForm *').filter('span').each(function(){
+											if (i == $(this).attr('id')){
+												$("#" + i).text(val);
+												$("#" + i).addClass('badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill');
+											}
+										});
+								  })
+			            		}
+			            		
+			            		
 			                    tbl.row.add($(data.data)).draw(false);
-			                    		                    
-			                    $('#altEditor-modal .modal-body .alert').remove();
-			                    $('#altEditor-modal').modal('hide');
-			                    
-			                    if ($('#errorModalPlatform').length > 0){
-									$('#errorModalPlatform').remove();
-								}
+			                   
 			                },
 			                error:function(data){
 			                	hide();

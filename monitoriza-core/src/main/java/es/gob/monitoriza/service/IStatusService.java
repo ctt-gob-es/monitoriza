@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.monitoriza.service.IStatusService.java.</p>
  * <b>Description:</b><p>Interface that provides communication with the operations of the persistence layer.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>20 abr. 2018.</p>
+ * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 09/11/2018.
+ * @version 1.3, 14/03/2019.
  */
 package es.gob.monitoriza.service;
 
@@ -32,12 +32,13 @@ import es.gob.monitoriza.persistence.configuration.dto.RowStatusSpieDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusSpieDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusVipDTO;
 import es.gob.monitoriza.persistence.configuration.dto.SummaryStatusDTO;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /**
  * <p>Interface that provides communication with the status servlet.
  * </p><b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.2, 09/11/2018.
+ * @version 1.3, 14/03/2019.
  */
 public interface IStatusService {
 
@@ -68,5 +69,37 @@ public interface IStatusService {
 	 * @return {@link #List<SummaryStatusDTO>} with summary alerts
 	 */
 	List<SummaryStatusDTO> getSummaryStatus(StatusVipDTO statusVip, StatusSpieDTO statusSpie, Locale locale);
+	
+	/**
+	 * Method that gets the unique identifier for a node-service SPIE.
+	 * @param node Long that represents the identifier of the node.
+	 * @param spieType Long that represents the identifier of the SPIE type.
+	 * @return String that represents the status SPIE unique identifier: node_spieType
+	 */
+	static String getUniqueIdStatusSpie(Long node, Long spieType) {
+		
+		// Se identifica cada resultado por la cadena compuesta: idnodo_idspie.
+		// Esto servirá para almacenar cada estado en memoria.
+		StringBuilder idStatus = new StringBuilder();
+		idStatus.append(node).append(UtilsStringChar.SYMBOL_UNDERSCORE_STRING).append(spieType);
+		
+		return idStatus.toString();
+	}
+	
+	/**
+	 * Method that gets the unique identifier for a node-service SPIE.
+	 * @param node String that represents the name of the node.
+	 * @param spieType String that represents the name of the SPIE type.
+	 * @return String that represents the status SPIE unique name: nodename_spietypename
+	 */
+	static String getUniqueNameStatusSpie(String node, String spieType) {
+		
+		// Se identifica cada resultado por la cadena compuesta: idnodo_idspie.
+		// Esto servirá para almacenar cada estado en memoria.
+		StringBuilder idStatus = new StringBuilder();
+		idStatus.append(node).append(UtilsStringChar.SYMBOL_UNDERSCORE_STRING).append(spieType);
+		
+		return idStatus.toString();
+	}
 
 }

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 28/10/2018.
+ * @version 1.6, 14/03/2019.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -50,6 +50,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.i18n.IWebLogMessages;
+import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.AfirmaDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TsaDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
@@ -66,7 +68,7 @@ import es.gob.monitoriza.service.IPlatformService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.5, 28/10/2018..
+ * @version 1.6, 14/03/2019.
  */
 @RestController
 public class PlatformRestController {
@@ -82,6 +84,11 @@ public class PlatformRestController {
 	 */
 	@Autowired
 	private IPlatformService platformService;
+	
+	/**
+	 * Constant that represents the key Json 'errorPlatform'.
+	 */
+	private static final String KEY_JS_ERROR_SAVE_PLATFORM = "errorSavePlatform";
 		
 
 	/**
@@ -155,13 +162,14 @@ public class PlatformRestController {
 			@Validated(OrderedValidation.class) @RequestBody AfirmaDTO afirmaForm, BindingResult bindingResult) {
 		DataTablesOutput<PlatformMonitoriza> dtOutput = new DataTablesOutput<>();
 		List<PlatformMonitoriza> listNewAfirma = new ArrayList<PlatformMonitoriza>();
+		
+		JSONObject json = new JSONObject();
 				
 		if (bindingResult.hasErrors()) {
 			listNewAfirma = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
 					.collect(Collectors.toList());
-			JSONObject json = new JSONObject();
 			for (FieldError o : bindingResult.getFieldErrors()) {
-				json.put("invalid-" + o.getField(), o.getDefaultMessage());
+				json.put(o.getField() + "_span", o.getDefaultMessage());
 			}
 			dtOutput.setError(json.toString());
 		} else {
@@ -171,9 +179,11 @@ public class PlatformRestController {
 				listNewAfirma.add(platformAfirma);
 				
 			}catch(Exception e) {
+				LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB021), e);
 				listNewAfirma = StreamSupport.stream(platformService.getAllPlatform().spliterator(), false)
 						.collect(Collectors.toList());
-				throw e;
+				json.put(KEY_JS_ERROR_SAVE_PLATFORM, Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB021));
+				dtOutput.setError(json.toString());
 			}
 		}
 		
