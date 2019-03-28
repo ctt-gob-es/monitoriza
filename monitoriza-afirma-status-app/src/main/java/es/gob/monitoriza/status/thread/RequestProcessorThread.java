@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 2.0, 14/03/2019.
+ * @version 2.1, 28/03/2019.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -86,7 +86,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 2.0, 14/03/2019.
+ * @version 2.1 28/03/2019.
  */
 public final class RequestProcessorThread implements Runnable {
 
@@ -94,6 +94,11 @@ public final class RequestProcessorThread implements Runnable {
 	 * Attribute that represents the object that manages the log of the class.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	
+	/**
+	 * Attribute that represents the identifier of the scheduled timer for this service thread. 
+	 */
+	private String idTimerTask;
 
 	/**
 	 * Attribute that represents the Object that holds the configuration for the service being processed in this thread. 
@@ -117,13 +122,15 @@ public final class RequestProcessorThread implements Runnable {
 
 	/**
 	 * Private constructor method for the class RequestProcessor.java. 
+	 * @param idTimerTaskParam Identifier of the scheduled timer.
 	 * @param serviceParam DTOService that represents the service being processed in this thread.
 	 * @param statusHolderParam Reference to the Map that holds the current status for the processed services. 
 	 * @param sslTrustStoreParam Truststore of Monitoriz@
 	 * @param rfc3161KeystoreParam Keystore for authenticating RFC3161 service
 	 */
-	public RequestProcessorThread(final ConfigServiceDTO serviceParam, final Map<String, StatusUptodate> statusHolderParam, final KeyStore sslTrustStoreParam, final KeyStore rfc3161KeystoreParam) {
+	public RequestProcessorThread(final String idTimerTaskParam, final ConfigServiceDTO serviceParam, final Map<String, StatusUptodate> statusHolderParam, final KeyStore sslTrustStoreParam, final KeyStore rfc3161KeystoreParam) {
 
+		this.idTimerTask = idTimerTaskParam;
 		this.service = serviceParam;
 		this.statusHolder = statusHolderParam;
 		ssl = sslTrustStoreParam;
@@ -135,6 +142,8 @@ public final class RequestProcessorThread implements Runnable {
 	 */
 	@Override
 	public void run() {
+		
+		LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS004, new Object[ ] { idTimerTask, service.getServiceName() }));
 		
 		RunningServices.getInstance();
 		RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.TRUE);
@@ -157,7 +166,7 @@ public final class RequestProcessorThread implements Runnable {
 
 			try {
 
-				LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS003, new Object[ ] { serviceDir.toPath().toString(), service.getWsdl() }));
+				LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS003, new Object[ ] { idTimerTask, serviceDir.toPath().toString(), service.getWsdl() }));
 
 				// Enviamos las peticiones del grupo principal
 				grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaConfig.getProperty(StaticConstants.GRUPO_PRINCIPAL_PATH_DIRECTORY)));
@@ -172,16 +181,14 @@ public final class RequestProcessorThread implements Runnable {
 							// petición, la enviamos a @Firma o TS@
 							if (request != null) {
 
-								LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS004, new Object[ ] { request.getName() }));
-
 								if (service.getServiceType().equalsIgnoreCase(GeneralConstants.OCSP_SERVICE)) {
-									tiempoTotal = OcspInvoker.sendRequest(request, service, ssl);
+									tiempoTotal = OcspInvoker.sendRequest(idTimerTask, request, service, ssl);
 								} else if (service.getServiceType().equalsIgnoreCase(GeneralConstants.RFC3161_SERVICE)) {
-									tiempoTotal = Rfc3161Invoker.sendRequest(request, service, ssl, authClient);
+									tiempoTotal = Rfc3161Invoker.sendRequest(idTimerTask, request, service, ssl, authClient);
 								} else if(service.getServiceType().equalsIgnoreCase(GeneralConstants.HTTP_SERVICE)){									
-									tiempoTotal = HttpInvoker.sendRequest(request, service, ssl);									
+									tiempoTotal = HttpInvoker.sendRequest(idTimerTask, request, service, ssl);									
  								} else {
-									tiempoTotal = SoapInvoker.sendRequest(request, service, ssl);
+									tiempoTotal = SoapInvoker.sendRequest(idTimerTask, request, service, ssl);
 								}
 
 								totalRequests++;
@@ -217,7 +224,7 @@ public final class RequestProcessorThread implements Runnable {
 						// Si se cumplen las condiciones, se obtiene el posible
 						// próximo grupo de confirmación...
 						if (perdidas > Integer.parseInt(service.getLostThreshold()) || tiempoMedio > service.getDegradedThreshold()) {
-							LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS005, new Object[ ] { service.getWsdl(), perdidas, tiempoMedio == null ? "N/A": tiempoMedio }));
+							LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS005, new Object[ ] { idTimerTask, service.getWsdl(), perdidas, tiempoMedio == null ? "N/A": tiempoMedio }));
 							necesarioConfirmar = Boolean.TRUE;
 							grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaConfig.getProperty(StaticConstants.GRUPO_CONFIRMACION_PATH_DIRECTORY)) + groupIndex);
 							groupIndex++;
@@ -226,11 +233,11 @@ public final class RequestProcessorThread implements Runnable {
 							// de confirmación,
 							// dormimos el hilo para simular la espera...
 							try {
-								LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS006, new Object[ ] { grupoAProcesar.getAbsolutePath() }));
+								LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS006, new Object[ ] { idTimerTask, grupoAProcesar.getAbsolutePath() }));
 								Thread.sleep(Long.parseLong(StaticMonitorizaConfig.getProperty(StaticConstants.CONFIRMATION_WAIT_TIME)));
 								
 							} catch (InterruptedException e) {
-								LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS007, new Object[ ] { service.getServiceName() }));
+								LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS007, new Object[ ] { idTimerTask, service.getServiceName() }));
 							}
 						} else {
 							necesarioConfirmar = Boolean.FALSE;
@@ -247,7 +254,7 @@ public final class RequestProcessorThread implements Runnable {
 
 			} catch (InvokerException e) {
 				
-				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS002, new Object[ ] { service.getServiceName() }), e);
+				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS002, new Object[ ] { idTimerTask, service.getServiceName() }), e);
 			} finally {
 				
 				// Si se ha obtenido una respuesta definitiva (no perdida/degradada) o no
@@ -349,7 +356,7 @@ public final class RequestProcessorThread implements Runnable {
 				
 				AlarmManager.throwNewAlarm(alarm);
 			} catch (AlarmException e) {
-				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS003, new Object[ ] { service.getServiceName(), estado }), e);
+				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS003, new Object[ ] { idTimerTask, service.getServiceName(), estado }), e);
 			}
 			
 			// Registramos la alarma en GrayLog si así está configurado.
@@ -377,7 +384,7 @@ public final class RequestProcessorThread implements Runnable {
 		try {
 			ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.DAILY_VIP_MONITORING_SERVICE, DailyVipMonitoringService.class).saveDailyVipMonitoring(daily);
 		} catch (DatabaseException e) {
-			String msg = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS018);
+			String msg = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS018, new Object[]{idTimerTask});
 			LOGGER.error(msg, e);
 			UtilsGrayLog.writeMessageInGrayLog(UtilsGrayLog.LEVEL_ERROR, GrayLogErrorCodes.ERROR_STATUS_VIP_SAVE, msg);
 		}	

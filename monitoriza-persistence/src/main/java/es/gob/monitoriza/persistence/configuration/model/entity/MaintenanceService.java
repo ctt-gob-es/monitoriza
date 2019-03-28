@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>14/03/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 14/03/2019.
+ * @version 1.1, 28/03/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -44,7 +44,7 @@ import es.gob.monitoriza.constant.NumberConstants;
 /** 
  * <p>Class that maps the <i>MAINTENANCE_SERVICE</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 14/03/2019.
+ * @version 1.1, 28/03/2019.
  */
 @Entity
 @Table(name = "MAINTENANCE_SERVICE")
@@ -99,7 +99,7 @@ public class MaintenanceService implements Serializable {
 	                  }
 	          )
 	@JsonView(DataTablesOutput.View.class)
-	public final Long getIdMaintenanceService() {
+	public Long getIdMaintenanceService() {
 		// CHECKSTYLE:ON
 		return idMaintenanceService;
 	}
@@ -110,7 +110,7 @@ public class MaintenanceService implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public final void setIdMaintenanceService(Long idMaintenanceServiceParam) {
+	public void setIdMaintenanceService(Long idMaintenanceServiceParam) {
 		// CHECKSTYLE:ON
 		this.idMaintenanceService = idMaintenanceServiceParam;
 	}
@@ -123,7 +123,7 @@ public class MaintenanceService implements Serializable {
 	// because Hibernate JPA needs not final access methods.
 	@Column(name = "SERVICE", nullable = false, length = NumberConstants.NUM100)
 	@JsonView(DataTablesOutput.View.class)
-	public final String getService() {
+	public String getService() {
 		// CHECKSTYLE:ON
 		return service;
 	}
@@ -134,7 +134,7 @@ public class MaintenanceService implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public final void setService(String serviceParam) {
+	public void setService(String serviceParam) {
 		// CHECKSTYLE:ON
 		this.service = serviceParam;
 	}
@@ -148,7 +148,7 @@ public class MaintenanceService implements Serializable {
 	@Column(name = "IS_INMAINTENANCE", nullable = false, precision = 1)
 	@Type(type = CONS_YES_NO)
 	@JsonView(DataTablesOutput.View.class)
-	public final Boolean getIsInMaintenance() {
+	public Boolean getIsInMaintenance() {
 		// CHECKSTYLE:ON
 		return isInMaintenance;
 	}
@@ -159,7 +159,7 @@ public class MaintenanceService implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public final void setIsInMaintenance(Boolean isInMaintenanceParam) {
+	public void setIsInMaintenance(Boolean isInMaintenanceParam) {
 		// CHECKSTYLE:ON
 		this.isInMaintenance = isInMaintenanceParam;
 	}
@@ -172,7 +172,7 @@ public class MaintenanceService implements Serializable {
 	// because Hibernate JPA needs not final access methods.
 	@Column(name = "STATUS_ORIGIN", nullable = true, length = NumberConstants.NUM1)
 	@JsonView(DataTablesOutput.View.class)
-	public final Integer getStatusOrigin() {
+	public Integer getStatusOrigin() {
 		// CHECKSTYLE:ON
 		return statusOrigin;
 	}
@@ -183,7 +183,7 @@ public class MaintenanceService implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public final void setStatusOrigin(Integer statusOriginParam) {
+	public void setStatusOrigin(Integer statusOriginParam) {
 		// CHECKSTYLE:ON
 		this.statusOrigin = statusOriginParam;
 	}

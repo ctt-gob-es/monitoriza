@@ -19,14 +19,14 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.9, 30/01/2019.
+ * @version 2.0, 28/03/2019.
  */
 package es.gob.monitoriza.constant;
 
 /** 
  * <p>Interface that contains general constants.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.9, 30/01/2019.
+ * @version 2.0, 28/03/2019.
  */
 public interface GeneralConstants {
 	
@@ -84,13 +84,7 @@ public interface GeneralConstants {
 	 * Attribute that represents the property substring for timer configuration. 
 	 */
 	public static final String MONITORIZA_TIMER = "timer";
-	
-	/**
-	 * Constant that represents the static property that indicates the frequency in which the soap requests
-	 * are sent to @firma or ts@.
-	 */
-	public static final String FREQUENCY = "freq";	
-	
+		
 	/**
 	 * Constant attribute that identifies the provider Sun for X.509 content type.
 	 */
@@ -115,6 +109,11 @@ public interface GeneralConstants {
 	 * Constant that represents the string 'service'.
 	 */
 	public static final String SERVICE = "service";
+	
+	/**
+	 * Attribute that represents the String 'SPIE'. 
+	 */
+	public static final String SPIE = "SPIE";
 
 	/**
 	 * Constant that represents the string 'blockAlarmTime'.

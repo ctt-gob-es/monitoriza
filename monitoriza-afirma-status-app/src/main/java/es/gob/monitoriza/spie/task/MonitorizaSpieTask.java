@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>25/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 15/02/2019.
+ * @version 1.3, 28/03/2019.
  */
 package es.gob.monitoriza.spie.task;
 
@@ -37,18 +37,20 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
+import es.gob.monitoriza.service.impl.PlatformService;
 import es.gob.monitoriza.service.impl.SpieMonitoringConfigService;
 import es.gob.monitoriza.service.utils.IServiceNameConstants;
-import es.gob.monitoriza.spie.status.StatusSpieHolder;
 import es.gob.monitoriza.spie.thread.RequestLauncherSpie;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 
 /** 
  * <p>Class that initializes the timers for processing the batch of requests for each SPIE service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 15/02/2019.
+ * @version 1.3, 28/03/2019.
  */
 public class MonitorizaSpieTask extends HttpServlet {
 
@@ -132,12 +134,17 @@ public class MonitorizaSpieTask extends HttpServlet {
 		 */
 		@Override
 		public void run() {
+			
+			CPlatformType type = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.PLATFORM_SERVICE, PlatformService.class).getPlatformTypeById(platformType);
+			StringBuilder idTimerTask = new StringBuilder();
+			idTimerTask.append(GeneralConstants.SPIE).append(UtilsStringChar.SYMBOL_HYPHEN_STRING).append(type.getName());
 
-			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS001, new Object[ ] { platformType }));
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS001, new Object[ ] { idTimerTask }));
 			
 			RequestLauncherSpie rlt = new RequestLauncherSpie();
 			
 			rlt.startInvoker(platformType);
+					
 
 		}
 

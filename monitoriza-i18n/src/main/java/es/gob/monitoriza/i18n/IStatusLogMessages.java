@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>08/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 15/02/2019.
+ * @version 1.6, 28/03/2019.
  */
 package es.gob.monitoriza.i18n;
 
@@ -28,7 +28,7 @@ package es.gob.monitoriza.i18n;
 /** 
  * <p>Interface that contains the keys to the log messages for the servlet status application.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.5, 15/02/2019.
+ * @version 1.6, 28/03/2019.
  */
 public interface IStatusLogMessages {
 	
@@ -235,5 +235,10 @@ public interface IStatusLogMessages {
 	 * Constant attribute that represents the name of the property <code>errorstatus024</code> belonging to the file status/monitoriza_xx_YY.properties.
 	 */
 	String ERRORSTATUS024 = "errorstatus024";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>errorstatus025</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORSTATUS025 = "errorstatus025";
 
 }

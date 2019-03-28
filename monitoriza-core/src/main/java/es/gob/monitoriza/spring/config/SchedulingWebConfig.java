@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>17/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 20/09/2018.
+ * @version 1.2, 28/03/2019.
  */
 package es.gob.monitoriza.spring.config;
 
@@ -37,6 +37,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.cron.SchedulerObjectInterface;
 import es.gob.monitoriza.cron.ValidCertificatesJob;
 import es.gob.monitoriza.service.IValidServiceService;
@@ -45,7 +46,7 @@ import es.gob.monitoriza.service.IValidServiceService;
  * <p>Class that configures the spring scheduled task for checking the status of the timers
  * allowing to to get the fixed rate parameter at running time.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 20/09/2018.
+ * @version 1.2, 28/03/2019.
  */
 @Configuration
 @EnableScheduling
@@ -63,14 +64,16 @@ public class SchedulingWebConfig {
 	@Autowired
 	private IValidServiceService validServiceService;
 	
+	private static Map<String, SchedulerObjectInterface> schduledJobsMap = new HashMap<>();
+	
 	/**
 	 * Method that creates a new instance of {@link ScheduledExecutorService}.
 	 * @return {@link Executor}
 	 */
 	@Bean(destroyMethod = "shutdown")
     public Executor taskExecutor() {
-        return Executors.newScheduledThreadPool(100);
-    }private static Map<String, SchedulerObjectInterface> schduledJobsMap = new HashMap<>();
+        return Executors.newScheduledThreadPool(NumberConstants.NUM100);
+    }
     
     /**
      * Method that puts all jobs to execute into map.
