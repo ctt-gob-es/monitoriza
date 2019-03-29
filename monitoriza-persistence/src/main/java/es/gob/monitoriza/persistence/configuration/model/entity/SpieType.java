@@ -1,4 +1,4 @@
-/* 
+/*
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,7 +14,7 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
+/**
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.entity.NodeAfirma.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
@@ -43,7 +43,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.NumberConstants;
 
-/** 
+/**
  * <p>Class that maps the <i>SPIE_TYPE</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.2, 15/02/2019.
@@ -51,49 +51,49 @@ import es.gob.monitoriza.constant.NumberConstants;
 @Entity
 @Table(name = "SPIE_TYPE")
 public class SpieType implements Serializable {
-	
+
 	/**
-	 * Attribute that represents the class serial version identifier. 
+	 * Attribute that represents the class serial version identifier.
 	 */
 	private static final long serialVersionUID = -4299283176302847810L;
-	
+
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents .
 	 */
 	public static final Long ID_CONN_HSM_AFIRMA = 1L;
-	
+
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents .
 	 */
 	public static final Long ID_MODE_EMERGENCY_AFIRMA = 2L;
-	
+
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents .
 	 */
 	public static final Long ID_CONN_TSA = 3L;
-			
+
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents .
 	 */
 	public static final Long ID_VAL_METHODS = 4L;
-	
+
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents .
 	 */
 	public static final Long ID_RESPONSE_TIMES = 5L;
-	
+
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents .
 	 */
 	public static final Long ID_CONN_HSM_TSA = 6L;
-	
+
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents .
 	 */
 	public static final Long ID_MODE_EMERGENCY_TSA = 7L;
-	
+
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents .
 	 */
 	public static final Long ID_CONN_AFIRMA = 8L;
 
@@ -101,32 +101,32 @@ public class SpieType implements Serializable {
 	 * Attribute that represents the object ID.
 	 */
 	private Long idSpieType;
-	
+
 	/**
-	 * Attribute that represents the name of the SPIE type. 
+	 * Attribute that represents the name of the SPIE type.
 	 */
 	private String tokenName;
-	
+
 	/**
-	 * Attribute that represents the context string for invoking the SPIE. 
+	 * Attribute that represents the context string for invoking the SPIE.
 	 */
 	private String context;
-		
+
 	/**
-	 * Attribute that represents the type of platform. 
+	 * Attribute that represents the type of platform.
 	 */
 	private CPlatformType platformType;
-	
+
 	/**
-	 * Attribute that represents the sempahore error level for the SPIE type. 
+	 * Attribute that represents the sempahore error level for the SPIE type.
 	 */
 	private Integer semaphoreErrorLevel;
-	
+
 	/**
-	 * Attribute that represents the HTML resolver class name for parsing the SPIE result. 
+	 * Attribute that represents the HTML resolver class name for parsing the SPIE result.
 	 */
 	private String resolverClass;
-		
+
 	/**
 	 * Gets the value of the attribute {@link #idSpieType}.
 	 * @return the value of the attribute {@link #idSpieType}.
@@ -148,7 +148,7 @@ public class SpieType implements Serializable {
 	@JsonView(DataTablesOutput.View.class)
 	public Long getIdSpieType() {
 		// CHECKSTYLE:ON
-		return idSpieType;
+		return this.idSpieType;
 	}
 
 	/**
@@ -157,7 +157,7 @@ public class SpieType implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setIdSpieType(Long idSpieType) {
+	public void setIdSpieType(final Long idSpieType) {
 		// CHECKSTYLE:ON
 		this.idSpieType = idSpieType;
 	}
@@ -172,7 +172,7 @@ public class SpieType implements Serializable {
 	@JsonView(DataTablesOutput.View.class)
 	public String getTokenName() {
 		// CHECKSTYLE:ON
-		return tokenName;
+		return this.tokenName;
 	}
 
 	/**
@@ -181,7 +181,7 @@ public class SpieType implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setTokenName(String tokenName) {
+	public void setTokenName(final String tokenName) {
 		// CHECKSTYLE:ON
 		this.tokenName = tokenName;
 	}
@@ -196,7 +196,7 @@ public class SpieType implements Serializable {
 	@JsonView(DataTablesOutput.View.class)
 	public String getContext() {
 		// CHECKSTYLE:ON
-		return context;
+		return this.context;
 	}
 
 	/**
@@ -205,12 +205,11 @@ public class SpieType implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setContext(String context) {
+	public void setContext(final String context) {
 		// CHECKSTYLE:ON
 		this.context = context;
 	}
 
-		
 	/**
 	 * Gets the value of the attribute {@link #platformType}.
 	 * @return the value of the attribute {@link #platformType}.
@@ -219,10 +218,10 @@ public class SpieType implements Serializable {
 	// because Hibernate JPA needs not final access methods.
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "ID_PLATFORM_TYPE", nullable = false)
-	@JsonView(DataTablesOutput.View.class)	
+	@JsonView(DataTablesOutput.View.class)
 	public CPlatformType getPlatformType() {
 		// CHECKSTYLE:ON
-		return platformType;
+		return this.platformType;
 	}
 
 	/**
@@ -231,7 +230,7 @@ public class SpieType implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setPlatformType(CPlatformType platformType) {
+	public void setPlatformType(final CPlatformType platformType) {
 		// CHECKSTYLE:ON
 		this.platformType = platformType;
 	}
@@ -243,10 +242,10 @@ public class SpieType implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	@Column(name = "SEMAPHORE_LEVEL", nullable = false, length = NumberConstants.NUM1, unique = false)
-	@JsonView(DataTablesOutput.View.class)	
+	@JsonView(DataTablesOutput.View.class)
 	public Integer getSemaphoreErrorLevel() {
 		// CHECKSTYLE:ON
-		return semaphoreErrorLevel;
+		return this.semaphoreErrorLevel;
 	}
 
 	/**
@@ -255,7 +254,7 @@ public class SpieType implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public void setSemaphoreErrorLevel(Integer semaphoreErrorLevelParam) {
+	public void setSemaphoreErrorLevel(final Integer semaphoreErrorLevelParam) {
 		// CHECKSTYLE:ON
 		this.semaphoreErrorLevel = semaphoreErrorLevelParam;
 	}
@@ -267,10 +266,10 @@ public class SpieType implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	@Column(name = "RESOLVER_CLASS", nullable = true, length = NumberConstants.NUM100, unique = false)
-	@JsonView(DataTablesOutput.View.class)	
-	public final String getResolverClass() {
+	@JsonView(DataTablesOutput.View.class)
+	public String getResolverClass() {
 		// CHECKSTYLE:ON
-		return resolverClass;
+		return this.resolverClass;
 	}
 
 	/**
@@ -279,9 +278,9 @@ public class SpieType implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	public final void setResolverClass(String resolverClassParam) {
+	public void setResolverClass(final String resolverClassParam) {
 		// CHECKSTYLE:ON
 		this.resolverClass = resolverClassParam;
-	}	
+	}
 
 }

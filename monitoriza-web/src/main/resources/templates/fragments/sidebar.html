@@ -188,6 +188,18 @@
 				   </ul>
 				</li>
 				<li class="nav-item">
+	              <a id="aSplAdmin" class='sidebar-link' href="#">
+	                <span class="icon-holder">
+	                  <i class="c-brown-500 ti-receipt"></i>
+	                </span>
+	                <span class="title" th:text="#{menu.admin.spl}"></span>
+	                 <script th:inline="javascript">
+	                 	var actionSpl = /*[[@{/spl}]]*/;
+	                 	$('#aSplAdmin').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionSpl, 'optionReplacement', 'GET', null, true); return false;});
+	                </script>
+	              </a>
+	            </li>
+				<li class="nav-item">
 	              <a id="aServiceAdmin" class='sidebar-link' href="#">
 	                <span class="icon-holder">
 	                  <i class="c-green-500 ti-panel"></i>

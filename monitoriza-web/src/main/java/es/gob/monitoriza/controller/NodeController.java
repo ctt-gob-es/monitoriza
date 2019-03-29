@@ -88,7 +88,8 @@ public class NodeController {
 			
 		model.addAttribute("nodeafirmaform", new NodeDTO());
 		
-		return "modal/nodeAfirmaForm";
+		//return "modal/nodeAfirmaForm";
+		return "modal/logForm";
     }	
 	
 	/**
