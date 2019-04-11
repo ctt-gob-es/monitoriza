@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19/02/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 28/03/2019.
+ * @version 1.6, 11/04/2019.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -47,7 +47,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 /** 
  * <p>Class that manages the thread pool for processing each service in a separate thread.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.5, 28/03/2019.
+ * @version 1.6, 11/04/2019.
  */
 public class RequestLauncher {
 
@@ -112,11 +112,11 @@ public class RequestLauncher {
 	    pool.shutdown(); 
 	    try {
 	        // Se espera la terminación de hilos actuales
-	        if (!pool.awaitTermination(NumberConstants.NUM60, TimeUnit.SECONDS)) {
+	        if (!pool.awaitTermination(NumberConstants.NUM600, TimeUnit.SECONDS)) {
 	        	// Cancelación de hilos en ejecución para el pool
 	            pool.shutdownNow(); 
 	            // Se espera a la obtención de respuesta de cancelación de los hilos pendientes
-	            if (!pool.awaitTermination(NumberConstants.NUM60, TimeUnit.SECONDS)) {
+	            if (!pool.awaitTermination(NumberConstants.NUM600, TimeUnit.SECONDS)) {
 	                LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS015, new Object[]{service.getTimerName()}));
 	            }
 	        }

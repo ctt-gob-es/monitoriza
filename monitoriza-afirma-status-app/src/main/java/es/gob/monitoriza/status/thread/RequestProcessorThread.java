@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 2.1, 28/03/2019.
+ * @version 2.2, 11/04/2019.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -86,7 +86,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 2.1 28/03/2019.
+ * @version 2.2, 11/04/2019.
  */
 public final class RequestProcessorThread implements Runnable {
 
@@ -142,17 +142,17 @@ public final class RequestProcessorThread implements Runnable {
 	 */
 	@Override
 	public void run() {
-		
+
 		LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS004, new Object[ ] { idTimerTask, service.getServiceName() }));
-		
+
 		RunningServices.getInstance();
 		RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.TRUE);
-		
+
 		Long tiempoTotal = null;
 		Long tiempoMedio = null;
 		Integer perdidas = null;
-		int totalRequests = 0;
-		int totalRequestsLost = 0;
+		float totalRequests = 0;
+		float totalRequestsLost = 0;
 		Long totalTimes = 0L;
 		boolean necesarioConfirmar = Boolean.TRUE;
 		File grupoAProcesar = null;
@@ -164,117 +164,113 @@ public final class RequestProcessorThread implements Runnable {
 		// Si existe un directorio con el nombre del servicio, continuo...
 		if (serviceDir != null && serviceDir.exists() && serviceDir.isDirectory()) {
 
-			try {
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS003, new Object[ ] { idTimerTask, serviceDir.toPath().toString(), service.getWsdl() }));
 
-				LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS003, new Object[ ] { idTimerTask, serviceDir.toPath().toString(), service.getWsdl() }));
+			// Enviamos las peticiones del grupo principal
+			grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaConfig.getProperty(StaticConstants.GRUPO_PRINCIPAL_PATH_DIRECTORY)));
 
-				// Enviamos las peticiones del grupo principal
-				grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaConfig.getProperty(StaticConstants.GRUPO_PRINCIPAL_PATH_DIRECTORY)));
+			do {
 
-				do {
+				// Se procesa el grupo...
+				if (grupoAProcesar != null && grupoAProcesar.exists() && grupoAProcesar.listFiles() != null) {
 
-					// Se procesa el grupo...
-					if (grupoAProcesar != null && grupoAProcesar.exists() && grupoAProcesar.listFiles() != null) {
-						
-						for (File request: grupoAProcesar.listFiles()) {
-							// Vamos recorriendo los ficheros, y si es una
-							// petición, la enviamos a @Firma o TS@
-							if (request != null) {
+					for (File request: grupoAProcesar.listFiles()) {
+						// Vamos recorriendo los ficheros, y si es una
+						// petición, la enviamos a @Firma o TS@
+						if (request != null) {
 
+							try {
 								if (service.getServiceType().equalsIgnoreCase(GeneralConstants.OCSP_SERVICE)) {
 									tiempoTotal = OcspInvoker.sendRequest(idTimerTask, request, service, ssl);
 								} else if (service.getServiceType().equalsIgnoreCase(GeneralConstants.RFC3161_SERVICE)) {
 									tiempoTotal = Rfc3161Invoker.sendRequest(idTimerTask, request, service, ssl, authClient);
-								} else if(service.getServiceType().equalsIgnoreCase(GeneralConstants.HTTP_SERVICE)){									
-									tiempoTotal = HttpInvoker.sendRequest(idTimerTask, request, service, ssl);									
- 								} else {
+								} else if (service.getServiceType().equalsIgnoreCase(GeneralConstants.HTTP_SERVICE)) {
+									tiempoTotal = HttpInvoker.sendRequest(idTimerTask, request, service, ssl);
+								} else {
 									tiempoTotal = SoapInvoker.sendRequest(idTimerTask, request, service, ssl);
 								}
+							} catch (InvokerException e) {
 
+								LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS002, new Object[ ] { idTimerTask, service.getServiceName() }), e);
+
+							} finally {
 								totalRequests++;
 
-								// Si no ha podido calcularse el tiempo de la
-								// request o
-								// se considera perdida,
+								// Si no ha podido calcularse el tiempo de
+								// la request o se considera perdida,
 								// se aumenta el nº de requests perdidas.
 								if (isServiceRequestLost(tiempoTotal)) {
 									totalRequestsLost++;
-									// En otro caso, se añade el tiempo de la
-									// request al
-									// total para hacer la media a posteriori.
+									// En otro caso, se añade el tiempo de
+									// la request al total para hacer la media a
+									// posteriori.
 								} else {
 									totalTimes += tiempoTotal;
 								}
-								
-								// Se almacena el resultado parcial para la petición del grupo actual
-								partialRequestResult.put(request.getAbsolutePath(), isServiceRequestLost(tiempoTotal)? "Sin respuesta" : tiempoTotal.toString());
-								
+
+								// Se almacena el resultado parcial para la
+								// petición del grupo actual
+								partialRequestResult.put(request.getAbsolutePath(), isServiceRequestLost(tiempoTotal) ? "Sin respuesta" : tiempoTotal.toString());
+
 							}
 
 						}
 
-						// Calcular el tiempo medio acumulado si hay algún
-						// tiempo disponible...
-						if (totalRequests != totalRequestsLost) {
-							tiempoMedio = totalTimes / (totalRequests - totalRequestsLost);
+					}
+
+					// Calcular el tiempo medio acumulado si hay algún
+					// tiempo disponible...
+					if (totalRequests != totalRequestsLost) {
+						tiempoMedio = (long) Math.round(totalTimes / (totalRequests - totalRequestsLost));
+					}
+					// Calcular % de perdidas para el grupo principal
+					perdidas = Math.round((totalRequestsLost / totalRequests) * NumberConstants.NUM100);
+
+					// Si se cumplen las condiciones, se obtiene el posible
+					// próximo grupo de confirmación...
+					if (perdidas > Integer.parseInt(service.getLostThreshold()) || tiempoMedio > service.getDegradedThreshold()) {
+						LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS005, new Object[ ] { idTimerTask, service.getWsdl(), perdidas, tiempoMedio == null ? "N/A" : tiempoMedio }));
+						necesarioConfirmar = Boolean.TRUE;
+						grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaConfig.getProperty(StaticConstants.GRUPO_CONFIRMACION_PATH_DIRECTORY)) + groupIndex);
+						groupIndex++;
+
+						// Al ser necesario procesar el siguiente grupo
+						// de confirmación,
+						// dormimos el hilo para simular la espera...
+						try {
+							LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS006, new Object[ ] { idTimerTask, grupoAProcesar.getAbsolutePath() }));
+							Thread.sleep(Long.parseLong(StaticMonitorizaConfig.getProperty(StaticConstants.CONFIRMATION_WAIT_TIME)));
+
+						} catch (InterruptedException e) {
+							LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS007, new Object[ ] { idTimerTask, service.getServiceName() }));
 						}
-						// Calcular % de perdidas para el grupo principal
-						perdidas = Math.round((float) (totalRequestsLost / totalRequests) * NumberConstants.NUM100);
-
-						// Si se cumplen las condiciones, se obtiene el posible
-						// próximo grupo de confirmación...
-						if (perdidas > Integer.parseInt(service.getLostThreshold()) || tiempoMedio > service.getDegradedThreshold()) {
-							LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS005, new Object[ ] { idTimerTask, service.getWsdl(), perdidas, tiempoMedio == null ? "N/A": tiempoMedio }));
-							necesarioConfirmar = Boolean.TRUE;
-							grupoAProcesar = new File(serviceDir.getAbsolutePath().concat(GeneralConstants.DOUBLE_PATH_SEPARATOR).concat(StaticMonitorizaConfig.getProperty(StaticConstants.GRUPO_CONFIRMACION_PATH_DIRECTORY)) + groupIndex);
-							groupIndex++;
-
-							// Al ser necesario procesar el siguiente grupo
-							// de confirmación,
-							// dormimos el hilo para simular la espera...
-							try {
-								LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS006, new Object[ ] { idTimerTask, grupoAProcesar.getAbsolutePath() }));
-								Thread.sleep(Long.parseLong(StaticMonitorizaConfig.getProperty(StaticConstants.CONFIRMATION_WAIT_TIME)));
-								
-							} catch (InterruptedException e) {
-								LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS007, new Object[ ] { idTimerTask, service.getServiceName() }));
-							}
-						} else {
-							necesarioConfirmar = Boolean.FALSE;
-						}
-
 					} else {
-						// Si no existe el grupo, no es necesario (ni posible)
-						// confirmar
 						necesarioConfirmar = Boolean.FALSE;
 					}
 
+				} else {
+					// Si no existe el grupo, no es necesario (ni posible)
+					// confirmar
+					necesarioConfirmar = Boolean.FALSE;
 				}
-				while (necesarioConfirmar);
 
-			} catch (InvokerException e) {
-				
-				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS002, new Object[ ] { idTimerTask, service.getServiceName() }), e);
-			} finally {
-				
-				// Si se ha obtenido una respuesta definitiva (no perdida/degradada) o no
-				// hay más grupos de confirmación,
-				// pasamos a calcular el estado del servicio con los datos
-				// obtenidos.
-				StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(tiempoMedio, perdidas), service.getPlatform(), tiempoMedio, LocalDateTime.now(), partialRequestResult);
-				statusHolder.put(service.getServiceName(), statusUptodate);
-				RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
-				
-				saveDailyVipMonitoring(service.getServiceName(), service.getPlatform(), statusUptodate);
-				
-				manageMaintenanceService(statusUptodate);
-								
 			}
+			while (necesarioConfirmar);
+
+			// Si se ha obtenido una respuesta definitiva (no perdida/degradada)
+			// o no
+			// hay más grupos de confirmación,
+			// pasamos a calcular el estado del servicio con los datos
+			// obtenidos.
+			StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(tiempoMedio, perdidas), service.getPlatform(), tiempoMedio, LocalDateTime.now(), partialRequestResult);
+			statusHolder.put(service.getServiceName(), statusUptodate);
+			RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
+
+			saveDailyVipMonitoring(service.getServiceName(), service.getPlatform(), statusUptodate);
+
+			manageMaintenanceService(statusUptodate);
 
 		}
-		
-	
-
 	}
 
 	/**
@@ -287,7 +283,7 @@ public final class RequestProcessorThread implements Runnable {
 		IMaintenanceServiceService maintenanceService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.MAINTENANCE_SERVICE, MaintenanceServiceService.class);
 				
 		MaintenanceService maintenance = maintenanceService.getMaintenanceServiceByService(service.getServiceName());
-		// Si el servicio no se ha añadio aún a la tabla de mantenimiento, se persiste
+		// Si el servicio no se ha añadido aún a la tabla de mantenimiento, se persiste
 		if (maintenance == null) {
 			
 			maintenance = new MaintenanceService();
@@ -328,15 +324,16 @@ public final class RequestProcessorThread implements Runnable {
 		String bodyAlarm = null;
 				
 		boolean sendAlarm = Boolean.parseBoolean(StaticMonitorizaConfig.getProperty(StaticConstants.ALARM_ACTIVE));
+		boolean servicioCaido = perdidas == null || perdidas > Integer.parseInt(service.getLostThreshold());
 
-		if (tiempoMedio != null && tiempoMedio <= service.getDegradedThreshold()) {
+		if (tiempoMedio != null && tiempoMedio <= service.getDegradedThreshold() && !servicioCaido) {
 			estado = ServiceStatusConstants.CORRECTO;
-		} else if (tiempoMedio != null && tiempoMedio > service.getDegradedThreshold()) {
+		} else if (tiempoMedio != null && tiempoMedio > service.getDegradedThreshold() && !servicioCaido) {
 			estado = ServiceStatusConstants.DEGRADADO;
 			grayLogErrorCode = GrayLogErrorCodes.ALARM_SERVICE_DEGRADED;
 			subjectAlarm = generateSubject(estado);
 			bodyAlarm = Language.getFormatResAlarmMonitoriza(IAlarmMailText.BODY_MAIL_ALARM_DEGRADED, new Object[ ] { service.getPlatform().concat(GeneralConstants.EN_DASH_WITH_SPACES).concat(getServiceConfigUrl(service)), tiempoMedio, service.getDegradedThreshold()});
-		} else if (tiempoMedio == null || perdidas > Integer.parseInt(service.getLostThreshold())) {
+		} else if (tiempoMedio == null || servicioCaido) {
 			estado = ServiceStatusConstants.CAIDO;
 			subjectAlarm = generateSubject(estado);
 			grayLogErrorCode = GrayLogErrorCodes.ALARM_SERVICE_LOST;
