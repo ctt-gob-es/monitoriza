@@ -20,15 +20,16 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>29/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 30/01/2019.
+ * @version 1.6, 14/03/2019.
  */
 package es.gob.monitoriza.spie.thread;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.security.KeyStore;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import org.apache.log4j.Logger;
@@ -37,9 +38,11 @@ import es.gob.monitoriza.alarm.AlarmManager;
 import es.gob.monitoriza.alarm.types.AlarmMail;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.GrayLogErrorCodes;
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.enums.SemaphoreEnum;
 import es.gob.monitoriza.exception.AlarmException;
 import es.gob.monitoriza.exception.InvokerException;
+import es.gob.monitoriza.i18n.IAlarmLogMessages;
 import es.gob.monitoriza.i18n.IAlarmMailText;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
@@ -53,16 +56,16 @@ import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SpieType;
 import es.gob.monitoriza.persistence.configuration.model.utils.IAlarmIdConstants;
+import es.gob.monitoriza.service.IAlarmService;
+import es.gob.monitoriza.service.ISpieMonitoringConfigService;
+import es.gob.monitoriza.service.IStatusService;
 import es.gob.monitoriza.service.impl.AlarmService;
 import es.gob.monitoriza.service.impl.DailySpieMonitoringService;
 import es.gob.monitoriza.service.impl.SpieMonitoringConfigService;
 import es.gob.monitoriza.service.utils.IServiceNameConstants;
-import es.gob.monitoriza.spie.html.IHtmlSpieResolver;
-import es.gob.monitoriza.spie.html.impl.HtmlAvgResponseTimeResolver;
-import es.gob.monitoriza.spie.html.impl.HtmlEmergencyModeResolver;
-import es.gob.monitoriza.spie.html.impl.HtmlHsmConnResolver;
-import es.gob.monitoriza.spie.html.impl.HtmlPlatformConnResolver;
+import es.gob.monitoriza.spie.html.AbstractHtmlSpieResolver;
 import es.gob.monitoriza.spie.invoker.SpieInvoker;
+import es.gob.monitoriza.spie.status.StatusSpieHolder;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.utilidades.UtilsGrayLog;
 import es.gob.monitoriza.utilidades.UtilsStringChar;
@@ -70,7 +73,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that get the results of the SPIE services configured.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 30/01/2019.
+ * @version 1.6, 14/03/2019.
  */
 public class RequestSpieThread implements Runnable {
 	
@@ -90,32 +93,23 @@ public class RequestSpieThread implements Runnable {
 	private final transient NodeMonitoriza node;
 	
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents the base address for invoking SPIEs in the node.
 	 */
-	private final transient Map<Long, RowStatusSpieDTO> spieHolder;
+	private final transient String spieBaseAddress;
 	
-	/**
-	 * Attribute that represents the singleton instance of the SPIE services manager. 
-	 */
-	private final transient SpieMonitoringConfigService spieMonitoringConfigService = ApplicationContextProvider.getApplicationContext().getBean("spieMonitoringConfigService", SpieMonitoringConfigService.class);
-	
-	/**
-	 * Attribute that represents the singleton instance of the SPIE alarm service. 
-	 */
-	private final transient AlarmService alarmSpieService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.ALARM_SPIE_SERVICE, AlarmService.class);
-
 	/**
 	 * Constructor method for the class RequestSpieThread.java.
-	 * @param spieHolderParam Reference to the Map that holds the current status for the processed SPIEs. 
 	 * @param nodeParam the value for {@link #nodeUrl} to set 
 	 * @param sslParam the value for {@link #ssl} to set
 	 * 
 	 */
-	public RequestSpieThread(final Map<Long, RowStatusSpieDTO> spieHolderParam, final NodeMonitoriza nodeParam, final KeyStore sslParam ) {
+	public RequestSpieThread(final NodeMonitoriza nodeParam, final KeyStore sslParam ) {
 		super();
-		this.spieHolder = spieHolderParam;
 		this.node = nodeParam;
 		ssl = sslParam;
+		final StringBuffer address = new StringBuffer();
+		address.append(node.getIsSecure() ? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP).append(UtilsStringChar.SYMBOL_COLON_STRING).append(GeneralConstants.DOUBLE_PATH_SEPARATOR).append(node.getHost()).append(UtilsStringChar.SYMBOL_COLON_STRING).append(node.getPort());
+		spieBaseAddress = address.toString();
 	}
 
 	/**
@@ -124,173 +118,107 @@ public class RequestSpieThread implements Runnable {
 	 */
 	@Override
 	public void run() {
-				
-		// ¿Se va a mantener map de runnig services para evitar repetir?
-
-		// Obtención de la dirección a invocar
-		final StringBuffer spieBaseAddress = new StringBuffer();
-		spieBaseAddress.append(node.getIsSecure() ? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP).append(UtilsStringChar.SYMBOL_COLON_STRING).append(GeneralConstants.DOUBLE_PATH_SEPARATOR).append(node.getHost()).append(UtilsStringChar.SYMBOL_COLON_STRING).append(node.getPort());
-		
+	
 		if (node.getNodeType().getIdPlatformType().equals(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA)) {
-			checkSpieAfirma(spieBaseAddress.toString());
+			checkSpieAfirma();
 		} else if (node.getNodeType().getIdPlatformType().equals(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA)){
-			checkSpieTsa(spieBaseAddress.toString());
+			checkSpieTsa();
 		}
 				
 	}
 	
 	/**
-	 * Method that checks which SPIEs are available for this @Firma node and executes the invoker.
-	 * @param spieBaseAddress Node address: protocol://ip:port
+	 * Method that checks which SPIEs are available for this @Firma node and obtains the status result on each one.
 	 */
-	private void checkSpieAfirma(final String spieBaseAddress) {
-		
-		final ConfSpieDTO confSpie = spieMonitoringConfigService.getSpieConfiguration();
+	private void checkSpieAfirma() {
+
+		// Se obtiene la configuración general de monitorización
+		final ConfSpieDTO confSpie = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SPIE_MONITORING_CONFIG_SERVICE, SpieMonitoringConfigService.class).getSpieConfiguration();
 		SpieType spieType = null;
-		RowStatusSpieDTO status = null;
-		String htmlInvokerResult = null;
-		IHtmlSpieResolver resolver = null;
 		String msgAlarm = null;
-			
-		try {
-			
-		
-    		if (node.getCheckHsm() != null && node.getCheckHsm()) {
-    			spieType = spieMonitoringConfigService.getSpieTypeById(SpieType.ID_CONN_HSM_AFIRMA);
-    			resolver = new HtmlHsmConnResolver(spieType.getSemaphoreErrorLevel());
-    			htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
-        		status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, confSpie), null, LocalDateTime.now());
-        		// Se actualiza el mapa de resultados
-    			spieHolder.put(spieType.getIdSpieType(), status);
-    			// Se persiste el resultado
-    			saveDailySpieMonitoring(spieType.getTokenName(), status);
-    			// Se envía alarma si procede
-    			msgAlarm = Language.getFormatResAlarmMonitoriza(alarmSpieService.getAlarmById(IAlarmIdConstants.ALM002_AFIRMA_NO_HSM_CONNECTION).getDescription(), new Object[]{node.getName()});
-    			checkStatusAndSendAlarmIfNecessary(status, IAlarmIdConstants.ALM002_AFIRMA_NO_HSM_CONNECTION, msgAlarm);
-    		}
-    		
-    		if (node.getCheckEmergencyDB() != null && node.getCheckEmergencyDB()) {
-    			spieType = spieMonitoringConfigService.getSpieTypeById(SpieType.ID_MODE_EMERGENCY_AFIRMA);
-    			resolver = new HtmlEmergencyModeResolver(spieType.getSemaphoreErrorLevel());
-    			htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
-        		status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, confSpie), null, LocalDateTime.now());
-        		// Se actualiza el mapa de resultados
-    			spieHolder.put(spieType.getIdSpieType(), status);
-    			// Se persiste el resultado
-    			saveDailySpieMonitoring(spieType.getTokenName(), status);
-    			// Se envía alarma si procede
-    			msgAlarm = Language.getFormatResAlarmMonitoriza(alarmSpieService.getAlarmById(IAlarmIdConstants.ALM005_AFIRMA_EMERGENCY_MODE).getDescription(), new Object[]{node.getName()});
-    			checkStatusAndSendAlarmIfNecessary(status, IAlarmIdConstants.ALM005_AFIRMA_EMERGENCY_MODE, msgAlarm);
-    		}
-    		
-    		if (node.getCheckTsa() != null && node.getCheckTsa()) {
-    			spieType = spieMonitoringConfigService.getSpieTypeById(SpieType.ID_CONN_TSA);
-    			resolver = new HtmlPlatformConnResolver(spieType.getSemaphoreErrorLevel());
-    			htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
-        		status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, confSpie), null, LocalDateTime.now());
-        		// Se actualiza el mapa de resultados
-    			spieHolder.put(spieType.getIdSpieType(), status);
-    			// Se persiste el resultado
-    			saveDailySpieMonitoring(spieType.getTokenName(), status);
-    			// Se envía alarma si procede
-    			msgAlarm = Language.getFormatResAlarmMonitoriza(alarmSpieService.getAlarmById(IAlarmIdConstants.ALM001_AFIRMA_NO_TSA_CONNECTION).getDescription(), new Object[]{node.getName()});
-    			checkStatusAndSendAlarmIfNecessary(status, IAlarmIdConstants.ALM001_AFIRMA_NO_TSA_CONNECTION, msgAlarm);
-    		}
-    		
-    		htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
-    		status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, confSpie), null, LocalDateTime.now());
-    		
-    		if (node.getCheckServices() != null && node.getCheckServices()) {
-    			spieType = spieMonitoringConfigService.getSpieTypeById(SpieType.ID_RESPONSE_TIMES);
-    			final String htmlAvgResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
-    			HtmlAvgResponseTimeResolver avgResolver = new HtmlAvgResponseTimeResolver(spieType.getSemaphoreErrorLevel());
-    			status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), avgResolver.solveHtmlResult(htmlAvgResult, confSpie), avgResolver.getDetailResults(), LocalDateTime.now());
-    			// Se actualiza el mapa de resultados
-    			spieHolder.put(spieType.getIdSpieType(), status);
-    			// Se persiste el resultado
-    			saveDailySpieMonitoring(spieType.getTokenName(), status);
-    			// Se envía alarma si procede
-    			msgAlarm = Language.getFormatResAlarmMonitoriza(alarmSpieService.getAlarmById(IAlarmIdConstants.ALM004_AFIRMA_TRANS_ABOVE_MAX).getDescription(), new Object[]{node.getName(), confSpie.getPercentAccept()});
-    			checkStatusAndSendAlarmIfNecessary(status, IAlarmIdConstants.ALM004_AFIRMA_TRANS_ABOVE_MAX, msgAlarm);
-    		}
-    		
-		} catch (InvokerException ie) {
-			
-			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS015, new Object[ ] { node.getName() }), ie);
-			setAndPersistAllStatusError(spieBaseAddress);
-			msgAlarm = Language.getFormatResAlarmMonitoriza(alarmSpieService.getAlarmById(IAlarmIdConstants.ALM009_ERROR_NODE_CONNECTION).getDescription(), new Object[]{node.getName(), spieBaseAddress});
-			status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), SemaphoreEnum.RED.getId(), null, LocalDateTime.now());
-			checkStatusAndSendAlarmIfNecessary(status, IAlarmIdConstants.ALM009_ERROR_NODE_CONNECTION, msgAlarm);		
-						
+
+		// Se obtiene el servicio de alarmas.
+		IAlarmService alarmService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.ALARM_SPIE_SERVICE, AlarmService.class);
+		// Se obtiene el servicio de monitorización SPIE.
+		ISpieMonitoringConfigService spieService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SPIE_MONITORING_CONFIG_SERVICE, SpieMonitoringConfigService.class);
+		Alarm alarm = null;
+
+		// Se comprueban los SPIEs configurados para el nodo.
+		// Preparamos el posible mensaje de alarma parametrizado por cada caso.
+		// Se invoca el SPIE y se parsea el HTML de respuesta, obtienendo el estado.
+		if (node.getCheckHsm() != null && node.getCheckHsm()) {
+			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM002_AFIRMA_NO_HSM_CONNECTION);
+			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName() });
+			spieType = spieService.getSpieTypeById(SpieType.ID_CONN_HSM_AFIRMA);
+			resolveSpie(spieType, alarm, msgAlarm);
+
 		}
-		
+
+		if (node.getCheckEmergencyDB() != null && node.getCheckEmergencyDB()) {
+			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM005_AFIRMA_EMERGENCY_MODE);
+			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName() });
+			spieType = spieService.getSpieTypeById(SpieType.ID_MODE_EMERGENCY_AFIRMA);
+			resolveSpie(spieType, alarm, msgAlarm);
+
+		}
+
+		if (node.getCheckTsa() != null && node.getCheckTsa()) {
+			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM001_AFIRMA_NO_TSA_CONNECTION);
+			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName() });
+			spieType = spieService.getSpieTypeById(SpieType.ID_CONN_TSA);
+			resolveSpie(spieType, alarm, msgAlarm);
+
+		}
+
+		if (node.getCheckServices() != null && node.getCheckServices()) {
+			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM004_AFIRMA_TRANS_ABOVE_MAX);
+			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName(), confSpie.getPercentAccept() });
+			spieType = spieService.getSpieTypeById(SpieType.ID_RESPONSE_TIMES);
+			resolveSpie(spieType, alarm, msgAlarm);
+
+		}
+
 	}
 	
 	/**
-	 * Method that checks which SPIEs are available for this TS@ node and executes the invoker.
-	 * @param spieBaseAddress Node address: protocol://ip:port
+	 * Method that checks which SPIEs are available for this TS@ node and obtains the status result on each one.
 	 */
-	private void checkSpieTsa(final String spieBaseAddress) {
+	private void checkSpieTsa() {
 
-		final ConfSpieDTO confSpie = spieMonitoringConfigService.getSpieConfiguration();
 		SpieType spieType = null;
-		RowStatusSpieDTO status = null;
-		String htmlInvokerResult = null;
-		IHtmlSpieResolver resolver = null;
 		String msgAlarm = null;
-		
-		try {
 
-			if (node.getCheckHsm() != null && node.getCheckHsm()) {
-				spieType = spieMonitoringConfigService.getSpieTypeById(SpieType.ID_CONN_HSM_TSA);
-				resolver = new HtmlHsmConnResolver(spieType.getSemaphoreErrorLevel());
-				htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
-				status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, confSpie), null, LocalDateTime.now());
-				// Se actualiza el mapa de resultados
-				spieHolder.put(spieType.getIdSpieType(), status);
-				// Se persiste el resultado
-				saveDailySpieMonitoring(spieType.getTokenName(), status);
-				// Se envía alarma si procede
-				msgAlarm = Language.getFormatResAlarmMonitoriza(alarmSpieService.getAlarmById(IAlarmIdConstants.ALM006_TSA_NO_HSM_CONNECTION).getDescription(), new Object[]{node.getName()});   
-    			checkStatusAndSendAlarmIfNecessary(status, IAlarmIdConstants.ALM006_TSA_NO_HSM_CONNECTION, msgAlarm);
-			}
+		// Se obtiene el servicio de alarmas.
+		IAlarmService alarmService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.ALARM_SPIE_SERVICE, AlarmService.class);
+		// Se obtiene el servicio de monitorización SPIE.
+		ISpieMonitoringConfigService spieService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SPIE_MONITORING_CONFIG_SERVICE, SpieMonitoringConfigService.class);
+		Alarm alarm = null;
 
-			if (node.getCheckEmergencyDB() != null && node.getCheckEmergencyDB()) {
-				spieType = spieMonitoringConfigService.getSpieTypeById(SpieType.ID_MODE_EMERGENCY_TSA);
-				resolver = new HtmlEmergencyModeResolver(spieType.getSemaphoreErrorLevel());
-				htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
-				status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, confSpie), null, LocalDateTime.now());
-				// Se actualiza el mapa de resultados
-				spieHolder.put(spieType.getIdSpieType(), status);
-				// Se persiste el resultado
-				saveDailySpieMonitoring(spieType.getTokenName(), status);
-				// Se envía alarma si procede
-				msgAlarm = Language.getFormatResAlarmMonitoriza(alarmSpieService.getAlarmById(IAlarmIdConstants.ALM008_TSA_EMERGENCY_MODE).getDescription(), new Object[]{node.getName()});
-    			checkStatusAndSendAlarmIfNecessary(status, IAlarmIdConstants.ALM008_TSA_EMERGENCY_MODE, msgAlarm);
-			}
+		// Se comprueban los SPIEs configurados para el nodo.
+		// Preparamos el posiblem mensaje de alarma parametrizado por cada caso.
+		// Se invoca el SPIE y se parsea el HTML de respuesta, obtienendo el estado.
+		if (node.getCheckHsm() != null && node.getCheckHsm()) {
+			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM006_TSA_NO_HSM_CONNECTION);
+			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName() });
+			spieType = spieService.getSpieTypeById(SpieType.ID_CONN_HSM_TSA);
+			resolveSpie(spieType, alarm, msgAlarm);
 
-			if (node.getCheckAfirma() != null && node.getCheckAfirma()) {
-				spieType = spieMonitoringConfigService.getSpieTypeById(SpieType.ID_CONN_AFIRMA);
-				resolver = new HtmlPlatformConnResolver(spieType.getSemaphoreErrorLevel());
-				htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
-				status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, confSpie), null, LocalDateTime.now());
-				// Se actualiza el mapa de resultados
-				spieHolder.put(spieType.getIdSpieType(), status);
-				// Se persiste el resultado
-				saveDailySpieMonitoring(spieType.getTokenName(), status);
-				// Se envía alarma si procede
-				msgAlarm = Language.getFormatResAlarmMonitoriza(alarmSpieService.getAlarmById(IAlarmIdConstants.ALM007TSA_NO_AFIRMA_CONNECTION).getDescription(), new Object[]{node.getName()});
-    			checkStatusAndSendAlarmIfNecessary(status, IAlarmIdConstants.ALM007TSA_NO_AFIRMA_CONNECTION, msgAlarm);
-			}
+		}
 
-		} catch (InvokerException ie) {
-			
-			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS015, new Object[ ] { node.getName() }), ie);
-			setAndPersistAllStatusError(spieBaseAddress);
-			msgAlarm = Language.getFormatResAlarmMonitoriza(alarmSpieService.getAlarmById(IAlarmIdConstants.ALM009_ERROR_NODE_CONNECTION).getDescription(), new Object[]{node.getName(), spieBaseAddress});
-			status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), SemaphoreEnum.RED.getId(), null, LocalDateTime.now());
-			checkStatusAndSendAlarmIfNecessary(status, IAlarmIdConstants.ALM009_ERROR_NODE_CONNECTION, msgAlarm);			
-			
+		if (node.getCheckEmergencyDB() != null && node.getCheckEmergencyDB()) {
+			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM008_TSA_EMERGENCY_MODE);
+			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName() });
+			spieType = spieService.getSpieTypeById(SpieType.ID_MODE_EMERGENCY_TSA);
+			resolveSpie(spieType, alarm, msgAlarm);
+
+		}
+
+		if (node.getCheckAfirma() != null && node.getCheckAfirma()) {
+			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM007TSA_NO_AFIRMA_CONNECTION);
+			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName() });
+			spieType = spieService.getSpieTypeById(SpieType.ID_CONN_AFIRMA);
+			resolveSpie(spieType, alarm, msgAlarm);
+
 		}
 
 	}
@@ -331,15 +259,18 @@ public class RequestSpieThread implements Runnable {
 		
 		if (id != null) {
     		switch (id) {
-    			case 0:
+    			case NumberConstants.NUM0:
     				name = SemaphoreEnum.GREEN.getName();
     				break;
-    			case 1:
+    			case NumberConstants.NUM2:
     				name = SemaphoreEnum.AMBER.getName();
     				break;
-    			case 2:
+    			case NumberConstants.NUM3:
     				name = SemaphoreEnum.RED.getName();
     				break;
+    			case NumberConstants.NUM4:
+    				name = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS017, new Object[]{node.getName()});
+    				break;	
     			default:
     				name = SemaphoreEnum.RED.getName();
     				break;
@@ -354,67 +285,18 @@ public class RequestSpieThread implements Runnable {
 	
 	
 	/**
-	 * Persist null status for all SPIE services when there is no response from the SPIE node.
-	 * @param spieBaseAddress Base address of the SPIE node.
-	 */
-	private void setAndPersistAllStatusError(final String spieBaseAddress) {
-		
-		SpieType spieType = null;
-		RowStatusSpieDTO status = null;
-				
-		if (node.getCheckHsm() != null && node.getCheckHsm()) {
-			spieType = spieMonitoringConfigService.getSpieTypeById(SpieType.ID_CONN_HSM_AFIRMA);
-    		status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), null, null, LocalDateTime.now());
-    		// Se actualiza el mapa de resultados
-			spieHolder.put(spieType.getIdSpieType(), status);
-			// Se persiste el resultado
-			saveDailySpieMonitoring(spieType.getTokenName(), status);
-		}
-		
-		if (node.getCheckEmergencyDB() != null && node.getCheckEmergencyDB()) {
-			spieType = spieMonitoringConfigService.getSpieTypeById(SpieType.ID_MODE_EMERGENCY_AFIRMA);
-    		status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), null, null, LocalDateTime.now());
-    		// Se actualiza el mapa de resultados
-			spieHolder.put(spieType.getIdSpieType(), status);
-			// Se persiste el resultado
-			saveDailySpieMonitoring(spieType.getTokenName(), status);
-		}
-		
-		if (node.getCheckTsa() != null && node.getCheckTsa()) {
-			spieType = spieMonitoringConfigService.getSpieTypeById(SpieType.ID_CONN_TSA);
-    		status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), null, null, LocalDateTime.now());
-    		// Se actualiza el mapa de resultados
-			spieHolder.put(spieType.getIdSpieType(), status);
-			// Se persiste el resultado
-			saveDailySpieMonitoring(spieType.getTokenName(), status);
-		}
-						
-		if (node.getCheckServices() != null && node.getCheckServices()) {
-			spieType = spieMonitoringConfigService.getSpieTypeById(SpieType.ID_RESPONSE_TIMES);
-			status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), null, null, LocalDateTime.now());
-			// Se actualiza el mapa de resultados
-			spieHolder.put(spieType.getIdSpieType(), status);
-			// Se persiste el resultado
-			saveDailySpieMonitoring(spieType.getTokenName(), status);
-		}
-		
-	}
-	
-	/**
 	 * Sends a SPIE alarm if its necessary.
 	 * @param spieStatus RowStatusSpieDTO with the status result information of the SPIE.
-	 * @param idAlarm Alarm identifier.
-	 * @param msgAlarm Message of the alarm to be sent in the body of the e-mail.
+	 * @param alarm {@link Alarm} SPIE alarm to send if there is an error
+	 * @param msgAlarm Parametrized message for the alarm
 	 */
-	private void checkStatusAndSendAlarmIfNecessary(final RowStatusSpieDTO spieStatus, final String idAlarm, final String msgAlarm)  {
+	private void checkStatusAndSendAlarmIfNecessary(final RowStatusSpieDTO spieStatus, final Alarm alarm, final String msgAlarm)  {
 				
 		StringBuilder subjectAlarm = new StringBuilder();
 		String estado = getSemaphoreNameById(spieStatus.getStatusValue());
-						
-		Alarm alarm = alarmSpieService.getAlarmById(idAlarm);
-				
+								
 		// El estado es erróneo, se lanza alarma.
-		if (!spieStatus.getStatusValue().equals(SemaphoreEnum.GREEN.getId()) && alarm != null && alarm.getActive()) {
+		if ((spieStatus.getStatusValue() == null || !spieStatus.getStatusValue().equals(SemaphoreEnum.GREEN.getId())) && alarm != null && alarm.getActive()) {
 			
 			subjectAlarm.append(Language.getFormatResAlarmMonitoriza(IAlarmMailText.SUBJECT_ALARM_SPIE, new Object[]{spieStatus.getSystem(), spieStatus.getNodeName(), spieStatus.getSpieService(), estado}));
 						
@@ -455,4 +337,64 @@ public class RequestSpieThread implements Runnable {
 
 	}
 	
+	/**
+	 * Gets the status of the SPIE.
+	 * @param spieType Type of the SPIE
+	 * @param alarm {@link Alarm} SPIE alarm to send if there is an error
+	 * @param msgAlarm Parametrized message for the alarm
+	 * @return {@link RowStatusSpieDTO} with the status of the SPIE
+	 */
+	private RowStatusSpieDTO resolveSpie(final SpieType spieType, final Alarm alarm, String msgAlarm) {
+				
+		// Se obtiene la clase de parseo HTML del tipo de SPIE por reflexión,
+		// según la cadena de nombre de clase almacenada en persistencia.
+		AbstractHtmlSpieResolver resolver = null;
+		try {
+			Class<?> cl = Class.forName(spieType.getResolverClass());
+			Constructor<?> cons = cl.getConstructor(Integer.class);
+			resolver = (AbstractHtmlSpieResolver) cons.newInstance(spieType.getSemaphoreErrorLevel());
+		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException e) {
+			
+			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS024, new Object[ ] { spieType.getTokenName() }), e);
+		}
+				
+		String htmlInvokerResult = null;
+		RowStatusSpieDTO status = null;
+				
+		String idStatus = IStatusService.getUniqueIdStatusSpie(node.getIdNode(), spieType.getIdSpieType());
+		
+		try {
+							
+			// Se invoca el SPIE.
+			htmlInvokerResult = SpieInvoker.sendRequest(spieBaseAddress, spieType.getContext(), ssl);
+			
+			// Si se ha obtenido clase de parseo, se parsea el resultado, obteniendo el estado.
+			if (resolver != null) {
+				status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SPIE_MONITORING_CONFIG_SERVICE, SpieMonitoringConfigService.class).getSpieConfiguration()), null, LocalDateTime.now());
+			}
+			
+			// Se actualiza el mapa de resultados usando el identificador obtenido.
+			StatusSpieHolder.getInstance().getCurrentStatusHolder().put(idStatus, status);
+			// Se persiste el resultado
+			saveDailySpieMonitoring(spieType.getTokenName(), status);
+
+			// Se envía alarma si procede
+			checkStatusAndSendAlarmIfNecessary(status, alarm, msgAlarm);
+			
+		} catch (InvokerException ie) {
+			
+			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS023, new Object[ ] { node.getName() }), ie);
+			status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), SemaphoreEnum.OTHER.getId(), resolver.getDetailResults(), LocalDateTime.now());
+			// Se persiste el resultado
+			saveDailySpieMonitoring(idStatus, status);
+			// Se actualiza el mapa de resultados usando el identificador obtenido.
+			StatusSpieHolder.getInstance().getCurrentStatusHolder().put(idStatus, status);
+
+			// Se envía la alarma correspondiente a nodo sin conexion
+			checkStatusAndSendAlarmIfNecessary(status, alarm, Language.getFormatResAlarmMonitoriza(IAlarmLogMessages.ERRORALAMR006, new Object[]{node.getName(), spieBaseAddress}));		
+		}
+				
+		return status;
+	}
+		
 }

@@ -31,7 +31,7 @@
 						<h4 class="c-grey-900 mB-20" th:text="#{table.summary.title}"></h4>
 							
 							<div class="masonry-sizer col-md-12 border border-light border-3 bg-light">
-								<table id="summaryTable" class="display"
+								<table data-page-length='50' id="summaryTable" class="display"
 									style="cellspacing: 0; width: 100%;">
 									<thead>
 										<tr>
@@ -43,13 +43,13 @@
 									</thead>
 									<tbody>
 										<tr th:each="sum : ${summary}">
-											<td th:if="${sum.status eq 2}"><i
+											<td th:if="${sum.status eq 3}"><i
 												class="c-red-500 ti-control-record"></i></td>
-											<td th:if="${sum.status eq 1}"><i
+											<td th:if="${sum.status eq 2}"><i
 												class="c-yellow-500 ti-control-record"></i></td>
 											<td th:if="${sum.status eq 0}"><i
 												class="c-green-500 ti-control-record"></i></td>
-											<td th:if="${sum.status eq null}" th:text="#{error.spie.connection}" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></td>
+											<td th:if="${sum.status eq 4}" th:text="#{error.spie.connection}" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></td>
 											<td th:text="${sum.status}"></td>
 											<td th:text="${sum.type}"></td>
 											<td th:text="${sum.description}"></td>
@@ -61,13 +61,14 @@
 						
 						<!-- Tabla de resultados VIP -->
 						<h4 class="c-grey-900 mB-20" th:text="#{table.status.vip.title}"></h4>
+						<div id="statusVipDiv">
 							<div th:if="${statusVip.error != null}" class="masonry-sizer col-md-12">
 								<div id="errorModalService" class="alert alert-danger" role="alert">
 									<strong th:text=${statusVip.error}></strong>
 								</div>
 							</div>
 							<div th:if="${statusVip.error == null}" class="masonry-sizer col-md-12 border border-light border-3 bg-light">
-								<table id="statusVipTable" class="display"
+								<table data-page-length='50' id="statusVipTable" class="display"
 									style="cellspacing: 0; width: 100%;">
 									<thead>
 										<tr>
@@ -80,13 +81,16 @@
 												Time</th>
 											<th></th>
 											<th th:text="#{table.status.vip.info}">urls</th>
+											<th th:text="#{table.status.vip.mark}">mark</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr th:each="stVip : ${statusVip.data}">
-											<td th:if="${stVip.statusAux eq 2}"><i
-												class="c-red-500 ti-control-record"></i></td>
 											<td th:if="${stVip.statusAux eq 1}"><i
+												class="c-blue-500 ti-hummer"></i></td>
+											<td th:if="${stVip.statusAux eq 3}"><i
+												class="c-red-500 ti-control-record"></i></td>
+											<td th:if="${stVip.statusAux eq 2}"><i
 												class="c-yellow-500 ti-control-record"></i></td>
 											<td th:if="${stVip.statusAux eq 0}"><i
 												class="c-green-500 ti-control-record"></i></td>
@@ -95,13 +99,17 @@
 											<td th:text="${stVip.averageTime}"></td>
 											<td th:text="${stVip.samplingTime}"></td>
 											<td th:text="${stVip.partialRequestResult}"></td>
-											<td><i class='c-blue-500 ti-search'> </i></td>
+											<td><i class='c-blue-500 ti-search'></i></td>
+											<td th:if="${stVip.statusAux eq 0 || stVip.statusAux eq 1}">-</td>
+											<td th:if="${stVip.statusAux eq 2 || stVip.statusAux eq 3}"><i class='c-blue-500 ti-check-box'></i></td>
 										</tr>
 									</tbody>
 								</table>
 							</div>
+						</div>
 							<!-- Fin tabla VIP -->
 							<!-- Tabla de resultados SPIE -->
+							<div id="statusSpieDiv">
 							<h4 class="c-grey-900 mB-20" th:text="#{table.status.spie.title}"></h4>
 							<div th:if="${statusSpie.error != null}" class="masonry-sizer col-md-12"> 
 								<div id="errorModalService" class="alert alert-danger" role="alert">
@@ -109,7 +117,7 @@
 								</div>
 							</div>
 							<div th:if="${statusSpie.error == null}" class="masonry-sizer col-md-12 border border-light border-3 bg-light">
-								<table id="statusSpieTable" class="display"
+								<table data-page-length='50' id="statusSpieTable" class="display"
 									style="cellspacing: 0; width: 100%;">
 									<thead>
 										<tr>
@@ -121,17 +129,20 @@
 											<th th:text="#{table.status.spie.type}">SPIE type</th>
 											<th></th>
 											<th th:text="#{table.status.spie.info}">urls</th>
+											<th th:text="#{table.status.spie.mark}">mark</th>
 										</tr>
 									</thead>
 									<tbody>
 										<tr th:each="stSpie : ${statusSpie.data}">
-											<td th:if="${stSpie.statusValue eq 2}"><i
+											<td th:if="${stSpie.statusValue eq 3}"><i
 												class="c-red-500 ti-control-record"></i></td>
-											<td th:if="${stSpie.statusValue eq 1}"><i
+											<td th:if="${stSpie.statusValue eq 2}"><i
 												class="c-yellow-500 ti-control-record"></i></td>
+											<td th:if="${stSpie.statusValue eq 1}"><i
+												class="c-blue-500 ti-hummer"></i></td>
 											<td th:if="${stSpie.statusValue eq 0}"><i
 												class="c-green-500 ti-control-record"></i></td>
-											<td th:if="${stSpie.statusValue eq null}"
+											<td th:if="${stSpie.statusValue eq 4}"
 												th:text="#{error.spie.connection}"
 												class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></td>
 											<td th:text="${stSpie.statusValue}"></td>
@@ -143,30 +154,24 @@
 											<td th:if="${stSpie.partialRequestResult != null}"><i
 												class='c-blue-500 ti-search'></i></td>
 											<td th:if="${stSpie.partialRequestResult == null}">-</td>
+											<td th:if="${stSpie.statusValue eq 0 || stSpie.statusValue eq 1}">-</td>
+											<td th:if="${stSpie.statusValue eq 4 || stSpie.statusValue eq 2 || stSpie.statusValue eq 3}"><i class='c-blue-500 ti-check-box'></i></td>
 										</tr>
 									</tbody>
 								</table>
+							</div>
 							</div>
 							<!-- Fin tabla SPIE -->
 						</div>
 				</div>
             </div>
+            <div id="modal"></div>
           </div>
         </main>
       </div>
     </div>
   </body>
 </html>
-
-<style type="text/css">
-td.details-control {
-    content: "\e610";
-    cursor: pointer;
-}
-tr.shown td.details-control {
-    content: "\e610";
-}
-</style>
 
 <script th:inline="javascript">
 
@@ -247,6 +252,18 @@ $(document).ready(function() {
 				"visible" : true,
                 "data": "H",
                 "defaultContent": ''
+            },
+            {
+            	"targets" : [ 7 ],
+				"orderable": false,
+				"visible" : true,
+				"createdCell": function (td, cellData, rowData, row, col) {
+					
+                    if ( cellData != '-' ) {
+                      $(td).addClass('mark-control')
+                    }
+                 },
+            	
             }
 		],
 		"order" : [ 1, 'desc' ],
@@ -274,6 +291,31 @@ $(document).ready(function() {
             row.child( formatVip(row.data()) ).show();
             tr.addClass('shown');
         }
+    });
+	
+	var markVipService = /*[[@{/markVipService}]]*/;
+	// Add event listener for opening and closing details
+	$('#statusVipTable tbody').on('click', 'td.mark-control', function () {
+        var tr = $(this).closest('tr');
+        var row = tableVipInterval.row( tr );
+ 
+        var service = row.data()[2];
+        loading();
+        $.ajax({
+        	url: markVipService+ "?service=" + service,
+        	type: 'POST',
+        	data: null,
+        	success: function(data){
+                       	   
+        	   $("#optionReplacement").html(data);
+        	   hide();	
+                  
+            },
+            error:function(){}
+        });
+        
+        return false;
+        
     });
 	
 	var tableSpieInterval = $('#statusSpieTable').DataTable({
@@ -318,6 +360,17 @@ $(document).ready(function() {
 				"visible" : true,
 	            "data": "H",
 	            "defaultContent": ''
+	        },
+	        {
+				"targets" : [ 8 ],
+				"createdCell": function (td, cellData, rowData, row, col) {
+					
+                    if ( cellData != '-' ) {
+                      $(td).addClass('mark-control')
+                    }
+                 },
+	            "orderable": false,
+				"visible" : true	            
 	        }
 		],
 		"order" : [ 1, 'desc' ],
@@ -345,6 +398,31 @@ $(document).ready(function() {
             row.child( formatSpie(row.data()) ).show();
             tr.addClass('shown');
         }
+    });
+	
+	var markSpieService = /*[[@{/markSpieService}]]*/;
+	// Add event listener for opening and closing details
+	$('#statusSpieTable tbody').on('click', 'td.mark-control', function () {
+        var tr = $(this).closest('tr');
+        var row = tableSpieInterval.row( tr );
+ 
+        var service = row.data()[3] + "_" + row.data()[5];
+        loading();
+        $.ajax({
+        	url: markSpieService+ "?service=" + service,
+        	type: 'POST',
+        	data: null,
+        	success: function(data){
+                     	  
+        		$("#optionReplacement").html(data);
+        		hide();               
+                  
+            },
+            error:function(){}
+        });
+        
+        return false;
+        
     });
 		
 	var actionStatus = /*[[@{/status}]]*/;

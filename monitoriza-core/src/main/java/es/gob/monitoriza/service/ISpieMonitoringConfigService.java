@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>30/01/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 30/01/2019.
+ * @version 1.1, 15/02/2019.
  */
 package es.gob.monitoriza.service;
 
@@ -33,7 +33,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.SpieType;
 /** 
  * <p>Interface that provides configuration methods for the SPIE monitoring process.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 30/01/2019.
+ * @version 1.1, 15/02/2019.
  */
 public interface ISpieMonitoringConfigService {
 	
@@ -56,5 +56,6 @@ public interface ISpieMonitoringConfigService {
 	 * @return {@link #SpieType}
 	 */
 	SpieType getSpieTypeById(Long idSpieType);
+	
 
 }

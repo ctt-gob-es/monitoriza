@@ -15,59 +15,40 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.enums.SemaphoreEnum.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.spie.html.IHTML.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>08/11/2018.</p>
+ * <b>Date:</b><p>27/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 14/03/2019.
+ * @version 1.0, 15/02/2018.
  */
-package es.gob.monitoriza.enums;
+package es.gob.monitoriza.spie.html;
 
+import java.util.List;
+import java.util.Map;
+
+import es.gob.monitoriza.persistence.configuration.dto.AvgTimesServiceDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
 
 /** 
- * <p>Enum that represents the semaphore values .</p>
+ * <p>Interface for the resolvers that parses concrete HTML SPIE responses.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 14/03/2019.
+ * @version 1.0, 15/02/2018.
  */
-public enum SemaphoreEnum {
+public abstract class AbstractHtmlSpieResolver {
+		
+	/**
+	 * Method that parse the HTML from a SPIE and gets the status result.
+	 * @param htmlResult HTML response from a SPIE
+	 * @param confSpie DTO containing SPIE global configuration
+	 * @return SpieHtmlResolved representing the status of the SPIE
+	 */
+	public abstract Integer solveHtmlResult(String htmlResult, ConfSpieDTO confSpie);
 	
-	GREEN(0, "OK"), BLUE (1, "MAINTENANCE"), AMBER(2, "WARNING"), RED(3, "ERROR"), OTHER(4, "MESSAGE");
-
 	/**
-	 * Attribute that represents the enum id. 
+	 * Gets the {@link #detailResults}.
+	 * @return {@link Map}.
 	 */
-	private final Integer id;
+	public abstract List<AvgTimesServiceDTO> getDetailResults();
 
-	/**
-	 * Attribute that represents the enum name. 
-	 */
-	private final String name;
-
-	/**
-	 * Constructor method for the class SemaphoreEnum.java.
-	 * @param id enum id
-	 * @param name enum name
-	 */
-	private SemaphoreEnum(Integer id, String name) {
-		this.id = id;
-		this.name = name;
-	}
-
-	/**
-	 * Get id.
-	 * @return id
-	 */
-	public Integer getId() {
-		return id;
-	}
-
-	/**
-	 * Get name.
-	 * @return name
-	 */
-	public String getName() {
-		return name;
-	}
-	
 }

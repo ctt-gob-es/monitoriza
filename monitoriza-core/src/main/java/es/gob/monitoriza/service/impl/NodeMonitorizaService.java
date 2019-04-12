@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>09/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 30/01/2019.
+ * @version 1.5, 14/03/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -37,6 +37,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.NodeMonitorizaRepository;
+import es.gob.monitoriza.persistence.configuration.model.repository.SpieTypeRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.NodeDatatableRepository;
 import es.gob.monitoriza.persistence.configuration.model.specification.CNodeTypeSpecification;
 import es.gob.monitoriza.service.INodeMonitorizaService;
@@ -45,7 +46,7 @@ import es.gob.monitoriza.service.INodeMonitorizaService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for NodeMonitoriza.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 30/01/2019.
+ * @version 1.5, 14/03/2019.
  */
 @Service("nodeMonitorizaService")
 public class NodeMonitorizaService implements INodeMonitorizaService {
@@ -55,7 +56,13 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 	 */
 	@Autowired
     private NodeMonitorizaRepository repository;
-		
+	
+	/**
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 */
+	@Autowired
+    private SpieTypeRepository spieRepository;
+				
 	/**
 	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
 	 */
@@ -77,9 +84,10 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 	 * @see es.gob.monitoriza.service.INodeMonitorizaService#savePlatform(es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza)
 	 */
 	@Override
+	@Transactional
 	public NodeMonitoriza saveNode(NodeMonitoriza node) {
 		
-		return repository.save(node);
+		return repository.saveAndFlush(node);
 	}
 
 	/**
@@ -90,6 +98,8 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 	@Transactional
 	public void deleteNodeById(Long nodeId) {
 		
+		NodeMonitoriza node = repository.findByIdNode(nodeId);
+	
 		repository.deleteById(nodeId);
 
 	}
@@ -153,11 +163,9 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 	public NodeMonitoriza saveNodeAfirma(NodeDTO nodeAfirmaDto) {
 		
 		NodeMonitoriza nodeAfirma = null;
-		//boolean afirmaHaCambiado = false;
-		
+				
 		if (nodeAfirmaDto.getIdNode() != null) {
 			nodeAfirma = repository.findByIdNode(nodeAfirmaDto.getIdNode());
-			//afirmaHaCambiado = isAfirmaUpdatedForm(nodeAfirmaDto, nodeAfirma);
 		} else {
 			nodeAfirma = new NodeMonitoriza();
 		}
@@ -171,20 +179,17 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 		nodeAfirma.setCheckServices(nodeAfirmaDto.getCheckServices());
 		nodeAfirma.setCheckTsa(nodeAfirmaDto.getCheckTsa());
 		nodeAfirma.setCheckValidMethod(nodeAfirmaDto.getCheckValidMethod());
+			
 		CPlatformType afirmaType = new CPlatformType();
 		afirmaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
 		nodeAfirma.setNodeType(afirmaType);
-
+		
 		NodeMonitoriza afirmaNode = repository.save(nodeAfirma);
-				
-		// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
-//		if (afirmaHaCambiado && nodeAfirma.getIdPlatform() != null) {
-//			
-//			updateScheduledTimerFromPlatform(nodeAfirma);
-//		}
 		
 		return afirmaNode;
 	}
+
+	
 
 	/**
 	 * {@inheritDoc}
@@ -195,11 +200,10 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 	public NodeMonitoriza saveNodeTsa(NodeDTO nodeTsaDto) {
 		
 		NodeMonitoriza nodeTsa = null;
-		//boolean afirmaHaCambiado = false;
-		
+				
 		if (nodeTsaDto.getIdNode() != null) {
 			nodeTsa = repository.findByIdNode(nodeTsaDto.getIdNode());
-			//afirmaHaCambiado = isAfirmaUpdatedForm(nodeAfirmaForm, nodeAfirma);
+			
 		} else {
 			nodeTsa = new NodeMonitoriza();
 		}
@@ -211,20 +215,24 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 		nodeTsa.setCheckEmergencyDB(nodeTsaDto.getCheckEmergencyDB());
 		nodeTsa.setCheckHsm(nodeTsaDto.getCheckHsm());
 		nodeTsa.setCheckAfirma(nodeTsaDto.getCheckAfirma());
-		
+				
 		CPlatformType tsaType = new CPlatformType();
 		tsaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA);
 		nodeTsa.setNodeType(tsaType);
 
 		NodeMonitoriza tsaNode = repository.save(nodeTsa);
-				
-		// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
-//		if (afirmaHaCambiado && nodeAfirma.getIdPlatform() != null) {
-//			
-//			updateScheduledTimerFromPlatform(nodeAfirma);
-//		}
 		
 		return tsaNode;
+	}
+	
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.INodeMonitorizaService#getNodeByName(java.lang.String)
+	 */
+	@Override
+	public NodeMonitoriza getNodeByName(String nodeName) {
+		return repository.findByName(nodeName);
 	}
 
 }

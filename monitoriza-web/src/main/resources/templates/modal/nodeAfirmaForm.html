@@ -43,7 +43,7 @@
 		
 		<div style="clear:both;"/>
 	</div>
-
+	
 	<div class="form-group">
 		<div class="checkbox checkbox-circle checkbox-info peers ai-c cb-center">
 			<input type="checkbox" id="isSecure" th:checked="${nodeafirmaform.isSecure}" class="peer">
@@ -103,7 +103,7 @@
 <script th:inline="javascript">
 
 	$(document).ready(function () {
-		
+					
 		// Inicialización con valor correcto del checkbox isSecure
 		if ($("#isSecure").is(":checked")) {
 	    	$("#isSecure").val('true');

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>09/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 25/01/2019.
+ * @version 1.3, 28/03/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -46,7 +46,7 @@ import es.gob.monitoriza.constant.NumberConstants;
 /** 
  * <p>Class that maps the <i>SPIE_TYPE</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 25/01/2019.
+ * @version 1.3, 28/03/2019.
  */
 @Entity
 @Table(name = "SPIE_TYPE")
@@ -121,6 +121,11 @@ public class SpieType implements Serializable {
 	 * Attribute that represents the sempahore error level for the SPIE type. 
 	 */
 	private Integer semaphoreErrorLevel;
+	
+	/**
+	 * Attribute that represents the HTML resolver class name for parsing the SPIE result. 
+	 */
+	private String resolverClass;
 		
 	/**
 	 * Gets the value of the attribute {@link #idSpieType}.
@@ -254,7 +259,29 @@ public class SpieType implements Serializable {
 		// CHECKSTYLE:ON
 		this.semaphoreErrorLevel = semaphoreErrorLevelParam;
 	}
-	
-	
+
+	/**
+	 * Gets the value of the attribute {@link #resolverClass}.
+	 * @return the value of the attribute {@link #resolverClass}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	@Column(name = "RESOLVER_CLASS", nullable = true, length = NumberConstants.NUM100, unique = false)
+	@JsonView(DataTablesOutput.View.class)	
+	public String getResolverClass() {
+		// CHECKSTYLE:ON
+		return resolverClass;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #resolverClass}.
+	 * @param resolverClassParam The value for the attribute {@link #resolverClass}.
+	 */
+	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
+	// because Hibernate JPA needs not final access methods.
+	public void setResolverClass(String resolverClassParam) {
+		// CHECKSTYLE:ON
+		this.resolverClass = resolverClassParam;
+	}	
 
 }

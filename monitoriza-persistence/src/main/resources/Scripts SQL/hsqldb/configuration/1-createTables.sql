@@ -471,11 +471,10 @@ COMMENT ON TABLE "SPIE_STATISTICS" IS 'Tabla que almacena la información relati
 COMMENT ON COLUMN "SPIE_STATISTICS"."ID_SPIE_STATISTICS" IS 'Identificador de la tabla.';
 COMMENT ON COLUMN "SPIE_STATISTICS"."STATUS" IS 'Valor que representa el estado obtenido para un servicio en un momento determinado.';
 COMMENT ON COLUMN "SPIE_STATISTICS"."PLATFORM" IS 'Valor que representa la plataforma a la que pertenece el servicio monitorizado.';
-COMMENT ON COLUMN "SPIE_STATISTICS"."NODE" IS 'Valor que representa el nodeo al que pertenece el servicio monitorizado.';
+COMMENT ON COLUMN "SPIE_STATISTICS"."NODE" IS 'Valor que representa el nodo al que pertenece el servicio monitorizado.';
 COMMENT ON COLUMN "SPIE_STATISTICS"."SERVICE" IS 'Valor que representa el nombre del servicio monitorizado.';
 COMMENT ON COLUMN "SPIE_STATISTICS"."DATE_GROUP" IS 'Valor que indica la fecha dd/mm/aaaa en la que se agrupa el resultado para el servicio/estado';
 COMMENT ON COLUMN "SPIE_STATISTICS"."STATUS_PERCENTAGE" IS 'Valor que indica el porcentaje (0-1) de servicios que se encuentran en un estado para la fecha del registro';
-
 
 ALTER TABLE "SERVICE_MONITORIZA" ADD CONSTRAINT "R_TIMER_SERVICE_FK" FOREIGN KEY ("ID_TIMER_SERVICE") REFERENCES "TIMER_MONITORIZA" ("ID_TIMER");
 ALTER TABLE "SERVICE_MONITORIZA" ADD CONSTRAINT "R_ALARM_SERVICE_FK" FOREIGN KEY ("ID_ALARM_SERVICE") REFERENCES "ALARM_MONITORIZA" ("ID_ALARM");

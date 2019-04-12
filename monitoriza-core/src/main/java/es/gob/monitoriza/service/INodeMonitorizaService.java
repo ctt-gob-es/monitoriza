@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>09/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 28/10/2018.
+ * @version 1.2, 15/02/2019.
  */
 package es.gob.monitoriza.service;
 
@@ -35,7 +35,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 28/10/2018.
+ * @version 1.2, 15/02/2019.
  */
 public interface INodeMonitorizaService {
 	
@@ -45,6 +45,13 @@ public interface INodeMonitorizaService {
 	 * @return {@link NodeMonitoriza}
 	 */
 	NodeMonitoriza getNodeById(Long nodeId);
+	
+	/**
+	 * Method that obtains the configuration for a node by its name.
+	 * @param nodeName The node name.
+	 * @return {@link NodeMonitoriza}
+	 */
+	NodeMonitoriza getNodeByName(String nodeName);
 	
 	/**
 	 * Method that stores a node configuration in the persistence.

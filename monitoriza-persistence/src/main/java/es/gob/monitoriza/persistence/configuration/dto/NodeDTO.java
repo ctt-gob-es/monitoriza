@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>15/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 28/10/2018.
+ * @version 1.1, 15/02/2019.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -29,7 +29,7 @@ import es.gob.monitoriza.constant.GeneralConstants;
 /** 
  * <p>Class that represents the backing form for adding/editing a SPIE node.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 28/10/2018.
+ * @version 1.1, 15/02/2019.
  */
 public class NodeDTO {
 	
@@ -57,6 +57,11 @@ public class NodeDTO {
 	 * Attribute that represents the type of platform. 
 	 */
 	private Long type;
+	
+	/**
+	 * Attribute that indicates if the Node is registered (true) or unregistered (false).
+	 */
+	private Boolean active;
 	
 	/**
 	 * Attribute that indicates if the SPIE for emergency database connection will be checked.
@@ -92,6 +97,16 @@ public class NodeDTO {
 	 * Attribute that indicates whether the access to the node is through secured connection (https).
 	 */
 	private Boolean isSecure;
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	private String spieSelected;
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	private String spieSelectedConcat;
 	
 	/**
 	 * Gets the value of the attribute {@link #idNode}.
@@ -171,6 +186,22 @@ public class NodeDTO {
 	 */
 	public void setType(Long typeParam) {
 		this.type = typeParam;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #active}.
+	 * @return the value of the attribute {@link #active}.
+	 */
+	public final Boolean getActive() {
+		return active;
+	}
+	
+	/**
+	 * Sets the value of the attribute {@link #active}.
+	 * @param activeParam The value for the attribute {@link #active}.
+	 */
+	public final void setActive(Boolean activeParam) {
+		this.active = activeParam;
 	}
 
 	/**
@@ -283,6 +314,39 @@ public class NodeDTO {
 	 */
 	public void setIsSecure(Boolean isSecureParam) {
 		this.isSecure = isSecureParam;
+	}
+	
+	
+	/**
+	 * Gets the value of the attribute {@link #spieSelected}.
+	 * @return the value of the attribute {@link #spieSelected}.
+	 */
+	public final String getSpieSelected() {
+		return spieSelected;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #spieSelected}.
+	 * @param spieSelectedParam The value for the attribute {@link #spieSelected}.
+	 */
+	public final void setSpieSelected(String spieSelectedParam) {
+		this.spieSelected = spieSelectedParam;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #spieSelectedConcat}.
+	 * @return the value of the attribute {@link #spieSelectedConcat}.
+	 */
+	public final String getSpieSelectedConcat() {
+		return spieSelectedConcat;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #spieSelectedConcat}.
+	 * @param spieSelectedConcatParam The value for the attribute {@link #spieSelectedConcat}.
+	 */
+	public final void setSpieSelectedConcat(String spieSelectedConcatParam) {
+		this.spieSelectedConcat = spieSelectedConcatParam;
 	}
 
 	/**
