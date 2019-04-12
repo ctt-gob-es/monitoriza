@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.6, 30/01/2019.
+ * @version 1.8, 26/03/2019.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -106,7 +106,7 @@ import es.gob.monitoriza.webservice.ClientManager;
  * <p>Class that manages the REST requests related to the Keystore administration
  * and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.6, 30/01/2019.
+ * @version 1.8, 26/03/2019.
  */
 @RestController
 public class KeystoreRestController {
@@ -252,12 +252,12 @@ public class KeystoreRestController {
 	 * Method that maps the save ssl certificate web request to the controller and saves it in the persistence.
 	 * @param file Object that contains the uploaded file information.
 	 * @param alias String that represents the SSL certificate alias to be stored
+	 * @throws Exception If the method fails
 	 * @return DataTablesOutput<SystemCertificate>
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@ResponseStatus(HttpStatus.OK)
 	@RequestMapping(value = "/savessl", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE)
-	@Transactional
 	public @ResponseBody DataTablesOutput<SystemCertificate> saveSsl(@RequestParam(FIELD_FILE) MultipartFile file, @RequestParam(FIELD_ALIAS) String alias) throws Exception {
 
 		DataTablesOutput<SystemCertificate> dtOutput = new DataTablesOutput<>();
@@ -279,6 +279,11 @@ public class KeystoreRestController {
 		if (alias == null) {
 
 			json.put(FIELD_ALIAS + "_span", "El campo alias es obligatorio");
+			error = true;
+		}
+		
+		if (sysCertService.getSystemCertificateByAlias(alias) != null) {
+			json.put(FIELD_ALIAS + "_span", "Ya existe en el sistema un certificado con alias: " + alias);
 			error = true;
 		}
 
@@ -310,50 +315,8 @@ public class KeystoreRestController {
 		if (!error) {
 
 			try {
-				IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(KeystoreMonitoriza.ID_TRUSTSTORE_SSL));
-
-				X509Certificate cert = UtilsCertificate.getCertificate(certBytes);
-
-				String issuer = UtilsCertificate.getCertificateIssuerId(cert);
-				String subject = UtilsCertificate.getCertificateId(cert);
-				BigInteger serialNumber = UtilsCertificate.getCertificateSerialNumber(cert);
-
-				KeystoreMonitoriza ko = null;
-
-				// Alta de certificado
-
-				// Valida el certificado y lo añade al almacén truststore
-				// ssl del sistema
-
-				ko = keyStoreFacade.storeCertificate(alias, cert, null);
-				// Modificamos el keystore correspondiente, añadiendo el
-				// certificado
-				if (sysCertService.getSystemCertificateByKsAndIssAndSn(ko, issuer, serialNumber) != null) {
-					LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB014, new Object[] {alias} ));
-					throw new Exception(GeneralConstants.CERTIFICATE_STORED);
-				}
-
-				keystoreService.saveKeystore(ko);
-
-				SystemCertificate sysCert = new SystemCertificate();
-
-				sysCert.setAlias(alias);
-				sysCert.setIssuer(issuer);
-				sysCert.setSubject(subject);
-				sysCert.setKeystore(ko);
-				sysCert.setKey(true);
-				sysCert.setSerialNumber(serialNumber);
-				sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(StatusCertificateEnum.VALID.getId()));
-
-				// Añade el certificado a la persistencia
-				sysCertService.saveSystemCertificate(sysCert);
-				listSystemCertificate.add(sysCert);
-
-				// Importación correcta
-				LOGGER.info(Language.getFormatResWebMonitoriza(IWebLogMessages.WEB002, new Object[ ] { alias }));
 				
-				// Al haber cambios en el almacén Truststore SSL, se procede a marcar todos los timers programados como elegibles para ser reprogramados
-				scheduledService.setAllScheduledTimersNotUpdated();
+				listSystemCertificate = keystoreService.saveSsl(alias, certBytes);
 
 			} catch (Exception e) {
 				LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB001, new Object[ ] { alias }), e);
@@ -376,7 +339,7 @@ public class KeystoreRestController {
 	 * @param file MultipartFile that represents the uploaded certificate
 	 * @param password String that represents the password for the keystore 
 	 * @return PickListForm
-	 * @throws IOException
+	 * @throws IOException If the method fails
 	 */
 	@JsonView(PickListVO.View.class)
 	@ResponseStatus(HttpStatus.OK)
@@ -423,7 +386,7 @@ public class KeystoreRestController {
 	 * @param file Multipart object that represents the uploaded keystore
 	 * @param password String that represents the password for the keystore. 
 	 * @return PickListForm
-	 * @throws IOException
+	 * @throws IOException If the method fails
 	 */
 	@JsonView(PickListVO.View.class)
 	@ResponseStatus(HttpStatus.OK)
@@ -470,7 +433,7 @@ public class KeystoreRestController {
 	 * @param sslForm Object that represents the backing ssl certificate form.
 	 * @param bindingResult Object that represents the validation results
 	 * @return DataTablesOutput<SystemCertificate>
-	 * @throws IOException
+	 * @throws IOException If the method fails
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@ResponseStatus(HttpStatus.OK)
@@ -508,7 +471,7 @@ public class KeystoreRestController {
 			int esta = sslForm.getAlias().indexOf(characters[i]);
 			if (esta >= 0) {
 				char special = sslForm.getAlias().charAt(esta);
-				res += special + UtilsStringChar.SPECIAL_BLANK_SPACE_STRING;;
+				res += special + UtilsStringChar.SPECIAL_BLANK_SPACE_STRING;
 			}
 		}
 
@@ -653,7 +616,7 @@ public class KeystoreRestController {
 	 * Method that maps the save ssl certificate web request to the controller and saves it in the persistence.
 	 * @param aliases List<PickListElement> with the selected aliases for the certificates to be saved in persistence.
 	 * @return DataTablesOutput<SystemCertificate>
-	 * @throws Exception
+	 * @throws Exception If the method fails
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@ResponseStatus(HttpStatus.OK)
@@ -792,7 +755,7 @@ public class KeystoreRestController {
 	 * Method that maps the save valid service certificate web request to the controller and saves it in the persistence.
 	 * @param aliases List<PickListElement> with the alisases of the certificates to be stored in persistence.
 	 * @return DataTablesOutput<SystemCertificate>
-	 * @throws Exception
+	 * @throws Exception If the method fails
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@ResponseStatus(HttpStatus.OK)
@@ -914,7 +877,7 @@ public class KeystoreRestController {
 	 * @param authForm Object that represents the backing certificate form.
 	 * @param bindingResult Object that represents the validation results 
 	 * @return DataTablesOutput<SystemCertificate>
-	 * @throws IOException
+	 * @throws IOException If the method fails
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@ResponseStatus(HttpStatus.OK)
@@ -1010,7 +973,7 @@ public class KeystoreRestController {
 	 * @param validServForm Object that represents the backing certificate form. 
 	 * @param bindingResult Object that represents the validation results.
 	 * @return {@link DataTablesOutput<SystemCertificate>}
-	 * @throws IOException
+	 * @throws IOException If the method fails
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@ResponseStatus(HttpStatus.OK)
@@ -1105,7 +1068,7 @@ public class KeystoreRestController {
 	 * Method that downloads a certificate.
 	 * @param idSystemCertificate id certificate to download
 	 * @param response to write the certificate to download
-	 * @throws IOException exception
+	 * @throws IOException If the method fails
 	 */
 	@RequestMapping(value = "/downloadCertificate/{idSystemCertificate}")
 	public void downloadCertificate(@PathVariable("idSystemCertificate") Long idSystemCertificate, HttpServletResponse response) throws IOException {

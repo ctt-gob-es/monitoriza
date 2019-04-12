@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.9, 30/01/2019.
+ * @version 2.0, 15/02/2019.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -43,7 +43,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.MediaType;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
@@ -81,7 +80,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /**
  * <p>Class that manages the REST requests related to the Services administration and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
-  * @version 1.9, 30/01/2019.
+  * @version 2.0, 15/02/2019.
  */
 @RestController
 public class ServiceRestController {
@@ -225,7 +224,6 @@ public class ServiceRestController {
 	 */
 	@RequestMapping(value = "/savetimer", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
-	@Transactional
 	public @ResponseBody DataTablesOutput<TimerMonitoriza> saveTimer(
 			@Validated(OrderedValidation.class) @RequestBody TimerDTO timerForm, BindingResult bindingResult) {
 		DataTablesOutput<TimerMonitoriza> dtOutput = new DataTablesOutput<>();
@@ -269,41 +267,15 @@ public class ServiceRestController {
 	 */
 	@RequestMapping(path = "/saveservice", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@JsonView(DataTablesOutput.View.class)
-	@Transactional
 	public @ResponseBody DataTablesOutput<ServiceMonitoriza> saveService(
 			@Validated(OrderedValidation.class) @RequestPart("serviceForm") ServiceDTO serviceForm, @RequestPart("file") MultipartFile file, BindingResult bindingResult) {
 		
 		DataTablesOutput<ServiceMonitoriza> dtOutput = new DataTablesOutput<>();
 		List<ServiceMonitoriza> listNewService = new ArrayList<ServiceMonitoriza>();
-				
-		// Se controla manualmente el error 'requerido' para el campo nameWsdl, ya que depende del tipo de servicio
-		if (serviceForm.getServiceType().equalsIgnoreCase(GeneralConstants.SOAP_SERVICE)) {
 			
-			if (UtilsStringChar.EMPTY_STRING.equals(serviceForm.getNameWsdl())) {
-				FieldError wsdlFieldError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_ENDPOINT, "El campo 'Endpoint' es obligatorio.");
-				bindingResult.addError(wsdlFieldError);
-			}
-			
-			if (serviceForm.getNameWsdl() != null && (serviceForm.getNameWsdl().length() < 1 || serviceForm.getNameWsdl().length() > NumberConstants.NUM30)) {
-				FieldError wsdlFieldError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_ENDPOINT, "El tamaño debe estar entre 1 y 30.");
-				bindingResult.addError(wsdlFieldError);
-			}
-			
-		}
-		
-		// Al ser file un campo individual de la petición, se controla la validación por separado. 
-		// En modo edición, existe un identificador de fichero, pero se manda un fichero vacío por
-		// requisitos de la petición (no acepta null) / Error: "Required request part 'file' is not present".
-		if ((file == null || file.isEmpty()) && serviceForm.getIdFile() == null) {
-			
-			FieldError fileNullError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_FILE, "El campo 'Archivo de peticiones' es obligatorio.");
-			bindingResult.addError(fileNullError);
-			
-		} else if (!file.isEmpty() && !checkAllowedFormat(file)) {
-			
-			FieldError fileTypeError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_FILE, "El archivo de peticiones debe tener formato ZIP.");
-			bindingResult.addError(fileTypeError);
-		}				
+		// Se realizan validaciones en servidor, modificando el objecto bindingResult.
+		validateRequiredNameWsdlField(serviceForm, bindingResult);
+		validateZipFile(serviceForm, file, bindingResult);
 					
 		if (bindingResult.hasErrors()) {
 			listNewService = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false)
@@ -334,6 +306,56 @@ public class ServiceRestController {
 		return dtOutput;
 	}
 
+	/**
+	 * Modifies the {@link BindingResult} validating the nameWsdl field.
+	 * @param serviceForm Backing form object with the service data.
+	 * @param bindingResult Validation binding object.
+	 */
+	private void validateRequiredNameWsdlField(final ServiceDTO serviceForm, BindingResult bindingResult) {
+		// Se controla manualmente el error 'requerido' para el campo nameWsdl,
+		// ya que depende del tipo de servicio
+		if (serviceForm.getServiceType().equalsIgnoreCase(GeneralConstants.SOAP_SERVICE)) {
+
+			if (UtilsStringChar.EMPTY_STRING.equals(serviceForm.getNameWsdl())) {
+				FieldError wsdlFieldError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_ENDPOINT, "El campo 'Endpoint' es obligatorio.");
+				bindingResult.addError(wsdlFieldError);
+			}
+
+			if (serviceForm.getNameWsdl() != null && (serviceForm.getNameWsdl().length() < 1 || serviceForm.getNameWsdl().length() > NumberConstants.NUM30)) {
+				FieldError wsdlFieldError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_ENDPOINT, "El tamaño debe estar entre 1 y 30.");
+				bindingResult.addError(wsdlFieldError);
+			}
+
+		}
+	}
+
+	
+	/**
+	 * Modifies the {@link BindingResult} validating the file field.
+	 * @param serviceForm Backing form object with the service data.
+	 * @param file ZIP file with requests for this service
+	 * @param bindingResult Validation binding object.
+	 */
+	private void validateZipFile(final ServiceDTO serviceForm, final MultipartFile file, BindingResult bindingResult) {
+		
+		// Al ser file un campo individual de la petición, se controla la
+		// validación por separado.
+		// En modo edición, existe un identificador de fichero, pero se manda un
+		// fichero vacío por
+		// requisitos de la petición (no acepta null) / Error: "Required request
+		// part 'file' is not present".
+		if ((file == null || file.isEmpty()) && serviceForm.getIdFile() == null) {
+
+			FieldError fileNullError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_FILE, "El campo 'Archivo de peticiones' es obligatorio.");
+			bindingResult.addError(fileNullError);
+
+		} else if (!file.isEmpty() && !checkAllowedFormat(file)) {
+
+			FieldError fileTypeError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_FILE, "El archivo de peticiones debe tener formato ZIP.");
+			bindingResult.addError(fileTypeError);
+		}
+
+	}
 
 	/**
 	 * Method that deletes a timer from persistence and updates the scheduled timers.
@@ -343,7 +365,6 @@ public class ServiceRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deletetimer", method = RequestMethod.POST)
-	@Transactional
 	public String deleteTimer(final @RequestParam("id") Long timerId, final @RequestParam("index") String index) {
 		
 		String indexResult = index;
@@ -365,7 +386,6 @@ public class ServiceRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deleteservice", method = RequestMethod.POST)
-	@Transactional
 	public String deleteservice(@RequestParam("id") Long idService, @RequestParam("index") String index) {
 		
 		String indexResult = index;
