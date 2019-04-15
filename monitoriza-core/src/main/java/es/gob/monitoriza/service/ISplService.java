@@ -1,4 +1,4 @@
-/* 
+/*
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,7 +14,7 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
+/**
  * <b>File:</b><p>es.gob.monitoriza.service.IPlatformController.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
@@ -28,16 +28,15 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import es.gob.monitoriza.persistence.configuration.dto.SplDTO;
-import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.SplMonitoriza;
 
-/** 
+/**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring SPLs.</p>
  * @version 1.0, 14/03/2019.
  */
 public interface ISplService {
-		
+
 	/**
 	 * Method that obtains the information for a SPL by its identifier.
 	 * @param splId The SPL identifier.
@@ -50,19 +49,19 @@ public interface ISplService {
 	 * @param splId {@link Integer} that represents the SPL to delete.
 	 */
 	void deleteSplById(Long splId);
-	
+
 	/**
 	 * Method that deletes a SPL in the persistence.
 	 * @param spl {@link SplMonitoriza} that represents the spl to delete.
 	 */
 	void deletePlatform(SplMonitoriza spl);
-	
+
 	/**
 	 * Method that gets all the SPLs from the persistence.
 	 * @return a {@link Iterable<SplMonitoriza>} with all SPLs.
 	 */
 	Iterable<SplMonitoriza> getAllSpl();
-		
+
 	/**
 	 * Method that returns a list of SPLs to be showed in DataTable.
 	 * @param input DataTableInput with filtering, paging and sorting configuration.
@@ -73,7 +72,7 @@ public interface ISplService {
 	/**
 	 * Method that stores SPL information in the persistence and updates corresponding scheduled timers.
 	 * @param splDto a {@link SplDTO} with the information of the SPL.
-	 * @return {@link SplMonitoriza} The SPL's information. 
+	 * @return {@link SplMonitoriza} The SPL's information.
 	 */
 	SplMonitoriza saveSpl(SplDTO splDto);
 }

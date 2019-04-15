@@ -35,6 +35,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.persistence.configuration.dto.LogFileInfoDTO;
 import es.gob.monitoriza.persistence.configuration.dto.SplDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.SplMonitoriza;
 import es.gob.monitoriza.service.ILogConsumerService;
@@ -133,20 +134,20 @@ public class SplController {
     }
 
     /**
-     * Method that maps the connecting request to the controller, open the
-     * connection to the SPL and list its log files.
-     * @param afirmaId Identifier of the SPL to be edited.
+     * Method that maps the openning file request to the controller, select the
+     * file and show the log search screen.
+     * @param logFileName Name/Id  of the log file.
      * @param model Holder object for model attributes.
      * @return String that represents the name of the view to forward.
-     * @throws IOException Error related with the connection to the SPL.
+     * @throws IOException Error related with the file selection.
      */
-    @RequestMapping(value = "getlogfiles", method = RequestMethod.POST)
-    public String getLogFiles(@RequestParam("id") final Long splId, final Model model) throws IOException {
+    @RequestMapping(value = "openlogfile", method = RequestMethod.POST)
+    public String openLogFile(@RequestParam("id") final String logFileName, final Model model) throws IOException {
 
-    	final SplMonitoriza spl = this.splService.getSplById(splId);
+    	final LogFileInfoDTO logInfo = this.logConsumerService.openLogFile(logFileName);
 
-    	this.logConsumerService.configure(spl.getUrl(), spl.getKey());
+    	model.addAttribute("searchinfoform", logInfo);
 
-        return "fragments/logfiles.html";
+        return "fragments/logsearch.html";
     }
 }

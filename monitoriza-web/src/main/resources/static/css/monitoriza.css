@@ -81,6 +81,29 @@
 }
 
 /*------------------------------------------------------------------
+[ Tabs ]*/
+
+.mon-toolbar {
+	
+}
+
+.mon-distribution-left {
+	float: left;
+}
+
+.mon-distribution-right {
+	float: right;
+}
+
+.mon-vertical-padding {
+	padding-top: 1em;
+}
+
+.mon-log-panel {
+	white-space: nowrap;
+}
+
+/*------------------------------------------------------------------
 [ Modal ]*/
 
 .modal-pre {

@@ -151,8 +151,12 @@ public interface IWebLogMessages {
 	String ERRORWEB020 = "errorweb020";
 
 	/**
-	 * Constant attribute that represents the name of the property <code>errorutils020</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 * Constant attribute that represents the name of the property <code>errorweb025</code> belonging to the file status/monitoriza_xx_YY.properties.
 	 */
 	String ERRORWEB025 = "errorweb025";
 
+	/**
+	 * Constant attribute that represents the name of the property <code>errorweb026</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORWEB026 = "errorweb026";
 }

@@ -37,9 +37,11 @@ import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
 import es.gob.log.consumer.client.LogConsumerClient;
+import es.gob.log.consumer.client.LogInfo;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.persistence.configuration.dto.LogFileInfoDTO;
 import es.gob.monitoriza.persistence.configuration.dto.LogFilesDTO;
 import es.gob.monitoriza.persistence.configuration.dto.RowLogFileErrorDTO;
 import es.gob.monitoriza.service.ILogConsumerService;
@@ -86,5 +88,26 @@ public class LogConsumerService implements ILogConsumerService {
 		}
 
 		return logFiles;
+	}
+
+	@Override
+	public LogFileInfoDTO openLogFile(final String logFileName) {
+
+		final LogFileInfoDTO logFileInfo = new LogFileInfoDTO();
+
+		final LogInfo logInfo = this.logConsumerBean.openFile(logFileName);
+
+		if (logInfo.getError() != null) {
+			final String errorMsg = Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB026);
+			logFileInfo.setError(errorMsg);
+		}
+		else {
+			logFileInfo.setCharset(logInfo.getCharset());
+			logFileInfo.setDate(logInfo.isDate());
+			logFileInfo.setTime(logInfo.isTime());
+			logFileInfo.setDateTimeFormat(logInfo.getDateTimeFormat());
+			logFileInfo.setLevels(logInfo.getLevels());
+		}
+		return logFileInfo;
 	}
 }

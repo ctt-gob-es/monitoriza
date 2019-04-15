@@ -26,6 +26,7 @@ package es.gob.monitoriza.service;
 
 import java.io.IOException;
 
+import es.gob.monitoriza.persistence.configuration.dto.LogFileInfoDTO;
 import es.gob.monitoriza.persistence.configuration.dto.LogFilesDTO;
 
 /**
@@ -50,4 +51,10 @@ public interface ILogConsumerService {
 	LogFilesDTO getLogFiles();
 
 
+	/**
+	 * Method that select a log file from the selected SPL.
+	 * @param logFileName Name/Id from the file.
+	 * @return The log file's information needed to search.
+	 */
+	LogFileInfoDTO openLogFile(String logFileName);
 }

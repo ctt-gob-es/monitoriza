@@ -1,0 +1,216 @@
+<div class="container-fluid" id="searchLog">
+	<h4 class="c-grey-900 mT-10 mB-30" th:text="#{log.search.admin.title}"></h4>
+	<div class="row">
+		<div class="col-md-12">
+			<div class="bgc-white bd bdrs-3 p-20 mB-20">
+				<div class="mon-toolbar">
+					<div class="mon-distribution-left">
+						<ul class="nav nav-tabs">
+						<li class="nav-item">
+					      <a class="nav-link active" data-toggle="tab" href="#lastlines-pane">&Uacute;ltimas l&iacute;neas</a>
+					    </li>
+					    <li class="nav-item">
+					      <a class="nav-link" data-toggle="tab" href="#filterlogs-pane">Filtrar trazas</a>
+					    </li>
+					    <li class="nav-item">
+					      <a class="nav-link" data-toggle="tab" href="#searchtext-pane">Buscar texto</a>
+					    </li>
+						</ul>
+					</div>
+					<div class="mon-distribution-right">
+						<form class="form-inline" action="/servicioDescarga">
+							<button type="button" class="button-download-log btn btn-primary">Descargar fichero</button>
+						</form>
+					</div>
+					<div class="clearfix"></div>
+				</div>
+				<!-- Tab panes -->
+				<div class="tab-content mon-vertical-padding">
+				
+				  <!-- ULTIMAS LINEAS -->
+				  <div class="tab-pane active" id="lastlines-pane">
+				  	 <div class="row">
+				  	 	<!-- Formulario de busqueda -->
+				  	 	<div class="col-md-3 col-lg-2">
+				  	 		<form action="/servicioDescarga">
+				  	 		  <div class="form-group">
+				  	 			<label for="numlines-lastlines">N&uacute;mero de l&iacute;neas:</label>
+				  	 			<select id="numlines-lastlines" name="numlines" class="form-control">
+				  	 				<option value="50">50</option>
+				  	 				<option value="200">200</option>
+				  	 				<option value="500">500</option>
+				  	 			</select>
+				  	 			<br>
+				  	 			<div class="center">
+				  	 				<button type="button" class="button-lastlines btn btn-primary">Consultar</button>
+				  	 			</div>
+				  	 		  </div>
+				  	 		</form>
+				  	 	</div>
+				  	 	<!-- Panel de consulta -->
+				  	 	<div class="col-md-9 col-lg-10">
+				  	 		<textarea cols="50" rows="20" class="form-control mon-log-panel"></textarea>
+				  	 	</div>
+				  	 </div>
+				  </div>
+				  
+				  <!-- FILTRADO DE LOGS -->
+				  <div class="tab-pane fade" id="filterlogs-pane">
+				  	 <div class="row">
+
+				  	 	<!-- Formulario de busqueda -->
+				  	 	<div class="col-md-3 col-lg-2">
+				  	 		<form action="/servicioDescarga">
+				  	 		  <div class="form-group">
+				  	 			<label for="numlines-filterlogs">N&uacute;mero de l&iacute;neas:</label>
+				  	 			<select id="numlines-filterlogs" name="numlines" class="form-control">
+				  	 				<option value="50">50</option>
+				  	 				<option value="200">200</option>
+				  	 				<option value="500">500</option>
+				  	 			</select>
+				  	 			<br>
+				  	 			<!--  Fecha/hora inico de rango -->
+				  	 			<label for="start-datetimepicker-filterlogs">Fecha/hora de inicio:</label>
+								<input type="text" id="start-datetimepicker-filterlogs" name="start-date" class="form-control">
+								<br>
+				  	 			<!--  Fecha/hora fin de rango -->
+				  	 			<label for="end-datetimepicker-filterlogs">Fecha/hora de fin:</label>
+					  	 		<input type="text" id="end-datetimepicker-filterlogs" name="end-date" class="form-control" />
+					  	 		<br>
+					  	 		<!--  Nivel de log -->
+				  	 			<label for="loglevel-filterlogs">Nivel m&iacute;nimo de log:</label>
+					  	 		<select id="loglevel-filterlogs" name="log-level" class="form-control">
+				  	 				<option value="0">FINE</option>
+				  	 				<option value="1">INFO</option>
+				  	 				<option value="2">WARNING</option>
+				  	 				<option value="3">SEVERE</option>
+				  	 			</select>
+				  	 			<br>
+				  	 			<div class="center">
+				  	 				<button type="button" id="button-filterlogs" class="btn btn-primary">Consultar</button>
+				  	 			</div>
+				  	 		  </div>
+				  	 		</form>
+				  	 	</div>
+				  	 	
+				  	 	<!-- Panel de consulta -->
+				  	 	<div class="col-md-9 col-lg-10">
+				  	 		<textarea  rows="20" class="form-control mon-log-panel"></textarea>
+				  	 	</div>
+				  	 </div>
+				  </div>
+				  
+				  <!-- BUSQUEDA DE TEXTO -->
+				  <div class="tab-pane fade" id="searchtext-pane">
+				  	 <div class="row">
+
+				  	 	<!-- Formulario de busqueda -->
+				  	 	<div class="col-md-3 col-lg-2">
+				  	 		<form action="/servicioDescarga">
+				  	 		  <div class="form-group">
+				  	 			<label for="numlines-searchtext">N&uacute;mero de l&iacute;neas:</label>
+				  	 			<select id="numlines-searchtext" name="numlines" class="form-control">
+				  	 				<option value="50">50</option>
+				  	 				<option value="200">200</option>
+				  	 				<option value="500">500</option>
+				  	 			</select>
+				  	 			<br>
+				  	 			<!--  Texto de busqueda -->
+				  	 			<label for="text-searchtext">Texto de b&uacute;squeda:</label>
+					  	 		<input type="text" id="text-searchtext" name="text" class="form-control" />
+					  	 		<br>
+				  	 			<!--  Fecha/hora inico de rango -->
+				  	 			<label for="start-datetimepicker-searchtext">Fecha/hora de inicio:</label>
+				  	 			<input type="text" id="start-datetimepicker-searchtext" name="start-date" class="form-control">
+				  	 			<br>
+				  	 			<div class="center">
+				  	 				<button type="button" id="button-searchtext" class="btn btn-primary">Consultar</button>
+				  	 			</div>
+				  	 		  </div>
+				  	 		</form>
+				  	 	</div>
+				  	 	
+				  	 	<!-- Panel de consulta -->
+				  	 	<div class="col-md-9 col-lg-10">
+				  	 		<textarea  rows="20" class="form-control mon-log-panel"></textarea>
+				  	 	</div>
+				  	 </div>
+				  </div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<script src="../../static/js/jquery/jquery.datetimepicker.js"></script>
+
+<script th:inline="javascript">
+if (!$('link[href="../../static/css/jquery.datetimepicker.css"]').length) {
+    $('<link type="text/css" rel="stylesheet" href="../../static/css/jquery.datetimepicker.css">').appendTo("head");
+}
+
+$(document).ready(function() {
+	
+	var supportDate = true;
+	var supportTime = true;
+	
+	$('#start-datetimepicker-filterlogs').change(function (evt){
+		var dateText = evt.target.value;
+		if (!dateText) {
+			resetPickerEndFilterLogs(supportDate, supportTime);
+			return;
+		}
+
+		var dateFragment = dateText.substring(0, dateText.indexOf(" "));
+		resetPickerEndFilterLogs(supportDate, supportTime, dateFragment);
+	});
+	
+	function resetPickerStartFilterLogs(supportDate, supportTime, maxDate) {
+		$('#start-datetimepicker-filterlogs').datetimepicker({
+			dayOfWeekStart: 1,
+			step: 10,
+			datepicker: !!supportDate,
+			timepicker: !!supportTime,
+			format: "d/m/Y H:i",
+			formatDate: "d/m/Y",
+			maxDate: maxDate ? maxDate : false,
+			lang:"es",
+			onChangeDateTime: function (date) {
+				var textDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+				resetPickerEndFilterLogs(supportDate, supportTime, textDate);
+			}
+		});
+	}
+	
+	$('#end-datetimepicker-filterlogs').change(function (evt){
+		var dateText = evt.target.value;
+		if (!dateText) {
+			resetPickerStartFilterLogs(supportDate, supportTime);
+			return;
+		}
+
+		var dateFragment = dateText.substring(0, dateText.indexOf(" "));
+		resetPickerStartFilterLogs(supportDate, supportTime, dateFragment);
+	});
+	
+	function resetPickerEndFilterLogs(supportDate, supportTime, minDate) {
+		$('#end-datetimepicker-filterlogs').datetimepicker({
+			dayOfWeekStart: 1,
+			step: 10,
+			datepicker: !!supportDate,
+			timepicker: !!supportTime,
+			format: "d/m/Y H:i",
+			formatDate: "d/m/Y",
+			minDate: minDate ? minDate : false,
+			lang:"es",
+			onChangeDateTime: function (date) {
+				var textDate = date.getDate() + "/" + (date.getMonth() + 1) + "/" + date.getFullYear();
+				resetPickerStartFilterLogs(supportDate, supportTime, textDate);
+			}
+		});
+	}
+	
+	// Creamos los calendarios
+	resetPickerStartFilterLogs(supportDate, supportTime);
+	resetPickerEndFilterLogs(supportDate, supportTime);
+});
+</script>
