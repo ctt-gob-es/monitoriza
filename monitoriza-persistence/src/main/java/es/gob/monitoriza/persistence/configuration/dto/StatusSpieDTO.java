@@ -17,9 +17,9 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.StatusDTO.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
- * <b>Date:</b><p>8 oct. 2018.</p>
+ * <b>Date:</b><p>8/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 17/10/2018.
+ * @version 1.2, 03/05/2019..
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -37,7 +37,7 @@ import com.fasterxml.jackson.annotation.JsonView;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.0, 31/10/2018.
+ * @version 1.2, 03/05/2019.
  */
 public class StatusSpieDTO {
 
@@ -90,8 +90,6 @@ public class StatusSpieDTO {
 	public void setError(String errorParam) {
 		this.error = errorParam;
 	}
-
-
 
 	/** 
 	 * <p>Interface used by Jackson (JSON) for annotate view fields.</p>

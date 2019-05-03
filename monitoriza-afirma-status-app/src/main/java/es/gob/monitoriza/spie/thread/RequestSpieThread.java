@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>29/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.6, 14/03/2019.
+ * @version 1.7, 03/05/2019..
  */
 package es.gob.monitoriza.spie.thread;
 
@@ -77,7 +77,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that get the results of the SPIE services configured.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.6, 14/03/2019.
+ * @version 1.7, 03/05/2019.
  */
 public class RequestSpieThread implements Runnable {
 	
@@ -154,6 +154,7 @@ public class RequestSpieThread implements Runnable {
 			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM002_AFIRMA_NO_HSM_CONNECTION);
 			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName() });
 			spieType = spieService.getSpieTypeById(SpieType.ID_CONN_HSM_AFIRMA);
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS017, new Object[] { node.getName(), spieType.getTokenName()}));
 			resolveSpie(spieType, alarm, msgAlarm);
 
 		}
@@ -162,6 +163,7 @@ public class RequestSpieThread implements Runnable {
 			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM005_AFIRMA_EMERGENCY_MODE);
 			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName() });
 			spieType = spieService.getSpieTypeById(SpieType.ID_MODE_EMERGENCY_AFIRMA);
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS017, new Object[] { node.getName(), spieType.getTokenName()}));
 			resolveSpie(spieType, alarm, msgAlarm);
 
 		}
@@ -170,6 +172,7 @@ public class RequestSpieThread implements Runnable {
 			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM001_AFIRMA_NO_TSA_CONNECTION);
 			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName() });
 			spieType = spieService.getSpieTypeById(SpieType.ID_CONN_TSA);
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS017, new Object[] { node.getName(), spieType.getTokenName()}));
 			resolveSpie(spieType, alarm, msgAlarm);
 
 		}
@@ -178,6 +181,7 @@ public class RequestSpieThread implements Runnable {
 			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM004_AFIRMA_TRANS_ABOVE_MAX);
 			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName(), confSpie.getPercentAccept() });
 			spieType = spieService.getSpieTypeById(SpieType.ID_RESPONSE_TIMES);
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS017, new Object[] { node.getName(), spieType.getTokenName()}));
 			resolveSpie(spieType, alarm, msgAlarm);
 
 		}
@@ -205,6 +209,7 @@ public class RequestSpieThread implements Runnable {
 			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM006_TSA_NO_HSM_CONNECTION);
 			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName() });
 			spieType = spieService.getSpieTypeById(SpieType.ID_CONN_HSM_TSA);
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS017, new Object[] { node.getName(), spieType.getTokenName()}));
 			resolveSpie(spieType, alarm, msgAlarm);
 
 		}
@@ -213,6 +218,7 @@ public class RequestSpieThread implements Runnable {
 			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM008_TSA_EMERGENCY_MODE);
 			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName() });
 			spieType = spieService.getSpieTypeById(SpieType.ID_MODE_EMERGENCY_TSA);
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS017, new Object[] { node.getName(), spieType.getTokenName()}));
 			resolveSpie(spieType, alarm, msgAlarm);
 
 		}
@@ -221,6 +227,7 @@ public class RequestSpieThread implements Runnable {
 			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM007TSA_NO_AFIRMA_CONNECTION);
 			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName() });
 			spieType = spieService.getSpieTypeById(SpieType.ID_CONN_AFIRMA);
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS017, new Object[] { node.getName(), spieType.getTokenName()}));
 			resolveSpie(spieType, alarm, msgAlarm);
 
 		}
@@ -300,7 +307,7 @@ public class RequestSpieThread implements Runnable {
 		String estado = getSemaphoreNameById(spieStatus.getStatusValue());
 								
 		// El estado es erróneo, se lanza alarma.
-		if ((spieStatus.getStatusValue() == null || !spieStatus.getStatusValue().equals(SemaphoreEnum.GREEN.getId())) && alarm != null && alarm.getActive()) {
+		if ((spieStatus.getStatusValue() == null || !spieStatus.getStatusValue().equals(SemaphoreEnum.GREEN.getId())) && alarm != null && alarm.getActive() && alarm.getTimeBlock() != null) {
 			
 			subjectAlarm.append(Language.getFormatResAlarmMonitoriza(IAlarmMailText.SUBJECT_ALARM_SPIE, new Object[]{spieStatus.getSystem(), spieStatus.getNodeName(), spieStatus.getSpieService(), estado}));
 						
