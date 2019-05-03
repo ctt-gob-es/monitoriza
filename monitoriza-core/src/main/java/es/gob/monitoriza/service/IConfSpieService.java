@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 28/10/2018.
+ * @version 1.2, 03/05/2019.
  */
 package es.gob.monitoriza.service;
 
@@ -37,7 +37,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.ConfSpie;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.1, 28/10/2018.
+ * @version 1.2, 03/05/2019.
  */
 public interface IConfSpieService {
 
@@ -63,6 +63,13 @@ public interface IConfSpieService {
 	 * @return {@link ConfSpieDTO} an object that represents the ConfSpie.
 	 */
 	ConfSpie saveConfSpie(ConfSpieDTO confSpie);
+	
+	/**
+	 * Method that saves ConfSpie entity
+	 * @param confSpie {@link ConfSpie}
+	 * @return saved {@link ConfSpie}
+	 */
+	ConfSpie save(ConfSpie confSpie);
 
 	/**
 	 * Method that delete a ConfSpie.

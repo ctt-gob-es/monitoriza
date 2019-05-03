@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 25/01/2019.
+ * @version 1.6, 03/05/2019.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -34,6 +34,10 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.NumberConstants;
 
@@ -47,7 +51,7 @@ import es.gob.monitoriza.constant.NumberConstants;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.5, 25/01/2019.
+ * @version 1.6, 03/05/2019.
  */
 @Entity
 @Table(name = "CONF_SPIE")
@@ -77,6 +81,16 @@ public class ConfSpie implements Serializable {
 	 * Attribute that represents the frequency TS@.
 	 */
 	private Long frequencyTsa;
+	
+	/**
+	 * Attribute that represents if the SPIE afirma timer must be updated.
+	 */
+	private Boolean updateAfirma;
+	
+	/**
+	 * Attribute that represents if the SPIE tsa timer must be updated.
+	 */
+	private Boolean updateTsa;
 
 	/**
 	 * @return the idConfSpie
@@ -147,4 +161,48 @@ public class ConfSpie implements Serializable {
 		this.frequencyTsa = frequencyTsa;
 	}
 
+	/**
+	 * Gets the value of the attribute {@link #updateAfirma}.
+	 * 
+	 * @return the value of the attribute {@link #updateAfirma}.
+	 */
+	@Column(name = "UPDATE_AFIRMA", nullable = true, precision = NumberConstants.NUM1)
+	@Type(type = "yes_no")
+	@JsonView(DataTablesOutput.View.class)
+	public Boolean getUpdateAfirma() {
+		return updateAfirma;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #updateAfirma}.
+	 * 
+	 * @param active
+	 *            The value for the attribute {@link #updateAfirma}.
+	 */
+	public void setUpdateAfirma(Boolean updateAfirma) {
+		this.updateAfirma = updateAfirma;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #updateTsa}.
+	 * 
+	 * @return the value of the attribute {@link #updateTsa}.
+	 */
+	@Column(name = "UPDATE_TSA", nullable = true, precision = NumberConstants.NUM1)
+	@Type(type = "yes_no")
+	@JsonView(DataTablesOutput.View.class)
+	public Boolean getUpdateTsa() {
+		return updateTsa;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #updateTsa}.
+	 * 
+	 * @param active
+	 *            The value for the attribute {@link #updateTsa}.
+	 */
+	public void setUpdateTsa(Boolean updateTsa) {
+		this.updateTsa = updateTsa;
+	}
+	
 }

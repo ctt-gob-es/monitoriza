@@ -17,9 +17,9 @@
  * <b>File:</b><p>es.gob.monitoriza.invoker.rfc3161.Rfc3161Invoker.java.</p>
  * <b>Description:</b><p>Class that manages and performs the request of a service via RFC3161.</p>
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
- * <b>Date:</b><p>29 ene. 2018.</p>
+ * <b>Date:</b><p>29/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 05/12/2018.
+ * @version 1.7, 03/05/2019.
  */
 package es.gob.monitoriza.invoker.rfc3161;
 
@@ -60,7 +60,7 @@ import es.gob.monitoriza.utilidades.UtilsResource;
 /** 
  * <p>Class that manages and performs the request of a service via RFC3161.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.5, 05/12/2018.
+ * @version 1.7, 03/05/2019.
  */
 public class Rfc3161Invoker {
 	
@@ -93,14 +93,15 @@ public class Rfc3161Invoker {
 	
 	/**
 	 * Method that invokes the TS@ RFC 3161 - HTTPS service to obtain an ASN.1 timestamp.
+	 * @param idTimerTask Identifier of the scheduled timer.
 	 * @param requestFile File that contains the RFC3161 request.
 	 * @param service DTOService that contains the configuration data for the service.
 	 * @return Long that represents the time in milliseconds that has taken to complete the request.
 	 * If there is some configuration or communication problem, this value will be null.
 	 * @throws InvokerException If the method fails.
 	 */
-	public static Long sendRequest(final File requestFile, final ConfigServiceDTO service, final KeyStore ssl, final KeyStore authRfc3161) throws InvokerException {
-		LOGGER.debug(Language.getResMonitoriza(IStatusLogMessages.STATUS009));
+	public static Long sendRequest(final String idTimerTask, final File requestFile, final ConfigServiceDTO service, final KeyStore ssl, final KeyStore authRfc3161) throws InvokerException {
+		LOGGER.debug(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS009, new Object[]{idTimerTask}));
 		
 		Long tiempoTotal = null;
 		String msgError = null;
@@ -118,37 +119,37 @@ public class Rfc3161Invoker {
 			// Obtenemos el indicador para saber si es necesaria la
 			// autenticación del cliente
 			if (service.getUseRfc3161Auth()) {
-				LOGGER.debug(Language.getResMonitoriza(IStatusLogMessages.STATUS010));
+				LOGGER.debug(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS010, new Object[]{idTimerTask}));
 
 				// Obtenemos el alias del certificado a usar para la
 				// autenticación cliente
 				//String certificateAlias = StaticMonitorizaProperties.getProperty(StaticConstants.RFC3161_HTTPS_CERTIFICATE_ALIAS);
 				// Comprobamos que el alias del certificado a usar para la
 				// autenticación cliente no es nulo
-				checkValueNotNull(service.getRfc3161Cert(), Language.getResMonitoriza(IStatusLogMessages.STATUS011));
+				checkValueNotNull(service.getRfc3161Cert(), Language.getFormatResMonitoriza(IStatusLogMessages.STATUS011, new Object[]{idTimerTask}));
 
 				// Accedemos al almacén con el certificado para la autenticación cliente
-				msgError = Language.getResMonitoriza(IStatusLogMessages.STATUS012);
+				msgError = Language.getFormatResMonitoriza(IStatusLogMessages.STATUS012, new Object[]{idTimerTask});
 												
 				// Comprobamos que el certificado existe en el almacén
 				if (!authRfc3161.containsAlias(service.getRfc3161Cert())) {
-					msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS006, new Object[ ] { service.getRfc3161Cert() });
+					msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS006, new Object[ ] { idTimerTask, service.getRfc3161Cert() });
 				} else {
 					PrivateKey pk = null;
 					// Obtenemos la clave privada asociada al alias del
 					// certificado
-					msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS007, new Object[ ] { service.getRfc3161Cert() });
+					msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS007, new Object[ ] { idTimerTask, service.getRfc3161Cert() });
 					if (authRfc3161.isKeyEntry(service.getRfc3161Cert())) {
 						pk = (PrivateKey) authRfc3161.getKey(service.getRfc3161Cert(), service.getRfc3161Password().toCharArray());
 					}
 					// Obtenemos la cadena de certificación para el alias del
 					// certificado
-					msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS008, new Object[ ] { service.getRfc3161Cert() });
+					msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS008, new Object[ ] { idTimerTask,  service.getRfc3161Cert() });
 					Certificate[ ] certificateChain = authRfc3161.getCertificateChain(service.getRfc3161Cert());
 					// Creamos un almacén de claves vacío para meter el
 					// certificado
 					// a usar para la autenticación cliente
-					msgError = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS009);
+					msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS009, new Object[]{idTimerTask});
 					String keystoreType = KEYSTORE_TYPE_PKCS12;
 					String keystorePass = CLIENT_AUTH_KEYSTORE_PASSWORD;
 					KeyStore ks = KeyStore.getInstance(keystoreType);
@@ -161,8 +162,8 @@ public class Rfc3161Invoker {
 				}
 
 			} else {
-				LOGGER.info(Language.getResMonitoriza(IStatusLogMessages.STATUS013));
-				msgError = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS009);
+				LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS013, new Object[]{idTimerTask}));
+				msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS009, new Object[]{idTimerTask});
 				ctx.init(null, tmf.getTrustManagers(), null);
 			}
 
@@ -170,12 +171,12 @@ public class Rfc3161Invoker {
 			byte request[] = FileUtils.fileToByteArray(requestFile);
 
 			// Obtenemos la URL de conexión con el servicio RFC 3161
-			URL url = getRFC3161TSAURLFromWebAdmin(service);
+			URL url = getRFC3161TSAURLFromWebAdmin(idTimerTask, service);
 			
 			HttpsURLConnection tsaConnection = (HttpsURLConnection) url.openConnection();
 			tsaConnection.setHostnameVerifier(new NameVerifier());
 
-			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS008, new Object[ ] { requestFile, url.toString()}));			
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS008, new Object[ ] { idTimerTask, requestFile, url.toString()}));			
 			
 			SSLSocketFactory factory = ctx.getSocketFactory();
 			tsaConnection.setSSLSocketFactory(factory);
@@ -209,8 +210,9 @@ public class Rfc3161Invoker {
 	 * Method that gets the URL of the configured RFC3161 service in TS@.
 	 * @param service Configured RFC3161 service
 	 * @return URL of the RFC3161 service in TS@
+	 * @throws InvokerException 
 	 */
-	private static URL getRFC3161TSAURLFromWebAdmin(ConfigServiceDTO service) throws InvokerException {
+	private static URL getRFC3161TSAURLFromWebAdmin(final String idTimerTask, final ConfigServiceDTO service) throws InvokerException {
 					
 		StringBuffer tsaURL = new StringBuffer();
 		tsaURL.append(service.getBaseUrl()).append(service.getRfc3161Context());
@@ -218,7 +220,7 @@ public class Rfc3161Invoker {
 		try {
 			return new URL(tsaURL.toString());
 		} catch (MalformedURLException e) {
-			throw new InvokerException(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS010, new Object[ ] { tsaURL }), e);
+			throw new InvokerException(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS010, new Object[ ] {idTimerTask, tsaURL }), e);
 		}
 	}
 	

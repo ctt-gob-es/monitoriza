@@ -15,127 +15,63 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.spie.task.MonitorizaSpieTask.java.</p>
- * <b>Description:</b><p> .</p>
+ * <b>File:</b><p>es.gob.monitoriza.spie.task.MonitorizaTaskSpieManager.java.</p>
+ * <b>Description:</b><p>Class that update the configuration of the scheduled SPIE timer. .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>25/10/2018.</p>
+ * <b>Date:</b><p>03/05/2019.</p>
  * @author Gobierno de España.
- * @version 1.4, 03/05/2019.
+ * @version 1.0, 03/05/2019.
  */
 package es.gob.monitoriza.spie.task;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-
 import org.apache.log4j.Logger;
+import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
-import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
-import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.service.impl.PlatformService;
-import es.gob.monitoriza.service.impl.SpieMonitoringConfigService;
 import es.gob.monitoriza.service.utils.IServiceNameConstants;
 import es.gob.monitoriza.spie.thread.RequestLauncherSpie;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.timers.TimersHolder;
 import es.gob.monitoriza.utilidades.UtilsStringChar;
 
-
 /** 
- * <p>Class that initializes the timers for processing the batch of requests for each SPIE service.</p>
+ * <p>Class that update the configuration of the scheduled SPIE timer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 03/05/2019.
+ * @version 1.0, 03/05/2019.
  */
-public class MonitorizaSpieTask extends HttpServlet {
-
-	/**
-	 * Attribute that represents the serial number. 
-	 */
-	private static final long serialVersionUID = -7514164022124720290L;
-		
+@Service("monitorizaTaskSpieManager")
+public class MonitorizaTaskSpieManager {
+	
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 	
-	/**
-	 * {@inheritDoc}
-	 * @see javax.servlet.GenericServlet#init()
-	 */
-	@Override
-	public void init(final ServletConfig config) throws ServletException {
+	public void updateSpieTimerFromWebAdmin(final Long platform, final Long frequency) {
 		
-		super.init(config);
-					
-		scheduleSpieFromWebAdmin();
-	}
+		StringBuilder idTimerSpie = new StringBuilder();
+		idTimerSpie.append(GeneralConstants.SPIE).append(platform);
+		Timer timer = TimersHolder.getInstance().getCurrentTimersSpieHolder().get(idTimerSpie.toString());
 
-	/**
-	 * Method that gets the SPIE configuration from the web admin database and schedules the service request batch.
-	 */
-	private void scheduleSpieFromWebAdmin() {
-					
-		final ConfSpieDTO confSpie =  ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SPIE_MONITORING_CONFIG_SERVICE, SpieMonitoringConfigService.class).getSpieConfiguration();
-		
-		if (confSpie != null) {
-			scheduleSpieAfirma(confSpie.getFrequencyAFirma());
-			scheduleSpieTsa(confSpie.getFrequencyTsa());
-		} else {
-			LOGGER.info(Language.getResMonitoriza(IStatusLogMessages.STATUS018));
+		if (timer != null) {
+			timer.cancel();
 		}
-		
-	}
 
-	/**
-	 * Method that schedules a timer task for requesting SPIE from @Firma.
-	 * @param afirmaFrequency Period on the launcher
-	 */
-	private void scheduleSpieAfirma(final Long afirmaFrequency) {
-		Timer timer = new Timer();
-		ExecuteTimer batchTimer = new ExecuteTimer(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
-		
-		try {
-			timer.schedule(batchTimer, 0, afirmaFrequency);
-			
-			StringBuilder timerAfirma = new StringBuilder();
-			timerAfirma.append(GeneralConstants.SPIE).append(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
-			
-			// El timer programado se añade a la memoria para poder gestionarlo  
-			TimersHolder.getInstance().getCurrentTimersSpieHolder().put(timerAfirma.toString(), timer);
-			
-		} catch (IllegalArgumentException e) {
-			LOGGER.info(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS027));
-		}
+		timer = new Timer();
+		ExecuteTimer batchTimer = new ExecuteTimer(platform);
+		timer.schedule(batchTimer, 0, frequency);
+
+		// El timer programado se añade a la memoria para poder gestionarlo
+		TimersHolder.getInstance().getCurrentTimersSpieHolder().put(idTimerSpie.toString(), timer);
 		
 		
-	}
-	
-	/**
-	 * Method that schedules a timer task for requesting SPIE from @Firma.
-	 * @param afirmaFrequency Period on the launcher
-	 */
-	private void scheduleSpieTsa(final Long afirmaFrequency) {
-		Timer timer = new Timer();
-		ExecuteTimer batchTimer = new ExecuteTimer(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA);
-		
-		try {
-			timer.schedule(batchTimer, 0, afirmaFrequency);
-			
-			StringBuilder timerTsa = new StringBuilder();
-			timerTsa.append(GeneralConstants.SPIE).append(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA);
-			
-			// El timer programado se añade a la memoria para poder gestionarlo  
-			TimersHolder.getInstance().getCurrentTimersSpieHolder().put(timerTsa.toString(), timer);
-		} catch (IllegalArgumentException e) {
-			LOGGER.info(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS028));
-		}
 	}
 	
 	/**
@@ -178,6 +114,6 @@ public class MonitorizaSpieTask extends HttpServlet {
 
 		}
 
-	}
+	}	
 
 }

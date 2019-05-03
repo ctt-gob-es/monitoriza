@@ -18,9 +18,9 @@
  * <b>Description:</b>
  * <p>Class that manages the thread pool for processing each service in a separate thread.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
- * <b>Date:</b><p>19 feb. 2018.</p>
+ * <b>Date:</b><p>19/02/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 25/01/2019.
+ * @version 1.7, 03/05/2019.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -47,7 +47,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 /** 
  * <p>Class that manages the thread pool for processing each service in a separate thread.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 25/01/2019.
+ * @version 1.7, 03/05/2019.
  */
 public class RequestLauncher {
 
@@ -55,30 +55,24 @@ public class RequestLauncher {
 	 * Attribute that represents the object that manages the log of the class.
 	 */
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
-
-	/**
-	 * Attribute that represents the path where the pairs are stored.
-	 */
-	private static String requestDirectory = StaticMonitorizaConfig.getProperty(StaticConstants.ROOT_PATH_DIRECTORY);
 		
 	/**
 	 * Method that performs the invocation of service by service name.
+	 * @param idTimerTask Identificador del timer programado
 	 * @param statusHolder Reference to the Map that holds the current status for the processed services. 
 	 * @param servicios DTOService that represents the service being processed in this thread.
 	 * @param sslTrustStore Truststore of Monitoriz@
 	 * @param rfc3161Keystore Keystore for authenticating RFC3161 service
 	 * @throws InvokerException if the path is not correct or the directories structure is not correct.
 	 */
-	public void startInvoker(final Map<String, StatusUptodate> statusHolder, final List<ConfigServiceDTO> servicios, final KeyStore sslTrustStore, final KeyStore rfc3161Keystore) {
-
-		LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS002, new Object[ ] { requestDirectory }));
+	public void startInvoker(final String idTimerTask, final Map<String, StatusUptodate> statusHolder, final List<ConfigServiceDTO> servicios, final KeyStore sslTrustStore, final KeyStore rfc3161Keystore) {
 				
 		Integer threads = null;
 				
 		try {
 			threads = Integer.parseInt(StaticMonitorizaConfig.getProperty(StaticConstants.REQUEST_THREAD_POOL_SIZE));
 		} catch (NumberFormatException e) {
-			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS001, new Object[ ] { requestDirectory }), e);
+			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS001, new Object[ ] { StaticMonitorizaConfig.getProperty(StaticConstants.ROOT_PATH_DIRECTORY) }), e);
 		}
 		
 		if (threads == null || threads <= 0) {
@@ -94,9 +88,8 @@ public class RequestLauncher {
 			RunningServices.getInstance();
 			
 			if (RunningServices.getRequestsRunning().get(s.getServiceName()) == null || !RunningServices.getRequestsRunning().get(s.getServiceName())) {
-    			RequestProcessorThread rpt = new RequestProcessorThread(s, statusHolder, sslTrustStore, rfc3161Keystore);
-    
-    			executor.execute(rpt);
+    			RequestProcessorThread rpt = new RequestProcessorThread(idTimerTask, s, statusHolder, sslTrustStore, rfc3161Keystore);
+      			executor.execute(rpt);
 			} 			
 			
 		}
@@ -119,11 +112,11 @@ public class RequestLauncher {
 	    pool.shutdown(); 
 	    try {
 	        // Se espera la terminación de hilos actuales
-	        if (!pool.awaitTermination(NumberConstants.NUM60, TimeUnit.SECONDS)) {
+	        if (!pool.awaitTermination(NumberConstants.NUM600, TimeUnit.SECONDS)) {
 	        	// Cancelación de hilos en ejecución para el pool
 	            pool.shutdownNow(); 
 	            // Se espera a la obtención de respuesta de cancelación de los hilos pendientes
-	            if (!pool.awaitTermination(NumberConstants.NUM60, TimeUnit.SECONDS)) {
+	            if (!pool.awaitTermination(NumberConstants.NUM600, TimeUnit.SECONDS)) {
 	                LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS015, new Object[]{service.getTimerName()}));
 	            }
 	        }

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 30/01/2019.
+ * @version 1.3, 03/05/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -40,7 +40,7 @@ import es.gob.monitoriza.service.IMethodValidationService;
  * <p>
  * Class that implements the communication with the operations of the persistence layer for ConfSpie.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
-  * @version 1.2, 30/01/2019.
+  * @version 1.3, 03/05/2019.
  */
 @Service("confSpieService")
 public class ConfSpieService implements IConfSpieService {
@@ -58,7 +58,7 @@ public class ConfSpieService implements IConfSpieService {
 	 */
 	@Autowired
 	private IMethodValidationService methodValidationService;
-
+	
 	/**
 	 * 
 	 * {@inheritDoc}
@@ -101,17 +101,30 @@ public class ConfSpieService implements IConfSpieService {
 		} else {
 			confSpie = new ConfSpie();
 		}
-
+		
+		if (!confSpieDto.getFrequencyAFirma().equals(confSpie.getFrequencyAfirma())) {
+			confSpie.setUpdateAfirma(Boolean.TRUE);
+		} else {
+			confSpie.setUpdateAfirma(Boolean.FALSE);
+		}
+		
+		if (!confSpieDto.getFrequencyTsa().equals(confSpie.getFrequencyTsa())) {
+			confSpie.setUpdateTsa(Boolean.TRUE);
+		} else {
+			confSpie.setUpdateTsa(Boolean.FALSE);
+		}
+		
 		confSpie.setPercentAccept(confSpieDto.getPercentAccept());
 		confSpie.setFrequencyAfirma(confSpieDto.getFrequencyAFirma());
 		confSpie.setFrequencyTsa(confSpieDto.getFrequencyTsa());
 
 		result = repository.save(confSpie);
 		methodValidationService.createAllMethods(confSpieDto.getMethodValidations(), result);
-		
+						
 		return result;
 		
 	}
+		
 
 	/**
 	 * {@inheritDoc}
@@ -122,6 +135,16 @@ public class ConfSpieService implements IConfSpieService {
 	@Transactional
 	public void deleteConfSpie(Long idConfSpie) {
 		repository.deleteById(idConfSpie);
+	}
+
+	/* (non-Javadoc)
+	 * @see es.gob.monitoriza.service.IConfSpieService#save(es.gob.monitoriza.persistence.configuration.model.entity.ConfSpie)
+	 */
+	@Override
+	@Transactional
+	public ConfSpie save(ConfSpie confSpie) {
+		
+		return repository.save(confSpie);
 	}
 
 }

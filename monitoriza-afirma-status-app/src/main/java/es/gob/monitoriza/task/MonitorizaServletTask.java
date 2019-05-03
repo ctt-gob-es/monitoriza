@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.7, 30/01/2019.
+ * @version 1.9, 03/05/2019.
  */
 package es.gob.monitoriza.task;
 
@@ -59,11 +59,13 @@ import es.gob.monitoriza.status.thread.RequestLauncher;
 import es.gob.monitoriza.timers.TimersHolder;
 import es.gob.monitoriza.utilidades.FileUtils;
 import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
+import es.gob.monitoriza.utilidades.UtilsIdentifierGenerators;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /** 
  * <p>Class that initializes the timers for processing the batch of requests for each service.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.7, 30/01/2019.
+ * @version 1.9, 03/05/2019.
  */
 @Configurable
 public class MonitorizaServletTask extends HttpServlet {
@@ -120,6 +122,8 @@ public class MonitorizaServletTask extends HttpServlet {
 		// Se carga una sola vez el almacén de certificados para autenticación
 		// RFC3161.
 		KeyStore rfc3161Keystore = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.KEYSTORE_SERVICE, KeystoreService.class).loadRfc3161Keystore();
+		
+		LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS002, new Object[ ] { StaticMonitorizaConfig.getProperty(StaticConstants.ROOT_PATH_DIRECTORY) }));
 
 		for (ConfigTimerDTO timerDTO: timers) {
 
@@ -194,12 +198,18 @@ public class MonitorizaServletTask extends HttpServlet {
 		 */
 		@Override
 		public void run() {
+			
+			String idTraza = UtilsIdentifierGenerators.generateNumbersUniqueId();
+			StringBuilder idTimerTask = new StringBuilder();
+			idTimerTask.append(idTraza).append(UtilsStringChar.SYMBOL_HYPHEN_STRING).append(timerId);
 
-			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS001, new Object[ ] { timerId }));
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS001, new Object[ ] { idTimerTask }));
 			
 			RequestLauncher rlt = new RequestLauncher();
 			
-			rlt.startInvoker(StatusHolder.getInstance().getCurrenttatusHolder(), serviciosDelTimer, sslTrustStore, rfc3161Keystore);
+			rlt.startInvoker(idTimerTask.toString(), StatusHolder.getInstance().getCurrenttatusHolder(), serviciosDelTimer, sslTrustStore, rfc3161Keystore);
+			
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS015, new Object[ ] { idTimerTask }));
 
 		}
 

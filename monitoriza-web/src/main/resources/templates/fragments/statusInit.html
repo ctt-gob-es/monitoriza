@@ -81,7 +81,6 @@
 												Time</th>
 											<th></th>
 											<th th:text="#{table.status.vip.info}">urls</th>
-											<th th:text="#{table.status.vip.mark}">mark</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -100,8 +99,6 @@
 											<td th:text="${stVip.samplingTime}"></td>
 											<td th:text="${stVip.partialRequestResult}"></td>
 											<td><i class='c-blue-500 ti-search'></i></td>
-											<td th:if="${stVip.statusAux eq 0 || stVip.statusAux eq 1}">-</td>
-											<td th:if="${stVip.statusAux eq 2 || stVip.statusAux eq 3}"><i class='c-blue-500 ti-check-box'></i></td>
 										</tr>
 									</tbody>
 								</table>
@@ -129,7 +126,6 @@
 											<th th:text="#{table.status.spie.type}">SPIE type</th>
 											<th></th>
 											<th th:text="#{table.status.spie.info}">urls</th>
-											<th th:text="#{table.status.spie.mark}">mark</th>
 										</tr>
 									</thead>
 									<tbody>
@@ -154,8 +150,6 @@
 											<td th:if="${stSpie.partialRequestResult != null}"><i
 												class='c-blue-500 ti-search'></i></td>
 											<td th:if="${stSpie.partialRequestResult == null}">-</td>
-											<td th:if="${stSpie.statusValue eq 0 || stSpie.statusValue eq 1}">-</td>
-											<td th:if="${stSpie.statusValue eq 4 || stSpie.statusValue eq 2 || stSpie.statusValue eq 3}"><i class='c-blue-500 ti-check-box'></i></td>
 										</tr>
 									</tbody>
 								</table>
@@ -252,18 +246,6 @@ $(document).ready(function() {
 				"visible" : true,
                 "data": "H",
                 "defaultContent": ''
-            },
-            {
-            	"targets" : [ 7 ],
-				"orderable": false,
-				"visible" : true,
-				"createdCell": function (td, cellData, rowData, row, col) {
-					
-                    if ( cellData != '-' ) {
-                      $(td).addClass('mark-control')
-                    }
-                 },
-            	
             }
 		],
 		"order" : [ 1, 'desc' ],
@@ -291,31 +273,6 @@ $(document).ready(function() {
             row.child( formatVip(row.data()) ).show();
             tr.addClass('shown');
         }
-    });
-	
-	var markVipService = /*[[@{/markVipService}]]*/;
-	// Add event listener for opening and closing details
-	$('#statusVipTable tbody').on('click', 'td.mark-control', function () {
-        var tr = $(this).closest('tr');
-        var row = tableVipInterval.row( tr );
- 
-        var service = row.data()[2];
-        loading();
-        $.ajax({
-        	url: markVipService+ "?service=" + service,
-        	type: 'POST',
-        	data: null,
-        	success: function(data){
-                       	   
-        	   $("#optionReplacement").html(data);
-        	   hide();	
-                  
-            },
-            error:function(){}
-        });
-        
-        return false;
-        
     });
 	
 	var tableSpieInterval = $('#statusSpieTable').DataTable({
@@ -360,17 +317,6 @@ $(document).ready(function() {
 				"visible" : true,
 	            "data": "H",
 	            "defaultContent": ''
-	        },
-	        {
-				"targets" : [ 8 ],
-				"createdCell": function (td, cellData, rowData, row, col) {
-					
-                    if ( cellData != '-' ) {
-                      $(td).addClass('mark-control')
-                    }
-                 },
-	            "orderable": false,
-				"visible" : true	            
 	        }
 		],
 		"order" : [ 1, 'desc' ],
@@ -399,32 +345,7 @@ $(document).ready(function() {
             tr.addClass('shown');
         }
     });
-	
-	var markSpieService = /*[[@{/markSpieService}]]*/;
-	// Add event listener for opening and closing details
-	$('#statusSpieTable tbody').on('click', 'td.mark-control', function () {
-        var tr = $(this).closest('tr');
-        var row = tableSpieInterval.row( tr );
- 
-        var service = row.data()[3] + "_" + row.data()[5];
-        loading();
-        $.ajax({
-        	url: markSpieService+ "?service=" + service,
-        	type: 'POST',
-        	data: null,
-        	success: function(data){
-                     	  
-        		$("#optionReplacement").html(data);
-        		hide();               
-                  
-            },
-            error:function(){}
-        });
-        
-        return false;
-        
-    });
-		
+			
 	var actionStatus = /*[[@{/status}]]*/;
 	setInterval(function(){
 		if (tableSummary.table.length > 0 && tableVipInterval.table.length > 0 && tableSpieInterval.table.length > 0) {
