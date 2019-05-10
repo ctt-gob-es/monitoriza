@@ -1,6 +1,6 @@
 <div class="container-fluid" id="tableSpl">
 	<h4 class="c-grey-900 mT-10 mB-30" th:text="#{spl.admin.title}"></h4>
-	<div class="row">
+	<div class="row" id="spl-panel">
 		<div class="col-md-12">
 			<div class="bgc-white bd bdrs-3 p-20 mB-20">
 				<h4 class="c-grey-900 mB-20" th:text="#{table.spl.title}"></h4>
@@ -207,7 +207,7 @@ $(document).ready(function() {
 		                success: function(data){
 		                    
 		                	if (data == "-1" && $('#errorSpl').length == 0){
-		                		$('#tableSpl').append('<div id="errorSpl" class="alert alert-danger" role="alert"><strong>' + [[#{spl.admin.error.inUse}]] + '</strong></div>');
+		                		$('#spl-panel').before('<div id="errorSpl" class="alert alert-danger" role="alert"><strong>' + [[#{spl.admin.error.inUse}]] + '</strong></div>');
 		                	}else{
 								$('#errorSpl').remove();
 							}
@@ -260,7 +260,7 @@ function connectToSpl( e, dt, node, config ) {
         	hide();
       	
         	if ($('#errorSpl').length == 0) {
-				$('#tableSpl').append('<div id="errorSpl" class="alert alert-danger" role="alert"><strong>' + [[#{spl.admin.error.connecting}]] + '</strong></div>');
+				$('#spl-panel').before('<div id="errorSpl" class="alert alert-danger" role="alert"><strong>' + [[#{spl.admin.error.connecting}]] + '</strong></div>');
         	}
         	else {
         		$('#errorSpl').html('<strong>' + [[#{spl.admin.error.connecting}]] + '</strong>')

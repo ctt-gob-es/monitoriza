@@ -26,6 +26,8 @@ package es.gob.monitoriza.service;
 
 import java.io.IOException;
 
+import es.gob.monitoriza.persistence.configuration.dto.DownloadedLogFileDTO;
+import es.gob.monitoriza.persistence.configuration.dto.LogDataDTO;
 import es.gob.monitoriza.persistence.configuration.dto.LogFileInfoDTO;
 import es.gob.monitoriza.persistence.configuration.dto.LogFilesDTO;
 
@@ -45,6 +47,11 @@ public interface ILogConsumerService {
 	void configure(String url, String key) throws IOException;
 
 	/**
+	 * Method that close the connection to service.
+	 */
+	void closeConnection();
+
+	/**
 	 * Method to list the log files.
 	 * @return Log files.
 	 */
@@ -53,8 +60,57 @@ public interface ILogConsumerService {
 
 	/**
 	 * Method that select a log file from the selected SPL.
-	 * @param logFileName Name/Id from the file.
+	 * @param logFilename Name/Id from the file.
 	 * @return The log file's information needed to search.
 	 */
-	LogFileInfoDTO openLogFile(String logFileName);
+	LogFileInfoDTO openLogFile(String logFilename);
+
+	/**
+	 * Method to close the current opened log file.
+	 */
+	void closeLogFile();
+
+	/**
+	 * Method that download the opened log file.
+	 * @param logFilename Name of the log file.
+	 * @return The log file's data.
+	 */
+	DownloadedLogFileDTO downloadLogFile(String logFilename);
+
+	/**
+	 * Method to get the last lines from the opened log file.
+	 * @param logFilename Name of the log file.
+	 * @param numLines Number of lines requested.
+	 * @return Last lines.
+	 */
+	LogDataDTO lastLines(String logFilename, int numLines);
+
+	/**
+	 * Method to get a set of lines filter by criterias.
+	 * @param numLines Number of lines requested.
+	 * @param startDate Minimun date limit to get.
+	 * @param endDate Maximun date limit to get.
+	 * @param level Minimun level of log to get.
+	 * @param more {@code true} if it has to continue at the current line,
+	 * {@code false} if it has to start at the beginning of the file.
+	 * @return Filtered lines.
+	 */
+	LogDataDTO filterLines(int numLines, long startDate, long endDate, String level, boolean more);
+
+	/**
+	 * Method to search text in a log file.
+	 * @param numLines Number of lines requested.
+	 * @param text Text to search.
+	 * @param startDate Minimun date limit to get.
+	 * @param more Request more results when this isn't the first request.
+	 * @return Lines with the found text.
+	 */
+	LogDataDTO searchText(int numLines, String text, long startDate, final boolean more);
+
+	/**
+	 * Method to recover more lines from the last request.
+	 * @param numLines Number of lines requested.
+	 * @return Additionales lines from the log.
+	 */
+	LogDataDTO getMore(int numLines);
 }

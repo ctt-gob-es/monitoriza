@@ -114,8 +114,7 @@ public class SplController {
     }
 
     /**
-     * Method that maps the connecting request to the controller, open the
-     * connection to the SPL and list its log files.
+     * Method that maps the connecting request to the SPL and list its log files.
      * @param afirmaId Identifier of the SPL to be edited.
      * @param model Holder object for model attributes.
      * @return String that represents the name of the view to forward.
@@ -134,6 +133,18 @@ public class SplController {
     }
 
     /**
+     * Method that maps the disconnecting request to the current SPL and list the SPLs.
+     * @return String that represents the name of the view to forward.
+     */
+    @RequestMapping(value = "disconnectspl", method = RequestMethod.POST)
+    public String disconnectSpl() {
+
+    	this.logConsumerService.closeConnection();
+
+    	 return "fragments/spl.html";
+    }
+
+    /**
      * Method that maps the openning file request to the controller, select the
      * file and show the log search screen.
      * @param logFileName Name/Id  of the log file.
@@ -149,5 +160,18 @@ public class SplController {
     	model.addAttribute("searchinfoform", logInfo);
 
         return "fragments/logsearch.html";
+    }
+
+    /**
+     * Method that maps the closing file request to the controller, close the
+     * file and show the log files list.
+     * @return String that represents the name of the view to forward.
+     */
+    @RequestMapping(value = "closelogfile", method = RequestMethod.POST)
+    public String closeLogFile() {
+
+    	this.logConsumerService.closeLogFile();
+
+        return "fragments/logfiles.html";
     }
 }

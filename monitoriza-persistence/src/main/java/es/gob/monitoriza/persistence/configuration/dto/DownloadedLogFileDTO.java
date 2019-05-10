@@ -27,33 +27,21 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>
- * Data transfer object that encapsulates the information of a log file.
+ * Data transfer object that encapsulates the information of a downloaded log file.
  * </p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 01/04/2019.
+ * @version 1.0, 15/04/2019.
  */
-public class LogFileInfoDTO {
+public class DownloadedLogFileDTO {
+
+	@JsonView(View.class)
+	private String contentType;
 
 	@JsonView(View.class)
 	private String filename;
 
-	/**
-	 * Optional: Log file's character encoding. If no setterDo not include if there is no error.
-	 */
 	@JsonView(View.class)
-	private String charset = "utf-8";
-
-	@JsonView(View.class)
-	private boolean date;
-
-	@JsonView(View.class)
-	private boolean time;
-
-	@JsonView(View.class)
-	private String dateTimeFormat;
-
-	@JsonView(View.class)
-	private String[] levels;
+	private byte[] data;
 
 	/**
 	 * Optional: If an error occurs during the running of the server-side processing script, you can
@@ -64,63 +52,28 @@ public class LogFileInfoDTO {
 	private String error;
 
 
+	public String getContentType() {
+		return this.contentType;
+	}
+
+	public void setContentType(final String contentType) {
+		this.contentType = contentType;
+	}
+
 	public String getFilename() {
 		return this.filename;
 	}
 
-
-	public void setFilename(final String logFilename) {
-		this.filename = logFilename;
+	public void setFilename(final String filename) {
+		this.filename = filename;
 	}
 
-
-	public String getCharset() {
-		return this.charset;
+	public byte[ ] getData() {
+		return this.data;
 	}
 
-
-	public void setCharset(final String charset) {
-		this.charset = charset;
-	}
-
-
-	public boolean isDate() {
-		return this.date;
-	}
-
-
-	public void setDate(final boolean date) {
-		this.date = date;
-	}
-
-
-	public boolean isTime() {
-		return this.time;
-	}
-
-
-	public void setTime(final boolean time) {
-		this.time = time;
-	}
-
-
-	public String getDateTimeFormat() {
-		return this.dateTimeFormat;
-	}
-
-
-	public void setDateTimeFormat(final String dateTimeFormat) {
-		this.dateTimeFormat = dateTimeFormat;
-	}
-
-
-	public String[ ] getLevels() {
-		return this.levels;
-	}
-
-
-	public void setLevels(final String[ ] levels) {
-		this.levels = levels;
+	public void setData(final byte[ ] data) {
+		this.data = data;
 	}
 
 	/**
@@ -147,4 +100,5 @@ public class LogFileInfoDTO {
 	public interface View {
 		// No necesita contenido
 	}
+
 }

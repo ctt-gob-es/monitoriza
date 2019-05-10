@@ -1,4 +1,4 @@
-/* 
+/*
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,7 +14,7 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
+/**
  * <b>File:</b><p>es.gob.monitoriza.rest.controller.ServiceRestController.java.</p>
  * <b>Description:</b><p>Class that manages the REST requests related to the Services administration and JSON communication.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
@@ -103,62 +103,62 @@ public class ServiceRestController {
 	 */
 	@Autowired
 	private ITimerMonitorizaService timerService;
-	
+
 	/**
 	 * Attribute that represents the service object for accessing the
 	 * repository.
 	 */
 	@Autowired
 	private IPlatformService platformService;
-	
+
 	/**
 	 * Attribute that represents the service object for accessing the
 	 * repository.
 	 */
 	@Autowired
 	private IRequestServiceFileService fileService;
-	
-	
+
+
 	/**
 	 * Method that maps the list users web requests to the controller and
 	 * forwards the list of services to the view.
-	 * 
+	 *
 	 * @param input
 	 *            Holder object for datatable attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/servicesdatatable", method = RequestMethod.GET)
-	public DataTablesOutput<ServiceMonitoriza> services(@Valid DataTablesInput input) {
-		return (DataTablesOutput<ServiceMonitoriza>) serviceService.findAll(input);
+	public DataTablesOutput<ServiceMonitoriza> services(@Valid final DataTablesInput input) {
+		return this.serviceService.findAll(input);
 	}
 
 	/**
 	 * Method that maps the list users web requests to the controller and
 	 * forwards the list of timees to the view.
-	 * 
+	 *
 	 * @param input
 	 *            Holder object for datatable attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/timersdatatable", method = RequestMethod.GET)
-	public DataTablesOutput<TimerMonitoriza> timers(@Valid DataTablesInput input) {
-		return (DataTablesOutput<TimerMonitoriza>) timerService.findAll(input);
+	public DataTablesOutput<TimerMonitoriza> timers(@Valid final DataTablesInput input) {
+		return this.timerService.findAll(input);
 	}
 
 	/**
 	 * Method that maps the request to get the service types for the selected
 	 * platform type. to the view.
-	 * 
+	 *
 	 * @param idPlatform Platform identifier
 	 * @return String that represents the name of the view to forward.
 	 */
 	@RequestMapping(path = "/loadservicetype", method = RequestMethod.GET)
-	public List<String> loadservicetype(@RequestParam("idPlatform") Long idPlatform) {
+	public List<String> loadservicetype(@RequestParam("idPlatform") final Long idPlatform) {
 
-		PlatformMonitoriza platform = platformService.getPlatformById(idPlatform);
-		List<String> serviceTypes = new ArrayList<String>();
+		final PlatformMonitoriza platform = this.platformService.getPlatformById(idPlatform);
+		final List<String> serviceTypes = new ArrayList<>();
 
 		if (platform != null
 				&& platform.getPlatformType().getIdPlatformType().equals(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA)) {
@@ -186,11 +186,11 @@ public class ServiceRestController {
 	 * @return String that represents the name of the view to forward.
 	 */
 	@RequestMapping(path = "/loadbaseendpoint", method = RequestMethod.GET)
-	public Map<String, String> loadbaseendpoint(@RequestParam("idPlatform") Long idPlatform,
-			@RequestParam("serviceType") String serviceType) {
+	public Map<String, String> loadbaseendpoint(@RequestParam("idPlatform") final Long idPlatform,
+			@RequestParam("serviceType") final String serviceType) {
 
-		PlatformMonitoriza platform = platformService.getPlatformById(idPlatform);
-		StringBuilder baseEndpoint = new StringBuilder();
+		final PlatformMonitoriza platform = this.platformService.getPlatformById(idPlatform);
+		final StringBuilder baseEndpoint = new StringBuilder();
 		baseEndpoint.append("http://").append(platform.getHost()).append(UtilsStringChar.SYMBOL_COLON_STRING)
 				.append(platform.getPort());
 
@@ -217,7 +217,7 @@ public class ServiceRestController {
 	/**
 	 * Method that maps the save timer web request to the controller and saves
 	 * it in the persistence.
-	 * 
+	 *
 	 * @param timerForm Object that represents the backing timer form.
 	 * @param bindingResult Object that represents the form validation result.
 	 * @return {@link DataTablesOutput<TimerMonitoriza>}
@@ -225,28 +225,28 @@ public class ServiceRestController {
 	@RequestMapping(value = "/savetimer", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
 	public @ResponseBody DataTablesOutput<TimerMonitoriza> saveTimer(
-			@Validated(OrderedValidation.class) @RequestBody TimerDTO timerForm, BindingResult bindingResult) {
-		DataTablesOutput<TimerMonitoriza> dtOutput = new DataTablesOutput<>();
-		
-		List<TimerMonitoriza> listNewTimer = new ArrayList<TimerMonitoriza>();
+			@Validated(OrderedValidation.class) @RequestBody final TimerDTO timerForm, final BindingResult bindingResult) {
+		final DataTablesOutput<TimerMonitoriza> dtOutput = new DataTablesOutput<>();
+
+		List<TimerMonitoriza> listNewTimer = new ArrayList<>();
 
 		if (bindingResult.hasErrors()) {
-			listNewTimer = StreamSupport.stream(timerService.getAllTimerMonitoriza().spliterator(), false)
+			listNewTimer = StreamSupport.stream(this.timerService.getAllTimerMonitoriza().spliterator(), false)
 					.collect(Collectors.toList());
-			JSONObject json = new JSONObject();
-			for (FieldError o : bindingResult.getFieldErrors()) {
+			final JSONObject json = new JSONObject();
+			for (final FieldError o : bindingResult.getFieldErrors()) {
 				json.put(o.getField() + "Timer_span", o.getDefaultMessage());
 			}
 			dtOutput.setError(json.toString());
 		} else {
 			try {
-				
-				TimerMonitoriza timerMonitoriza = timerService.saveTimerMonitoriza(timerForm);
-				
+
+				final TimerMonitoriza timerMonitoriza = this.timerService.saveTimerMonitoriza(timerForm);
+
 				listNewTimer.add(timerMonitoriza);
-				
-			} catch (Exception e) {
-				listNewTimer = StreamSupport.stream(timerService.getAllTimerMonitoriza().spliterator(), false)
+
+			} catch (final Exception e) {
+				listNewTimer = StreamSupport.stream(this.timerService.getAllTimerMonitoriza().spliterator(), false)
 						.collect(Collectors.toList());
 				dtOutput.setError(GeneralConstants.ROW_INDEX_ERROR);
 				throw e;
@@ -268,39 +268,39 @@ public class ServiceRestController {
 	@RequestMapping(path = "/saveservice", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@JsonView(DataTablesOutput.View.class)
 	public @ResponseBody DataTablesOutput<ServiceMonitoriza> saveService(
-			@Validated(OrderedValidation.class) @RequestPart("serviceForm") ServiceDTO serviceForm, @RequestPart("file") MultipartFile file, BindingResult bindingResult) {
-		
-		DataTablesOutput<ServiceMonitoriza> dtOutput = new DataTablesOutput<>();
-		List<ServiceMonitoriza> listNewService = new ArrayList<ServiceMonitoriza>();
-			
+			@Validated(OrderedValidation.class) @RequestPart("serviceForm") final ServiceDTO serviceForm, @RequestPart("file") final MultipartFile file, final BindingResult bindingResult) {
+
+		final DataTablesOutput<ServiceMonitoriza> dtOutput = new DataTablesOutput<>();
+		List<ServiceMonitoriza> listNewService = new ArrayList<>();
+
 		// Se realizan validaciones en servidor, modificando el objecto bindingResult.
 		validateRequiredNameWsdlField(serviceForm, bindingResult);
 		validateZipFile(serviceForm, file, bindingResult);
-					
+
 		if (bindingResult.hasErrors()) {
-			listNewService = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false)
+			listNewService = StreamSupport.stream(this.serviceService.getAllServiceMonitoriza().spliterator(), false)
 					.collect(Collectors.toList());
-			JSONObject json = new JSONObject();
-			for (FieldError o : bindingResult.getFieldErrors()) {
+			final JSONObject json = new JSONObject();
+			for (final FieldError o : bindingResult.getFieldErrors()) {
 				json.put(o.getField() + "_span", o.getDefaultMessage());
 			}
 			dtOutput.setError(json.toString());
-			
+
 		} else {
 			try {
-						
+
 				// Se almacena el servicio y se comprueba si es necesario actualizar el timer programado
-				ServiceMonitoriza service = serviceService.saveServiceMonitoriza(serviceForm, file);
-							
-				listNewService.add(service);	
-					
-			} catch (Exception e) {
-				listNewService = StreamSupport.stream(serviceService.getAllServiceMonitoriza().spliterator(), false)
+				final ServiceMonitoriza service = this.serviceService.saveServiceMonitoriza(serviceForm, file);
+
+				listNewService.add(service);
+
+			} catch (final Exception e) {
+				listNewService = StreamSupport.stream(this.serviceService.getAllServiceMonitoriza().spliterator(), false)
 						.collect(Collectors.toList());
 				dtOutput.setError(GeneralConstants.ROW_INDEX_ERROR);
 			}
 		}
-		
+
 		dtOutput.setData(listNewService);
 
 		return dtOutput;
@@ -311,33 +311,33 @@ public class ServiceRestController {
 	 * @param serviceForm Backing form object with the service data.
 	 * @param bindingResult Validation binding object.
 	 */
-	private void validateRequiredNameWsdlField(final ServiceDTO serviceForm, BindingResult bindingResult) {
+	private void validateRequiredNameWsdlField(final ServiceDTO serviceForm, final BindingResult bindingResult) {
 		// Se controla manualmente el error 'requerido' para el campo nameWsdl,
 		// ya que depende del tipo de servicio
 		if (serviceForm.getServiceType().equalsIgnoreCase(GeneralConstants.SOAP_SERVICE)) {
 
 			if (UtilsStringChar.EMPTY_STRING.equals(serviceForm.getNameWsdl())) {
-				FieldError wsdlFieldError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_ENDPOINT, "El campo 'Endpoint' es obligatorio.");
+				final FieldError wsdlFieldError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_ENDPOINT, "El campo 'Endpoint' es obligatorio.");
 				bindingResult.addError(wsdlFieldError);
 			}
 
 			if (serviceForm.getNameWsdl() != null && (serviceForm.getNameWsdl().length() < 1 || serviceForm.getNameWsdl().length() > NumberConstants.NUM30)) {
-				FieldError wsdlFieldError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_ENDPOINT, "El tamaño debe estar entre 1 y 30.");
+				final FieldError wsdlFieldError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_ENDPOINT, "El tamaño debe estar entre 1 y 30.");
 				bindingResult.addError(wsdlFieldError);
 			}
 
 		}
 	}
 
-	
+
 	/**
 	 * Modifies the {@link BindingResult} validating the file field.
 	 * @param serviceForm Backing form object with the service data.
 	 * @param file ZIP file with requests for this service
 	 * @param bindingResult Validation binding object.
 	 */
-	private void validateZipFile(final ServiceDTO serviceForm, final MultipartFile file, BindingResult bindingResult) {
-		
+	private void validateZipFile(final ServiceDTO serviceForm, final MultipartFile file, final BindingResult bindingResult) {
+
 		// Al ser file un campo individual de la petición, se controla la
 		// validación por separado.
 		// En modo edición, existe un identificador de fichero, pero se manda un
@@ -346,12 +346,12 @@ public class ServiceRestController {
 		// part 'file' is not present".
 		if ((file == null || file.isEmpty()) && serviceForm.getIdFile() == null) {
 
-			FieldError fileNullError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_FILE, "El campo 'Archivo de peticiones' es obligatorio.");
+			final FieldError fileNullError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_FILE, "El campo 'Archivo de peticiones' es obligatorio.");
 			bindingResult.addError(fileNullError);
 
 		} else if (!file.isEmpty() && !checkAllowedFormat(file)) {
 
-			FieldError fileTypeError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_FILE, "El archivo de peticiones debe tener formato ZIP.");
+			final FieldError fileTypeError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_FILE, "El archivo de peticiones debe tener formato ZIP.");
 			bindingResult.addError(fileTypeError);
 		}
 
@@ -366,13 +366,13 @@ public class ServiceRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deletetimer", method = RequestMethod.POST)
 	public String deleteTimer(final @RequestParam("id") Long timerId, final @RequestParam("index") String index) {
-		
+
 		String indexResult = index;
-		
+
 		try {
-			timerService.deleteTimerMonitoriza(timerId);		
-			
-		} catch (Exception e) {
+			this.timerService.deleteTimerMonitoriza(timerId);
+
+		} catch (final Exception e) {
 			indexResult = GeneralConstants.ROW_INDEX_ERROR;
 		}
 		return indexResult;
@@ -386,74 +386,73 @@ public class ServiceRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deleteservice", method = RequestMethod.POST)
-	public String deleteservice(@RequestParam("id") Long idService, @RequestParam("index") String index) {
-		
+	public String deleteservice(@RequestParam("id") final Long idService, @RequestParam("index") final String index) {
+
 		String indexResult = index;
-		
+
 		try {
-			
-			serviceService.deleteServiceMonitoriza(idService);
-			
-		} catch (EmptyResultDataAccessException e) {
+
+			this.serviceService.deleteServiceMonitoriza(idService);
+
+		} catch (final EmptyResultDataAccessException e) {
 			indexResult = GeneralConstants.ROW_INDEX_ERROR;
 			throw e;
 		}
 		return indexResult;
 	}
-		
+
 	/**
-	 * Method to discard non zip files. 
+	 * Method to discard non zip files.
 	 * @param file Multipart file to check
 	 * @return true if the file matches supported extension and includes signature format number for zip files.
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	private boolean checkAllowedFormat(final MultipartFile file) {
-		
+
 		final String extension = file.getOriginalFilename().split("\\.")[1];
 		boolean esZip = false;
 		byte[ ] fileBytes;
-		
+
 		try {
-			
+
 			fileBytes = file.getBytes();
-		
+
 			final String isoZipSignature = new String(fileBytes, StandardCharsets.ISO_8859_1).substring(NumberConstants.NUM0, NumberConstants.NUM2);
-						
+
 			// Se comprueba si es zip
 			if (FileUtils.ZIP_EXTENSION.equals(extension) && FileUtils.ZIP_ISO8859_1_SIGNATURE.equalsIgnoreCase(isoZipSignature) && FileUtils.isZipType(file.getContentType())) {
-				
+
 				esZip = true;
-			} 
-			
-		} catch (IOException e) {
-			
+			}
+
+		} catch (final IOException e) {
+
 			LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB011, new Object[ ] { file.getOriginalFilename() }), e.getCause());
 		}
-						
+
 		return esZip;
-		
+
 	}
-		
-	
+
+
 	/**
 	 * Method that copy to the response the contents of the file requested.
 	 * @param idFile Identifier of the file to download
 	 * @param response HttpServletResponse
-	 * @throws IOException Exception launched if there is an error copying the file to the response 
+	 * @throws IOException Exception launched if there is an error copying the file to the response
 	 * @throws RequestFileNotFoundException Exception launched if there is no file in persistence with the passed identifier
 	 */
-	@RequestMapping(value = "/downloadFile", produces = "application/zip")
-	public void downloadFile(@RequestParam("idFile") Long idFile, HttpServletResponse response) throws IOException, RequestFileNotFoundException {
-				
-		final RequestServiceFile file = fileService.getRequestFileById(idFile);
-		
-		String fileName = "attachment; filename=" + file.getFilename();
-		
+	@RequestMapping(value = "/downloadFile", produces = "application/zip", method = RequestMethod.POST)
+	public void downloadFile(@RequestParam("idFile") final Long idFile, final HttpServletResponse response) throws IOException, RequestFileNotFoundException {
+
+		final RequestServiceFile file = this.fileService.getRequestFileById(idFile);
+
+		final String fileName = "attachment; filename=" + file.getFilename();
+
 		response.setHeader("Content-Disposition", fileName);
 		response.setContentType(file.getContentType());
 		response.setCharacterEncoding(StandardCharsets.ISO_8859_1.name());
 		FileCopyUtils.copy(file.getFiledata(), response.getOutputStream());
 		response.flushBuffer();
-	} 
-		
+	}
 }

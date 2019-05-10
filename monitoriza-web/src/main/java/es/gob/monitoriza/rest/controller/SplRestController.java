@@ -24,11 +24,19 @@
  */
 package es.gob.monitoriza.rest.controller;
 
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import javax.validation.Valid;
 
 import org.apache.log4j.Logger;
@@ -37,6 +45,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.MediaType;
+import org.springframework.ui.Model;
+import org.springframework.util.FileCopyUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -50,7 +60,12 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.persistence.configuration.dto.DownloadedLogFileDTO;
+import es.gob.monitoriza.persistence.configuration.dto.LogDataDTO;
 import es.gob.monitoriza.persistence.configuration.dto.LogFilesDTO;
+import es.gob.monitoriza.persistence.configuration.dto.LogFilterFormDTO;
+import es.gob.monitoriza.persistence.configuration.dto.LogLastLinesFormDTO;
+import es.gob.monitoriza.persistence.configuration.dto.LogSearchTextFormDTO;
 import es.gob.monitoriza.persistence.configuration.dto.RowLogFileDTO;
 import es.gob.monitoriza.persistence.configuration.dto.SplDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.SplMonitoriza;
@@ -197,5 +212,176 @@ public class SplRestController {
 		dtOutput.setData(filesList);
 
 		return dtOutput;
+	}
+
+    /**
+     * Method that maps the openning file request to the controller, select the
+     * file and show the log search screen.
+     * @param logFileName Name/Id  of the log file.
+     * @param model Holder object for model attributes.
+     * @throws IOException Error related with the file selection.
+     */
+    @RequestMapping(value = "downloadlogfile", produces = "application/zip")
+    public void download(@RequestParam("filename") final String logFilename,
+    		final HttpServletRequest request, final HttpServletResponse response, final Model model) throws IOException {
+
+		final HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.sendError(403, "Sesi&oacute;n caducada");
+			response.flushBuffer();
+			return;
+		}
+
+    	final DownloadedLogFileDTO downloadResult = this.logConsumerService.downloadLogFile(logFilename);
+
+    	if (downloadResult.getError() != null) {
+    		LOGGER.warn("Error al descargar el fichero de log: " + downloadResult.getError());
+    		response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR, downloadResult.getError());
+    		return;
+    	}
+
+    	final String fileName = "attachment; filename=" + downloadResult.getFilename();
+
+		response.setHeader("Content-Disposition", fileName);
+		response.setContentType(downloadResult.getContentType());
+		response.setCharacterEncoding(StandardCharsets.ISO_8859_1.name());
+		FileCopyUtils.copy(downloadResult.getData(), response.getOutputStream());
+		response.flushBuffer();
+    }
+
+	/**
+	 * Method that maps the last lines of a log file request and
+	 * forwards them to the view.
+	 *
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(path = "/loglastlines", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public void logLastLines(@RequestBody final LogLastLinesFormDTO requestForm,
+			final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+
+		final HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.sendError(401, "Sesi&oacute;n caducada");
+			response.flushBuffer();
+			return;
+		}
+
+		LogDataDTO logData;
+		if (!requestForm.isMore()) {
+			logData = this.logConsumerService.lastLines(requestForm.getLogFilename(),
+			                                            requestForm.getNumLines());
+		}
+		else {
+			logData = this.logConsumerService.getMore(requestForm.getNumLines());
+		}
+
+		response.setContentType("text/plain");
+		response.setCharacterEncoding(requestForm.getCharsetName());
+		if (logData.getErrorMessage() != null) {
+			response.sendError(logData.getErrorCode(), logData.getErrorMessage());
+		}
+		else if (logData.getLog() != null) {
+			response.getOutputStream().write(logData.getLog());
+		}
+		response.flushBuffer();
+	}
+
+	/**
+	 * Method that maps the last lines of a log file request and
+	 * forwards them to the view.
+	 *
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(path = "/logfilter", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public void logFilterLines(@RequestBody final LogFilterFormDTO requestForm,
+			final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+
+		final HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.sendError(401, "Sesi&oacute;n caducada");
+			response.flushBuffer();
+			return;
+		}
+
+		final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.ROOT);
+
+		long startDate = 0;
+		if (requestForm.getStartDate() != null && !requestForm.getStartDate().isEmpty()) {
+			try {
+				startDate = formatter.parse(requestForm.getStartDate()).getTime();
+			} catch (final ParseException e) {
+				LOGGER.warn("Se ha enviado una fecha de fin con formato invalido: " + e);
+				startDate = 0;
+			}
+		}
+		long endDate = 0;
+		if (requestForm.getEndDate() != null && !requestForm.getEndDate().isEmpty()) {
+			try {
+				endDate = formatter.parse(requestForm.getEndDate()).getTime();
+			} catch (final ParseException e) {
+				LOGGER.warn("Se ha enviado una fecha de fin con formato invalido: " + e);
+				endDate = 0;
+			}
+		}
+
+		final LogDataDTO logData = this.logConsumerService.filterLines(requestForm.getNumLines(),
+		                                                               startDate,
+		                                                               endDate,
+		                                                               requestForm.getLevel(),
+		                                                               requestForm.isMore());
+
+		response.setContentType("text/plain");
+		response.setCharacterEncoding(requestForm.getCharsetName());
+		if (logData.getErrorMessage() != null) {
+			response.sendError(logData.getErrorCode(), logData.getErrorMessage());
+		}
+		else {
+			response.getOutputStream().write(logData.getLog());
+		}
+		response.flushBuffer();
+	}
+
+	/**
+	 * Method that maps the last lines of a log file request and
+	 * forwards them to the view.
+	 *
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(path = "/searchtext", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public void logSearchText(@RequestBody final LogSearchTextFormDTO requestForm,
+			final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+
+		final HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.sendError(401, "Sesi&oacute;n caducada");
+			response.flushBuffer();
+			return;
+		}
+
+		final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.ROOT);
+
+		long startDate = 0;
+		if (requestForm.getStartDate() != null && !requestForm.getStartDate().isEmpty()) {
+			try {
+				startDate = formatter.parse(requestForm.getStartDate()).getTime();
+			} catch (final ParseException e) {
+				LOGGER.warn("Se ha enviado una fecha de fin con formato invalido: " + e);
+				startDate = 0;
+			}
+		}
+
+		final LogDataDTO logData = this.logConsumerService.searchText(requestForm.getNumLines(),
+			                                             requestForm.getText(),
+			                                             startDate, requestForm.isMore());
+
+		response.setContentType("text/plain");
+		response.setCharacterEncoding(requestForm.getCharsetName());
+		if (logData.getErrorMessage() != null) {
+			response.sendError(logData.getErrorCode(), logData.getErrorMessage());
+		}
+		else {
+			response.getOutputStream().write(logData.getLog());
+		}
+		response.flushBuffer();
 	}
 }
