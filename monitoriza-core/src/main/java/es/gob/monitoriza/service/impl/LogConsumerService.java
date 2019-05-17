@@ -76,7 +76,7 @@ public class LogConsumerService implements ILogConsumerService {
 	private LogConsumerClient logConsumerBean;
 
 	@Override
-	public void configure(final String url, final String key) throws IOException {
+	public void connect(final String url, final String key) throws IOException {
 		this.logConsumerBean.init(url, key);
 	}
 

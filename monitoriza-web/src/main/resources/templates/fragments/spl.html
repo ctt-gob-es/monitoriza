@@ -37,7 +37,7 @@ $(document).ready(function() {
 		dom: 'Bfrtip',
 	    select: 'single',
 	    responsive: true,
-	    
+
 	    altEditor: true,
 	    buttons: [
 	    	{text: 'Conectar', name: 'connect', extend: 'selected', action: connectToSpl},
@@ -45,10 +45,10 @@ $(document).ready(function() {
 	    	{text: 'Editar', name: 'edit', extend: 'selected'},
 	    	{text: 'Eliminar', name: 'delete', extend: 'selected'}
 	    ],
-	
+
 	    "iTotalRecords": "totalElements",
         "iTotalDisplayRecords": "numberOfElements",
-	    
+
 		"processing": true,
 	    "serverSide": true,
 		"ajax": {
@@ -244,14 +244,15 @@ function connectToSpl( e, dt, node, config ) {
 	var actionConnectSpl = /*[[@{/connectspl}]]*/;
 	
 	$.ajax(actionConnectSpl, {
-    	data : $.param({ 'id' : splData.idSpl, 'index' : rowIndex}),
+    	data : $.param({ 'id' : splData.idSpl, 'name' : splData.name, 'type' : splData.type, 'desc' : splData.description, 'index' : rowIndex}),
         type : 'POST',
         success : function(data){
        	
         	// Se oculta la capa 'cargando...'
 			hide();            
 
-        	// Cargamos el en componente padre de la tabla el HTML recuperado
+        	// Cargamos en el fragmento HTML resultante sustituyendo al actual por medio del componente padre
+        	// del elemento principal
 			$("#tableSpl").parent().html(data);
         },
         error : function(){

@@ -39,12 +39,12 @@ import es.gob.monitoriza.persistence.configuration.dto.LogFilesDTO;
 public interface ILogConsumerService {
 
 	/**
-	 * Method that configure the service instance.
+	 * Method that connect to the log consumer service.
 	 * @param url The URL to the service.
 	 * @param key Authentication key.
 	 * @throws IOException When it is no possible connect to service.
 	 */
-	void configure(String url, String key) throws IOException;
+	void connect(String url, String key) throws IOException;
 
 	/**
 	 * Method that close the connection to service.

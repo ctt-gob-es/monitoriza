@@ -50,4 +50,13 @@ public class LogConsumerConfig {
 	    return new LogConsumerClient();
 	}
 
+	/**
+	 * Method that creates a new LogConsumerConnectionInfo instance for this session.
+	 * @return A LogConsumerConnectionInfo instance.
+	 */
+	@Bean
+	@Scope(value = WebApplicationContext.SCOPE_SESSION, proxyMode = ScopedProxyMode.TARGET_CLASS)
+	public LogConsumerConnectionInfo connectionInfoBean() {
+	    return new LogConsumerConnectionInfo();
+	}
 }

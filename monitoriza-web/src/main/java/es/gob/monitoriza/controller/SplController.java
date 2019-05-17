@@ -40,6 +40,7 @@ import es.gob.monitoriza.persistence.configuration.dto.SplDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.SplMonitoriza;
 import es.gob.monitoriza.service.ILogConsumerService;
 import es.gob.monitoriza.service.ISplService;
+import es.gob.monitoriza.spring.config.LogConsumerConnectionInfo;
 
 /**
  * <p>Class that manages the requests related to the SPL administration.</p>
@@ -65,6 +66,13 @@ public class SplController {
 	 */
 	@Autowired
 	private ILogConsumerService logConsumerService;
+
+	/**
+	 * Attribute that represents the injected interface that store the information
+	 * of the current LogConsumer.
+	 */
+	@Autowired
+	private LogConsumerConnectionInfo connectionInfoBean;
 
 	/**
 	 * Method that maps the web requests to the controller and forwards the list of SPL
@@ -115,19 +123,28 @@ public class SplController {
 
     /**
      * Method that maps the connecting request to the SPL and list its log files.
-     * @param afirmaId Identifier of the SPL to be edited.
+     * @param id Identifier of the SPL to connect.
+     * @param name Name of the SPL to connect.
+     * @param type Type of the SPL to connect.
+     * @param desc Description of the SPL to connect.
      * @param model Holder object for model attributes.
      * @return String that represents the name of the view to forward.
      * @throws IOException Error related with the connection to the SPL.
      */
     @RequestMapping(value = "connectspl", method = RequestMethod.POST)
-    public String connectSpl(@RequestParam("id") final Long splId, final Model model) throws IOException {
+    public String connectSpl(@RequestParam("id") final Long splId, @RequestParam("name") final String name,
+    		@RequestParam("type") final String type, @RequestParam("desc") final String desc, final Model model) throws IOException {
 
     	final SplMonitoriza spl = this.splService.getSplById(splId);
 
     	// Configuramos el servicio para que en las siguientes llamadas se pueda
     	// recuperar la informacion de los logs
-    	this.logConsumerService.configure(spl.getUrl(), spl.getKey());
+    	this.logConsumerService.connect(spl.getUrl(), spl.getKey());
+
+    	// Guardamos la informacion sel servicio de logs
+    	this.connectionInfoBean.setServerInfo(splId, name, type, desc);
+
+    	model.addAttribute("connectioninfo", this.connectionInfoBean);
 
         return "fragments/logfiles.html";
     }
@@ -140,6 +157,9 @@ public class SplController {
     public String disconnectSpl() {
 
     	this.logConsumerService.closeConnection();
+
+    	// Eliminamos la informacion del servicio de logs
+    	this.connectionInfoBean.setServerInfo(null, null, null, null);
 
     	 return "fragments/spl.html";
     }
@@ -157,6 +177,9 @@ public class SplController {
 
     	final LogFileInfoDTO logInfo = this.logConsumerService.openLogFile(logFileName);
 
+    	this.connectionInfoBean.setFilename(logFileName);
+
+    	model.addAttribute("connectioninfo", this.connectionInfoBean);
     	model.addAttribute("searchinfoform", logInfo);
 
         return "fragments/logsearch.html";
@@ -165,12 +188,18 @@ public class SplController {
     /**
      * Method that maps the closing file request to the controller, close the
      * file and show the log files list.
+     * @param model Holder object for model attributes.
      * @return String that represents the name of the view to forward.
      */
     @RequestMapping(value = "closelogfile", method = RequestMethod.POST)
-    public String closeLogFile() {
+    public String closeLogFile(final Model model) {
 
     	this.logConsumerService.closeLogFile();
+
+    	// Borramos la referencia al fichero que cerramos
+    	this.connectionInfoBean.setFilename(null);
+
+    	model.addAttribute("connectioninfo", this.connectionInfoBean);
 
         return "fragments/logfiles.html";
     }
