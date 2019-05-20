@@ -3,6 +3,11 @@ $(document).ready(function() {
 	
 	var SC_INTERNAL_SERVER_ERROR = 500;
 	var SC_NO_CONTENT = 520;
+
+	// Numero maximo de lineas que mostrar en los paneles de consulta de logs
+	var MAX_NUM_LINES = 1000;
+	
+	var currentNumLines = 0;
 	
 	// Agregamos los CSS que sean necesarios
 	if (!$('link[href="css/jquery.datetimepicker.css"]').length) {
@@ -13,6 +18,8 @@ $(document).ready(function() {
 	function onClickCloseFile(event) {
 		
 		showLoading();
+		
+		currentNumLines = 0;
 		
 		$.ajax("closelogfile", {
 	        type: 'POST',
@@ -121,17 +128,12 @@ $(document).ready(function() {
 	        	console.log("Exito");
 	        	hideLoading();
 	        	clearAlert();
-	        	
-	        	if (!data) {
-	        		data = '';
-	        	}
-	        	
-	        	if ($('#lastlines-more').val() === 'true') {
-	        		$('#lastlines-result').val($('#lastlines-result').val() + data);
-	        	}
-	        	else {
-	        		$('#lastlines-result').val(data);
-		        	
+	        		
+	        	if (data) {
+        			$('#lastlines-result').val(concatTextWithinLimit($('#lastlines-result').val(), data));
+        		}
+
+	        	if ($('#lastlines-more').val() != 'true' && data) {
 		        	$('#lastlines-reset-button').removeClass('hidden');
 		        	$('#lastlines-more').val('true');
 		        	$('#lastlines-button').html('M&aacute;s');
@@ -163,6 +165,7 @@ $(document).ready(function() {
 		$('#lastlines-more').val('false');
 		$('#lastlines-button').html('Consultar');
 		$('#lastlines-result').val('');
+		currentNumLines = 0;
 	}
 	
 	function onClickFilterLogs(event) {
@@ -198,12 +201,12 @@ $(document).ready(function() {
 	        		return;
 	        	}
 	        	
-	        	if ($('#filterlogs-more').val() === 'true') {
-	        		$('#filterlogs-result').val($('#filterlogs-result').val() + data);
-	        	}
-	        	else {
-	        		$('#filterlogs-result').val(data);
-		        	
+        		if (data) {
+        			$('#filterlogs-result').val(concatTextWithinLimit($('#filterlogs-result').val(), data));
+        		}
+
+        		// Despues de la primera llamada, cambiamos el boton
+	        	if ($('#filterlogs-more').val() != 'true' && data) {
 		        	$('#filterlogs-reset-button').removeClass('hidden');
 		        	$('#filterlogs-more').val('true');
 		        	$('#filterlogs-button').html('M&aacute;s');
@@ -231,6 +234,7 @@ $(document).ready(function() {
 		$('#filterlogs-more').val('false');
 		$('#filterlogs-button').html('Consultar');
 		$('#filterlogs-result').val('');
+		currentNumLines = 0;
 	}
 	
 	function onClickSearchText(event) {
@@ -274,37 +278,42 @@ $(document).ready(function() {
 		        		return;
 		        	}
 		        	
-		        	if (!!data) {
-		        		var searchedText = $('#text-searchtext').val();
+	        		var searchedText = $('#text-searchtext').val();
 
-		        		var idx1 = 0;
-		        		var idx2;
-		        		var formatedText = '<div>';
-		        		while ((idx2 = data.indexOf(searchedText, idx1)) > -1) {
-		        			formatedText += data.substring(idx1, idx2) + "<span class='el mon-search-highlight'>" +
-		        						searchedText + "</span>";
-		        			idx1 = idx2 + searchedText.length;
-		        		}
-		        		formatedText += data.substring(idx1) + '</div>';
+	        		// Definimos el prefijo del texto, que tendra un separador si no es la primera llamada
+	        		// que se hace el metodo
+	        		var formatedText = "";
+	        		if ($('#searchtext-next').val() === 'true') {
+	        			formatedText += '<div>. . . . . . . . . .</div><div>. . . . . . . . . .</div><div>. . . . . . . . . .</div>';
+	        		}
+	        		formatedText += '<div>';
+	        		
+	        		// Tomamos el texto y marcamos cada una de las apariciones de la cadena buscada
+	        		var idx1 = 0;
+	        		var idx2;
+	        		while ((idx2 = data.indexOf(searchedText, idx1)) > -1) {
+	        			formatedText += data.substring(idx1, idx2) + "<span class='el mon-search-highlight'>" +
+	        						searchedText + "</span>";
+	        			idx1 = idx2 + searchedText.length;
+	        		}
+	        		formatedText += data.substring(idx1) + '</div>';
 
-		        		// Si no es la primera llamada, antes de agregar el texto de busqueda, se agrega un separador
-		        		// antes del texto para diferenciarlo del anterior
-		        		if ($('#searchtext-next').val() === 'true') {
-		        			var SEPARATOR = "<div>. . . . . . . . . .</div><div>. . . . . . . . . .</div><div>. . . . . . . . . .</div>";
-		        			$('#searchtext-result').append(SEPARATOR);
-		        		}
-		        		
-		        		$('#searchtext-result').append(formatedText);
-
-		        		// Si no es el primer fragmento que se carga, se selecciona el siguiente elemento
-		        		if ($('#searchtext-next').val() === 'true') {
-		        			markNextText($('#searchtext-result'));
-		        		}
-		        		// Si es el primer fragmento, se selecciona el primer elemento
-		        		else {
-		        			markFirstText($('#searchtext-result'));
-		        		}
-		        	}
+	        		// Mostramos el texto concatenandolo con el que ya se mostraba y teniendo en cuenta la restricion ilimitada
+	        		$('#searchtext-result').html(concatTextWithinLimit($('#searchtext-result').html(), formatedText));
+	        		
+	        		// Si no es el primer fragmento que se carga, se selecciona el siguiente elemento
+	        		if ($('#searchtext-next').val() === 'true') {
+	        			var notFound = markNextText($('#searchtext-result'));
+	        			// Si no se encontro el siguiente elemento, puede ser porque se elimino el texto en donde
+	        			// se encontro la anterior ocurrencia. En ese caso, seleccionaremos el primero que encontremos
+	        			if (notFound) {
+	        				markFirstText($('#searchtext-result'));	
+	        			}
+	        		}
+	        		// Si es el primer fragmento, se selecciona el primer elemento
+	        		else {
+	        			markFirstText($('#searchtext-result'));
+	        		}
 		        	
 		        	$('#searchtext-reset-button').removeClass('hidden');
 		        	$('#searchtext-next').val('true');
@@ -335,6 +344,7 @@ $(document).ready(function() {
 		$('#searchtext-next').val('false');
 		$('#searchtext-button').html('Consultar');
 		$('#searchtext-result').html('');
+		currentNumLines = 0;
 	}
 	
 	/**
@@ -506,6 +516,57 @@ $(document).ready(function() {
 		if (hide) {
 			hide();
 		}
+	}
+	
+	/** Concatena dos textos omitiendo las lineas necesarias del primero de ellos para que
+	 * el resultado final que se devuelve no acceda un limite maximo (MAX_NUM_LINES). Como
+	 * minimo, se devolvera el segundo texto completo, incluso si este excede el tamano maximo. */
+	function concatTextWithinLimit(baseText, additionalText) {
+	
+		var numLines = countLines(additionalText);
+		
+		// Si el texto que agregamos es superior al limite, lo devolvemos tal cual. Nunca
+		// retiraremos lineas del texto que se quiere agregar
+		if (numLines >= MAX_NUM_LINES) {
+			currentNumLines = numLines;
+			return additionalText;
+		}
+		
+		// Si no hemos alcanzado el limite, concatenamos los textos y sumamos el numero de lineas
+		if (currentNumLines + numLines <= MAX_NUM_LINES) {
+			currentNumLines += numLines;
+			return baseText + additionalText;
+		}
+		
+		// Para no superar el limite, retiraremos tantas lineas como sea necesario del texto base
+		var excessLines = currentNumLines + numLines - MAX_NUM_LINES;
+		currentNumLines = MAX_NUM_LINES;
+		return trunkFirstLines(baseText, excessLines) + additionalText;
+	}
+	
+	/**
+	 * Cuenta el numero de lineas de un texto.
+	 */
+	function countLines(text) {
+		var lines = 1;
+		var idx = -1;
+		while ((idx = text.indexOf('\n', ++idx)) != -1) {
+			lines++;
+		}
+		return lines;
+	}
+	
+	/**
+	 * Devuelve el mismo texto de entrada (baseText) sin las primeras (excessLines) lineas.
+	 * Si no hay suficientes lineas o estas no pueden identificarse, devolvera cadena vacia.
+	 */
+	function trunkFirstLines(baseText, excessLines) {
+		var lines = 0;
+		var idx = -1;
+		while ((idx = baseText.indexOf('\n', ++idx)) != -1 && lines < excessLines) {
+			lines++;
+		}
+		return idx > 0 ? baseText.substring(idx + 1) : "";
 	}
 	
 	console.log("Iniciamos la configuracion de la pagina");
