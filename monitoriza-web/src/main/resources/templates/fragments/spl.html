@@ -15,7 +15,7 @@
 							<th th:text="#{table.spl.type}"></th>
 							<th th:text="#{table.spl.url}"></th>
 							<th th:text="#{table.spl.key}"></th>
-							<th th:text="#{table.spl.isSecure}"></th>
+					
 						</tr>
 					</thead>
 				</table>
@@ -77,7 +77,7 @@ $(document).ready(function() {
 	        { "data": "type" },
 	        { "data": "url" },
 	        { "data": "key", "visible": false },
-	        { "data": "isSecure", "visible": false, "name": "isSecure"}
+	    
 	        ]
 		}).on('crudaction', function(e, accion, idSpl, data, rowindex){
 		    // e          Evento Jquery

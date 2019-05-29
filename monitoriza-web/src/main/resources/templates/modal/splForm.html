@@ -73,35 +73,43 @@
 	</div>
 	
 	<div class="form-row">
-		<div class="form-group col-md-12">
-			<div class="checkbox checkbox-circle checkbox-info peers ai-c cb-center">
-				<input type="checkbox" id="isSecure" th:checked="${splform.isSecure}" class="peer">
-					<label for="isSecure" class="peers peer-greed js-sb ai-c">
-						<span class="peer peer-greed" th:text="#{form.log.spl.issecure}"></span>
-					</label>
-			</div>
-		</div>
+		<button type="button" class="btn btn-secondary" id="check-connection-button" >Comprobar conexi&oacute;n</button>
+		<span id="connection-result" class="mon-alert-message" role="alert"></span>
 	</div>
-
 </form>
 
 <script th:inline="javascript">
+$(document).ready(function () {
 
-	$(document).ready(function () {
+    $("#check-connection-button").on("click", function () {
 
-		// Inicialización con valor correcto del checkbox isSecure
-		if ($("#isSecure").is(":checked")) {
-	    	$("#isSecure").attr('value', 'true');
-	    } else {
-	    	$("#isSecure").attr('value', 'false');
-	    }
+    	$.ajax("checkspl", {
+	        type: 'POST',
+	        data: $.param({'urlTex': $('#url').val()}),
+	        success: function(data, status, response) {
 
-	    $("#isSecure").change(function () {
-	        if ($(this).is(":checked")) {
-	        	$(this).attr('value', 'true');
-	        }else {
-	        	$(this).attr('value', 'false');
-	        }
-	    });
-   });
+				console.log("Conexion correcta");
+				
+				console.log(data);
+				
+				if (data === true) {
+					$("#connection-result").removeClass("alert-success alert-danger");
+					$("#connection-result").addClass("alert-success");
+					$("#connection-result").html("<strong>Conexi&oacute;n correcta</strong>");
+				}
+				else {
+					$("#connection-result").removeClass("alert-success alert-danger");
+		        	$("#connection-result").addClass("alert-danger");
+		        	$("#connection-result").html("<strong>No se ha podido conectar con el servidor</strong>");	
+				}
+	        },
+	        error: function(err) {
+	        	console.log("Conexion fallida");
+	        	$("#connection-result").removeClass("alert-success alert-danger");
+	        	$("#connection-result").addClass("alert-danger");
+	        	$("#connection-result").html("<strong>No se ha podido comprobar la conexi&oacute;n con el servidor</strong>");
+			}
+		});
+    });
+});
 </script>
