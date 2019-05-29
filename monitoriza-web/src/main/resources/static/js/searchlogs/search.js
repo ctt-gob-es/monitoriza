@@ -109,13 +109,15 @@ $(document).ready(function() {
 	
 	function onClickLastLines(event) {
 		
-		showLoading();
 		
+		showLoading();
 		var lastLinesFormData = {
 				logFilename: $('#data-filename').val(),
 				charsetName: $('#data-charset').val(),
 				numLines: $('#numlines-lastlines').val(),
 				more: $('#lastlines-more').val()};
+		
+	
 		
 		console.log("Solicitamos las ultimas lineas");
 		
@@ -314,10 +316,12 @@ $(document).ready(function() {
 	        		else {
 	        			markFirstText($('#searchtext-result'));
 	        		}
-		        	
+	        		$('#searchTextMore-button').removeClass('hidden');
 		        	$('#searchtext-reset-button').removeClass('hidden');
 		        	$('#searchtext-next').val('true');
 		        	$('#searchtext-button').html('Siguiente');
+		        	
+		        	
 		        },
 		        error: function(errorMsg, status, response) {
 		        	hideLoading();
@@ -339,7 +343,7 @@ $(document).ready(function() {
 	function onClickSearchTextReset(event) {
 		
 		clearAlert();
-		
+		$('#searchTextMore-button').addClass('hidden');
 		$('#searchtext-reset-button').addClass('hidden');
 		$('#searchtext-next').val('false');
 		$('#searchtext-button').html('Consultar');
@@ -383,7 +387,7 @@ $(document).ready(function() {
 		 // Indicamos que se han encontrado ocurrencias para que no se interprete que hay
 		 // que hacer una nueva busqueda ya que sabemos que no se van encontrar
 		 if (allElements.length == 0) {
-			 return false;
+			 return true;
 		 }
 
 		 var previousElement;
@@ -393,14 +397,19 @@ $(document).ready(function() {
 				 previousElement = $(this);
 			 }
 			 // Si la variable previousElement esta establecida, este es el siguiente elemento a seleccionar
-			 else if (previousElement) {
+			 else if (previousElement && !newElement) {
 				 previousElement.removeClass("mon-search-current-highlight").addClass("mon-search-highlight");
 				 $(this).removeClass("mon-search-highlight").addClass("mon-search-current-highlight");
-				 previousElement = null;
 				 newElement = $(this);
 			 }
 		 });
 
+		// Si no se ha encontrado el elemento seleccionado, se selecciona de los que existen
+		 if (!previousElement) {
+			 markFirstText(searchResultPanel);
+			 return true;
+		 }
+		 
 		 // Si se ha seleccionado un nuevo elemento, movemos el scroll del panel para que se vea
 		 if (newElement) {
 			 scrollToElement(searchResultPanel, newElement);
@@ -409,6 +418,77 @@ $(document).ready(function() {
 		 // Si no hemos encontrado un nuevo elemento, indicamos que sera necesario continuar la busqueda 
 		 return !newElement;
 	 }
+	 
+	 
+	 function onClickSearchTextMore(event) {				
+
+		 var searchTextFormData = {
+				 text: $('#text-searchtext').val(),
+				 startDate: $('#start-datetimepicker-searchtext').val(),
+				 numLines: $('#numlines-searchtext').val(),
+				 charsetName: $('#data-charset').val(),
+				 more: $('#searchtext-next').val()
+		 };
+
+		 showLoading();
+
+		 $.ajax("searchTextMore", {
+			 data: JSON.stringify(searchTextFormData),
+			 contentType : 'application/json; charset=utf-8',
+			 type: 'POST',
+			 success: function(data, status, response) {
+
+				 console.log("Exito");
+				 hideLoading();
+				 clearAlert();
+				 
+					if (status == SC_NO_CONTENT || !data) {
+		        		showError('No se encuentran m&aacute;s coincidencias.');
+		        		return;
+		        	}
+		        	
+	        		var searchedText = $('#text-searchtext').val();
+
+	        		// Definimos el prefijo del texto, que tendra un separador si no es la primera llamada
+	        		// que se hace el metodo
+	        		var formatedText = "";
+	        	
+	        		formatedText += '<div>';
+	        		
+	        		// Tomamos el texto y marcamos cada una de las apariciones de la cadena buscada
+	        		var idx1 = 0;
+	        		var idx2;
+	        		while ((idx2 = data.indexOf(searchedText, idx1)) > -1) {
+	        			formatedText += data.substring(idx1, idx2) + "<span class='el mon-search-highlight'>" +
+	        						searchedText + "</span>";
+	        			idx1 = idx2 + searchedText.length;
+	        		}
+	        		formatedText += data.substring(idx1) + '</div>';
+
+	        		// Mostramos el texto concatenandolo con el que ya se mostraba y teniendo en cuenta la restricion ilimitada
+	        		$('#searchtext-result').html(concatTextWithinLimit($('#searchtext-result').html(), formatedText));
+		        	
+			 },
+			 error: function(errorMsg, status, response) {
+				 console.log("Error al buscar mas");
+				 hideLoading();
+				 if (errorMsg.status == 401) {
+					 showError('Sesi&oacute;n caducada');
+				 } else if (errorMsg.status == SC_NO_CONTENT) {
+					 showError('No se encuentran m&aacute;s resultados');
+				 } else if (errorMsg.statusText) {
+					 showError(errorMsg.statusText);
+				 }
+				 else {
+					 showError(errorMsg);
+				 }
+			 }
+		 });
+	 }
+		
+			// ----- EVENTOS -----
+		
+		// Boton de cierre de fichero
 
 	 /**
 	  * Desplaza, si es necesario, las barras de desplazamiento de un panel para que pueda verse un
@@ -606,6 +686,12 @@ $(document).ready(function() {
 	assignEnterEvent($('#text-searchtext'), onClickSearchText);
 	$('#searchtext-reset-button').on('click', onClickSearchTextReset);
 	
+	// Formulario de consultas en la busqueda de texto
+	$('#searchTextMore-button').on('click', onClickSearchTextMore);
+
+	
+	
+	
 	// Pestanas
 	$('#lastlines-tab').on('click', onClickFilterLogsReset);
 	$('#lastlines-tab').on('click', onClickSearchTextReset);
@@ -613,6 +699,8 @@ $(document).ready(function() {
 	$('#filterlogs-tab').on('click', onClickSearchTextReset);
 	$('#searchtext-tab').on('click', onClickLastLinesReset);
 	$('#searchtext-tab').on('click', onClickFilterLogsReset);
+	
+	
 	
 	// --------------------
 
