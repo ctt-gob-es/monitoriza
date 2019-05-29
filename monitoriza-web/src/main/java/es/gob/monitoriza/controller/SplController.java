@@ -115,12 +115,11 @@ public class SplController {
     	splForm.setType(spl.getType());
     	splForm.setUrl(spl.getUrl());
     	splForm.setKey(spl.getKey());
-    	splForm.setIsSecure(spl.getIsSecure());
-
+    	
     	model.addAttribute("splform", splForm);
         return "modal/splForm";
     }
-
+    
     /**
      * Method that maps the connecting request to the SPL and list its log files.
      * @param id Identifier of the SPL to connect.

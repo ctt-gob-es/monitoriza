@@ -113,4 +113,14 @@ public interface ILogConsumerService {
 	 * @return Additionales lines from the log.
 	 */
 	LogDataDTO getMore(int numLines);
+	
+	
+	/**
+	 * Method to recover the connection.
+	 * @param connection requested.
+	 * @return splUrl from the log.
+	 */
+	boolean echo(String splUrl);
+
+	
 }

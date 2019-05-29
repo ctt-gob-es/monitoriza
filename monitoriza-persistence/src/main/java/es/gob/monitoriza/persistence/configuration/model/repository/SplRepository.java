@@ -46,5 +46,8 @@ public interface SplRepository extends JpaRepository<SplMonitoriza, Long>, JpaSp
 	 */
 	SplMonitoriza findByIdSpl(Long id);
 	
+	
+
+	
 
 }

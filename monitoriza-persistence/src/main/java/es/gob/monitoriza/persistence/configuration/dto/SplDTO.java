@@ -81,10 +81,10 @@ public class SplDTO {
     private String key = UtilsStringChar.EMPTY_STRING;
 
 	/**
-	 * Attribute that represents the value of the input isSecure of the SPL in the form.
+	 * Attribute that represents the value of the input Connection of the SPL in the form.
 	 */
-	@NotNull(groups=CheckItFirst.class, message="{form.log.spl.secure.notnull}")
-    private Boolean isSecure = Boolean.TRUE;
+	@NotNull(groups=CheckItFirst.class, message="{form.log.spl.button.connection}")
+    private Boolean connection = Boolean.TRUE;
 
 	/**
 	 * Gets the value of the attribute {@link #idSpl}.
@@ -181,20 +181,17 @@ public class SplDTO {
 	public void setKey(final String key) {
 		this.key = key;
 	}
-
 	/**
-	 * Gets the value of the attribute {@link #isSecure}.
-	 * @return the value of the attribute {@link #isSecure}.
+	 * Gets the value of the attribute {@link #connection}.
+	 * @return the value of the attribute {@link #connection}.
 	 */
-	public Boolean getIsSecure() {
-		return this.isSecure;
-	}
 
-	/**
-	 * Sets the value of the attribute {@link #isSecure}.
-	 * @param isSecure the value for the attribute {@link #isSecure} to set.
-	 */
-	public void setIsSecure(final Boolean isSecure) {
-		this.isSecure = isSecure;
-	}
+	 public final boolean connection() {
+			return this.connection;
+			
+		}
+	 
+	 public final void setConnection(final boolean connection) {
+			this.connection = connection;
+		}
 }

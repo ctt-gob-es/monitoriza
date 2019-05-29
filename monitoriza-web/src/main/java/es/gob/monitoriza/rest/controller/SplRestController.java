@@ -184,6 +184,21 @@ public class SplRestController {
 
 		return dtOutput;
 	}
+	
+    /**
+     * Method that maps the connection url to the controller and loads.
+     * * The SPL to the backup form.
+     * @param afirmaId Identifier of the SPL to be edited.
+     * @param model Holder object for model attributes.
+     * @return String that represents the name of the view to forward.
+     */
+	
+    @RequestMapping(value = "checkspl", method = RequestMethod.POST)
+    public Boolean checkConnectionSpl(@RequestParam("urlTex") final String splUrlTex) {
+    	
+    	final boolean checked = this.logConsumerService.echo(splUrlTex);
+        return new Boolean(checked);
+    }
 
 	/**
 	 * Method that maps the SPL's log files to the controller and
@@ -384,4 +399,35 @@ public class SplRestController {
 		}
 		response.flushBuffer();
 	}
+	
+	/**
+	 * Method that maps the text searches of a log file request and
+	 * forwards them to the view.
+	 *
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(path = "/searchTextMore", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	public void searchTextMore(@RequestBody final LogSearchTextFormDTO requestForm,
+			final HttpServletRequest request, final HttpServletResponse response) throws IOException {
+
+		final HttpSession session = request.getSession(false);
+		if (session == null) {
+			response.sendError(401, "Sesi&oacute;n caducada");
+			response.flushBuffer();
+			return;
+		}
+
+		LogDataDTO logData = this.logConsumerService.getMore(requestForm.getNumLines());
+		
+		response.setContentType("text/plain");
+		response.setCharacterEncoding(requestForm.getCharsetName());
+		if (logData.getErrorMessage() != null) {
+			response.sendError(logData.getErrorCode(), logData.getErrorMessage());
+		}
+		else if (logData.getLog() != null) {
+			response.getOutputStream().write(logData.getLog());
+		}
+		response.flushBuffer();
+	}
+	
 }

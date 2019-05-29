@@ -34,7 +34,6 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -89,11 +88,6 @@ public class SplMonitoriza implements Serializable {
 	 * Attribute that represents the AES key base 64 encoded to connect to the SPL.
 	 */
 	private String key;
-
-	/**
-	 * Attribute that indicates whether the access to the SPL is through secured connection (https).
-	 */
-	private Boolean isSecure;
 
 	/**
 	 * Gets the value of the attribute {@link #idSpl}.
@@ -214,23 +208,5 @@ public class SplMonitoriza implements Serializable {
 	 */
 	public void setKey(final String key) {
 		this.key = key;
-	}
-	/**
-	 * Gets the value of the attribute {@link #isSecure}.
-	 * @return the value of the attribute {@link #isSecure}.
-	 */
-	@Column(name = "IS_SECURE", nullable = false, precision = 1)
-	@Type(type = CONS_YES_NO)
-	@JsonView(DataTablesOutput.View.class)
-	public Boolean getIsSecure() {
-		return this.isSecure;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #isSecure}.
-	 * @param isSecure The value for the attribute {@link #isSecure}.
-	 */
-	public void setIsSecure(final Boolean isSecure) {
-		this.isSecure = isSecure;
 	}
 }

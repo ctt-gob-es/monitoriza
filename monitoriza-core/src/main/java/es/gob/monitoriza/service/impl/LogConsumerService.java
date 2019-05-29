@@ -84,6 +84,20 @@ public class LogConsumerService implements ILogConsumerService {
 	public void closeConnection() {
 		this.logConsumerBean.closeConnection();
 	}
+	
+	@Override
+	public boolean echo(String urlTex) {
+		
+		String result = this.logConsumerBean.echo(urlTex);
+		
+		final String ok = "\"Code\":200";
+		if (result.indexOf(ok) == -1) {
+			LOGGER.warn("No se pudo conectar con el servicio: " + result);
+			return false;	
+		}
+		
+		return true;
+	}
 
 	@Override
 	public LogFilesDTO getLogFiles() {

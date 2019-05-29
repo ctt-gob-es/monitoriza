@@ -93,7 +93,7 @@ public class SplService implements ISplService {
 		spl.setType(splDto.getType());
 		spl.setUrl(splDto.getUrl());
 		spl.setKey(splDto.getKey());
-		spl.setIsSecure(splDto.getIsSecure());
+	
 
 		return this.repository.save(spl);
 	}
@@ -102,5 +102,4 @@ public class SplService implements ISplService {
 	public DataTablesOutput<SplMonitoriza> findAll(final DataTablesInput input) {
 		return this.dtRepository.findAll(input);
 	}
-
 }
