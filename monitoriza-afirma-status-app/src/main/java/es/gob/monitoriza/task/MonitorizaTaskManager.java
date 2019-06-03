@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 30/01/2019.
+ * @version 1.5, 28/03/2019.
  */
 package es.gob.monitoriza.task;
 
@@ -48,11 +48,13 @@ import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 import es.gob.monitoriza.status.StatusHolder;
 import es.gob.monitoriza.status.thread.RequestLauncher;
 import es.gob.monitoriza.timers.TimersHolder;
+import es.gob.monitoriza.utilidades.UtilsIdentifierGenerators;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /** 
  * <p>Class that update the configuration of the scheduled services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 30/01/2019.
+ * @version 1.5, 28/03/2019.
  */
 @Service("monitorizaTaskManager")
 class MonitorizaTaskManager {
@@ -179,12 +181,18 @@ class MonitorizaTaskManager {
 		 */
 		@Override
 		public void run() {
+			
+			String idTraza = UtilsIdentifierGenerators.generateNumbersUniqueId();
+			StringBuilder idTimerTask = new StringBuilder();
+			idTimerTask.append(idTraza).append(UtilsStringChar.SYMBOL_HYPHEN_STRING).append(timerId);
 
-			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS001, new Object[ ] { timerId }));
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS001, new Object[ ] { idTimerTask }));
 			
 			RequestLauncher rlt = new RequestLauncher();
 			
-			rlt.startInvoker(StatusHolder.getInstance().getCurrenttatusHolder(), serviciosDelTimer, sslTrustStore, rfc3161Keystore);
+			rlt.startInvoker(idTimerTask.toString(), StatusHolder.getInstance().getCurrenttatusHolder(), serviciosDelTimer, sslTrustStore, rfc3161Keystore);
+			
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS015, new Object[ ] { idTimerTask }));
 
 		}
 

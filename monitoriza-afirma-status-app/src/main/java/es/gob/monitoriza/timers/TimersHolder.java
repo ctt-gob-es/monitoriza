@@ -25,13 +25,13 @@ import java.util.concurrent.ConcurrentHashMap;
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 12/09/2018.
+ * @version 1.1, 03/05/2019.
  */
 
 /** 
  * <p>Class that stores in memory the timers currently scheduled.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 12/09/2018.
+ * @version 1.1, 03/05/2019.
  */
 public class TimersHolder {
 
@@ -39,6 +39,11 @@ public class TimersHolder {
 	 * Attribute that represents the current map of timers scheduled. 
 	 */
 	private Map<Long,Timer> currentTimersHolder;
+	
+	/**
+	 * Attribute that represents the current map of timers scheduled. 
+	 */
+	private Map<String,Timer> currentTimersSpieHolder;
 	
 	/**
 	 * Attribute that represents the instance for this class. 
@@ -50,6 +55,7 @@ public class TimersHolder {
 	 */
 	private TimersHolder() {
 		currentTimersHolder = new ConcurrentHashMap<Long, Timer>();
+		currentTimersSpieHolder = new ConcurrentHashMap<String, Timer>();
 	}
 	
 	/**
@@ -79,6 +85,23 @@ public class TimersHolder {
 	 */
 	public void setCurrentTimersHolder(Map<Long, Timer> currentTimersHolder) {
 		this.currentTimersHolder = currentTimersHolder;
+	}
+	
+	/**
+	 * Gets the {@link currentTimersSpieHolder}.
+	 * @return {@link Map}.
+	 */	
+	public Map<String, Timer> getCurrentTimersSpieHolder() {
+		return currentTimersSpieHolder;
+	}
+
+	
+	/**
+	 * Sets the {@link currentTimersSpieHolder}.
+	 * @param currentTimersSpieHolder
+	 */
+	public void setCurrentTimersSpieHolder(Map<String, Timer> currentTimersSpieHolder) {
+		this.currentTimersSpieHolder = currentTimersSpieHolder;
 	}
 	
 }

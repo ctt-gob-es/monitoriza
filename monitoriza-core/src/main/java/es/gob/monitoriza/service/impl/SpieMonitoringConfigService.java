@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>22/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 15/02/2019.
+ * @version 1.4, 03/05/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -56,7 +56,7 @@ import es.gob.monitoriza.service.ISpieMonitoringConfigService;
  * <p>Class that manages the configuration of the @firma/ts@ SPIE from database persistence
  *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 15/02/2019.
+ * @version 1.4, 03/05/2019.
  */
 @Service("spieMonitoringConfigService")
 public class SpieMonitoringConfigService implements ISpieMonitoringConfigService {
@@ -100,9 +100,14 @@ public class SpieMonitoringConfigService implements ISpieMonitoringConfigService
 	@Override
 	public ConfSpieDTO getSpieConfiguration() {
 		
+		ConfSpieDTO confSpieDTO = null;
 		ConfSpie confSpie = spieService.getAllConfSpie();
+				
+		if (confSpie != null) {
+			confSpieDTO = new ConfSpieDTO(confSpie.getIdConfSpie(), confSpie.getPercentAccept(), confSpie.getFrequencyAfirma(), confSpie.getFrequencyTsa(), null, null, methodValidationService.getAllMethodValidationString());
+		}
 		
-		return new ConfSpieDTO(confSpie.getIdConfSpie(), confSpie.getPercentAccept(), confSpie.getFrequencyAfirma(), confSpie.getFrequencyTsa(), null, null, methodValidationService.getAllMethodValidationString());
+		return confSpieDTO;
 	}
 	
 		

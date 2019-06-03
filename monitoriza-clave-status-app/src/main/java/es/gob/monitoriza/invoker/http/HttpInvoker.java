@@ -17,9 +17,9 @@
  * <b>File:</b><p>es.gob.monitoriza.invoker.http.HttpInvoker.java.</p>
  * <b>Description:</b><p>Class that performs the request of a HTTP service.</p>
  * <b>Project:</b><p>Application for monitoring services of Cl@ve suite systems</p>
- * <b>Date:</b><p>18 oct. 2018.</p>
+ * <b>Date:</b><p>18/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 18/12/2018.
+ * @version 1.4, 28/03/2019.
  */
 package es.gob.monitoriza.invoker.http;
 
@@ -64,7 +64,7 @@ import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
  * Application for monitoring services of Cl@ve suite systems.
  * </p>
  * 
- * @version 1.3, 18/12/2018.
+ * @version 1.4, 28/03/2019.
  */
 public class HttpInvoker extends AbstractHttpInvoker {
 
@@ -80,7 +80,7 @@ public class HttpInvoker extends AbstractHttpInvoker {
 	 *         problem, this value will be null.
 	 * @throws InvokerException
 	 */
-	public static Long sendRequest(final File file, final ConfigServiceDTO service, final KeyStore ssl)
+	public static Long sendRequest(final String idTimerTask, final File file, final ConfigServiceDTO service, final KeyStore ssl)
 			throws InvokerException {
 		CloseableHttpClient httpClient;
 		Long tiempoTotal = null;

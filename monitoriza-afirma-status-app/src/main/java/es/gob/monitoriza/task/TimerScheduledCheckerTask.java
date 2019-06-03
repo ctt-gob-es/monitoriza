@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 17/09/2018.
+ * @version 1.2, 03/05/2019.
  */
 package es.gob.monitoriza.task;
 
@@ -34,13 +34,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.persistence.configuration.model.entity.ConfSpie;
+import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
+import es.gob.monitoriza.service.IConfSpieService;
 import es.gob.monitoriza.service.ITimerScheduledService;
+import es.gob.monitoriza.service.impl.ConfSpieService;
+import es.gob.monitoriza.service.utils.IServiceNameConstants;
+import es.gob.monitoriza.spie.task.MonitorizaTaskSpieManager;
+import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 
 /** 
  * <p>Class that executes a scheduled task to check if there are changes on running scheduled timers.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 17/09/2018.
+ * @version 1.2, 03/05/2019.
  */
 @Component
 public class TimerScheduledCheckerTask {
@@ -61,6 +68,12 @@ public class TimerScheduledCheckerTask {
 	 */
 	@Autowired
 	private MonitorizaTaskManager taskManager;
+	
+	/**
+	 * Attribute that represents . 
+	 */
+	@Autowired
+	private MonitorizaTaskSpieManager taskSpieManager;
 
 	/**
 	 * 
@@ -71,7 +84,7 @@ public class TimerScheduledCheckerTask {
 		
 		final List<Long> timersToUpdate = new ArrayList<Long>();
 		
-		// Se obtiene la lista de timers programados con su estado (actualizado o no)
+		// Se obtiene la lista de timers VIP programados con su estado (actualizado o no)
 		List<TimerScheduled> listScheduled = StreamSupport.stream(scheduledService.getAllTimerScheduled().spliterator(), false)
 				.collect(Collectors.toList());
 		
@@ -87,6 +100,27 @@ public class TimerScheduledCheckerTask {
 		}
 		
 		taskManager.updateTimersFromWebAdmin(timersToUpdate);
+		
+		// Se comprueba si es necesario actualizar los timers SPIE
+		// Se obtiene el servicio de configuración SPIE.
+		IConfSpieService confSpieService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.CONF_SPIE_SERVICE, ConfSpieService.class);
+		
+		ConfSpie confSpie = confSpieService.getAllConfSpie();
+		
+		if (confSpie != null)
+		{
+			if (confSpie.getUpdateAfirma()) {
+				taskSpieManager.updateSpieTimerFromWebAdmin(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA, confSpie.getFrequencyAfirma());
+				confSpie.setUpdateAfirma(Boolean.FALSE);
+			}
+			
+			if (confSpie.getUpdateTsa()) {
+				taskSpieManager.updateSpieTimerFromWebAdmin(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA, confSpie.getFrequencyAfirma());
+				confSpie.setUpdateTsa(Boolean.FALSE);
+			}
+			
+			confSpieService.save(confSpie);
+		}
 		
 	}
 

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 09/11/2018.
+ * @version 1.3, 14/03/2019.
  */
 package es.gob.monitoriza.controller;
 
@@ -30,9 +30,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import es.gob.monitoriza.persistence.configuration.dto.StatusSpieDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusVipDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.MaintenanceService;
+import es.gob.monitoriza.service.IMaintenanceServiceService;
 import es.gob.monitoriza.service.IStatusService;
 
 /**
@@ -44,7 +47,7 @@ import es.gob.monitoriza.service.IStatusService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.2, 09/11/2018.
+ * @version 1.3, 14/03/2019.
  */
 @Controller
 public class StatusController {
@@ -55,6 +58,13 @@ public class StatusController {
 	 */
 	@Autowired
 	private IStatusService statusService;
+	
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IMaintenanceServiceService maintenanceService;
 
 	/**
 	 * Method that maps the list users web requests to the controller and forwards
@@ -78,5 +88,53 @@ public class StatusController {
 
 		return "fragments/status.html";
 	}
+	
+	/**
+	 * Method that maps the list users web requests to the controller and forwards
+	 * the list of users to the view.
+	 * 
+	 * @param model
+	 *            Holder object for model attributes.
+	 * @param request Request object
+	 * @param service String that represents the service to mark.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "markVipService")
+	public String markVipService(final Model model, final HttpServletRequest request, @RequestParam("service") String service) {
 
+		MaintenanceService maintenance = maintenanceService.getMaintenanceServiceByService(service);
+		
+		if (maintenance != null) {
+    		maintenance.setIsInMaintenance(Boolean.TRUE);
+    		maintenanceService.saveMaintenanceService(maintenance);
+		}
+		
+		return status(model, request);
+
+	}
+	
+	/**
+	 * Method that maps the list users web requests to the controller and forwards
+	 * the list of users to the view.
+	 * 
+	 * @param model
+	 *            Holder object for model attributes.
+	 * @param request Request object
+	 * @param service String that represents the service to mark.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@RequestMapping(value = "markSpieService")
+	public String markSpieService(final Model model, final HttpServletRequest request, @RequestParam("service") String service) {
+		
+		MaintenanceService maintenance = maintenanceService.getMaintenanceServiceByService(service);
+		
+		if (maintenance != null) {
+    		maintenance.setIsInMaintenance(Boolean.TRUE);
+    		maintenanceService.saveMaintenanceService(maintenance);
+		}
+		
+		return status(model, request);
+
+	}
+	
 }

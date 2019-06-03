@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.7, 15/02/2019.
+ * @version 1.8, 26/03/2019.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -106,7 +106,7 @@ import es.gob.monitoriza.webservice.ClientManager;
  * <p>Class that manages the REST requests related to the Keystore administration
  * and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.7, 15/02/2019.
+ * @version 1.8, 26/03/2019.
  */
 @RestController
 public class KeystoreRestController {
@@ -316,7 +316,7 @@ public class KeystoreRestController {
 
 			try {
 				
-				keystoreService.saveSsl(alias, certBytes);
+				listSystemCertificate = keystoreService.saveSsl(alias, certBytes);
 
 			} catch (Exception e) {
 				LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB001, new Object[ ] { alias }), e);

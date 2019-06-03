@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 30/01/2019.
+ * @version 1.5, 14/03/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -37,12 +37,14 @@ import org.springframework.web.multipart.MultipartFile;
 
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.MaintenanceService;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.RequestServiceFile;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
 import es.gob.monitoriza.persistence.configuration.model.repository.AlarmMonitorizaRepository;
+import es.gob.monitoriza.persistence.configuration.model.repository.MaintenanceServiceRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.PlatformRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.ServiceMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.TimerMonitorizaRepository;
@@ -93,6 +95,13 @@ public class ServiceMonitorizaService implements IServiceMonitorizaService {
 	 * operations for the persistence.
 	 */
 	@Autowired
+	private MaintenanceServiceRepository repositoryMaintenance;
+	
+	/**
+	 * Attribute that represents the injected interface that provides CRUD
+	 * operations for the persistence.
+	 */
+	@Autowired
 	private PlatformRepository repositoryplatform;
 
 	/**
@@ -128,12 +137,18 @@ public class ServiceMonitorizaService implements IServiceMonitorizaService {
 				ServiceMonitoriza serviceMonitoriza = repositoryService.findByIdService(serviceId);
 				repositoryService.deleteById(serviceId);
 						
+				// Se marca el timer asociado como no actualizado
 				TimerScheduled scheduled = repositoryScheduled.findByTimerIdTimer(serviceMonitoriza.getTimer().getIdTimer());
 						
 				scheduled.setUpdated(false);
 				
 				repositoryScheduled.save(scheduled);
 				
+				// Se elimina el servicio de la tabla de mantenimiento
+				MaintenanceService maintenance = repositoryMaintenance.findByService(serviceMonitoriza.getName());
+				if (maintenance != null) {
+					repositoryMaintenance.delete(maintenance);
+				}				
 				
 			} catch (Exception e) {
 				throw e;

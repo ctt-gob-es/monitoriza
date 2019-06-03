@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 15/02/2019.
+ * @version 1.5, 26/03/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -63,7 +63,7 @@ import es.gob.monitoriza.utilidades.UtilsCertificate;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for Keystore.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 15/02/2019.
+ * @version 1.5, 26/03/2019.
  */
 @Service("keystoreService")
 public class KeystoreService implements IKeystoreService {
@@ -292,7 +292,7 @@ public class KeystoreService implements IKeystoreService {
 		listSystemCertificate.add(sysCert);
 
 		// Importación correcta
-		LOGGER.info(Language.getFormatResWebMonitoriza(ICoreLogMessages.CORE011, new Object[ ] { alias }));
+		LOGGER.info(Language.getFormatResCoreMonitoriza(ICoreLogMessages.CORE011, new Object[ ] { alias }));
 		
 		// Al haber cambios en el almacén Truststore SSL, se procede a marcar todos los timers programados como elegibles para ser reprogramados
 		scheduledRepository.setAllNotUpdated();

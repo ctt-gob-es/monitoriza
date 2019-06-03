@@ -1,5 +1,5 @@
 <form name="altEditor-form" role="form" id="userForm" th:object="${userform}" th:action="@{/saveuser}" method="post">
-					
+			<div id="errorSaveUser" role="alert"></div>		
 			<input type='hidden' class='primarykey' id="idUserMonitoriza" th:field="*{idUserMonitoriza}">
 			
 			<div class="form-group">
@@ -10,10 +10,8 @@
 						    var messageName = /*[[#{form.user.name.pattern}]]*/ 'default';
 						/*]]>*/
 					</script>
+					<span id="name_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 					<input onblur="validate(this,messageName);" type="text" name="nameAdd" id="nameAdd" th:field="*{name}" class="form-control" pattern=".{3,15}" required />
-					<div id="invalid-nameAdd" class="invalid-modal" ></div>
-				
-				<div style="clear:both;"/>
 			</div>
 			
 			<div class="form-group">
@@ -24,10 +22,8 @@
 						    var messageSurname = /*[[#{form.user.surnames.pattern}]]*/ 'default';
 						/*]]>*/
 					</script>
+					<span id="surnames_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 					<input onblur="validate(this,messageSurname);" type="text" name="surnamesAdd" id="surnamesAdd" th:field="*{surnames}" class="form-control" required pattern=".{3,30}"/>
-					<div id="invalid-surnamesAdd" class="invalid-modal" ></div>
-				
-				<div style="clear:both;"/>
 			</div>
 			
 			<div class="form-group">
@@ -38,10 +34,8 @@
 						    var messageLogin = /*[[#{form.user.login.pattern}]]*/ 'default';
 						/*]]>*/
 					</script>
+					<span id="login_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 					<input onblur="validate(this,messageLogin);" type="text" name="loginAdd" id="loginAdd" th:field="*{login}" style="overflow:hidden" class="form-control" required pattern=".{5,30}"/>
-					<div id="invalid-loginAdd" class="invalid-modal" ></div>
-				
-				<div style="clear:both;"/>
 			</div>
 			
 			<div class="form-group">
@@ -52,20 +46,16 @@
 						    var messagePassword = /*[[#{form.user.password.pattern}]]*/ 'default';
 						/*]]>*/
 					</script>
+					<span id="passwordAdd_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 					<input type="password" style="display:none">
 					<input onblur="validate(this,messagePassword);" type="password" name="passwordAdd" id="passwordAdd" th:field="*{password}" class="form-control" pattern=".{7,30}" required />
-					<div id="invalid-passwordAdd" class="invalid-modal" ></div>
-				
-				<div style="clear:both;"/>
 			</div>
 			
 			<div class="form-group">
 				
 					<label for="confirmPassword" class="col-form-label" th:text="#{form.user.confirmPassword}"></label>
+					<span id="confirmPasswordAdd_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 					<input onblur="validateConfirmPassword();" type="password" name="confirmPassword" id="confirmPasswordAdd" th:field="*{confirmPassword}" class="form-control" pattern=".{7,30}" required />
-					<div id="invalid-confirmPassword" class="invalid-modal" ></div>
-				
-				<div style="clear:both;"/>
 			</div>
 			
 			<div class="form-group">
@@ -76,10 +66,8 @@
 						    var messageEmail = /*[[#{form.user.email.pattern}]]*/ 'default';
 						/*]]>*/
 					</script>
+					<span id="email_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 					<input onblur="validate(this,messageEmail);" type="email" name="emailAdd" id="emailAdd" th:field="*{email}" style="overflow:hidden" class="form-control" required/>
-					<div id="invalid-emailAdd" class="invalid-modal" ></div>
-				
-				<div style="clear:both;"/>
 			</div>
 							
 </form>
@@ -93,16 +81,16 @@ function validateConfirmPassword(){
 	var messageConfirmPassword = /*[[#{form.user.confirmPassword.pattern}]]*/ 'default';
 	
 	if(($('#passwordAdd').val().length == 0) || ($('#confirmPasswordAdd').val().length == 0)){
-		$('#invalid-confirmPassword').html(messageConfirmPassword);
-		$('#invalid-confirmPassword').addClass("invalid-modal");
+		$('#passwordAdd_span').html(messageConfirmPassword);
+		$('#passwordAdd_span').addClass("badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill");
     }
     else if (pass != repass) {
     	$('#invalid-confirmPassword').html(messageConfirmPassword);
-		$('#invalid-confirmPassword').addClass("invalid-modal");
+		$('#invalid-confirmPassword').addClass("badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill");
     }
     else {
     	$('#invalid-confirmPassword').html('');
-		$('#invalid-confirmPassword').removeClass("invalid-modal");
+		$('#invalid-confirmPassword').removeClass("badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill");
     }
 	
 }

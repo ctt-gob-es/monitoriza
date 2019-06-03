@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>09/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 05/03/2019.
+ * @version 1.5, 14/03/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -34,18 +34,23 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.gob.monitoriza.persistence.configuration.dto.NodeDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
+import es.gob.monitoriza.persistence.configuration.model.entity.MaintenanceService;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.SpieType;
+import es.gob.monitoriza.persistence.configuration.model.repository.MaintenanceServiceRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.NodeMonitorizaRepository;
+import es.gob.monitoriza.persistence.configuration.model.repository.SpieTypeRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.NodeDatatableRepository;
 import es.gob.monitoriza.persistence.configuration.model.specification.CNodeTypeSpecification;
 import es.gob.monitoriza.service.INodeMonitorizaService;
+import es.gob.monitoriza.service.IStatusService;
 
 
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for NodeMonitoriza.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 05/03/2019.
+ * @version 1.5, 14/03/2019.
  */
 @Service("nodeMonitorizaService")
 public class NodeMonitorizaService implements INodeMonitorizaService {
@@ -55,6 +60,18 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 	 */
 	@Autowired
     private NodeMonitorizaRepository repository;
+	
+	/**
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 */
+	@Autowired
+    private SpieTypeRepository spieRepository;
+	
+	/**
+	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
+	 */
+	@Autowired
+    private MaintenanceServiceRepository maintenanceRepository;
 		
 	/**
 	 * Attribute that represents the injected interface that provides CRUD operations for the persistence. 
@@ -90,6 +107,19 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 	@Override
 	@Transactional
 	public void deleteNodeById(Long nodeId) {
+		
+		NodeMonitoriza node = repository.findByIdNode(nodeId);
+		
+		// Se va a borrar el nodo, luego es necesario eliminar todos los
+		// servicios asociados de la tabla de mantenimiento.
+		node.setCheckAfirma(Boolean.FALSE);
+		node.setCheckEmergencyDB(Boolean.FALSE);
+		node.setCheckHsm(Boolean.FALSE);
+		node.setCheckServices(Boolean.FALSE);
+		node.setCheckTsa(Boolean.FALSE);
+		node.setCheckValidMethod(Boolean.FALSE);
+		
+		deleteNodeSpieMaintenance(node);
 		
 		repository.deleteById(nodeId);
 
@@ -154,11 +184,9 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 	public NodeMonitoriza saveNodeAfirma(NodeDTO nodeAfirmaDto) {
 		
 		NodeMonitoriza nodeAfirma = null;
-		//boolean afirmaHaCambiado = false;
-		
+				
 		if (nodeAfirmaDto.getIdNode() != null) {
 			nodeAfirma = repository.findByIdNode(nodeAfirmaDto.getIdNode());
-			//afirmaHaCambiado = isAfirmaUpdatedForm(nodeAfirmaDto, nodeAfirma);
 		} else {
 			nodeAfirma = new NodeMonitoriza();
 		}
@@ -172,19 +200,74 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 		nodeAfirma.setCheckServices(nodeAfirmaDto.getCheckServices());
 		nodeAfirma.setCheckTsa(nodeAfirmaDto.getCheckTsa());
 		nodeAfirma.setCheckValidMethod(nodeAfirmaDto.getCheckValidMethod());
+			
 		CPlatformType afirmaType = new CPlatformType();
 		afirmaType.setIdPlatformType(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
 		nodeAfirma.setNodeType(afirmaType);
-
+		
 		NodeMonitoriza afirmaNode = repository.save(nodeAfirma);
-				
-		// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
-//		if (afirmaHaCambiado && nodeAfirma.getIdPlatform() != null) {
-//			
-//			updateScheduledTimerFromPlatform(nodeAfirma);
-//		}
+		
+		// Se comprueba si es necesario eliminar algún servicio SPIE de la tabla
+		// de mantenimiento por dejar de ser monitorizado.
+		deleteNodeSpieMaintenance(nodeAfirma);
 		
 		return afirmaNode;
+	}
+
+	/**
+	 * Checks if there are services that have been stopped monitoring in the node. 
+	 * @param node {@link NodeMonitoriza} Node to check.
+	 */
+	private void deleteNodeSpieMaintenance(NodeMonitoriza node) {
+		
+		// Es un nodo @firma
+		if (node.getNodeType().getIdPlatformType().equals(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA)) {
+
+			if (!node.getCheckEmergencyDB()) {
+				SpieType spieType = spieRepository.findByIdSpieType(SpieType.ID_MODE_EMERGENCY_AFIRMA);
+				deleteSpieMaintenance(node.getName(), spieType.getTokenName());
+			}
+
+			if (!node.getCheckHsm()) {
+				SpieType spieType = spieRepository.findByIdSpieType(SpieType.ID_CONN_HSM_AFIRMA);
+				deleteSpieMaintenance(node.getName(), spieType.getTokenName());
+			}
+
+			if (!node.getCheckServices()) {
+				SpieType spieType = spieRepository.findByIdSpieType(SpieType.ID_RESPONSE_TIMES);
+				deleteSpieMaintenance(node.getName(), spieType.getTokenName());
+			}
+
+			if (!node.getCheckTsa()) {
+				SpieType spieType = spieRepository.findByIdSpieType(SpieType.ID_CONN_TSA);
+				deleteSpieMaintenance(node.getName(), spieType.getTokenName());
+			}
+
+			if (!node.getCheckValidMethod()) {
+				SpieType spieType = spieRepository.findByIdSpieType(SpieType.ID_VAL_METHODS);
+				deleteSpieMaintenance(node.getName(), spieType.getTokenName());
+			}
+		// Es un nodo TS@	
+		} else {
+			
+			if (!node.getCheckEmergencyDB()) {
+				SpieType spieType = spieRepository.findByIdSpieType(SpieType.ID_MODE_EMERGENCY_TSA);
+				deleteSpieMaintenance(node.getName(), spieType.getTokenName());
+			}
+					
+			
+			if (!node.getCheckHsm()) {
+				SpieType spieType = spieRepository.findByIdSpieType(SpieType.ID_CONN_HSM_TSA);
+				deleteSpieMaintenance(node.getName(), spieType.getTokenName());
+			}
+			
+			
+			if (!node.getCheckAfirma()) {
+				SpieType spieType = spieRepository.findByIdSpieType(SpieType.ID_CONN_AFIRMA);
+				deleteSpieMaintenance(node.getName(), spieType.getTokenName());
+			}
+			
+		}
 	}
 
 	/**
@@ -196,11 +279,10 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 	public NodeMonitoriza saveNodeTsa(NodeDTO nodeTsaDto) {
 		
 		NodeMonitoriza nodeTsa = null;
-		//boolean afirmaHaCambiado = false;
-		
+				
 		if (nodeTsaDto.getIdNode() != null) {
 			nodeTsa = repository.findByIdNode(nodeTsaDto.getIdNode());
-			//afirmaHaCambiado = isAfirmaUpdatedForm(nodeAfirmaForm, nodeAfirma);
+			
 		} else {
 			nodeTsa = new NodeMonitoriza();
 		}
@@ -218,14 +300,30 @@ public class NodeMonitorizaService implements INodeMonitorizaService {
 		nodeTsa.setNodeType(tsaType);
 
 		NodeMonitoriza tsaNode = repository.save(nodeTsa);
-				
-		// Si la plataforma ha cambiado y no es nueva (sin asociar), se actualiza el estado de los timers programados asociados.
-//		if (afirmaHaCambiado && nodeAfirma.getIdPlatform() != null) {
-//			
-//			updateScheduledTimerFromPlatform(nodeAfirma);
-//		}
+		
+		// Se comprueba si es necesario eliminar algún servicio SPIE de la tabla de mantenimiento
+		// por dejar de ser monitorizado.
+		deleteNodeSpieMaintenance(nodeTsa);
 		
 		return tsaNode;
+	}
+	
+	/**
+	 * Method that deletes a SPIE service from the maintenance.
+	 * @param node String that represents the name of the node
+	 * @param spieType String that represents the name of the SPIE type
+	 */
+	@Transactional
+	private void deleteSpieMaintenance(String node, String spieType) {
+		String spieUniqueName = IStatusService.getUniqueNameStatusSpie(node, spieType);
+		
+		MaintenanceService maintenance = maintenanceRepository.findByService(spieUniqueName);
+		
+		// Se elimina el servicio SPIE de la tabla de mantenimiento
+		if (maintenance != null) {
+			maintenanceRepository.delete(maintenance);
+		}
+			
 	}
 
 	/**

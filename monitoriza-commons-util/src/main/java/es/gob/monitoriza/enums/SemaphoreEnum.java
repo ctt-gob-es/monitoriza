@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>08/11/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 04/01/2019.
+ * @version 1.2, 14/03/2019.
  */
 package es.gob.monitoriza.enums;
 
@@ -28,11 +28,11 @@ package es.gob.monitoriza.enums;
 /** 
  * <p>Enum that represents the semaphore values .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 04/01/2019.
+ * @version 1.2, 14/03/2019.
  */
 public enum SemaphoreEnum {
 	
-	GREEN(0, "OK"), AMBER(1, "WARNING"), RED(2, "ERROR");
+	GREEN(0, "OK"), BLUE (1, "MAINTENANCE"), AMBER(2, "WARNING"), RED(3, "ERROR"), OTHER(4, "MESSAGE");
 
 	/**
 	 * Attribute that represents the enum id. 

@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>25/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 25/01/2019.
+ * @version 1.6, 28/03/2019.
  */
 package es.gob.monitoriza.invoker.ocsp;
 
@@ -57,7 +57,7 @@ import es.gob.monitoriza.utilidades.FileUtils;
 /** 
  * <p>Class that performs the request of a OCSP service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.5, 25/01/2019.
+ * @version 1.6, 28/03/2019.
  */
 public final class OcspInvoker {
 
@@ -75,13 +75,13 @@ public final class OcspInvoker {
 
 	/**
 	 * Method that sends a request and get the response message.
-	 * 
+	 * @param idTimerTask Identifier of the scheduled service.
 	 * @param requestFile request file which contents the SOAP message.
 	 * @param service DTOService that contains the configuration data for the service.
 	 * @return Long that represents the time in milliseconds that has taken to complete the request.
 	 * If there is some configuration or communication problem, this value will be null.
 	 */
-	public static Long sendRequest(final File requestFile, final ConfigServiceDTO service, final KeyStore ssl) throws InvokerException {
+	public static Long sendRequest(final String idTimerTask, final File requestFile, final ConfigServiceDTO service, final KeyStore ssl) throws InvokerException {
 		
 		Long tiempoTotal = null;
 		byte[ ] requestByte = FileUtils.fileToByteArray(requestFile);
@@ -98,7 +98,7 @@ public final class OcspInvoker {
 
 					if (connection instanceof HttpsURLConnection) {
 
-						String msgError = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS004);
+						String msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS004, new Object[]{idTimerTask});
 
 						try {
 
@@ -125,7 +125,7 @@ public final class OcspInvoker {
 
 			});
 			
-			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS008, new Object[ ] { requestFile, endpoint}));
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS008, new Object[ ] { idTimerTask, requestFile, endpoint}));
 			
 			HttpURLConnection con = (HttpURLConnection) endpoint.openConnection();
 			con.setDoOutput(true);
@@ -152,7 +152,7 @@ public final class OcspInvoker {
 			// Comprobamos que la conexión se estableció correctamente
 			if (con.getResponseCode() / NumberConstants.NUM100 != 2) {
 				// Si hay algún problema de conexión, considero la petición como perdida...
-				LOGGER.error(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS005));
+				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS005, new Object[]{idTimerTask, requestFile}));
 			}
 			else {
     			// Lectura...
@@ -163,7 +163,7 @@ public final class OcspInvoker {
 		
 		} catch (IOException e) {
 
-			String msgError = Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS005);
+			String msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS005, new Object[]{idTimerTask});
 			LOGGER.error(msgError, e);
 			throw new InvokerException(msgError,e.getCause());
 		}
