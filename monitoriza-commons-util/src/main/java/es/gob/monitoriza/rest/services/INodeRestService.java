@@ -1,4 +1,4 @@
-/* 
+/*
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,7 +14,7 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
+/**
  * <b>File:</b><p>es.gob.monitoriza.rest.services.IRegisterConfigRestService.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
@@ -36,53 +36,53 @@ import javax.ws.rs.core.MediaType;
 import es.gob.monitoriza.exception.MonitorizaRestException;
 import es.gob.monitoriza.rest.elements.NodeRestStatusResponse;
 
-/** 
+/**
  * <p>Interface that represents the registration restful service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.1, 05/03/2019.
  */
 public interface INodeRestService {
-	
+
 	/**
 	 * Constant attribute that represents the token parameter 'nodeName'.
 	 */
 	String PARAM_NODE_NAME = "nodeName";
-	
+
 	/**
 	 * Constant attribute that represents the token parameter 'nodeHost'.
 	 */
 	String PARAM_NODE_HOST = "nodeHost";
-	
+
 	/**
 	 * Constant attribute that represents the token parameter 'nodePort'.
 	 */
 	String PARAM_NODE_PORT = "nodePort";
-	
+
 	/**
 	 * Constant attribute that represents the token parameter 'nodeSecure'.
 	 */
 	String PARAM_NODE_SECURE = "nodeSecure";
-	
+
 	/**
 	 * Constant attribute that represents the token parameter 'nodeType'.
 	 */
 	String PARAM_NODE_TYPE = "nodeType";
-	
+
 	/**
 	 * Constant attribute that represents the token parameter 'spieSelected'.
 	 */
 	String PARAM_SPIE_SELECTED = "spieSelected";
-	
+
 	/**
 	 * Constant attribute that represents the token parameter 'registerNode'.
 	 */
 	String SERVICENAME_REGISTER_NODE = "registerNode";
-		
+
 	/**
 	 * Constant attribute that represents the token parameter 'unRegisterNode'.
 	 */
 	String SERVICENAME_UNREGISTER_NODE = "unRegisterNode";
-		
+
 	/**
 	 * <br>Method that register a node in Monitoriz@. Registering a node could mean one of two things:</br>
 	 * <br>1.- If the node not exists, a new {@link es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza} is persisted in repository.</br>
@@ -101,7 +101,7 @@ public interface INodeRestService {
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 	NodeRestStatusResponse registerNode(@FormParam(PARAM_NODE_NAME) String nodeName, @FormParam(PARAM_NODE_HOST) String nodeHost, @FormParam(PARAM_NODE_PORT) String nodePort, @FormParam(PARAM_NODE_TYPE) String nodeType, @FormParam(PARAM_NODE_SECURE) Boolean nodeSecure, @FormParam(PARAM_SPIE_SELECTED) Set<String> spieSelected) throws MonitorizaRestException;
-	
+
 //	/**
 //	 * Method that un-register a node in Monitoriz@. This always means a de-activation setting the attribute active to false in {@link es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza}.
 //	 * @param nodeName Name of the node.

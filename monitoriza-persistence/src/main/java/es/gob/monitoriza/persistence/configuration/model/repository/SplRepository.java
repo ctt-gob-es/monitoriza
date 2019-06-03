@@ -1,4 +1,4 @@
-/* 
+/*
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,7 +14,7 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
+/**
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.repository.PlatformAfirmaRepository.java.</p>
  * <b>Description:</b><p>Interface that provides CRUD functionality for the PlatformAfirma entity.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
@@ -31,23 +31,26 @@ import org.springframework.stereotype.Repository;
 import es.gob.monitoriza.persistence.configuration.model.entity.SplMonitoriza;
 
 
-/** 
+/**
  * <p>Interface that provides CRUD functionality for the SplMonitoriza entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 15/03/2019.
  */
 @Repository
 public interface SplRepository extends JpaRepository<SplMonitoriza, Long>, JpaSpecificationExecutor<SplMonitoriza> {
-	
+
 	/**
-	  * Method that obtains from the persistence a SPL identified by its primary key. 
-	 * @param id String that represents the primary key of the SPL in the persistence.
-	 * @return Object that represents a SPL from the persistence. 
+	  * Method that obtains from the persistence a SPL identified by its primary key.
+	 * @param id Long that represents the primary key of the SPL in the persistence.
+	 * @return Object that represents a SPL from the persistence.
 	 */
 	SplMonitoriza findByIdSpl(Long id);
-	
-	
 
-	
 
+	/**
+	  * Method that obtains from the persistence a SPL identified by its unique URL.
+	 * @param url String that represents the service URL of the SPL in the persistence.
+	 * @return Object that represents a SPL from the persistence.
+	 */
+	SplMonitoriza findByUrl(String url);
 }

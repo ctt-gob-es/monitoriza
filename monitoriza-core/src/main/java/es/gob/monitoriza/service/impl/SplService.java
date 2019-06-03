@@ -64,6 +64,11 @@ public class SplService implements ISplService {
 	}
 
 	@Override
+	public SplMonitoriza getSplByUrl(final String url) {
+		return this.repository.findByUrl(url);
+	}
+
+	@Override
 	public void deleteSplById(final Long splId) {
 		this.repository.deleteById(splId);
 	}
@@ -93,7 +98,6 @@ public class SplService implements ISplService {
 		spl.setType(splDto.getType());
 		spl.setUrl(splDto.getUrl());
 		spl.setKey(splDto.getKey());
-	
 
 		return this.repository.save(spl);
 	}

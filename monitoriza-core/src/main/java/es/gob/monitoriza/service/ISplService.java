@@ -45,6 +45,13 @@ public interface ISplService {
 	SplMonitoriza getSplById(Long splId);
 
 	/**
+	 * Method that obtains the information for a SPL by its URL.
+	 * @param url The SPL URL.
+	 * @return {@link SplMonitoriza}
+	 */
+	SplMonitoriza getSplByUrl(String url);
+
+	/**
 	 * Method that deletes a SPL in the persistence.
 	 * @param splId {@link Integer} that represents the SPL to delete.
 	 */
