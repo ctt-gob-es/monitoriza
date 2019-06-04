@@ -130,11 +130,14 @@ $(document).ready(function() {
 	        	console.log("Exito");
 	        	hideLoading();
 	        	clearAlert();
-	        		
-	        	if (data) {
-        			$('#lastlines-result').val(concatTextWithinLimit($('#lastlines-result').val(), data));
-        		}
-
+	        	
+	        	if (status == SC_NO_CONTENT || !data) {
+	        		showError('No se encuentran m&aacute;s l&iacute;neas en el fichero.');
+	        		return;
+	        	}
+	        	
+	        	$('#lastlines-result').val(concatTextWithinLimit($('#lastlines-result').val(), data));
+        		
 	        	if ($('#lastlines-more').val() != 'true' && data) {
 		        	$('#lastlines-reset-button').removeClass('hidden');
 		        	$('#lastlines-more').val('true');
@@ -404,9 +407,9 @@ $(document).ready(function() {
 			 }
 		 });
 
-		// Si no se ha encontrado el elemento seleccionado, se selecciona de los que existen
+		// Si no se ha encontrado el elemento seleccionado, debe haberse solicitado mas lineas del log
+		 // y entenderemos que debe buscar un nuevo fragmento porque el anterior ya se ha revisado
 		 if (!previousElement) {
-			 markFirstText(searchResultPanel);
 			 return true;
 		 }
 		 
@@ -418,8 +421,10 @@ $(document).ready(function() {
 		 // Si no hemos encontrado un nuevo elemento, indicamos que sera necesario continuar la busqueda 
 		 return !newElement;
 	 }
-	 
-	 
+
+	 /**
+	  * Funcion para solicitar nuevas lineas desde la ventana de busqueda de texto. 
+	  */
 	 function onClickSearchTextMore(event) {				
 
 		 var searchTextFormData = {
@@ -438,39 +443,37 @@ $(document).ready(function() {
 			 type: 'POST',
 			 success: function(data, status, response) {
 
-				 console.log("Exito");
 				 hideLoading();
 				 clearAlert();
-				 
-					if (status == SC_NO_CONTENT || !data) {
-		        		showError('No se encuentran m&aacute;s coincidencias.');
-		        		return;
-		        	}
-		        	
-	        		var searchedText = $('#text-searchtext').val();
 
-	        		// Definimos el prefijo del texto, que tendra un separador si no es la primera llamada
-	        		// que se hace el metodo
-	        		var formatedText = "";
-	        	
-	        		formatedText += '<div>';
-	        		
-	        		// Tomamos el texto y marcamos cada una de las apariciones de la cadena buscada
-	        		var idx1 = 0;
-	        		var idx2;
-	        		while ((idx2 = data.indexOf(searchedText, idx1)) > -1) {
-	        			formatedText += data.substring(idx1, idx2) + "<span class='el mon-search-highlight'>" +
-	        						searchedText + "</span>";
-	        			idx1 = idx2 + searchedText.length;
-	        		}
-	        		formatedText += data.substring(idx1) + '</div>';
+				 if (status == SC_NO_CONTENT || !data) {
+					 showError('No se encuentran m&aacute;s l&iacute;neas en el fichero.');
+					 return;
+				 }
 
-	        		// Mostramos el texto concatenandolo con el que ya se mostraba y teniendo en cuenta la restricion ilimitada
-	        		$('#searchtext-result').html(concatTextWithinLimit($('#searchtext-result').html(), formatedText));
-		        	
+				 var searchedText = $('#text-searchtext').val();
+
+				 // Definimos el prefijo del texto, que tendra un separador si no es la primera llamada
+				 // que se hace el metodo
+				 var formatedText = "";
+
+				 formatedText += '<div>';
+
+				 // Tomamos el texto y marcamos cada una de las apariciones de la cadena buscada
+				 var idx1 = 0;
+				 var idx2;
+				 while ((idx2 = data.indexOf(searchedText, idx1)) > -1) {
+					 formatedText += data.substring(idx1, idx2) + "<span class='el mon-search-highlight'>" +
+					 searchedText + "</span>";
+					 idx1 = idx2 + searchedText.length;
+				 }
+				 formatedText += data.substring(idx1) + '</div>';
+
+				 // Mostramos el texto concatenandolo con el que ya se mostraba y teniendo en cuenta la restricion ilimitada
+				 $('#searchtext-result').html(concatTextWithinLimit($('#searchtext-result').html(), formatedText));
+
 			 },
 			 error: function(errorMsg, status, response) {
-				 console.log("Error al buscar mas");
 				 hideLoading();
 				 if (errorMsg.status == 401) {
 					 showError('Sesi&oacute;n caducada');
@@ -485,10 +488,6 @@ $(document).ready(function() {
 			 }
 		 });
 	 }
-		
-			// ----- EVENTOS -----
-		
-		// Boton de cierre de fichero
 
 	 /**
 	  * Desplaza, si es necesario, las barras de desplazamiento de un panel para que pueda verse un
@@ -649,6 +648,24 @@ $(document).ready(function() {
 		return idx > 0 ? baseText.substring(idx + 1) : "";
 	}
 	
+	var dateSelectedCurrently;
+	
+	function onFocusDateTimePicker(evt) {
+		dateSelectedCurrently = evt.target.value;
+	}
+	
+	function onBlurDateTimePickerFilterLogs(evt) {
+		if (dateSelectedCurrently != evt.target.value) {
+			onClickFilterLogsReset(evt);
+		}
+	}
+	
+	function onBlurDateTimePickerSearchText(evt) {
+		if (dateSelectedCurrently != evt.target.value) {
+			onClickSearchTextReset(evt);
+		}
+	}
+	
 	console.log("Iniciamos la configuracion de la pagina");
 	
 	// ----- EVENTOS -----
@@ -668,10 +685,12 @@ $(document).ready(function() {
 	$('#filterlogs-button').on('click', onClickFilterLogs);
 	$('#numlines-filterlogs').on('change', onClickFilterLogsReset);
 	$('#start-datetimepicker-filterlogs').on('change', onClickFilterLogsReset);
-	$('#start-datetimepicker-filterlogs').on('blur', onClickFilterLogsReset);
+	$('#start-datetimepicker-filterlogs').on('focus', onFocusDateTimePicker);
+	$('#start-datetimepicker-filterlogs').on('blur', onBlurDateTimePickerFilterLogs);
 	assignEnterEvent($('#start-datetimepicker-filterlogs'), onClickFilterLogs);
 	$('#end-datetimepicker-filterlogs').on('change', onClickFilterLogsReset);
-	$('#end-datetimepicker-filterlogs').on('blur', onClickFilterLogsReset);
+	$('#end-datetimepicker-filterlogs').on('focus', onFocusDateTimePicker);
+	$('#end-datetimepicker-filterlogs').on('blur', onBlurDateTimePickerFilterLogs);
 	assignEnterEvent($('#end-datetimepicker-filterlogs'), onClickFilterLogs);
 	$('#loglevel-filterlogs').on('change', onClickFilterLogsReset);
 	$('#filterlogs-reset-button').on('click', onClickFilterLogsReset);
@@ -680,7 +699,8 @@ $(document).ready(function() {
 	$('#searchtext-button').on('click', onClickSearchText);
 	$('#numlines-searchtext').on('change', onClickSearchTextReset);
 	$('#start-datetimepicker-searchtext').on('change', onClickSearchTextReset);
-	$('#start-datetimepicker-searchtext').on('blur', onClickSearchTextReset);
+	$('#start-datetimepicker-searchtext').on('focus', onFocusDateTimePicker);
+	$('#start-datetimepicker-searchtext').on('blur', onBlurDateTimePickerSearchText);
 	assignEnterEvent($('#start-datetimepicker-searchtext'), onClickSearchText);
 	$('#text-searchtext').on('change', onClickSearchTextReset);
 	assignEnterEvent($('#text-searchtext'), onClickSearchText);

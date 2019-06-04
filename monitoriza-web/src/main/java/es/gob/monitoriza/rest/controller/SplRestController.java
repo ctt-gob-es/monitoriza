@@ -184,7 +184,7 @@ public class SplRestController {
 
 		return dtOutput;
 	}
-	
+
     /**
      * Method that maps the connection url to the controller and loads.
      * * The SPL to the backup form.
@@ -192,10 +192,10 @@ public class SplRestController {
      * @param model Holder object for model attributes.
      * @return String that represents the name of the view to forward.
      */
-	
+
     @RequestMapping(value = "checkspl", method = RequestMethod.POST)
     public Boolean checkConnectionSpl(@RequestParam("urlTex") final String splUrlTex) {
-    	
+
     	final boolean checked = this.logConsumerService.echo(splUrlTex);
         return new Boolean(checked);
     }
@@ -357,7 +357,7 @@ public class SplRestController {
 	}
 
 	/**
-	 * Method that maps the last lines of a log file request and
+	 * Method that maps the text searches of a log file request and
 	 * forwards them to the view.
 	 *
 	 * @return String that represents the name of the view to forward.
@@ -399,7 +399,7 @@ public class SplRestController {
 		}
 		response.flushBuffer();
 	}
-	
+
 	/**
 	 * Method that maps the text searches of a log file request and
 	 * forwards them to the view.
@@ -417,8 +417,8 @@ public class SplRestController {
 			return;
 		}
 
-		LogDataDTO logData = this.logConsumerService.getMore(requestForm.getNumLines());
-		
+		final LogDataDTO logData = this.logConsumerService.getMore(requestForm.getNumLines());
+
 		response.setContentType("text/plain");
 		response.setCharacterEncoding(requestForm.getCharsetName());
 		if (logData.getErrorMessage() != null) {
@@ -429,5 +429,5 @@ public class SplRestController {
 		}
 		response.flushBuffer();
 	}
-	
+
 }

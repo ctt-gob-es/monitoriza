@@ -84,18 +84,18 @@ public class LogConsumerService implements ILogConsumerService {
 	public void closeConnection() {
 		this.logConsumerBean.closeConnection();
 	}
-	
+
 	@Override
-	public boolean echo(String urlTex) {
-		
-		String result = this.logConsumerBean.echo(urlTex);
-		
+	public boolean echo(final String urlTex) {
+
+		final String result = this.logConsumerBean.echo(urlTex);
+
 		final String ok = "\"Code\":200";
 		if (result.indexOf(ok) == -1) {
 			LOGGER.warn("No se pudo conectar con el servicio: " + result);
-			return false;	
+			return false;
 		}
-		
+
 		return true;
 	}
 
@@ -185,6 +185,7 @@ public class LogConsumerService implements ILogConsumerService {
 		final LogDataDTO log = new LogDataDTO();
 		if (logData.getError() != null) {
 			if (LogError.EC_NO_MORE_LINES.equals(logData.getError().getCode())) {
+				log.setErrorCode(LogErrors.NO_MORE_LINES.getCode());
 				log.setErrorMessage(LogErrors.NO_MORE_LINES.getMessage());
 			}
 			else {
@@ -258,6 +259,7 @@ public class LogConsumerService implements ILogConsumerService {
 		final LogDataDTO log = new LogDataDTO();
 		if (logData.getError() != null) {
 			if (LogError.EC_NO_MORE_LINES.equals(logData.getError().getCode())) {
+				log.setErrorCode(LogErrors.NO_MORE_LINES.getCode());
 				log.setErrorMessage(LogErrors.NO_MORE_LINES.getMessage());
 			}
 			else {
