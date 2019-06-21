@@ -168,8 +168,8 @@ public interface IServiceNameConstants {
 	String SYSTEM_NOTIFICATION_SERVICE = "systemNotificationService";
 
 	/**
-	 * Attribute that represents the name of the service maintenanceService. 
+	 * Attribute that represents the name of the service maintenanceService.
 	 */
 	String MAINTENANCE_SERVICE = "maintenanceService";
-	
+
 }

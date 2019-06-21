@@ -25,6 +25,7 @@
 package es.gob.monitoriza.service;
 
 import java.io.IOException;
+import java.security.KeyStore;
 
 import es.gob.monitoriza.persistence.configuration.dto.DownloadedLogFileDTO;
 import es.gob.monitoriza.persistence.configuration.dto.LogDataDTO;
@@ -113,8 +114,8 @@ public interface ILogConsumerService {
 	 * @return Additionales lines from the log.
 	 */
 	LogDataDTO getMore(int numLines);
-	
-	
+
+
 	/**
 	 * Method to recover the connection.
 	 * @param connection requested.
@@ -122,5 +123,11 @@ public interface ILogConsumerService {
 	 */
 	boolean echo(String splUrl);
 
-	
+	/**
+	 * Establece el almac&eacute;n de confianza para la verificaci&oacute;n de los certificados SSL.
+	 * @param trustStore Almac&eacute;n de confianza ya inicializado.
+	 */
+	void setSslTrustStore(KeyStore trustStore);
+
+
 }

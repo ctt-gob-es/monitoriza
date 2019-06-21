@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Type;
 import java.nio.file.Files;
+import java.security.KeyStore;
 import java.util.Collections;
 
 import org.apache.log4j.Logger;
@@ -74,6 +75,12 @@ public class LogConsumerService implements ILogConsumerService {
 	 */
 	@Autowired
 	private LogConsumerClient logConsumerBean;
+
+
+	@Override
+	public void setSslTrustStore(final KeyStore trustStore) {
+		this.logConsumerBean.setTrustStore(trustStore);
+	}
 
 	@Override
 	public void connect(final String url, final String key) throws IOException {

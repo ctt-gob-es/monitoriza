@@ -41,7 +41,7 @@ import es.gob.monitoriza.service.ISplService;
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 15/03/2019.
  */
-@Service("splService")
+@Service("logNodeMonitorizaService")
 public class SplService implements ISplService {
 
 	/**

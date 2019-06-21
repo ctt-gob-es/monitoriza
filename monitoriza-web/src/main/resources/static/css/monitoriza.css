@@ -135,9 +135,10 @@ textarea[class*=mon-log-panel][readonly] {
 [ SPL form ]*/
 
 .mon-alert-message {
-  padding: 0.75rem 1.25rem;
+  padding: 0.375rem 1.25rem;
   border: 1px solid transparent;
   border-radius: 0.25rem; 
+  margin-left: 0.75em;
 }
 
 /*------------------------------------------------------------------

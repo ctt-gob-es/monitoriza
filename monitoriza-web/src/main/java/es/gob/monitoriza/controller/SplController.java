@@ -25,6 +25,7 @@
 package es.gob.monitoriza.controller;
 
 import java.io.IOException;
+import java.security.KeyStore;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,6 +41,7 @@ import es.gob.monitoriza.persistence.configuration.dto.SplDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.SplMonitoriza;
 import es.gob.monitoriza.service.ILogConsumerService;
 import es.gob.monitoriza.service.ISplService;
+import es.gob.monitoriza.service.impl.KeystoreService;
 import es.gob.monitoriza.spring.config.LogConsumerConnectionInfo;
 
 /**
@@ -73,6 +75,13 @@ public class SplController {
 	 */
 	@Autowired
 	private LogConsumerConnectionInfo connectionInfoBean;
+
+	/**
+	 * Attribute that represents the service object for accessing the keystore
+	 * repository.
+	 */
+	@Autowired
+	private KeystoreService keyStoreService;
 
 	/**
 	 * Method that maps the web requests to the controller and forwards the list of SPL
@@ -115,11 +124,11 @@ public class SplController {
     	splForm.setType(spl.getType());
     	splForm.setUrl(spl.getUrl());
     	splForm.setKey(spl.getKey());
-    	
+
     	model.addAttribute("splform", splForm);
         return "modal/splForm";
     }
-    
+
     /**
      * Method that maps the connecting request to the SPL and list its log files.
      * @param id Identifier of the SPL to connect.
@@ -133,6 +142,9 @@ public class SplController {
     @RequestMapping(value = "connectspl", method = RequestMethod.POST)
     public String connectSpl(@RequestParam("id") final Long splId, @RequestParam("name") final String name,
     		@RequestParam("type") final String type, @RequestParam("desc") final String desc, final Model model) throws IOException {
+
+    	final KeyStore trustStore = this.keyStoreService.loadSslTruststore();
+    	this.logConsumerService.setSslTrustStore(trustStore);
 
     	final SplMonitoriza spl = this.splService.getSplById(splId);
 

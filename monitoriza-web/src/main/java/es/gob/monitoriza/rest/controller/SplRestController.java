@@ -26,6 +26,7 @@ package es.gob.monitoriza.rest.controller;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyStore;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -72,6 +73,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.SplMonitoriza;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.ILogConsumerService;
 import es.gob.monitoriza.service.ISplService;
+import es.gob.monitoriza.service.impl.KeystoreService;
 
 /**
  * <p>
@@ -103,6 +105,13 @@ public class SplRestController {
 	 */
 	@Autowired
 	private ILogConsumerService logConsumerService;
+
+	/**
+	 * Attribute that represents the service object for accessing the keystore
+	 * repository.
+	 */
+	@Autowired
+	private KeystoreService keyStoreService;
 
 	/**
 	 * Method that maps the list users web requests to the controller and
@@ -195,6 +204,9 @@ public class SplRestController {
 
     @RequestMapping(value = "checkspl", method = RequestMethod.POST)
     public Boolean checkConnectionSpl(@RequestParam("urlTex") final String splUrlTex) {
+
+    	final KeyStore trustStore = this.keyStoreService.loadSslTruststore();
+    	this.logConsumerService.setSslTrustStore(trustStore);
 
     	final boolean checked = this.logConsumerService.echo(splUrlTex);
         return new Boolean(checked);

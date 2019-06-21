@@ -82,8 +82,8 @@ public class RegisterLogRestService implements ILogRestService {
 
 		// Indicamos la recepcion del servicio junto con los parametros de
 		// entrada.
-		LOGGER.info(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG034,
-		                                                       new Object[ ] { logName, logDescription, logType, logUrl, logKey }));
+		LOGGER.info(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG012,
+		                                                       new Object[ ] { logName, logDescription, logType, logUrl }));
 
 		// Se crea el objecto que representa el resultado de la operación.
 		final LogRestRegisterResponse result = new LogRestRegisterResponse();
@@ -103,6 +103,7 @@ public class RegisterLogRestService implements ILogRestService {
 
 		// El nodo existe, no se hace nada
 		if (node != null) {
+			LOGGER.info("Se intenta registrar un servicio de logs ya dado de alta. Se ignorara.");
 			result.setDescription(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG011, new Object[ ] { logUrl }));
 			result.setStatus(LogRestServiceStatus.STATUS_NODE_WAS_REGISTERED);
 			result.setResponseTime(LocalDateTime.now());
@@ -134,8 +135,6 @@ public class RegisterLogRestService implements ILogRestService {
 		// Se registra la notificación asociada al registro del nodo.
 		final ISystemNotificationService sysNotificationService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SYSTEM_NOTIFICATION_SERVICE, SystemNotificationService.class);
 		sysNotificationService.registerSystemNotification(INotificationTypeIds.ID_LOG_NOTIFICATION_TYPE, INotificationOriginIds.ID_REST_SERVICE_LOG_ORIGIN, INotificationPriority.ID_NOTIFICATION_PRIORITY_NORMAL, msg);
-
-
 		return result;
 	}
 
