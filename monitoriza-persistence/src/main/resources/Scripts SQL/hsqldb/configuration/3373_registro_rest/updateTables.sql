@@ -136,8 +136,7 @@ CREATE TABLE "SPL_MONITORIZA" (
 	"DESCRIPTION" VARCHAR(255) NOT NULL,
 	"TYPE" VARCHAR(30) NOT NULL,
 	"URL" VARCHAR(255) NOT NULL,
-	"KEY" VARCHAR(100) NOT NULL,
-	"IS_SECURE" CHAR(1) DEFAULT 'Y' NOT NULL
+	"KEY" VARCHAR(100) NOT NULL
 	);
 ALTER TABLE "SPL_MONITORIZA" ADD CONSTRAINT "ID_SPL_CONS" PRIMARY KEY ("ID_SPL");
 COMMENT ON TABLE "SPL_MONITORIZA" IS 'Tabla que almacena la información de los servicios de provisión de logs configurados.';
@@ -147,7 +146,6 @@ COMMENT ON COLUMN "SPL_MONITORIZA"."DESCRIPTION" IS 'Descripción de los logs qu
 COMMENT ON COLUMN "SPL_MONITORIZA"."TYPE" IS 'Tipo de logs que se recuperan.';
 COMMENT ON COLUMN "SPL_MONITORIZA"."URL" IS 'URL del servicio de provisión de logs.';
 COMMENT ON COLUMN "SPL_MONITORIZA"."KEY" IS 'Clave AES codificada en base 64 para autenticarse ante el servicio.';
-COMMENT ON COLUMN "SPL_MONITORIZA"."IS_SECURE" IS 'Indica si se debe compropobar el certificado SSL de la URL del servicio.';
 
   -- Secuencia necesaria para la clave de la tabla SPL_MONITORIZA
 CREATE SEQUENCE SQ_SPL_MONITORIZA AS NUMERIC(19)
