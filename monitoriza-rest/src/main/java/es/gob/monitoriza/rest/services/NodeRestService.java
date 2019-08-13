@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Platform for detection and validation of certificates recognized in European TSL.</p>
  * <b>Date:</b><p>07/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 05/03/2019.
+ * @version 1.3, 13/08/2019.
  */
 package es.gob.monitoriza.rest.services;
 
@@ -28,7 +28,7 @@ import java.beans.IntrospectionException;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.time.LocalDateTime;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -52,6 +52,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
 import es.gob.monitoriza.persistence.configuration.model.entity.NodeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.rest.elements.NodeRestStatusResponse;
+import es.gob.monitoriza.rest.elements.json.DateString;
 import es.gob.monitoriza.service.ISystemNotificationService;
 import es.gob.monitoriza.service.impl.NodeMonitorizaService;
 import es.gob.monitoriza.service.impl.PlatformService;
@@ -63,7 +64,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /**
  * <p>Class that represents the node restful service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 05/03/2019.
+ * @version 1.3, 13/08/2019.
  */
 @Path("/node")
 public class NodeRestService implements INodeRestService {
@@ -105,7 +106,7 @@ public class NodeRestService implements INodeRestService {
 			result = new NodeRestStatusResponse();
 			result.setStatus(INodeRestServiceStatus.STATUS_ERROR_INPUT_PARAMETERS);
 			result.setDescription(resultCheckParams);
-			result.setDateTime(LocalDateTime.now());
+			result.setDateTime(new DateString(Calendar.getInstance().getTime()));
 		}
 		
 		// Comprobamos que el tipo de plataforma indicada sea correcto
@@ -117,7 +118,7 @@ public class NodeRestService implements INodeRestService {
     			result = new NodeRestStatusResponse();
     			result.setStatus(INodeRestServiceStatus.STATUS_ERROR_NODETYPE_PARAMETER);
     			result.setDescription(resultCheckParams);
-    			result.setDateTime(LocalDateTime.now());
+    			result.setDateTime(new DateString(Calendar.getInstance().getTime()));
 			}
 		}
 				
@@ -152,7 +153,7 @@ public class NodeRestService implements INodeRestService {
     			ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.NODE_MONITORIZA_SERVICE, NodeMonitorizaService.class).saveNode(node);
     			result.setDescription(msg);
     			result.setStatus(status);
-    			result.setDateTime(LocalDateTime.now());
+    			result.setDateTime(new DateString(Calendar.getInstance().getTime())	);
     			// Se actualiza el mapa de resultados para su uso por parte del semáforo.
     			//StatusNodeHolder.getInstance().getCurrentStatusHolder().put(nodeName, result);    			
     			
@@ -356,7 +357,7 @@ public class NodeRestService implements INodeRestService {
 
 		pd = new PropertyDescriptor(propertyName, obj.getClass());
 		Method setter = pd.getWriteMethod();
-
+	
 		setter.invoke(obj, variableValue);
  
 	}

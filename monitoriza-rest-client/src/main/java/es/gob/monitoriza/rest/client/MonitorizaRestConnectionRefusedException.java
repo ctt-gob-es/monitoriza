@@ -15,41 +15,42 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.monitoriza.exception.MonitorizaRestException.java.</p>
- * <b>Description:</b><p> .</p>
-  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>12/02/2019.</p>
+ * <b>File:</b><p>es.gob.monitoriza.rest.client.MonitorizaRestConnectionRefusedException.java.</p>
+ * <b>Description:</b><p> Class that manages exceptions produced by network connection refused in monitoriz@ rest client.</p>
+  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * <b>Date:</b><p>13/08/2019.</p>
  * @author Gobierno de España.
- * @version 1.1, 13/08/2019.
+ * @version 1.0, 13/08/2019.
  */
-package es.gob.monitoriza.exception;
+package es.gob.monitoriza.rest.client;
 
 import org.apache.log4j.Logger;
 
+import es.gob.monitoriza.exception.MonitorizaRestException;
 import es.gob.monitoriza.utilidades.UtilsXml;
 
 /** 
- * <p>Class that manages exceptions produced by the rest service module.</p>
+ * <p>Class that manages exceptions produced by network connection refused in monitoriz@ rest client.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 13/08/2019..
+ * @version 1.0, 13/08/2019.
  */
-public class MonitorizaRestException extends Exception {
+public class MonitorizaRestConnectionRefusedException extends MonitorizaRestException {
 
 	/**
-	 * Attribute that represents the serial version id. 
+	 * Constant attribute that represents the serial version UID.
 	 */
-	private static final long serialVersionUID = -8731837393927855067L;
-	
+	private static final long serialVersionUID = 2341944670584069679L;
+
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(MonitorizaRestException.class);
-	
+	private static final Logger LOGGER = Logger.getLogger(MonitorizaRestConnectionRefusedException.class);
+
 	/**
-	 * Attribute that represents a code associated to the error.
+	 * Attribute that represents the error code.
 	 */
 	private String errorCode;
-	
+
 	/**
 	 * Attribute that represents a description associated to the error.
 	 */
@@ -59,72 +60,61 @@ public class MonitorizaRestException extends Exception {
 	 * Attribute that represents a java exception associated to the error. It is optional.
 	 */
 	private Exception exception;
-	
+
 	/**
-	 * Constructor method for the class MonitorizaRestException.java.
+	 * Constructor method for the class ValetRestConnectionRefusedException.java.
 	 */
-	public MonitorizaRestException() {
+	public MonitorizaRestConnectionRefusedException() {
 		super();
 	}
 
 	/**
-	 * Constructor method for the class MonitorizaRestException.java with the specified detail message.
-	 * The cause is not initialized.
-	 *
-	 * @param message the detail message.
+	 * Constructor method for the class ValetRestConnectionRefusedException.java.
+	 * @param errorCodeParam Error code.
+	 * @param errorDescParam Description for the error.
 	 */
-	public MonitorizaRestException(final String message) {
-		super(message);
-		errorDesc = message;
+	public MonitorizaRestConnectionRefusedException(final String errorCodeParam, final String errorDescParam) {
+		super(errorDescParam);
+		errorCode = errorCodeParam;
+		errorDesc = errorDescParam;
+		LOGGER.warn(errorDescParam);
 	}
 
 	/**
-	 * Constructor method for the class MonitorizaRestException.java.
+	 * Constructor method for the class ValetRestConnectionRefusedException.java.
+	 * @param errorCodeParam Error code.
 	 * @param errorDescParam Description for the error.
 	 * @param exceptionParam Exception that causes the error.
 	 */
-	public MonitorizaRestException(final String errorDescParam, final Exception exceptionParam) {
-		super(errorDescParam);
-		errorDesc = errorDescParam;
-		exception = exceptionParam;
-		LOGGER.warn(errorDescParam);
-	}
-	
-	/**
-	 * Constructor method for the class MonitorizaRestException.java.
-	 * @param errorCodeParam Code of the error.
-	 * @param errorDescParam Description of the error.
-	 * @param exceptionParam Exception that causes the error.
-	 */
-	public MonitorizaRestException(final String errorCodeParam, final String errorDescParam, final Exception exceptionParam) {
+	public MonitorizaRestConnectionRefusedException(final String errorCodeParam, final String errorDescParam, final Exception exceptionParam) {
 		super(errorDescParam);
 		errorCode = errorCodeParam;
 		errorDesc = errorDescParam;
 		exception = exceptionParam;
 		LOGGER.warn(errorDescParam);
-	}	
-	
+	}
+
 	/**
 	 * Gets the value of the attribute {@link #errorCode}.
 	 * @return the value of the attribute {@link #errorCode}.
 	 */
-	public String getErrorCode() {
+	public final String getErrorCode() {
 		return errorCode;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #errorCode}.
-	 * @param errorCodeParam The value for the attribute {@link #errorCode}.
+	 * @param errorCodePAram The value for the attribute {@link #errorCode}.
 	 */
-	public void setErrorCode(String errorCodeParam) {
-		this.errorCode = errorCodeParam;
+	public final void setErrorCode(final String errorCodePAram) {
+		errorCode = errorCodePAram;
 	}
 
 	/**
 	 * Gets the value of the attribute {@link #errorDesc}.
 	 * @return the value of the attribute {@link #errorDesc}.
 	 */
-	public String getErrorDescription() {
+	public final String getErrorDescription() {
 		return errorDesc;
 	}
 
@@ -132,7 +122,7 @@ public class MonitorizaRestException extends Exception {
 	 * Sets the value of the attribute {@link #errorDesc}.
 	 * @param errorDescParam The value for the attribute {@link #errorDesc}.
 	 */
-	public void setErrorDescription(final String errorDescParam) {
+	public final void setErrorDescription(final String errorDescParam) {
 		errorDesc = UtilsXml.escapeXml10(errorDescParam);
 	}
 
@@ -140,7 +130,7 @@ public class MonitorizaRestException extends Exception {
 	 * Gets the value of the attribute {@link #exception}.
 	 * @return the value of the attribute {@link #exception}.
 	 */
-	public Exception getException() {
+	public final Exception getException() {
 		return exception;
 	}
 
@@ -148,25 +138,23 @@ public class MonitorizaRestException extends Exception {
 	 * Sets the value of the attribute {@link #exception}.
 	 * @param exceptionParam The value for the attribute {@link #exception}.
 	 */
-	public void setException(final Exception exceptionParam) {
+	public final void setException(final Exception exceptionParam) {
 		exception = exceptionParam;
-	}	
+	}
 
 	/**
 	 * {@inheritDoc}
 	 * @see java.lang.Throwable#toString()
 	 */
 	@Override
-	public String toString() {
+	public final String toString() {
 
 		if (exception == null) {
-			return "DESCRIPTION: [" + errorDesc + "]";
+			return "EXCEPTION_CODE: [" + errorCode + "]; DESCRIPTION: [" + errorDesc + "]";
 		} else {
-			return "DESCRIPTION: [" + errorDesc + "]; CAUSE: " + exception.toString();
+			return "EXCEPTION_CODE: [" + errorCode + "]; DESCRIPTION: [" + errorDesc + "]; CAUSE: " + exception.toString();
 		}
 
 	}
-
-
 
 }

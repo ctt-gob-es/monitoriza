@@ -8,6 +8,7 @@
 		<artifactId>monitoriza-parent</artifactId>
 		<version>1.0</version>
 	</parent>
+	<version>${monitoriza.version.clave.status.app}</version>
 	<artifactId>monitoriza-clave-status-app</artifactId>
 	<name>Monitorización Cl@ve</name>
 	<description>Agentes de monitorización para el sistema de identificación Cl@ve</description>

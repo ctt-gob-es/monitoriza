@@ -8,6 +8,7 @@
 		<artifactId>monitoriza-parent</artifactId>
 		<version>1.0</version>
 	</parent>
+	<version>${monitoriza.version.alarm}</version>
 	<artifactId>monitoriza-alarm</artifactId>
 	<name>monitoriza-alarm</name>
 	<packaging>jar</packaging>

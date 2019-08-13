@@ -174,7 +174,7 @@ public final class SoapInvoker {
 				
 				// Lectura...
 				con.getContent();
-				debugResponse(con);
+				//debugResponse(con);
     			LocalTime afterCall = LocalTime.now();
     			tiempoTotal = afterCall.getLong(ChronoField.MILLI_OF_DAY) - beforeCall.getLong(ChronoField.MILLI_OF_DAY);
 			}

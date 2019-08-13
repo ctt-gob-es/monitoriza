@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/02/2019.</p>
  * @author Gobierno de España.
- * @version 1.1, 05/03/2019.
+ * @version 1.2, 13/08/2019.
  */
 package es.gob.monitoriza.rest.client;
 
@@ -39,6 +39,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
+import es.gob.monitoriza.exception.IMonitorizaException;
 import es.gob.monitoriza.exception.MonitorizaRestException;
 import es.gob.monitoriza.rest.elements.NodeRestStatusResponse;
 import es.gob.monitoriza.rest.services.INodeRestService;
@@ -46,7 +47,7 @@ import es.gob.monitoriza.rest.services.INodeRestService;
 /** 
  * <p>Class that implements a client for Monitoriz@ rest services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 05/03/2019.
+ * @version 1.2, 13/08/2019.
  */
 public class MonitorizaClient {
 	
@@ -106,19 +107,19 @@ public class MonitorizaClient {
 				response = restService.registerNode(nodeName, nodeHost, nodePort, nodeType, nodeSecure, spieSelected);
 			} catch (ProcessingException e) {
 				if (e.getCause().getClass().equals(UnknownHostException.class)) {
-					throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Unknown host. The address of the host could not be determined.");
+					throw new MonitorizaRestUnknownHostException(IMonitorizaException.COD_193, "Error trying to connect to Monitoriza rest services. Unknown host. The address of the host could not be determined.");
 				} else if (e.getCause().getClass().equals(SocketTimeoutException.class)) {
-					throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Network connection timeout. The service didn't response after seconds configured as 'timeout'.");
+					throw new MonitorizaRestTimeoutException(IMonitorizaException.COD_194, "Error trying to connect to Monitoriza rest services. Network connection timeout. The service didn't response after seconds configured as 'timeout'.");
 				} else if (e.getCause().getClass().equals(ConnectException.class)) {
-					throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Connection refused. Error occurred while attempting to connect a socket to a remote address and port.");
+					throw new MonitorizaRestConnectionRefusedException(IMonitorizaException.COD_195, "Error trying to connect to Monitoriza rest services. Connection refused. Error occurred while attempting to connect a socket to a remote address and port.");
 				} else {
 					// If child exception of ProcessingException is unknown
-					throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Connection no available. There are internal processing errors on the server.");
+					throw new MonitorizaRestException(IMonitorizaException.COD_196, "Error trying to connect to Monitoriza rest services. Connection no available. There are internal processing errors on the server.", e);
 				}
 			} catch (NotFoundException e) {
-				throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Not found. The resource requested by client was not found on the server.");
+				throw new MonitorizaRestHostNotFoundException(IMonitorizaException.COD_197, "Error trying to connect to Monitoriza rest services. Not found. The resource requested by client was not found on the server.");
 			} catch (Exception e) {
-				throw new MonitorizaRestException("Error trying to connect to Monitoriza rest services. Connection no available.", e);
+				throw new MonitorizaRestException(IMonitorizaException.COD_196, "Error trying to connect to Monitoriza rest services. Connection no available.", e);
 			}
 			
 		}

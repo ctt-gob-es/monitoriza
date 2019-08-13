@@ -20,17 +20,18 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>11/02/2019.</p>
  * @author Gobierno de España.
- * @version 1.1, 05/03/2019.
+ * @version 1.2, 13/08/2019.
  */
 package es.gob.monitoriza.rest.elements;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+
+import es.gob.monitoriza.rest.elements.json.DateString;
 
 /** 
  * <p>Class that represents the status response of invoking a node REST service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 05/03/2019.
+ * @version 1.2, 13/08/2019.
  */
 public class NodeRestStatusResponse implements Serializable {
 
@@ -52,7 +53,7 @@ public class NodeRestStatusResponse implements Serializable {
 	/**
 	 * Attribute that represents the time when the Node Rest Service was called. 
 	 */
-	private LocalDateTime dateTime;
+	private DateString dateTime;
 	
 	/**
 	 * Gets the value of the attribute {@link #status}.
@@ -90,7 +91,7 @@ public class NodeRestStatusResponse implements Serializable {
 	 * Gets the value of the attribute {@link #dateTime}.
 	 * @return the value of the attribute {@link #v}.
 	 */
-	public final LocalDateTime getDateTime() {
+	public final DateString getDateTime() {
 		return dateTime;
 	}
 
@@ -98,7 +99,7 @@ public class NodeRestStatusResponse implements Serializable {
 	 * Sets the value of the attribute {@link #dateTime}.
 	 * @param dateTimeParam The value for the attribute {@link #dateTime}.
 	 */
-	public final void setDateTime(LocalDateTime dateTimeParam) {
+	public final void setDateTime(DateString dateTimeParam) {
 		this.dateTime = dateTimeParam;
 	}
 

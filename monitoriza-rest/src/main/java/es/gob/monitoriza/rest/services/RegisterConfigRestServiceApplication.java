@@ -18,9 +18,9 @@
  * <b>File:</b><p>es.gob.valet.rest.TslRestServiceApplication.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Platform for detection and validation of certificates recognized in European TSL.</p>
- * <b>Date:</b><p>7 ago. 2018.</p>
+ * <b>Date:</b><p>7/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 7 ago. 2018.
+ * @version 1.1, 13/08/2019.
  */
 package es.gob.monitoriza.rest.services;
 
@@ -29,11 +29,12 @@ import java.util.Set;
 
 import javax.ws.rs.ApplicationPath;
 import javax.ws.rs.core.Application;
+import es.gob.monitoriza.rest.services.RegisterLogRestService;
 
 /** 
  * <p>Class needed for restful ws server.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 06/02/2019.
+ * @version1.1, 13/08/2019.
  */
 @ApplicationPath("/rest")
 public class RegisterConfigRestServiceApplication extends Application {

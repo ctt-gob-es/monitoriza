@@ -12,11 +12,10 @@
 /**
  * <b>File:</b><p>es.gob.afirma.utilidades.UtilsFecha.java.</p>
  * <b>Description:</b><p>Class that provides methods for managing dates.</p>
- * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
- * certificates and electronic signature.</p>
+ * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>25/10/2005.</p>
  * @author Gobierno de España.
- * @version 1.1, 01/12/2015.
+ * @version 1.2, 13/08/2019.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -29,9 +28,8 @@ import java.util.TimeZone;
 
 /**
  * <p>Class that provides methods for managing dates.</p>
- * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
- * certificates and electronic signature.</p>
- * @version 1.1, 01/12/2015.
+ * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * @version 1.2, 13/18/2019.
  */
 public class UtilsFecha {
 
@@ -154,6 +152,11 @@ public class UtilsFecha {
 	 * Constant attribute that represents the date format <code>"yyyy-MM-dd'T'HH:mm:ss'.'SSS'Z'"</code>.
 	 */
 	public static final String FORMATO_FECHA_TIMESTAMP = "yyyy-MM-dd'T'HH:mm:ss'.'SSS'Z'";
+	
+	/**
+	 * Constant attribute that represents the date format <code>"yyyy-MM-dd'T'HH:mm:ss.SSSXXX"</code>.
+	 */
+	public static final String FORMAT_DATE_TIME_JSON = "yyyy-MM-dd'T'HH:mm:ss.SSSXXX";
 
 	/**
 	 * Attribute that represents the value of the date.
@@ -189,6 +192,20 @@ public class UtilsFecha {
 		fecha = formador.parse(fechaStr);
 
 	}
+	
+	/**
+	 * Method that obtains a date from a string using a determined pattern.
+	 * @param initialDate Parameter that represents the string to transform in date.
+	 * @param pattern Parameter that represents the pattern used to generate the date.
+	 * @return a date from a string using a determined pattern.
+	 * @throws ParseException If the method fails.
+	 */
+	public static Date transformDate(String initialDate, String pattern) throws ParseException {
+		SimpleDateFormat format = new SimpleDateFormat(pattern);
+		Date dateParsed = null;
+		dateParsed = format.parse(initialDate);
+		return dateParsed;
+	}
 
 	/**
 	 * Method that obtains a string with the value of the date for certain format.
@@ -210,6 +227,17 @@ public class UtilsFecha {
 	 */
 	public final String toString() {
 		return toString(FORMATO_FECHA_HORA);
+	}
+	
+	/**
+	 * Method that obtains a string with the value of the date for certain format.
+	 * @param dateFormat Parameter that represents the format to apply for the date.
+	 * @param dateParam Date to be transform to String
+	 * @return a string with the value of the date for certain format.
+	 */
+	public static final String toString(String dateFormat, Date dateParam) {
+		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, UtilsCountryLanguage.getFirstLocaleOfCountryCode(UtilsCountryLanguage.ES_COUNTRY_CODE));
+		return simpleDateFormat.format(dateParam);
 	}
 
 	/**

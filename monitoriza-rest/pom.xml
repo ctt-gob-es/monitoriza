@@ -8,6 +8,7 @@
 		<artifactId>monitoriza-parent</artifactId>
 		<version>1.0</version>
 	</parent>
+	<version>${monitoriza.version.rest}</version>
 	<groupId>es.gob.monitorizat</groupId>
 	<artifactId>monitoriza-rest</artifactId>
 	<packaging>war</packaging>

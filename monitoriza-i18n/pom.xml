@@ -7,6 +7,7 @@
     <artifactId>monitoriza-parent</artifactId>
     <version>1.0</version>
   </parent>
+  <version>${monitoriza.version.i18n}</version>
   <artifactId>monitoriza-i18n</artifactId>
   <name>monitoriza-i18n</name>
   <packaging>jar</packaging>

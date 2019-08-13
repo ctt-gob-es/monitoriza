@@ -10,6 +10,7 @@
 	</parent>
 	<artifactId>monitoriza-afirma-status-app</artifactId>
 	<packaging>war</packaging>
+	<version>${monitoriza.version.afirma.status.app}</version>
 	<name>monitoriza-afirma-status-app</name>
 	<description>status servlet for @firma service</description>
 	<dependencies>

@@ -8,6 +8,7 @@
 		<artifactId>monitoriza-parent</artifactId>
 		<version>1.0</version>
 	</parent>
+	<version>${monitoriza.version.core}</version>
 	<artifactId>monitoriza-core</artifactId>
 	<name>monitoriza-core</name>
 	<packaging>jar</packaging>

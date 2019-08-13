@@ -7,6 +7,7 @@
     <artifactId>monitoriza-parent</artifactId>
     <version>1.0</version>
   </parent>
+  <version>${monitoriza.version.rest-client}</version>
   <artifactId>monitoriza-rest-client</artifactId>
   <name>monitoriza-rest-client</name>
   <packaging>jar</packaging>
@@ -37,8 +38,8 @@
 							<Built-By>${built.by}</Built-By>
 							<Built-Time>${timestamp}</Built-Time>
 							<Vendor>${project.organization.name}</Vendor>
-							<Project-Name>${valet.project.name}</Project-Name>
-							<Valet-Version>${valet.version}</Valet-Version>
+							<Project-Name>${monitoriza.project.name}</Project-Name>
+							<Monitoriza-Version>${monitoriza.version}</Monitoriza-Version>
 							<Artifact-Name>${project.artifactId}</Artifact-Name>
 							<Artifact-Version>${project.version}</Artifact-Version>
 						</manifestEntries>

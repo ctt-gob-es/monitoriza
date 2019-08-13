@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>05/03/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 05/03/2019.
+ * @version 1.1, 13/08/2019.
  */
 package es.gob.monitoriza.service;
 
@@ -35,7 +35,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.SystemNotificati
 /** 
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 05/03/2019.
+ * @version 1.1, 13/08/2019.
  */
 public interface ISystemNotificationService {
 	
@@ -108,7 +108,7 @@ public interface ISystemNotificationService {
 	Boolean hasPendingNotifications();
 	
 	/**
-	 * Mark the notificacion as reviewd by the admin
+	 * Mark the notificacion as reviewd by the admin.
 	 * @param sysNot The system notification to mark.
 	 */
 	void checkNotification(SystemNotification sysNot);

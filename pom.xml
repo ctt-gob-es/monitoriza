@@ -26,6 +26,19 @@
 		<spring.version>2.0.1.RELEASE</spring.version>
 		<hibernate.version>5.2.13.Final</hibernate.version>
 		<plugin.javadoc.skip>true</plugin.javadoc.skip>
+		
+		<!-- Versionado de módulos propios de Monitoriz@. -->
+		<monitoriza.version.commons-util>1.0</monitoriza.version.commons-util>
+		<monitoriza.version.i18n>1.0</monitoriza.version.i18n>
+		<monitoriza.version.persistence>1.0</monitoriza.version.persistence>
+		<monitoriza.version.core>1.0</monitoriza.version.core>
+		<monitoriza.version.web>1.0</monitoriza.version.web>
+		<monitoriza.version.rest>1.0</monitoriza.version.rest>
+		<monitoriza.version.rest-client>1.0</monitoriza.version.rest-client>
+		<monitoriza.version.afirma.status.app>1.0</monitoriza.version.afirma.status.app>
+		<monitoriza.version.clave.status.app>1.0</monitoriza.version.clave.status.app>
+		<monitoriza.version.clave.web>1.0</monitoriza.version.clave.web>
+		<monitoriza.version.alarm>1.0</monitoriza.version.alarm>
 	</properties>
 
 	<modules>
@@ -40,7 +53,7 @@
 		<module>monitoriza-core</module>
     	<module>monitoriza-rest</module>
     	<module>monitoriza-rest-client</module>
-  </modules>
+  	</modules>
 
 	<dependencyManagement>
 		<dependencies>

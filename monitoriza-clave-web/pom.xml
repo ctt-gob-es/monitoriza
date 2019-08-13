@@ -9,6 +9,7 @@
 		<artifactId>monitoriza-parent</artifactId>
 		<version>1.0</version>
 	</parent>
+	<version>${monitoriza.version.clave.web}</version>
 	<artifactId>monitoriza-clave-web</artifactId>
 	<name>monitoriza-web Cl@ve</name>
 	<packaging>war</packaging>
