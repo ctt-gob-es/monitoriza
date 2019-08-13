@@ -292,13 +292,18 @@ function hide() {
 // Client side validation
 function validate(obj, msg)
 {
-  if(!obj.checkValidity())
-  {
-	 $("#invalid-" + $(obj).attr('id')).html(msg);
-	 $("#" + $(obj).attr('id')).addClass("is-invalid");
+  var valid;
+  if (!obj.checkValidity()) {
+	if (msg) {
+		$("#invalid-" + $(obj).attr('id')).html(msg);
+	}
+	$("#" + $(obj).attr('id')).addClass("is-invalid");
+	valid = false;
   } else {
-	 $("#" + $(obj).attr('id')).removeClass("is-invalid");
+	$("#" + $(obj).attr('id')).removeClass("is-invalid");
+	valid = true;
   }
+  return valid;
 }
 
 function drawValidationResult(jsonFieldErrors) {

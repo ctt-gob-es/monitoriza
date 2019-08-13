@@ -231,4 +231,10 @@ public interface IRestGeneralLogMessages {
 	 */
 	String REST_LOG033 = "REST033";
 
+	/**
+	 * Constant attribute that represents the name of the property <code>REST034</code> belonging to the
+	 * file messages/valet-rest/general_xx_YY.properties.
+	 */
+	String REST_LOG034 = "REST034";
+
 }

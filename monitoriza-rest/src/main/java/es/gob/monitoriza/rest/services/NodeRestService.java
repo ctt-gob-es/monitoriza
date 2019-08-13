@@ -85,21 +85,21 @@ public class NodeRestService implements INodeRestService {
 	@Path("/registerNode")
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
-	public NodeRestStatusResponse registerNode(@FormParam(PARAM_NODE_NAME) String nodeName, @FormParam(PARAM_NODE_HOST) String nodeHost, @FormParam(PARAM_NODE_PORT) String nodePort, @FormParam(PARAM_NODE_TYPE) String nodeType, @FormParam(PARAM_NODE_SECURE) Boolean nodeSecure, @FormParam(PARAM_SPIE_SELECTED) Set<String> spieSelected) throws MonitorizaRestException {
+	public NodeRestStatusResponse registerNode(@FormParam(PARAM_NODE_NAME) final String nodeName, @FormParam(PARAM_NODE_HOST) final String nodeHost, @FormParam(PARAM_NODE_PORT) final String nodePort, @FormParam(PARAM_NODE_TYPE) final String nodeType, @FormParam(PARAM_NODE_SECURE) final Boolean nodeSecure, @FormParam(PARAM_SPIE_SELECTED) final Set<String> spieSelected) throws MonitorizaRestException {
 		// CHECKSTYLE:ON
-		
+
 		// Indicamos la recepción del servicio junto con los parámetros de
 		// entrada.
 		LOGGER.info(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG001, new Object[ ] { nodeName, nodeHost, nodePort, spieSelected }));
-		
+
 		// Se crea el objecto que representa el resultado de la operación.
 		NodeRestStatusResponse result = null;
-		
+
 		// Inicialmente consideramos que todo es OK para proceder.
 		boolean allIsOk = Boolean.TRUE;
-		
+
 		// Comprobamos los parámetros obligatorios de entrada.
-		String resultCheckParams = checkParamsRegisterNode(nodeName, nodeHost, nodePort, nodeType, nodeSecure, spieSelected);
+		final String resultCheckParams = checkParamsRegisterNode(nodeName, nodeHost, nodePort, nodeType, nodeSecure, spieSelected);
 		if (resultCheckParams != null) {
 			allIsOk = Boolean.FALSE;
 			LOGGER.error(resultCheckParams);
@@ -108,46 +108,48 @@ public class NodeRestService implements INodeRestService {
 			result.setDescription(resultCheckParams);
 			result.setDateTime(new DateString(Calendar.getInstance().getTime()));
 		}
-		
+
 		// Comprobamos que el tipo de plataforma indicada sea correcto
 		if (allIsOk) {
-			String resultCheckPlatform = checkPlatform(nodeType);
-			
+			final String resultCheckPlatform = checkPlatform(nodeType);
+
 			if (resultCheckPlatform != null) {
 				allIsOk = Boolean.FALSE;
     			result = new NodeRestStatusResponse();
     			result.setStatus(INodeRestServiceStatus.STATUS_ERROR_NODETYPE_PARAMETER);
+
     			result.setDescription(resultCheckParams);
     			result.setDateTime(new DateString(Calendar.getInstance().getTime()));
+
 			}
 		}
-				
+
 		if (allIsOk) {
-			
+
 			String msg = null;
 			Integer status = null;
 			result = new NodeRestStatusResponse();
     		// Se busca el nodo a registrar.
     		NodeMonitoriza node = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.NODE_MONITORIZA_SERVICE, NodeMonitorizaService.class).getNodeByName(nodeName);
-    		
+
     		// El nodo no existe. Hay que crearlo.
     		if (node == null) {
-    			
+
     			node = prepareNodeToRegister(nodeName, nodeHost, nodePort, nodeType, nodeSecure, spieSelected);
     			msg = Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG005, new Object[ ] { nodeName });
     			status = INodeRestServiceStatus.STATUS_NODE_REGISTER_CREATED;
-    			
-    
-    		// Si el nodo ya existe, se actualiza.	
+
+
+    		// Si el nodo ya existe, se actualiza.
     		} else {
-    			
-    			Long idNode = node.getIdNode();
+
+    			final Long idNode = node.getIdNode();
     			node = prepareNodeToRegister(nodeName, nodeHost, nodePort, nodeType, nodeSecure, spieSelected);
     			node.setIdNode(idNode);
     			msg = Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG006, new Object[ ] { nodeName });
     			status = INodeRestServiceStatus.STATUS_NODE_REGISTER_MODIFIED;
     		}
-    		
+
     		try {
     			// Se registra el nodo, creándolo o modificándolo
     			ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.NODE_MONITORIZA_SERVICE, NodeMonitorizaService.class).saveNode(node);
@@ -155,36 +157,36 @@ public class NodeRestService implements INodeRestService {
     			result.setStatus(status);
     			result.setDateTime(new DateString(Calendar.getInstance().getTime())	);
     			// Se actualiza el mapa de resultados para su uso por parte del semáforo.
-    			//StatusNodeHolder.getInstance().getCurrentStatusHolder().put(nodeName, result);    			
-    			
-    			ISystemNotificationService sysNotificationService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SYSTEM_NOTIFICATION_SERVICE, SystemNotificationService.class);
-    			
+    			//StatusNodeHolder.getInstance().getCurrentStatusHolder().put(nodeName, result);
+
+    			final ISystemNotificationService sysNotificationService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SYSTEM_NOTIFICATION_SERVICE, SystemNotificationService.class);
+
     			// Se registra la notificación asociada al registro del nodo.
     			sysNotificationService.registerSystemNotification(INotificationTypeIds.ID_NODE_NOTIFICATION_TYPE, INotificationOriginIds.ID_REST_SERVICE_NODE_ORIGIN, INotificationPriority.ID_NOTIFICATION_PRIORITY_NORMAL, msg);
-    			    			
+
     		}
-    		catch (Exception e) {
+    		catch (final Exception e) {
     			throw new MonitorizaRestException(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG009, new Object[ ] { INodeRestService.SERVICENAME_REGISTER_NODE }), e);
     		}
 		}
-		
+
 		return result;
 	}
 
 	/**
 	 * Method that checks required parameters for {@link es.gob.monitoriza.rest.services.NodeRestService#registerNode(String, String, String, String)} method.
 	 * @param nodeName Name of the node
-	 * @param nodeHost Host of the node. 
+	 * @param nodeHost Host of the node.
 	 * @param nodePort Port of the node.
-	 * @param spieSelected String that represents which SPIE services are being monitored for the node. 
+	 * @param spieSelected String that represents which SPIE services are being monitored for the node.
 	 * @return {@link String} with the parameter that not are correctly defined, otherwise <code>null</code>.
 	 */
 	private String checkParamsRegisterNode(final String nodeName, final String nodeHost, final String nodePort, final String nodeType, final Boolean nodeSecure, final Set<String> spieSelected) {
-		
-		StringBuffer result = new StringBuffer();
+
+		final StringBuffer result = new StringBuffer();
 		result.append(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG003, new Object[ ] { INodeRestService.SERVICENAME_REGISTER_NODE }));
 		boolean checkError = false;
-		
+
 		// Check received parameters
 		if (UtilsStringChar.isNullOrEmptyTrim(nodeName)) {
 			checkError = true;
@@ -193,7 +195,7 @@ public class NodeRestService implements INodeRestService {
 			result.append(INodeRestService.PARAM_NODE_NAME);
 			result.append(UtilsStringChar.SYMBOL_CLOSE_BRACKET_STRING);
 		}
-		
+
 		// Check received parameters
 		if (UtilsStringChar.isNullOrEmptyTrim(nodeHost)) {
 			checkError = true;
@@ -202,7 +204,7 @@ public class NodeRestService implements INodeRestService {
 			result.append(INodeRestService.PARAM_NODE_HOST);
 			result.append(UtilsStringChar.SYMBOL_CLOSE_BRACKET_STRING);
 		}
-		
+
 		// Check received parameters
 		if (UtilsStringChar.isNullOrEmptyTrim(nodeType)) {
 			checkError = true;
@@ -211,7 +213,7 @@ public class NodeRestService implements INodeRestService {
 			result.append(INodeRestService.PARAM_NODE_TYPE);
 			result.append(UtilsStringChar.SYMBOL_CLOSE_BRACKET_STRING);
 		}
-		
+
 		// Check received parameters
 		if (spieSelected == null || spieSelected.isEmpty()) {
 			checkError = true;
@@ -220,25 +222,25 @@ public class NodeRestService implements INodeRestService {
 			result.append(INodeRestService.PARAM_SPIE_SELECTED);
 			result.append(UtilsStringChar.SYMBOL_CLOSE_BRACKET_STRING);
 		}
-		
+
 		if (checkError) {
 			return result.toString();
 		} else {
 			return null;
 		}
 	}
-	
+
 	/**
 	 * Method that checks required parameters for {@link es.gob.monitoriza.rest.services.NodeRestService#unRegisterNode(String)} method.
 	 * @param nodeName Name of the node
 	 * @return {@link String} with the parameter that not are correctly defined, otherwise <code>null</code>.
 	 */
 	private String checkParamsUnRegisterNode(final String nodeName) {
-		
-		StringBuffer result = new StringBuffer();
+
+		final StringBuffer result = new StringBuffer();
 		result.append(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG003, new Object[ ] { INodeRestService.SERVICENAME_UNREGISTER_NODE }));
 		boolean checkError = false;
-		
+
 		// Check received parameters
 		if (UtilsStringChar.isNullOrEmptyTrim(nodeName)) {
 			checkError = true;
@@ -247,24 +249,24 @@ public class NodeRestService implements INodeRestService {
 			result.append(INodeRestService.PARAM_NODE_NAME);
 			result.append(UtilsStringChar.SYMBOL_CLOSE_BRACKET_STRING);
 		}
-		
+
 		if (checkError) {
 			return result.toString();
 		} else {
 			return null;
 		}
 	}
-		
+
 	/**
 	 * Method that checks if the value for the parameter {@link es.gob.monitoriza.rest.services.INodeRestService#PARAM_NODE_TYPE} is valid.
 	 * @param nodeType Platform type of the node
 	 * @return {@link String} with the parameter value that not are correctly defined, otherwise <code>null</code>.
 	 */
-	private String checkPlatform(String nodeType) {
-		StringBuffer result = new StringBuffer();
+	private String checkPlatform(final String nodeType) {
+		final StringBuffer result = new StringBuffer();
 		result.append(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG004, new Object[ ] { INodeRestService.SERVICENAME_REGISTER_NODE }));
 		boolean checkError = false;
-		
+
 		// Check platform value
 		if (!GeneralConstants.PARAMETER_AFIRMA.equalsIgnoreCase(nodeType) && !GeneralConstants.PARAMETER_TSA.equalsIgnoreCase(nodeType)) {
 			checkError = true;
@@ -273,7 +275,7 @@ public class NodeRestService implements INodeRestService {
 			result.append(nodeType);
 			result.append(UtilsStringChar.SYMBOL_CLOSE_BRACKET_STRING);
 		}
-		
+
 		if (checkError) {
 			return result.toString();
 		} else {
@@ -286,49 +288,49 @@ public class NodeRestService implements INodeRestService {
 	 * @param nodeName String that represents the name of the node.
 	 * @param nodeHost String that represents the host of the node address.
 	 * @param nodePort String that represents the port of the node address.
-	 * @param spieSelected String that represents which SPIE services are being monitored for the node.  
+	 * @param spieSelected String that represents which SPIE services are being monitored for the node.
 	 * @return {@link Object} that represents the node to register.
 	 */
 	private NodeMonitoriza prepareNodeToRegister(final String nodeName, final String nodeHost, final String nodePort, final String nodeType, final Boolean nodeSecure, final Set<String> spieSelected) {
-		
-		NodeMonitoriza node = new NodeMonitoriza();
-	
+
+		final NodeMonitoriza node = new NodeMonitoriza();
+
 		node.setName(nodeName);
 		node.setHost(nodeHost);
 		node.setPort(nodePort);
 		node.setIsSecure(nodeSecure);
-				
+
 		CPlatformType type = null;
-		
+
 		// Se establece el tipo de plataforma asociada al nodo
 		if (GeneralConstants.PARAMETER_AFIRMA.equalsIgnoreCase(nodeType)) {
-			type = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.PLATFORM_SERVICE, PlatformService.class).getPlatformTypeById(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA); 
+			type = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.PLATFORM_SERVICE, PlatformService.class).getPlatformTypeById(PlatformMonitoriza.ID_PLATFORM_TYPE_AFIRMA);
 		} else {
 			type = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.PLATFORM_SERVICE, PlatformService.class).getPlatformTypeById(PlatformMonitoriza.ID_PLATFORM_TYPE_TSA);
-		}		 
-		
+		}
+
 		node.setNodeType(type);
-		
+
 		// Se inicializan las comprobaciones sobre los SPIE.
 		node.setCheckAfirma(Boolean.FALSE);
 		node.setCheckEmergencyDB(Boolean.FALSE);
 		node.setCheckHsm(Boolean.FALSE);
 		node.setCheckServices(Boolean.FALSE);
 		node.setCheckTsa(Boolean.FALSE);
-		node.setCheckValidMethod(Boolean.FALSE);		
-		
+		node.setCheckValidMethod(Boolean.FALSE);
+
 		// Preparamos la ejecución por reflexión, de los métodos
 		// de comprobación de SPIEs para el nodo a registrar.
-		Iterator<String> itSpie = spieSelected.iterator();
+		final Iterator<String> itSpie = spieSelected.iterator();
 		String check = null;
-		
+
 		// Se recorren los SPIEs para el nodo, pasados como argumento y representados por
 		// el nobre del método que establece el valor.
 		while (itSpie.hasNext()) {
-			
+
 			// Se obtiene el nombre de la propiedad de comprobación SPIE del nodo "checkXXX".
 			check = itSpie.next();
-			
+
 			try {
 				// Se invoca el método setter correspondiente "setCheckXXX(true)".
 				invokeSetter(node, check, Boolean.TRUE);
@@ -337,11 +339,11 @@ public class NodeRestService implements INodeRestService {
 				LOGGER.error(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG002, new Object[ ] { nodeName, check }));
 			}
 		}
-		
+
 		return node;
 	}
-	
-	
+
+
 	/**
 	 * Invoke by reflection the setter method of a property
 	 * @param obj Object with the property whose value its being setting.
@@ -356,10 +358,9 @@ public class NodeRestService implements INodeRestService {
 		PropertyDescriptor pd;
 
 		pd = new PropertyDescriptor(propertyName, obj.getClass());
-		Method setter = pd.getWriteMethod();
-	
+		final Method setter = pd.getWriteMethod();
 		setter.invoke(obj, variableValue);
- 
+
 	}
 
 	/**
@@ -375,7 +376,7 @@ public class NodeRestService implements INodeRestService {
 //	@Consumes(MediaType.APPLICATION_FORM_URLENCODED)
 //	public NodeRestStatusResponse unRegisterNode(@FormParam(PARAM_NODE_NAME) String nodeName) throws MonitorizaRestException {
 //		// CHECKSTYLE:ON
-//		
+//
 //		// Indicamos la recepción del servicio junto con los parámetros de
 //		// entrada.
 //		LOGGER.info(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG007, new Object[ ] { nodeName }));
@@ -385,7 +386,7 @@ public class NodeRestService implements INodeRestService {
 //
 //		// Inicialmente consideramos que todo es OK para proceder.
 //		boolean allIsOk = Boolean.TRUE;
-//		
+//
 //		// Comprobamos los parámetros obligatorios de entrada.
 //		String resultCheckParams = checkParamsUnRegisterNode(nodeName);
 //		if (resultCheckParams != null) {
@@ -396,12 +397,12 @@ public class NodeRestService implements INodeRestService {
 //			result.setDescription(resultCheckParams);
 //			result.setDateTime(LocalDateTime.now());
 //		}
-//		
+//
 //		if (allIsOk) {
-//	
+//
 //			// Se busca el nodo a des-registrar.
 //			NodeMonitoriza node = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.NODE_MONITORIZA_SERVICE, NodeMonitorizaService.class).getNodeByName(nodeName);
-//			
+//
 //			if (node == null) {
 //				allIsOk = Boolean.FALSE;
 //				LOGGER.error(resultCheckParams);
@@ -409,13 +410,13 @@ public class NodeRestService implements INodeRestService {
 //				result.setStatus(INodeRestServiceStatus.STATUS_ERROR_NODE_NOT_FOUND);
 //				result.setDescription(resultCheckParams);
 //				result.setDateTime(LocalDateTime.now());
-//				
+//
 //			} else {
-//				
+//
 //				node.setActive(Boolean.FALSE);
 //    			String msg = Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG008, new Object[ ] { nodeName });
 //    			Integer status = INodeRestServiceStatus.STATUS_NODE_UNREGISTER;
-//    			
+//
 //    			try {
 //        			// Se registra el nodo, ya sea desde cero o activándolo de nuevo.
 //        			ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.NODE_MONITORIZA_SERVICE, NodeMonitorizaService.class).saveNode(node);
@@ -423,22 +424,22 @@ public class NodeRestService implements INodeRestService {
 //        			result.setDescription(msg);
 //        			result.setStatus(status);
 //        			result.setDateTime(LocalDateTime.now());
-//        			
+//
 //        			ISystemNotificationService sysNotificationService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SYSTEM_NOTIFICATION_SERVICE, SystemNotificationService.class);
-//        			
+//
 //        			// Se registra la notificación asociada al registro del nodo.
-//        			sysNotificationService.registerSystemNotification(INotificationTypeIds.ID_NODE_NOTIFICATION_TYPE, msg);        			
-//        			
+//        			sysNotificationService.registerSystemNotification(INotificationTypeIds.ID_NODE_NOTIFICATION_TYPE, msg);
+//
 //        		}
 //        		catch (Exception e) {
 //        			throw new MonitorizaRestException(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG009, new Object[ ] { INodeRestService.SERVICENAME_UNREGISTER_NODE }), e);
 //        		}
-//    			
+//
 //			}
 //		}
-//				
+//
 //		return result;
 //	}
-	
+
 
 }

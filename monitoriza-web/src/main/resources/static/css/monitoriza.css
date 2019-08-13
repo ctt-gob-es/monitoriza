@@ -81,6 +81,67 @@
 }
 
 /*------------------------------------------------------------------
+[ Search screen ]*/
+
+.mon-toolbar {
+	
+}
+
+.mon-distribution-left {
+	float: left;
+}
+
+.mon-distribution-right {
+	float: right;
+}
+
+.mon-vertical-padding {
+	padding-top: 1em;
+}
+
+.mon-panel-close {
+	text-align: right;
+	padding-bottom: 1em;
+}
+
+.mon-button-panel > button {
+	margin-bottom: 1em;
+}
+
+.mon-log-panel {
+    white-space: pre;
+}
+
+.mon-log-panel-search {
+	overflow-x: auto;
+	overflow-y:auto;
+	height: 30em;
+	background-color: #fff;
+}
+
+.mon-search-highlight {
+	background-color: #ffff80;
+}
+
+.mon-search-current-highlight {
+	background-color: #80ffff;
+}
+
+textarea[class*=mon-log-panel][readonly] {
+	background-color: #fff;
+}
+
+/*------------------------------------------------------------------
+[ SPL form ]*/
+
+.mon-alert-message {
+  padding: 0.375rem 1.25rem;
+  border: 1px solid transparent;
+  border-radius: 0.25rem; 
+  margin-left: 0.75em;
+}
+
+/*------------------------------------------------------------------
 [ Modal ]*/
 
 .modal-pre {

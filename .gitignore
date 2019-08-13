@@ -60,6 +60,7 @@ local.properties
 
 # Code analyler
 .pmd
+.eclipse-pmd
 .ruleset
 
 # Mobile Tools for Java (J2ME)
