@@ -17,6 +17,7 @@
 		<built.by>@Firma Team</built.by>
 		<monitoriza.version>${project.version}</monitoriza.version>
 		<monitoriza.project.name>Monitoriz@</monitoriza.project.name>
+		<logconsumer.version>1.1</logconsumer.version>
 		<java.1.8.version>1.8.0_131</java.1.8.version>
 		<!-- Para la correcta ejecución maven, establecer la variable java.1.8.home hacia la ruta absoluta de donde se disponga la jdk -->
 		<!-- <java.1.8.home>C:\Trabajo\Software\Java\jdk1.8.0_131</java.1.8.home> -->
@@ -53,7 +54,8 @@
 		<module>monitoriza-core</module>
     	<module>monitoriza-rest</module>
     	<module>monitoriza-rest-client</module>
-  	</modules>
+		<module>monitoriza-log-register</module>
+  </modules>
 
 	<dependencyManagement>
 		<dependencies>
@@ -82,6 +84,11 @@
 				<groupId>es.gob.monitoriza</groupId>
 				<artifactId>monitoriza-core</artifactId>
 				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>es.gob.logconsumer</groupId>
+				<artifactId>log-consumer-register</artifactId>
+				<version>${logconsumer.version}</version>
 			</dependency>
 			<!-- Módulos de Monitoriz@ -->
 			<dependency>
