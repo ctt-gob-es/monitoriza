@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 2.0, 14/03/2019.
+ * @version 2.1, 27/08/2019.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -30,9 +30,11 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import org.apache.http.HttpEntity;
@@ -65,9 +67,12 @@ import es.gob.monitoriza.persistence.configuration.dto.RowStatusVipDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusSpieDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusVipDTO;
 import es.gob.monitoriza.persistence.configuration.dto.SummaryStatusDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ValMethodsConnDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.MaintenanceService;
+import es.gob.monitoriza.persistence.configuration.model.entity.SpieType;
 import es.gob.monitoriza.persistence.configuration.model.utils.IStatusAdapter;
 import es.gob.monitoriza.service.IMaintenanceServiceService;
+import es.gob.monitoriza.service.ISpieMonitoringConfigService;
 import es.gob.monitoriza.service.IStatusService;
 import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 
@@ -75,7 +80,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
  * <p>Class that implements the communication with the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.9, 05/03/2019.
+ * @version 2.1, 27/08/2019.
  */
 @Service("statusService")
 public class StatusService implements IStatusService {
@@ -97,6 +102,13 @@ public class StatusService implements IStatusService {
 	 */
 	@Autowired
 	private IMaintenanceServiceService maintenanceService;
+	
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private ISpieMonitoringConfigService spieService;
 	
 	/**
 	 * {@inheritDoc}
@@ -341,6 +353,7 @@ public class StatusService implements IStatusService {
 		return status;
 	}
 	
+	
 	/**
 	 * {@inheritDoc}
 	 * @see es.gob.monitoriza.service.IStatusService#getSpieAvgTimesDetails(java.util.List)
@@ -349,10 +362,12 @@ public class StatusService implements IStatusService {
 	public List<AvgTimesServiceDTO> getSpieAvgTimesDetails(final List<RowStatusSpieDTO> spieStatus) {
 		
 		List<AvgTimesServiceDTO> avgDetails = new ArrayList<AvgTimesServiceDTO>();
+		Map<String, List<AvgTimesServiceDTO>> avgResultPerService = new HashMap<String, List<AvgTimesServiceDTO>>();
 		
 		for (RowStatusSpieDTO s : spieStatus) {
 			
 			if (s.getPartialRequestResult() != null && !s.getPartialRequestResult().isEmpty()) {
+				avgResultPerService.put(s.getNodeName(), s.getPartialRequestResult());
 				avgDetails = s.getPartialRequestResult();
 			}
 			
@@ -360,6 +375,67 @@ public class StatusService implements IStatusService {
 		
 		return avgDetails;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IStatusService#getSpieAvgTimesDetailsMap(java.util.List)
+	 */
+	@Override
+	public Map<String, List<AvgTimesServiceDTO>> getSpieAvgTimesDetailsMap(final List<RowStatusSpieDTO> spieStatus) {
+		
+		SpieType spieType = spieService.getSpieTypeById(SpieType.ID_RESPONSE_TIMES);
+		Map<String, List<AvgTimesServiceDTO>> avgResultPerService = new HashMap<String, List<AvgTimesServiceDTO>>();
+		
+		for (RowStatusSpieDTO s : spieStatus) {
+			
+			if (s.getPartialRequestResult() != null && s.getSpieService().equals(spieType.getTokenName())) {
+				avgResultPerService.put(s.getNodeName(), s.getPartialRequestResult());
+			}
+			
+		}
+		
+		return avgResultPerService;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IStatusService#getValMethodDetails(java.util.List)
+	 */
+	@Override
+	public List<ValMethodsConnDTO> getValMethodDetails(List<RowStatusSpieDTO> spieStatus) {
+		
+		List<ValMethodsConnDTO> valMethodDetails = new ArrayList<ValMethodsConnDTO>();
+				
+		for (RowStatusSpieDTO s : spieStatus) {
+			
+			if (s.getValMethodConnDetail() != null) {
+				valMethodDetails = s.getValMethodConnDetail();
+			}
+		}
+		
+		return valMethodDetails;
+	}
+	
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IStatusService#getValMethodDetailsMap(java.util.List)
+	 */
+	@Override
+	public Map<String, List<ValMethodsConnDTO>> getValMethodDetailsMap(List<RowStatusSpieDTO> spieStatus) {
+		
+		SpieType spieType = spieService.getSpieTypeById(SpieType.ID_VAL_METHODS);
+		Map<String, List<ValMethodsConnDTO>> valMethodResultPerService = new HashMap<String, List<ValMethodsConnDTO>>();
+		
+		for (RowStatusSpieDTO s : spieStatus) {
+			
+			if (s.getValMethodConnDetail() != null && s.getSpieService().equals(spieType.getTokenName())) {
+				valMethodResultPerService.put(s.getNodeName(), s.getValMethodConnDetail());
+			}
+		}
+		
+		return valMethodResultPerService;
+	}
+	
 
 	/**
 	 * {@inheritDoc}
@@ -420,5 +496,6 @@ public class StatusService implements IStatusService {
 			
 		return summaryList;
 	}
+	
 		
 }

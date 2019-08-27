@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>27/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 15/02/2018.
+ * @version 1.1, 27/08/2019.
  */
 package es.gob.monitoriza.spie.html;
 
@@ -29,11 +29,12 @@ import java.util.Map;
 
 import es.gob.monitoriza.persistence.configuration.dto.AvgTimesServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ValMethodsConnDTO;
 
 /** 
  * <p>Interface for the resolvers that parses concrete HTML SPIE responses.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 15/02/2018.
+ * @version 1.1, 27/08/2019.
  */
 public abstract class AbstractHtmlSpieResolver {
 		
@@ -49,6 +50,12 @@ public abstract class AbstractHtmlSpieResolver {
 	 * Gets the {@link #detailResults}.
 	 * @return {@link Map}.
 	 */
-	public abstract List<AvgTimesServiceDTO> getDetailResults();
+	public abstract List<AvgTimesServiceDTO> getAvgDetailResults();
+	
+	/**
+	 * Gets the {@link #detailResults}.
+	 * @return {@link Map}.
+	 */
+	public abstract List<ValMethodsConnDTO> getValMethodDetailResults();
 
 }

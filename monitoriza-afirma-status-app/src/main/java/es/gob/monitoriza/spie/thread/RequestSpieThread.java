@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>29/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.7, 03/05/2019..
+ * @version 1.8, 27/08/2019.
  */
 package es.gob.monitoriza.spie.thread;
 
@@ -77,7 +77,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that get the results of the SPIE services configured.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.7, 03/05/2019.
+ * @version 1.8, 27/08/2019.
  */
 public class RequestSpieThread implements Runnable {
 	
@@ -172,6 +172,15 @@ public class RequestSpieThread implements Runnable {
 			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM001_AFIRMA_NO_TSA_CONNECTION);
 			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName() });
 			spieType = spieService.getSpieTypeById(SpieType.ID_CONN_TSA);
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS017, new Object[] { node.getName(), spieType.getTokenName()}));
+			resolveSpie(spieType, alarm, msgAlarm);
+
+		}
+		
+		if (node.getCheckValidMethod() != null && node.getCheckValidMethod()) {
+			alarm = alarmService.getAlarmById(IAlarmIdConstants.ALM004_AFIRMA_TRANS_ABOVE_MAX);
+			msgAlarm = Language.getFormatResAlarmMonitoriza(alarm.getDescription(), new Object[ ] { node.getName(), confSpie.getPercentAccept() });
+			spieType = spieService.getSpieTypeById(SpieType.ID_VAL_METHODS);
 			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS017, new Object[] { node.getName(), spieType.getTokenName()}));
 			resolveSpie(spieType, alarm, msgAlarm);
 
@@ -305,9 +314,10 @@ public class RequestSpieThread implements Runnable {
 				
 		StringBuilder subjectAlarm = new StringBuilder();
 		String estado = getSemaphoreNameById(spieStatus.getStatusValue());
-								
+		Boolean redAndSendAlarm = !spieStatus.getStatusValue().equals(SemaphoreEnum.GREEN.getId()) && alarm != null && alarm.getActive() && alarm.getTimeBlock() != null;
+		
 		// El estado es erróneo, se lanza alarma.
-		if ((spieStatus.getStatusValue() == null || !spieStatus.getStatusValue().equals(SemaphoreEnum.GREEN.getId())) && alarm != null && alarm.getActive() && alarm.getTimeBlock() != null) {
+		if (spieStatus.getStatusValue() == null || redAndSendAlarm) {
 			
 			subjectAlarm.append(Language.getFormatResAlarmMonitoriza(IAlarmMailText.SUBJECT_ALARM_SPIE, new Object[]{spieStatus.getSystem(), spieStatus.getNodeName(), spieStatus.getSpieService(), estado}));
 						
@@ -381,7 +391,7 @@ public class RequestSpieThread implements Runnable {
 			
 			// Si se ha obtenido clase de parseo, se parsea el resultado, obteniendo el estado.
 			if (resolver != null) {
-				status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SPIE_MONITORING_CONFIG_SERVICE, SpieMonitoringConfigService.class).getSpieConfiguration()), null, LocalDateTime.now());
+				status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), resolver.solveHtmlResult(htmlInvokerResult, ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SPIE_MONITORING_CONFIG_SERVICE, SpieMonitoringConfigService.class).getSpieConfiguration()), resolver.getAvgDetailResults(), resolver.getValMethodDetailResults(), LocalDateTime.now());
 			}
 			
 			// Se actualiza el mapa de resultados usando el identificador obtenido.
@@ -396,7 +406,7 @@ public class RequestSpieThread implements Runnable {
 		} catch (InvokerException ie) {
 			
 			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS023, new Object[ ] { node.getName() }), ie);
-			status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), SemaphoreEnum.OTHER.getId(), resolver.getDetailResults(), LocalDateTime.now());
+			status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), SemaphoreEnum.OTHER.getId(), resolver.getAvgDetailResults(), resolver.getValMethodDetailResults(), LocalDateTime.now());
 			// Se persiste el resultado
 			saveDailySpieMonitoring(idStatus, status);
 			// Se actualiza el mapa de resultados usando el identificador obtenido.

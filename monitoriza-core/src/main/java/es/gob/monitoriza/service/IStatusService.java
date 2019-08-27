@@ -20,25 +20,27 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 14/03/2019.
+ * @version 1.4, 27/08/2019.
  */
 package es.gob.monitoriza.service;
 
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 import es.gob.monitoriza.persistence.configuration.dto.AvgTimesServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.RowStatusSpieDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusSpieDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusVipDTO;
 import es.gob.monitoriza.persistence.configuration.dto.SummaryStatusDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ValMethodsConnDTO;
 import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /**
  * <p>Interface that provides communication with the status servlet.
  * </p><b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.3, 14/03/2019.
+ * @version 1.4, 27/08/2019.
  */
 public interface IStatusService {
 
@@ -60,6 +62,27 @@ public interface IStatusService {
 	 * @return List<AvgTimesServiceDTO> corresponding to the details of average service times SPIE
 	 */
 	List<AvgTimesServiceDTO> getSpieAvgTimesDetails(List<RowStatusSpieDTO> spieStatus);
+	
+	/**
+	 * Method that gets the response details from average times SPIE.
+	 * @param spieStatus List<RowStatusSpieDTO> of SPIE status results
+	 * @return Map<String, List<ValMethodsConnDTO>> corresponding to the details of average service times SPIE
+	 */
+	Map<String, List<AvgTimesServiceDTO>> getSpieAvgTimesDetailsMap(List<RowStatusSpieDTO> spieStatus);
+	
+	/**
+	 * Method that gets the response details from the validation method SPIE.
+	 * @param spieStatus List<RowStatusSpieDTO> of SPIE status results
+	 * @return List<ValMethodsConnDTO> corresponding to the details of validation method SPIE
+	 */
+	List<ValMethodsConnDTO> getValMethodDetails(List<RowStatusSpieDTO> spieStatus);
+	
+	/**
+	 * Method that gets the response details from the validation method SPIE.
+	 * @param spieStatus List<RowStatusSpieDTO> of SPIE status results
+	 * @return Map<String, List<ValMethodsConnDTO>> corresponding to the details of validation method SPIE
+	 */
+	Map<String, List<ValMethodsConnDTO>> getValMethodDetailsMap(List<RowStatusSpieDTO> spieStatus);
 	
 	/**
 	 * Method that gets the summary information of the status alerts from both VIP and SPIE.

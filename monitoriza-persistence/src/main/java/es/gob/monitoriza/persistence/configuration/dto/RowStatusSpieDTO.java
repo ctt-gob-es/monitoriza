@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>11/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 04/01/2019.
+ * @version 1.3, 27/08/2019.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -32,7 +32,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 /** 
  * <p>Class that represents a row of the datatable status semaphore.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 04/01/2019.
+ * @version 1.3, 27/08/2019.
  */
 public class RowStatusSpieDTO {
 			
@@ -72,6 +72,11 @@ public class RowStatusSpieDTO {
 	private List<AvgTimesServiceDTO> partialRequestResult;
 	
 	/**
+	 * Attribute that represents the time result for each request file. 
+	 */
+	private List<ValMethodsConnDTO> valMethodConnDetail;
+	
+	/**
 	 * Attribute that represents the local date time in which the results were obtained. 
 	 */
 	private LocalDateTime statusUptodate;
@@ -94,7 +99,7 @@ public class RowStatusSpieDTO {
 	 * @param partialRequestResultParam {@link #partialRequestResult} to set
 	 * @param statusUptodateParam {@link #statusUptodate} to set
 	 */
-	public RowStatusSpieDTO(final String systemParam, final String nodeNameParam, final String nodeAddressParam, final String spieServiceParam, final Integer statusValueParam, final List<AvgTimesServiceDTO> partialRequestResultParam, final LocalDateTime statusUptodateParam) {
+	public RowStatusSpieDTO(final String systemParam, final String nodeNameParam, final String nodeAddressParam, final String spieServiceParam, final Integer statusValueParam, final List<AvgTimesServiceDTO> partialRequestResultParam, final List<ValMethodsConnDTO> valMethodConnDetailParam, final LocalDateTime statusUptodateParam) {
 		super();
 		this.system = systemParam;
 		this.nodeName = nodeNameParam;
@@ -102,6 +107,7 @@ public class RowStatusSpieDTO {
 		this.spieService = spieServiceParam;
 		this.statusValue = statusValueParam;
 		this.partialRequestResult = partialRequestResultParam;
+		this.valMethodConnDetail = valMethodConnDetailParam;
 		this.statusUptodate = statusUptodateParam;
 	}
 
@@ -223,6 +229,24 @@ public class RowStatusSpieDTO {
 	 */
 	public void setPartialRequestResult(List<AvgTimesServiceDTO> partialRequestResultParam) {
 		this.partialRequestResult = partialRequestResultParam;
+	}
+		
+
+	/**
+	 * Gets the value of the attribute {@link #valMethodConnDetail}.
+	 * @return the value of the attribute {@link #valMethodConnDetail}.
+	 */
+	@JsonView(StatusVipDTO.View.class)
+	public final List<ValMethodsConnDTO> getValMethodConnDetail() {
+		return valMethodConnDetail;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #valMethodConnDetail}.
+	 * @param valMethodConnDetailParam the value for the attribute {@link #valMethodConnDetail} to set.
+	 */
+	public final void setValMethodConnDetail(List<ValMethodsConnDTO> valMethodConnDetailParam) {
+		this.valMethodConnDetail = valMethodConnDetailParam;
 	}
 
 	/**

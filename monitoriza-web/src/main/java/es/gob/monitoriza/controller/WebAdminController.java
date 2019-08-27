@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 05/03/2019.
+ * @version 1.5, 27/08/2019.
  */
 package es.gob.monitoriza.controller;
 
@@ -40,7 +40,7 @@ import es.gob.monitoriza.service.ISystemNotificationService;
  * <p>Class that maps the request for the front view to the controller.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 1.4, 05/03/2019.
+ * @version 1.5, 27/08/2019.
  */
 @Controller
 public class WebAdminController {
@@ -82,7 +82,8 @@ public class WebAdminController {
 
 		model.addAttribute("statusVip", statusVipDto);
 		model.addAttribute("statusSpie", statusSpieDto);
-		model.addAttribute("spieAvgDetails", statusService.getSpieAvgTimesDetails(statusSpieDto.getData()));
+		model.addAttribute("spieAvgDetailsMap", statusService.getSpieAvgTimesDetailsMap(statusSpieDto.getData()));
+		model.addAttribute("valMethodDetailsMap", statusService.getValMethodDetailsMap(statusSpieDto.getData()));
 		model.addAttribute("summary", statusService.getSummaryStatus(statusVipDto, statusSpieDto, request.getLocale()));
 		model.addAttribute("hasPendingNotifications", sysNotService.hasPendingNotifications());
 	

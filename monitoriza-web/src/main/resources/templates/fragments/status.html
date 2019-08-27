@@ -124,10 +124,16 @@
 						<td th:text="${stSpie.nodeName}"></td>
 						<td th:text="${stSpie.nodeAddress}"></td>
 						<td th:text="${stSpie.spieService}"></td>
-						<td th:text="${stSpie.partialRequestResult}"></td>
-						<td th:if="${stSpie.partialRequestResult != null}"><i
-							class='c-blue-500 ti-search'></i></td>
-						<td th:if="${stSpie.partialRequestResult == null}">-</td>
+						<!-- Si el SPIE es de tipo "response times" o "validation methods"  -->
+						<td th:if="${stSpie.spieService eq 'Response times'}" th:text="${stSpie.partialRequestResult}"></td>
+						<td th:if="${stSpie.spieService eq 'Validation methods'}" th:text="${stSpie.valMethodConnDetail}"></td>
+						<td th:if="${stSpie.spieService != 'Response times' && stSpie.spieService != 'Validation methods'}" th:text="${stSpie.valMethodConnDetail}"></td>
+                               						<!-- Ocultar o mostrar el icono de información -->
+						<td th:if="${stSpie.partialRequestResult != null || stSpie.valMethodConnDetail != null}">
+							<i class='c-blue-500 ti-search'></i>
+						</td>
+						<td th:if="${stSpie.partialRequestResult == null && stSpie.valMethodConnDetail == null}">-</td>
+						<!-- Ocultar o mostrar el icono de mantenimiento -->
 						<td th:if="${stSpie.statusValue eq 0 || stSpie.statusValue eq 1}">-</td>
 						<td th:if="${stSpie.statusValue eq 4 || stSpie.statusValue eq 2 || stSpie.statusValue eq 3}"><i class='c-blue-500 ti-check-box'></i></td>
 					</tr>
@@ -443,32 +449,72 @@ function formatVip ( d ) {
     
     return result;
 }
-var spieAvgDetails = /*[[${spieAvgDetails}]]*/ [];
+
+var spieAvgDetailsMap = /*[[${spieAvgDetailsMap}]]*/ [];
+var valMethodDetailsMap = /*[[${valMethodDetailsMap}]]*/ [];
 function formatSpie ( d ) {
     var result = '<table id="statusSpieTable" class="display" style="cellspacing: 0; width: 100%; background-color: lightgrey;">';
 	hide();
-    $.each( d, function( key, value ) {
+	var spieType = '';
+	var nodeId = '';
+    $.each( d, function( key, value ) {   	
+    	
+    	if (key == '3') {
+    		nodeId = value;
+    	}
+    	
+    	if (key == '5') {
+    		spieType = value;
+    	}
+    	
 		if(key === '6'){
-			if (value == "" || value == "{}"){
+			if (value == "" || value == "{}" || value == "[]" || (spieAvgDetailsMap[nodeId] == null && spieType == "Response times") || (valMethodDetailsMap[nodeId] == null && spieType == "Validation methods")){
 				result += '<thead></thead>';
 				result += '<tbody>';
 				result += '<tr><td>'+ [[#{message.view.noInfo}]] +'</td></tr>';
 			}else{
-				result += '<thead><tr><th>'+ 
-							[[#{table.status.spie.avg.serviceName}]] +
-							'</th><th>'+
-							[[#{table.status.spie.avg.time}]] +
-							'</th><th>'+
-							[[#{table.status.spie.avg.maxtime}]] +
-							'</th><th>'+
-							[[#{table.status.spie.avg.nabove}]] +	
-							'</th><th>'+
-							[[#{table.status.spie.avg.ntotal}]] +
-							'</th></tr></thead>';
-				result += '<tbody>';
-				for(var i=0; i<spieAvgDetails.length;i++){
-					result += '<tr><td>'+spieAvgDetails[i].serviceName+'</td><td>'+spieAvgDetails[i].avgTime+'</td><td>'+spieAvgDetails[i].maxTime+'</td><td>'+spieAvgDetails[i].numTransAboveMax+'</td><td>'+spieAvgDetails[i].totalNumTrans+'</td></tr>';
-				}
+				
+					if (spieType == "Response times")
+					{
+						result += '<thead><tr><th>'+ 
+									[[#{table.status.spie.avg.serviceName}]] +
+									'</th><th>'+
+									[[#{table.status.spie.avg.time}]] +
+									'</th><th>'+
+									[[#{table.status.spie.avg.maxtime}]] +
+									'</th><th>'+
+									[[#{table.status.spie.avg.nabove}]] +	
+									'</th><th>'+
+									[[#{table.status.spie.avg.ntotal}]] +
+									'</th></tr></thead>';
+						result += '<tbody>';
+						
+						var spieAvgDetails = spieAvgDetailsMap[nodeId];
+						
+						for(var i=0; i<spieAvgDetails.length;i++){
+							result += '<tr><td>'+spieAvgDetails[i].serviceName+'</td><td>'+spieAvgDetails[i].avgTime+'</td><td>'+spieAvgDetails[i].maxTime+'</td><td>'+spieAvgDetails[i].numTransAboveMax+'</td><td>'+spieAvgDetails[i].totalNumTrans+'</td></tr>';
+						}
+						
+					} else if (spieType == "Validation methods") {
+						
+						result += '<thead><tr><th>'+ 
+									[[#{table.status.spie.valmet.id}]] +
+									'</th><th>'+
+									[[#{table.status.spie.valmet.type}]] +
+									'</th><th>'+
+									[[#{table.status.spie.valmet.url}]] +
+									'</th><th>'+
+									[[#{table.status.spie.valmet.result}]] +	
+									'</th><th>'+
+									'</th></tr></thead>';
+						result += '<tbody>';
+						
+						var valMethodDetails = valMethodDetailsMap[nodeId];
+						
+						for(var i=0; i<valMethodDetails.length;i++){
+							result += '<tr><td>'+valMethodDetails[i].valMethodId+'</td><td>'+valMethodDetails[i].valMethodType+'</td><td>'+valMethodDetails[i].valMethodUrl+'</td><td>'+valMethodDetails[i].result+'</td></tr>';
+						}
+					}
 			}
 		}
 	});

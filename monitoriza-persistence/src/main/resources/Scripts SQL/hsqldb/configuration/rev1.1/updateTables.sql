@@ -3,7 +3,7 @@ COMMENT ON COLUMN "SPIE_TYPE"."RESOLVER_CLASS" IS 'Nombre de la clase que parsea
 UPDATE SPIE_TYPE SET "RESOLVER_CLASS" = 'es.gob.monitoriza.spie.html.impl.HtmlHsmConnResolver' WHERE ID_SPIE_TYPE = 1;
 UPDATE SPIE_TYPE SET "RESOLVER_CLASS" = 'es.gob.monitoriza.spie.html.impl.HtmlEmergencyModeResolver' WHERE ID_SPIE_TYPE = 2;
 UPDATE SPIE_TYPE SET "RESOLVER_CLASS" = 'es.gob.monitoriza.spie.html.impl.HtmlPlatformConnResolver' WHERE ID_SPIE_TYPE = 3;
---UPDATE SPIE_TYPE SET "RESOLVER_CLASS" = 'es.gob.monitoriza.spie.html.impl' WHERE ID_SPIE_TYPE = 4;
+--UPDATE SPIE_TYPE SET "RESOLVER_CLASS" = 'es.gob.monitoriza.spie.html.impl.HtmlValMethodsResolver' WHERE ID_SPIE_TYPE = 4;
 UPDATE SPIE_TYPE SET "RESOLVER_CLASS" = 'es.gob.monitoriza.spie.html.impl.HtmlAvgResponseTimeResolver' WHERE ID_SPIE_TYPE = 5;
 UPDATE SPIE_TYPE SET "RESOLVER_CLASS" = 'es.gob.monitoriza.spie.html.impl.HtmlHsmConnResolver' WHERE ID_SPIE_TYPE = 6;
 UPDATE SPIE_TYPE SET "RESOLVER_CLASS" = 'es.gob.monitoriza.spie.html.impl.HtmlEmergencyModeResolver' WHERE ID_SPIE_TYPE = 7;

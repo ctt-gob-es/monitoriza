@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>05/11/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 15/02/2019.
+ * @version 1.3, 27/08/2019.
  */
 package es.gob.monitoriza.spie.html.impl;
 
@@ -35,13 +35,14 @@ import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.enums.SemaphoreEnum;
 import es.gob.monitoriza.persistence.configuration.dto.AvgTimesServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ValMethodsConnDTO;
 import es.gob.monitoriza.spie.html.AbstractHtmlSpieResolver;
 
 
 /** 
  * <p>Class that parses Emergency Mode SPIE HTML response.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 15/02/2019.
+ * @version 1.3, 27/08/2019.
  */
 public class HtmlEmergencyModeResolver extends AbstractHtmlSpieResolver {
 	
@@ -98,10 +99,21 @@ public class HtmlEmergencyModeResolver extends AbstractHtmlSpieResolver {
 
 	/**
 	 * {@inheritDoc}
-	 * @see es.gob.monitoriza.spie.html.AbstractHtmlSpieResolver#getDetailResults()
+	 * @see es.gob.monitoriza.spie.html.AbstractHtmlSpieResolver#getAvgDetailResults()
 	 */
 	@Override
-	public List<AvgTimesServiceDTO> getDetailResults() {
+	public List<AvgTimesServiceDTO> getAvgDetailResults() {
+		return null;
+	}
+
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.spie.html.AbstractHtmlSpieResolver#getValMethodDetailResults()
+	 */
+	@Override
+	public List<ValMethodsConnDTO> getValMethodDetailResults() {
+		
 		return null;
 	}
 
