@@ -73,4 +73,10 @@ public interface INodeRestServiceStatus {
 	 * when the node registration is successful and the node is created.
 	 */
 	Integer STATUS_NODE_UNREGISTER = Integer.valueOf(6);
+	
+	/**
+	 * Constant attribute that represents the value for the result status service
+	 * when the node already exists and the service does nothing.
+	 */
+	Integer STATUS_ALREADY_REGISTERED = Integer.valueOf(7);
 }

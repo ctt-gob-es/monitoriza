@@ -111,7 +111,7 @@ public class MonitorizaSpieTask extends HttpServlet {
 			TimersHolder.getInstance().getCurrentTimersSpieHolder().put(timerAfirma.toString(), timer);
 			
 		} catch (IllegalArgumentException e) {
-			LOGGER.info(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS027));
+			LOGGER.error(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS027));
 		}
 		
 		
@@ -134,7 +134,7 @@ public class MonitorizaSpieTask extends HttpServlet {
 			// El timer programado se añade a la memoria para poder gestionarlo  
 			TimersHolder.getInstance().getCurrentTimersSpieHolder().put(timerTsa.toString(), timer);
 		} catch (IllegalArgumentException e) {
-			LOGGER.info(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS028));
+			LOGGER.error(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS028));
 		}
 	}
 	

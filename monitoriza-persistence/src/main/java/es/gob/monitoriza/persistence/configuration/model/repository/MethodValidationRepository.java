@@ -52,6 +52,6 @@ public interface MethodValidationRepository extends JpaRepository<MethodValidati
 	 *            the persistence.
 	 * @return Object that represents a MethodValidation from the persistence.
 	 */
-	MethodValidation findByIdMethodValidation(Long id);
+	MethodValidation findByIdMethodValidation(Long id);	
 
 }

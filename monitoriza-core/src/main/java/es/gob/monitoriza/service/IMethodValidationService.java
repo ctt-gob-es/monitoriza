@@ -63,8 +63,7 @@ public interface IMethodValidationService {
 	/**
 	 * Method that saves MethodValidation.
 	 * 
-	 * @param MethodValidation
-	 *            to update.
+	 * @param methodValidation to update.
 	 * @return {@link MethodValidation} an object that represents the
 	 *         MethodValidation.
 	 */
@@ -79,16 +78,17 @@ public interface IMethodValidationService {
 	void deleteMethodValidation(Long idMethodValidation);
 
 	/**
-	 * Method that create all method validation by a list of string
+	 * Method that create all method validation by a list of string.
 	 * 
-	 * @param methodValidations, confSpie
+	 * @param methodValidations List of validation method identifiers to create
+	 * @param confSpie Object that represents the SPIE general configuration
 	 * 
 	 * @return {@link List<MethodValidation>}
 	 */
 	List<MethodValidation> createAllMethods(List<String> methodValidations, ConfSpie confSpie);
 
 	/**
-	 * Method that gets all method validation by ID of Conf Spie in String
+	 * Method that gets all method validation by ID of Conf Spie in String.
 	 * 
 	 * @return {@link List<String>}
 	 */

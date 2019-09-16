@@ -39,7 +39,11 @@ import es.gob.monitoriza.enums.SemaphoreEnum;
 import es.gob.monitoriza.persistence.configuration.dto.AvgTimesServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ValMethodsConnDTO;
+import es.gob.monitoriza.service.IMethodValidationService;
+import es.gob.monitoriza.service.impl.MethodValidationService;
+import es.gob.monitoriza.service.utils.IServiceNameConstants;
 import es.gob.monitoriza.spie.html.AbstractHtmlSpieResolver;
+import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 
 
 /** 
@@ -57,12 +61,12 @@ public class HtmlValMethodsResolver extends AbstractHtmlSpieResolver {
 	/**
 	 * Attribute that represents the semaphore level to set when the SPIE returns error.
 	 */
-	private Integer semaphErrorLevel;
+	private final transient Integer semaphErrorLevel;
 	
 	/**
 	 * Attribute that represents the detailed information of service's average times. 
 	 */
-	private List<ValMethodsConnDTO> detailResults = new ArrayList<ValMethodsConnDTO>();
+	private final transient List<ValMethodsConnDTO> detailResults = new ArrayList<ValMethodsConnDTO>();
 	
 	/**
 	 * Constructor method for the class HtmlValMethodsResolver.java.
@@ -82,45 +86,55 @@ public class HtmlValMethodsResolver extends AbstractHtmlSpieResolver {
 		
 		Integer sempaphoreValue = SemaphoreEnum.GREEN.getId();
 		ValMethodsConnDTO detail = null;
-		
+		IMethodValidationService valMetService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.METHOD_VALIDATION_SERVICE, MethodValidationService.class);
+		List<String> valMetsToCheck = valMetService.getAllMethodValidationString();		
+				
 		if (htmlResult != null) {
-    		Document doc = Jsoup.parse(htmlResult);
-    		Element table = doc.select("table").get(0);
-    		Elements rows = table.select("tr");
-    		
-    		Iterator<Element> connRows = rows.iterator();
-    				
-    		Element row = null;
-    		Elements cols = null;
-    		
-    		// Se recorren todas las filas para generar el detalle
-    		while (connRows.hasNext()) {
-    			
-    			row = connRows.next();
-    			cols = row.select("td");
-    			
-    			// El primer grupo de columnas son las cabeceras,
-    			// luego hay que comprobar que exista <td>.
-    			if (!cols.isEmpty()) {
-    				detail = new ValMethodsConnDTO();
-    				// La columna con índice 0 se corresponde con el identificador del método de validación
-    				detail.setValMethodId(cols.get(NumberConstants.NUM0).text());
-    				// La columna con índice 1 se corresponde con el tipo del método de validación
-    				detail.setValMethodType(cols.get(NumberConstants.NUM1).text());
-    				// La columna con índice 2 se corresponde con la URL del método de validación
-    				detail.setValMethodUrl(cols.get(NumberConstants.NUM2).text());
-    				// La columna con índice 3 se corresponde con el resultado de la conexión con el método de validación
-    				detail.setResult(cols.get(NumberConstants.NUM3).text());
-    				
-    				// Se añade al detalle
-    				detailResults.add(detail);
-    				    				 
-    				if (!detail.getResult().equals(VALMETHOD_CONNECTION_OK)) {
-    					sempaphoreValue = semaphErrorLevel;
-    
-    				}
-    			}
-    		}
+			Document doc = Jsoup.parse(htmlResult);
+			Element table = doc.select("table").get(0);
+			Elements rows = table.select("tr");
+
+			Iterator<Element> connRows = rows.iterator();
+
+			Element row = null;
+			Elements cols = null;
+
+			// Se recorren todas las filas para generar el detalle
+			while (connRows.hasNext()) {
+
+				row = connRows.next();
+				cols = row.select("td");
+
+				// El primer grupo de columnas son las cabeceras,
+				// luego hay que comprobar que exista <td>.
+				if (!cols.isEmpty()) {
+					detail = new ValMethodsConnDTO();
+					// La columna con índice 0 se corresponde con el
+					// identificador del método de validación
+					detail.setValMethodId(cols.get(NumberConstants.NUM0).text());
+					// La columna con índice 1 se corresponde con el tipo del
+					// método de validación
+					detail.setValMethodType(cols.get(NumberConstants.NUM1).text());
+					// La columna con índice 2 se corresponde con la URL del
+					// método de validación
+					detail.setValMethodUrl(cols.get(NumberConstants.NUM2).text());
+					// La columna con índice 3 se corresponde con el resultado
+					// de la conexión con el método de validación
+					detail.setResult(cols.get(NumberConstants.NUM3).text());
+
+					// Se añade al detalle
+					detailResults.add(detail);
+
+					// Para considerar un semáforo erróneo en este SPIE, deben darse una de las dos condiciones siguientes:
+					//	- La lista de métodos de validación establecida en la configuración general SPIE es vacía y al menos un método de validación monitorizado tiene estado no OK
+					//	- La lista de métodos de validación establecida en la configuración general SPIE contiene al menos un método monitorizado y su estado es no OK
+					// Si por ejemplo, la lista configurada no es vacía y en la respuesta del SPIE todos los métodos coincidentes tienen estado OK, el semáforo será verde independientemente
+					// del estado del resto de métodos que no están en la lista.
+					if ((!valMetsToCheck.isEmpty() && valMetsToCheck.contains(detail.getValMethodId()) || valMetsToCheck.isEmpty()) && !detail.getResult().equals(VALMETHOD_CONNECTION_OK)) {
+						sempaphoreValue = semaphErrorLevel;
+					}
+				}
+			}
 		} else {
 			sempaphoreValue = null;
 		}
