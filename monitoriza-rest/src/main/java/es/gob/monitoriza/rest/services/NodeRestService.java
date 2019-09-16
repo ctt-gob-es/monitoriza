@@ -131,43 +131,38 @@ public class NodeRestService implements INodeRestService {
 			result = new NodeRestStatusResponse();
     		// Se busca el nodo a registrar.
     		NodeMonitoriza node = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.NODE_MONITORIZA_SERVICE, NodeMonitorizaService.class).getNodeByName(nodeName);
+    		
+    		// Si el nodo ya existe, se ignora el registro.
+    		if (node != null) {
+	
+    			msg = Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG006, new Object[ ] { nodeName });
+    			status = INodeRestServiceStatus.STATUS_ALREADY_REGISTERED;
 
-    		// El nodo no existe. Hay que crearlo.
-    		if (node == null) {
+   			// El nodo no existe. Hay que crearlo.
+    		} else {
 
     			node = prepareNodeToRegister(nodeName, nodeHost, nodePort, nodeType, nodeSecure, spieSelected);
     			msg = Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG005, new Object[ ] { nodeName });
     			status = INodeRestServiceStatus.STATUS_NODE_REGISTER_CREATED;
-
-
-    		// Si el nodo ya existe, se actualiza.
-    		} else {
-
-    			final Long idNode = node.getIdNode();
-    			node = prepareNodeToRegister(nodeName, nodeHost, nodePort, nodeType, nodeSecure, spieSelected);
-    			node.setIdNode(idNode);
-    			msg = Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG006, new Object[ ] { nodeName });
-    			status = INodeRestServiceStatus.STATUS_NODE_REGISTER_MODIFIED;
+    			
+    			try {
+        			// Se registra el nodo, creándolo o modificándolo
+        			ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.NODE_MONITORIZA_SERVICE, NodeMonitorizaService.class).saveNode(node);
+        			// Se actualiza el mapa de resultados para su uso por parte del semáforo.
+        			//StatusNodeHolder.getInstance().getCurrentStatusHolder().put(nodeName, result);
+        			final ISystemNotificationService sysNotificationService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SYSTEM_NOTIFICATION_SERVICE, SystemNotificationService.class);
+        			// Se registra la notificación asociada al registro del nodo.
+        			sysNotificationService.registerSystemNotification(INotificationTypeIds.ID_NODE_NOTIFICATION_TYPE, INotificationOriginIds.ID_REST_SERVICE_NODE_ORIGIN, INotificationPriority.ID_NOTIFICATION_PRIORITY_NORMAL, msg);
+        		}
+        		catch (final Exception e) {
+        			throw new MonitorizaRestException(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG009, new Object[ ] { INodeRestService.SERVICENAME_REGISTER_NODE }), e);
+        		}
     		}
-
-    		try {
-    			// Se registra el nodo, creándolo o modificándolo
-    			ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.NODE_MONITORIZA_SERVICE, NodeMonitorizaService.class).saveNode(node);
-    			result.setDescription(msg);
-    			result.setStatus(status);
-    			result.setDateTime(new DateString(Calendar.getInstance().getTime())	);
-    			// Se actualiza el mapa de resultados para su uso por parte del semáforo.
-    			//StatusNodeHolder.getInstance().getCurrentStatusHolder().put(nodeName, result);
-
-    			final ISystemNotificationService sysNotificationService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.SYSTEM_NOTIFICATION_SERVICE, SystemNotificationService.class);
-
-    			// Se registra la notificación asociada al registro del nodo.
-    			sysNotificationService.registerSystemNotification(INotificationTypeIds.ID_NODE_NOTIFICATION_TYPE, INotificationOriginIds.ID_REST_SERVICE_NODE_ORIGIN, INotificationPriority.ID_NOTIFICATION_PRIORITY_NORMAL, msg);
-
-    		}
-    		catch (final Exception e) {
-    			throw new MonitorizaRestException(Language.getFormatResRestGeneralMonitoriza(IRestGeneralLogMessages.REST_LOG009, new Object[ ] { INodeRestService.SERVICENAME_REGISTER_NODE }), e);
-    		}
+    		
+    		result.setDescription(msg);
+			result.setStatus(status);
+			result.setDateTime(new DateString(Calendar.getInstance().getTime()));
+    		
 		}
 
 		return result;
