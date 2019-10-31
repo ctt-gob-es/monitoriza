@@ -60,7 +60,7 @@ public class KeystoreController {
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "ssladmin")
+	@RequestMapping(value = "ssladmin", method = RequestMethod.GET)
 	public String keystoressladmin(final Model model) {
 
 		return "fragments/ssladmin.html";
@@ -72,7 +72,7 @@ public class KeystoreController {
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "authadmin")
+	@RequestMapping(value = "authadmin", method = RequestMethod.GET)
 	public String keystoreauthadmin(final Model model) {
 
 		return "fragments/authadmin.html";
@@ -83,7 +83,7 @@ public class KeystoreController {
 	 * @param model Holder object for model attributes
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "keystorevalidserviceadmin")
+	@RequestMapping(value = "keystorevalidserviceadmin", method = RequestMethod.GET)
 	public String keystoreValidServiceAdmin(final Model model) {
 
 		return "fragments/keystorevalidserviceadmin.html";
@@ -95,7 +95,7 @@ public class KeystoreController {
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "addssl")
+	@RequestMapping(value = "addssl", method = RequestMethod.POST)
 	public String addSsl(final Model model) {
 
 		model.addAttribute("sslform", new CertificateDTO());
@@ -108,7 +108,7 @@ public class KeystoreController {
 	 * to the view.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "addauth")
+	@RequestMapping(value = "addauth", method = RequestMethod.POST)
 	public String addAuth() {
 
 		return "modal/authForm.html";
@@ -119,7 +119,7 @@ public class KeystoreController {
 	 * to the view.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "addvalidservicekeystore")
+	@RequestMapping(value = "addvalidservicekeystore", method = RequestMethod.POST)
 	public String addValidService() {
 
 		return "modal/validServForm.html";
@@ -127,8 +127,9 @@ public class KeystoreController {
 
 	/**
 	 * Method that maps the save ssl certificate web request to the controller and saves it in the persistence.
-	 * @param file Object that rpresetns the certificate file.
+	 * @param file Object that represents the certificate file.
 	 * @param model Holder object for model attributes.
+	 * @throws IOException Exception thrown if the action fails
 	 * @return String that represents the name of the view to forward.
 	 */
 	@ResponseStatus(HttpStatus.OK)

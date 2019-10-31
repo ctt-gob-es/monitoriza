@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.persistence.configuration.dto.ServiceDTO;
@@ -102,7 +103,7 @@ public class ServiceController {
 	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "serviceadmin")
+	@RequestMapping(value = "serviceadmin", method = RequestMethod.GET)
 	public String serviceadmin(Model model) {
 		List<String> serviceTypes = new ArrayList<String>();
 		List<PlatformMonitoriza> platforms = new ArrayList<PlatformMonitoriza>();

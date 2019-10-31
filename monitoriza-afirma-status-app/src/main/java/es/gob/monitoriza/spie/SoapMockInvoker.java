@@ -107,7 +107,7 @@ public final class SoapMockInvoker {
 						try {
 
 							TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
-							SSLContext ctx = SSLContext.getInstance("SSL");
+							SSLContext ctx = SSLContext.getInstance("TLS");
 							tmf.init(ssl);
 							ctx.init(null, tmf.getTrustManagers(), null);
 							SSLSocketFactory factory = ctx.getSocketFactory();

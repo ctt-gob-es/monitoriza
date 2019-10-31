@@ -98,7 +98,7 @@ public class ValidationServiceController {
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "validservicecertificate")
+	@RequestMapping(value = "validservicecertificate",  method = RequestMethod.GET)
 	public String validService(Model model) {
 
 		ValidServiceDTO validService = new ValidServiceDTO();

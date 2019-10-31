@@ -317,7 +317,7 @@ public abstract class AbstractHttpInvoker {
 				tmf = TrustManagerFactory.getInstance("SunX509");
 				tmf.init(ssl);
 				// Protocolo seuro
-				sslContext = SSLContext.getInstance("SSL");
+				sslContext = SSLContext.getInstance("TLS");
 
 				// Autenticación Mutua
 				if (requestConf.getConnection().getAuthenticationMutual() != null) {

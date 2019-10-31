@@ -231,7 +231,7 @@ public class AxisSSLSocketFactory extends JSSESocketFactory implements SecureSoc
 			TrustManagerFactory tmf = TrustManagerFactory.getInstance(TrustManagerFactory.getDefaultAlgorithm());
 			tmf.init(keyStore);
 			// congifure a local SSLContext to use created keystores
-			SSLContext sslContext = SSLContext.getInstance("SSL");
+			SSLContext sslContext = SSLContext.getInstance("TLS");
 			sslContext.init(kmf.getKeyManagers(), tmf.getTrustManagers(), new SecureRandom());
 			return sslContext;
 		} catch (Exception e) {

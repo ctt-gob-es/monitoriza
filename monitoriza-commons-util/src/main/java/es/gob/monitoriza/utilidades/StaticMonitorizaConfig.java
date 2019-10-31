@@ -93,6 +93,11 @@ public class StaticMonitorizaConfig {
 	public static final String GRAYLOG_FIELDS_PREFIX = "graylog.field.";
 	
 	/**
+	 * Constant attribute that represents name for property <i>"system.keystore.password."</i>.
+	 */
+	public static final String SYSTEM_KEYSTORE_PASSWORD = "system.keystore.password";
+	
+	/**
 	 * Constructor method for the class StaticMonitorizaProperties.java.
 	 */
 	private StaticMonitorizaConfig() {

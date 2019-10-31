@@ -34,6 +34,7 @@ import java.util.TreeSet;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
@@ -83,11 +84,13 @@ public final class UtilsCertificate {
 	static {
 		// Obtención de un parseador de XML
 		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+			
 		dbf.setNamespaceAware(Boolean.TRUE);
 		dbf.setIgnoringComments(Boolean.FALSE);
 		try {
+			dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 			db = dbf.newDocumentBuilder();
-		} catch (Exception e) {
+		} catch (ParserConfigurationException e) {
 			LOGGER.error(Language.getResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.ERRORUTILS008));
 		}
 	}

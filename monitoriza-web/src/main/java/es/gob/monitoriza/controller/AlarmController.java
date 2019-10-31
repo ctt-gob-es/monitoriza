@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.persistence.configuration.dto.AlarmDTO;
@@ -94,7 +95,7 @@ public class AlarmController {
 	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "alarmadmin")
+	@RequestMapping(value = "alarmadmin", method = RequestMethod.GET)
 	public String alarmAdmin(Model model) {
 		List<MailMonitoriza> mails = new ArrayList<MailMonitoriza>();
 		List<AlarmMonitoriza> alarms = new ArrayList<AlarmMonitoriza>();
@@ -130,7 +131,7 @@ public class AlarmController {
 	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "confalarmadmin")
+	@RequestMapping(value = "confalarmadmin", method = RequestMethod.GET)
 	public String confAlarmAdmin(Model model) {
 		List<Alarm> alarms = new ArrayList<Alarm>();
 		List<MailMonitoriza> mails = new ArrayList<MailMonitoriza>();

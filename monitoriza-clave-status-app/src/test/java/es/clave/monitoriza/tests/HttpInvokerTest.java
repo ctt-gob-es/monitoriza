@@ -288,7 +288,7 @@ public class HttpInvokerTest {
 
 //			SSLContext sslContext = new SSLContextBuilder().loadKeyMaterial(keystore, "G5cp,fYC9gje".toCharArray()).build();
 			
-			SSLContext sslContext = SSLContext.getInstance("SSL");
+			SSLContext sslContext = SSLContext.getInstance("TLS");
 			sslContext.init(tmf.getKeyManagers(), null, null);
 			
 			

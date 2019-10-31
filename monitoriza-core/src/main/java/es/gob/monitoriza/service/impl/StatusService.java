@@ -127,7 +127,6 @@ public class StatusService implements IStatusService {
 			jsonFromVip = getRequestFromStatusVip();
 			statusVip = new Gson().fromJson(jsonFromVip, listType);			
 			
-			
 		} catch (StatusVipResponseException svre) {
 			statusVip.setError(svre.getMessage());
 		} catch (JsonSyntaxException e) {

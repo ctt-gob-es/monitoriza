@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.gob.monitoriza.persistence.configuration.dto.DailySpieDTO;
@@ -71,7 +72,7 @@ public class QuerySpieController {
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "queryspietimerange")
+	@RequestMapping(value = "queryspietimerange", method = RequestMethod.GET)
     public String querySpieTimeRange(Model model){
 		
 		List<CPlatformType> systems = new ArrayList<CPlatformType>();
@@ -93,7 +94,7 @@ public class QuerySpieController {
 	 * @param service String that represents the name or part of the name of the service to filter
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "queryspietime")
+	@RequestMapping(value = "queryspietime", method = RequestMethod.GET)
     public String querySpieTime(Model model, @RequestParam("minTimeSeconds") Long minTime, @RequestParam("maxTimeSeconds") Long maxTime, @RequestParam("system") String system, @RequestParam("service") String service){
 		
 		LocalTime minLocalTime = LocalTime.ofSecondOfDay(minTime);

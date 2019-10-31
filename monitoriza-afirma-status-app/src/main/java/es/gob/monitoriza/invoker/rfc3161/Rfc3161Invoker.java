@@ -55,6 +55,7 @@ import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.utilidades.FileUtils;
+import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 import es.gob.monitoriza.utilidades.UtilsResource;
 
 /** 
@@ -62,7 +63,7 @@ import es.gob.monitoriza.utilidades.UtilsResource;
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.6, 28/03/2019.
  */
-public class Rfc3161Invoker {
+public final class Rfc3161Invoker {
 	
 	/**
 	 * Attribute that represents the object that manages the log of the class.
@@ -73,6 +74,11 @@ public class Rfc3161Invoker {
 	 * Constant that represents the 'SSL' protocol. 
 	 */
 	private static final String SSL_PROTOCOL = "SSL";
+	
+	/**
+	 * Constant that represents the 'TLS' protocol. 
+	 */
+	private static final String TLS_PROTOCOL = "TLS";
 			
 	/**
 	 * Constant that represents the type for the client authentication keystore. 
@@ -96,6 +102,8 @@ public class Rfc3161Invoker {
 	 * @param idTimerTask Identifier of the scheduled timer.
 	 * @param requestFile File that contains the RFC3161 request.
 	 * @param service DTOService that contains the configuration data for the service.
+	 * @param ssl Keystore that contains ssl certificates.
+	 * @param authRfc3161 Keystore that contains authentication certificate.
 	 * @return Long that represents the time in milliseconds that has taken to complete the request.
 	 * If there is some configuration or communication problem, this value will be null.
 	 * @throws InvokerException If the method fails.
@@ -114,7 +122,7 @@ public class Rfc3161Invoker {
 			
 			tmf.init(ssl);
 
-			SSLContext ctx = SSLContext.getInstance(SSL_PROTOCOL);
+			SSLContext ctx = SSLContext.getInstance(TLS_PROTOCOL);
 
 			// Obtenemos el indicador para saber si es necesaria la
 			// autenticación del cliente
@@ -151,7 +159,7 @@ public class Rfc3161Invoker {
 					// a usar para la autenticación cliente
 					msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS009, new Object[]{idTimerTask});
 					String keystoreType = KEYSTORE_TYPE_PKCS12;
-					String keystorePass = CLIENT_AUTH_KEYSTORE_PASSWORD;
+					String keystorePass = StaticMonitorizaConfig.getProperty(StaticMonitorizaConfig.SYSTEM_KEYSTORE_PASSWORD);
 					KeyStore ks = KeyStore.getInstance(keystoreType);
 					ks.load(null, keystorePass.toCharArray());
 					ks.setKeyEntry(service.getRfc3161Cert(), pk, keystorePass.toCharArray(), certificateChain);
@@ -208,6 +216,7 @@ public class Rfc3161Invoker {
 		
 	/**
 	 * Method that gets the URL of the configured RFC3161 service in TS@.
+	 * @param idTimerTask Timer identifier
 	 * @param service Configured RFC3161 service
 	 * @return URL of the RFC3161 service in TS@
 	 * @throws InvokerException 

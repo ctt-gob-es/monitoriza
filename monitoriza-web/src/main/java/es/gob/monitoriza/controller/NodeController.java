@@ -62,7 +62,7 @@ public class NodeController {
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "nodesafirma")
+	@RequestMapping(value = "nodesafirma", method = RequestMethod.GET)
     public String nodesAfirma(Model model){
         return "fragments/nodesafirma.html";
     }
@@ -73,7 +73,7 @@ public class NodeController {
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "nodestsa")
+	@RequestMapping(value = "nodestsa", method = RequestMethod.GET)
     public String nodeTsa(Model model){
         return "fragments/nodestsa.html";
     }

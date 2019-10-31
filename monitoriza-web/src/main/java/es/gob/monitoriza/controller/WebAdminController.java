@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import es.gob.monitoriza.persistence.configuration.dto.StatusSpieDTO;
 import es.gob.monitoriza.persistence.configuration.dto.StatusVipDTO;
@@ -62,7 +63,7 @@ public class WebAdminController {
 	* @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "invalidSession")
+	@RequestMapping(value = "invalidSession", method = { RequestMethod.GET, RequestMethod.POST })
 	public String invalid(Model model) {
 		return "invalidSession.html";
 	}
@@ -75,7 +76,7 @@ public class WebAdminController {
 	 * @param request Request object
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "inicio")
+	@RequestMapping(value = "inicio", method = { RequestMethod.GET, RequestMethod.POST })
 	public String index(Model model, final HttpServletRequest request) {
 		StatusVipDTO statusVipDto = statusService.completeStatusVip();
 		StatusSpieDTO statusSpieDto = statusService.completeStatusSpie();

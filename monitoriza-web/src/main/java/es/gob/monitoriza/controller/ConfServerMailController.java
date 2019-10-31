@@ -34,6 +34,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.persistence.configuration.dto.ConfServerMailDTO;
@@ -84,7 +85,7 @@ public class ConfServerMailController {
 	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "confmailadmin")
+	@RequestMapping(value = "confmailadmin", method = RequestMethod.GET)
 	public String mailAdmin(Model model) {
 		List<MailMonitoriza> mails = new ArrayList<MailMonitoriza>();
 		MailDTO mailForm = new MailDTO();

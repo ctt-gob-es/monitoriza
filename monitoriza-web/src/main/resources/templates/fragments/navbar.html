@@ -100,8 +100,9 @@
                   </li>
                   
                   <li role="separator" class="divider"></li>
-                  <li>
-	                  <form id="logoutForm" th:action="@{/logout}" class="form-logout">
+                  <li>                
+					 <form id="logoutForm" th:action="@{/logout}" class="form-logout">
+					 	<input type="hidden" name="${_csrf.parameterName}" value="${_csrf.token}"/>
 	                    <a onclick="logout();return false;" href="#" class="d-b td-n pY-5 bgcH-grey-100 c-grey-700">
 						 <i class="ti-power-off mR-10"></i>
 						 <span th:text="#{monitoriza.general.logout}"></span>

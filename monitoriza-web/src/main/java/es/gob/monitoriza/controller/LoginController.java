@@ -24,6 +24,7 @@ package es.gob.monitoriza.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /** 
  * <p>Class that maps the request for the login form to the controller.</p>
@@ -37,7 +38,7 @@ public class LoginController {
 	 * Method that maps the root request for the application to the controller to the login view.  
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "/")
+	@RequestMapping(value = "/", method = RequestMethod.GET)
     public String login() {
         return "login.html";
     }

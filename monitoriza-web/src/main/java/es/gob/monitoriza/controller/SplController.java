@@ -89,7 +89,7 @@ public class SplController {
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "spl")
+	@RequestMapping(value = "spl", method = RequestMethod.GET)
     public String spl(final Model model){
         return "fragments/spl.html";
     }
@@ -109,11 +109,11 @@ public class SplController {
     /**
      * Method that maps the edit web request to the controller and loads
      * the SPL to the backing form.
-     * @param afirmaId Identifier of the SPL to be edited.
+     * @param splId Identifier of the SPL to be edited.
      * @param model Holder object for model attributes.
      * @return String that represents the name of the view to forward.
      */
-    @RequestMapping(value = "editspl", method = RequestMethod.POST)
+    @RequestMapping(value = "editspl", method = {RequestMethod.POST, RequestMethod.GET})
     public String editSpl(@RequestParam("id") final Long splId, final Model model) {
     	final SplMonitoriza spl = this.splService.getSplById(splId);
 
@@ -131,7 +131,7 @@ public class SplController {
 
     /**
      * Method that maps the connecting request to the SPL and list its log files.
-     * @param id Identifier of the SPL to connect.
+     * @param splId Identifier of the SPL to connect.
      * @param name Name of the SPL to connect.
      * @param type Type of the SPL to connect.
      * @param desc Description of the SPL to connect.

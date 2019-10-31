@@ -52,7 +52,7 @@ public class SystemNotificationController {
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "sysNotifications")
+	@RequestMapping(value = "sysNotifications",  method = RequestMethod.GET)
     public String sysNotifications(Model model){
         return "fragments/sysnotifications.html";
     }

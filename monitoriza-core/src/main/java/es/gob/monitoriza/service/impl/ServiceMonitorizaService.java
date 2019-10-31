@@ -305,7 +305,8 @@ public class ServiceMonitorizaService implements IServiceMonitorizaService {
 	 */
 	private boolean isServiceUpdatedForm(final ServiceDTO serviceForm, final ServiceMonitoriza service, MultipartFile file) throws IOException {
 		
-		boolean filesAreEquals = file.isEmpty() || Arrays.equals(file.getBytes(), service.getRequestFile().getFiledata());
+		byte[] oldFileData = service.getRequestFile() == null?null:service.getRequestFile().getFiledata();
+		boolean filesAreEquals = file.isEmpty() || Arrays.equals(file.getBytes(), oldFileData);
 						
 		return !(serviceForm.getAlarm().equals(service.getAlarm().getIdAlarm()) 
 				&& serviceForm.getDegradedThreshold().equals(service.getDegradedThreshold())

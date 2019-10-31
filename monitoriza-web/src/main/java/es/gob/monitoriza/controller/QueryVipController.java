@@ -36,6 +36,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.gob.monitoriza.persistence.configuration.dto.DailyVipDTO;
@@ -72,7 +73,7 @@ public class QueryVipController {
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "queryviptimerange")
+	@RequestMapping(value = "queryviptimerange", method = RequestMethod.GET)
     public String queryVipTimeRange(Model model){
 		
 		List<CPlatformType> systems = new ArrayList<CPlatformType>();
@@ -94,7 +95,7 @@ public class QueryVipController {
 	 * @param service String that represents the name or part of the name of the service to filter
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "queryviptime")
+	@RequestMapping(value = "queryviptime", method = RequestMethod.GET)
     public String queryVipTime(Model model, @RequestParam("minTimeSeconds") Long minTime, @RequestParam("maxTimeSeconds") Long maxTime, @RequestParam("system") String system, @RequestParam("service") String service){
 		
 		LocalTime minLocalTime = LocalTime.ofSecondOfDay(minTime);

@@ -31,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 import es.gob.monitoriza.persistence.configuration.dto.ConfSpieDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ConfSpie;
@@ -71,7 +72,7 @@ public class ConfSpieController {
 	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "confspie")
+	@RequestMapping(value = "confspie", method = RequestMethod.GET)
 	public String confSpieAdmin(Model model) {
 		ConfSpie confSpie = new ConfSpie();
 		ConfSpieDTO confSpieForm = new ConfSpieDTO();

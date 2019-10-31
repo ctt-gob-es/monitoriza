@@ -84,7 +84,7 @@ public class HtmlValMethodsResolver extends AbstractHtmlSpieResolver {
 	@Override
 	public Integer solveHtmlResult(final String htmlResult, final ConfSpieDTO confSpie) {
 		
-		Integer sempaphoreValue = SemaphoreEnum.GREEN.getId();
+		Integer semaphoreValue = SemaphoreEnum.GREEN.getId();
 		ValMethodsConnDTO detail = null;
 		IMethodValidationService valMetService = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.METHOD_VALIDATION_SERVICE, MethodValidationService.class);
 		List<String> valMetsToCheck = valMetService.getAllMethodValidationString();		
@@ -131,15 +131,15 @@ public class HtmlValMethodsResolver extends AbstractHtmlSpieResolver {
 					// Si por ejemplo, la lista configurada no es vacía y en la respuesta del SPIE todos los métodos coincidentes tienen estado OK, el semáforo será verde independientemente
 					// del estado del resto de métodos que no están en la lista.
 					if ((!valMetsToCheck.isEmpty() && valMetsToCheck.contains(detail.getValMethodId()) || valMetsToCheck.isEmpty()) && !detail.getResult().equals(VALMETHOD_CONNECTION_OK)) {
-						sempaphoreValue = semaphErrorLevel;
+						semaphoreValue = semaphErrorLevel;
 					}
 				}
 			}
 		} else {
-			sempaphoreValue = null;
+			semaphoreValue = null;
 		}
 		
-		return sempaphoreValue;
+		return semaphoreValue;
 	}
 			
 	

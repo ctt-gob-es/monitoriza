@@ -29,6 +29,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /** 
  * <p>Class .</p>
@@ -47,7 +48,7 @@ public class StatsVipController {
 	 * @param request Request object
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "statsvip")
+	@RequestMapping(value = "statsvip", method = RequestMethod.GET)
 	public String status(final Model model, final HttpServletRequest request) {
 		
 		return "fragments/statsvip.html";

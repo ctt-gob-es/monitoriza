@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.io.StringWriter;
 import java.util.Arrays;
 
+import javax.xml.XMLConstants;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -73,12 +74,14 @@ public final class UtilsXml {
 		try {
 	        //Obtenemos el document del fichero XML existente
 	        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+	        dbf.setFeature("http://apache.org/xml/features/disallow-doctype-decl", true);
 	        DocumentBuilder db = dbf.newDocumentBuilder();
 	        document = db.parse(pathUri);
 	        document.getDocumentElement().normalize();
 	        document.getElementsByTagName("dss:Name").item(0).setTextContent(app);
 	        document.getElementsByTagName("ds:X509Certificate").item(0).setTextContent(certificate);
 	        TransformerFactory transfac = TransformerFactory.newInstance();
+	        transfac.setFeature(XMLConstants.FEATURE_SECURE_PROCESSING, true);
 			Transformer trans = transfac.newTransformer();
 			trans.setOutputProperty(OutputKeys.METHOD, "xml");
 			trans.setOutputProperty(OutputKeys.INDENT, "yes");

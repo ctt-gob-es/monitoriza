@@ -30,6 +30,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.gob.monitoriza.persistence.configuration.dto.StatusSpieDTO;
@@ -75,7 +76,7 @@ public class StatusController {
 	 * @param request Request object
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "status")
+	@RequestMapping(value = "status", method = RequestMethod.GET)
 	public String status(final Model model, final HttpServletRequest request) {
 
 		StatusVipDTO statusVipDto = statusService.completeStatusVip();
@@ -100,7 +101,7 @@ public class StatusController {
 	 * @param service String that represents the service to mark.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "markVipService")
+	@RequestMapping(value = "markVipService", method = RequestMethod.POST)
 	public String markVipService(final Model model, final HttpServletRequest request, @RequestParam("service") String service) {
 
 		MaintenanceService maintenance = maintenanceService.getMaintenanceServiceByService(service);
@@ -124,7 +125,7 @@ public class StatusController {
 	 * @param service String that represents the service to mark.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "markSpieService")
+	@RequestMapping(value = "markSpieService", method = RequestMethod.POST)
 	public String markSpieService(final Model model, final HttpServletRequest request, @RequestParam("service") String service) {
 		
 		MaintenanceService maintenance = maintenanceService.getMaintenanceServiceByService(service);

@@ -83,7 +83,7 @@ public class UserController {
 	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "adduser", method = RequestMethod.POST)
+	@RequestMapping(value = "adduser", method = { RequestMethod.GET, RequestMethod.POST })
 	public String addUser(final Model model) {
 		model.addAttribute("userform", new UserDTO());
 		model.addAttribute("accion", "add");

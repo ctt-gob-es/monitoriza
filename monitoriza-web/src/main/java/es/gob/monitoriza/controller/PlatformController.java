@@ -75,7 +75,7 @@ public class PlatformController {
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "platformafirma")
+	@RequestMapping(value = "platformafirma", method = RequestMethod.GET)
     public String platformAfirma(final Model model){
         return "fragments/platformafirma.html";
     }
@@ -86,7 +86,7 @@ public class PlatformController {
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
-	@RequestMapping(value = "platformtsa")
+	@RequestMapping(value = "platformtsa", method = RequestMethod.GET)
     public String platformTsa(final Model model){
         return "fragments/platformtsa.html";
     }
