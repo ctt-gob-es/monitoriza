@@ -99,7 +99,8 @@ public class RegisterLogRestService implements ILogRestService {
 		}
 
 		// Se busca el nodo a registrar.
-		final SplMonitoriza node = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.LOG_NODE_MONITORIZA_SERVICE, SplService.class).getSplByUrl(logUrl);
+		final SplMonitoriza node = ApplicationContextProvider.getApplicationContext().
+				getBean(IServiceNameConstants.LOG_NODE_MONITORIZA_SERVICE, SplService.class).getSplByUrl(logUrl);
 
 		// El nodo existe, no se hace nada
 		if (node != null) {

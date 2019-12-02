@@ -93,6 +93,9 @@ public class SplRestController {
 	/** Logger. */
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_WEB_LOG);
 
+
+	private static final String dateFieldFormat = "dd/MM/yyyy HH:mm";
+
 	/**
 	 * Attribute that represents the service object to manage the SPLs.
 	 */
@@ -330,7 +333,7 @@ public class SplRestController {
 			return;
 		}
 
-		final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.ROOT);
+		final SimpleDateFormat formatter = new SimpleDateFormat(dateFieldFormat, Locale.ROOT);
 
 		long startDate = 0;
 		if (requestForm.getStartDate() != null && !requestForm.getStartDate().isEmpty()) {
@@ -385,7 +388,7 @@ public class SplRestController {
 			return;
 		}
 
-		final SimpleDateFormat formatter = new SimpleDateFormat("dd/MM/yyyy hh:mm", Locale.ROOT);
+		final SimpleDateFormat formatter = new SimpleDateFormat(dateFieldFormat, Locale.ROOT);
 
 		long startDate = 0;
 		if (requestForm.getStartDate() != null && !requestForm.getStartDate().isEmpty()) {

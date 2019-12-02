@@ -4,6 +4,8 @@ import java.io.IOException;
 import java.io.OutputStreamWriter;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLEncoder;
+import java.nio.charset.StandardCharsets;
 import java.security.KeyManagementException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.X509Certificate;
@@ -114,17 +116,19 @@ public class MonitorizaLogServiceRegister implements LogServiceRegister {
 			throw new IOException("No se proporcionaron todas las propiedades de configuracion necesarias para el registro", e);
 		}
 
+		final String utf8 = StandardCharsets.UTF_8.name();
+
 		final StringBuilder urlParameters = new StringBuilder();
-		urlParameters.append(PARAM_LOG_NAME).append("=").append(this.config.getLogServiceName()).append("&")
-		.append(PARAM_LOG_DESCRIPTION).append("=").append(this.config.getLogServiceDescription()).append("&")
-		.append(PARAM_LOG_TYPE).append("=").append(this.config.getLogServiceType()).append("&")
-		.append(PARAM_LOG_URL).append("=").append(this.config.getLogServiceUrl()).append("&")
-		.append(PARAM_LOG_KEY).append("=").append(Base64.encode(this.config.getCipherKey()));
+		urlParameters.append(PARAM_LOG_NAME).append("=").append(URLEncoder.encode(this.config.getLogServiceName(), utf8)).append("&")
+		.append(PARAM_LOG_DESCRIPTION).append("=").append(URLEncoder.encode(this.config.getLogServiceDescription(), utf8)).append("&")
+		.append(PARAM_LOG_TYPE).append("=").append(URLEncoder.encode(this.config.getLogServiceType(), utf8)).append("&")
+		.append(PARAM_LOG_URL).append("=").append(URLEncoder.encode(this.config.getLogServiceUrl(), utf8)).append("&")
+		.append(PARAM_LOG_KEY).append("=").append(URLEncoder.encode(Base64.encode(this.config.getCipherKey()), utf8));
 
 		conn.setDoOutput(true);
 
 		// Preparamos el envio de los parametros
-		try (final OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream())) {
+		try (final OutputStreamWriter writer = new OutputStreamWriter(conn.getOutputStream(), StandardCharsets.UTF_8)) {
 			writer.write(urlParameters.toString());
 		}
 
