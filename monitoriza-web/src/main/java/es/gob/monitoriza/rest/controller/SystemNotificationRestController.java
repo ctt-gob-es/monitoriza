@@ -27,7 +27,7 @@ package es.gob.monitoriza.rest.controller;
 import java.util.Arrays;
 import java.util.List;
 
-import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +78,7 @@ public class SystemNotificationRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/sysnotificationdatatable", method = RequestMethod.GET)
-	public DataTablesOutput<SystemNotification> dtSysNotifications(@Valid DataTablesInput input) {
+	public DataTablesOutput<SystemNotification> dtSysNotifications(@NotEmpty DataTablesInput input) {
 		
 		// Se eliminan las notificaciones expiradas.
 		sysNotificationService.clearExpiredNotifications();

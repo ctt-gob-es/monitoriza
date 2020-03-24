@@ -31,7 +31,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -112,7 +112,7 @@ public class AlarmRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/mailsdatatable", method = RequestMethod.GET)
-	public DataTablesOutput<MailMonitoriza> mails(@Valid DataTablesInput input) {
+	public DataTablesOutput<MailMonitoriza> mails(@NotEmpty DataTablesInput input) {
 		return (DataTablesOutput<MailMonitoriza>) mailService.findAll(input);
 	}
 
@@ -126,7 +126,7 @@ public class AlarmRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/alarmsdatatable", method = RequestMethod.GET)
-	public DataTablesOutput<AlarmMonitoriza> alarms(@Valid DataTablesInput input) {
+	public DataTablesOutput<AlarmMonitoriza> alarms(@NotEmpty DataTablesInput input) {
 		return (DataTablesOutput<AlarmMonitoriza>) alarmMonitorizaService.findAll(input);
 	}
 
@@ -308,7 +308,7 @@ public class AlarmRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/confalarmsdatatable", method = RequestMethod.GET)
-	public DataTablesOutput<Alarm> confAlarms(@Valid DataTablesInput input) {
+	public DataTablesOutput<Alarm> confAlarms(@NotEmpty DataTablesInput input) {
 		return (DataTablesOutput<Alarm>) alarmService.getAllAlarm(input);
 	}
 

@@ -44,7 +44,7 @@ import java.util.stream.StreamSupport;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 import org.apache.axis.utils.ByteArray;
 import org.apache.log4j.Logger;
@@ -214,7 +214,7 @@ public class KeystoreRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/ssldatatable", method = RequestMethod.GET)
-	public DataTablesOutput<SystemCertificate> listSslCertificates(@Valid DataTablesInput input) {
+	public DataTablesOutput<SystemCertificate> listSslCertificates(@NotEmpty DataTablesInput input) {
 
 		return (DataTablesOutput<SystemCertificate>) certificateService.findAllSsl(input);
 
@@ -228,7 +228,7 @@ public class KeystoreRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/authdatatable", method = RequestMethod.GET)
-	public DataTablesOutput<SystemCertificate> listAuthCertificates(@Valid DataTablesInput input) {
+	public DataTablesOutput<SystemCertificate> listAuthCertificates(@NotEmpty DataTablesInput input) {
 
 		return (DataTablesOutput<SystemCertificate>) certificateService.findAllAuth(input);
 
@@ -242,7 +242,7 @@ public class KeystoreRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/validservicekeystoredatatable", method = RequestMethod.GET)
-	public DataTablesOutput<SystemCertificate> listValidServiceCertificates(@Valid DataTablesInput input) {
+	public DataTablesOutput<SystemCertificate> listValidServiceCertificates(@NotEmpty DataTablesInput input) {
 
 		return (DataTablesOutput<SystemCertificate>) certificateService.findAllValidService(input);
 
