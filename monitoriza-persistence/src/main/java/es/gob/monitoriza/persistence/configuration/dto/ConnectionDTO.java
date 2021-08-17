@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>30 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 30 ene. 2018.
+ * @version 1.1, 17/08/2021
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -27,7 +27,7 @@ package es.gob.monitoriza.persistence.configuration.dto;
 /** 
  * <p>Data transfer object that encapsulates the information of a connection configuration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 28/08/2018.
+ * @version 1.2, 17/08/2021
  */
 public class ConnectionDTO {
 	
@@ -101,7 +101,7 @@ public class ConnectionDTO {
 
 
 	/**
-	 * Gets the value of the attribute {@link #secureMode} 
+	 * Gets the value of the attribute {@link #secureMode}.
 	 * @return the value of the attribute {@link #secureMode}
 	 */
 	public Boolean getSecureMode() {
@@ -111,10 +111,10 @@ public class ConnectionDTO {
 	
 	/**
 	 * Sets the value of the attribute {@link #secureMode} 
-	 * @param serviceId the value for the attribute {@link #secureMode} to set.
+	 * @param secureModeParam the value for the attribute {@link #secureMode} to set.
 	 */
-	public void setSecureMode(Boolean secureMode) {
-		this.secureMode = secureMode;
+	public void setSecureMode(Boolean secureModeParam) {
+		this.secureMode = secureModeParam;
 	}
 
 	
@@ -129,10 +129,10 @@ public class ConnectionDTO {
 	
 	/**
 	 * Sets the value of the attribute {@link #host} 
-	 * @param serviceId the value for the attribute {@link #host} to set.
+	 * @param host the value for the attribute {@link #host} to set.
 	 */
-	public void setHost(String host) {
-		this.host = host;
+	public void setHost(String hostParam) {
+		this.host = hostParam;
 	}
 
 	
@@ -147,10 +147,10 @@ public class ConnectionDTO {
 	
 	/**
 	 * Sets the value of the attribute {@link #port} 
-	 * @param serviceId the value for the attribute {@link #port} to set.
+	 * @param portParam the value for the attribute {@link #port} to set.
 	 */
-	public void setPort(String port) {
-		this.port = port;
+	public void setPort(String portParam) {
+		this.port = portParam;
 	}
 	
 	/**
@@ -163,10 +163,10 @@ public class ConnectionDTO {
 	
 	/**
 	 * Sets the value of the attribute {@link #securePort} 
-	 * @param serviceId the value for the attribute {@link #securePort} to set.
+	 * @param securePortParam the value for the attribute {@link #securePort} to set.
 	 */
-	public void setSecurePort(String securePort) {
-		this.securePort = securePort;
+	public void setSecurePort(String securePortParam) {
+		this.securePort = securePortParam;
 	}
 
 	/**
@@ -180,10 +180,10 @@ public class ConnectionDTO {
 	
 	/**
 	 * Sets the value of the attribute {@link #serviceContext} 
-	 * @param serviceId the value for the attribute {@link #serviceContext} to set.
+	 * @param serviceContextParam the value for the attribute {@link #serviceContext} to set.
 	 */
-	public void setServiceContext(String serviceContext) {
-		this.serviceContext = serviceContext;
+	public void setServiceContext(String serviceContextParam) {
+		this.serviceContext = serviceContextParam;
 	}
 
 	
@@ -198,10 +198,10 @@ public class ConnectionDTO {
 	
 	/**
 	 * Sets the value of the attribute {@link #ocspContext} 
-	 * @param serviceId the value for the attribute {@link #ocspContext} to set.
+	 * @param ocspContextParam the value for the attribute {@link #ocspContext} to set.
 	 */
-	public void setOcspContext(String ocspContext) {
-		this.ocspContext = ocspContext;
+	public void setOcspContext(String ocspContextParam) {
+		this.ocspContext = ocspContextParam;
 	}
 
 
@@ -218,22 +218,28 @@ public class ConnectionDTO {
 	
 	/**
 	 * Sets the value of the attribute {@link #rfc3161Context} 
-	 * @param serviceId the value for the attribute {@link #rfc3161Context} to set.
+	 * @param rfc3161Context the value for the attribute {@link #rfc3161Context} to set.
 	 */
-	public void setRfc3161Context(String rfc3161Context) {
-		this.rfc3161Context = rfc3161Context;
+	public void setRfc3161Context(String rfc3161ContextParam) {
+		this.rfc3161Context = rfc3161ContextParam;
 	}
 
 
-	
+	/**
+	 * Gets the value of the attribute {@link #rfc3161Port} 
+	 * @return the value of the attribute {@link #rfc3161Port}
+	 */
 	public String getRfc3161Port() {
 		return rfc3161Port;
 	}
 
 
-	
-	public void setRfc3161Port(String rfc3161Port) {
-		this.rfc3161Port = rfc3161Port;
+	/**
+	 * Sets the value of the attribute {@link #rfc3161Port} 
+	 * @param rfc3161Port the value for the attribute {@link #rfc3161Port} to set.
+	 */
+	public void setRfc3161Port(String rfc3161PortParam) {
+		this.rfc3161Port = rfc3161PortParam;
 	}
 	
 	

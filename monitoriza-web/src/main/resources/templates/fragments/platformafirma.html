@@ -164,7 +164,7 @@ $(document).ready(function() {
 									  });
 								  }else{
 									tbl.row.add($(data.data)).draw(false);
-									
+																		
 									$('#altEditor-modal .modal-body .alert').remove();
 				                    $('#altEditor-modal').modal('hide');
 								  }
@@ -236,6 +236,7 @@ $(document).ready(function() {
 			            		
 			            		
 			                    tbl.row.add($(data.data)).draw(false);
+			                    $('#altEditor-modal').modal('hide');
 			                   
 			                },
 			                error:function(data){

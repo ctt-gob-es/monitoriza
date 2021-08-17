@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>13/11/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 13/11/2018.
+ * @version 1.1, 17/08/2021.
  */
 package es.gob.monitoriza.controller;
 
@@ -41,7 +41,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import es.gob.monitoriza.persistence.configuration.dto.DailyVipDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.CPlatformType;
-import es.gob.monitoriza.persistence.configuration.model.entity.PlatformMonitoriza;
 import es.gob.monitoriza.service.IDailyVipMonitoringService;
 import es.gob.monitoriza.service.IPlatformService;
 
@@ -49,7 +48,7 @@ import es.gob.monitoriza.service.IPlatformService;
 /** 
  * <p>Class that manages the requests related to the queriying of daily VIP data by time range.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 13/11/2018.
+ * @version 1.1, 17/08/2021.
  */
 @Controller
 public class QueryVipController {

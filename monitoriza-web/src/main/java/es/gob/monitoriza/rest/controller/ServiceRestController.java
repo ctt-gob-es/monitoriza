@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 2.0, 15/02/2019.
+ * @version 2.1, 17/08/2021.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -80,7 +80,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /**
  * <p>Class that manages the REST requests related to the Services administration and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
-  * @version 2.0, 15/02/2019.
+  * @version 2.1, 17/08/2021.
  */
 @RestController
 public class ServiceRestController {
@@ -117,8 +117,8 @@ public class ServiceRestController {
 	 */
 	@Autowired
 	private IRequestServiceFileService fileService;
-
-
+	
+	
 	/**
 	 * Method that maps the list users web requests to the controller and
 	 * forwards the list of services to the view.
@@ -191,7 +191,14 @@ public class ServiceRestController {
 
 		final PlatformMonitoriza platform = this.platformService.getPlatformById(idPlatform);
 		final StringBuilder baseEndpoint = new StringBuilder();
-		baseEndpoint.append("http://").append(platform.getHost()).append(UtilsStringChar.SYMBOL_COLON_STRING)
+		
+		String protocol = "http://";
+		
+		if (platform.getIsSecure()) {
+			protocol = "https://";
+		}
+		
+		baseEndpoint.append(protocol).append(platform.getHost()).append(UtilsStringChar.SYMBOL_COLON_STRING)
 				.append(platform.getPort());
 
 		switch (serviceType.toLowerCase()) {
@@ -276,6 +283,7 @@ public class ServiceRestController {
 		// Se realizan validaciones en servidor, modificando el objecto bindingResult.
 		validateRequiredNameWsdlField(serviceForm, bindingResult);
 		validateZipFile(serviceForm, file, bindingResult);
+		validateTemporal(serviceForm, bindingResult);
 
 		if (bindingResult.hasErrors()) {
 			listNewService = StreamSupport.stream(this.serviceService.getAllServiceMonitoriza().spliterator(), false)
@@ -305,6 +313,7 @@ public class ServiceRestController {
 
 		return dtOutput;
 	}
+	
 
 	/**
 	 * Modifies the {@link BindingResult} validating the nameWsdl field.
@@ -327,6 +336,30 @@ public class ServiceRestController {
 			}
 
 		}
+	}
+	
+	/**
+	 * Modifies the {@link BindingResult} validating the temporal fields: timeout, uDegraded and uLost.
+	 * @param serviceForm Backing form object with the service data.
+	 * @param bindingResult Validation binding object.
+	 */
+	private void validateTemporal(ServiceDTO serviceForm, BindingResult bindingResult) {
+		
+		if (serviceForm.getDegradedThreshold() != null && !serviceForm.getDegradedThreshold().isEmpty() && !UtilsStringChar.isPositiveNumber(serviceForm.getDegradedThreshold())) {
+			final FieldError uDegradedFieldError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_UDEGRADED, "El campo 'Umbral degradado' deber ser un valor numérico positivo.");
+			bindingResult.addError(uDegradedFieldError);
+		}
+		
+		if (serviceForm.getLostThreshold() != null && !serviceForm.getLostThreshold().isEmpty() && !UtilsStringChar.isPositiveNumber(serviceForm.getLostThreshold())) {
+			final FieldError uLostFieldError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_ULOST, "El campo 'Umbral perdido' deber ser un valor numérico positivo.");
+			bindingResult.addError(uLostFieldError);
+		}
+		
+		if (serviceForm.getTimeout() != null && !serviceForm.getTimeout().isEmpty() && !UtilsStringChar.isPositiveNumber(serviceForm.getTimeout())) {
+			final FieldError timeoutFieldError = new FieldError(ServiceDTO.FORM_OBJECT_VALUE, ServiceDTO.FIELD_TIMEOUT, "El campo 'timeout' deber ser un valor numérico positivo.");
+			bindingResult.addError(timeoutFieldError);
+		}
+		
 	}
 
 

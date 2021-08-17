@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19/01/2018.</p>
  * @author Gobierno de España.
- * @version 2.4, 30/01/2019.
+ * @version 2.5, 17/08/2021
  */
 package es.gob.monitoriza.service.impl;
 
@@ -62,7 +62,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that manages the configuration of the services from database persistence for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- *  @version 2.4, 30/01/2019.
+ *  @version 2.5, 17/08/2021
  */
 @Service("vipMonitoringConfigService")
 public class VipMonitoringConfigService implements IVipMonitoringConfigService {
@@ -232,14 +232,16 @@ public class VipMonitoringConfigService implements IVipMonitoringConfigService {
 								
 		final ConnectionDTO connection = new ConnectionDTO(platform.getIsSecure(), platform.getHost(), platform.getPort(), platform.getRfc3161Port(), platform.getServiceContext(), platform.getOcspContext(), platform.getRfc3161Context());
 
-		String port = connection.getPort();
+		String port = null;
 		
 		String protocol = null;
 		if (serviceType.equalsIgnoreCase(GeneralConstants.RFC3161_SERVICE)) {
 			// Si el servicio es RFC3161, la conexión siempre se hará mediante HTTPS
 			protocol = GeneralConstants.SECUREMODE_HTTPS;
+			port = connection.getRfc3161Port();
 		} else {
 			protocol = connection.getSecureMode()? GeneralConstants.SECUREMODE_HTTPS : GeneralConstants.SECUREMODE_HTTP;
+			port = connection.getPort();
 		}
 		
 		

@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 2.2, 11/04/2019.
+ * @version 2.3, 2.3, 17/08/2021.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -86,7 +86,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 2.2, 11/04/2019.
+ * @version 2.3, 17/08/2021.
  */
 public final class RequestProcessorThread implements Runnable {
 
@@ -245,6 +245,7 @@ public final class RequestProcessorThread implements Runnable {
 							LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS007, new Object[ ] { idTimerTask, service.getServiceName() }));
 						}
 					} else {
+						LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS019, new Object[ ] { idTimerTask, service.getWsdl()}));
 						necesarioConfirmar = Boolean.FALSE;
 					}
 
@@ -264,6 +265,7 @@ public final class RequestProcessorThread implements Runnable {
 			// obtenidos.
 			StatusUptodate statusUptodate = new StatusUptodate(calcularEstadoDelServicio(tiempoMedio, perdidas), service.getPlatform(), tiempoMedio, LocalDateTime.now(), partialRequestResult);
 			statusHolder.put(service.getServiceName(), statusUptodate);
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS020, new Object[ ] { idTimerTask, service.getServiceName()}));
 			RunningServices.getRequestsRunning().put(service.getServiceName(), Boolean.FALSE);
 
 			saveDailyVipMonitoring(service.getServiceName(), service.getPlatform(), statusUptodate);

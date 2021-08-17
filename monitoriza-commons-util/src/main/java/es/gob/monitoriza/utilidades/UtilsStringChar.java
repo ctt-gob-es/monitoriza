@@ -15,7 +15,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>10/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 30/01/2019.
+ * @version 1.1, 17/08/2021.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -24,7 +24,7 @@ import org.apache.commons.codec.binary.Hex;
 /**
  * <p>Class that provides functionality for managing strings and characters.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 30/01/2019.
+ * @version 1.1, 17/08/2021
  */
 public final class UtilsStringChar {
 
@@ -244,6 +244,8 @@ public final class UtilsStringChar {
 	 * Constant attribute that represents the token '0'.
 	 */
 	private static final char TOKEN_ZERO = '0';
+	
+	private static final String regExpPositiveNumberNotZero = "^[0-9]*[1-9][0-9]*$";
 
 	/**
 	 * Method that checks whether a string is null or empty.
@@ -402,6 +404,17 @@ public final class UtilsStringChar {
 
 		return result;
 
+	}
+	
+	/**
+	 * Checks if the String parameter represents a positive number.
+	 * @param string String that represents the number.
+	 * @return true if the parameter string is a positive number
+	 */
+	public static boolean isPositiveNumber(String string) {
+		
+		return string.matches(regExpPositiveNumberNotZero);
+		
 	}
 
 }

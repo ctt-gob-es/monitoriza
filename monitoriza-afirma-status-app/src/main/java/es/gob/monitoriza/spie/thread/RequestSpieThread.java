@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>29/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.8, 27/08/2019.
+ * @version1.9, 17/08/2021.
  */
 package es.gob.monitoriza.spie.thread;
 
@@ -77,7 +77,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that get the results of the SPIE services configured.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.8, 27/08/2019.
+ * @version 1.9, 17/08/2021.
  */
 public class RequestSpieThread implements Runnable {
 	
@@ -408,7 +408,7 @@ public class RequestSpieThread implements Runnable {
 			LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS023, new Object[ ] { node.getName() }), ie);
 			status = new RowStatusSpieDTO(spieType.getPlatformType().getName(), node.getName(), spieBaseAddress, spieType.getTokenName(), SemaphoreEnum.OTHER.getId(), resolver.getAvgDetailResults(), resolver.getValMethodDetailResults(), LocalDateTime.now());
 			// Se persiste el resultado
-			saveDailySpieMonitoring(idStatus, status);
+			saveDailySpieMonitoring(spieType.getTokenName(), status);
 			// Se actualiza el mapa de resultados usando el identificador obtenido.
 			StatusSpieHolder.getInstance().getCurrentStatusHolder().put(idStatus, status);
 			// Se persiste la información de mantenimiento del servicio SPIE

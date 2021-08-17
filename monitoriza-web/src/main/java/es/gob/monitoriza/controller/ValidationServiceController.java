@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>28 ago. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 17/08/2021.
  */
 package es.gob.monitoriza.controller;
 
@@ -28,12 +28,15 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -52,11 +55,12 @@ import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IAuthenticationTypeService;
 import es.gob.monitoriza.service.ISystemCertificateService;
 import es.gob.monitoriza.service.IValidServiceService;
+import es.gob.monitoriza.utilidades.UtilsScheduler;
 
 /** 
  * <p>Class that maps the request for the validation service form to the controller.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 17/08/2021.
  */
 @Controller
 public class ValidationServiceController {
@@ -136,10 +140,22 @@ public class ValidationServiceController {
 	 * @throws Exception Error saving the validation service
 	 */
 	@RequestMapping(value = "/savevalidservice", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	public @ResponseBody ValidService saveValidService(@Validated(OrderedValidation.class) @RequestBody final ValidServiceDTO validServiceForm, final BindingResult bindingResult) throws Exception{
+	public @ResponseBody ValidServiceDTO saveValidService(@Validated(OrderedValidation.class) @RequestBody final ValidServiceDTO validServiceForm, final BindingResult bindingResult) throws Exception{
 
 		ValidService validService = null;
+		ValidServiceDTO validServiceDto = new ValidServiceDTO();
 		
+		
+        if (!UtilsScheduler.validExpression(validServiceForm.getCronExpression())) {
+            LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB029));
+            
+            final FieldError cronFieldError = new FieldError(ValidServiceDTO.FORM_OBJECT_VALUE, ValidServiceDTO.FIELD_CRON, "El formato del campo 'Hora de ejecución' no es correcto");
+			bindingResult.addError(cronFieldError);   
+			JSONObject json = new JSONObject();
+			json.put(ValidServiceDTO.FIELD_CRON + "_span", "Formato incorrecto");
+			validServiceDto.setError(json.toString());
+        }
+        
 		if (!bindingResult.hasErrors()) {
 			try {
 				
@@ -151,6 +167,11 @@ public class ValidationServiceController {
 				}
 								
 				validService = validServiceService.saveValidService(validServiceForm);
+				
+				// Si todo va bien, se ejecuta el job
+				if (!StringUtils.equals(validService.getCronExpression(), validServiceForm.getCronExpression()) && validServiceForm.getIsEnableValidationJob()) {
+					validCertificatesJob.start();
+				}				
 
 			} catch (Exception e) {
 				LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB010), e.getCause());
@@ -158,7 +179,7 @@ public class ValidationServiceController {
 			}
 		}
 		
-		return validService;
+		return validServiceDto;
 	}
 
 	/**

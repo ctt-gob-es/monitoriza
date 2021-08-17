@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring services of Cl@ve suite systems</p>
  * <b>Date:</b><p>18/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 28/03/2019.
+ * @version 1.5, 17/08/2021.
  */
 package es.gob.monitoriza.invoker.http;
 
@@ -44,7 +44,9 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
+import org.apache.log4j.Logger;
 
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.exception.InvokerException;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
@@ -64,9 +66,14 @@ import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
  * Application for monitoring services of Cl@ve suite systems.
  * </p>
  * 
- * @version 1.4, 28/03/2019.
+ * @version 1.5, 17/08/2021
  */
 public class HttpInvoker extends AbstractHttpInvoker {
+	
+	/**
+	 * Attribute that represents the object that manages the log of the class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
 	 * Method that sends a request and get the response message.
@@ -93,10 +100,10 @@ public class HttpInvoker extends AbstractHttpInvoker {
 		try {
 			requestConf = Utilities.transformJabx(file);
 			samlRequest = AbstractHttpInvoker.generateSamlRequest(requestConf, service);
-			LOGGER.debug("Petición SAML generada: " + samlRequest);
+			LOGGER.info("Petición SAML generada: " + samlRequest);
 
 			httpPost = new HttpPost(service.getSoapUrl() + service.getWsdl());
-			LOGGER.debug("URL generada: " + httpPost);
+			LOGGER.info("URL generada: " + httpPost);
 
 			// Comprobamos si tenemos petición HTTP
 			if (requestConf.getRequest().getHttpRequest() != null) {
@@ -122,6 +129,7 @@ public class HttpInvoker extends AbstractHttpInvoker {
 			params.add(new BasicNameValuePair("SAMLRequest", samlRequest));
 			params.add(new BasicNameValuePair("RelayState", SecureRandomXmlIdGenerator.INSTANCE.generateIdentifier(8)));
 
+			LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS008, new Object[ ] { idTimerTask, file, httpPost}));			
 			httpPost.setEntity(new UrlEncodedFormEntity(params));
 			beforeCall = LocalTime.now();
 
@@ -130,6 +138,8 @@ public class HttpInvoker extends AbstractHttpInvoker {
 			
 			// Comprobamos que la conexión se estableció correctamente
 			String result = requestConf.getRequest().getHttpRequest().getResult();
+			LOGGER.info("Los codigos de resultados obtenidos en la invocacion del servicio de Clave: " + httpPost + " son los siguientes: " + result);
+			LOGGER.info("El valor de httpResponse.getStatusLine().getStatusCode() es: " + httpResponse.getStatusLine().getStatusCode());
 			String[] resultSplit = result.split(",");
 			Boolean resultCodeResponse = false;
 			
@@ -141,7 +151,7 @@ public class HttpInvoker extends AbstractHttpInvoker {
 			
 			if (!resultCodeResponse) {
 				// Si hay algún problema de conexión, considero la petición como perdida...
-				LOGGER.error(Language.getResMonitoriza(IStatusLogMessages.ERRORSTATUS005));
+				LOGGER.error(Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS029, new Object[]{idTimerTask,file.getAbsolutePath()}));
 				tiempoTotal = null;
 			} else {
 				LocalTime afterCall = LocalTime.now();

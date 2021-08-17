@@ -20,18 +20,16 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>30/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 30/01/2019.
+ * @version 1.3, 17/08/2021
  */
 package es.gob.monitoriza.service.impl;
 
 import java.util.List;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import es.gob.monitoriza.cron.ValidCertificatesJob;
 import es.gob.monitoriza.persistence.configuration.dto.ValidServiceDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
 import es.gob.monitoriza.persistence.configuration.model.repository.AuthenticationTypeRepository;
@@ -42,7 +40,7 @@ import es.gob.monitoriza.service.IValidServiceService;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for ValidService.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 30/01/2019.
+ * @version 1.3, 17/08/2021
  */
 @Service("validServiceService")
 public class ValidServiceService implements IValidServiceService {
@@ -64,12 +62,6 @@ public class ValidServiceService implements IValidServiceService {
 	 */
 	@Autowired
 	private SystemCertificateRepository repositorySysCert;	
-		
-	/**
-	 * Attribute that represents the service object for accessing the repository. 
-	 */
-	@Autowired
-	private ValidCertificatesJob validCertificatesJob;
 
 	/**
 	 * {@inheritDoc}
@@ -99,21 +91,19 @@ public class ValidServiceService implements IValidServiceService {
 	public ValidService saveValidService(final ValidServiceDTO validServiceDto) {
 		
 		ValidService validService = null;
-		boolean runJob = Boolean.FALSE;
+		
 		
 		if (validServiceDto.getIdValidService() != null) {
 			validService = repository.findByIdValidService(validServiceDto.getIdValidService());
 		} else {
 			validService = new ValidService();
 		}
+		        
 		validService.setApplication(validServiceDto.getApplication());
 		validService.setAuthenticationType(repositoryAuthType.findByIdAuthenticationType(validServiceDto.getAuthenticationType()));
 		validService.setHost(validServiceDto.getHost());
 		validService.setIsSecure(validServiceDto.getIsSecure());
 		
-		if (!StringUtils.equals(validService.getCronExpression(), validServiceDto.getCronExpression()) && validServiceDto.getIsEnableValidationJob()) {
-			runJob = Boolean.TRUE;
-		}
 		validService.setIsEnableValidationJob(validServiceDto.getIsEnableValidationJob());
 		validService.setCronExpression(validServiceDto.getCronExpression());
 		validService.setPass(validServiceDto.getPass());
@@ -121,12 +111,7 @@ public class ValidServiceService implements IValidServiceService {
 		validService.setUser(validServiceDto.getUser());
 		validService.setValidServiceCertificate(repositorySysCert.findByIdSystemCertificate(validServiceDto.getValidServiceCertificate()));
 						
-		validService = repository.save(validService);
-		
-		// Si todo va bien, se ejecuta el job
-		if (runJob) {
-			validCertificatesJob.start();
-		}
+		validService = repository.save(validService);		
 		
 		return validService;
 
