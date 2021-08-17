@@ -33,7 +33,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.servlet.ServletContext;
-import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -172,7 +172,7 @@ public class UserRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/usersdatatable", method = RequestMethod.GET)
-	public DataTablesOutput<UserMonitoriza> users(@Valid final DataTablesInput input) {
+	public DataTablesOutput<UserMonitoriza> users(@NotEmpty final DataTablesInput input) {
 		input.getColumn(COLUMN_CERT_NOT_VALID).setSearchable(Boolean.FALSE);
 		return (DataTablesOutput<UserMonitoriza>) userService.findAll(input);
 	}
@@ -345,7 +345,7 @@ public class UserRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/certuserdatatable/{idUserMonitoriza}", method = RequestMethod.GET)
-	public DataTablesOutput<SystemCertificate> listCertificatesUser(@Valid final DataTablesInput input, @PathVariable(FIELD_ID_USER) final Long idUserMonitoriza) {
+	public DataTablesOutput<SystemCertificate> listCertificatesUser(@NotEmpty final DataTablesInput input, @PathVariable(FIELD_ID_USER) final Long idUserMonitoriza) {
 		return (DataTablesOutput<SystemCertificate>) certService.findCertUserByUser(input, idUserMonitoriza);
 	}
 

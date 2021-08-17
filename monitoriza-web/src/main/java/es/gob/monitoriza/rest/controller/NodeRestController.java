@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -86,7 +86,7 @@ public class NodeRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/nodeafirmadatatable", method = RequestMethod.GET)
-	public DataTablesOutput<NodeMonitoriza> dtAfirma(@Valid DataTablesInput input) {
+	public DataTablesOutput<NodeMonitoriza> dtAfirma(@NotEmpty DataTablesInput input) {
 
 		return (DataTablesOutput<NodeMonitoriza>) nodeService.findAllAfirma(input);
 
@@ -102,7 +102,7 @@ public class NodeRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/nodetsadatatable", method = RequestMethod.GET)
-	public DataTablesOutput<NodeMonitoriza> dtTsa(@Valid DataTablesInput input) {
+	public DataTablesOutput<NodeMonitoriza> dtTsa(@NotEmpty DataTablesInput input) {
 
 		return (DataTablesOutput<NodeMonitoriza>) nodeService.findAllTsa(input);
 

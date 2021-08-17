@@ -38,7 +38,7 @@ import java.util.stream.StreamSupport;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
-import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -126,7 +126,7 @@ public class SplRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/spldatatable", method = RequestMethod.GET)
-	public DataTablesOutput<SplMonitoriza> dtSpl(@Valid final DataTablesInput input) {
+	public DataTablesOutput<SplMonitoriza> dtSpl(@NotEmpty final DataTablesInput input) {
 		return this.splService.findAll(input);
 	}
 

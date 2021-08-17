@@ -34,7 +34,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -129,7 +129,7 @@ public class ServiceRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/servicesdatatable", method = RequestMethod.GET)
-	public DataTablesOutput<ServiceMonitoriza> services(@Valid final DataTablesInput input) {
+	public DataTablesOutput<ServiceMonitoriza> services(@NotEmpty final DataTablesInput input) {
 		return this.serviceService.findAll(input);
 	}
 
@@ -143,7 +143,7 @@ public class ServiceRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/timersdatatable", method = RequestMethod.GET)
-	public DataTablesOutput<TimerMonitoriza> timers(@Valid final DataTablesInput input) {
+	public DataTablesOutput<TimerMonitoriza> timers(@NotEmpty final DataTablesInput input) {
 		return this.timerService.findAll(input);
 	}
 
