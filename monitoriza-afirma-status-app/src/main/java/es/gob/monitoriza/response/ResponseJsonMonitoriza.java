@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>04/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 30/10/2018.
+ * @version 1.3, 07/09/2021.
  */
 package es.gob.monitoriza.response;
 
@@ -38,7 +38,7 @@ import es.gob.monitoriza.utilidades.GeneralUtils;
 /** 
  * <p>Class that builds the JSON response for servlet admin calls.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 30/10/2018.
+ * @version 1.3, 07/09/2021.
  */
 public final class ResponseJsonMonitoriza {
 	
@@ -67,6 +67,7 @@ public final class ResponseJsonMonitoriza {
 			statusUptodate = entry.getValue();
 			response = new ResponsePOJO();
 			response.setAverageTime(statusUptodate.getAverageTime());
+			response.setIdTimerLog(statusUptodate.getIdTimerLog());
 			response.setStatus(statusUptodate.getStatusValue());
 			response.setSamplingTime(GeneralUtils.getFormattedDateTime(statusUptodate.getStatusUptodate()));
 			response.setService(entry.getKey());
