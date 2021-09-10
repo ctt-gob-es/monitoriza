@@ -17,7 +17,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>14/02/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 05/03/2019.
+ * @version 1.5, 10/09/2021.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -46,7 +46,7 @@ import es.gob.monitoriza.constant.NumberConstants;
  * <p>Class that maps the <i>SYSTEM_CERTIFICATE</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.4, 05/03/2019.
+ * @version 1.5, 10/09/2021.
  */
 @Entity
 @Table(name = "SYSTEM_CERTIFICATE")
@@ -245,7 +245,7 @@ public class SystemCertificate implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	@Column(name = "SERIAL_NUMBER", length = NumberConstants.NUM100, nullable = false)
+	@Column(name = "SERIAL_NUMBER", length = NumberConstants.NUM128, nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public BigInteger getSerialNumber() {
 		// CHECKSTYLE:ON

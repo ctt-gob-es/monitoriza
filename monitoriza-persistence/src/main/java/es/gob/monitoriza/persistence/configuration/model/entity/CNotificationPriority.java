@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>05/03/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 05/03/2019.
+ * @version 1.1, 12/09/2021.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -41,7 +41,7 @@ import es.gob.monitoriza.constant.NumberConstants;
 /** 
  * <p>Class that maps the <i>C_NOTIFICATION_PRIORITY</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 05/03/2019.
+ * @version 1.1, 12/09/2021.
  */
 @Entity
 @Table(name = "C_NOTIFICATION_PRIORITY")
@@ -122,7 +122,7 @@ public class CNotificationPriority implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	@Column(name = "LEVEL", nullable = false, length = NumberConstants.NUM1, unique = true)
+	@Column(name = "NIVEL", nullable = false, length = NumberConstants.NUM1, unique = true)
 	@JsonView(DataTablesOutput.View.class)
 	public Integer getLevel() {
 		// CHECKSTYLE:ON
