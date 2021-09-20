@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>29/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 30/01/2019.
+ * @version 1.3, 17/08/2021
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -36,9 +36,21 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that represents the data transfer object and backing form for the validation service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 30/01/2019.
+ * @version 1.3, 17/08/2021
  */
 public class ValidServiceDTO {
+	
+	/**
+	 * Constant string that represents the name of the mapped form in the template view. 
+	 */
+	public static final String FORM_OBJECT_VALUE = "validServiceForm";
+	
+	/**
+	 * Constant string that represents the identifier of the field "Cron Expression" in the form of the template view. 
+	 */
+	public static final String FIELD_CRON = "cronExpression";
+	
+	private String error;
 	
 	
 	/**
@@ -280,4 +292,16 @@ public class ValidServiceDTO {
 	public void setValidServiceCertificate(Long validServiceCertificateParam) {
 		this.validServiceCertificate = validServiceCertificateParam;
 	}
+
+	
+	public final String getError() {
+		return error;
+	}
+
+	
+	public final void setError(String error) {
+		this.error = error;
+	}
+	
+	
 }

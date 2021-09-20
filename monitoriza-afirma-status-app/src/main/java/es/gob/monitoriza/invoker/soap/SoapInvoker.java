@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>04/01/2019.</p>
  * @author Gobierno de España.
- * @version 1.4, 11/04/2019.
+ * @version 1.5, 07/09/2021.
  */
 package es.gob.monitoriza.invoker.soap;
 
@@ -60,7 +60,7 @@ import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 /** 
  * <p>Class that performs the request of a SOAP service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 11/04/2019.
+ * @version 1.5, 07/09/2021.
  */
 public final class SoapInvoker {
 
@@ -180,7 +180,7 @@ public final class SoapInvoker {
 			}
 		
 		} catch (IOException e) {
-
+			
 			String msgError = Language.getFormatResMonitoriza(IStatusLogMessages.ERRORSTATUS012, new Object[]{idTimerTask, service.getPlatform(), requestFile});
 			LOGGER.error(msgError, e);
 			throw new InvokerException(msgError,e.getCause());

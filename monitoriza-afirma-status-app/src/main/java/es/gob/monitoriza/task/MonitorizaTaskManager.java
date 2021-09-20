@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 28/03/2019.
+ * @version 1.6, 17/08/2021.
  */
 package es.gob.monitoriza.task;
 
@@ -29,6 +29,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
 
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,12 +41,16 @@ import es.gob.monitoriza.i18n.IStatusLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ConfigTimerDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
+import es.gob.monitoriza.service.IServiceMonitorizaService;
 import es.gob.monitoriza.service.ITimerScheduledService;
 import es.gob.monitoriza.service.impl.KeystoreService;
 import es.gob.monitoriza.service.impl.VipMonitoringConfigService;
 import es.gob.monitoriza.service.utils.IServiceNameConstants;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
+import es.gob.monitoriza.status.RunningServices;
 import es.gob.monitoriza.status.StatusHolder;
 import es.gob.monitoriza.status.thread.RequestLauncher;
 import es.gob.monitoriza.timers.TimersHolder;
@@ -54,7 +60,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that update the configuration of the scheduled services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.5, 28/03/2019.
+ * @version 1.6, 17/08/2021.
  */
 @Service("monitorizaTaskManager")
 class MonitorizaTaskManager {
@@ -75,6 +81,13 @@ class MonitorizaTaskManager {
 	 */
 	@Autowired
 	private ITimerScheduledService scheduledService;
+	
+	/**
+	 * Attribute that represents the service object for accessing the service
+	 * repository.
+	 */
+	@Autowired
+	private IServiceMonitorizaService serviceService;
 		
 	/**
 	 * Method that updates the executing timers.
@@ -104,6 +117,16 @@ class MonitorizaTaskManager {
     				
     				// Se cancela el timer para volver a programarlo con los valores actualizados
     				LOGGER.info(Language.getFormatResMonitoriza(IStatusLogMessages.STATUS014, new Object[ ] { timerDTO.getName()}));
+    				
+    				TimerMonitoriza tm = new TimerMonitoriza();
+    				tm.setIdTimer(timerDTO.getIdTimer());
+    				final List<ServiceMonitoriza> servicesByTimer = StreamSupport.stream(serviceService.getAllByTimer(tm).spliterator(), false).collect(Collectors.toList());
+    				
+    				// Actualizamos el estado de todos los servicios. 
+    				for (ServiceMonitoriza sm : servicesByTimer) {
+    					RunningServices.getRequestsRunning().put(sm.getName(), Boolean.FALSE);
+    				}
+    				    				
     				timer.cancel();
     			} 
     			

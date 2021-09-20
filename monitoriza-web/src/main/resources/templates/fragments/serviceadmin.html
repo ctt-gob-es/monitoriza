@@ -686,6 +686,13 @@ $(document).ready(function() {
 				  var errores = JSON.parse(data.error);
 				  
 				  if (data.error != null){
+					  
+					  $('#serviceForm *').filter('span').each(function(){
+							if (i == $(this).attr('id')){
+								$("#" + i).text('');
+							}
+						});
+					  
 					  jQuery.each(errores, function(i, val) {
 					  	$('#serviceForm *').filter('span').each(function(){
 							if (i == $(this).attr('id')){

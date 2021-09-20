@@ -20,12 +20,13 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 25/01/2019.
+ * @version 1.3, 17/08/2021
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Pattern;
 import javax.validation.constraints.Size;
 
 import org.springframework.web.multipart.MultipartFile;
@@ -43,7 +44,7 @@ import es.gob.monitoriza.persistence.configuration.dto.validation.ThenCheckIt;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.2, 25/01/2019.
+ * @version 1.3, 17/08/2021
  */
 public class ServiceDTO {
 	
@@ -56,6 +57,21 @@ public class ServiceDTO {
 	 * Constant string that represents the identifier of the field "Endpoint" in the form of the template view. 
 	 */
 	public static final String FIELD_ENDPOINT = "nameWsdl";
+	
+	/**
+	 * Constant string that represents the identifier of the field "timeout" in the form of the template view. 
+	 */
+	public static final String FIELD_TIMEOUT = "timeout";
+		
+	/**
+	 * Constant string that represents the identifier of the field "uDegraded" in the form of the template view. 
+	 */
+	public static final String FIELD_UDEGRADED = "uDegraded";
+	
+	/**
+	 * Constant string that represents the identifier of the field "uLost" in the form of the template view. 
+	 */
+	public static final String FIELD_ULOST = "uLost";
 	
 	/**
 	 * Constant string that represents the identifier of the field "file" in the form of the template view. 
@@ -79,7 +95,8 @@ public class ServiceDTO {
 	 * pass before the request for this service is cancelled.
 	 */
 	@NotNull(message = "{form.valid.service.timeout.notempty}")
-	private Long timeout;
+	@Pattern(regexp = "[\\s]*[0-9]*[1-9]+",message="form.valid.service.timeout.pattern")
+	private String timeout;
 
 	/**
 	 * Attribute that represents the name of the service in the WSDL endpoint
@@ -92,19 +109,20 @@ public class ServiceDTO {
 	 * request must take to be considered degraded.
 	 */
 	@NotNull(message = "{form.valid.service.degradedThreshold.notempty}")
-	private Long degradedThreshold;
+	private String degradedThreshold;
 
 	/**
 	 * Attribute that represents the average time in milliseconds that a service
 	 * request must take to be considered lost.
 	 */
 	@NotNull(message = "{form.valid.service.lostThreshold.notempty}")
-	private Long lostThreshold;
+	private String lostThreshold;
 
 	/**
 	 * Attribute that represents the timer configured to this service.
 	 */
 	@NotNull(message = "{form.valid.service.timer.notempty}")
+	
 	private Long timer;
 
 	/**
@@ -178,7 +196,7 @@ public class ServiceDTO {
 	 * Gets the value of the attribute {@link #timeout}.
 	 * @return the value of the attribute {@link #timeout}.
 	 */
-	public Long getTimeout() {
+	public String getTimeout() {
 		return timeout;
 	}
 
@@ -186,7 +204,7 @@ public class ServiceDTO {
 	 * Sets the value of the attribute {@link #timeout}.
 	 * @param timeoutParam the value for the attribute {@link #timeout} to set.
 	 */
-	public void setTimeout(Long timeoutParam) {
+	public void setTimeout(String timeoutParam) {
 		this.timeout = timeoutParam;
 	}
 
@@ -210,7 +228,7 @@ public class ServiceDTO {
 	 * Gets the value of the attribute {@link #degradedThreshold}.
 	 * @return the value of the attribute {@link #degradedThreshold}.
 	 */
-	public Long getDegradedThreshold() {
+	public String getDegradedThreshold() {
 		return degradedThreshold;
 	}
 
@@ -218,7 +236,7 @@ public class ServiceDTO {
 	 * Sets the value of the attribute {@link #degradedThreshold}.
 	 * @param degradedThresholdParam the value for the attribute {@link #degradedThreshold} to set.
 	 */
-	public void setDegradedThreshold(Long degradedThresholdParam) {
+	public void setDegradedThreshold(String degradedThresholdParam) {
 		this.degradedThreshold = degradedThresholdParam;
 	}
 
@@ -226,7 +244,7 @@ public class ServiceDTO {
 	 * Gets the value of the attribute {@link #lostThreshold}.
 	 * @return the value of the attribute {@link #lostThreshold}.
 	 */
-	public Long getLostThreshold() {
+	public String getLostThreshold() {
 		return lostThreshold;
 	}
 
@@ -234,7 +252,7 @@ public class ServiceDTO {
 	 * Sets the value of the attribute {@link #lostThreshold}.
 	 * @param lostThresholdParam the value for the attribute {@link #lostThreshold} to set.
 	 */
-	public void setLostThreshold(Long lostThresholdParam) {
+	public void setLostThreshold(String lostThresholdParam) {
 		this.lostThreshold = lostThresholdParam;
 	}
 

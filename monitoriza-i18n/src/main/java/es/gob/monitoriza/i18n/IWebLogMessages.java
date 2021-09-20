@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>08/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 14/03/2019.
+ * @version 1.4, 17/08/2021
  */
 package es.gob.monitoriza.i18n;
 
@@ -28,7 +28,7 @@ package es.gob.monitoriza.i18n;
 /**
  * <p>Interface that contains the keys to the log messages for the web module.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 14/03/2019.
+ * @version 1.4, 17/08/2021
  */
 public interface IWebLogMessages {
 
@@ -179,4 +179,9 @@ public interface IWebLogMessages {
 	 * Constant attribute that represents the name of the property <code>errorweb028</code> belonging to the file status/monitoriza_xx_YY.properties.
 	 */
 	String ERRORWEB028 = "errorweb028";
+	
+	/**
+	 * Constant attribute that represents the name of the property <code>errorweb029</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 */
+	String ERRORWEB029 = "errorweb029";
 }

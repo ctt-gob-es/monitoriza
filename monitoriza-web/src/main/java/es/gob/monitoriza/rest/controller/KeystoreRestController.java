@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.8, 26/03/2019.
+ * @version 1.9, 17/08/2021.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -35,7 +35,6 @@ import java.security.cert.Certificate;
 import java.security.cert.CertificateException;
 import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Base64;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -44,7 +43,7 @@ import java.util.stream.StreamSupport;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 import org.apache.axis.utils.ByteArray;
 import org.apache.log4j.Logger;
@@ -73,6 +72,7 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.constant.StaticConstants;
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
@@ -86,7 +86,6 @@ import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitori
 import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
-import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
 import es.gob.monitoriza.service.IKeystoreService;
 import es.gob.monitoriza.service.IStatusCertificateService;
 import es.gob.monitoriza.service.ISystemCertificateService;
@@ -94,10 +93,8 @@ import es.gob.monitoriza.service.ITimerMonitorizaService;
 import es.gob.monitoriza.service.ITimerScheduledService;
 import es.gob.monitoriza.service.IValidServiceService;
 import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
-import es.gob.monitoriza.utilidades.StatusCertificateEnum;
 import es.gob.monitoriza.utilidades.UtilsCertificate;
 import es.gob.monitoriza.utilidades.UtilsStringChar;
-import es.gob.monitoriza.utilidades.UtilsXml;
 import es.gob.monitoriza.vo.PickListElementVO;
 import es.gob.monitoriza.vo.PickListVO;
 import es.gob.monitoriza.webservice.ClientManager;
@@ -106,7 +103,7 @@ import es.gob.monitoriza.webservice.ClientManager;
  * <p>Class that manages the REST requests related to the Keystore administration
  * and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.8, 26/03/2019.
+ * @version 1.9, 17/08/2021.
  */
 @RestController
 public class KeystoreRestController {
@@ -214,7 +211,7 @@ public class KeystoreRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/ssldatatable", method = RequestMethod.GET)
-	public DataTablesOutput<SystemCertificate> listSslCertificates(@Valid DataTablesInput input) {
+	public DataTablesOutput<SystemCertificate> listSslCertificates(@NotEmpty DataTablesInput input) {
 
 		return (DataTablesOutput<SystemCertificate>) certificateService.findAllSsl(input);
 
@@ -228,7 +225,7 @@ public class KeystoreRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/authdatatable", method = RequestMethod.GET)
-	public DataTablesOutput<SystemCertificate> listAuthCertificates(@Valid DataTablesInput input) {
+	public DataTablesOutput<SystemCertificate> listAuthCertificates(@NotEmpty DataTablesInput input) {
 
 		return (DataTablesOutput<SystemCertificate>) certificateService.findAllAuth(input);
 
@@ -242,7 +239,7 @@ public class KeystoreRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/validservicekeystoredatatable", method = RequestMethod.GET)
-	public DataTablesOutput<SystemCertificate> listValidServiceCertificates(@Valid DataTablesInput input) {
+	public DataTablesOutput<SystemCertificate> listValidServiceCertificates(@NotEmpty DataTablesInput input) {
 
 		return (DataTablesOutput<SystemCertificate>) certificateService.findAllValidService(input);
 
@@ -656,42 +653,6 @@ public class KeystoreRestController {
 						serialNumber = UtilsCertificate.getCertificateSerialNumber(x509Cert);
 					}
 
-					// Valida el certificado y lo añade al almacén truststore
-					// ssl del sistema
-					String certificateBase64 = Base64.getEncoder().encodeToString(cert.getEncoded());
-
-					List<ValidService> validServices = validServiceService.getAllValidServices();
-					ValidService validService = null;
-					if (!validServices.isEmpty()) {
-						validService = validServices.get(0);
-					}
-
-					if (validService != null) {
-
-						String protocol = validService.getIsSecure() != null && validService.getIsSecure() ? UtilsCertificate.PROTOCOL_HTTPS : UtilsCertificate.PROTOCOL_HTTP;
-						String host = validService.getHost();
-						String port = validService.getPort();
-
-						String result = UtilsStringChar.EMPTY_STRING;
-						String endpoint = protocol + "://" + host + ":" + port + UtilsCertificate.VALID_SERVICE_ENDPOINT;
-						Object[ ] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
-						try {
-							result = clientManager.getDSSCertificateServiceClientResult(endpoint, validService, peticion);
-						} catch (Exception e) {
-							LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB005), e.getCause());
-						}
-
-						Long statusCertificateId = UtilsCertificate.processStatusCertificate(result);
-						boolean validResult = Boolean.FALSE;
-						if (statusCertificateId.equals(StatusCertificateEnum.VALID.getId()) || statusCertificateId.equals(StatusCertificateEnum.UNKNOWN.getId())) {
-							validResult = Boolean.TRUE;
-						}
-
-						if (!validResult) {
-							LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB015, new Object[] {alias}));
-							throw new Exception(GeneralConstants.CERTIFICATE_NOT_VALID);
-						}
-
 						ko = keyStoreFacade.storeCertificate(alias, cert, key);
 						// Modificamos el keystore correspondiente, añadiendo el
 						// certificado
@@ -709,7 +670,7 @@ public class KeystoreRestController {
 						sysCert.setKeystore(ko);
 						sysCert.setKey(true);
 						sysCert.setSerialNumber(serialNumber);
-						sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(statusCertificateId));
+						sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(new Long(NumberConstants.NUM1)));
 
 						// Añade el certificado a la persistencia
 						sysCertService.saveSystemCertificate(sysCert);
@@ -732,12 +693,7 @@ public class KeystoreRestController {
 									scheduledService.saveTimerScheduled(scheduled);
 								}
 							}
-						}
-						
-					} else {
-						LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB014, new Object[] {alias}));
-						throw new Exception(GeneralConstants.VALID_SERVICE_NOT_CONFIGURED);
-					}
+						}					
 				}
 			}
 
@@ -795,71 +751,32 @@ public class KeystoreRestController {
 						serialNumber = UtilsCertificate.getCertificateSerialNumber(x509Cert);
 					}
 
-					// Valida el certificado y lo añade al almacén valid service
-					// valid service del sistema
-					String certificateBase64 = Base64.getEncoder().encodeToString(cert.getEncoded());
+					ko = keyStoreFacade.storeCertificate(alias, cert, key);
+					// Modificamos el keystore correspondiente, añadiendo el
+					// certificado
 
-					List<ValidService> validServices = validServiceService.getAllValidServices();
-					ValidService validService = null;
-					if (!validServices.isEmpty()) {
-						validService = validServices.get(0);
+					if (sysCertService.getSystemCertificateByKsAndIssAndSn(ko, issuer, serialNumber) != null) {
+						LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB014, new Object[ ] { alias }));
+						throw new Exception(GeneralConstants.CERTIFICATE_STORED);
 					}
 
-					if (validService != null) {
+					keystoreService.saveKeystore(ko);
 
-						String protocol = validService.getIsSecure() != null && validService.getIsSecure() ? UtilsCertificate.PROTOCOL_HTTPS : UtilsCertificate.PROTOCOL_HTTP;
-						String host = validService.getHost();
-						String port = validService.getPort();
+					sysCert.setAlias(alias);
+					sysCert.setIssuer(issuer);
+					sysCert.setSubject(subject);
+					sysCert.setKeystore(ko);
+					sysCert.setKey(true);
+					sysCert.setSerialNumber(serialNumber);
+					sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(new Long(NumberConstants.NUM1)));
 
-						String result = UtilsStringChar.EMPTY_STRING;
-						String endpoint = protocol + "://" + host + ":" + port + UtilsCertificate.VALID_SERVICE_ENDPOINT;
-						Object[ ] peticion = UtilsXml.getXmlValidation(context.getRealPath(UtilsCertificate.PATH_CERT_VALIDATION_REPORT), validService.getApplication(), certificateBase64);
-						try {
-							result = clientManager.getDSSCertificateServiceClientResult(endpoint, validService, peticion);
-						} catch (Exception e) {
-							LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB005), e.getCause());
-						}
+					// Añade el certificado a la persistencia
+					sysCertService.saveSystemCertificate(sysCert);
+					listSystemCertificate.add(sysCert);
 
-						Long statusCertificateId = UtilsCertificate.processStatusCertificate(result);
-						boolean validResult = Boolean.FALSE;
-						if (statusCertificateId.equals(StatusCertificateEnum.VALID.getId()) || statusCertificateId.equals(StatusCertificateEnum.UNKNOWN.getId())) {
-							validResult = Boolean.TRUE;
-						}
+					// Importación correcta
+					LOGGER.info(Language.getFormatResWebMonitoriza(IWebLogMessages.WEB001, new Object[ ] { alias }));
 
-						if (!validResult) {
-							LOGGER.error("Error al validar el certificado con alias " + alias + " , certificado no válido");
-							throw new Exception(GeneralConstants.CERTIFICATE_NOT_VALID);
-						}
-
-						ko = keyStoreFacade.storeCertificate(alias, cert, key);
-						// Modificamos el keystore correspondiente, añadiendo el
-						// certificado
-
-						if (sysCertService.getSystemCertificateByKsAndIssAndSn(ko, issuer, serialNumber) != null) {
-							LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB014, new Object[] {alias}));
-							throw new Exception(GeneralConstants.CERTIFICATE_STORED);
-						}
-
-						keystoreService.saveKeystore(ko);
-
-						sysCert.setAlias(alias);
-						sysCert.setIssuer(issuer);
-						sysCert.setSubject(subject);
-						sysCert.setKeystore(ko);
-						sysCert.setKey(true);
-						sysCert.setSerialNumber(serialNumber);
-						sysCert.setStatusCertificate(statusCertService.getStatusCertificateById(statusCertificateId));
-
-						// Añade el certificado a la persistencia
-						sysCertService.saveSystemCertificate(sysCert);
-						listSystemCertificate.add(sysCert);
-
-						// Importación correcta
-						LOGGER.info(Language.getFormatResWebMonitoriza(IWebLogMessages.WEB001, new Object[ ] { alias }));
-					} else {
-						LOGGER.error("Error al guardar el certificado, el certificado con alias " + alias + " ya existe en el almacén");
-						throw new Exception(GeneralConstants.VALID_SERVICE_NOT_CONFIGURED);
-					}
 				}
 			}
 		} catch (Exception e) {

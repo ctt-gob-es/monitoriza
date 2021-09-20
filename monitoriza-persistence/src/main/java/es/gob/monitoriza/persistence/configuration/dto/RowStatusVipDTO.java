@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>11/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 18/10/2018.
+ * @version 1.2, 07/09/2021.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 /** 
  * <p>Class that represents a row of the datatable status semaphore.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 31/10/2018.
+ * @version 1.2, 07/09/2021.
  */
 public class RowStatusVipDTO {
 	
@@ -59,6 +59,11 @@ public class RowStatusVipDTO {
 	 * Attribute that represents the date time of the sampling. 
 	 */
 	private String samplingTime;
+	
+	/**
+	 * Attribute that represents the id of the timer used in the log. 
+	 */
+	private String idTimerLog;
 	
 	/**
 	 * Attribute that represents the time result for each request file. 
@@ -151,6 +156,25 @@ public class RowStatusVipDTO {
 	public void setSamplingTime(final String samplingTimeParam) {
 		this.samplingTime = samplingTimeParam;
 	}
+	
+	
+	/**
+	 * Gets the value of the attribute {@link #idTimerLog}.
+	 * @return the value of the attribute {@link #idTimerLog}.
+	 */
+	@JsonView(StatusVipDTO.View.class)	
+	public final String getIdTimerLog() {
+		return idTimerLog;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #idTimerLog}.
+	 * @param samplingTimeParam the value for the attribute {@link #idTimerLog} to set.
+	 */	
+	public final void setIdTimerLog(String idTimerLog) {
+		this.idTimerLog = idTimerLog;
+	}
+
 
 	/**
 	 * Gets the value of the attribute {@link #partialRequestResult}.

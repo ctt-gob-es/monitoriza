@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>05/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 18/10/2018.
+ * @version 1.2, 07/09/2021.
  */
 package es.gob.monitoriza.response;
 
@@ -31,7 +31,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 /** 
  * <p>Class that represents each of the service results for the JSON response.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 18/10/2018.
+ * @version 1.2, 07/09/2021.
  */
 public class ResponsePOJO {
 	
@@ -49,6 +49,11 @@ public class ResponsePOJO {
 	 * Attribute that represents the average response time. 
 	 */
 	private Long averageTime;
+	
+	/**
+	 * Attribute that represents the average response time. 
+	 */
+	private String idTimerLog;
 	
 	/**
 	 * Attribute that represents the date time of the sampling. 
@@ -109,6 +114,23 @@ public class ResponsePOJO {
 	 */
 	public void setAverageTime(final Long averageTime) {
 		this.averageTime = averageTime;
+	}
+	
+	/**
+	 * Gets the value of the attribute {@link #idTimerLog}.
+	 * @return the value of the attribute {@link #idTimerLog}.
+	 */
+	@JsonView(DatatableStatus.View.class)	
+	public final String getIdTimerLog() {
+		return idTimerLog;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #idTimerLog}.
+	 * @param averageTime the value for the attribute {@link #idTimerLog} to set.
+	 */
+	public final void setIdTimerLog(String idTimerLog) {
+		this.idTimerLog = idTimerLog;
 	}
 
 	/**

@@ -67,6 +67,17 @@
 		return finalValue;
 	}
 	
+	function cleanForm(f){
+		$(f + ' *').filter(':input').each(function(){
+			$(this).val('');
+		});
+		$(f + ' *').filter('span').each(function(){
+			$(this).text('');
+		});
+		$(f + " select").select2().val('').change();
+		$(f).find(".alert").remove();
+	}
+	
 	function checkTypeTime(id){
 		var numValue =  $(id).val();
 		if (numValue.indexOf(':') != -1){

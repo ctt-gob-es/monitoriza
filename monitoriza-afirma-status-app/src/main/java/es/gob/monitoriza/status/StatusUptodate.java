@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21 jun. 2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 30/01/2019.
+ * @version 1.6, 07/09/2021.
  */
 package es.gob.monitoriza.status;
 
@@ -32,7 +32,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that stores the last results for a service invocation.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.5, 30/01/2019.
+ * @version 1.6, 07/09/2021.
  */
 public class StatusUptodate {
 	
@@ -62,6 +62,11 @@ public class StatusUptodate {
 	private LocalDateTime statusUptodate;
 	
 	/**
+	 * Attribute that represents the timer identifier in the log. 
+	 */
+	private String idTimerLog;
+	
+	/**
 	 * Constructor method for the class StatusUptodate.java.
 	 */
 	public StatusUptodate() {
@@ -76,12 +81,13 @@ public class StatusUptodate {
 	 * @param statusUptodateParam The sampling time.
 	 * @param partialRequestResultParam The time details for each request. 
 	 */
-	public StatusUptodate(final String statusValueParam, final String platformParam, final Long averageTimeParam, final LocalDateTime statusUptodateParam, final Map<String,String> partialRequestResultParam) {
+	public StatusUptodate(final String statusValueParam, final String platformParam, final Long averageTimeParam, final String idTimerLog, final LocalDateTime statusUptodateParam, final Map<String,String> partialRequestResultParam) {
 		super();
 		this.statusValue = statusValueParam;
 		this.platform = platformParam;
 		this.averageTime = averageTimeParam;
 		this.statusUptodate = statusUptodateParam;
+		this.idTimerLog = idTimerLog;
 		this.partialRequestResult = partialRequestResultParam;
 	}
 
@@ -165,6 +171,22 @@ public class StatusUptodate {
 		this.partialRequestResult = partialRequestResultParam;
 	}
 	
+	/**
+	 * Gets the value of the attribute {@link #idTimerLog}.
+	 * @return the value of the attribute {@link #idTimerLog}.
+	 */	
+	public final String getIdTimerLog() {
+		return idTimerLog;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #idTimerLog}.
+	 * @param partialRequestResultParam the value for the attribute {@link #idTimerLog} to set.
+	 */
+	public final void setIdTimerLog(String idTimerLog) {
+		this.idTimerLog = idTimerLog;
+	}
+
 	/**
 	 * Method that returns the advanced information of the service in a formatted String.
 	 * @return String "request_file_path1/request_time1;request_file_path2/request_time2;....;request_file_pathn/request_timen"

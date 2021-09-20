@@ -53,6 +53,7 @@
 							<th th:text="#{table.status.vip.service}">Service</th>
 							<th th:text="#{table.status.vip.averageTime}">Average Time</th>
 							<th th:text="#{table.status.vip.samplingTime}">Sampling Time</th>
+							<th th:text="#{table.status.vip.idTimerLog}">Id timer (log)</th>
 							<th></th>
 							<th th:text="#{table.status.vip.info}">info</th>
 							<th th:text="#{table.status.vip.mark}">mark</th>
@@ -72,6 +73,7 @@
 							<td th:text="${stVip.service}"></td>
 							<td th:text="${stVip.averageTime}"></td>
 							<td th:text="${stVip.samplingTime}"></td>
+							<td th:text="${stVip.idTimerLog}"></td>
 							<td th:text="${stVip.partialRequestResult}"></td>
 							<td><i class='c-blue-500 ti-search'></i></td>
 							<td th:if="${stVip.statusAux eq 0 || stVip.statusAux eq 1}">-</td>
@@ -220,12 +222,12 @@ $(document).ready(function() {
 				"searchable" : false
 			},
 			{
-				"targets" : [ 5 ],
+				"targets" : [ 6 ],
 				"visible" : false,
 				"searchable" : false
 			},
 			{
-				"targets" : [ 6 ],
+				"targets" : [ 7 ],
                 "className": 'details-control',
                 "orderable": false,
 				"visible" : true,
@@ -233,7 +235,7 @@ $(document).ready(function() {
                 "defaultContent": ''
             },
             {
-            	"targets" : [ 7 ],
+            	"targets" : [ 8 ],
 				"orderable": false,
 				"visible" : true,
 				"createdCell": function (td, cellData, rowData, row, col) {
@@ -421,7 +423,7 @@ function formatVip ( d ) {
     var result = '<table id="statusVipTable" class="display" style="cellspacing: 0; width: 100%; background-color: lightgrey;">';
 	
     $.each( d, function( key, value ) {
-		if(key === '5'){
+		if(key === '6'){
 			if (value == "" || value == "{}"){
 				result += '<thead></thead>';
 				result += '<tbody>';

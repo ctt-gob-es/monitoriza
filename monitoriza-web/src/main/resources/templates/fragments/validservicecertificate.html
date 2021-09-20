@@ -117,6 +117,7 @@
 						</div>	
 						<div class="form-group col-md-6">
 							<label for="cronExpression" class="col-form-label" th:text="#{form.validservice.cronexpression}"></label>
+							<span id="cronExpression_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
 							<script th:inline="javascript">
 								/*<![CDATA[*/
 									var messageCron = /*[[#{form.validservice.cron.pattern}]]*/ 'default';
@@ -238,8 +239,25 @@
 			  data: formData,
 			  success: function(data) {
 				hide();
-				$('#resultValidService').addClass( "alert alert-success" );
-				$('#resultValidService').append('<strong id="resultValidServiceText">' + [[#{validService.admin.ok.save}]] + '</strong>');
+				
+				 var errores = JSON.parse(data.error);
+				  
+				 if (data.error != null){
+					  jQuery.each(errores, function(i, val) {
+					  	$('#validServiceForm *').filter('span').each(function(){
+							if (i == $(this).attr('id')){
+								$("#" + i).text(val);
+							}
+						});
+					  });
+				 } else {
+					 
+					    clearValidationResult('validServiceForm');
+					    $("#cronExpression_span").text('');
+						$('#resultValidService').addClass( "alert alert-success" );
+						$('#resultValidService').append('<strong id="resultValidServiceText">' + [[#{validService.admin.ok.save}]] + '</strong>');
+				 }
+				
 			  },
 			  error:function(xhr,status,error) {
 				var responseText = jQuery.parseJSON(xhr.responseText);
@@ -261,5 +279,5 @@
 			  contentType : "application/json"
 			});
 		});
-
+		
 </script>

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 14/03/2019.
+ * @version 1.6, 17/08/2021.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -57,7 +57,7 @@ import es.gob.monitoriza.service.IServiceMonitorizaService;
  * <p>
  * Class that implements the communication with the operations of the persistence layer for ServiceMonitoriza.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
-  * @version 1.4, 30/01/2019.
+  * @version 1.6, 17/08/2021.
  */
 @Service("serviceMonitorizaService")
 public class ServiceMonitorizaService implements IServiceMonitorizaService {
@@ -241,13 +241,13 @@ public class ServiceMonitorizaService implements IServiceMonitorizaService {
 			serviceMonitoriza = new ServiceMonitoriza();
 		}
 						
-		serviceMonitoriza.setDegradedThreshold(serviceDto.getDegradedThreshold());
-		serviceMonitoriza.setLostThreshold(serviceDto.getLostThreshold());
+		serviceMonitoriza.setDegradedThreshold(Long.valueOf(serviceDto.getDegradedThreshold()));
+		serviceMonitoriza.setLostThreshold(Long.valueOf(serviceDto.getLostThreshold()));
 		serviceMonitoriza.setName(serviceDto.getName());
 		serviceMonitoriza.setNameWsdl(serviceDto.getNameWsdl());
 		serviceMonitoriza.setAlarm(repositoryAlarm.findByIdAlarm(serviceDto.getAlarm()));
 		serviceMonitoriza.setPlatform(repositoryplatform.findByIdPlatform(serviceDto.getPlatform()));
-		serviceMonitoriza.setTimeout(serviceDto.getTimeout());
+		serviceMonitoriza.setTimeout(Long.valueOf(serviceDto.getTimeout()));
 		serviceMonitoriza.setTimer(repositoryTimer.findByIdTimer(serviceDto.getTimer()));
 		
 		serviceMonitoriza.setServiceType(serviceDto.getServiceType());

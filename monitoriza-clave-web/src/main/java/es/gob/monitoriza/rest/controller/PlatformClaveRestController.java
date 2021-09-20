@@ -29,7 +29,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.validation.Valid;
+import javax.validation.constraints.NotEmpty;
 
 import org.apache.log4j.Logger;
 import org.json.JSONObject;
@@ -94,7 +94,7 @@ public class PlatformClaveRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/clavedatatable", method = RequestMethod.GET)
-	public DataTablesOutput<PlatformMonitoriza> dtClave(@Valid DataTablesInput input) {
+	public DataTablesOutput<PlatformMonitoriza> dtClave(@NotEmpty DataTablesInput input) {
 		return (DataTablesOutput<PlatformMonitoriza>) platformService.findAllByPlatFormType(input,
 				ID_PLATFORM_TYPE_CLAVE);
 	}
