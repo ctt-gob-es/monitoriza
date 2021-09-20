@@ -1,0 +1,88 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>es.gob.eventmanager</groupId>
+	<artifactId>eventmanager-service</artifactId>
+	<packaging>war</packaging>
+
+	<name>eventmanager-service</name>
+	<description>Servicio de gestión de eventos</description>
+
+	<parent>
+		<groupId>es.gob.monitoriza</groupId>
+		<artifactId>monitoriza-parent</artifactId>
+		<version>1.0</version>
+	</parent>
+
+	<dependencies>
+
+	    <dependency>
+	      <groupId>es.gob.eventmanager</groupId>
+		  <artifactId>eventmanager-message</artifactId>
+	    </dependency>
+
+	    <!--  Gson: Java to Json conversion -->
+	    <dependency>
+	      <groupId>com.google.code.gson</groupId>
+	      <artifactId>gson</artifactId>
+	      <version>2.8.5</version>
+	    </dependency>
+
+		<!-- JSON API -->
+		<dependency>
+			<groupId>javax.json</groupId>
+			<artifactId>javax.json-api</artifactId>
+		</dependency>
+		<dependency>
+    		<groupId>org.glassfish</groupId>
+    		<artifactId>javax.json</artifactId>
+		</dependency>
+
+		<!--  API de logs. -->
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		    <version>1.7.29</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.29</version>
+			<optional>true</optional>
+		</dependency>
+
+		<!-- Servlets -->
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+			<scope>provided</scope>
+		</dependency>
+
+	</dependencies>
+  
+  <build>
+    <plugins>
+    
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.6.1</version>
+        <configuration>
+          <source>${project.build.jdk}</source>
+          <target>${project.build.jdk}</target>
+        </configuration>
+      </plugin>
+
+    </plugins>
+    
+	<resources>
+		<resource>
+			<directory>src/main/resources/</directory>
+			<excludes>
+				<exclude>*.properties</exclude>
+			</excludes>
+			<filtering>false</filtering>
+		</resource>
+	</resources>
+  </build>
+</project>
