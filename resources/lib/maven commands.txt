@@ -1,4 +1,10 @@
-# Dependencias con librerías para el servicio de consulta de logs
+﻿# Dependencias con librerías para el servicio de consulta de logs
 mvn install:install-file -Dfile=./es/gob/logconsumer/log-consumer-api/1.2/log-consumer-api-1.2.jar -DgroupId=es.gob.logconsumer -DartifactId=log-consumer-api -Dversion=1.2 -Dpackaging=jar -DpomFile=./es/gob/logconsumer/log-consumer-api/1.2/log-consumer-api-1.2.pom
 mvn install:install-file -Dfile=./es/gob/logconsumer/log-consumer-register/1.2/log-consumer-register-1.2.jar -DgroupId=es.gob.logconsumer -DartifactId=log-consumer-register -Dversion=1.2 -Dpackaging=jar -DpomFile=./es/gob/logconsumer/log-consumer-register/1.2/log-consumer-register-1.2.pom
 mvn install:install-file -Dfile=./es/gob/fire/fire-artifacts/2.4-SNAPSHOT/fire-artifacts-2.4-SNAPSHOT.pom -Dpackaging=pom -DpomFile=./es/gob/fire/fire-artifacts/2.4-SNAPSHOT/fire-artifacts-2.4-SNAPSHOT.pom
+mvn install:install-file -Dfile=./clave/eidas-commons/1.4.3/eidas-commons-1.4.3.jar -Dpackaging=jar -DpomFile=./clave/eidas-commons/1.4.3/eidas-commons-1.4.3.pom
+mvn install:install-file -Dfile=./clave/eidas-configmodule/1.4.3/eidas-configmodule-1.4.3.jar -Dpackaging=jar -DpomFile=./clave/eidas-configmodule/1.4.3/eidas-configmodule-1.4.3.pom
+mvn install:install-file -Dfile=./clave/eidas-encryption/1.4.3/eidas-encryption-1.4.3.jar -Dpackaging=jar -DpomFile=./clave/eidas-encryption/1.4.3/eidas-encryption-1.4.3.pom
+mvn install:install-file -Dfile=./clave/eidas-light-commons/1.4.3/eidas-light-commons-1.4.3.jar -Dpackaging=jar -DpomFile=./clave/eidas-light-commons/1.4.3/eidas-light-commons-1.4.3.pom
+mvn install:install-file -Dfile=./clave/eidas-saml-engine/1.4.3/eidas-saml-engine-1.4.3.jar -Dpackaging=jar -DpomFile=./clave/eidas-saml-engine/1.4.3/eidas-saml-engine-1.4.3.pom
+mvn install:install-file -Dfile=./clave/saml-engine/1.4.3/saml-engine-1.4.3.jar -Dpackaging=jar -DpomFile=./clave/saml-engine/1.4.3/saml-engine-1.4.3.pom

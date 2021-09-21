@@ -26,19 +26,21 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <build> 
+  <build>
+
 		<resources>
 			<resource>
 				<directory>../</directory>
 				<includes>
 					<include>LICENSE.txt</include>
 				</includes>
-				<targetPath>${basedir}/target/classes/META-INF</targetPath>
+				<targetPath>META-INF</targetPath>
 			</resource>
 			<resource>
 				<directory>${basedir}/src/main/resources</directory>
 			</resource>
 		</resources>
+
 		<plugins>
 			<!-- Plugin para generar el jar referente a la parte de persistencia en 
 				base de datos. -->

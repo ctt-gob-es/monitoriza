@@ -59,7 +59,6 @@
 		<module>monitoriza-log-register</module>
 		<module>eventmanager-message</module>
 		<module>eventmanager-api</module>
-<!--		<module>eventmanager-notice</module> -->
 		<module>eventmanager-service</module>
   </modules>
 
@@ -430,9 +429,35 @@
 			</snapshots>
 		</repository>
 		<repository>
+			<id>Jenkins-Releases-Repository</id>
+			<name>Jenkins Releases Repository</name>
+			<url>https://repo.jenkins-ci.org/releases/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
+		<repository>
 			<id>Maven-Central-Repository</id>
 			<name>Maven Central Repository</name>
 			<url>http://central.maven.org/maven2/</url>
+			<releases>
+				<enabled>true</enabled>
+				<updatePolicy>never</updatePolicy>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+				<updatePolicy>never</updatePolicy>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>Shibboleth-Repository</id>
+			<name>Shibboleth Repository</name>
+			<url>https://build.shibboleth.net/nexus/content/repositories/releases/</url>
 			<releases>
 				<enabled>true</enabled>
 				<updatePolicy>never</updatePolicy>
