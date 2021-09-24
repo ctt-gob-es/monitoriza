@@ -12,43 +12,32 @@
  * along with this program; if not, you may find it at
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
-package es.gob.eventmanager.message;
-
-import java.io.Serializable;
+package es.gob.eventmanager.notifier;
 
 /**
- *
- * Respuesta obtenida del servicio de gesti&oacute;n de eventos.
- * <b>Project:</b><p>Event manager system.</p>
- * @version 1.0, 07/09/2021.
+ * Excepci&oacute;n en la carga de un notificador o el env&oacute;o de una notificaci&oacute;n.
+ * <b>Project:</b><p>Sistema de gesti&oacute;n de eventos.</p>
+ * @version 1.0, 22/09/2021.
  */
-public class EventResponse implements Serializable {
+public class NotifierException extends Exception {
 
-	/** Serial ID. */
-	private static final long serialVersionUID = -4183796374683570896L;
+	/** Serial Id. */
+	private static final long serialVersionUID = 4046822960742408804L;
 
-	private final String result;
-
-	private String description;
-
-
-	public EventResponse(final String result) {
-		this.result = result;
-		this.description = null;
+	/**
+	 * Construye la excepci&oacute;n con un mensaje descriptivo.
+	 * @param message Descripci&oacute;n del error.
+	 */
+	public NotifierException(final String message) {
+		super(message);
 	}
 
-
-	public void setDescription(final String description) {
-		this.description = description;
-	}
-
-
-	public String getResult() {
-		return this.result;
-	}
-
-
-	public String getDescription() {
-		return this.description;
+	/**
+	 * Construye la excepci&oacute;n con un mensaje descriptivo y su causa.
+	 * @param message Descripci&oacute;n del error.
+	 * @param cause Causa del error.
+	 */
+	public NotifierException(final String message, final Throwable cause) {
+		super(message, cause);
 	}
 }

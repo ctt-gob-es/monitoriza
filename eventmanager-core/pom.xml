@@ -1,0 +1,63 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>es.gob.eventmanager</groupId>
+	<artifactId>eventmanager-core</artifactId>
+	<packaging>jar</packaging>
+
+	<name>eventmanager-core</name>
+	<description>Clases con la funciones principales para la gestion de los eventos y su notificacion.</description>
+
+	<parent>
+		<groupId>es.gob.monitoriza</groupId>
+		<artifactId>monitoriza-parent</artifactId>
+		<version>1.0</version>
+	</parent>
+
+	<dependencies>
+
+		<dependency>
+		    <groupId>es.gob.eventmanager</groupId>
+		    <artifactId>eventmanager-notifier</artifactId>
+		</dependency>
+
+		<!--  API de logs. -->
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		    <version>1.7.29</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.29</version>
+			<optional>true</optional>
+		</dependency>
+
+	</dependencies>
+  
+  <build>
+    <plugins>
+    
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.6.1</version>
+        <configuration>
+          <source>${project.build.jdk}</source>
+          <target>${project.build.jdk}</target>
+        </configuration>
+      </plugin>
+
+    </plugins>
+    
+	<resources>
+		<resource>
+			<directory>src/main/resources/</directory>
+			<excludes>
+				<exclude>*.properties</exclude>
+			</excludes>
+			<filtering>false</filtering>
+		</resource>
+	</resources>
+  </build>
+</project>

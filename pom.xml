@@ -59,6 +59,8 @@
 		<module>monitoriza-log-register</module>
 		<module>eventmanager-message</module>
 		<module>eventmanager-api</module>
+		<module>eventmanager-notifier</module>
+		<module>eventmanager-core</module>
 		<module>eventmanager-service</module>
   </modules>
 
@@ -119,7 +121,12 @@
 			</dependency>
 			<dependency>
 				<groupId>es.gob.eventmanager</groupId>
-				<artifactId>eventmanager-notice</artifactId>
+				<artifactId>eventmanager-notifier</artifactId>
+				<version>${eventmanager.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>es.gob.eventmanager</groupId>
+				<artifactId>eventmanager-core</artifactId>
 				<version>${eventmanager.version}</version>
 			</dependency>
 			<dependency>
