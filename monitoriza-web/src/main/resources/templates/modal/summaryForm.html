@@ -1,0 +1,147 @@
+<div class="modal-content">
+	<div class="modal-header">
+		<h4 class="modal-title"
+			th:text="#{applalert.summaries.modal.add.title }"></h4>
+		<button type="button" class="close" data-dismiss="modal"
+			aria-label="Cerrar">
+			<span aria-hidden="true">&times;</span>
+		</button>
+	</div>
+	<div class="modal-body">
+		<div class="masonry-sizer col-md-12"></div>
+		<div class="row">
+		<div class="masonry-item col-md-6">
+			<div class="bgc-white p-20 bd">
+				<div class="mT-30">
+					<form id="summaryform" name="summaryform" role="form"
+						th:object="${summaryform}" th:action="@{/saveservice}"
+						method="post" enctype="multipart/form-data">
+
+						<!--  <input type='hidden' class='primarykey' id="idService" th:field="*{idService}"> -->
+
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="name" th:text="#{applalert.summaries.modal.name}"></label>
+								<input type="text" class="form-control" id="name">
+							</div>
+						</div>
+						<div class="form-row">
+							<div
+								class="checkbox checkbox-circle checkbox-info peers ai-c cb-center">
+								<input type="checkbox" id="isActive" name="isActive"
+									class="peer"> <label for="isActive"
+									class="peers peer-greed js-sb ai-c"> <span
+									class="peer peer-greed"
+									th:text="#{applalert.summaries.modal.activeresume}"></span>
+								</label>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="description"
+									th:text="#{applalert.summaries.modal.description}"></label> <input
+									type="text" class="form-control" id="description">
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="periodicity"
+									th:text="#{applalert.summaries.modal.periodicity}"></label> <select
+									id="periodicity" class="form-control" required>
+									<option selected="selected" value="hourly"
+										th:text="#{applalert.summaries.modal.periodicity.select.hourly}"></option>
+									<option selected="selected" value="daily"
+										th:text="#{applalert.summaries.modal.periodicity.select.daily}"></option>
+									<option selected="selected" value="weekly"
+										th:text="#{applalert.summaries.modal.periodicity.select.weekly}"></option>
+									<option selected="selected" value="monthly"
+										th:text="#{applalert.summaries.modal.periodicity.select.monthly}"></option>
+								</select>
+							</div>
+						</div>
+						<div class="form-row">
+							<div class="form-group col-md-6">
+								<label for="notifsystem"
+									th:text="#{applalert.summaries.modal.notifsystem}"></label> <select
+									id="notifsystem" class="form-control" required>
+									<option selected="selected" value="-1">Correo
+										electronico</option>
+								</select>
+								<button id="add" type="submit" class="btn btn-primary"
+									th:text="#{applalert.summaries.modal.btn.add}"></button>
+							</div>
+						</div>
+						<div class="form-row">
+							<button id="config" type="submit" class="btn btn-primary"
+								th:text="#{applalert.summaries.modal.btn.config}"></button>
+							<button id="delete" class="btn btn-primary"
+								onclick="cleanServiceForm();"
+								th:text="#{applalert.summaries.modal.btn.delete}"></button>
+						</div>
+						<table id="notifSystemTable"
+							class="table table-striped table-bordered" cellspacing="0"
+							width="100%">
+							<thead>
+								<tr>
+									<!-- Columna oculta para el identificador de la plataforma -->
+									<th th:text="#{applalert.summaries.modal.notifsystem}"></th>
+								</tr>
+							</thead>
+						</table>
+				</div>
+			</div>
+		</div>
+
+		<div class="masonry-item col-md-6">
+			<div class="bgc-white p-20 bd">
+				<h6 class="c-grey-900"
+					th:text="#{applalert.summaries.modal.alertslist}"></h6>
+				<div class="mT-30">
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<label for="application"
+								th:text="#{applalert.summaries.modal.table.application}"></label>
+							<select id="application" class="form-control" required>
+								<option selected="selected" value="-1">AFIRMA_PRO</option>
+							</select>
+							<button id="add" type="submit" class="btn btn-primary"
+								th:text="#{applalert.summaries.modal.btn.addall}"></button>
+							<label for="alert"
+								th:text="#{applalert.summaries.modal.table.alert}"></label> <select
+								id="alert" class="form-control" required>
+								<option selected="selected" value="-1">AFIRMA_PRO</option>
+							</select>
+							<button id="add" type="submit" class="btn btn-primary"
+								th:text="#{applalert.summaries.modal.btn.add}"></button>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="form-group col-md-6">
+							<button id="deleteAlert" type="submit" class="btn btn-primary"
+								th:text="#{applalert.summaries.modal.btn.delete}"></button>
+						</div>
+					</div>
+					<div class="form-row">
+						<div class="bgc-white bd bdrs-3 p-20 mB-20">
+							<table id="alertListTable"
+								class="table table-striped table-bordered" cellspacing="0"
+								width="100%">
+								<thead>
+									<tr>
+										<!-- Columna oculta para el identificador de la plataforma -->
+										<th th:text="#{applalert.summaries.modal.table.application}"></th>
+										<th th:text="#{applalert.summaries.modal.table.alert}"></th>
+									</tr>
+								</thead>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+</div>
+
+<script th:inline="javascript">
+</script>
