@@ -12,11 +12,13 @@
  * along with this program; if not, you may find it at
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
-package es.gob.eventmanager.notifier;
+package es.gob.eventmanager.core;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.Properties;
+
+import es.gob.eventmanager.notifier.NotifierException;
 
 /**
  * Informaci&oacute;n sobre le notificador.
@@ -42,8 +44,7 @@ public class NotifierInfo {
 
 	/**
 	 * Construye la informacion del notificador.
-	 * Constructor method for the class NotifierInfo.java.
-	 * @param name
+	 * @param name Nombre del notificador.
 	 */
 	public NotifierInfo(final String name) {
 		this.name = name;

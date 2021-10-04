@@ -119,7 +119,7 @@
 				<targetPath>META-INF</targetPath>
 			</resource>
 			<resource>
-				<directory>${basedir}/src/main/resources</directory>
+				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
 		<plugins>
@@ -140,6 +140,10 @@
 							<Artifact-Version>${project.version}</Artifact-Version>
 						</manifestEntries>
 					</archive>
+					<includes>
+						<include>${basedir}/../</include>
+						<include>**/*</include>
+					</includes>
 					<finalName>${project.artifactId}</finalName>
 				</configuration>
 			</plugin>

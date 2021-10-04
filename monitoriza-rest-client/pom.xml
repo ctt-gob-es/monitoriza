@@ -17,14 +17,14 @@
   <build>
 		<resources>
 			<resource>
-				<directory>../resources/license</directory>
+				<directory>../</directory>
 				<includes>
 					<include>LICENSE.txt</include>
 				</includes>
 				<targetPath>META-INF</targetPath>
 			</resource>
 			<resource>
-				<directory>${basedir}/src/main/resources</directory>
+				<directory>src/main/resources</directory>
 			</resource>
 		</resources>
 		<plugins>
