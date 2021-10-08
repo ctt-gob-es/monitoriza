@@ -53,9 +53,6 @@ import es.gob.monitoriza.constant.NumberConstants;
 @Table(name = "ALERT_APP_TEMPLATES")
 public class TemplateMonitoriza implements Serializable {
 
-	/**
-	 *
-	 */
 	private static final long serialVersionUID = -7313327436554167369L;
 
 	/**

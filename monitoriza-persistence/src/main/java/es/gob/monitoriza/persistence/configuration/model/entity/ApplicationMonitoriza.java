@@ -25,6 +25,7 @@
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,7 +33,10 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -103,6 +107,22 @@ public class ApplicationMonitoriza implements Serializable {
 	 */
 	private String enabled;
 
+	/**
+	 * Attribute that represents the alerts configurations for this application.
+	 */
+	private List<AlertConfigMonitoriza> alertConfigMonitoriza;
+
+	/**
+	 * Attribute that represents the alerts types for this application used in the resumes.
+	 */
+	private List<AlertTypeMonitoriza> alertsTypesMonitoriza;
+
+	/**
+	 * Attribute that represents the alerts types for this application used in the resumes.
+	 */
+	private List<ResumeMonitoriza> resumesMonitoriza;
+
+
 	public ApplicationMonitoriza() {
 		this.templateMonitoriza = new TemplateMonitoriza();
 	}
@@ -123,17 +143,6 @@ public class ApplicationMonitoriza implements Serializable {
 	@JsonView(DataTablesOutput.View.class)
 	public Long getIdApplicationMonitoriza() {
 		return this.idApplicationMonitoriza;
-	}
-
-
-	/**
-	 * Sets the value of the attribute {@link #idApplicationMonitoriza}.
-	 *
-	 * @param templateId
-	 *            The value for the attribute {@link #idApplicationMonitoriza}.
-	 */
-	public void setIdTemplateMonitoriza(final Long appId) {
-		this.templateMonitoriza.setIdTemplateMonitoriza(appId);
 	}
 
 	/**
@@ -286,5 +295,58 @@ public class ApplicationMonitoriza implements Serializable {
 
 	public void setEnabled(final String enabled) {
 		this.enabled = enabled;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #alertConfigsMonitoriza}.
+	 * @return the value of the attribute {@link #alertConfigsMonitoriza}.
+		*/
+	@OneToMany(fetch = FetchType.EAGER, mappedBy = "applicationMonitoriza")
+	public List<AlertConfigMonitoriza> getAlertConfigMonitoriza() {
+		return this.alertConfigMonitoriza;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #alertConfigsMonitoriza}.
+	 * @param alertConfigsMonitoriza) The value for the attribute {@link #alertConfigsMonitoriza}.
+	*/
+	public void setAlertConfigMonitoriza(final List<AlertConfigMonitoriza> alertConfigMonitoriza) {
+		this.alertConfigMonitoriza = alertConfigMonitoriza;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #alertsTypeMonitoriza}.
+	 * @return the value of the attribute {@link #alertsTypeMonitoriza}.
+	 */
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "ALERT_RESUME_TYPES", joinColumns = @JoinColumn(name = "APP_ID", referencedColumnName = "APP_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "TYPE_ID", referencedColumnName = "TYPE_ID", nullable = false))
+	public List<AlertTypeMonitoriza> getAlertTypesMonitoriza() {
+		return this.alertTypesMonitoriza;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #alertsTypeMonitoriza}.
+	 * @param alertsConfigMonitoriza The value for the attribute {@link #alertsTypeMonitoriza}.
+	 */
+	public void setAlertTypesMonitoriza(final List<AlertTypeMonitoriza> alertTypesMonitoriza) {
+		this.alertTypesMonitoriza = alertTypesMonitoriza;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #resumesMonitoriza}.
+	 * @return the value of the attribute {@link #resumesMonitoriza}.
+	 */
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "ALERT_RESUME_TYPES", joinColumns = @JoinColumn(name = "APP_ID", referencedColumnName = "APP_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = false))
+	public List<ResumeMonitoriza> getResumesMonitoriza() {
+		return this.resumesMonitoriza;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #resumesMonitoriza}.
+	 * @param alertsConfigMonitoriza The value for the attribute {@link #resumesMonitoriza}.
+	 */
+	public void setResumesMonitoriza(final List<ResumeMonitoriza> resumesMonitoriza) {
+		this.resumesMonitoriza = resumesMonitoriza;
 	}
 }

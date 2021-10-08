@@ -4,7 +4,7 @@
 
 	<div class="form-group">
 		<div class="checkbox checkbox-circle checkbox-info peers ai-c">
-			<input type="checkbox" id="isEnabled" name="isEnabled" class="peer" th:checked="${applicationform.isEnabled}">
+			<input type="checkbox" id="enabled" name="enabled" class="peer" th:checked="${applicationform.enabled}">
 			<label for="enabled" class="peers peer-greed js-sb ai-c"> 
 			<span class="peer peer-greed" th:text="#{applalert.applications.modal.enablenotifications}"></span>
 			</label>
@@ -48,5 +48,20 @@
 
 <script th:inline="javascript">
 
-	
+	$(document).ready(function () {
+		
+		if ($("#enabled").is(":checked")) {
+			$("#enabled").val('true');
+		} else {
+			$("#enabled").attr('value', 'false');
+		}
+
+		$("#enabled").change(function () {
+    		if ($(this).is(":checked")) {
+    			$(this).val('true');
+    		} else {
+    			$(this).attr('value', 'false');
+    		}
+		});
+	});	
 </script>

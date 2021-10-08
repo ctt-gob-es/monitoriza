@@ -33,6 +33,7 @@ import es.gob.monitoriza.persistence.configuration.dto.UserEditDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.ApplicationMonitorizaRepository;
+import es.gob.monitoriza.persistence.configuration.model.repository.TemplateMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.ApplicationDatatableRepository;
 import es.gob.monitoriza.service.IApplicationMonitorizaService;
 
@@ -45,6 +46,9 @@ public class ApplicationMonitorizaService implements IApplicationMonitorizaServi
 
 	@Autowired
 	private ApplicationMonitorizaRepository appMonitorizaRepository;
+
+	@Autowired
+	private TemplateMonitorizaRepository templMonitorizaRepository;
 
 	@Autowired
 	private ApplicationDatatableRepository dtRepository;
@@ -80,17 +84,19 @@ public class ApplicationMonitorizaService implements IApplicationMonitorizaServi
 		}
 
 		appMonitoriza.setName(appDto.getName());
-		if (Boolean.TRUE == appDto.getIsEnabled()){
+		if (Boolean.TRUE == appDto.getEnabled()){
 			appMonitoriza.setEnabled("S"); //$NON-NLS-1$
 		} else {
 			appMonitoriza.setEnabled("N"); //$NON-NLS-1$
 		}
 		appMonitoriza.setAppKey(appDto.getAppKey());
 		appMonitoriza.setCipherKey("TODO"); //$NON-NLS-1$
-		appMonitoriza.setIdTemplateMonitoriza(appDto.getTemplateID());
 		appMonitoriza.setResponsibleName(appDto.getResponsibleName());
 		appMonitoriza.setResponsibleEmail(appDto.getResponsibleEmail());
 		appMonitoriza.setResponsiblePhone(appDto.getResponsiblePhone());
+
+		final TemplateMonitoriza templateMonitoriza = this.templMonitorizaRepository.findByIdTemplateMonitoriza(appDto.getTemplateID());
+		appMonitoriza.setTemplateMonitoriza(templateMonitoriza);
 
 		return this.appMonitorizaRepository.save(appMonitoriza);
 	}

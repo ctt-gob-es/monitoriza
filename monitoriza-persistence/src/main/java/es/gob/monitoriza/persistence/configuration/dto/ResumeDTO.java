@@ -55,35 +55,37 @@ public class ResumeDTO {
 	/**
 	 * Attribute that represents the periodicity.
 	 */
-	private int periodicity;
+	private Long periodicity;
 
 	/**
 	 * Attribute that represents if a resume is active
 	 */
-	private String active;
+	private String enabled;
 
-	public int getPeriodicity() {
+	private Long alertSystemsList;
+
+	private Long applicationsList;
+
+	private Long alertConfigList;
+
+	public Long getPeriodicity() {
 		return this.periodicity;
 	}
 
-	public void setPeriodicity(final int periodicity) {
+	public void setPeriodicity(final Long periodicity) {
 		this.periodicity = periodicity;
 	}
 
-	public String getActive() {
-		return this.active;
+	public String getEnabled() {
+		return this.enabled;
 	}
 
-	public void setActive(final String active) {
-		this.active = active;
+	public void setEnabled(final String enabled) {
+		this.enabled = enabled;
 	}
 
 	public Long getIdResumeMonitoriza() {
 		return this.idResumeMonitoriza;
-	}
-
-	public String getDescription() {
-		return this.description;
 	}
 
 	public String getName() {
@@ -94,14 +96,35 @@ public class ResumeDTO {
 		this.name = name;
 	}
 
-	public void getDescription(final String description) {
-		this.description = description;
+	public String getDescription() {
+		return this.description;
 	}
 
 	public void setDescription(final String description) {
 		this.description = description;
 	}
 
+	public Long getAlertSystemsList() {
+		return this.alertSystemsList;
+	}
 
+	public void setAlertSystemsList(final Long alertSystemsList) {
+		this.alertSystemsList = alertSystemsList;
+	}
 
+	public Long getApplicationsList() {
+		return this.applicationsList;
+	}
+
+	public void setApplicationsList(final Long applicationsList) {
+		this.applicationsList = applicationsList;
+	}
+
+	public Long getAlertConfigList() {
+		return this.alertConfigList;
+	}
+
+	public void setAlertConfigList(final Long alertConfigList) {
+		this.alertConfigList = alertConfigList;
+	}
 }

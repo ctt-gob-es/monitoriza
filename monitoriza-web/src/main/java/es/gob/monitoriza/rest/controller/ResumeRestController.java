@@ -24,18 +24,36 @@
  */
 package es.gob.monitoriza.rest.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.StreamSupport;
+
 import javax.validation.constraints.NotEmpty;
 
+import org.apache.log4j.Logger;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.http.MediaType;
+import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.i18n.IWebLogMessages;
+import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
+import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IResumeMonitorizaService;
 
 /**
@@ -51,6 +69,62 @@ public class ResumeRestController {
 	 */
 	@Autowired
 	private IResumeMonitorizaService resumeService;
+
+	/**
+	 * Attribute that represents the span text.
+	 */
+	private static final String SPAN = "_span"; //$NON-NLS-1$
+
+	/**
+	 * Attribute that represents the object that manages the log of the class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+
+	/**
+	 * Constant that represents the key Json 'errorSaveAlertSystem'.
+	 */
+	private static final String KEY_JS_ERROR_RESUME = "errorSaveResume"; //$NON-NLS-1$
+
+	/**
+	 * Method that maps the save user web request to the controller and saves it
+	 * in the persistence.
+	 *
+	 * @param applicationForm
+	 *            Object that represents the backing user form.
+	 * @param bindingResult
+	 *            Object that represents the form validation result.
+	 * @return {@link DataTablesOutput<ApplicationMonitoriza>}
+	 */
+	@RequestMapping(value = "/saveresume", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+	@JsonView(DataTablesOutput.View.class)
+	public @ResponseBody DataTablesOutput<ResumeMonitoriza> save(@Validated(OrderedValidation.class) @RequestBody final ResumeDTO resumeForm, final BindingResult bindingResult) {
+
+		final DataTablesOutput<ResumeMonitoriza> dtOutput = new DataTablesOutput<ResumeMonitoriza>();
+		List<ResumeMonitoriza> listNewResume = new ArrayList<ResumeMonitoriza>();
+		final JSONObject json = new JSONObject();
+
+		if (bindingResult.hasErrors()) {
+			listNewResume = StreamSupport.stream(this.resumeService.getAllResumeMonitoriza().spliterator(), false).collect(Collectors.toList());
+			for (final FieldError o: bindingResult.getFieldErrors()) {
+				json.put(o.getField() + SPAN, o.getDefaultMessage());
+			}
+			dtOutput.setError(json.toString());
+		} else {
+			try {
+				final ResumeMonitoriza resume = this.resumeService.saveResumeMonitoriza(resumeForm);
+				listNewResume.add(resume);
+			} catch (final Exception e) {
+				LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB022), e);
+				listNewResume = StreamSupport.stream(this.resumeService.getAllResumeMonitoriza().spliterator(), false).collect(Collectors.toList());
+				json.put(KEY_JS_ERROR_RESUME, Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB022));
+				dtOutput.setError(json.toString());
+			}
+		}
+
+		dtOutput.setData(listNewResume);
+
+		return dtOutput;
+	}
 
 	/**
 	 * Method that maps the list templates web requests to the controller and

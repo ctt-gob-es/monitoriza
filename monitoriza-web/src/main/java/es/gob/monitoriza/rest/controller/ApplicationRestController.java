@@ -37,12 +37,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,6 +55,7 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ApplicationDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IApplicationMonitorizaService;
@@ -140,6 +144,41 @@ public class ApplicationRestController {
 
 		return dtOutput;
 	}
+
+	/**
+	 * Method that maps the delete user request from datatable to the controller
+	 * and performs the delete of the user identified by its id.
+	 *
+	 * @param userId
+	 *            Identifier of the user to be deleted.
+	 * @param index
+	 *            Row index of the datatable.
+	 * @return String that represents the name of the view to redirect.
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(path = "/deleteapplication", method = RequestMethod.POST)
+	@Transactional
+	public String deleteApplication(@RequestParam("id") final Long appId, @RequestParam("index") final String index) {
+
+		this.applicationService.deleteApplicationMonitoriza(appId);
+
+		return index;
+	}
+
+	/**
+	 * Method that maps the add new node web request to the controller and sets the backing form.
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(path = "/alertsfromapplication", method = RequestMethod.POST)
+	@Transactional
+    public List<AlertConfigMonitoriza> getAlertsFromApplication(@RequestParam("id") final Long applicationId, final Model model){
+
+		final ApplicationMonitoriza application = this.applicationService.getApplicationMonitorizaById(applicationId);
+
+		return application.getAlertConfigMonitoriza();
+    }
 
 
 }

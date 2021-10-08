@@ -38,8 +38,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import es.gob.monitoriza.persistence.configuration.dto.AlertSystemDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ApplicationDTO;
-import es.gob.monitoriza.persistence.configuration.dto.SummaryDTO;
+import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TemplateDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
@@ -81,10 +82,6 @@ public class ApplicationAlertController {
 
 	private static final String APP_ENABLED_S = "S"; //$NON-NLS-1$
 
-	private static final String PARAM_ENABLED_TRUE = "true"; //$NON-NLS-1$
-
-	private static final String PARAM_ENABLED_FALSE = "false"; //$NON-NLS-1$
-
 	/**
 	 * Method that maps the list users web requests to the controller and forwards
 	 * the list of users to the view.
@@ -121,6 +118,12 @@ public class ApplicationAlertController {
 
 	@RequestMapping(value = "applsummaries", method = RequestMethod.GET)
 	public String applSummaries(final Model model) {
+
+		model.addAttribute("alertSystemsList", new ArrayList<AlertSystemMonitoriza>()); //$NON-NLS-1$
+
+		model.addAttribute("applicationsList", new ArrayList<ApplicationMonitoriza>()); //$NON-NLS-1$
+
+		model.addAttribute("summaryform", new ResumeDTO()); //$NON-NLS-1$
 
 		return "fragments/applsummaries.html"; //$NON-NLS-1$
 	}
@@ -195,6 +198,7 @@ public class ApplicationAlertController {
 		final ApplicationMonitoriza application = this.applicationService.getApplicationMonitorizaById(appId);
 		final ApplicationDTO applicationForm = new ApplicationDTO();
 
+		applicationForm.setIdApplicationMonitoriza(appId);
 		applicationForm.setName(application.getName());
 		applicationForm.setTemplateID(application.getTemplateMonitoriza().getIdTemplateMonitoriza());
 		applicationForm.setAppKey(application.getAppKey());
@@ -203,9 +207,9 @@ public class ApplicationAlertController {
 		applicationForm.setResponsiblePhone(application.getResponsiblePhone());
 
 		if (APP_ENABLED_S.equals(application.getEnabled())) {
-			applicationForm.setIsEnabled(Boolean.TRUE);
+			applicationForm.setEnabled(Boolean.TRUE);
 		} else {
-			applicationForm.setIsEnabled(Boolean.FALSE);
+			applicationForm.setEnabled(Boolean.FALSE);
 		}
 
 		model.addAttribute("applicationform", applicationForm); //$NON-NLS-1$
@@ -229,10 +233,32 @@ public class ApplicationAlertController {
 		return "modal/importTemplateForm.html"; //$NON-NLS-1$
     }
 
-	@RequestMapping(value = "addsummary", method = RequestMethod.POST)
+	@RequestMapping(value = "newresumeinfo", method = RequestMethod.POST)
     public String addSummary(final Model model){
 
-		model.addAttribute("summaryform", new SummaryDTO()); //$NON-NLS-1$
+		// Se cargan los sistemas de notificacion para el select
+		List<AlertSystemMonitoriza> alertSystemsList = new ArrayList<AlertSystemMonitoriza>();
+
+		alertSystemsList = StreamSupport.stream(this.alertSystemService.getAllAlertSystemMonitoriza().spliterator(), false)
+				.collect(Collectors.toList());
+
+		model.addAttribute("alertSystemsList", alertSystemsList); //$NON-NLS-1$
+
+		// Se cargan las aplicaciones para el select
+		List<ApplicationMonitoriza> applicationsList = new ArrayList<ApplicationMonitoriza>();
+
+		applicationsList = StreamSupport.stream(this.applicationService.getAllApplicationMonitoriza().spliterator(), false)
+						.collect(Collectors.toList());
+
+		model.addAttribute("applicationsList", applicationsList); //$NON-NLS-1$
+
+		// Si encontramos aplicaciones cargaremos las alertas de la primera que encuentre
+		if (applicationsList.size() > 0) {
+			final List<AlertConfigMonitoriza> alertConfigList = applicationsList.get(0).getAlertConfigMonitoriza();
+			model.addAttribute("alertConfigList", alertConfigList); //$NON-NLS-1$
+		}
+
+		model.addAttribute("summaryform", new ResumeDTO()); //$NON-NLS-1$
 
 		return "modal/summaryForm.html"; //$NON-NLS-1$
     }

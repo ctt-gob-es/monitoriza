@@ -25,11 +25,16 @@
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -76,12 +81,32 @@ public class ResumeMonitoriza implements Serializable {
 	/**
 	 * Attribute that represents the resume's periodicity.
 	 */
-	private int periodicity;
+	private Long periodicity;
 
 	/**
 	 * Attribute that represents if the resume is enabled.
 	 */
 	private String enabled;
+
+	/**
+	 * Attribute that represents the systems configurated for this resume.
+	 */
+	private List<AlertSystemMonitoriza> alertSystemsMonitoriza;
+
+	/**
+	 * Attribute that represents the alerts configurated for this resume.
+	 */
+	private List<AlertConfigMonitoriza> alertsConfigMonitoriza;
+
+	/**
+	 * Attribute that represents the alerts types configurated for this resume.
+	 */
+	private List<AlertTypeMonitoriza> alertsTypeMonitoriza;
+
+	/**
+	 * Attribute that represents the applications configurated for this resume.
+	 */
+	private List<ApplicationMonitoriza> applicationsMonitoriza;
 
 	/**
 	 * Gets the value of the attribute {@link #idTemplateMonitoriza}.
@@ -156,7 +181,7 @@ public class ResumeMonitoriza implements Serializable {
 	 */
 	@Column(name = "PERIODICITY", nullable = false, precision = NumberConstants.NUM19)
 	@JsonView(DataTablesOutput.View.class)
-	public int getPeriodicity() {
+	public Long getPeriodicity() {
 		return this.periodicity;
 	}
 
@@ -166,7 +191,7 @@ public class ResumeMonitoriza implements Serializable {
 	 * @param name
 	 *            The value for the attribute {@link #periodicity}.
 	 */
-	public void setPeriodicity(final int periodicity) {
+	public void setPeriodicity(final Long periodicity) {
 		this.periodicity = periodicity;
 	}
 
@@ -189,5 +214,77 @@ public class ResumeMonitoriza implements Serializable {
 	 */
 	public void setEnabled(final String enabled) {
 		this.enabled = enabled;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #alertSystemsMonitoriza}.
+	 * @return the value of the attribute {@link #alertSystemsMonitoriza}.
+	 */
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "ALERT_RESUME_SYSTEMS", joinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "SYSTEM_ID", referencedColumnName = "SYSTEM_ID", nullable = false))
+	public List<AlertSystemMonitoriza> getAlertSystemsMonitoriza() {
+		return this.alertSystemsMonitoriza;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #alertSystemsMonitoriza}.
+	 * @param emailsDegraded The value for the attribute {@link #alertSystemsMonitoriza}.
+	 */
+	public void setAlertSystemsMonitoriza(final List<AlertSystemMonitoriza> alertSystemsMonitoriza) {
+		this.alertSystemsMonitoriza = alertSystemsMonitoriza;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #alertsConfigMonitoriza}.
+	 * @return the value of the attribute {@link #alertsConfigMonitoriza}.
+	 */
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "ALERT_RESUME_LIST", joinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "ALERT_CONFIG_ID", referencedColumnName = "ALERT_CONFIG_ID", nullable = false))
+	public List<AlertConfigMonitoriza> getAlertConfigMonitoriza() {
+		return this.alertsConfigMonitoriza;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #alertsConfigMonitoriza}.
+	 * @param alertsConfigMonitoriza The value for the attribute {@link #alertsConfigMonitoriza}.
+	 */
+	public void setAlertConfigMonitoriza(final List<AlertConfigMonitoriza> alertsConfigMonitoriza) {
+		this.alertsConfigMonitoriza = alertsConfigMonitoriza;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #alertsTypeMonitoriza}.
+	 * @return the value of the attribute {@link #alertsTypeMonitoriza}.
+	 */
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "ALERT_RESUME_TYPES", joinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "TYPE_ID", referencedColumnName = "TYPE_ID", nullable = false))
+	public List<AlertTypeMonitoriza> getAlertTypeMonitoriza() {
+		return this.alertsTypeMonitoriza;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #alertsTypeMonitoriza}.
+	 * @param alertsConfigMonitoriza The value for the attribute {@link #alertsTypeMonitoriza}.
+	 */
+	public void setAlertTypeMonitoriza(final List<AlertTypeMonitoriza> alertsTypeMonitoriza) {
+		this.alertsTypeMonitoriza = alertsTypeMonitoriza;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #applicationsMonitoriza}.
+	 * @return the value of the attribute {@link #applicationsMonitoriza}.
+	 */
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "ALERT_RESUME_TYPES", joinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "APP_ID", referencedColumnName = "APP_ID", nullable = false))
+	public List<ApplicationMonitoriza> getApplicationsMonitoriza() {
+		return this.applicationsMonitoriza;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #alertsTypeMonitoriza}.
+	 * @param alertsConfigMonitoriza The value for the attribute {@link #alertsTypeMonitoriza}.
+	 */
+	public void setApplicationsMonitoriza(final List<ApplicationMonitoriza> applicationsMonitoriza) {
+		this.applicationsMonitoriza = applicationsMonitoriza;
 	}
 }

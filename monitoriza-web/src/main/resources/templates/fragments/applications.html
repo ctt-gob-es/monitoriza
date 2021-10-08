@@ -26,11 +26,14 @@
 <div id="modalEditUser"></div>
 
 <script th:inline="javascript">
+
 $(document).ready(function() {
+	
 	var addTemplate = /*[[@{/addapplication}]]*/;
 	var editTemplate = /*[[@{/editapplication}]]*/;
 	var getApps = /*[[@{/applicationsdatatable}]]*/;
 	var saveApplication = /*[[@{/saveapplication}]]*/;
+	var deleteApplication = /*[[@{/deleteapplication}]]*/;
 	
 	var tbl = $('#applicationsTable').DataTable({
 		dom: 'Bfrtip',
@@ -38,9 +41,12 @@ $(document).ready(function() {
 	    responsive: true,
 	    
 	    altEditor: true,
-	    buttons: [{text: 'Agregar', name: 'add'}, {extend: 'selected',text: 'Configurar alarmas',name: 'configAlarms'}, {extend: 'selected',text: 'Editar',name: 'edit'}, 
+	    buttons: [
+		    {text: 'Agregar', name: 'add'},
+		    {extend: 'selected',text: 'Configurar alarmas',name: 'configAlarms'},
+		    {extend: 'selected',text: 'Editar',name: 'edit'},
 	    	{extend: 'selected',text: 'Eliminar',name: 'delete'}
-			],
+		],
 	
 	    "iTotalRecords": "totalElements",
         "iTotalDisplayRecords": "numberOfElements",
@@ -64,7 +70,7 @@ $(document).ready(function() {
 					data.formId = "applicationForm";
 					data.editTemplate = editTemplate;
 					data.addTemplate = addTemplate;
-			        }
+				}
 		},
 		"columns": [
 			{ "data": "idApplicationMonitoriza",
@@ -74,7 +80,12 @@ $(document).ready(function() {
 	        { "data": "appKey" },
 	        { "data": "responsibleName" },
 	        { "data": "responsiblePhone" },
-	        { "data": "enabled" }
+	        { "data": "enabled",
+				"render": function (data, type, row) {  
+					var is_checked = data == "S" ? "checked" : "";
+		        	return '<div class="checkbox checkbox-circle checkbox-info peers ai-c"><input disabled type="checkbox" id="isEnabledCheck" class="peer"' + is_checked + '><label for="isEnabledCheck" class="peers peer-greed js-sb ai-c"><span class="peer peer-greed" ></span></label></div>';	        	  
+		          }		
+		    }
 	        ]
 		}).on('crudaction', function(e, accion, idApplicationMonitoriza, data, rowindex){
 		    // e          Evento Jquery
@@ -89,7 +100,7 @@ $(document).ready(function() {
 		    
 		    switch(accion){
 		        case 'add':
-		            		$.ajax(saveApplication, {
+						$.ajax(saveApplication, {
 				            	dataType : 'json',
 				            	contentType:'application/json',
 				                data : JSON.stringify($("#applicationForm").serializeJSON()),
@@ -97,7 +108,8 @@ $(document).ready(function() {
 				                success: function(data){
 				            		// Se oculta la capa 'cargando...'
 				            		hide();  
-
+									alert(JSON.stringify($(data)));
+									alert(JSON.stringify($(data.data)));
 				  				  	tbl.row.add($(data.data)).draw(false);
 	    		                    
 				                    $('#altEditor-modal .modal-body .alert').remove();
@@ -105,9 +117,8 @@ $(document).ready(function() {
 				                },
 				                error:function(data){
 				                	hide();
-				                	alert("error");
-				                	$('#errorModalUser').remove();
-				                	$('#userForm').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
+				                	$('#errorModalApplication').remove();
+				                	$('#applicationForm').append('<div id="errorModalApplication" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
 				                }
 				            });
 		            break;
@@ -119,19 +130,17 @@ $(document).ready(function() {
 			                type:'POST',
 			                success: function(data){
 			            		// Se oculta la capa 'cargando...'
-			            		alert(JSON.stringify(data));
 			            		hide();
 			            		tbl.row.add($(data.data)).draw(false);
 			                    $('#altEditor-modal').modal('hide');
 			                },
 			                error:function(data){
-			                	alert(JSON.stringify(data));
-			                	//$('#afirmaForm').append('<div id="errorModalPlatform" class="alert alert-danger" role="alert"><strong>' + [[#{platform.admin.error.sameName}]] + '</strong></div>');
+			                	$('#applicationForm').append('<div id="errorModalApplication" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
 			                }
 			            });
 	            	break;
 		        case 'delete':
-		            $.ajax(actionDelete,{
+		            $.ajax(deleteApplication,{
 		            	data:$.param({'id':data.idApplicationMonitoriza, 'index':rowindex}),
 		                type:'POST',
 		                success: function(data){

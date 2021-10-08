@@ -25,6 +25,7 @@
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -33,6 +34,8 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -78,6 +81,11 @@ public class AlertSystemMonitoriza implements Serializable {
 	 * Attribute that represents the relation with templateMonitoriza object.
 	 */
 	private AlertGraylogSystemConfig graylogSystemConfig;
+
+	/**
+	 * Attribute that represents the resumes configurated for this alert system.
+	 */
+	private List<ResumeMonitoriza> resumesMonitoriza;
 
 	/**
 	 * Gets the value of the attribute {@link #idAlertSystemMonitoriza}.
@@ -168,5 +176,23 @@ public class AlertSystemMonitoriza implements Serializable {
 	public void setGraylogSystemConfig(final AlertGraylogSystemConfig graylogSystemConfig) {
 		// CHECKSTYLE:ON
 		this.graylogSystemConfig = graylogSystemConfig;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #resumesMonitoriza}.
+	 * @return the value of the attribute {@link #resumesMonitoriza}.
+	 */
+	@ManyToMany(fetch = FetchType.EAGER)
+	@JoinTable(name = "ALERT_RESUME_SYSTEMS", joinColumns = @JoinColumn(name = "SYSTEM_ID", referencedColumnName = "SYSTEM_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = false))
+	public List<ResumeMonitoriza> getResumesMonitoriza() {
+		return this.resumesMonitoriza;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #resumesMonitoriza}.
+	 * @param emailsDegraded The value for the attribute {@link #resumesMonitoriza}.
+	 */
+	public void setResumesMonitoriza(final List<ResumeMonitoriza> resumesMonitoriza) {
+		this.resumesMonitoriza = resumesMonitoriza;
 	}
 }

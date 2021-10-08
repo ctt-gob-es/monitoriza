@@ -40,7 +40,7 @@ public class ApplicationDTO {
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input in the form.
 	 */
-	private final Long idApplicationMonitoriza = null;
+	private Long idApplicationMonitoriza = null;
 
 	/**
 	 * Attribute that represents the name of the application
@@ -75,11 +75,14 @@ public class ApplicationDTO {
 	/**
 	 * Attribute that represents the value of the input isSecure of the user in the form.
 	 */
-	//@NotNull(groups=CheckItFirst.class, message="{form.valid.platform.secure.notnull}")
     private Boolean isEnabled;
 
 	public Long getIdApplicationMonitoriza() {
 		return this.idApplicationMonitoriza;
+	}
+
+	public void setIdApplicationMonitoriza(final Long idApp) {
+		this.idApplicationMonitoriza = idApp;
 	}
 
 	public String getName() {
@@ -130,11 +133,11 @@ public class ApplicationDTO {
 		this.responsiblePhone = responsiblePhone;
 	}
 
-	public Boolean getIsEnabled() {
+	public Boolean getEnabled() {
 		return this.isEnabled;
 	}
 
-	public void setIsEnabled(final Boolean isEnabled) {
+	public void setEnabled(final Boolean isEnabled) {
 		this.isEnabled = isEnabled;
 	}
 
