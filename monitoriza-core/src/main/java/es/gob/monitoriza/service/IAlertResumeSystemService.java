@@ -23,49 +23,44 @@
  */
 package es.gob.monitoriza.service;
 
-import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
-import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-
-import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeSystem;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
-public interface IResumeMonitorizaService {
+public interface IAlertResumeSystemService {
 
 	/**
-	 * Method that obtains a resume by its identifier.
-	 * @param templateId The resume identifier.
-	 * @return {@link TemplateMonitoriza}
+	 * Method that obtains a AlertResumeSystem by its identifier.
+	 * @param resumeSystemId The resume type identifier.
+	 * @return {@link AlertResumeSystem}
 	 */
-	ResumeMonitoriza getResumeMonitorizaById(Long resumeId);
+	AlertResumeSystem getAlertResumeSystemId(Long resumeSystemId);
 
 	/**
-	 * Method that deletes a resume in the persistence.
-	 * @param templateId {@link Integer} that represents the resume identifier to delete.
+	 * Method that deletes a relation in the persistence.
+	 * @param idResSystem {@link Integer} that represents the relation identifier to delete.
 	 */
-	void deleteResumeMonitoriza(Long resumeId);
+	void deleteAlertResumeSystem(Long idResSystem);
 
 	/**
-	 * Method that gets all the resumes from the persistence.
-	 * @return a {@link Iterable<ResumeMonitoriza>} with the information of all resumes.
+	 * Method that gets all the relations from the persistence.
+	 * @return a {@link Iterable<AlertResumeSystem>} with the information of all relations.
 	 */
-	Iterable<ResumeMonitoriza> getAllResumeMonitoriza();
+	Iterable<AlertResumeSystem> getAllAlertResumeSystems();
 
 	/**
-	 * Method that gets all the resumes from the persistence for populating a datatable.
-	 * @param input DataTable input configuration object
-	 * @return DataTablesOutput object for drawing the datatable.
+	 * Method that stores a relation in the persistence.
+	 * @param alertResumeSystem a {@link AlertResumeSystem} with the information of the relation.
+	 * @return {@link AlertResumeSystem} The relation.
 	 */
-	DataTablesOutput<ResumeMonitoriza> findAll(DataTablesInput input);
+	AlertResumeSystem saveAlertResumeSystem(AlertResumeSystem alertResumeSystem);
 
 	/**
-	 * Method that stores a resume in the persistence.
-	 * @param templateDto a {@link ResumeDTO} with the information of the resume.
-	 * @return {@link ResumeMonitoriza} The resume.
+	 * Method that delete all alerts systems of an resume.
+	 * @param resumeMonitoriza The {@link ResumeMonitoriza} to delete
 	 */
-	ResumeMonitoriza saveResumeMonitoriza(ResumeDTO resumeDto);
+	void deleteAlertResumeSystemByResumeMonitoriza(ResumeMonitoriza resumeMonitoriza);
 }

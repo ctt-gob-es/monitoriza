@@ -27,11 +27,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
-import es.gob.monitoriza.persistence.configuration.dto.UserEditDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.ResumeMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.ResumeDatatableRepository;
 import es.gob.monitoriza.service.IResumeMonitorizaService;
@@ -55,6 +54,7 @@ public class ResumeMonitorizaService implements IResumeMonitorizaService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteResumeMonitoriza(final Long resumeId) {
 		this.repository.deleteById(resumeId);
 	}
@@ -71,30 +71,24 @@ public class ResumeMonitorizaService implements IResumeMonitorizaService {
 
 	@Override
 	public ResumeMonitoriza saveResumeMonitoriza(final ResumeDTO resumeDto) {
-		final ResumeMonitoriza resumeMonitoriza = null;
+		ResumeMonitoriza resumeMonitoriza = null;
 
-		/*if (templateDto.get != null) {
-			userMonitoriza = this.repository.findByIdTemplateMonitoriza(templateDto.getIdUserMonitoriza());
+		if (resumeDto.getIdResumeMonitoriza() != null) {
+			resumeMonitoriza = this.repository.findByIdResumeMonitoriza(resumeDto.getIdResumeMonitoriza());
 		} else {
-			userMonitoriza = new UserMonitoriza();
+			resumeMonitoriza = new ResumeMonitoriza();
 		}
 
-		templateMonitoriza.setLogin(templateDto.getLogin());
-		templateMonitoriza.setAttemptsNumber(NumberConstants.NUM0);
-		templateMonitoriza.setEmail(templateDto.getEmail());
-		templateMonitoriza.setIsBlocked(Boolean.FALSE);
-		templateMonitoriza.setLastAccess(null);
-		templateMonitoriza.setLastIpAccess(null);
-		templateMonitoriza.setName(templateDto.getName());
-		templateMonitoriza.setSurnames(templateDto.getSurnames());*/
+		resumeMonitoriza.setName(resumeDto.getName());
+		resumeMonitoriza.setDescription(resumeDto.getDescription());
+		resumeMonitoriza.setPeriodicity(resumeDto.getPeriodicity());
+		if (Boolean.TRUE == resumeDto.getIsEnabled()) {
+			resumeMonitoriza.setEnabled("S"); //$NON-NLS-1$
+		} else {
+			resumeMonitoriza.setEnabled("N"); //$NON-NLS-1$
+		}
 
 		return this.repository.save(resumeMonitoriza);
-	}
-
-	@Override
-	public TemplateMonitoriza updateUserMonitoriza(final UserEditDTO userEditDto) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 

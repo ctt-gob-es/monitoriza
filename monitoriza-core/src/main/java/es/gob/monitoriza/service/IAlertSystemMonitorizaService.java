@@ -28,10 +28,8 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import es.gob.monitoriza.persistence.configuration.dto.AlertSystemDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TemplateDTO;
-import es.gob.monitoriza.persistence.configuration.dto.UserEditDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
@@ -71,11 +69,4 @@ public interface IAlertSystemMonitorizaService {
 	 * @return {@link TemplateMonitoriza} The template.
 	 */
 	AlertSystemMonitoriza saveAlertSystemMonitoriza(AlertSystemDTO templateDto);
-
-	/**
-	 * Method that updates a user in the persistence.
-	 * @param userEditDto a {@link UserEditDTO} with the information of the user.
-	 * @return {@link UserMonitoriza} The user.
-	 */
-	AlertSystemMonitoriza updateAlertSystemMonitoriza(UserEditDTO userEditDto);
 }

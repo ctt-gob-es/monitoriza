@@ -23,49 +23,56 @@
  */
 package es.gob.monitoriza.service;
 
-import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
-import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-
-import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
+import es.gob.monitoriza.persistence.configuration.dto.UserEditDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
-public interface IResumeMonitorizaService {
+public interface IAlertResumeTypeService {
 
 	/**
-	 * Method that obtains a resume by its identifier.
-	 * @param templateId The resume identifier.
-	 * @return {@link TemplateMonitoriza}
+	 * Method that obtains a alertResume by its identifier.
+	 * @param resTypeId The resume type identifier.
+	 * @return {@link AlertResumeType}
 	 */
-	ResumeMonitoriza getResumeMonitorizaById(Long resumeId);
+	AlertResumeType getAlertResumeTypeId(Long resTypeId);
 
 	/**
-	 * Method that deletes a resume in the persistence.
-	 * @param templateId {@link Integer} that represents the resume identifier to delete.
+	 * Method that deletes a resume type in the persistence.
+	 * @param resTypeId {@link Integer} that represents the resume type identifier to delete.
 	 */
-	void deleteResumeMonitoriza(Long resumeId);
+	void deleteAlertResumeType(Long resTypeId);
 
 	/**
-	 * Method that gets all the resumes from the persistence.
-	 * @return a {@link Iterable<ResumeMonitoriza>} with the information of all resumes.
+	 * Method that deletes a resume type in the persistence.
+	 * @param resumeMonitoriza {@link ResumeMonitoriza} that represents the resume to delete.
 	 */
-	Iterable<ResumeMonitoriza> getAllResumeMonitoriza();
+	void deleteAlertResumeTypeByResumeMonitoriza(ResumeMonitoriza resumeMonitoriza);
 
 	/**
-	 * Method that gets all the resumes from the persistence for populating a datatable.
-	 * @param input DataTable input configuration object
-	 * @return DataTablesOutput object for drawing the datatable.
+	 * Method that gets all the resume types from the persistence.
+	 * @return a {@link Iterable<AlertResumeTypes>} with the information of all resume types.
 	 */
-	DataTablesOutput<ResumeMonitoriza> findAll(DataTablesInput input);
+	Iterable<AlertResumeType> getAllAlertResumeTypes();
 
 	/**
-	 * Method that stores a resume in the persistence.
-	 * @param templateDto a {@link ResumeDTO} with the information of the resume.
-	 * @return {@link ResumeMonitoriza} The resume.
+	 * Method that stores a resume type in the persistence.
+	 * @param alertResumeType a {@link AlertResumeType} with the information of the resume type.
+	 * @return {@link AlertResumeType} The alert resume.
 	 */
-	ResumeMonitoriza saveResumeMonitoriza(ResumeDTO resumeDto);
+	AlertResumeType saveAlertResumeType(AlertResumeType alertResumeType);
+
+	/**
+	 * Method that updates a user in the persistence.
+	 * @param userEditDto a {@link UserEditDTO} with the information of the user.
+	 * @return {@link UserMonitoriza} The user.
+	 */
+	TemplateMonitoriza updateUserMonitoriza(UserEditDTO userEditDto);
+
+
 }

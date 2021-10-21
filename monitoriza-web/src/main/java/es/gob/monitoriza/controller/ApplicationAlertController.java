@@ -43,9 +43,11 @@ import es.gob.monitoriza.persistence.configuration.dto.TemplateDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 import es.gob.monitoriza.service.IAlertSystemMonitorizaService;
 import es.gob.monitoriza.service.IApplicationMonitorizaService;
+import es.gob.monitoriza.service.IResumeMonitorizaService;
 import es.gob.monitoriza.service.ITemplateMonitorizaService;
 
 /**
@@ -73,6 +75,12 @@ public class ApplicationAlertController {
 	 */
 	@Autowired
 	private IAlertSystemMonitorizaService alertSystemService;
+
+	/**
+	 * Attribute that represents the service object for accessing the repository for resumes.
+	 */
+	@Autowired
+	private IResumeMonitorizaService resumeService;
 
 	/**
 	 * Attribute that represents the service object for accessing the repository for applications.
@@ -259,6 +267,53 @@ public class ApplicationAlertController {
 		}
 
 		model.addAttribute("summaryform", new ResumeDTO()); //$NON-NLS-1$
+
+		return "modal/summaryForm.html"; //$NON-NLS-1$
+    }
+
+	@RequestMapping(value = "editresumeinfo", method = RequestMethod.POST)
+    public String editSummary(@RequestParam("id") final Long resumeId, final Model model){
+
+		// Se cargan los sistemas de notificacion para el select
+		List<AlertSystemMonitoriza> allAlertSystemsList = new ArrayList<AlertSystemMonitoriza>();
+
+		allAlertSystemsList = StreamSupport.stream(this.alertSystemService.getAllAlertSystemMonitoriza().spliterator(), false)
+				.collect(Collectors.toList());
+
+		model.addAttribute("alertSystemsList", allAlertSystemsList); //$NON-NLS-1$
+
+		// Se cargan las aplicaciones para el select
+		List<ApplicationMonitoriza> allApplicationsList = new ArrayList<ApplicationMonitoriza>();
+
+		allApplicationsList = StreamSupport.stream(this.applicationService.getAllApplicationMonitoriza().spliterator(), false)
+						.collect(Collectors.toList());
+
+		model.addAttribute("applicationsList", allApplicationsList); //$NON-NLS-1$
+
+		// Si encontramos aplicaciones cargaremos las alertas de la primera que encuentre
+		if (allApplicationsList.size() > 0) {
+			final List<AlertConfigMonitoriza> alertConfigList = allApplicationsList.get(0).getAlertConfigMonitoriza();
+			model.addAttribute("alertConfigList", alertConfigList); //$NON-NLS-1$
+		}
+
+		// Se cargan la informacion del resumen
+		final ResumeMonitoriza resume = this.resumeService.getResumeMonitorizaById(resumeId);
+		final ResumeDTO resumeForm = new ResumeDTO();
+		resumeForm.setIdResumeMonitoriza(resumeId);
+		resumeForm.setName(resume.getName());
+		if ("S".equals(resume.getEnabled())) { //$NON-NLS-1$
+			resumeForm.setIsEnabled(Boolean.TRUE);
+		} else {
+			resumeForm.setIsEnabled(Boolean.FALSE);
+		}
+		resumeForm.setDescription(resume.getDescription());
+		resumeForm.setPeriodicity(resume.getPeriodicity());
+
+		model.addAttribute("alertSystemsSaved", resume.getAlertResumeSystem()); //$NON-NLS-1$
+
+		model.addAttribute("applicationsWithAlertsSaved", resume.getResumeTypes()); //$NON-NLS-1$
+
+		model.addAttribute("summaryform", resumeForm); //$NON-NLS-1$
 
 		return "modal/summaryForm.html"; //$NON-NLS-1$
     }

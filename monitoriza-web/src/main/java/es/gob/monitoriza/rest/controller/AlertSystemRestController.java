@@ -37,12 +37,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -88,7 +90,7 @@ public class AlertSystemRestController {
 
 	/**
 	 * Method that maps the list templates web requests to the controller and
-	 * forwards the list of templates to the view.
+	 * forwards the list of alert systems to the view.
 	 *
 	 * @param input
 	 *            Holder object for datatable attributes.
@@ -113,6 +115,7 @@ public class AlertSystemRestController {
 	@RequestMapping(value = "/savenotifsystem", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
 	public @ResponseBody DataTablesOutput<AlertSystemMonitoriza> save(@Validated(OrderedValidation.class) @RequestBody final AlertSystemDTO alertSystemForm, final BindingResult bindingResult) {
+
 		final DataTablesOutput<AlertSystemMonitoriza> dtOutput = new DataTablesOutput<AlertSystemMonitoriza>();
 		List<AlertSystemMonitoriza> listNewAlertSystem = new ArrayList<AlertSystemMonitoriza>();
 		final JSONObject json = new JSONObject();
@@ -140,6 +143,26 @@ public class AlertSystemRestController {
 		dtOutput.setData(listNewAlertSystem);
 
 		return dtOutput;
+	}
+
+	/**
+	 * Method that maps the delete user request from datatable to the controller
+	 * and performs the delete of the user identified by its id.
+	 *
+	 * @param userId
+	 *            Identifier of the user to be deleted.
+	 * @param index
+	 *            Row index of the datatable.
+	 * @return String that represents the name of the view to redirect.
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(path = "/deletenotifsystem", method = RequestMethod.POST)
+	@Transactional
+	public String deleteAlertSystem(@RequestParam("id") final Long alertSystemId, @RequestParam("index") final String index) {
+
+		this.alertSystemService.deleteAlertSystemMonitoriza(alertSystemId);
+
+		return index;
 	}
 
 

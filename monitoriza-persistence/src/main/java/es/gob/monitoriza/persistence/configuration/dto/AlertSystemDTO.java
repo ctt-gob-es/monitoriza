@@ -52,17 +52,21 @@ public class AlertSystemDTO {
 	private String type;
 
 	/**
-	 * Attribute that represents the host of the alert system
+	 * Attribute that represents the host of the alert system for graylog systems
 	 */
 	private String host;
 
 	/**
-	 * Attribute that represents the port of the alert system
+	 * Attribute that represents the port of the alert system for graylog systems
 	 */
-	private int port;
+	private Long port;
 
 	public Long getIdAlertSystemMonitoriza() {
 		return this.idAlertSystemMonitoriza;
+	}
+
+	public void setIdAlertSystemMonitoriza(final Long idAlertSystemMonitoriza) {
+		this.idAlertSystemMonitoriza = idAlertSystemMonitoriza;
 	}
 
 	public String getName() {
@@ -89,11 +93,11 @@ public class AlertSystemDTO {
 		this.host = host;
 	}
 
-	public int getPort() {
+	public Long getPort() {
 		return this.port;
 	}
 
-	public void setPort(final int port) {
+	public void setPort(final Long port) {
 		this.port = port;
 	}
 

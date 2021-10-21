@@ -25,16 +25,15 @@
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -58,6 +57,8 @@ import es.gob.monitoriza.constant.NumberConstants;
 @Table(name = "ALERT_TYPES")
 public class AlertTypeMonitoriza implements Serializable {
 
+	private static final long serialVersionUID = 1955681895543358686L;
+
 	/**
 	 * Attribute that represents the object ID.
 	 */
@@ -74,19 +75,14 @@ public class AlertTypeMonitoriza implements Serializable {
 	private String description;
 
 	/**
-	 * Attribute that represents the resumes configurated for this type.
+	 * Attribute that represents the relations with applications and resumes.
 	 */
-	private List<ResumeMonitoriza> resumesMonitoriza;
+    private Set<AlertResumeType> alertResumeTypes;
 
 	/**
-	 * Attribute that represents the applications configurated for this type.
-	 */
-	private List<ApplicationMonitoriza> applicationsMonitoriza;
-
-	/**
-	 * Gets the value of the attribute {@link #idTemplateMonitoriza}.
+	 * Gets the value of the attribute {@link #idTypeMonitoriza}.
 	 *
-	 * @return the value of the attribute {@link #idTemplateMonitoriza}.
+	 * @return the value of the attribute {@link #idTypeMonitoriza}.
 	 */
 	@Id
 	@Column(name = "TYPE_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
@@ -149,39 +145,13 @@ public class AlertTypeMonitoriza implements Serializable {
 		this.description = description;
 	}
 
-	/**
-	 * Gets the value of the attribute {@link #resumesMonitoriza}.
-	 * @return the value of the attribute {@link #resumesMonitoriza}.
-	 */
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "ALERT_RESUME_TYPES", joinColumns = @JoinColumn(name = "TYPE_ID", referencedColumnName = "TYPE_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = false))
-	public List<ResumeMonitoriza> getResumeMonitoriza() {
-		return this.resumesMonitoriza;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "alertTypeMonitoriza", cascade = CascadeType.ALL)
+	public Set<AlertResumeType> getAlertResumeTypes() {
+		return this.alertResumeTypes;
 	}
 
-	/**
-	 * Sets the value of the attribute {@link #resumesMonitoriza}.
-	 * @param alertsConfigMonitoriza The value for the attribute {@link #resumesMonitoriza}.
-	 */
-	public void setResumeMonitoriza(final List<ResumeMonitoriza> resumesMonitoriza) {
-		this.resumesMonitoriza = resumesMonitoriza;
+	public void setAlertResumeTypes(final Set<AlertResumeType> alertResumeTypes) {
+		this.alertResumeTypes = alertResumeTypes;
 	}
 
-	/**
-	 * Gets the value of the attribute {@link #applicationsMonitoriza}.
-	 * @return the value of the attribute {@link #applicationsMonitoriza}.
-	 */
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "ALERT_RESUME_TYPES", joinColumns = @JoinColumn(name = "TYPE_ID", referencedColumnName = "TYPE_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "APP_ID", referencedColumnName = "APP_ID", nullable = false))
-	public List<ApplicationMonitoriza> getApplicationMonitoriza() {
-		return this.applicationsMonitoriza;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #applicationsMonitoriza}.
-	 * @param alertsConfigMonitoriza The value for the attribute {@link #applicationsMonitoriza}.
-	 */
-	public void setApplicationMonitoriza(final List<ApplicationMonitoriza> applicationsMonitoriza) {
-		this.applicationsMonitoriza = applicationsMonitoriza;
-	}
 }

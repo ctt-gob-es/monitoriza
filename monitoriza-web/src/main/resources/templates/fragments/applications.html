@@ -107,9 +107,7 @@ $(document).ready(function() {
 				                type:'POST',
 				                success: function(data){
 				            		// Se oculta la capa 'cargando...'
-				            		hide();  
-									alert(JSON.stringify($(data)));
-									alert(JSON.stringify($(data.data)));
+				            		hide();
 				  				  	tbl.row.add($(data.data)).draw(false);
 	    		                    
 				                    $('#altEditor-modal .modal-body .alert').remove();

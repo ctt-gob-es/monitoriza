@@ -24,10 +24,11 @@
 $(document).ready(function() {
 	var addTemplate= /*[[@{/addnotifsystem}]]*/;
 	var editTemplate= /*[[@{/editnotifsystem}]]*/;
+	var deleteNotifSystem= /*[[@{/deletenotifsystem}]]*/;
 	var getAlertSystems = /*[[@{/alertsystemsdatatable}]]*/;
 	var saveNotifSystem = /*[[@{/savenotifsystem}]]*/;
 	
-	var tbl = $('#systemNotificationTable').DataTable({
+	var systemNotificationsTable = $('#systemNotificationTable').DataTable({
 		dom: 'Bfrtip',
 	    select: 'single',
 	    responsive: true,
@@ -54,6 +55,7 @@ $(document).ready(function() {
 			"url": getAlertSystems,
 			"dataSrc" : "data",
 			"data": function (data) {
+				console.log(data);
 				// Datos a pasar al modal
 				data.formId = "notifSystemForm";
 				data.editTemplate = editTemplate;
@@ -64,7 +66,21 @@ $(document).ready(function() {
 			{ "data": "idAlertSystemMonitoriza",
 		    	"visible": false},
 	        { "data": "name" },
-	        { "data": "type" }
+	        { "data": "type" ,
+				"render": function (data, type, row) {
+					var type;
+					
+					switch(data){
+						case "email":
+							type = "Correo electronico";
+						break;
+						case "graylog":
+							type = "Graylog";
+						break;
+					}
+		        	return type;       	  
+		          }	
+	         }
 	        ]
 	        
 		}).on('crudaction', function(e, accion, idAlertSystemMonitoriza, data, rowindex){
@@ -88,39 +104,35 @@ $(document).ready(function() {
 				                success: function(data){
 				            		// Se oculta la capa 'cargando...'
 				            		hide();  
+				            		console.log(data);
 
-				  				  	tbl.row.add($(data.data)).draw(false);
+				            		systemNotificationsTable.row.add($(data.data)).draw(false);
 	    		                    
 				                    $('#altEditor-modal .modal-body .alert').remove();
 				                    $('#altEditor-modal').modal('hide');
 				                },
 				                error:function(data){
 				                	hide();
-				                	alert("error");
 				                	$('#errorModalUser').remove();
 				                	$('#userForm').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
 				                }
 				            });
 		            break;
 		        case 'edit':
-		        	$.ajax(actionSave, {
+		        	$.ajax(saveNotifSystem, {
 		            	dataType : 'json',
 		            	contentType:'application/json',
-		                data : JSON.stringify(data),
+		            	data : JSON.stringify($("#notifSystemForm").serializeJSON()),
 		                type:'POST',
 		                success: function(data){
 		                  
 		            		// Se oculta la capa 'cargando...'
 		            		hide();
-		                    //tbl.row.add($(data.data)).draw(false);
-		                    $('#tableAfirmaNode').DataTable().rows().invalidate('data').draw(false);
+		                    $('#systemNotificationTable').DataTable().rows().invalidate('data').draw(false);
 		                    		                    
 		                    $('#altEditor-modal .modal-body .alert').remove();
 		                    $('#altEditor-modal').modal('hide');
-		                    
-		                    if ($('#errorModalNode').length > 0){
-								$('#errorModalNode').remove();
-							}
+
 		                },
 		                error:function(data){
 		                	hide();
@@ -129,14 +141,14 @@ $(document).ready(function() {
 		            });
 		            break;
 		        case 'delete':
-		            $.ajax(actionDelete,{
+		            $.ajax(deleteNotifSystem,{
 		            	data:$.param({'id':data.idAlertSystemMonitoriza, 'index':rowindex}),
 		                type:'POST',
 		                success: function(data){
 		                    
 		                	// Se oculta la capa 'cargando...'
 		                	hide();
-		                    tbl.row(data.index).remove().draw();
+		                	systemNotificationsTable.row(data.index).remove().draw();
 		                    
 		                    $('#altEditor-modal .modal-body .alert').remove();
 		                    $('#altEditor-modal').modal('hide');

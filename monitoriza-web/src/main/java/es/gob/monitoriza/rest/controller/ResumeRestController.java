@@ -37,12 +37,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.http.MediaType;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,8 +54,18 @@ import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeSystem;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
+import es.gob.monitoriza.service.IAlertResumeSystemService;
+import es.gob.monitoriza.service.IAlertResumeTypeService;
+import es.gob.monitoriza.service.IAlertSystemMonitorizaService;
+import es.gob.monitoriza.service.IAlertTypeMonitorizaService;
+import es.gob.monitoriza.service.IApplicationMonitorizaService;
 import es.gob.monitoriza.service.IResumeMonitorizaService;
 
 /**
@@ -63,12 +75,23 @@ import es.gob.monitoriza.service.IResumeMonitorizaService;
 @RestController
 public class ResumeRestController {
 
-	/**
-	 * Attribute that represents the service object for accessing the
-	 * repository.
-	 */
 	@Autowired
 	private IResumeMonitorizaService resumeService;
+
+	@Autowired
+	private IApplicationMonitorizaService applicationService;
+
+	@Autowired
+	private IAlertTypeMonitorizaService alertTypeService;
+
+	@Autowired
+	private IAlertResumeTypeService alertResumeTypeService;
+
+	@Autowired
+	private IAlertSystemMonitorizaService alertSystemService;
+
+	@Autowired
+	private IAlertResumeSystemService alertResumeSystemService;
 
 	/**
 	 * Attribute that represents the span text.
@@ -86,7 +109,7 @@ public class ResumeRestController {
 	private static final String KEY_JS_ERROR_RESUME = "errorSaveResume"; //$NON-NLS-1$
 
 	/**
-	 * Method that maps the save user web request to the controller and saves it
+	 * Method that maps the save resume web request to the controller and saves it
 	 * in the persistence.
 	 *
 	 * @param applicationForm
@@ -111,8 +134,39 @@ public class ResumeRestController {
 			dtOutput.setError(json.toString());
 		} else {
 			try {
+
 				final ResumeMonitoriza resume = this.resumeService.saveResumeMonitoriza(resumeForm);
+
+				// Si ya existian relaciones de resumen - sistema de notificacion las eliminamos
+				// para crear las nuevas indicadas en el formulario
+				this.alertResumeSystemService.deleteAlertResumeSystemByResumeMonitoriza(resume);
+
+				// Guardamos los datos en la tabla con las nuevas relaciones entre sistemas de notificacion y resumen
+				for (final Long alertSystemId : resumeForm.getNotifSystemsIdArray()) {
+					final AlertSystemMonitoriza alertSystem = this.alertSystemService.getAlertSystemMonitorizaById(alertSystemId);
+					final AlertResumeSystem alertResumeSystem = new AlertResumeSystem();
+					alertResumeSystem.setResumeMonitoriza(resume);
+					alertResumeSystem.setAlertSystemMonitoriza(alertSystem);
+					this.alertResumeSystemService.saveAlertResumeSystem(alertResumeSystem);
+				}
+
+				// Si ya existian relaciones de resumen - aplicacion / tipo de alerta
+				// para crear las nuevas indicadas en el formulario
+				this.alertResumeTypeService.deleteAlertResumeTypeByResumeMonitoriza(resume);
+
+				// Guardamos los datos en la tabla con las nuevas relaciones relacion entre app, tipo de alerta y resumen
+				for (int i = 0; i < resumeForm.getApplicationsIdArray().size() ; i++) {
+					final ApplicationMonitoriza appMonit = this.applicationService.getApplicationMonitorizaById(resumeForm.getApplicationsIdArray().get(i));
+					final AlertTypeMonitoriza alertTypeMon = this.alertTypeService.getAlertTypeMonitorizaById(resumeForm.getAlertsTypesIdArray().get(i));
+					final AlertResumeType alertResumeType = new AlertResumeType();
+					alertResumeType.setApplicationMonitoriza(appMonit);
+					alertResumeType.setAlertTypeMonitoriza(alertTypeMon);
+					alertResumeType.setResumeMonitoriza(resume);
+					this.alertResumeTypeService.saveAlertResumeType(alertResumeType);
+				}
+
 				listNewResume.add(resume);
+
 			} catch (final Exception e) {
 				LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB022), e);
 				listNewResume = StreamSupport.stream(this.resumeService.getAllResumeMonitoriza().spliterator(), false).collect(Collectors.toList());
@@ -127,7 +181,7 @@ public class ResumeRestController {
 	}
 
 	/**
-	 * Method that maps the list templates web requests to the controller and
+	 * Method that maps the list resumes web requests to the controller and
 	 * forwards the list of templates to the view.
 	 *
 	 * @param input
@@ -140,5 +194,70 @@ public class ResumeRestController {
 		return this.resumeService.findAll(input);
 	}
 
+	/**
+	 * Method that maps the list of alert systems for a resume and
+	 * forwards the list of templates to the view.
+	 *
+	 * @param input
+	 *            Holder object for datatable attributes.
+	 * @param resumeId the resume id
+	 * @return String that represents the name of the view to forward.
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(path = "/resumealertssystemsdt", method = RequestMethod.POST)
+	public DataTablesOutput<AlertSystemMonitoriza> resumeAlertSystems(@NotEmpty final DataTablesInput input, @RequestParam("resumeId") final Long resumeId) {
+		final ResumeMonitoriza resume = this.resumeService.getResumeMonitorizaById(resumeId);
+		final DataTablesOutput<AlertSystemMonitoriza> result = new DataTablesOutput<AlertSystemMonitoriza>();
+		if (resume != null && !resume.getAlertSystemsMonitoriza().isEmpty()) {
+			result.setData(resume.getAlertSystemsMonitoriza());
+		}
+		return result;
+	}
 
+	/**
+	 * Method that maps the list of applications and alert types for a resume and
+	 * forwards the list of templates to the view.
+	 *
+	 * @param input
+	 *            Holder object for datatable attributes.
+	 * @param resumeId the resume id
+	 * @return String that represents the name of the view to forward.
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(path = "/resumeappsalerttypessdt", method = RequestMethod.POST)
+	public DataTablesOutput<AlertResumeType> resumeAppsAndAlertTypes(@NotEmpty final DataTablesInput input, @RequestParam("resumeId") final Long resumeId) {
+		final ResumeMonitoriza resume = this.resumeService.getResumeMonitorizaById(resumeId);
+		final DataTablesOutput<AlertResumeType> result = new DataTablesOutput<AlertResumeType>();
+		if (resume != null && !resume.getResumeTypes().isEmpty()) {
+			result.setData(new ArrayList<>(resume.getResumeTypes()));
+		}
+		return result;
+	}
+
+	/**
+	 * Method that maps the delete user request from datatable to the controller
+	 * and performs the delete of the user identified by its id.
+	 *
+	 * @param userId
+	 *            Identifier of the user to be deleted.
+	 * @param index
+	 *            Row index of the datatable.
+	 * @return String that represents the name of the view to redirect.
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(path = "/deleteresume", method = RequestMethod.POST)
+	@Transactional
+	public String deleteResumeRelations(@RequestParam("id") final Long resumeId, @RequestParam("index") final String index) {
+
+		final ResumeMonitoriza resume = this.resumeService.getResumeMonitorizaById(resumeId);
+
+		// Si ya existian relaciones de resumen - aplicacion / tipo de alerta las eliminamos
+		if (resume.getResumeTypes() != null && !resume.getResumeTypes().isEmpty()) {
+			this.alertResumeTypeService.deleteAlertResumeTypeByResumeMonitoriza(resume);
+		}
+
+		this.resumeService.deleteResumeMonitoriza(resumeId);
+
+		return index;
+	}
 }

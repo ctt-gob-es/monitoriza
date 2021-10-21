@@ -1,6 +1,6 @@
 <form name="altEditor-form" role="form" id="notifSystemForm" th:object="${notifsystemform}" th:action="@{/savenotifsystem}" method="post">
 					
-	<!--  <input type='hidden' class='primarykey' id="idNode" th:field="*{idNode}">-->
+	<input type='hidden' class='primarykey' id="idAlertSystemMonitoriza" th:field="*{idAlertSystemMonitoriza}">
 	
 	<div class="form-group">
 			<label for="name" class="col-form-label" th:text="#{table.applalert.sysnot.name}"></label>
@@ -16,10 +16,10 @@
         </select>
 	</div>	
 	
-	<h6 id="typeInfoTitle" style="display:none" class="mT-10 mL-10 c-grey-900"></h6>
+	<h6 id="typeInfoTitle" class="mT-10 mL-10 c-grey-900"></h6>
 	
 	<div class="form-group">
-		<label id="emailInfo" style="display:none" class="col-form-label" th:text="#{applalert.sysnot.modal.info.email}"></label>
+		<label id="emailInfo" class="col-form-label" th:text="#{applalert.sysnot.modal.info.email}"></label>
 	</div>
 	
 	<div style="display:none" id="graylogData" class="form-group">
@@ -34,11 +34,17 @@
 <script th:inline="javascript">
 
 	$(document).ready(function () {
+
+		checkTypeSelection();
 							
 	    $("#type").change(function () {
 	    	
 	    	$('#typeInfoTitle').show();
-	    	
+	    	checkTypeSelection();
+	    });	
+
+	    function checkTypeSelection(){
+		    
 	        if ($('select[name=type] option').filter(':selected').val() == "email") {
 	        	$('#emailInfo').show();
 	        	$('#graylogData').hide();
@@ -48,7 +54,7 @@
 	        	$('#graylogData').show();
 	        	$("#typeInfoTitle").text("Configuraci\u00F3n de Graylog");
 	        }
-	    });	
+		}
 	 });
 	
 </script>

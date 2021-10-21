@@ -29,8 +29,8 @@
 									<div class="form-row">
 										<div
 											class="checkbox checkbox-circle checkbox-info peers mL-5 mB-20 mT-10">
-											<input type="checkbox" id="enabled" name="enabled" class="peer" th:checked="${summaryform.enabled}"> 
-												<label for="enabled" class="peers peer-greed js-sb ai-c"> 
+											<input type="checkbox" id="isEnabled" name="isEnabled" class="peer" th:checked="${summaryform.isEnabled}"> 
+												<label for="isEnabled" class="peers peer-greed js-sb ai-c"> 
 												<span class="peer peer-greed" th:text="#{applalert.summaries.modal.activeresume}">
 												</span>
 											</label>
@@ -118,7 +118,7 @@
 											<select name="alertConfigList" id="alertConfigList"
 												class="form-control" th:field="*{alertConfigList}" required>
 												<option th:each="t: ${alertConfigList}"
-													th:value="${t.idAlertConfigMonitoriza}"
+													th:value="${t.alertTypeMonitoriza.idTypeMonitoriza}"
 													th:text="${t.alertTypeMonitoriza.name}"></option>
 											</select> </select>
 										</div>
@@ -187,18 +187,21 @@
 
 <script th:inline="javascript">
 
-	var alertSystemCounter = 0;
-	var appAlertConfigCounter = 0;
-	var alertSystemIdListIndex = 0;
-	var alertConfigIdListIndex = 0;
-
-	//Relacion aplicacion - alerta???
-
 	$(document).ready(function () {
+
+		// Identificadores para la aplicacion de la tabla de aplicacion-alerta
+		var applicationsIdArray = [];
+		// Identificadores de los tipos de alerta de la tabla de aplicacion-alerta
+		var alertsTypesIdArray = [];
+		// Identificadores de los sistemas de notificacion indicados en la tabla
+		var notifSystemsIdArray = [];
 
 		var getAlertsFromApp = /*[[@{/alertsfromapplication}]]*/;
 		var saveResume = /*[[@{/saveresume}]]*/;
+		var getResumeAlertSystems = /*[[@{/resumealertssystemsdt}]]*/;
+		var getResumeAppsAndAlertsTypes = /*[[@{/resumeappsalerttypessdt}]]*/;
 
+		// Instancia de las tablas para sistemas de notificacion y aplicaciones / tipos de alerta
 		var alertSystemTbl = $('#alertSystemTable').DataTable({
 			dom: 'Bfrtip',
 		    responsive: true,
@@ -210,8 +213,14 @@
 				{extend: 'selected',text: 'Configurar',name: 'configure',
 					action: function ( e, dt, node, config ) {
 						$('#configureEmailsModal').modal('show');
-	  			  }},   
-    			{extend: 'selected',text: 'Eliminar',name: 'delete'}
+					}
+				},   
+    			{extend: 'selected',text: 'Eliminar',name: 'deleteAlertSystem',
+					action: function ( e, dt, node, config ) {
+						var alertSysSelected = alertSystemTbl.rows({ selected: true });
+						alertSystemTbl.row(alertSysSelected).remove().draw();
+					}
+				}
 			],
 		    "language": {
 		        "url": "js/datatables/i18n/spanish.json",
@@ -222,6 +231,11 @@
 		            }
 		          }
 		    },
+			"ajax": {
+				"url": getResumeAlertSystems,
+				"data" : { "resumeId" : $("#idResumeMonitoriza").val()},
+				"type" : "POST"
+			},
 			"columns": [
 				{ "data": "idAlertSystemMonitoriza", "visible": false},
 		        { "data": "name" }
@@ -236,7 +250,12 @@
 			altEditor: true,
 			"bLengthChange" : false,
 		    buttons: [
-				{extend: 'selected',text: 'Eliminar',name: 'delete'}
+				{extend: 'selected',text: 'Eliminar',name: 'deleteAppAlert',
+					action: function ( e, dt, node, config ) {
+						var alertConfSelected = alertConfigTbl.rows({ selected: true });
+						alertConfigTbl.row(alertConfSelected).remove().draw();
+					}
+				}
 			],
 		    "language": {
 		        "url": "js/datatables/i18n/spanish.json",
@@ -247,14 +266,20 @@
 		            }
 		          }
 		    },
+			"ajax": {
+				"url": getResumeAppsAndAlertsTypes,
+				"data" : { "resumeId" : $("#idResumeMonitoriza").val()},
+				"type" : "POST"
+			},
 			"columns": [
-				{ "data": "idApplicationMonitoriza", "visible": false},
-		        { "data": "appName" },
-		        { "data": "idAlertConfigMonitoriza", "visible": false},
-		        { "data": "alertConfigName" }
+				{ "data" : "applicationMonitoriza.idApplicationMonitoriza", "visible": false },
+		        { "data" : "applicationMonitoriza.name" },
+		        { "data" : "alertTypeMonitoriza.idTypeMonitoriza", "visible": false },
+		        { "data" : "alertTypeMonitoriza.name" }
 		        ]
 			});
-	
+
+		// Funciones para los eventos de botones y selects
     	$("#applicationsList").change(function () {
         	
         	var idApplicationMonitoriza = $("#applicationsList option:selected").val();
@@ -267,7 +292,7 @@
                         $('#alertConfigList').html('');  
                         var options = '';
                         for (var i = 0; i < data.length; i++) {  
-                            options += '<option value="' + data[i].idAlertConfigMonitoriza + '">' + data[i].alertTypeMonitoriza.name + '</option>';  
+                            options += '<option value="' + data[i].alertTypeMonitoriza.idTypeMonitoriza + '">' + data[i].alertTypeMonitoriza.name + '</option>';  
                         }  
                         $('#alertConfigList').append(options);  
                     }
@@ -280,11 +305,9 @@
     	});	
 
         $('#btnAddAlertSystem').on( 'click', function () {
-            var alertSystemJsonText = '{"0":' + 
-            '{"idAlertSystemMonitoriza":' + $("#alertSystemsList option:selected").val() + 
-            ',"name":"' + $("#alertSystemsList option:selected").text() + '"}, "length":1}';
-            var data = JSON.parse(alertSystemJsonText);
-        	alertSystemTbl.row.add($(data)).draw(false);
+        	alertSystemTbl.row.add({"idAlertSystemMonitoriza" : $("#alertSystemsList option:selected").val(),
+            						"name" : $("#alertSystemsList option:selected").text()
+            						}).draw(false);
         });
 
         $('#btnAddAlertConfig').on( 'click', function () {
@@ -308,40 +331,82 @@
         $("#summaryButton").click(function(){
         	
             loading();
+
+            // Cargamos la informacion de las tablas en arrays que se mandaran al servidor
+            loadTableInfoIntoArrays();
+
+            console.log('notif systems = ' + notifSystemsIdArray);
+            console.log('alert types = ' + alertsTypesIdArray);
+            console.log('applications = ' + applicationsIdArray);
+
+            var formToJSON = $("#summaryForm").serializeJSON();
+            formToJSON.applicationsIdArray = applicationsIdArray;
+            formToJSON.alertsTypesIdArray = alertsTypesIdArray;
+            formToJSON.notifSystemsIdArray = notifSystemsIdArray;
+            
+            //Eliminamos los datos que no son necesarios para guardar un nuevo registro
+            delete formToJSON["alertSystemsList"];
+            delete formToJSON["applicationsList"];
+            delete formToJSON["alertConfigList"];
+            
 			$.ajax(saveResume, {
             	dataType : 'json',
             	contentType:'application/json',
-                data : JSON.stringify($("#summaryForm").serializeJSON()),
+                data : JSON.stringify(formToJSON),
                 type:'POST',
                 success: function(data){
             		// Se oculta la capa 'cargando...'
             		hide();
-            		alert('conseguido' + data);
-  				  	tbl.row.add($(data.data)).draw(false);
-                    
-                    $('#altEditor-modal .modal-body .alert').remove();
-                    $('#altEditor-modal').modal('hide');
+            		summariesTable.row.add($(data.data)).draw(false);
+                    $('#summaryModal').modal('hide');
                 },
                 error:function(data){
                 	hide();
-                	alert('error' + data.error);
                 	$('#errorModalSummary').remove();
-                	$('#summaryForm').append('<div id="errorModalSummary" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
+                	$('#summaryModal').append('<div id="errorModalSummary" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
                 }
             });
 		});
 
-        function insertAlertConfig(appValue, appText, alertValue, alertText){
-			var alertConfigJsonText = '{"0":' + 
-            '{"idApplicationMonitoriza":' + appValue + 
-            ',"appName":"' + appText + '"' +
-            ',"idAlertConfigMonitoriza":' + alertValue + 
-            ',"alertConfigName":"' + alertText + '"}, "length":1}';
-            var data = JSON.parse(alertConfigJsonText);
-            alertConfigTbl.row.add($(data)).draw(false);
+		if ($("#isEnabled").is(":checked")) {
+			$("#isEnabled").val('true');
+		} else {
+			$("#isEnabled").attr('value', 'false');
 		}
+
+		$("#isEnabled").change(function () {
+    		if ($(this).is(":checked")) {
+    			$(this).val('true');
+    		} else {
+    			$(this).attr('value', 'false');
+    		}
+		});
+
+        function insertAlertConfig(appValue, appText, alertValue, alertText){
+
+            alertConfigTbl.row.add({"applicationMonitoriza" : {
+                					"idApplicationMonitoriza" : appValue, 
+                					"name" : appText},
+                					"alertTypeMonitoriza" : {
+                					"idTypeMonitoriza" : alertValue,
+                					"name" : alertText}}).draw(false);
+		}
+
+		function loadTableInfoIntoArrays(){
+			
+            var alertSystems = $("#alertSystemTable").dataTable().fnGetNodes();
+            for (var i = 0 ; i < alertSystems.length ; i++) {
+            	var alertSystemData = $('#alertSystemTable').DataTable().row($(alertSystems[i])).data();
+            	notifSystemsIdArray.push(alertSystemData.idAlertSystemMonitoriza);
+            }
+
+            var appAlerts = $("#alertListTable").dataTable().fnGetNodes();
+            for (var i = 0 ; i < appAlerts.length ; i++) {
+            	var appAlertData = $('#alertListTable').DataTable().row($(appAlerts[i])).data();
+            	applicationsIdArray.push(appAlertData.applicationMonitoriza.idApplicationMonitoriza);
+            	alertsTypesIdArray.push(appAlertData.alertTypeMonitoriza.idTypeMonitoriza);
+            }
+		}
+
  	});
-
-
- 
 </script>

@@ -26,7 +26,9 @@ package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -35,6 +37,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -99,14 +102,14 @@ public class ResumeMonitoriza implements Serializable {
 	private List<AlertConfigMonitoriza> alertsConfigMonitoriza;
 
 	/**
-	 * Attribute that represents the alerts types configurated for this resume.
+	 * Attribute that represents the relations with applications and types.
 	 */
-	private List<AlertTypeMonitoriza> alertsTypeMonitoriza;
+    private Set<AlertResumeType> resumeTypes;
 
 	/**
-	 * Attribute that represents the applications configurated for this resume.
+	 * Attribute that represents the alert systems configurated for a resume.
 	 */
-	private List<ApplicationMonitoriza> applicationsMonitoriza;
+	private Set<AlertResumeSystem> alertResumeSystems;
 
 	/**
 	 * Gets the value of the attribute {@link #idTemplateMonitoriza}.
@@ -220,8 +223,8 @@ public class ResumeMonitoriza implements Serializable {
 	 * Gets the value of the attribute {@link #alertSystemsMonitoriza}.
 	 * @return the value of the attribute {@link #alertSystemsMonitoriza}.
 	 */
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "ALERT_RESUME_SYSTEMS", joinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "SYSTEM_ID", referencedColumnName = "SYSTEM_ID", nullable = false))
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "ALERT_RESUME_SYSTEMS", joinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = true), inverseJoinColumns = @JoinColumn(name = "SYSTEM_ID", referencedColumnName = "SYSTEM_ID", nullable = true))
 	public List<AlertSystemMonitoriza> getAlertSystemsMonitoriza() {
 		return this.alertSystemsMonitoriza;
 	}
@@ -239,7 +242,7 @@ public class ResumeMonitoriza implements Serializable {
 	 * @return the value of the attribute {@link #alertsConfigMonitoriza}.
 	 */
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "ALERT_RESUME_LIST", joinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "ALERT_CONFIG_ID", referencedColumnName = "ALERT_CONFIG_ID", nullable = false))
+	@JoinTable(name = "ALERT_RESUME_LIST", joinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = true), inverseJoinColumns = @JoinColumn(name = "ALERT_CONFIG_ID", referencedColumnName = "ALERT_CONFIG_ID", nullable = true))
 	public List<AlertConfigMonitoriza> getAlertConfigMonitoriza() {
 		return this.alertsConfigMonitoriza;
 	}
@@ -252,39 +255,22 @@ public class ResumeMonitoriza implements Serializable {
 		this.alertsConfigMonitoriza = alertsConfigMonitoriza;
 	}
 
-	/**
-	 * Gets the value of the attribute {@link #alertsTypeMonitoriza}.
-	 * @return the value of the attribute {@link #alertsTypeMonitoriza}.
-	 */
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "ALERT_RESUME_TYPES", joinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "TYPE_ID", referencedColumnName = "TYPE_ID", nullable = false))
-	public List<AlertTypeMonitoriza> getAlertTypeMonitoriza() {
-		return this.alertsTypeMonitoriza;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeMonitoriza" , cascade = CascadeType.ALL)
+	public Set<AlertResumeType> getResumeTypes() {
+		return this.resumeTypes;
 	}
 
-	/**
-	 * Sets the value of the attribute {@link #alertsTypeMonitoriza}.
-	 * @param alertsConfigMonitoriza The value for the attribute {@link #alertsTypeMonitoriza}.
-	 */
-	public void setAlertTypeMonitoriza(final List<AlertTypeMonitoriza> alertsTypeMonitoriza) {
-		this.alertsTypeMonitoriza = alertsTypeMonitoriza;
+	public void setResumeTypes(final Set<AlertResumeType> resumeTypes) {
+		this.resumeTypes = resumeTypes;
 	}
 
-	/**
-	 * Gets the value of the attribute {@link #applicationsMonitoriza}.
-	 * @return the value of the attribute {@link #applicationsMonitoriza}.
-	 */
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "ALERT_RESUME_TYPES", joinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "APP_ID", referencedColumnName = "APP_ID", nullable = false))
-	public List<ApplicationMonitoriza> getApplicationsMonitoriza() {
-		return this.applicationsMonitoriza;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeMonitoriza")
+	public Set<AlertResumeSystem> getAlertResumeSystem() {
+		return this.alertResumeSystems;
 	}
 
-	/**
-	 * Sets the value of the attribute {@link #alertsTypeMonitoriza}.
-	 * @param alertsConfigMonitoriza The value for the attribute {@link #alertsTypeMonitoriza}.
-	 */
-	public void setApplicationsMonitoriza(final List<ApplicationMonitoriza> applicationsMonitoriza) {
-		this.applicationsMonitoriza = applicationsMonitoriza;
+	public void setAlertResumeSystem(final Set<AlertResumeSystem> alertResumeSystems) {
+		this.alertResumeSystems = alertResumeSystems;
 	}
+
 }

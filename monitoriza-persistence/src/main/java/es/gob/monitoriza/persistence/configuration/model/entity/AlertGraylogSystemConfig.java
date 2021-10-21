@@ -65,7 +65,7 @@ public class AlertGraylogSystemConfig implements Serializable {
 	/**
 	 * Attribute that represents the alert system port.
 	 */
-	private int port;
+	private Long port;
 
 	/**
 	 * Gets the value of the attribute {@link #idAlertSystemMonitoriza}.
@@ -103,7 +103,7 @@ public class AlertGraylogSystemConfig implements Serializable {
 	/**
 	 * Sets the value of the attribute {@link #host}.
 	 *
-	 * @param name
+	 * @param host
 	 *            The value for the attribute {@link #host}.
 	 */
 	public void setHost(final String host) {
@@ -117,17 +117,17 @@ public class AlertGraylogSystemConfig implements Serializable {
 	 */
 	@Column(name = "PORT", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
-	public int getPort() {
+	public Long getPort() {
 		return this.port;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #type}.
+	 * Sets the value of the attribute {@link #port}.
 	 *
-	 * @param name
-	 *            The value for the attribute {@link #type}.
+	 * @param port
+	 *            The value for the attribute {@link #port}.
 	 */
-	public void setPort(final int port) {
+	public void setPort(final Long port) {
 		this.port = port;
 	}
 }

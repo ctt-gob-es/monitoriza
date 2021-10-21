@@ -29,7 +29,6 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.persistence.configuration.dto.AlertSystemDTO;
-import es.gob.monitoriza.persistence.configuration.dto.UserEditDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogSystemConfig;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.AlertGraylogSystemConfigRepository;
@@ -53,18 +52,16 @@ public class AlertSystemMonitorizaService implements IAlertSystemMonitorizaServi
 	@Autowired
 	private AlertSystemDatatableRepository dtRepository;
 
-	private static final String TYPE_GRAYLOG = "graylog";
-
-	private static final String TYPE_EMAIL = "email";
+	private static final String TYPE_GRAYLOG = "graylog"; //$NON-NLS-1$
 
 	@Override
-	public AlertSystemMonitoriza getAlertSystemMonitorizaById(final Long templateId) {
-		return this.repository.findByIdAlertSystemMonitoriza(templateId);
+	public AlertSystemMonitoriza getAlertSystemMonitorizaById(final Long alertSystemId) {
+		return this.repository.findByIdAlertSystemMonitoriza(alertSystemId);
 	}
 
 	@Override
-	public void deleteAlertSystemMonitoriza(final Long templateId) {
-		this.repository.deleteById(templateId);
+	public void deleteAlertSystemMonitoriza(final Long alertSystemId) {
+		this.repository.deleteById(alertSystemId);
 	}
 
 	@Override
@@ -79,8 +76,8 @@ public class AlertSystemMonitorizaService implements IAlertSystemMonitorizaServi
 
 	@Override
 	public AlertSystemMonitoriza saveAlertSystemMonitoriza(final AlertSystemDTO alertSystemDto) {
-		AlertSystemMonitoriza alertSystemMonitoriza = null;
-		AlertSystemMonitoriza alertSystemSaved;
+
+		AlertSystemMonitoriza alertSystemMonitoriza;
 
 		if (alertSystemDto.getIdAlertSystemMonitoriza() != null) {
 			alertSystemMonitoriza = this.repository.findByIdAlertSystemMonitoriza(alertSystemDto.getIdAlertSystemMonitoriza());
@@ -91,23 +88,17 @@ public class AlertSystemMonitorizaService implements IAlertSystemMonitorizaServi
 		alertSystemMonitoriza.setName(alertSystemDto.getName());
 		alertSystemMonitoriza.setType(alertSystemDto.getType());
 
-		alertSystemSaved =  this.repository.save(alertSystemMonitoriza);
+		alertSystemMonitoriza =  this.repository.save(alertSystemMonitoriza);
 
 		if(alertSystemDto.getType().equals(TYPE_GRAYLOG)) {
 			final AlertGraylogSystemConfig alertGraylogConfig = new AlertGraylogSystemConfig();
-			alertGraylogConfig.setIdAlertGraylogSystemConfig(alertSystemSaved.getIdAlertSystemMonitoriza());
+			alertGraylogConfig.setIdAlertGraylogSystemConfig(alertSystemMonitoriza.getIdAlertSystemMonitoriza());
 			alertGraylogConfig.setHost(alertSystemDto.getHost());
 			alertGraylogConfig.setPort(alertSystemDto.getPort());
 			this.graylogSystemRepository.save(alertGraylogConfig);
 		}
 
-		return alertSystemSaved;
-	}
-
-	@Override
-	public AlertSystemMonitoriza updateAlertSystemMonitoriza(final UserEditDTO userEditDto) {
-		// TODO Auto-generated method stub
-		return null;
+		return alertSystemMonitoriza;
 	}
 
 

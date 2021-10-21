@@ -25,7 +25,7 @@
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -34,8 +34,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
@@ -83,9 +82,9 @@ public class AlertSystemMonitoriza implements Serializable {
 	private AlertGraylogSystemConfig graylogSystemConfig;
 
 	/**
-	 * Attribute that represents the resumes configurated for this alert system.
+	 * Attribute that represents the alert systems configurated for a resume.
 	 */
-	private List<ResumeMonitoriza> resumesMonitoriza;
+	private Set<AlertResumeSystem> alertResumeSystems;
 
 	/**
 	 * Gets the value of the attribute {@link #idAlertSystemMonitoriza}.
@@ -157,13 +156,10 @@ public class AlertSystemMonitoriza implements Serializable {
 	 * Gets the value of the attribute {@link #graylogSystemConfig}.
 	 * @return the value of the attribute {@link #graylogSystemConfig}.
 	 */
-	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
-	// because Hibernate JPA needs not final access methods.
-	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "SYSTEM_ID", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public AlertGraylogSystemConfig getGraylogSystemConfig() {
-		// CHECKSTYLE:ON
 		return this.graylogSystemConfig;
 	}
 
@@ -171,28 +167,16 @@ public class AlertSystemMonitoriza implements Serializable {
 	 * Sets the value of the attribute {@link #graylogSystemConfig}.
 	 * @param requestFile The value for the attribute {@link #graylogSystemConfig}.
 	 */
-	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
-	// because Hibernate JPA needs not final access methods.
 	public void setGraylogSystemConfig(final AlertGraylogSystemConfig graylogSystemConfig) {
-		// CHECKSTYLE:ON
 		this.graylogSystemConfig = graylogSystemConfig;
 	}
 
-	/**
-	 * Gets the value of the attribute {@link #resumesMonitoriza}.
-	 * @return the value of the attribute {@link #resumesMonitoriza}.
-	 */
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "ALERT_RESUME_SYSTEMS", joinColumns = @JoinColumn(name = "SYSTEM_ID", referencedColumnName = "SYSTEM_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = false))
-	public List<ResumeMonitoriza> getResumesMonitoriza() {
-		return this.resumesMonitoriza;
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "alertSystemMonitoriza")
+	public Set<AlertResumeSystem> getAlertResumeSystem() {
+		return this.alertResumeSystems;
 	}
 
-	/**
-	 * Sets the value of the attribute {@link #resumesMonitoriza}.
-	 * @param emailsDegraded The value for the attribute {@link #resumesMonitoriza}.
-	 */
-	public void setResumesMonitoriza(final List<ResumeMonitoriza> resumesMonitoriza) {
-		this.resumesMonitoriza = resumesMonitoriza;
+	public void setAlertResumeSystem(final Set<AlertResumeSystem> alertResumeSystems) {
+		this.alertResumeSystems = alertResumeSystems;
 	}
 }
