@@ -261,6 +261,76 @@
 	                </script>
 	              </a>
 	            </li>
+	            
+				<!-- Alertas de aplicacion -->
+
+                <li class="nav-item dropdown">
+                  <a id="aAplAlertAdmin" class="dropdown-toggle" href="javascript:void(0);">
+                    <span class="icon-holder">
+                      <i class="c-orange-500 ti-flag"></i>
+                    </span>
+                    <span class="title" th:text="#{menu.admin.aplicationAlerts}"></span>
+                    <span class="arrow"><i class="ti-angle-right"></i></span>
+                  </a> 
+                   <ul class="dropdown-menu">
+                   	   <li>
+                          <a id="aApplControlPanel" class='sidebar-link' href="#">
+                              <span class="title" th:text="#{menu.admin.aplicationAlerts.controlPanel}"></span>
+                              <script th:inline="javascript">
+		                           var actionControlPanel = /*[[@{/applcontrolpanel}]]*/;
+		                           $('#aApplControlPanel').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionControlPanel, 'optionReplacement', 'GET', null, true); return false;});
+                           	  </script>
+                          </a>
+                  	   </li>
+                       <li>
+                          <a id="aApplNotificationSystem" class='sidebar-link' href="#">
+                              <span class="title" th:text="#{menu.admin.aplicationAlerts.notificationSystem}"></span>
+                              <script th:inline="javascript">
+		                           var actionNotificationSystem = /*[[@{/applnotificationsystem}]]*/;
+		                           $('#aApplNotificationSystem').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionNotificationSystem, 'optionReplacement', 'GET', null, true); return false;});
+                           	  </script>
+                          </a>
+                  	   </li>
+                  	   <li>
+							<a id="aAplications" class='sidebar-link' href="#">
+							    <span class="title" th:text="#{menu.admin.aplicationAlerts.aplications}"></span>
+								<script th:inline="javascript">
+		                 			var actionApplications = /*[[@{/applications}]]*/;
+		                 			$('#aAplications').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionApplications, 'optionReplacement', 'GET', null, true); return false;});
+		               			</script>
+	               			</a>
+	               		</li>
+                  	   <li>
+                          <a id="aApplTemplates" class='sidebar-link' href="#">
+                              <span class="title" th:text="#{menu.admin.aplicationAlerts.templates}"></span>
+                              <script th:inline="javascript">
+		                           var actionTemplates = /*[[@{/appltemplates}]]*/;
+		                           $('#aApplTemplates').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionTemplates, 'optionReplacement', 'GET', null, true); return false;});
+                           	  </script>
+                          </a>
+                  	   </li>
+                  	   <li>
+                          <a id="aApplSummaries" class='sidebar-link' href="#">
+                              <span class="title" th:text="#{menu.admin.aplicationAlerts.summaries}"></span>
+                              <script th:inline="javascript">
+		                           var actionSummaries = /*[[@{/applsummaries}]]*/;
+		                           $('#aApplSummaries').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionSummaries, 'optionReplacement', 'GET', null, true); return false;});
+                           	  </script>
+                          </a>
+                  	   </li>
+                  	   <li>
+                          <a id="aApplStats" class='sidebar-link' href="#">
+                              <span class="title" th:text="#{menu.admin.aplicationAlerts.stats}"></span>
+                              <script th:inline="javascript">
+		                           var actionStats = /*[[@{/applstats}]]*/;
+		                           $('#aApplStats').click(function(e){e.preventDefault(); loadIntoAjax('formMenu', actionStats, 'optionReplacement', 'GET', null, true); return false;});
+                           	  </script>
+                          </a>
+                  	   </li>
+                   </ul>
+                </li>
+                <!-- FIN Alertas de aplicacion -->
+	            
 	            <!-- SPIE -->
 
                 <li class="nav-item dropdown">

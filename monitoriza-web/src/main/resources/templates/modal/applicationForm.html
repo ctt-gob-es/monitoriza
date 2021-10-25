@@ -1,0 +1,67 @@
+<form name="altEditor-form" role="form" id="applicationForm" th:object="${applicationform}" th:action="@{/saveapplication}" method="post">
+					
+	<input type='hidden' class='primarykey' id="idApplicationMonitoriza" th:field="*{idApplicationMonitoriza}">
+
+	<div class="form-group">
+		<div class="checkbox checkbox-circle checkbox-info peers ai-c">
+			<input type="checkbox" id="enabled" name="enabled" class="peer" th:checked="${applicationform.enabled}">
+			<label for="enabled" class="peers peer-greed js-sb ai-c"> 
+			<span class="peer peer-greed" th:text="#{applalert.applications.modal.enablenotifications}"></span>
+			</label>
+		</div>
+	</div>
+
+	<div class="form-group">
+			<label for="name" class="col-form-label" th:text="#{applalert.applications.modal.appname}"></label>
+			<input type="text" id="name" name="name" th:field="*{name}" class="form-control" />
+	</div>
+	
+	<div class="form-group">
+		<label for="templateID" class="col-form-label" th:text="#{applalert.applications.modal.template}"></label>
+        <select name="templateID" id="templateID" th:field="*{templateID}" class="form-control">
+        	<option th:each="t: ${templatesList}" th:value="${t.idTemplateMonitoriza}" th:text="${t.name}">
+			</option>
+        </select>
+	</div>	
+	
+	<div class="form-group">
+		<label for="appKey" class="col-form-label" th:text="#{applalert.applications.modal.appkey}"></label>
+		<input type="text" id="appKey" name="appKey" th:field="*{appKey}" class="form-control" />
+	</div>	
+	
+	<div class="form-group">
+		<label for="responsibleName" class="col-form-label" th:text="#{applalert.applications.modal.responsiblename}"></label>
+		<input type="text" id="responsibleName" name="responsibleName" th:field="*{responsibleName}" class="form-control" />
+	</div>	
+	
+	<div class="form-group">
+		<label for="responsibleEmail" class="col-form-label" th:text="#{applalert.applications.modal.responsibleemail}"></label>
+		<input type="email" id="responsibleEmail" name="responsibleEmail" th:field="*{responsibleEmail}" class="form-control" />
+	</div>	
+	
+	<div class="form-group">
+		<label for="responsiblePhone" class="col-form-label"  th:text="#{applalert.applications.modal.responsibletel}"></label>
+		<input type="text" id="responsiblePhone" name="responsiblePhone" th:field="*{responsiblePhone}" class="form-control" />
+	</div>	
+	
+</form>
+
+<script th:inline="javascript">
+
+	$(document).ready(function () {
+		
+		if ($("#enabled").is(":checked")) {
+			$("#enabled").val('true');
+		} else {
+			$("#enabled").attr('value', 'false');
+		}
+
+		$("#enabled").change(function () {
+    		if ($(this).is(":checked")) {
+    			$(this).val('true');
+    		} else {
+    			$(this).attr('value', 'false');
+    		}
+		});
+	});	
+</script>

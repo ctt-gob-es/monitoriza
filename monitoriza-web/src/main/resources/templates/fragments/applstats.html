@@ -1,0 +1,120 @@
+<div class="container-fluid">
+	<h4 class="c-grey-900 mT-10 mB-30" th:text="#{applalert.admin.title}"></h4>
+	<div class="row">
+		<div class="col-md-12">
+				<div class="bgc-white bd bdrs-3 p-20 mB-20">
+				<h4 class="c-grey-900 mB-20" th:text="#{applalert.stats.admin.title}"></h4>
+				<form id="statsForm" name="statsForm" role="form"	th:action="@{/applAlertsStats}" method="post" >
+					 
+					 <input type='hidden' id="minTimeSeconds" name="minTimeSeconds">
+					 <input type='hidden' id="maxTimeSeconds" name="maxTimeSeconds">
+
+					<div class="form-row">
+						<div class="form-group col-md-2">
+							<label for="maxDate" th:text="#{applalert.stats.form.maxdate}"></label> 
+							<span id="maxDate" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
+							<input type="date" class="form-control" id="maxDate" name="maxDate" step="1" required>
+						</div>
+						<div class="form-group col-md-2">
+							<label for="minDate" th:text="#{applalert.stats.form.mindate}"></label> 
+							<span id="minDate" value="" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
+							<input type="date" class="form-control" id="minDate" name="minDate" step="1" required>
+						</div>
+						<div class="form-group col-md-2"><label for="application" th:text="#{applalert.stats.form.application}"></label>
+							 <select id="application" name="application" class="form-control">
+									<option selected="selected" value="" th:text="#{applalert.stats.form.application}"></option>
+							</select>
+						</div>
+						<div class="form-group col-md-2">
+							<label for="alarm" th:text="#{applalert.stats.form.alarm}"></label>
+							<select id="alarm" name="alarm" class="form-control">
+									<option selected="selected" value="" th:text="#{applalert.stats.form.alarm}"></option>
+							</select>
+						</div>
+						<div class="form-group col-md-2">
+							<label for="service" th:text="#{applalert.stats.form.node}"></label>
+							<select id="node" name="node" class="form-control">
+									<option selected="selected" value="" th:text="#{applalert.stats.form.node}"></option>
+							</select>
+						</div>
+						<div class="form-group col-md-2">
+							<label for="criticity" th:text="#{applalert.stats.form.criticity}"></label>
+							<select id="criticity" name="criticity" class="form-control">
+									<option selected="selected" value="" th:text="#{applalert.stats.form.criticity}"></option>
+							</select>
+						</div>
+					</div>
+
+					<button id="consultBtn" type="submit" class="btn btn-primary"
+						th:text="#{applalert.stats.form.btn.consult}"></button>
+					<button id="cleanStatsBtn" class="btn btn-primary"
+						onclick="cleanForm('#statsForm');" th:text="#{applalert.stats.form.btn.clean}"></button>
+				</form>
+			</div>
+			<div class="bgc-white bd bdrs-3 p-20 mB-20">
+				<table id="statsTable" class="table table-striped table-bordered" 
+					cellspacing="0" width="100%">
+					<thead>
+						<tr>
+							<th th:text="#{table.stats.application}"></th>
+							<th th:text="#{table.stats.template}"></th>
+							<th th:text="#{table.stats.alarm}"></th>
+							<th th:text="#{table.stats.node}"></th>
+							<th th:text="#{table.stats.criticity}"></th>
+							<th th:text="#{table.stats.ocurrences}"></th>
+						</tr>
+					</thead>
+				</table>
+			</div>
+		</div>
+	</div>
+</div>
+<div id="modalEditUser"></div>
+
+<script th:inline="javascript">
+$(document).ready(function() {
+	var actionSave = /*[[@{/saveauth}]]*/;
+	var actionUpdate = /*[[@{/updateauth}]]*/;
+	var actionDownload = /*[[@{/downloadCertificate}]]*/;
+	var actionDelete = /*[[@{/deleteauth}]]*/;
+	var actionLoad = /*[[@{/loadauth}]]*/;
+	var getauths = /*[[@{/authdatatable}]]*/;
+	var editTemplate = /*[[@{/editcert}]]*/;
+	var addTemplate = /*[[@{/addauth}]]*/;
+	
+	var tbl = $('#statsTable').DataTable({
+		dom: 'Bfrtip',
+	    select: 'single',
+	    responsive: true,
+	    
+	    altEditor: true,
+	    buttons: [{extend: 'selected',text: 'Copy', name: 'copy'}, {extend: 'selected',text: 'Excel',name: 'excel'}, 
+	    	{extend: 'selected',text: 'PDF',name: 'pdf'}
+			],
+	
+	    "iTotalRecords": "totalElements",
+        "iTotalDisplayRecords": "numberOfElements",
+	    
+		"processing": true,
+	    "serverSide": true,
+	    "language": {
+	        "url": "js/datatables/i18n/spanish.json",
+	        select: {
+	            rows: {
+	                _: "%d filas seleccionadas",
+	                1: "1 fila seleccionada"
+	            }
+	          }
+	        },
+		"columns": [
+	        { "data": "application" },
+	        { "data": "template" },
+	        { "data": "alarm" },
+	        { "data": "node" },
+	        { "data": "criticity" },
+	        { "data": "ocurrences" }
+	        ]
+		});
+});	
+
+</script>

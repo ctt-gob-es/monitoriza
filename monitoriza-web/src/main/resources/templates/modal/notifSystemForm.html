@@ -1,0 +1,60 @@
+<form name="altEditor-form" role="form" id="notifSystemForm" th:object="${notifsystemform}" th:action="@{/savenotifsystem}" method="post">
+					
+	<input type='hidden' class='primarykey' id="idAlertSystemMonitoriza" th:field="*{idAlertSystemMonitoriza}">
+	
+	<div class="form-group">
+			<label for="name" class="col-form-label" th:text="#{table.applalert.sysnot.name}"></label>
+			<input type="text" id="name" name="name" th:field="*{name}" class="form-control"/>
+	</div>
+	
+	<div class="form-group">
+		<label for="type" class="col-form-label" th:text="#{table.applalert.sysnot.type}"></label>
+        <select name="type" id="type" class="form-control" th:field="*{type}">
+        	<option value="" selected disabled></option>
+            <option value="email" th:text="#{applalert.sysnot.modal.email}"></option>
+            <option value="graylog" th:text="#{applalert.sysnot.modal.graylog}"></option>
+        </select>
+	</div>	
+	
+	<h6 id="typeInfoTitle" class="mT-10 mL-10 c-grey-900"></h6>
+	
+	<div class="form-group">
+		<label id="emailInfo" class="col-form-label" th:text="#{applalert.sysnot.modal.info.email}"></label>
+	</div>
+	
+	<div style="display:none" id="graylogData" class="form-group">
+		<label for="host" class="col-form-label" th:text="#{applalert.sysnot.modal.address}"></label>
+        <input type="text" th:field="*{host}" id="host" name="host" class="form-control" />
+        <label for="port" class="col-form-label" th:text="#{applalert.sysnot.modal.port}"></label>
+        <input type="text" th:field="*{port}" id="port" class="form-control" />
+	</div>
+	
+</form>
+
+<script th:inline="javascript">
+
+	$(document).ready(function () {
+
+		checkTypeSelection();
+							
+	    $("#type").change(function () {
+	    	
+	    	$('#typeInfoTitle').show();
+	    	checkTypeSelection();
+	    });	
+
+	    function checkTypeSelection(){
+		    
+	        if ($('select[name=type] option').filter(':selected').val() == "email") {
+	        	$('#emailInfo').show();
+	        	$('#graylogData').hide();
+	        	$("#typeInfoTitle").text("Configuraci\u00F3n de Correo Electr\u00F3nico");
+	        }else {
+	        	$('#emailInfo').hide();
+	        	$('#graylogData').show();
+	        	$("#typeInfoTitle").text("Configuraci\u00F3n de Graylog");
+	        }
+		}
+	 });
+	
+</script>
