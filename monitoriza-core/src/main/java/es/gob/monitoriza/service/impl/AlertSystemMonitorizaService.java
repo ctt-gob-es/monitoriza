@@ -27,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.gob.monitoriza.persistence.configuration.dto.AlertSystemDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogSystemConfig;
@@ -54,12 +55,15 @@ public class AlertSystemMonitorizaService implements IAlertSystemMonitorizaServi
 
 	private static final String TYPE_GRAYLOG = "graylog"; //$NON-NLS-1$
 
+	private static final String TYPE_EMAIL = "email"; //$NON-NLS-1$
+
 	@Override
 	public AlertSystemMonitoriza getAlertSystemMonitorizaById(final Long alertSystemId) {
 		return this.repository.findByIdAlertSystemMonitoriza(alertSystemId);
 	}
 
 	@Override
+	@Transactional
 	public void deleteAlertSystemMonitoriza(final Long alertSystemId) {
 		this.repository.deleteById(alertSystemId);
 	}
@@ -75,12 +79,24 @@ public class AlertSystemMonitorizaService implements IAlertSystemMonitorizaServi
 	}
 
 	@Override
+	@Transactional
 	public AlertSystemMonitoriza saveAlertSystemMonitoriza(final AlertSystemDTO alertSystemDto) {
 
 		AlertSystemMonitoriza alertSystemMonitoriza;
 
 		if (alertSystemDto.getIdAlertSystemMonitoriza() != null) {
+			// Si el id ya existe, quiere decir que se esta editando un registro
 			alertSystemMonitoriza = this.repository.findByIdAlertSystemMonitoriza(alertSystemDto.getIdAlertSystemMonitoriza());
+
+			// Si se esta editando un registro y se ha seleccionado como tipo correo electronico,
+			// se elimina el registro de la tabla ALERT_GRAYLOG_SYSTEM_CONFIG
+			if(TYPE_EMAIL.equals(alertSystemDto.getType())) {
+				final AlertGraylogSystemConfig graylogSysConf = this.graylogSystemRepository.findByIdAlertGraylogSystemConfig(alertSystemDto.getIdAlertSystemMonitoriza());
+				if(graylogSysConf != null) {
+					this.graylogSystemRepository.delete(graylogSysConf);
+					alertSystemMonitoriza.setGraylogSystemConfig(null);
+				}
+			}
 		} else {
 			alertSystemMonitoriza = new AlertSystemMonitoriza();
 		}
@@ -90,7 +106,7 @@ public class AlertSystemMonitorizaService implements IAlertSystemMonitorizaServi
 
 		alertSystemMonitoriza =  this.repository.save(alertSystemMonitoriza);
 
-		if(alertSystemDto.getType().equals(TYPE_GRAYLOG)) {
+		if (alertSystemDto.getType().equals(TYPE_GRAYLOG)) {
 			final AlertGraylogSystemConfig alertGraylogConfig = new AlertGraylogSystemConfig();
 			alertGraylogConfig.setIdAlertGraylogSystemConfig(alertSystemMonitoriza.getIdAlertSystemMonitoriza());
 			alertGraylogConfig.setHost(alertSystemDto.getHost());

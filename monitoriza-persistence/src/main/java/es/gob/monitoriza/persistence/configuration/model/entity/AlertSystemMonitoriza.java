@@ -179,4 +179,5 @@ public class AlertSystemMonitoriza implements Serializable {
 	public void setAlertResumeSystem(final Set<AlertResumeSystem> alertResumeSystems) {
 		this.alertResumeSystems = alertResumeSystems;
 	}
+
 }

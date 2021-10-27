@@ -38,6 +38,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import es.gob.monitoriza.persistence.configuration.dto.AlertSystemDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ApplicationDTO;
+import es.gob.monitoriza.persistence.configuration.dto.MailResumeConfigDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TemplateDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
@@ -166,6 +167,7 @@ public class ApplicationAlertController {
 		final AlertSystemMonitoriza alertSystem = this.alertSystemService.getAlertSystemMonitorizaById(notifSystemId);
 		final AlertSystemDTO alertSystemForm = new AlertSystemDTO();
 
+		alertSystemForm.setIdAlertSystemMonitoriza(alertSystem.getIdAlertSystemMonitoriza());
 		alertSystemForm.setName(alertSystem.getName());
 		alertSystemForm.setType(alertSystem.getType());
 
@@ -316,6 +318,18 @@ public class ApplicationAlertController {
 		model.addAttribute("summaryform", resumeForm); //$NON-NLS-1$
 
 		return "modal/summaryForm.html"; //$NON-NLS-1$
+    }
+
+	@RequestMapping(value = "emailinformation", method = RequestMethod.POST)
+    public String emailInformation(@RequestParam("idAlertSystem") final Long alertSystemId, @RequestParam("emailConfiguration") final String emailConfiguration, final Model model){
+
+		final MailResumeConfigDTO mailResumeConfig = new MailResumeConfigDTO();
+		mailResumeConfig.setIdAlertSystem(alertSystemId);
+		mailResumeConfig.setEmailAddress(emailConfiguration);
+
+		model.addAttribute("emailinfoform", mailResumeConfig); //$NON-NLS-1$
+
+		return "modal/emailInformation.html"; //$NON-NLS-1$
     }
 
 }

@@ -220,24 +220,6 @@ public class ResumeMonitoriza implements Serializable {
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #alertSystemsMonitoriza}.
-	 * @return the value of the attribute {@link #alertSystemsMonitoriza}.
-	 */
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "ALERT_RESUME_SYSTEMS", joinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = true), inverseJoinColumns = @JoinColumn(name = "SYSTEM_ID", referencedColumnName = "SYSTEM_ID", nullable = true))
-	public List<AlertSystemMonitoriza> getAlertSystemsMonitoriza() {
-		return this.alertSystemsMonitoriza;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #alertSystemsMonitoriza}.
-	 * @param emailsDegraded The value for the attribute {@link #alertSystemsMonitoriza}.
-	 */
-	public void setAlertSystemsMonitoriza(final List<AlertSystemMonitoriza> alertSystemsMonitoriza) {
-		this.alertSystemsMonitoriza = alertSystemsMonitoriza;
-	}
-
-	/**
 	 * Gets the value of the attribute {@link #alertsConfigMonitoriza}.
 	 * @return the value of the attribute {@link #alertsConfigMonitoriza}.
 	 */
@@ -264,7 +246,7 @@ public class ResumeMonitoriza implements Serializable {
 		this.resumeTypes = resumeTypes;
 	}
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeMonitoriza")
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "resumeMonitoriza", cascade = CascadeType.ALL)
 	public Set<AlertResumeSystem> getAlertResumeSystem() {
 		return this.alertResumeSystems;
 	}

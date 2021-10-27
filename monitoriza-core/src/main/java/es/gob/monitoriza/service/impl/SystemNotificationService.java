@@ -1,4 +1,4 @@
-/* 
+/*
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,7 +14,7 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
+/**
  * <b>File:</b><p>es.gob.monitoriza.service.impl.SystemNotificationService.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
@@ -48,32 +48,32 @@ import es.gob.monitoriza.persistence.configuration.model.repository.datatable.Sy
 import es.gob.monitoriza.service.ISystemNotificationService;
 
 
-/** 
+/**
  * <p>Class that implements the communication with the operations of the persistence layer for SystemNotification.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 05/03/2019.
  */
 @Service("systemNotificationService")
 public class SystemNotificationService implements ISystemNotificationService {
-	
+
 	/**
 	 * Attribute that represents the injected interface that provides CRUD operations for the persistence.
 	 */
 	@Autowired
 	private SystemNotificationRepository repository;
-	
+
 	/**
 	 * Attribute that represents the injected interface that provides CRUD operations for the persistence.
 	 */
 	@Autowired
 	private CNotificationTypeRepository typeRepository;
-	
+
 	/**
 	 * Attribute that represents the injected interface that provides CRUD operations for the persistence.
 	 */
 	@Autowired
 	private CNotificationOriginRepository originRepository;
-	
+
 	/**
 	 * Attribute that represents the injected interface that provides CRUD operations for the persistence.
 	 */
@@ -92,8 +92,8 @@ public class SystemNotificationService implements ISystemNotificationService {
 	 */
 	@Override
 	public SystemNotification getSystemNotificationById(final Long sysNotificationId) {
-		
-		return repository.findByIdSystemNotification(sysNotificationId);
+
+		return this.repository.findByIdSystemNotification(sysNotificationId);
 	}
 
 	/**
@@ -103,11 +103,11 @@ public class SystemNotificationService implements ISystemNotificationService {
 	@Override
 	@Transactional
 	public void registerSystemNotification(final Long idNotificationType, final Long idNotificationOrigin, final Long idNotificationPriority, final String msg) {
-		
+
 		// Se prepara y registra el aviso de sistema sobre el registro del nodo.
-		SystemNotification aviso = new SystemNotification();
+		final SystemNotification aviso = new SystemNotification();
 		aviso.setCreationDate(LocalDateTime.now());
-		
+
 		if (INotificationPriority.ID_NOTIFICATION_PRIORITY_IMPORTANT.equals(idNotificationPriority)) {
 			// Si la notificación es importante, ésta no caducará.
     		aviso.setExpirationDate(null);
@@ -115,15 +115,15 @@ public class SystemNotificationService implements ISystemNotificationService {
     		// Se establece la fecha de expiración a 7 días tras la fecha de creación.
     		aviso.setExpirationDate(LocalDateTime.now().plusDays(NumberConstants.NUM7));
 		}
-		
+
 		aviso.setNotificationType(getNotificationTypeById(idNotificationType));
 		aviso.setNotificationOrigin(getNotificationOriginById(idNotificationOrigin));
 		aviso.setNotificationPriority(getNotificationPriorityById(idNotificationPriority));
 		aviso.setDescription(msg);
 		aviso.setIsOk(Boolean.FALSE);
-		
-		repository.saveAndFlush(aviso);
-			
+
+		//repository.saveAndFlush(aviso);
+
 	}
 
 	/**
@@ -133,8 +133,8 @@ public class SystemNotificationService implements ISystemNotificationService {
 	@Override
 	@Transactional
 	public void deleteSystemNotification(final SystemNotification systemNotification) {
-		repository.delete(systemNotification);
-		
+		this.repository.delete(systemNotification);
+
 	}
 
 	/**
@@ -143,8 +143,8 @@ public class SystemNotificationService implements ISystemNotificationService {
 	 */
 	@Override
 	public CNotificationType getNotificationTypeById(final Long idNotificationType) {
-		
-		return typeRepository.findByIdNotificationType(idNotificationType);
+
+		return this.typeRepository.findByIdNotificationType(idNotificationType);
 	}
 
 	/**
@@ -152,9 +152,9 @@ public class SystemNotificationService implements ISystemNotificationService {
 	 * @see es.gob.monitoriza.service.ISystemNotificationService#findAllSystemNotifications()
 	 */
 	@Override
-	public DataTablesOutput<SystemNotification> findAllSystemNotifications(DataTablesInput input) {
-		
-		return dtRepository.findAll(input);
+	public DataTablesOutput<SystemNotification> findAllSystemNotifications(final DataTablesInput input) {
+
+		return this.dtRepository.findAll(input);
 	}
 
 	/**
@@ -162,9 +162,9 @@ public class SystemNotificationService implements ISystemNotificationService {
 	 * @see es.gob.monitoriza.service.ISystemNotificationService#getNotificationOriginById(java.lang.Long)
 	 */
 	@Override
-	public CNotificationOrigin getNotificationOriginById(Long idNotificationOrigin) {
-		
-		return originRepository.findByIdNotificationOrigin(idNotificationOrigin);
+	public CNotificationOrigin getNotificationOriginById(final Long idNotificationOrigin) {
+
+		return this.originRepository.findByIdNotificationOrigin(idNotificationOrigin);
 	}
 
 	/**
@@ -172,9 +172,9 @@ public class SystemNotificationService implements ISystemNotificationService {
 	 * @see es.gob.monitoriza.service.ISystemNotificationService#getNotificationPriorityById(java.lang.Long)
 	 */
 	@Override
-	public CNotificationPriority getNotificationPriorityById(Long idNotificationPriority) {
-		
-		return priorityRepository.findByIdNotificationPriority(idNotificationPriority);
+	public CNotificationPriority getNotificationPriorityById(final Long idNotificationPriority) {
+
+		return this.priorityRepository.findByIdNotificationPriority(idNotificationPriority);
 	}
 
 	/**
@@ -182,9 +182,9 @@ public class SystemNotificationService implements ISystemNotificationService {
 	 * @see es.gob.monitoriza.service.ISystemNotificationService#getSystemNotificationByOrigin(java.lang.Long)
 	 */
 	@Override
-	public SystemNotification getSystemNotificationByOrigin(Long originNotificationId) {
-		
-		return repository.findByNotificationOriginIdNotificationOrigin(originNotificationId);
+	public SystemNotification getSystemNotificationByOrigin(final Long originNotificationId) {
+
+		return this.repository.findByNotificationOriginIdNotificationOrigin(originNotificationId);
 	}
 
 	/**
@@ -194,17 +194,17 @@ public class SystemNotificationService implements ISystemNotificationService {
 	@Override
 	@Transactional
 	public void clearExpiredNotifications() {
-		
-		Iterable<SystemNotification> all = repository.findAll();
-		List<SystemNotification> expired = new ArrayList<>();
-		
-		for (SystemNotification sysNot : all) {
+
+		final Iterable<SystemNotification> all = this.repository.findAll();
+		final List<SystemNotification> expired = new ArrayList<>();
+
+		for (final SystemNotification sysNot : all) {
 			if (sysNot.getExpirationDate() != null && sysNot.getExpirationDate().isBefore(LocalDateTime.now()) ) {
 				expired.add(sysNot);
 			}
 		}
-		
-		repository.deleteAll(expired);
+
+		this.repository.deleteAll(expired);
 	}
 
 	/**
@@ -213,8 +213,8 @@ public class SystemNotificationService implements ISystemNotificationService {
 	 */
 	@Override
 	public Boolean hasPendingNotifications() {
-		
-		return !repository.findByIsOk(Boolean.FALSE).isEmpty();
+
+		return !this.repository.findByIsOk(Boolean.FALSE).isEmpty();
 	}
 
 	/**
@@ -223,10 +223,10 @@ public class SystemNotificationService implements ISystemNotificationService {
 	 */
 	@Override
 	@Transactional
-	public void checkNotification(SystemNotification sysNot) {
-		
+	public void checkNotification(final SystemNotification sysNot) {
+
 		sysNot.setIsOk(Boolean.TRUE);
-		repository.saveAndFlush(sysNot);
+		this.repository.saveAndFlush(sysNot);
 	}
 
 }

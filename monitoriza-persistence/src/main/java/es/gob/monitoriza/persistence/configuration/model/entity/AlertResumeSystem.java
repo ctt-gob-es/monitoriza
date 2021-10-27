@@ -25,6 +25,7 @@
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -33,6 +34,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -72,6 +74,8 @@ public class AlertResumeSystem implements Serializable {
 	 * Attribute that represents the resume.
 	 */
 	private ResumeMonitoriza resumeMonitoriza;
+
+	private List<AlertMailResumeConfig> alertMailsResumeConfig;
 
 	/**
 	 * Gets the value of the attribute {@link #idResSystem}.
@@ -141,4 +145,12 @@ public class AlertResumeSystem implements Serializable {
 		this.alertSystemMonitoriza = alertSystemMonitoriza;
 	}
 
+	@OneToMany(mappedBy = "alertResumeSystem" ,orphanRemoval = true)
+	public List<AlertMailResumeConfig> getAlertMailsResumeConfig() {
+		return this.alertMailsResumeConfig;
+	}
+
+	public void setAlertMailsResumeConfig(final List<AlertMailResumeConfig> alertMailsResumeConfig) {
+		this.alertMailsResumeConfig = alertMailsResumeConfig;
+	}
 }

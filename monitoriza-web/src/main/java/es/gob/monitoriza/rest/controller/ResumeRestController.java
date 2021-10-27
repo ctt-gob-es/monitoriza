@@ -53,7 +53,9 @@ import com.fasterxml.jackson.annotation.JsonView;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
+import es.gob.monitoriza.persistence.configuration.dto.AlertSystemDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailResumeConfig;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeSystem;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
@@ -61,6 +63,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitor
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
+import es.gob.monitoriza.service.IAlertMailResumeConfigService;
 import es.gob.monitoriza.service.IAlertResumeSystemService;
 import es.gob.monitoriza.service.IAlertResumeTypeService;
 import es.gob.monitoriza.service.IAlertSystemMonitorizaService;
@@ -92,6 +95,9 @@ public class ResumeRestController {
 
 	@Autowired
 	private IAlertResumeSystemService alertResumeSystemService;
+
+	@Autowired
+	private IAlertMailResumeConfigService alertMailResumeConfigService;
 
 	/**
 	 * Attribute that represents the span text.
@@ -142,12 +148,15 @@ public class ResumeRestController {
 				this.alertResumeSystemService.deleteAlertResumeSystemByResumeMonitoriza(resume);
 
 				// Guardamos los datos en la tabla con las nuevas relaciones entre sistemas de notificacion y resumen
-				for (final Long alertSystemId : resumeForm.getNotifSystemsIdArray()) {
-					final AlertSystemMonitoriza alertSystem = this.alertSystemService.getAlertSystemMonitorizaById(alertSystemId);
-					final AlertResumeSystem alertResumeSystem = new AlertResumeSystem();
+				for (int j = 0 ; j < resumeForm.getNotifSystemsIdArray().size() ; j++) {
+					final AlertSystemMonitoriza alertSystem = this.alertSystemService.getAlertSystemMonitorizaById(resumeForm.getNotifSystemsIdArray().get(j));
+					AlertResumeSystem alertResumeSystem = new AlertResumeSystem();
 					alertResumeSystem.setResumeMonitoriza(resume);
 					alertResumeSystem.setAlertSystemMonitoriza(alertSystem);
-					this.alertResumeSystemService.saveAlertResumeSystem(alertResumeSystem);
+					alertResumeSystem = this.alertResumeSystemService.saveAlertResumeSystem(alertResumeSystem);
+					if (resumeForm.getEmailConfigurationArray() != null && !resumeForm.getEmailConfigurationArray().isEmpty()) {
+						saveMailResumeConfig(resumeForm.getEmailConfigurationArray().get(j) , alertResumeSystem);
+					}
 				}
 
 				// Si ya existian relaciones de resumen - aplicacion / tipo de alerta
@@ -205,12 +214,29 @@ public class ResumeRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/resumealertssystemsdt", method = RequestMethod.POST)
-	public DataTablesOutput<AlertSystemMonitoriza> resumeAlertSystems(@NotEmpty final DataTablesInput input, @RequestParam("resumeId") final Long resumeId) {
+	public DataTablesOutput<AlertSystemDTO> resumeAlertSystems(@NotEmpty final DataTablesInput input, @RequestParam("resumeId") final Long resumeId) {
 		final ResumeMonitoriza resume = this.resumeService.getResumeMonitorizaById(resumeId);
-		final DataTablesOutput<AlertSystemMonitoriza> result = new DataTablesOutput<AlertSystemMonitoriza>();
-		if (resume != null && !resume.getAlertSystemsMonitoriza().isEmpty()) {
-			result.setData(resume.getAlertSystemsMonitoriza());
+		final DataTablesOutput<AlertSystemDTO> result = new DataTablesOutput<AlertSystemDTO>();
+		final List<AlertSystemDTO> alertSystems = new ArrayList<AlertSystemDTO>();
+
+		if (resume != null && resume.getAlertResumeSystem() != null) {
+
+			for (final AlertResumeSystem alertSys : resume.getAlertResumeSystem()) {
+				final AlertSystemDTO sysDTO = new AlertSystemDTO();
+				sysDTO.setIdAlertSystemMonitoriza(alertSys.getAlertSystemMonitoriza().getIdAlertSystemMonitoriza());
+				sysDTO.setName(alertSys.getAlertSystemMonitoriza().getName());
+				String resumeMailAddresses = ""; //$NON-NLS-1$
+				if (alertSys.getAlertMailsResumeConfig() != null) {
+
+					for(final AlertMailResumeConfig mailResConf : alertSys.getAlertMailsResumeConfig()) {
+						resumeMailAddresses += mailResConf.getMail() + "\n"; //$NON-NLS-1$
+					}
+				}
+				sysDTO.setResumeEmailAddresses(resumeMailAddresses);
+				alertSystems.add(sysDTO);
+			}
 		}
+		result.setData(alertSystems);
 		return result;
 	}
 
@@ -247,11 +273,22 @@ public class ResumeRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deleteresume", method = RequestMethod.POST)
 	@Transactional
-	public String deleteResumeRelations(@RequestParam("id") final Long resumeId, @RequestParam("index") final String index) {
+	public String deleteResume(@RequestParam("id") final Long resumeId, @RequestParam("index") final String index) {
 
 		final ResumeMonitoriza resume = this.resumeService.getResumeMonitorizaById(resumeId);
 
-		// Si ya existian relaciones de resumen - aplicacion / tipo de alerta las eliminamos
+		// Si ya existian relaciones de resumen - configuracion de email se eliminan
+		if (resume.getAlertResumeSystem() != null && !resume.getAlertResumeSystem().isEmpty()) {
+			//Se itera con las relaciones con la tabla ALERT_RESUME_SYSTEMS
+			for (final AlertResumeSystem alertResSys : resume.getAlertResumeSystem()) {
+				//Se itera con las relaciones de la tabla ALERT_MAIL_RESUME_CONFIG para eliminarlas si existieran
+				for(final AlertMailResumeConfig alertMailRes : alertResSys.getAlertMailsResumeConfig()) {
+					this.alertMailResumeConfigService.deleteAlertMailResumeConfig(alertMailRes);
+				}
+			}
+		}
+
+		// Si ya existian relaciones de resumen - aplicacion / tipo de alerta se eliminan
 		if (resume.getResumeTypes() != null && !resume.getResumeTypes().isEmpty()) {
 			this.alertResumeTypeService.deleteAlertResumeTypeByResumeMonitoriza(resume);
 		}
@@ -259,5 +296,16 @@ public class ResumeRestController {
 		this.resumeService.deleteResumeMonitoriza(resumeId);
 
 		return index;
+	}
+
+	private void saveMailResumeConfig(final List<String> emailConfigurationArray, final AlertResumeSystem alertResumeSystem) {
+		for (int i = 0; i < emailConfigurationArray.size() ; i++) {
+			if (!emailConfigurationArray.get(i).isEmpty()) {
+					final AlertMailResumeConfig mailResumeConfig = new AlertMailResumeConfig();
+					mailResumeConfig.setResSysConfigId(alertResumeSystem.getIdResSystem());
+					mailResumeConfig.setMail(emailConfigurationArray.get(i));
+					this.alertMailResumeConfigService.saveAlertMailResumeConfig(mailResumeConfig);
+			}
+		}
 	}
 }

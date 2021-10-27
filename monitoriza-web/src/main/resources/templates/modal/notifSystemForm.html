@@ -1,6 +1,6 @@
 <form name="altEditor-form" role="form" id="notifSystemForm" th:object="${notifsystemform}" th:action="@{/savenotifsystem}" method="post">
 					
-	<input type='hidden' class='primarykey' id="idAlertSystemMonitoriza" th:field="*{idAlertSystemMonitoriza}">
+	<input type='hidden' class='primarykey' id="idAlertSystemMonitoriza" name="idAlertSystemMonitoriza" th:field="*{idAlertSystemMonitoriza}">
 	
 	<div class="form-group">
 			<label for="name" class="col-form-label" th:text="#{table.applalert.sysnot.name}"></label>

@@ -85,6 +85,11 @@ public class ResumeDTO {
 	private List<Long> notifSystemsIdArray;
 
 	/**
+	 * Attribute that represents the emails configurated for the alert systems
+	 */
+	private List<List<String>> emailConfigurationArray;
+
+	/**
 	 * Attribute that represents the alert systems for a resume
 	 */
 	List<AlertSystemMonitoriza> alertSystemsList;
@@ -200,6 +205,14 @@ public class ResumeDTO {
 
 	public void setNotifSystemsIdArray(final List<Long> notifSystemsIdArray) {
 		this.notifSystemsIdArray = notifSystemsIdArray;
+	}
+
+	public List<List<String>> getEmailConfigurationArray() {
+		return this.emailConfigurationArray;
+	}
+
+	public void setEmailConfigurationArray(final List<List<String>> emailConfigurationArray) {
+		this.emailConfigurationArray = emailConfigurationArray;
 	}
 
 	public List<ApplicationMonitoriza> getApplicationsListSaved() {
