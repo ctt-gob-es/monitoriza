@@ -26,45 +26,45 @@ package es.gob.monitoriza.service;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
-import es.gob.monitoriza.persistence.configuration.dto.ApplicationDTO;
-import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
+import es.gob.monitoriza.persistence.configuration.dto.AlertConfigDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
-public interface IApplicationMonitorizaService {
+public interface IAlertConfigMonitorizaService {
 
 	/**
-	 * Method that obtains a app by its identifier.
-	 * @param templateId The app identifier.
-	 * @return {@link ApplicationMonitoriza}
+	 * Method that obtains a alert config by its identifier.
+	 * @param alertConfigId The alert config identifier.
+	 * @return {@link AlertConfigMonitoriza}
 	 */
-	ApplicationMonitoriza getApplicationMonitorizaById(Long templateId);
+	AlertConfigMonitoriza getAlertConfigMonitorizaById(Long alertConfigId);
 
 	/**
-	 * Method that deletes a user in the persistence.
-	 * @param templateId {@link Integer} that represents the app identifier to delete.
+	 * Method that deletes a alert config in the persistence.
+	 * @param templateId {@link Integer} that represents the alert config identifier to delete.
 	 */
-	void deleteApplicationMonitoriza(Long appId);
+	void deleteAlertConfigMonitoriza(Long alertConfigId);
 
 	/**
-	 * Method that gets all the templates from the persistence.
-	 * @return a {@link Iterable<ApplicationMonitoriza>} with the information of all applications.
+	 * Method that gets all the alert configurations from the persistence.
+	 * @return a {@link Iterable<AlertConfigMonitoriza>} with the information of all alert configurations.
 	 */
-	Iterable<ApplicationMonitoriza> getAllApplicationMonitoriza();
+	Iterable<AlertConfigMonitoriza> getAllAlertConfigMonitoriza();
 
 	/**
-	 * Method that gets all the apps from the persistence for populating a datatable.
+	 * Method that gets all the alert configurations from the persistence for populating a datatable.
 	 * @param input DataTable input configuration object
 	 * @return DataTablesOutput object for drawing the datatable.
 	 */
-	DataTablesOutput<ApplicationMonitoriza> findAll(DataTablesInput input);
+	DataTablesOutput<AlertConfigMonitoriza> findAll(DataTablesInput input);
 
 	/**
-	 * Method that stores a app in the persistence.
-	 * @param templateDto a {@link ApplicationDTO} with the information of the template.
-	 * @return {@link ApplicationMonitoriza} The template.
+	 * Method that stores a alert config in the persistence.
+	 * @param alertConfigDTO a {@link AlertConfigDTO} with the information of the alert configuration.
+	 * @return {@link AlertConfigMonitoriza} The alert configuration.
 	 */
-	ApplicationMonitoriza saveApplicationMonitoriza(ApplicationDTO appDto);
+	AlertConfigMonitoriza saveAlertConfigMonitoriza(AlertConfigDTO alertConfigDTO);
 }

@@ -1,0 +1,183 @@
+<div class="modal" tabindex="-1" role="dialog" id="configureGrayLogModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title"
+					th:text="#{applalert.alertconfig.modal.graylogconf.title}"></h4>
+				<button type="button" class="close" data-dismiss="modal"
+					aria-label="Cerrar" onclick="closeModal()">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+		<form name="altEditor-form" role="form" id="grayLogInfoForm" th:object="${grayloginfoform}" action="#" method="post">
+			<input type='hidden' class='primarykey' id="idAlertSystem" th:field="*{idAlertSystem}">
+			<input type='hidden' id="editingIndex" name="editingIndex">
+			
+			<div class="modal-body">
+					<div class="form-row">
+						<div class="form-group col-md-3">
+							<label for="confKey" th:text="#{applalert.alertconfig.modal.key}"></label>
+							<input type="text" class="form-control" id="confKey" name="confKey">
+						</div>
+						<div class="form-group col-md-4">
+							<label for="confValue" th:text="#{applalert.alertconfig.modal.value}"></label>
+							<input type="text" class="form-control" id="confValue" name="confValue">
+						</div>
+						<div class="form-group col-md-2 d-flex align-items-end">
+							<button type="button" id="saveKeyValueBtn" name="saveKeyValueBtn" class="btn btn-primary form-control" 
+							th:text="#{button.save}"></button>
+						</div>
+						<div class="form-group col-md-3 d-flex align-items-end">
+							<button type="button" id="cleanGrayLogInfoFormBtn" name="cleanGrayLogInfoFormBtn"
+								class="btn btn-primary form-control" th:text="#{button.cleanForm}" onclick="cleanForm();"></button>
+						</div>
+					</div>
+					<table id="grayLogConfigTable" name="grayLogConfigTable"
+						class="table table-striped table-bordered" cellspacing="0"
+						width="100%">
+						<thead>
+							<tr>
+								<!-- Columna oculta para el identificador de la configuracion para el sistema Graylog -->
+								<th></th>
+								<th th:text="#{applalert.alertconfig.modal.key}"></th>
+								<th th:text="#{applalert.alertconfig.modal.value}"></th>
+							</tr>
+						</thead>
+					</table>
+					<div class="modal-footer">
+					<button type="button" class="btn btn-default" th:text="#{button.close}" onclick="closeModal()"></button>
+					<button type="button" id="saveGrayLogConfigButton" class="btn btn-primary" 
+					th:text="#{applalert.summaries.modal.btn.config}"></button>
+				</div>
+			</div>
+		</form>
+		</div>
+	</div>
+</div>
+
+<script th:inline="javascript">
+
+	$(document).ready(function () {
+
+		var keysArray = /*[[*{keysList}]]*/;
+		var valuesArray = /*[[*{valuesList}]]*/;
+		var idAlertSystem = /*[[*{idAlertSystem}]]*/;
+
+		var grayLogConfigTbl = $('#grayLogConfigTable').DataTable({
+			dom: 'Bfrtip',
+		    responsive: true,
+			select: 'single',
+			searching: false,
+			altEditor: true,
+			"bLengthChange" : false,
+		    buttons: [
+				{extend: 'selected',text: 'Editar',name: 'editKeyValue',
+					action: function ( e, dt, node, config ) {
+
+						for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({
+							id: o.context[0].aoColumns[e].mData           
+						});
+								  
+						var d = dt.rows({
+							selected: !0
+						});
+
+						var editingIndex = grayLogConfigTbl.row(d).index();
+						console.log(editingIndex);	
+						var key = d.data()[0].key;
+						var value = d.data()[0].value;
+
+						$('#editingIndex').val(editingIndex);
+						$('#confKey').val(key);
+						$('#confValue').val(value);
+					}
+				}, 
+				{extend: 'selected',text: 'Eliminar',name: 'deleteKeyValue',
+					action: function ( e, dt, node, config ) {
+						var grayLogConfSelected = grayLogConfigTbl.rows({ selected: true });
+						grayLogConfigTbl.row(grayLogConfSelected).remove().draw();
+					}
+				}
+			],
+		    "language": {
+		        "url": "js/datatables/i18n/spanish.json",
+		        select: {
+		            rows: {
+		                _: "%d filas seleccionadas",
+		                1: "1 fila seleccionada"
+		            }
+		          }
+		    },
+			"columns": [
+				{ "data" : "notSysConfigId" , "visible": false},
+		        { "data" : "key" },
+		        { "data" : "value" }
+		        ]
+			});
+
+        $('#saveKeyValueBtn').on( 'click', function () {
+            console.log('editing index = '+$('#editingIndex').val());
+            if ($('#editingIndex').val() != ""){
+            	grayLogConfigTbl.row($('#editingIndex').val()).remove().draw();
+            	$('#editingIndex').val("");
+            }
+        	grayLogConfigTbl.row.add({"notSysConfigId" : idAlertSystem, 
+            						"key" : $("#confKey").val() ,
+            						"value" : $("#confValue").val()}).draw(false);
+        	cleanForm();
+        });
+
+        // Cargamos la informacion de claves y valores en su tabla correspondiente
+        if (keysArray != null){
+			for (var i = 0 ; i < keysArray.length ; i++) {
+				grayLogConfigTbl.row.add({"notSysConfigId" : idAlertSystem, 
+											"key" : keysArray[i] ,
+											"value" : valuesArray[i]}).draw(false);
+			}
+        }
+        
+
+        $('#saveGrayLogConfigButton').on( 'click', function () {
+
+        	keysArray = [];
+        	valuesArray = [];
+
+            var keyValues = $("#grayLogConfigTable").dataTable().fnGetNodes();
+            
+            for (var i = 0 ; i < keyValues.length ; i++) {
+            	var keyValueData = $('#grayLogConfigTable').DataTable().row($(keyValues[i])).data();
+            	keysArray.push(keyValueData.key);
+            	valuesArray.push(keyValueData.value);
+            }
+            
+            var alertSystems = $("#alertSystemTable").dataTable().fnGetNodes();
+            
+            for (var i = 0 ; i < alertSystems.length ; i++) {
+            	var alertSystemData = $('#alertSystemTable').DataTable().row($(alertSystems[i])).data();
+            	console.log($('#idAlertSystem').val());
+				if (alertSystemData.alertSystemMonitoriza.idAlertSystemMonitoriza == $('#idAlertSystem').val()) {
+					$('#alertSystemTable').DataTable().row($(alertSystems[i])).data().keysList = keysArray;
+					$('#alertSystemTable').DataTable().row($(alertSystems[i])).data().valuesList = valuesArray;
+				}
+            }
+
+            closeModal();
+        });
+    });
+    
+   function cleanForm(){
+		$('#confKey').val("");
+		$('#confValue').val("");
+	}
+
+	function closeModal(){
+		$('#configureGrayLogModal').hide();
+		$('#alertConfigModal').modal().on('shown', function(){
+			$('body').css('overflow', 'auto');
+	 	});
+		$('.modal-backdrop').each(function(i, obj) {
+			$(obj).remove();
+		    return false;
+		});
+	}
+</script>

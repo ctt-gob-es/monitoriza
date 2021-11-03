@@ -95,7 +95,7 @@ public class AlertResumeType implements Serializable {
 	/**
 	 * Sets the value of the attribute {@link #idResType}.
 	 *
-	 * @param templateId
+	 * @param idResType
 	 *            The value for the attribute {@link #idResType}.
 	 */
 	public void setIdResType(final Long idResType) {

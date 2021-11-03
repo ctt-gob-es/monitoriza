@@ -25,60 +25,24 @@ package es.gob.monitoriza.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
-import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.repository.AlertResumeTypeRepository;
-import es.gob.monitoriza.service.IAlertResumeTypeService;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertSeverityMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.repository.AlertSeverityMonitorizaRepository;
+import es.gob.monitoriza.service.IAlertSeverityMonitorizaService;
 
 /**
  * <p>Class that implements the communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
-@Service("alertResumeTypeService")
-public class AlertResumeTypeService implements IAlertResumeTypeService {
+@Service("alertSeverityService")
+public class AlertSeverityMonitorizaService implements IAlertSeverityMonitorizaService {
 
 	@Autowired
-	private AlertResumeTypeRepository repository;
+	private AlertSeverityMonitorizaRepository repository;
 
 	@Override
-	public AlertResumeType getAlertResumeTypeId(final Long resTypeId) {
-		return this.repository.findByIdResType(resTypeId);
-	}
-
-	@Override
-	@Transactional
-	public void deleteAlertResumeType(final Long resTypeId) {
-		this.repository.deleteById(resTypeId);
-	}
-
-	@Override
-	@Transactional
-	public void deleteAlertResumeTypeByResumeMonitoriza(final ResumeMonitoriza resumeMonitoriza) {
-		this.repository.deleteByResumeMonitoriza(resumeMonitoriza);
-	}
-
-	@Override
-	public Iterable<AlertResumeType> getAllAlertResumeTypes() {
+	public Iterable<AlertSeverityMonitoriza> getAllAlertSeverity() {
 		return this.repository.findAll();
 	}
-
-	@Override
-	public AlertResumeType saveAlertResumeType(final AlertResumeType alertResumeType) {
-
-		final AlertResumeType newResumeType = new AlertResumeType();
-
-		if (alertResumeType.getIdResType() != null) {
-			newResumeType.setIdResType(alertResumeType.getIdResType());
-		}
-
-		newResumeType.setApplicationMonitoriza(alertResumeType.getApplicationMonitoriza());
-		newResumeType.setAlertTypeMonitoriza(alertResumeType.getAlertTypeMonitoriza());
-		newResumeType.setResumeMonitoriza(alertResumeType.getResumeMonitoriza());
-
-		return this.repository.save(newResumeType);
-	}
-
 
 }

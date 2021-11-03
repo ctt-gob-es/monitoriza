@@ -29,7 +29,6 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.persistence.configuration.dto.ApplicationDTO;
-import es.gob.monitoriza.persistence.configuration.dto.UserEditDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.ApplicationMonitorizaRepository;
@@ -99,12 +98,6 @@ public class ApplicationMonitorizaService implements IApplicationMonitorizaServi
 		appMonitoriza.setTemplateMonitoriza(templateMonitoriza);
 
 		return this.appMonitorizaRepository.save(appMonitoriza);
-	}
-
-	@Override
-	public TemplateMonitoriza updateUserMonitoriza(final UserEditDTO userEditDto) {
-		// TODO Auto-generated method stub
-		return null;
 	}
 
 

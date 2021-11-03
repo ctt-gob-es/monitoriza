@@ -23,46 +23,44 @@
  */
 package es.gob.monitoriza.service;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
-import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
-public interface IAlertResumeTypeService {
+public interface IAlertConfigSystemService {
 
 	/**
-	 * Method that obtains a alertResume by its identifier.
-	 * @param resTypeId The resume type identifier.
-	 * @return {@link AlertResumeType}
+	 * Method that obtains a AlertConfigSystem by its identifier.
+	 * @param alertConfigSystemId The resume type identifier.
+	 * @return {@link AlertConfigSystem}
 	 */
-	AlertResumeType getAlertResumeTypeId(Long resTypeId);
+	AlertConfigSystem getAlertConfigSystemId(Long alertConfigSystemId);
 
 	/**
-	 * Method that deletes a resume type in the persistence.
-	 * @param resTypeId {@link Integer} that represents the resume type identifier to delete.
+	 * Method that deletes a relation in the persistence.
+	 * @param idConfSystem {@link Integer} that represents the relation identifier to delete.
 	 */
-	void deleteAlertResumeType(Long resTypeId);
+	void deleteAlertConfigSystem(Long idConfSystem);
 
 	/**
-	 * Method that deletes a resume type in the persistence.
-	 * @param resumeMonitoriza {@link ResumeMonitoriza} that represents the resume to delete.
+	 * Method that gets all the relations from the persistence.
+	 * @return a {@link Iterable<AlertConfigSystem>} with the information of all relations.
 	 */
-	void deleteAlertResumeTypeByResumeMonitoriza(ResumeMonitoriza resumeMonitoriza);
+	Iterable<AlertConfigSystem> getAllAlertConfigSystems();
 
 	/**
-	 * Method that gets all the resume types from the persistence.
-	 * @return a {@link Iterable<AlertResumeTypes>} with the information of all resume types.
+	 * Method that stores a relation in the persistence.
+	 * @param AlertConfigSystem a {@link AlertConfigSystem} with the information of the relation.
+	 * @return {@link AlertConfigSystem} The relation.
 	 */
-	Iterable<AlertResumeType> getAllAlertResumeTypes();
+	AlertConfigSystem saveAlertConfigSystem(AlertConfigSystem alertConfigSystem);
 
 	/**
-	 * Method that stores a resume type in the persistence.
-	 * @param alertResumeType a {@link AlertResumeType} with the information of the resume type.
-	 * @return {@link AlertResumeType} The alert resume.
+	 * Method that delete all alerts systems of an resume.
+	 * @param alertConfigMonitoriza The {@link AlertConfigSystem} to delete
 	 */
-	AlertResumeType saveAlertResumeType(AlertResumeType alertResumeType);
-
-
+	void deleteAlertConfigSystemByAlertConfigMonitoriza(AlertConfigMonitoriza alertConfigMonitoriza);
 }

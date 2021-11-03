@@ -51,8 +51,17 @@
             
             for (var i = 0 ; i < alertSystems.length ; i++) {
             	var alertSystemData = $('#alertSystemTable').DataTable().row($(alertSystems[i])).data();
-            	if (alertSystemData.idAlertSystemMonitoriza == $("#idAlertSystem").val()) {
-            		$('#alertSystemTable').DataTable().row($(alertSystems[i])).data().resumeEmailAddresses = $("#emailAddress").val();
+            	// Si los datos vienen de la parte de configuracion de alertas vendran definidos de una forma, y si
+            	// vienen desde la configuracion de resumenes vendran de otra, por lo que se comprueba la forma en la que vienen
+            	// para anadirlos a la tabla de sistemas de una forma u otra
+            	if(alertSystemData.idAlertSystemMonitoriza === undefined){
+	            	if (alertSystemData.alertSystemMonitoriza.idAlertSystemMonitoriza == $("#idAlertSystem").val()) {
+	            		$('#alertSystemTable').DataTable().row($(alertSystems[i])).data().resumeEmailAddresses = $("#emailAddress").val();
+	                }
+            	} else {
+	            	if (alertSystemData.idAlertSystemMonitoriza == $("#idAlertSystem").val()) {
+	            		$('#alertSystemTable').DataTable().row($(alertSystems[i])).data().resumeEmailAddresses = $("#emailAddress").val();
+	                }
                 }
             }
 

@@ -296,14 +296,14 @@ CREATE TABLE "ALERT_CONFIG" (
 	"ALERT_CONFIG_ID" NUMERIC(19) NOT NULL,
 	"TYPE_ID" NUMERIC(19) NOT NULL,
 	"APP_ID" NUMERIC(19) NOT NULL,
-	"SEVERITY" VARCHAR(8) NOT NULL,
+	"ID_SEVERITY_TYPE" NUMERIC(19) NOT NULL,
 	"ENABLE" CHAR(1) NOT NULL,
 	"ALLOW_BLOCK" CHAR(1) NOT NULL,
-	"BLOCK_CONDITION" NUMERIC(19) NOT NULL,
-	"BLOCK_INTERVAL" NUMERIC(19) NOT NULL,
-	"BLOCK_PERIOD" NUMERIC(19) NOT NULL,
-	"BLOCK_TIME" DATE NOT NULL,
-	"LAST_TIME" DATE NOT NULL
+	"BLOCK_CONDITION" NUMERIC(19),
+	"BLOCK_INTERVAL" NUMERIC(19),
+	"BLOCK_PERIOD" NUMERIC(19),
+	"BLOCK_TIME" DATE,
+	"LAST_TIME" DATE
 	);
 	
 ALTER TABLE "ALERT_CONFIG" ADD CONSTRAINT "ALERT_CONFIG_ID_CONS" PRIMARY KEY ("ALERT_CONFIG_ID");
@@ -313,7 +313,7 @@ COMMENT ON TABLE "ALERT_CONFIG" IS 'Datos sobre la configuraciÃ³n asociada a u
 COMMENT ON COLUMN "ALERT_CONFIG"."ALERT_CONFIG_ID" IS 'Identificador de la configuraciÃ³n.';
 COMMENT ON COLUMN "ALERT_CONFIG"."TYPE_ID" IS 'Tipo de alerta a la que corresponde la configuraciÃ³n.';
 COMMENT ON COLUMN "ALERT_CONFIG"."APP_ID" IS 'Identificador de la aplicaciÃ³n en la que se ha configurado esta alerta.';
-COMMENT ON COLUMN "ALERT_CONFIG"."SEVERITY" IS 'Nombre del nivel de criticidad asociado a la alerta.';
+COMMENT ON COLUMN "ALERT_CONFIG"."ID_SEVERITY_TYPE" IS 'Nombre del nivel de criticidad asociado a la alerta.';
 COMMENT ON COLUMN "ALERT_CONFIG"."ENABLE" IS 'Indica si se encuentra activada la alerta o no.';
 COMMENT ON COLUMN "ALERT_CONFIG"."ALLOW_BLOCK" IS 'Indica si la alerta debe bloquearse cuando se cumplan los requisitos de bloqueo.';
 COMMENT ON COLUMN "ALERT_CONFIG"."BLOCK_CONDITION" IS 'NÃºmero de alertas de este tipo que deben recibirse para que se bloquee esta alerta.';
@@ -321,6 +321,18 @@ COMMENT ON COLUMN "ALERT_CONFIG"."BLOCK_INTERVAL" IS 'Intervalo de tiempo mÃ¡x
 COMMENT ON COLUMN "ALERT_CONFIG"."BLOCK_PERIOD" IS 'Periodo de tiempo durante el cual se mantendrÃ¡ bloqueada la alerta si se cumplen las condiciones de bloqueo.';
 COMMENT ON COLUMN "ALERT_CONFIG"."BLOCK_TIME" IS 'Instante del tiempo en el que se bloqueo la alerta.';
 COMMENT ON COLUMN "ALERT_CONFIG"."LAST_TIME" IS 'Instante del tiempo en el que se recibiÃ³ la Ãºltima alerta de este tipo.';
+
+-- Table ALERT_SEVERITY
+CREATE TABLE "ALERT_SEVERITY" ( 
+	"ID_SEVERITY_TYPE" NUMERIC(19) NOT NULL,
+	"NAME" VARCHAR(30) NOT NULL
+	);
+	
+ALTER TABLE "ALERT_SEVERITY" ADD CONSTRAINT "ID_SEVERITY_TYPE_CONS" PRIMARY KEY ("ID_SEVERITY_TYPE");
+ALTER TABLE "ALERT_SEVERITY" ADD CONSTRAINT "ID_SEVERITY_TYPE_FK" FOREIGN KEY ("ID_SEVERITY_TYPE") REFERENCES "ALERT_CONFIG" ("ID_SEVERITY_TYPE");
+COMMENT ON TABLE "ALERT_SEVERITY" IS 'Datos sobre los distintos niveles de criticidad para una alerta.';
+COMMENT ON COLUMN "ALERT_SEVERITY"."ID_SEVERITY_TYPE" IS 'Identificador del nivel.';
+COMMENT ON COLUMN "ALERT_SEVERITY"."NAME" IS 'Nombre asignado al nivel de criticidad.';
 
 -- Table ALERT_SYSTEMS
 CREATE TABLE "ALERT_SYSTEMS" ( 

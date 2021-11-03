@@ -224,3 +224,10 @@ td.details-control, td.mark-control {
 tr.shown, td.details-control {
     content: "\e610";
 }
+
+.alert-severity {
+    margin-bottom: 0; 
+    padding-bottom: 0; 
+    padding-top: 0;
+    font-weight: bold;
+}

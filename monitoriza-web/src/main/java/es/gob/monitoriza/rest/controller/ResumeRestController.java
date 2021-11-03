@@ -300,7 +300,7 @@ public class ResumeRestController {
 
 	private void saveMailResumeConfig(final List<String> emailConfigurationArray, final AlertResumeSystem alertResumeSystem) {
 		for (int i = 0; i < emailConfigurationArray.size() ; i++) {
-			if (!emailConfigurationArray.get(i).isEmpty()) {
+			if (emailConfigurationArray.get(i) != null && !emailConfigurationArray.get(i).isEmpty()) {
 					final AlertMailResumeConfig mailResumeConfig = new AlertMailResumeConfig();
 					mailResumeConfig.setResSysConfigId(alertResumeSystem.getIdResSystem());
 					mailResumeConfig.setMail(emailConfigurationArray.get(i));
