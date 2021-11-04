@@ -1,4 +1,4 @@
-/*
+/* 
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -15,35 +15,38 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.eventmanager.persistence.model.repository.TemplateMonitorizaRepository.java.</p>
+ * <b>File:</b><p>es.gob.eventmanager.persistence.model.repository.ConfServerMailRepository.java.</p>
  * <b>Description:</b><p> .</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
  * @version 1.0, 04/11/2021.
  */
-package es.gob.monitoriza.persistence.configuration.model.repository;
+package es.gob.eventmanager.persistence.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
+import es.gob.eventmanager.persistence.model.entity.ConfServerMail;
 
 /**
- * <p>Interface that provides CRUD functionality for the TemplateMonitorizaRepository entity.</p>
+ * <p>Interface that provides CRUD functionality for the ConfServerMailRepository entity.</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
  * @version 1.0, 04/11/2021.
  */
 @Repository
-public interface TemplateMonitorizaRepository extends JpaRepository<TemplateMonitoriza, Long> {
+public interface ConfServerMailRepository extends JpaRepository<ConfServerMail, Long> {
 
 	/**
-	  * Method that obtains from the persistence a user identified by its primary key.
-	 * @param id String that represents the primary key of the template in the persistence.
-	 * @return Object that represents a template from the persistence.
+	 * Method that obtains from the persistence a ConfServerMail identified by its
+	 * primary key.
+	 * 
+	 * @param id
+	 *            Long that represents the primary key of the ConfServerMail in
+	 *            the persistence.
+	 * @return Object that represents a ConfServerMail from the persistence.
 	 */
-	TemplateMonitoriza findByIdTemplateMonitoriza(Long id);
-
+	ConfServerMail findByIdConfServerMail(Long id);
 }

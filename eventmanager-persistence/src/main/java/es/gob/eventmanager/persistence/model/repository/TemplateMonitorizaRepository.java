@@ -14,27 +14,24 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
- * <b>File:</b><p>es.gob.eventmanager.persistence.model.repository.TemplateMonitorizaRepository.java.</p>
- * <b>Description:</b><p> .</p>
- * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
+/**
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.dao.impl.UserMonitorizaRepository.java.</p>
+ * <b>Description:</b><p>Interface that provides CRUD functionality for the UserMonitoriza entity.</p>
+  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Date:</b><p>7 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.0, 7 mar. 2018.
  */
-package es.gob.monitoriza.persistence.configuration.model.repository;
+package es.gob.eventmanager.persistence.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
+import es.gob.eventmanager.persistence.model.entity.TemplateMonitoriza;
 
 /**
- * <p>Interface that provides CRUD functionality for the TemplateMonitorizaRepository entity.</p>
- * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
- * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * <p>Interface that provides CRUD functionality for the TemplateMonitoriza entity.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
 @Repository
 public interface TemplateMonitorizaRepository extends JpaRepository<TemplateMonitoriza, Long> {

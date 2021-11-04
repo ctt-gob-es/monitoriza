@@ -62,6 +62,8 @@
 		<module>eventmanager-notifier</module>
 		<module>eventmanager-core</module>
 		<module>eventmanager-service</module>
+   		<module>eventmanager-persistence</module>
+    	<module>eventmanager-commons-util</module>
   </modules>
 
 	<dependencyManagement>
@@ -132,6 +134,16 @@
 			<dependency>
 				<groupId>es.gob.eventmanager</groupId>
 				<artifactId>eventmanager-service</artifactId>
+				<version>${eventmanager.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>es.gob.eventmanager</groupId>
+				<artifactId>eventmanager-persistence</artifactId>
+				<version>${eventmanager.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>es.gob.eventmanager</groupId>
+				<artifactId>eventmanager-commons-util</artifactId>
 				<version>${eventmanager.version}</version>
 			</dependency>
 			<!-- Spring Boot 2 -->

@@ -63,7 +63,7 @@ public class EventClientTest extends TestCase{
 
 		disableSslChecks();
 
-		final EventClient cliente = new EventClient("AFIRMA", "LOCAL", new URL("https://localhost:8443/eventmanager-service/notice"), "password");
+		final EventClient cliente = new EventClient("APLICACION1", "LOCAL", new URL("http://localhost:8080/eventmanager-service-1.0/notice"), "CLAVE!123");
 		final EventResponse response = cliente.sendAlert("COD_ERR008", "Error en el acceso a la base de datos");
 
 		System.out.println("Codigo resultado: " + response.getResult());

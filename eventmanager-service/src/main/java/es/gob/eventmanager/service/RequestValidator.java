@@ -25,12 +25,22 @@ import java.util.Date;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.springframework.stereotype.Component;
+
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
+import es.gob.eventmanager.configuration.ManagerConfigurationServices;
+import es.gob.eventmanager.exception.EventManagerException;
 import es.gob.eventmanager.message.Alert;
 import es.gob.eventmanager.message.Event;
+import es.gob.eventmanager.persistence.model.entity.ApplicationMonitoriza;
 
+/**
+ * Servicio para la notificaci&oacute;n de eventos.
+ * @version 1.1, 04/11/2021.
+ */
+@Component
 public class RequestValidator {
 
 	private static final Charset CHARSET = StandardCharsets.UTF_8;
@@ -43,7 +53,8 @@ public class RequestValidator {
 	private static final int MIN_SALT_SIZE = 32;
 
 	/** Diferencia de tiempo en milisegundos que puede haber entre la */
-	private static final long MAX_TIME_DIFFERENCE = 300000; // 5 Minutos
+	private static final long MAX_TIME_DIFFERENCE = 300000; // 5 Minutos	
+	
 
 	/**
 	 * Comprueba que la petici&oacute;n haya sido enviada por una aplicaci&oacute;n v&aacute;lida
@@ -126,8 +137,22 @@ public class RequestValidator {
 
 		// TODO: Acceso a la persistencia para comprobar que la aplicacion
 		// existe y obtener su clave base
-
-		return "password".toCharArray();
+		ApplicationMonitoriza app = null;
+		char[] password = new char[0];
+		
+		try {
+			//app = RequestValidator.stEventManagerBO.getApplicationMonitorizaByName(appName);
+			app = ManagerConfigurationServices.getInstance().getEventManagerBO().getApplicationMonitorizaByName(appName);
+			
+			if (app != null) {
+				password = app.getCipherKey().toCharArray(); 
+			}
+		} catch (EventManagerException e) {
+			
+			throw new SecurityException(e.getMessage(), e.getCause());
+		}
+				
+		return password;
 	}
 
 	/**
@@ -148,19 +173,22 @@ public class RequestValidator {
 	 * @throws IOException Cuando no se puede cargar la petici&oacute;n.
 	 */
 	private static StringBuilder loadRequestBody(final HttpServletRequest request) throws IOException {
-
+					
 		final StringBuilder buffer = new StringBuilder();
-		try (final BufferedReader reader = request.getReader(); ) {
+		try (final BufferedReader reader = request.getReader();) {
+			
+			reader.toString();
 			int n = 0;
-			final char[] block = new char[4096];
+			final char[ ] block = new char[4096];
+
 			while ((n = reader.read(block)) > 0) {
 				if (n == block.length) {
 					buffer.append(block);
-				}
-				else {
+				} else {
 					buffer.append(Arrays.copyOfRange(block, 0, n));
 				}
 			}
+
 		}
 		return buffer;
 	}

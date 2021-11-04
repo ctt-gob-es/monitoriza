@@ -7,7 +7,6 @@
 	<name>eventmanager-notifier</name>
 	<description>Clases con las interfaces y clases genericas para la notificacion de los eventos</description>
 
-
 	<parent>
 		<groupId>es.gob.monitoriza</groupId>
 		<artifactId>monitoriza-parent</artifactId>
@@ -19,6 +18,16 @@
 		<dependency>
 		    <groupId>es.gob.eventmanager</groupId>
 		    <artifactId>eventmanager-message</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>es.gob.eventmanager</groupId>
+		    <artifactId>eventmanager-commons-util</artifactId>
+		</dependency>
+		
+		<dependency>
+		    <groupId>es.gob.eventmanager</groupId>
+		    <artifactId>eventmanager-persistence</artifactId>
 		</dependency>
 
 		<!--  API de logs. -->
@@ -34,7 +43,7 @@
 			<version>1.7.29</version>
 			<optional>true</optional>
 		</dependency>
-
+				
 	</dependencies>
   
   <build>

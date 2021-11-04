@@ -1,4 +1,4 @@
-/*
+/* 
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -15,35 +15,34 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.eventmanager.persistence.model.repository.TemplateMonitorizaRepository.java.</p>
+ * <b>File:</b><p>es.gob.eventmanager.persistence.model.repository.AlertConfigMonitorizaRepository.java.</p>
  * <b>Description:</b><p> .</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
  * @version 1.0, 04/11/2021.
  */
-package es.gob.monitoriza.persistence.configuration.model.repository;
+package es.gob.eventmanager.persistence.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
+import es.gob.eventmanager.persistence.model.entity.AlertConfigMonitoriza;
+
 
 /**
- * <p>Interface that provides CRUD functionality for the TemplateMonitorizaRepository entity.</p>
+ * <p>Interface that provides CRUD functionality for the AlertConfigMonitorizaRepository entity.</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
  * @version 1.0, 04/11/2021.
  */
 @Repository
-public interface TemplateMonitorizaRepository extends JpaRepository<TemplateMonitoriza, Long> {
-
-	/**
-	  * Method that obtains from the persistence a user identified by its primary key.
-	 * @param id String that represents the primary key of the template in the persistence.
-	 * @return Object that represents a template from the persistence.
-	 */
-	TemplateMonitoriza findByIdTemplateMonitoriza(Long id);
-
+public interface AlertConfigMonitorizaRepository extends JpaRepository<AlertConfigMonitoriza, Long> {
+	
+	@Query("SELECT AC FROM AlertConfigMonitoriza AC, AlertTypeMonitoriza AT, ApplicationMonitoriza A WHERE AC.alertTypeMonitoriza.idTypeMonitoriza = :idAlertType AND AT.idTypeMonitoriza = :idAlertType AND AC.applicationMonitoriza.idApplicationMonitoriza = :idApplicationMonitoriza AND A.idApplicationMonitoriza = :idApplicationMonitoriza")
+	AlertConfigMonitoriza findByAlertTypeAndApp(@Param("idAlertType") final Long idAlertType, @Param("idApplicationMonitoriza") final Long idApplicationMonitoriza);
+	
 }

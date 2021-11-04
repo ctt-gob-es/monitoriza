@@ -14,11 +14,31 @@
 	</parent>
 
 	<dependencies>
-
+	    
+	    <!-- EventManager -->
+	    <dependency>
+	      <groupId>es.gob.eventmanager</groupId>
+		  <artifactId>eventmanager-persistence</artifactId>
+	    </dependency>
 	    <dependency>
 	      <groupId>es.gob.eventmanager</groupId>
 		  <artifactId>eventmanager-message</artifactId>
 	    </dependency>
+	    <dependency>
+	      <groupId>es.gob.eventmanager</groupId>
+		  <artifactId>eventmanager-notifier</artifactId>
+	    </dependency>
+
+		<!-- Spring Boot -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-tomcat</artifactId>
+			<scope>provided</scope>
+		</dependency>
 
 	    <!--  Gson: Java to Json conversion -->
 	    <dependency>

@@ -254,16 +254,16 @@ CREATE TABLE "ALERT_APPLICATIONS" (
 	
 ALTER TABLE "ALERT_APPLICATIONS" ADD CONSTRAINT "APP_ID_CONS" PRIMARY KEY ("APP_ID");
 ALTER TABLE "ALERT_APPLICATIONS" ADD CONSTRAINT "ALERT_APP_TEMPLATE_ID_FK" FOREIGN KEY ("TEMPLATE_ID") REFERENCES "ALERT_APP_TEMPLATES" ("TEMPLATE_ID");
-COMMENT ON TABLE "ALERT_APPLICATIONS" IS 'Datos de las aplicaciones que enviarÃ¡n alertas al sistema.';
+COMMENT ON TABLE "ALERT_APPLICATIONS" IS 'Datos de las aplicaciones que enviarán alertas al sistema.';
 COMMENT ON COLUMN "ALERT_APPLICATIONS"."APP_ID" IS 'Identificador de la tabla.';
-COMMENT ON COLUMN "ALERT_APPLICATIONS"."NAME" IS 'Nombre de la aplicaciÃ³n.';
-COMMENT ON COLUMN "ALERT_APPLICATIONS"."APP_KEY" IS 'Cadena que deberÃ¡ indicar la aplicaciÃ³n para identificarse frente al sistema.';
-COMMENT ON COLUMN "ALERT_APPLICATIONS"."CIPHER_KEY" IS 'Cadena que se usarÃ¡ como contraseÃ±a base para derivar la clave de cifrado.';
+COMMENT ON COLUMN "ALERT_APPLICATIONS"."NAME" IS 'Nombre de la aplicación.';
+COMMENT ON COLUMN "ALERT_APPLICATIONS"."APP_KEY" IS 'Cadena que deberá indicar la aplicación para identificarse frente al sistema.';
+COMMENT ON COLUMN "ALERT_APPLICATIONS"."CIPHER_KEY" IS 'Cadena que se usará como contraseña base para derivar la clave de cifrado.';
 COMMENT ON COLUMN "ALERT_APPLICATIONS"."TEMPLATE_ID" IS 'Identificador de la plantilla que define las alarmas que puede recibir.';
-COMMENT ON COLUMN "ALERT_APPLICATIONS"."RESPONSIBLE_NAME" IS 'Nombre del responsable de la aplicaciÃ³n.';
-COMMENT ON COLUMN "ALERT_APPLICATIONS"."RESPONSIBLE_EMAIL" IS 'DirecciÃ³n de correo electrÃ³nico del responsable de la aplicaciÃ³n.';
-COMMENT ON COLUMN "ALERT_APPLICATIONS"."RESPONSIBLE_PHONE" IS 'NÃºmero de telÃ©fono del responsable de la aplicaciÃ³n.';
-COMMENT ON COLUMN "ALERT_APPLICATIONS"."RESPONSIBLE_PHONE" IS 'Indica si la aplicaciÃ³n estÃ¡ activa o no';
+COMMENT ON COLUMN "ALERT_APPLICATIONS"."RESPONSIBLE_NAME" IS 'Nombre del responsable de la aplicación.';
+COMMENT ON COLUMN "ALERT_APPLICATIONS"."RESPONSIBLE_EMAIL" IS 'Dirección de correo electrónico del responsable de la aplicación.';
+COMMENT ON COLUMN "ALERT_APPLICATIONS"."RESPONSIBLE_PHONE" IS 'Número de teléfono del responsable de la aplicación.';
+COMMENT ON COLUMN "ALERT_APPLICATIONS"."RESPONSIBLE_PHONE" IS 'Indica si la aplicación está activa o no';
 
 -- Table ALERT_TYPES
 CREATE TABLE "ALERT_TYPES" ( 
@@ -275,8 +275,8 @@ CREATE TABLE "ALERT_TYPES" (
 ALTER TABLE "ALERT_TYPES" ADD CONSTRAINT "TYPE_ID_CONS" PRIMARY KEY ("TYPE_ID");
 COMMENT ON TABLE "ALERT_TYPES" IS 'Datos sobre los tipos de alertas dadas de alta en el sistema.';
 COMMENT ON COLUMN "ALERT_TYPES"."TYPE_ID" IS 'Identificador del tipo la alerta.';
-COMMENT ON COLUMN "ALERT_TYPES"."NAME" IS 'Nombre con el cual se recibirÃ¡ la alerta.';
-COMMENT ON COLUMN "ALERT_TYPES"."DESCRIPTION" IS 'DescripciÃ³n de la alerta.';
+COMMENT ON COLUMN "ALERT_TYPES"."NAME" IS 'Nombre con el cual se recibirá la alerta.';
+COMMENT ON COLUMN "ALERT_TYPES"."DESCRIPTION" IS 'Descripción de la alerta.';
 
 -- Table ALERT_TEMPLATE_TYPES
 CREATE TABLE "ALERT_TEMPLATE_TYPES" ( 
@@ -287,7 +287,7 @@ CREATE TABLE "ALERT_TEMPLATE_TYPES" (
 ALTER TABLE "ALERT_TEMPLATE_TYPES" ADD CONSTRAINT "TEMPLATE_ID-TYPE_ID_CONS" PRIMARY KEY ("TEMPLATE_ID", "TYPE_ID");
 ALTER TABLE "ALERT_TEMPLATE_TYPES" ADD CONSTRAINT "TEMPLATE_ID_FK" FOREIGN KEY ("TEMPLATE_ID") REFERENCES "ALERT_APP_TEMPLATES" ("TEMPLATE_ID");
 ALTER TABLE "ALERT_TEMPLATE_TYPES" ADD CONSTRAINT "TYPE_ID_FK" FOREIGN KEY ("TYPE_ID") REFERENCES "ALERT_TYPES" ("TYPE_ID");
-COMMENT ON TABLE "ALERT_TEMPLATE_TYPES" IS 'Datos sobre la relaciÃ³n de las alertas que pertenecen a cada plantilla';
+COMMENT ON TABLE "ALERT_TEMPLATE_TYPES" IS 'Datos sobre la relación de las alertas que pertenecen a cada plantilla';
 COMMENT ON COLUMN "ALERT_TEMPLATE_TYPES"."TEMPLATE_ID" IS 'Identificador de la plantilla a la que pertenece la alerta. Corresponde al campo template_ID de la tabla Alert_App_Templates.';
 COMMENT ON COLUMN "ALERT_TEMPLATE_TYPES"."TYPE_ID" IS 'Identificador del tipo la alerta. Corresponde al campo type_ID de la tabla Alert_Type.';
 
@@ -309,18 +309,18 @@ CREATE TABLE "ALERT_CONFIG" (
 ALTER TABLE "ALERT_CONFIG" ADD CONSTRAINT "ALERT_CONFIG_ID_CONS" PRIMARY KEY ("ALERT_CONFIG_ID");
 ALTER TABLE "ALERT_CONFIG" ADD CONSTRAINT "ALERT_CONFIG_TYPE_ID_FK" FOREIGN KEY ("TYPE_ID") REFERENCES "ALERT_TYPES" ("TYPE_ID");
 ALTER TABLE "ALERT_CONFIG" ADD CONSTRAINT "APP_ID_FK" FOREIGN KEY ("APP_ID") REFERENCES "ALERT_APPLICATIONS" ("APP_ID");
-COMMENT ON TABLE "ALERT_CONFIG" IS 'Datos sobre la configuraciÃ³n asociada a una alerta.';
-COMMENT ON COLUMN "ALERT_CONFIG"."ALERT_CONFIG_ID" IS 'Identificador de la configuraciÃ³n.';
-COMMENT ON COLUMN "ALERT_CONFIG"."TYPE_ID" IS 'Tipo de alerta a la que corresponde la configuraciÃ³n.';
-COMMENT ON COLUMN "ALERT_CONFIG"."APP_ID" IS 'Identificador de la aplicaciÃ³n en la que se ha configurado esta alerta.';
+COMMENT ON TABLE "ALERT_CONFIG" IS 'Datos sobre la configuración asociada a una alerta.';
+COMMENT ON COLUMN "ALERT_CONFIG"."ALERT_CONFIG_ID" IS 'Identificador de la configuración.';
+COMMENT ON COLUMN "ALERT_CONFIG"."TYPE_ID" IS 'Tipo de alerta a la que corresponde la configuración.';
+COMMENT ON COLUMN "ALERT_CONFIG"."APP_ID" IS 'Identificador de la aplicación en la que se ha configurado esta alerta.';
 COMMENT ON COLUMN "ALERT_CONFIG"."SEVERITY" IS 'Nombre del nivel de criticidad asociado a la alerta.';
 COMMENT ON COLUMN "ALERT_CONFIG"."ENABLE" IS 'Indica si se encuentra activada la alerta o no.';
 COMMENT ON COLUMN "ALERT_CONFIG"."ALLOW_BLOCK" IS 'Indica si la alerta debe bloquearse cuando se cumplan los requisitos de bloqueo.';
-COMMENT ON COLUMN "ALERT_CONFIG"."BLOCK_CONDITION" IS 'NÃºmero de alertas de este tipo que deben recibirse para que se bloquee esta alerta.';
-COMMENT ON COLUMN "ALERT_CONFIG"."BLOCK_INTERVAL" IS 'Intervalo de tiempo mÃ¡ximo que deben espaciarse las alertas para que contabilicen para la condiciÃ³n de bloqueo.';
-COMMENT ON COLUMN "ALERT_CONFIG"."BLOCK_PERIOD" IS 'Periodo de tiempo durante el cual se mantendrÃ¡ bloqueada la alerta si se cumplen las condiciones de bloqueo.';
+COMMENT ON COLUMN "ALERT_CONFIG"."BLOCK_CONDITION" IS 'Número de alertas de este tipo que deben recibirse para que se bloquee esta alerta.';
+COMMENT ON COLUMN "ALERT_CONFIG"."BLOCK_INTERVAL" IS 'Intervalo de tiempo máximo que deben espaciarse las alertas para que contabilicen para la condición de bloqueo.';
+COMMENT ON COLUMN "ALERT_CONFIG"."BLOCK_PERIOD" IS 'Periodo de tiempo durante el cual se mantendrá bloqueada la alerta si se cumplen las condiciones de bloqueo.';
 COMMENT ON COLUMN "ALERT_CONFIG"."BLOCK_TIME" IS 'Instante del tiempo en el que se bloqueo la alerta.';
-COMMENT ON COLUMN "ALERT_CONFIG"."LAST_TIME" IS 'Instante del tiempo en el que se recibiÃ³ la Ãºltima alerta de este tipo.';
+COMMENT ON COLUMN "ALERT_CONFIG"."LAST_TIME" IS 'Instante del tiempo en el que se recibió la última alerta de este tipo.';
 
 -- Table ALERT_SYSTEMS
 CREATE TABLE "ALERT_SYSTEMS" ( 
@@ -330,10 +330,10 @@ CREATE TABLE "ALERT_SYSTEMS" (
 	);
 	
 ALTER TABLE "ALERT_SYSTEMS" ADD CONSTRAINT "SYSTEM_ID_CONS" PRIMARY KEY ("SYSTEM_ID");
-COMMENT ON TABLE "ALERT_SYSTEMS" IS 'Datos sobre los sistemas de emisiÃ³n de notificaciones.';
-COMMENT ON COLUMN "ALERT_SYSTEMS"."SYSTEM_ID" IS 'Identificador del sistema de notificaciÃ³n.';
-COMMENT ON COLUMN "ALERT_SYSTEMS"."NAME" IS 'Nombre asignado al sistema de notificaciÃ³n.';
-COMMENT ON COLUMN "ALERT_SYSTEMS"."TYPE" IS 'Cadena con el tipo de sistema de notificaciÃ³n. ';
+COMMENT ON TABLE "ALERT_SYSTEMS" IS 'Datos sobre los sistemas de emisión de notificaciones.';
+COMMENT ON COLUMN "ALERT_SYSTEMS"."SYSTEM_ID" IS 'Identificador del sistema de notificación.';
+COMMENT ON COLUMN "ALERT_SYSTEMS"."NAME" IS 'Nombre asignado al sistema de notificación.';
+COMMENT ON COLUMN "ALERT_SYSTEMS"."TYPE" IS 'Cadena con el tipo de sistema de notificación. ';
 
 -- Table ALERT_GRAYLOG_SYSTEM_CONFIG
 CREATE TABLE "ALERT_GRAYLOG_SYSTEM_CONFIG" ( 
@@ -344,10 +344,10 @@ CREATE TABLE "ALERT_GRAYLOG_SYSTEM_CONFIG" (
 	
 ALTER TABLE "ALERT_GRAYLOG_SYSTEM_CONFIG" ADD CONSTRAINT "SYSTEM_ID_CONS" PRIMARY KEY ("SYSTEM_ID");
 ALTER TABLE "ALERT_GRAYLOG_SYSTEM_CONFIG" ADD CONSTRAINT "SYSTEM_ID_FK" FOREIGN KEY ("SYSTEM_ID") REFERENCES "ALERT_SYSTEMS" ("SYSTEM_ID");
-COMMENT ON TABLE "ALERT_GRAYLOG_SYSTEM_CONFIG" IS 'Datos sobre la configuraciÃ³n asignada a uno de los sistemas de notificaciÃ³n dados de alta para la notificaciÃ³n de una alerta.';
-COMMENT ON COLUMN "ALERT_GRAYLOG_SYSTEM_CONFIG"."SYSTEM_ID" IS 'Identificador del sistema de notificaciÃ³n.';
+COMMENT ON TABLE "ALERT_GRAYLOG_SYSTEM_CONFIG" IS 'Datos sobre la configuración asignada a uno de los sistemas de notificación dados de alta para la notificación de una alerta.';
+COMMENT ON COLUMN "ALERT_GRAYLOG_SYSTEM_CONFIG"."SYSTEM_ID" IS 'Identificador del sistema de notificación.';
 COMMENT ON COLUMN "ALERT_GRAYLOG_SYSTEM_CONFIG"."HOST" IS 'Cadena de host (IP o nombre de dominio) del sistema Graylog al que enviar las notificaciones.';
-COMMENT ON COLUMN "ALERT_GRAYLOG_SYSTEM_CONFIG"."PORT" IS 'NÃºmero de puerto en el que Graylog recibe las notificaciones.';
+COMMENT ON COLUMN "ALERT_GRAYLOG_SYSTEM_CONFIG"."PORT" IS 'Número de puerto en el que Graylog recibe las notificaciones.';
 
 -- Table ALERT_CONFIG_SYSTEMS
 CREATE TABLE "ALERT_CONFIG_SYSTEMS" ( 
@@ -359,10 +359,10 @@ CREATE TABLE "ALERT_CONFIG_SYSTEMS" (
 ALTER TABLE "ALERT_CONFIG_SYSTEMS" ADD CONSTRAINT "NOT_SYS_CONFIG_ID_CONS" PRIMARY KEY ("NOT_SYS_CONFIG_ID");
 ALTER TABLE "ALERT_CONFIG_SYSTEMS" ADD CONSTRAINT "ALERT_CONFIG_ID_FK" FOREIGN KEY ("ALERT_CONFIG_ID") REFERENCES "ALERT_CONFIG" ("ALERT_CONFIG_ID");
 ALTER TABLE "ALERT_CONFIG_SYSTEMS" ADD CONSTRAINT "ALERT_SYSTEM_ID_FK" FOREIGN KEY ("SYSTEM_ID") REFERENCES "ALERT_SYSTEMS" ("SYSTEM_ID");
-COMMENT ON TABLE "ALERT_CONFIG_SYSTEMS" IS 'Tabla de relaciÃ³n que asocia una alerta concreta con el sistema de notificaciÃ³n concreto con el que se desea enviar.';
-COMMENT ON COLUMN "ALERT_CONFIG_SYSTEMS"."NOT_SYS_CONFIG_ID" IS 'Identificador de la configuraciÃ³n del sistema de notificaciÃ³n para el envÃ­o de esa alerta concreta.';
-COMMENT ON COLUMN "ALERT_CONFIG_SYSTEMS"."ALERT_CONFIG_ID" IS 'Identificador de la configuraciÃ³n de la alerta que se va a notificar.';
-COMMENT ON COLUMN "ALERT_CONFIG_SYSTEMS"."SYSTEM_ID" IS 'Identificador del sistema de notificaciÃ³n que se configura.';
+COMMENT ON TABLE "ALERT_CONFIG_SYSTEMS" IS 'Tabla de relación que asocia una alerta concreta con el sistema de notificación concreto con el que se desea enviar.';
+COMMENT ON COLUMN "ALERT_CONFIG_SYSTEMS"."NOT_SYS_CONFIG_ID" IS 'Identificador de la configuración del sistema de notificación para el envío de esa alerta concreta.';
+COMMENT ON COLUMN "ALERT_CONFIG_SYSTEMS"."ALERT_CONFIG_ID" IS 'Identificador de la configuración de la alerta que se va a notificar.';
+COMMENT ON COLUMN "ALERT_CONFIG_SYSTEMS"."SYSTEM_ID" IS 'Identificador del sistema de notificación que se configura.';
 
 -- Table ALERT_MAIL_NOTICE_CONFIG
 CREATE TABLE "ALERT_MAIL_NOTICE_CONFIG" ( 
@@ -372,9 +372,9 @@ CREATE TABLE "ALERT_MAIL_NOTICE_CONFIG" (
 	
 ALTER TABLE "ALERT_MAIL_NOTICE_CONFIG" ADD CONSTRAINT "NOT_SYS_CONFIG_ID-MAIL_CONS" PRIMARY KEY ("NOT_SYS_CONFIG_ID" , "MAIL");
 ALTER TABLE "ALERT_MAIL_NOTICE_CONFIG" ADD CONSTRAINT "ALERT_CONF_SYS_ID_FK" FOREIGN KEY ("NOT_SYS_CONFIG_ID") REFERENCES "ALERT_CONFIG_SYSTEMS" ("NOT_SYS_CONFIG_ID");
-COMMENT ON TABLE "ALERT_MAIL_NOTICE_CONFIG" IS 'ConfiguraciÃ³n para el envÃ­o de una alerta concreta a travÃ©s de correo electrÃ³nico.';
-COMMENT ON COLUMN "ALERT_MAIL_NOTICE_CONFIG"."NOT_SYS_CONFIG_ID" IS 'Identificador de la configuraciÃ³n del sistema de notificaciÃ³n para el envÃ­o de esa alerta concreta.';
-COMMENT ON COLUMN "ALERT_MAIL_NOTICE_CONFIG"."MAIL" IS 'DirecciÃ³n de correo electrÃ³nico a la que enviar la alerta.';
+COMMENT ON TABLE "ALERT_MAIL_NOTICE_CONFIG" IS 'Configuración para el envío de una alerta concreta a través de correo electrónico.';
+COMMENT ON COLUMN "ALERT_MAIL_NOTICE_CONFIG"."NOT_SYS_CONFIG_ID" IS 'Identificador de la configuración del sistema de notificación para el envío de esa alerta concreta.';
+COMMENT ON COLUMN "ALERT_MAIL_NOTICE_CONFIG"."MAIL" IS 'Dirección de correo electrónico a la que enviar la alerta.';
 
 -- Table ALERT_GRAYLOG_NOTICE_CONFIG
 CREATE TABLE "ALERT_GRAYLOG_NOTICE_CONFIG" ( 
@@ -385,8 +385,8 @@ CREATE TABLE "ALERT_GRAYLOG_NOTICE_CONFIG" (
 	
 ALTER TABLE "ALERT_GRAYLOG_NOTICE_CONFIG" ADD CONSTRAINT "NOT_SYS_CONFIG_ID-KEY_CONS" PRIMARY KEY ("NOT_SYS_CONFIG_ID" , "PKEY");
 ALTER TABLE "ALERT_GRAYLOG_NOTICE_CONFIG" ADD CONSTRAINT "ALERT_CONFIG_SYS_ID_FK" FOREIGN KEY ("NOT_SYS_CONFIG_ID") REFERENCES "ALERT_CONFIG_SYSTEMS" ("NOT_SYS_CONFIG_ID");
-COMMENT ON TABLE "ALERT_GRAYLOG_NOTICE_CONFIG" IS 'ConfiguraciÃ³n para el envÃ­o de una alerta concreta a un servicio Graylog.';
-COMMENT ON COLUMN "ALERT_GRAYLOG_NOTICE_CONFIG"."NOT_SYS_CONFIG_ID" IS 'Identificador de la configuraciÃ³n del sistema de notificaciÃ³n para el envÃ­o de esa alerta concreta.';
+COMMENT ON TABLE "ALERT_GRAYLOG_NOTICE_CONFIG" IS 'Configuración para el envío de una alerta concreta a un servicio Graylog.';
+COMMENT ON COLUMN "ALERT_GRAYLOG_NOTICE_CONFIG"."NOT_SYS_CONFIG_ID" IS 'Identificador de la configuración del sistema de notificación para el envío de esa alerta concreta.';
 COMMENT ON COLUMN "ALERT_GRAYLOG_NOTICE_CONFIG"."PKEY" IS 'Nombre de propiedad a asignar.';
 COMMENT ON COLUMN "ALERT_GRAYLOG_NOTICE_CONFIG"."VALUE" IS 'Valor de la propiedad utilizar.';
 
@@ -400,11 +400,11 @@ CREATE TABLE "ALERT_RESUMES" (
 	);
 	
 ALTER TABLE "ALERT_RESUMES" ADD CONSTRAINT "RESUME_ID_CONS" PRIMARY KEY ("RESUME_ID");
-COMMENT ON TABLE "ALERT_RESUMES" IS 'ResumÃ©n de peticiones que se debe enviar.';
+COMMENT ON TABLE "ALERT_RESUMES" IS 'Resumén de peticiones que se debe enviar.';
 COMMENT ON COLUMN "ALERT_RESUMES"."NAME" IS 'Nombre del resumen.';
-COMMENT ON COLUMN "ALERT_RESUMES"."DESCRIPTION" IS 'DescripciÃ³n legible del resumen.';
+COMMENT ON COLUMN "ALERT_RESUMES"."DESCRIPTION" IS 'Descripción legible del resumen.';
 COMMENT ON COLUMN "ALERT_RESUMES"."PERIODICITY" IS 'Identificador de la periodicidad con la que se quiere que se emita el resumen.';
-COMMENT ON COLUMN "ALERT_RESUMES"."ENABLED" IS 'Indica si el resumen estÃ¡ activo o no.';
+COMMENT ON COLUMN "ALERT_RESUMES"."ENABLED" IS 'Indica si el resumen está activo o no.';
 
 -- Table ALERT_RESUME_SYSTEMS
 CREATE TABLE "ALERT_RESUME_SYSTEMS" ( 
@@ -416,10 +416,10 @@ CREATE TABLE "ALERT_RESUME_SYSTEMS" (
 ALTER TABLE "ALERT_RESUME_SYSTEMS" ADD CONSTRAINT "RES_SYS_CONFIG_ID_CONS" PRIMARY KEY ("RES_SYS_CONFIG_ID");
 ALTER TABLE "ALERT_RESUME_SYSTEMS" ADD CONSTRAINT "RESUME_ID_FK" FOREIGN KEY ("RESUME_ID") REFERENCES "ALERT_RESUMES" ("RESUME_ID");
 ALTER TABLE "ALERT_RESUME_SYSTEMS" ADD CONSTRAINT "ALERT_SYSTEMS_ID_FK" FOREIGN KEY ("SYSTEM_ID") REFERENCES "ALERT_SYSTEMS" ("SYSTEM_ID");
-COMMENT ON TABLE "ALERT_RESUME_SYSTEMS" IS 'Tabla de relaciÃ³n que asocia cada resumen con los sistemas de notificaciÃ³n activos a travÃ©s de los que se debe enviar.';
-COMMENT ON COLUMN "ALERT_RESUME_SYSTEMS"."RES_SYS_CONFIG_ID" IS 'Identificador de la asociaciÃ³n entre un resumen y uno de sus sistemas de notificaciÃ³n.';
+COMMENT ON TABLE "ALERT_RESUME_SYSTEMS" IS 'Tabla de relación que asocia cada resumen con los sistemas de notificación activos a través de los que se debe enviar.';
+COMMENT ON COLUMN "ALERT_RESUME_SYSTEMS"."RES_SYS_CONFIG_ID" IS 'Identificador de la asociación entre un resumen y uno de sus sistemas de notificación.';
 COMMENT ON COLUMN "ALERT_RESUME_SYSTEMS"."RESUME_ID" IS 'Identificador del resumen. Corresponde al campo resume_ID de la tabla Alert_resumes.';
-COMMENT ON COLUMN "ALERT_RESUME_SYSTEMS"."SYSTEM_ID" IS 'Identificador del sistema de notificaciÃ³n. Corresponde al campo system_ID de la tabla Alert_Systems.';
+COMMENT ON COLUMN "ALERT_RESUME_SYSTEMS"."SYSTEM_ID" IS 'Identificador del sistema de notificación. Corresponde al campo system_ID de la tabla Alert_Systems.';
 
 -- Table ALERT_MAIL_RESUME_CONFIG
 CREATE TABLE "ALERT_MAIL_RESUME_CONFIG" ( 
@@ -429,9 +429,9 @@ CREATE TABLE "ALERT_MAIL_RESUME_CONFIG" (
 	
 ALTER TABLE "ALERT_MAIL_RESUME_CONFIG" ADD CONSTRAINT "NOT_SYS_CONFIG_ID-MAIL_CONS" PRIMARY KEY ("NOT_SYS_CONFIG_ID" ,"MAIL");
 ALTER TABLE "ALERT_MAIL_RESUME_CONFIG" ADD CONSTRAINT "NOT_SYS_CONFIG_ID_FK" FOREIGN KEY ("NOT_SYS_CONFIG_ID") REFERENCES "ALERT_RESUME_SYSTEMS" ("RES_SYS_CONFIG_ID");
-COMMENT ON TABLE "ALERT_MAIL_RESUME_CONFIG" IS 'ConfiguraciÃ³n para el envÃ­o de un resumen concreto a travÃ©s de correo electrÃ³nico.';
-COMMENT ON COLUMN "ALERT_MAIL_RESUME_CONFIG"."RES_SYS_CONFIG_ID" IS 'Identificador de la configuraciÃ³n del sistema de notificaciÃ³n para el envÃ­o de ese resumen concreto.';
-COMMENT ON COLUMN "ALERT_MAIL_RESUME_CONFIG"."RESUME_ID" IS 'DirecciÃ³n de correo electrÃ³nico a la que enviar el resumen.';
+COMMENT ON TABLE "ALERT_MAIL_RESUME_CONFIG" IS 'Configuración para el envío de un resumen concreto a través de correo electrónico.';
+COMMENT ON COLUMN "ALERT_MAIL_RESUME_CONFIG"."RES_SYS_CONFIG_ID" IS 'Identificador de la configuración del sistema de notificación para el envío de ese resumen concreto.';
+COMMENT ON COLUMN "ALERT_MAIL_RESUME_CONFIG"."RESUME_ID" IS 'Dirección de correo electrónico a la que enviar el resumen.';
 
 -- Table ALERT_RESUME_LIST
 CREATE TABLE "ALERT_RESUME_LIST" ( 
@@ -445,12 +445,12 @@ CREATE TABLE "ALERT_RESUME_LIST" (
 ALTER TABLE "ALERT_RESUME_LIST" ADD CONSTRAINT "ALERT_ID_CONS" PRIMARY KEY ("ALERT_ID");
 ALTER TABLE "ALERT_RESUME_LIST" ADD CONSTRAINT "ALERT_RESUME_LIST_ALERT_CONFIG_ID_FK" FOREIGN KEY ("ALERT_CONFIG_ID") REFERENCES "ALERT_CONFIG" ("ALERT_CONFIG_ID");
 ALTER TABLE "ALERT_RESUME_LIST" ADD CONSTRAINT "ALERT_RESUME_LIST_RESUME_ID_FK" FOREIGN KEY ("RESUME_ID") REFERENCES "ALERT_RESUMES" ("RESUME_ID");
-COMMENT ON TABLE "ALERT_RESUME_LIST" IS 'RelaciÃ³n entre resumenes y alertas.';
-COMMENT ON COLUMN "ALERT_RESUME_LIST"."ALERT_ID" IS 'Identificador de la relaciÃ³n.';
-COMMENT ON COLUMN "ALERT_RESUME_LIST"."ALERT_CONFIG_ID" IS 'Identificador de la configuraciÃ³n de la alerta que se recibiÃ³.';
+COMMENT ON TABLE "ALERT_RESUME_LIST" IS 'Relación entre resumenes y alertas.';
+COMMENT ON COLUMN "ALERT_RESUME_LIST"."ALERT_ID" IS 'Identificador de la relación.';
+COMMENT ON COLUMN "ALERT_RESUME_LIST"."ALERT_CONFIG_ID" IS 'Identificador de la configuración de la alerta que se recibió.';
 COMMENT ON COLUMN "ALERT_RESUME_LIST"."RESUME_ID" IS 'Identificador del tipo de resumen.';
-COMMENT ON COLUMN "ALERT_RESUME_LIST"."NODE" IS 'Nombre o direcciÃ³n del nodo desde el que se envÃ­a la alerta.';
-COMMENT ON COLUMN "ALERT_RESUME_LIST"."TIMESTAMP" IS 'Fecha en la que se recibiÃ³ la alerta en cuestiÃ³n.';
+COMMENT ON COLUMN "ALERT_RESUME_LIST"."NODE" IS 'Nombre o dirección del nodo desde el que se envía la alerta.';
+COMMENT ON COLUMN "ALERT_RESUME_LIST"."TIMESTAMP" IS 'Fecha en la que se recibió la alerta en cuestión.';
 
 -- Table ALERT_RESUME_TYPES
 CREATE TABLE "ALERT_RESUME_TYPES" ( 
@@ -464,9 +464,9 @@ ALTER TABLE "ALERT_RESUME_TYPES" ADD CONSTRAINT "RES_TYPE_ID_CONS" PRIMARY KEY (
 ALTER TABLE "ALERT_RESUME_TYPES" ADD CONSTRAINT "ALERT_RESUME_TYPES_APP_ID_FK" FOREIGN KEY ("APP_ID") REFERENCES "ALERT_APPLICATIONS" ("APP_ID");
 ALTER TABLE "ALERT_RESUME_TYPES" ADD CONSTRAINT "ALERT_RESUME_TYPES_TYPE_ID_FK" FOREIGN KEY ("TYPE_ID") REFERENCES "ALERT_TYPES" ("TYPE_ID");
 ALTER TABLE "ALERT_RESUME_TYPES" ADD CONSTRAINT "ALERT_RESUME_TYPES_RESUME_ID_FK" FOREIGN KEY ("RESUME_ID") REFERENCES "ALERT_RESUMES" ("RESUME_ID");
-COMMENT ON TABLE "ALERT_RESUME_TYPES" IS 'RelaciÃ³n entre resÃºmenes y tipos de alerta.';
-COMMENT ON COLUMN "ALERT_RESUME_TYPES"."RES_TYPE_ID" IS 'Identificador de la configuraciÃ³n del sistema de notificaciÃ³n para el envÃ­o de ese resumen concreto.';
-COMMENT ON COLUMN "ALERT_RESUME_TYPES"."APP_ID" IS 'Identificador de la aplicaciÃ³n.';
+COMMENT ON TABLE "ALERT_RESUME_TYPES" IS 'Relación entre resúmenes y tipos de alerta.';
+COMMENT ON COLUMN "ALERT_RESUME_TYPES"."RES_TYPE_ID" IS 'Identificador de la configuración del sistema de notificación para el envío de ese resumen concreto.';
+COMMENT ON COLUMN "ALERT_RESUME_TYPES"."APP_ID" IS 'Identificador de la aplicación.';
 COMMENT ON COLUMN "ALERT_RESUME_TYPES"."TYPE_ID" IS 'Identificador del tipo de alerta.';
 COMMENT ON COLUMN "ALERT_RESUME_TYPES"."RESUME_ID" IS 'Identificador del tipo de resumen.';
 
@@ -484,14 +484,14 @@ CREATE TABLE "ALERT_AUDIT" (
 	);
 	
 ALTER TABLE "ALERT_AUDIT" ADD CONSTRAINT "ALERT_AUDIT_ID_CONS" PRIMARY KEY ("ALERT_ID");
-COMMENT ON TABLE "ALERT_AUDIT" IS 'Alertas almacenadas temporalmente para poderla contabilizar para la generaciÃ³n de los datos de explotaciÃ³n de estadÃ­sticas.';
+COMMENT ON TABLE "ALERT_AUDIT" IS 'Alertas almacenadas temporalmente para poderla contabilizar para la generación de los datos de explotación de estadísticas.';
 COMMENT ON COLUMN "ALERT_AUDIT"."ALERT_ID" IS 'Identificador de la alerta.';
-COMMENT ON COLUMN "ALERT_AUDIT"."APP_NAME" IS 'Nombre de la aplicaciÃ³n que emitiÃ³ la alerta.';
+COMMENT ON COLUMN "ALERT_AUDIT"."APP_NAME" IS 'Nombre de la aplicación que emitió la alerta.';
 COMMENT ON COLUMN "ALERT_AUDIT"."ALERT_NAME" IS 'Nombre de la alerta recibida.';
-COMMENT ON COLUMN "ALERT_AUDIT"."APP_TEMPLATE_NAME" IS 'Nombre de la plantilla de alertas en la que se basa la aplicaciÃ³n.';
-COMMENT ON COLUMN "ALERT_AUDIT"."NODE" IS 'Nombre del nodo que emitiÃ³ la alerta.';
+COMMENT ON COLUMN "ALERT_AUDIT"."APP_TEMPLATE_NAME" IS 'Nombre de la plantilla de alertas en la que se basa la aplicación.';
+COMMENT ON COLUMN "ALERT_AUDIT"."NODE" IS 'Nombre del nodo que emitió la alerta.';
 COMMENT ON COLUMN "ALERT_AUDIT"."LEVEL" IS 'Nivel de criticidad de la alerta.';
-COMMENT ON COLUMN "ALERT_AUDIT"."TIMESTAMP" IS 'Instance del tiempo en el que se recibiÃ³ la alerta.';
+COMMENT ON COLUMN "ALERT_AUDIT"."TIMESTAMP" IS 'Instance del tiempo en el que se recibió la alerta.';
 
 -- Table ALERT_DIM_APPS
 CREATE TABLE "ALERT_DIM_APPS" ( 
@@ -500,9 +500,9 @@ CREATE TABLE "ALERT_DIM_APPS" (
 	);
 	
 ALTER TABLE "ALERT_DIM_APPS" ADD CONSTRAINT "ALERT_DIM_APP_ID_CONS" PRIMARY KEY ("APP_ID");
-COMMENT ON TABLE "ALERT_DIM_APPS" IS 'Tabla de dimensiÃ³n del modelo en estrella orientada a almacenar los nombres de las aplicaciones.';
-COMMENT ON COLUMN "ALERT_DIM_APPS"."APP_ID" IS 'Identificador de la aplicaciÃ³n.';
-COMMENT ON COLUMN "ALERT_DIM_APPS"."APP_NAME" IS 'Nombre de aplicaciÃ³n.';
+COMMENT ON TABLE "ALERT_DIM_APPS" IS 'Tabla de dimensión del modelo en estrella orientada a almacenar los nombres de las aplicaciones.';
+COMMENT ON COLUMN "ALERT_DIM_APPS"."APP_ID" IS 'Identificador de la aplicación.';
+COMMENT ON COLUMN "ALERT_DIM_APPS"."APP_NAME" IS 'Nombre de aplicación.';
 
 -- Table ALERT_DIM_TYPES
 CREATE TABLE "ALERT_DIM_TYPES" ( 
@@ -511,8 +511,8 @@ CREATE TABLE "ALERT_DIM_TYPES" (
 	);
 	
 ALTER TABLE "ALERT_DIM_TYPES" ADD CONSTRAINT "ALERT_DIM_TYPE_ID_CONS" PRIMARY KEY ("TYPE_ID");
-COMMENT ON TABLE "ALERT_DIM_TYPES" IS 'Tabla de dimensiÃ³n del modelo en estrella orientada a almacenar los nombres de los tipos de alerta.';
-COMMENT ON COLUMN "ALERT_DIM_TYPES"."ALERT_ID" IS 'Identificador de tipo de alerta.';
+COMMENT ON TABLE "ALERT_DIM_TYPES" IS 'Tabla de dimensión del modelo en estrella orientada a almacenar los nombres de los tipos de alerta.';
+COMMENT ON COLUMN "ALERT_DIM_TYPES"."TYPE_ID" IS 'Identificador de tipo de alerta.';
 COMMENT ON COLUMN "ALERT_DIM_TYPES"."TYPE_NAME" IS 'Nombre de tipo de alerta.';
 
 -- Table ALERT_DIM_TEMPLATES
@@ -522,7 +522,7 @@ CREATE TABLE "ALERT_DIM_TEMPLATES" (
 	);
 	
 ALTER TABLE "ALERT_DIM_TEMPLATES" ADD CONSTRAINT "ALERT_DIM_TEMPLATE_ID_CONS" PRIMARY KEY ("TEMPLATE_ID");
-COMMENT ON TABLE "ALERT_DIM_TEMPLATES" IS 'Tabla de dimensiÃ³n del modelo en estrella orientada a almacenar los nombres de las plantillas de alerta.';
+COMMENT ON TABLE "ALERT_DIM_TEMPLATES" IS 'Tabla de dimensión del modelo en estrella orientada a almacenar los nombres de las plantillas de alerta.';
 COMMENT ON COLUMN "ALERT_DIM_TEMPLATES"."TEMPLATE_ID" IS 'Identificador de plantilla de alertas.';
 COMMENT ON COLUMN "ALERT_DIM_TEMPLATES"."TEMPLATE_NAME" IS 'Nombre de plantilla de alertas.';
 
@@ -533,7 +533,7 @@ CREATE TABLE "ALERT_DIM_NODES" (
 	);
 	
 ALTER TABLE "ALERT_DIM_NODES" ADD CONSTRAINT "ALERT_DIM_NODE_ID_CONS" PRIMARY KEY ("NODE_ID");
-COMMENT ON TABLE "ALERT_DIM_NODES" IS 'Tabla de dimensiÃ³n del modelo en estrella orientada a almacenar los nombres de los nodos.';
+COMMENT ON TABLE "ALERT_DIM_NODES" IS 'Tabla de dimensión del modelo en estrella orientada a almacenar los nombres de los nodos.';
 COMMENT ON COLUMN "ALERT_DIM_NODES"."NODE_ID" IS 'Identificador de nodo.';
 COMMENT ON COLUMN "ALERT_DIM_NODES"."NODE_NAME" IS 'Nombre de nodo.';
 
@@ -544,7 +544,7 @@ CREATE TABLE "ALERT_DIM_LEVELS" (
 	);
 	
 ALTER TABLE "ALERT_DIM_LEVELS" ADD CONSTRAINT "ALERT_DIM_LEVEL_ID_CONS" PRIMARY KEY ("LEVEL_ID");
-COMMENT ON TABLE "ALERT_DIM_LEVELS" IS 'Tabla de dimensiÃ³n del modelo en estrella orientada a almacenar los nombres de los niveles de criticidad.';
+COMMENT ON TABLE "ALERT_DIM_LEVELS" IS 'Tabla de dimensión del modelo en estrella orientada a almacenar los nombres de los niveles de criticidad.';
 COMMENT ON COLUMN "ALERT_DIM_LEVELS"."LEVEL_ID" IS 'Identificador de nivel de criticidad.';
 COMMENT ON COLUMN "ALERT_DIM_LEVELS"."LEVEL_NAME" IS 'Nombre de nivel de criticidad.';
 
@@ -566,14 +566,14 @@ ALTER TABLE "ALERT_STATISTICS" ADD CONSTRAINT "ALERT_DIM_TYPE_ID_FK" FOREIGN KEY
 ALTER TABLE "ALERT_STATISTICS" ADD CONSTRAINT "ALERT_DIM_TEMPLATE_ID_FK" FOREIGN KEY ("TEMPLATE_ID") REFERENCES "ALERT_DIM_TEMPLATES" ("TEMPLATE_ID");
 ALTER TABLE "ALERT_STATISTICS" ADD CONSTRAINT "ALERT_DIM_NODE_ID_FK" FOREIGN KEY ("NODE") REFERENCES "ALERT_DIM_NODES" ("NODE_ID");
 ALTER TABLE "ALERT_STATISTICS" ADD CONSTRAINT "ALERT_DIM_LEVEL_ID_FK" FOREIGN KEY ("LEVEL") REFERENCES "ALERT_DIM_LEVELS" ("LEVEL_ID");
-COMMENT ON TABLE "ALERT_STATISTICS" IS 'Conjunto de datos agrupados para su explotaciÃ³n estadÃ­stica.';
-COMMENT ON COLUMN "ALERT_STATISTICS"."STATISTIC_ID" IS 'Identificador de la estadÃ­stica.';
-COMMENT ON COLUMN "ALERT_STATISTICS"."APP_ID" IS 'Identificador de la aplicaciÃ³n.';
+COMMENT ON TABLE "ALERT_STATISTICS" IS 'Conjunto de datos agrupados para su explotación estadística.';
+COMMENT ON COLUMN "ALERT_STATISTICS"."STATISTIC_ID" IS 'Identificador de la estadística.';
+COMMENT ON COLUMN "ALERT_STATISTICS"."APP_ID" IS 'Identificador de la aplicación.';
 COMMENT ON COLUMN "ALERT_STATISTICS"."TYPE_ID" IS 'Identificador del tipo de alarma.';
 COMMENT ON COLUMN "ALERT_STATISTICS"."TEMPLATE_ID" IS 'Identificador de la plantilla.';
 COMMENT ON COLUMN "ALERT_STATISTICS"."NODE" IS 'Identificador del nodo.';
 COMMENT ON COLUMN "ALERT_STATISTICS"."LEVEL" IS 'Nombre de nivel de criticidad.';
-COMMENT ON COLUMN "ALERT_STATISTICS"."TIMESTAMP" IS 'Fecha (con precisiÃ³n de dÃ­a) a la que corresponde el computo.';
-COMMENT ON COLUMN "ALERT_STATISTICS"."OCURRENCY" IS 'NÃºmero de ocurrencias de esta configuraciÃ³n de alerta en la fecha indicada.';
+COMMENT ON COLUMN "ALERT_STATISTICS"."TIMESTAMP" IS 'Fecha (con precisión de día) a la que corresponde el computo.';
+COMMENT ON COLUMN "ALERT_STATISTICS"."OCURRENCY" IS 'Número de ocurrencias de esta configuración de alerta en la fecha indicada.';
 
 COMMIT;

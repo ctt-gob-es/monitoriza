@@ -35,7 +35,7 @@ import es.gob.eventmanager.message.EventResponse;
 /**
  * Cliente para el env&iacute;o de alertas.
  * <b>Project:</b><p>Event manager system.</p>
- * @version 1.0, 07/09/2021.
+ * @version 1.1, 04/11/2021.
  */
 public class EventClient {
 
@@ -164,6 +164,7 @@ public class EventClient {
 
 		// Construimos el cuerpo del mensaje
 		final byte[] message = buildJsonMessage(event);
+		conn.setRequestProperty("Content-Type", "application/json; utf-8");
 
 		// Establecemos las cabeceras de seguridad
 		try {
@@ -172,12 +173,13 @@ public class EventClient {
 		catch (final Exception e) {
 			throw new IOException("No se han podido establecer las cabeceras de seguridad de la peticion", e); //$NON-NLS-1$
 		}
-
+		conn.setRequestProperty("Accept", "application/json");
 		// Enviamos la peticion
 		try (OutputStream os = conn.getOutputStream()) {
-			os.write(message);
+			os.write(message, 0, message.length);
+			os.flush();
 		}
-
+				
 		// Realizamos la peticion y obtenemos la respuesta
 		EventResponse response;
 		try (InputStream is = conn.getInputStream()) {

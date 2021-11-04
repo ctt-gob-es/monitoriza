@@ -1,0 +1,53 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <groupId>es.gob.eventmanager</groupId>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>es.gob.monitoriza</groupId>
+    <artifactId>monitoriza-parent</artifactId>
+    <version>1.0</version>
+  </parent>
+  <artifactId>eventmanager-commons-util</artifactId>
+  <name>eventmanager-commons-util</name>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+    <!--  API de logs. -->
+		<dependency>
+		    <groupId>org.slf4j</groupId>
+		    <artifactId>slf4j-api</artifactId>
+		    <version>1.7.29</version>
+		</dependency>
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.29</version>
+			<optional>true</optional>
+		</dependency>
+    
+    	<!--  API de mail -->
+		<dependency>
+			<groupId>javax.mail</groupId>
+			<artifactId>javax.mail-api</artifactId>
+			<version>1.6.2</version>
+		</dependency>
+		
+		<!--  Graylog -->
+		<dependency>
+    		<groupId>biz.paluch.logging</groupId>
+    		<artifactId>logstash-gelf</artifactId>
+    		<version>1.11.1</version>
+    		<scope>compile</scope>
+		</dependency>
+		
+		<dependency>
+			<groupId>commons-codec</groupId>
+			<artifactId>commons-codec</artifactId>
+			<version>1.11</version>
+		</dependency>
+    
+  </dependencies>
+</project>

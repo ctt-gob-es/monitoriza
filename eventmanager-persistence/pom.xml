@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<project xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd" xmlns="http://maven.apache.org/POM/4.0.0"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <groupId>es.gob.eventmanager</groupId>
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>es.gob.monitoriza</groupId>
+    <artifactId>monitoriza-parent</artifactId>
+    <version>1.0</version>
+  </parent>
+  <artifactId>eventmanager-persistence</artifactId>
+  <name>eventmanager-persistence</name>
+  <description>Logica de acceso a datos</description>
+  <properties>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+  <dependencies>
+  	    <dependency>
+			<groupId>es.gob.eventmanager</groupId>
+			<artifactId>eventmanager-commons-util</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-data-jpa</artifactId>
+		</dependency>
+  </dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>
+		</plugins>
+	</build>
+
+</project>

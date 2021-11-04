@@ -1,4 +1,4 @@
-/*
+/* 
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -15,35 +15,72 @@
  ******************************************************************************/
 
 /** 
- * <b>File:</b><p>es.gob.eventmanager.persistence.model.repository.TemplateMonitorizaRepository.java.</p>
+ * <b>File:</b><p>es.gob.eventmanager.notifier.graylog.GraylogConfigDTO.java.</p>
  * <b>Description:</b><p> .</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
  * @version 1.0, 04/11/2021.
  */
-package es.gob.monitoriza.persistence.configuration.model.repository;
+package es.gob.eventmanager.notifier.graylog;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.Map;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
+import es.gob.eventmanager.notifier.NotifierConfigDTO;
 
-/**
- * <p>Interface that provides CRUD functionality for the TemplateMonitorizaRepository entity.</p>
+
+/** 
+ * <p>Class .</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
- * @author Gobierno de España.
  * @version 1.0, 04/11/2021.
  */
-@Repository
-public interface TemplateMonitorizaRepository extends JpaRepository<TemplateMonitoriza, Long> {
-
+public class GrayLogConfigDTO implements NotifierConfigDTO {
+	
 	/**
-	  * Method that obtains from the persistence a user identified by its primary key.
-	 * @param id String that represents the primary key of the template in the persistence.
-	 * @return Object that represents a template from the persistence.
+	 * Attribute that represents Graylog host. 
 	 */
-	TemplateMonitoriza findByIdTemplateMonitoriza(Long id);
+	private String host;
+	
+	/**
+	 * Attribute that represents Graylog port. 
+	 */
+	private int port;
+	
+	/**
+	 * Attribute that represents additional configuration parameters (key/value). 
+	 */
+	private Map<String, String> grayLogDeclaredFields;
+
+	
+	public final String getHost() {
+		return host;
+	}
+
+	
+	public final void setHost(String host) {
+		this.host = host;
+	}
+
+	
+	public final int getPort() {
+		return port;
+	}
+
+	
+	public final void setPort(int port) {
+		this.port = port;
+	}
+
+
+	
+	public final Map<String, String> getGrayLogDeclaredFields() {
+		return grayLogDeclaredFields;
+	}
+
+
+	
+	public final void setGrayLogDeclaredFields(Map<String, String> grayLogDeclaredFields) {
+		this.grayLogDeclaredFields = grayLogDeclaredFields;
+	}
 
 }
