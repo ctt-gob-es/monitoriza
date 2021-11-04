@@ -44,12 +44,12 @@ public class AlertMailNoticeConfigService implements IAlertMailNoticeConfigServi
 
 	@Override
 	public List<AlertMailNoticeConfig> getAlertMailNoticeConfigId(final Long alertMailNoticeConfigId) {
-		return this.repository.findByNotSysConfigId(alertMailNoticeConfigId);
+		return this.repository.findByIdNotSysConfig(alertMailNoticeConfigId);
 	}
 
 	@Override
 	public void deleteAlertMailNoticeConfig(final Long alertMailNoticeConfig) {
-		this.repository.deleteByNotSysConfigId(alertMailNoticeConfig);
+		this.repository.deleteByIdNotSysConfig(alertMailNoticeConfig);
 	}
 
 	@Override

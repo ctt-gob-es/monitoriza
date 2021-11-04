@@ -204,8 +204,6 @@
 							if (valuesList == "") {
 								valuesList = [""];
 							}
-
-							console.log(d.data()[0]);
 							
 		            		$.ajax(getGraylogInfo, {
 				                data : $.param({'idAlertSystem':idAlertSystem , 'keysList[]':keysList, 'valuesList[]':valuesList}),
@@ -312,6 +310,10 @@
                 },
                 error:function(data){
                 	hide();
+                	notifSystemsIdArray = [];
+                	emailConfigurationArray = [];
+                	keysArray = [];
+                	valuesArray = [];
                 	$('#errorModalAlertConfig').remove();
                 	$('#alertConfigModal').append('<div id="errorModalAlertConfig" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
                 }
@@ -365,15 +367,43 @@
             for (var i = 0 ; i < alertSystems.length ; i++) {
             	var alertSystemData = $('#alertSystemTable').DataTable().row($(alertSystems[i])).data();
             	notifSystemsIdArray.push(alertSystemData.alertSystemMonitoriza.idAlertSystemMonitoriza);
-            	var resumeEmailArray = alertSystemData.resumeEmailAddresses.split('\n');
+            	var noticeConfEmailArray = alertSystemData.resumeEmailAddresses.split('\n');
             	if (emailConfigurationArray.length == 0) {
-            		emailConfigurationArray[0] = resumeEmailArray;
+            		emailConfigurationArray[0] = noticeConfEmailArray;
                 } else {
-                	emailConfigurationArray[emailConfigurationArray.length] = resumeEmailArray;
+                	emailConfigurationArray[emailConfigurationArray.length] = noticeConfEmailArray;
 				}
-            	keysArray[keysArray.length] = alertSystemData.keysList;
-                valuesArray[valuesArray.length] = alertSystemData.valuesList;
-            }
+
+            	// Se comprueba que si el dato viene vacio, se instancie un array para evitar errores en la peticion
+            	var keysListData;
+
+            	if (alertSystemData.keysList == ""){
+            		keysListData = [""];
+                }else{
+                	keysListData = alertSystemData.keysList;
+                }
+            	
+            	if (keysArray.length == 0) {
+            		keysArray[0] = keysListData;
+                } else {
+                	keysArray[keysArray.length] = keysListData;
+				}
+
+            	// Se realiza el mismo proceso para la lista de valores
+            	var valuesListData;
+
+            	if (alertSystemData.valuesList == ""){
+            		valuesListData = [""];
+                }else{
+                	valuesListData = alertSystemData.valuesList;
+                }
+
+            	if (valuesArray.length == 0) {
+            		valuesArray[0] = valuesListData;
+                } else {
+                	valuesArray[valuesArray.length] = valuesListData;
+				}
+}
 		}
  	});
 

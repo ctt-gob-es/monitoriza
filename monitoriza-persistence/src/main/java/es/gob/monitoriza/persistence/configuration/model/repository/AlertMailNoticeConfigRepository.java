@@ -44,7 +44,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailNoticeC
 @Repository
 public interface AlertMailNoticeConfigRepository extends JpaRepository<AlertMailNoticeConfig, AlertMailNoticeConfigID> {
 
-    List<AlertMailNoticeConfig> findByNotSysConfigId(Long id);
+    List<AlertMailNoticeConfig> findByIdNotSysConfig(Long id);
 
-    void deleteByNotSysConfigId(Long id);
+    void deleteByIdNotSysConfig(Long id);
 }

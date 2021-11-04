@@ -49,17 +49,21 @@ import org.springframework.web.bind.annotation.RestController;
 import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.constant.INotificationSystemTypes;
 import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.AlertConfigDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogNoticeConfig;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailNoticeConfig;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
 import es.gob.monitoriza.service.IAlertConfigMonitorizaService;
 import es.gob.monitoriza.service.IAlertConfigSystemService;
 import es.gob.monitoriza.service.IAlertGrayLogNoticeConfigService;
+import es.gob.monitoriza.service.IAlertMailNoticeConfigService;
 import es.gob.monitoriza.service.IAlertSystemMonitorizaService;
 import es.gob.monitoriza.service.IApplicationMonitorizaService;
 
@@ -107,6 +111,13 @@ public class AlertConfigRestController {
 	private IAlertGrayLogNoticeConfigService alertGrayLogNoticeConfigService;
 
 	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IAlertMailNoticeConfigService alertMailNoticeConfigService;
+
+	/**
 	 * Attribute that represents the span text.
 	 */
 	private static final String SPAN = "_span"; //$NON-NLS-1$
@@ -120,11 +131,6 @@ public class AlertConfigRestController {
 	 * Constant that represents the key Json 'errorSaveAlertConfig'.
 	 */
 	private static final String KEY_JS_ERROR_ALERT_CONFIG = "errorSaveAlertConfig"; //$NON-NLS-1$
-
-	/**
-	 * Constant that represents the graylog type for alert systems
-	 */
-	private static final String GRAYLOG_TYPE = "graylog"; //$NON-NLS-1$
 
 	/**
 	 * Method that maps the list  alert configurations web requests to the controller and
@@ -203,7 +209,10 @@ public class AlertConfigRestController {
 					alertConfigSystem.setAlertConfigMonitoriza(alertConfig);
 					alertConfigSystem.setAlertSystemMonitoriza(alertSystem);
 					alertConfigSystem = this.alertConfigSystemService.saveAlertConfigSystem(alertConfigSystem);
-					if (GRAYLOG_TYPE.equals(alertConfigSystem.getAlertSystemMonitoriza().getType())) {
+					if (INotificationSystemTypes.GRAYLOG.equals(alertConfigSystem.getAlertSystemMonitoriza().getType())) {
+						saveGrayLogNoticeConfig(alertConfigSystem.getIdNotSysConfig(), alertConfigForm.getKeysArray().get(j), alertConfigForm.getValuesArray().get(j));
+					} else if (INotificationSystemTypes.EMAIL.equals(alertConfigSystem.getAlertSystemMonitoriza().getType())) {
+						saveMailNoticeConfig(alertConfigSystem.getIdNotSysConfig(), alertConfigForm.getEmailConfigurationArray().get(j));
 					}
 				}
 
@@ -219,6 +228,29 @@ public class AlertConfigRestController {
 		dtOutput.setData(listNewApplication);
 
 		return dtOutput;
+	}
+
+	private void saveGrayLogNoticeConfig(final Long alertConfSysId, final List<String> keysList, final List<String> valuesList) {
+		if (keysList != null && !keysList.isEmpty()) {
+			for (int i = 0 ; i < keysList.size() ; i++) {
+				final AlertGraylogNoticeConfig alertGrayLogNotConf = new AlertGraylogNoticeConfig();
+				alertGrayLogNotConf.setNotSysConfigId(alertConfSysId);
+				alertGrayLogNotConf.setPkey(keysList.get(i));
+				alertGrayLogNotConf.setValue(valuesList.get(i));
+				this.alertGrayLogNoticeConfigService.saveAlertGraylogNoticeConfig(alertGrayLogNotConf);
+			}
+		}
+	}
+
+	private void saveMailNoticeConfig(final Long alertConfSysId, final List<String> emailList) {
+		if (emailList != null && !emailList.isEmpty()) {
+			for (int i = 0 ; i < emailList.size() ; i++) {
+				final AlertMailNoticeConfig alertMailNotConf = new AlertMailNoticeConfig();
+				alertMailNotConf.setIdNotSysConfig(alertConfSysId);
+				alertMailNotConf.setMail(emailList.get(i));
+				this.alertMailNoticeConfigService.saveAlertMailNoticeConfig(alertMailNotConf);
+			}
+		}
 	}
 
 	/**
