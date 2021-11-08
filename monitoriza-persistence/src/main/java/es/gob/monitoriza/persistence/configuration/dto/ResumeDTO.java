@@ -28,7 +28,6 @@ import java.util.List;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 
 /**
@@ -103,21 +102,6 @@ public class ResumeDTO {
 	 * Attribute that represents the alerts configurations for the applications
 	 */
 	List<AlertConfigMonitoriza> alertConfigList;
-
-	/**
-	 * Attribute that represents the applications saved for a resume
-	 */
-	List<ApplicationMonitoriza> applicationsListSaved;
-
-	/**
-	 * Attribute that represents the alert types saved for a resume
-	 */
-	List<AlertTypeMonitoriza> alertTypesSaved;
-
-	/**
-	 * Attribute that represents the alert systems saved for a resume
-	 */
-	List<AlertSystemMonitoriza> alertSystemsSaved;
 
 	public Long getIdResumeMonitoriza() {
 		return this.idResumeMonitoriza;
@@ -213,30 +197,6 @@ public class ResumeDTO {
 
 	public void setEmailConfigurationArray(final List<List<String>> emailConfigurationArray) {
 		this.emailConfigurationArray = emailConfigurationArray;
-	}
-
-	public List<ApplicationMonitoriza> getApplicationsListSaved() {
-		return this.applicationsListSaved;
-	}
-
-	public void setApplicationsListSaved(final List<ApplicationMonitoriza> applicationsListSaved) {
-		this.applicationsListSaved = applicationsListSaved;
-	}
-
-	public List<AlertTypeMonitoriza> getAlertTypesSaved() {
-		return this.alertTypesSaved;
-	}
-
-	public void setAlertTypesSaved(final List<AlertTypeMonitoriza> alertTypesSaved) {
-		this.alertTypesSaved = alertTypesSaved;
-	}
-
-	public List<AlertSystemMonitoriza> getAlertSystemsSaved() {
-		return this.alertSystemsSaved;
-	}
-
-	public void setAlertSystemsSaved(final List<AlertSystemMonitoriza> alertSystemsSaved) {
-		this.alertSystemsSaved = alertSystemsSaved;
 	}
 
 }

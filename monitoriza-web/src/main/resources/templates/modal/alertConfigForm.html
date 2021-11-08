@@ -24,8 +24,8 @@
 									<div class="form-row">
 										<div class="form-group col-md-12">
 											<label for="alertTypesList" th:text="#{applalert.alertconfig.modal.alertsystems}"></label>
-											<select name="alertTypesList" id="alertTypesList"
-												class="form-control" th:field="*{alertTypesList}" required>
+											<select name="typeID" id="typeID"
+												class="form-control" th:field="*{typeID}" required>
 												<option th:each="t: ${alertTypesList}"
 													th:value="${t.idTypeMonitoriza}" th:text="${t.name}"></option>
 											</select>
@@ -35,8 +35,8 @@
 										<div class="form-group col-md-12">
 											<label for="severity"
 												th:text="#{table.alertconfig.criticity}"></label>
-											<select name="alertSeverityList" id="alertSeverityList"
-												class="form-control" th:field="*{alertSeverityList}" required>
+											<select name="severity" id="severity"
+												class="form-control" th:field="*{severity}" required>
 												<option th:each="t: ${alertSeverityList}"
 													th:value="${t.severityTypeId}" th:text="${t.name}"></option>
 											</select>
@@ -157,6 +157,16 @@
 		var getEmailInfo = /*[[@{/emailinformation}]]*/;
 		var getGraylogInfo = /*[[@{/grayloginformation}]]*/;
 
+		var blockCondition = /*[[*{blockCondition}]]*/;
+		var blockIntervalSeconds = /*[[*{blockIntervalSeconds}]]*/;
+		var blockPeriodSeconds = /*[[*{blockPeriodSeconds}]]*/;
+
+		if (blockCondition != null){
+			$('#blockCondition').val(blockCondition);
+			$('#blockInterval').val(secondsToTime(blockIntervalSeconds));
+			$('#blockPeriod').val(secondsToTime(blockPeriodSeconds));
+		}
+
 		// Instancia de las tablas para sistemas de notificacion y aplicaciones / tipos de alerta
 		var alertSystemTbl = $('#alertSystemTable').DataTable({
 			dom: 'Bfrtip',
@@ -178,7 +188,7 @@
 						});
 									
 						var idAlertSystem = d.data()[0].alertSystemMonitoriza.idAlertSystemMonitoriza;
-
+						
 						var type = d.data()[0].alertSystemMonitoriza.type;
 
 						if (type == "email"){
@@ -206,7 +216,7 @@
 							}
 							
 		            		$.ajax(getGraylogInfo, {
-				                data : $.param({'idAlertSystem':idAlertSystem , 'keysList[]':keysList, 'valuesList[]':valuesList}),
+				                data : $.param({'idAlertSystemConf':idAlertSystem , 'keysList[]':keysList, 'valuesList[]':valuesList}),
 				                type:'POST'
 				            })
 				            .done(function (data) {
@@ -284,8 +294,6 @@
 			$("#blockPeriodSeconds").val(timeToSecondsOfDay(blockPeriod));
 
             var formToJSON = $("#alertConfigForm").serializeJSON();
-            formToJSON.severity = $("#alertSeverityList option:selected").val();
-            formToJSON.typeID = $("#alertTypesList option:selected").val();
             formToJSON.notifSystemsIdArray = notifSystemsIdArray;
             formToJSON.emailConfigurationArray = emailConfigurationArray;
             formToJSON.keysArray = keysArray;
@@ -367,7 +375,14 @@
             for (var i = 0 ; i < alertSystems.length ; i++) {
             	var alertSystemData = $('#alertSystemTable').DataTable().row($(alertSystems[i])).data();
             	notifSystemsIdArray.push(alertSystemData.alertSystemMonitoriza.idAlertSystemMonitoriza);
-            	var noticeConfEmailArray = alertSystemData.resumeEmailAddresses.split('\n');
+            	var noticeConfEmailArray;
+            	
+            	if (alertSystemData.resumeEmailAddresses != null) {
+            		noticeConfEmailArray = alertSystemData.resumeEmailAddresses.split('\n');
+                } else{
+                	noticeConfEmailArray =  [""];
+				}
+                
             	if (emailConfigurationArray.length == 0) {
             		emailConfigurationArray[0] = noticeConfEmailArray;
                 } else {
@@ -403,7 +418,7 @@
                 } else {
                 	valuesArray[valuesArray.length] = valuesListData;
 				}
-}
+			}
 		}
  	});
 
@@ -442,5 +457,15 @@
 		}
 		
 		return finalValue;
+	}
+
+	function secondsToTime(seconds) {
+		  var hour = Math.floor(seconds / 3600);
+		  hour = (hour < 10)? '0' + hour : hour;
+		  var minute = Math.floor((seconds / 60) % 60);
+		  minute = (minute < 10)? '0' + minute : minute;
+		  var second = seconds % 60;
+		  second = (second < 10)? '0' + second : second;
+		  return hour + ':' + minute + ':' + second;
 	}
 </script>

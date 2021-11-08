@@ -130,7 +130,7 @@ public class AlertConfigSystem implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #alertSystemMonitoriza}.
 	 */
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "SYSTEM_ID", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public AlertSystemMonitoriza getAlertSystemMonitoriza() {

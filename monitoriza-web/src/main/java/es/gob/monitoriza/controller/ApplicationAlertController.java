@@ -50,6 +50,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitor
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
+import es.gob.monitoriza.service.IAlertConfigMonitorizaService;
 import es.gob.monitoriza.service.IAlertSeverityMonitorizaService;
 import es.gob.monitoriza.service.IAlertSystemMonitorizaService;
 import es.gob.monitoriza.service.IAlertTypeMonitorizaService;
@@ -102,10 +103,16 @@ public class ApplicationAlertController {
 	private IAlertTypeMonitorizaService alertTypeMonitorizaService;
 
 	/**
-	 * Attribute that represents the service object for accessing the repository for alert types.
+	 * Attribute that represents the service object for accessing the repository for severity types.
 	 */
 	@Autowired
 	private IAlertSeverityMonitorizaService alertSeverityMonitorizaService;
+
+	/**
+	 * Attribute that represents the service object for accessing the repository for alert configurations.
+	 */
+	@Autowired
+	private IAlertConfigMonitorizaService alertConfigMonitorizaService;
 
 	private static final String APP_ENABLED_S = "S"; //$NON-NLS-1$
 
@@ -363,7 +370,7 @@ public class ApplicationAlertController {
 	 * @return String that represents the name of the view to forward.
 	*/
 	@RequestMapping(value = "newalertconfig", method = RequestMethod.POST)
-    public String addAlertConfig(@RequestParam("alertConfigId") final Long alertConfigId, final Model model){
+    public String addAlertConfig(@RequestParam("appId") final Long appId, final Model model){
 
 		// Se cargan los sistemas de notificacion para el select correspondiente
 		List<AlertSystemMonitoriza> alertSystemsList = new ArrayList<AlertSystemMonitoriza>();
@@ -390,7 +397,54 @@ public class ApplicationAlertController {
 		model.addAttribute("alertSeverityList", alertSeverityList); //$NON-NLS-1$
 
 		final AlertConfigDTO alertConfigForm = new AlertConfigDTO();
-		alertConfigForm.setAppID(alertConfigId);
+		alertConfigForm.setAppID(appId);
+
+		model.addAttribute("alertconfigform", alertConfigForm); //$NON-NLS-1$
+
+		return "modal/alertConfigForm.html"; //$NON-NLS-1$
+    }
+
+	@RequestMapping(value = "editalertconfig", method = RequestMethod.POST)
+    public String editAlertConfig(@RequestParam("alertConfigId") final Long alertConfigId, @RequestParam("appId") final Long appId, final Model model){
+
+		// Se cargan los sistemas de notificacion para el select correspondiente
+		List<AlertSystemMonitoriza> alertSystemsList = new ArrayList<AlertSystemMonitoriza>();
+
+		alertSystemsList = StreamSupport.stream(this.alertSystemService.getAllAlertSystemMonitoriza().spliterator(), false)
+				.collect(Collectors.toList());
+
+		model.addAttribute("alertSystemsList", alertSystemsList); //$NON-NLS-1$
+
+		// Se cargan los tipos de alerta para el select correspondiente
+		List<AlertTypeMonitoriza> alertTypesMonitorizaList = new ArrayList<AlertTypeMonitoriza>();
+
+		alertTypesMonitorizaList = StreamSupport.stream(this.alertTypeMonitorizaService.getAllAlertTypeMonitoriza().spliterator(), false)
+				.collect(Collectors.toList());
+
+		model.addAttribute("alertTypesList", alertTypesMonitorizaList); //$NON-NLS-1$
+
+		// Se cargan los tipos de criticidad para el select correspondiente
+		List<AlertSeverityMonitoriza> alertSeverityList = new ArrayList<AlertSeverityMonitoriza>();
+
+		alertSeverityList = StreamSupport.stream(this.alertSeverityMonitorizaService.getAllAlertSeverity().spliterator(), false)
+				.collect(Collectors.toList());
+
+		model.addAttribute("alertSeverityList", alertSeverityList); //$NON-NLS-1$
+
+		// Se carga la informacion de la alerta
+		final AlertConfigMonitoriza alertConfig = this.alertConfigMonitorizaService.getAlertConfigMonitorizaById(alertConfigId);
+		final AlertConfigDTO alertConfigForm = new AlertConfigDTO();
+		alertConfigForm.setIdAlertConfigMonitoriza(alertConfigId);
+		alertConfigForm.setAppID(appId);
+		alertConfigForm.setTypeID(alertConfig.getAlertTypeMonitoriza().getIdTypeMonitoriza());
+		alertConfigForm.setSeverity(alertConfig.getAlertSeverityMonitoriza().getSeverityTypeId());
+		alertConfigForm.setIsAllowBlock(alertConfig.getAllowBlock());
+		if (alertConfig.getAllowBlock()) {
+			model.addAttribute("blockCondition", alertConfig.getBlockCondition()); //$NON-NLS-1$
+			model.addAttribute("blockIntervalSeconds", alertConfig.getBlockInterval()); //$NON-NLS-1$
+			model.addAttribute("blockPeriodSeconds", alertConfig.getBlockPeriod()); //$NON-NLS-1$
+		}
+		alertConfigForm.setIsEnable(alertConfig.getEnable());
 
 		model.addAttribute("alertconfigform", alertConfigForm); //$NON-NLS-1$
 
@@ -398,13 +452,13 @@ public class ApplicationAlertController {
     }
 
 	@RequestMapping(value = "grayloginformation", method = RequestMethod.POST)
-    public String grayLogInformation(@RequestParam("idAlertSystem") final Long alertSystemId,
+    public String grayLogInformation(@RequestParam("idAlertSystemConf") final Long alertSystemId,
     									@RequestParam("keysList[]") final String[] keysList,
     									@RequestParam("valuesList[]") final String[] valuesList,
     									final Model model){
 
 		final GrayLogConfigDTO grayLogConfig = new GrayLogConfigDTO();
-		grayLogConfig.setIdAlertSystem(alertSystemId);
+		grayLogConfig.setIdAlertSystemConf(alertSystemId);
 		grayLogConfig.setKeysList(keysList);
 		grayLogConfig.setValuesList(valuesList);
 

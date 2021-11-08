@@ -10,7 +10,7 @@
 				</button>
 			</div>
 		<form name="altEditor-form" role="form" id="grayLogInfoForm" th:object="${grayloginfoform}" action="#" method="post">
-			<input type='hidden' class='primarykey' id="idAlertSystem" th:field="*{idAlertSystem}">
+			<input type='hidden' class='primarykey' id="idAlertSystemConf" name="idAlertSystemConf" th:field="*{idAlertSystemConf}">
 			<input type='hidden' id="editingIndex" name="editingIndex">
 			
 			<div class="modal-body">
@@ -83,7 +83,7 @@
 						});
 
 						var editingIndex = grayLogConfigTbl.row(d).index();
-						console.log(editingIndex);	
+						
 						var key = d.data()[0].key;
 						var value = d.data()[0].value;
 
@@ -154,8 +154,7 @@
             
             for (var i = 0 ; i < alertSystems.length ; i++) {
             	var alertSystemData = $('#alertSystemTable').DataTable().row($(alertSystems[i])).data();
-            	console.log($('#idAlertSystem').val());
-				if (alertSystemData.alertSystemMonitoriza.idAlertSystemMonitoriza == $('#idAlertSystem').val()) {
+				if (alertSystemData.alertSystemMonitoriza.idAlertSystemMonitoriza == $('#idAlertSystemConf').val()) {
 					$('#alertSystemTable').DataTable().row($(alertSystems[i])).data().keysList = keysArray;
 					$('#alertSystemTable').DataTable().row($(alertSystems[i])).data().valuesList = valuesArray;
 				}

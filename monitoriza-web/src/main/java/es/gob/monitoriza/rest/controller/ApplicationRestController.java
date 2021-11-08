@@ -56,8 +56,12 @@ import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.ApplicationDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.rest.exception.OrderedValidation;
+import es.gob.monitoriza.service.IAlertConfigMonitorizaService;
+import es.gob.monitoriza.service.IAlertConfigSystemService;
+import es.gob.monitoriza.service.IAlertResumeTypeService;
 import es.gob.monitoriza.service.IApplicationMonitorizaService;
 
 /**
@@ -74,6 +78,27 @@ public class ApplicationRestController {
 	 */
 	@Autowired
 	private IApplicationMonitorizaService applicationService;
+
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IAlertConfigMonitorizaService alertConfigMonitorizaService;
+
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IAlertConfigSystemService alertConfigSystemService;
+
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IAlertResumeTypeService alertResumeTypeService;
 
 	/**
 	 * Attribute that represents the span text.
@@ -159,6 +184,24 @@ public class ApplicationRestController {
 	@RequestMapping(path = "/deleteapplication", method = RequestMethod.POST)
 	@Transactional
 	public String deleteApplication(@RequestParam("id") final Long appId, @RequestParam("index") final String index) {
+
+		final ApplicationMonitoriza application = this.applicationService.getApplicationMonitorizaById(appId);
+
+		// Se eliminan las alertas configuradas para la aplicacion. Tambien las relaciones de alertas - sistemas
+		if (application.getAlertConfigMonitoriza() != null && !application.getAlertConfigMonitoriza().isEmpty()) {
+			for (final AlertConfigMonitoriza alertConfig : application.getAlertConfigMonitoriza()) {
+				this.alertConfigSystemService.deleteAlertConfigSystemByAlertConfigMonitoriza(alertConfig);
+
+				this.alertConfigMonitorizaService.deleteAlertConfigMonitoriza(alertConfig.getIdAlertConfigMonitoriza());
+			}
+		}
+
+		// Se eliminan las relaciones de aplicaciones - resumen
+		if (application.getAlertResumeTypes() != null && !application.getAlertResumeTypes().isEmpty()) {
+			for (final AlertResumeType alertResumeType : application.getAlertResumeTypes()) {
+				this.alertResumeTypeService.deleteAlertResumeType(alertResumeType.getIdResType());
+			}
+		}
 
 		this.applicationService.deleteApplicationMonitoriza(appId);
 

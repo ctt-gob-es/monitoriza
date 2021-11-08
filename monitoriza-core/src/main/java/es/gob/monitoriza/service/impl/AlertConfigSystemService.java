@@ -74,23 +74,7 @@ public class AlertConfigSystemService implements IAlertConfigSystemService {
 	@Override
 	@Transactional
 	public void deleteAlertConfigSystemByAlertConfigMonitoriza(final AlertConfigMonitoriza alertConfigMonitoriza) {
-		// TODO Auto-generated method stub
-
+		this.repository.deleteByAlertConfigMonitoriza(alertConfigMonitoriza);
 	}
-
-	/*@Override
-	public AlertResumeSystem saveAlertResumeSystem(final AlertResumeSystem alertResumeSystem) {
-
-		AlertResumeSystem newResumeSystem = null;
-
-		if (alertResumeSystem.getIdResSystem() == null) {
-			newResumeSystem = new AlertResumeSystem();
-		}
-
-		newResumeSystem.setResumeMonitoriza(alertResumeSystem.getResumeMonitoriza());
-		newResumeSystem.setAlertSystemMonitoriza(alertResumeSystem.getAlertSystemMonitoriza());
-
-		return this.repository.save(newResumeSystem);
-	}*/
 
 }
