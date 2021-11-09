@@ -1,12 +1,11 @@
-<div class="modal" tabindex="-1" role="dialog" id="summaryModal"
-	name="summaryModal">
-	<div class="modal-dialog">
+<div class="modal" tabindex="-1" id="summaryModal" name="summaryModal">
+	<div class="modal-dialog modal-dialog-scrollable">
 		<div class="modal-content" style="margin-left: -50%; width: 200%;">
 			<div class="modal-header">
 				<h4 class="modal-title"
 					th:text="#{applalert.summaries.modal.add.title}"></h4>
 				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Cerrar">
+					aria-label="Cerrar" onclick="removeBackdrop()">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -82,9 +81,11 @@
 										width="100%">
 										<thead>
 											<tr>
-												<!-- Columna oculta para el identificador de la plataforma -->
+												<!-- Columna oculta para el identificador del sistema de notificacion -->
 												<th></th>
 												<th th:text="#{applalert.summaries.modal.notifsystem}"></th>
+												<!-- Columna oculta para los emails configurados -->
+												<th></th>
 											</tr>
 										</thead>
 									</table>
@@ -148,7 +149,7 @@
 				</div>-
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal"
-					th:text="#{button.close}"></button>
+					th:text="#{button.close}" onclick="removeBackdrop()"></button>
 				<button type="button" id="summaryButton" class="btn btn-primary"
 					th:text="#{applalert.summaries.modal.btn.accept}"></button>
 			</div>
@@ -157,35 +158,16 @@
 	</div>
 </div>
 
-<div class="modal" tabindex="-1" role="dialog" id="configureEmailsModal">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h4 class="modal-title"
-					th:text="#{applalert.summaries.modal.emailconfiguration.title}"></h4>
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Cerrar">
-					<span aria-hidden="true">&times;</span>
-				</button>
-			</div>
-			<div class="modal-body">
-				<div class="form-row">
-					<div class="form-group col-md-12">
-						<label for="emails" th:text="#{applalert.summaries.modal.emailconfiguration.description}"></label>
-						<textarea cols="10" rows="5" class="form-control mon-log-panel" id="emails"></textarea>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button type="button" class="btn btn-default" th:text="#{button.close}"></button>
-					<button type="button" id="confEmailButton" class="btn btn-primary" 
-					th:text="#{applalert.summaries.modal.btn.config}"></button>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
+<div id="emailInformationModal"></div>
 
 <script th:inline="javascript">
+
+	function removeBackdrop(){
+		$('.modal-backdrop').each(function(i, obj) {
+			$(obj).remove();
+		    return false;
+		});
+	}
 
 	$(document).ready(function () {
 
@@ -195,11 +177,14 @@
 		var alertsTypesIdArray = [];
 		// Identificadores de los sistemas de notificacion indicados en la tabla
 		var notifSystemsIdArray = [];
+		// Emails configurados para los sistemas de notificacion
+		var emailConfigurationArray = [];
 
 		var getAlertsFromApp = /*[[@{/alertsfromapplication}]]*/;
 		var saveResume = /*[[@{/saveresume}]]*/;
 		var getResumeAlertSystems = /*[[@{/resumealertssystemsdt}]]*/;
 		var getResumeAppsAndAlertsTypes = /*[[@{/resumeappsalerttypessdt}]]*/;
+		var getEmailInfo = /*[[@{/emailinformation}]]*/;
 
 		// Instancia de las tablas para sistemas de notificacion y aplicaciones / tipos de alerta
 		var alertSystemTbl = $('#alertSystemTable').DataTable({
@@ -212,7 +197,27 @@
 		    buttons: [
 				{extend: 'selected',text: 'Configurar',name: 'configure',
 					action: function ( e, dt, node, config ) {
-						$('#configureEmailsModal').modal('show');
+
+						for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({
+							id: o.context[0].aoColumns[e].mData           
+						});
+								  
+						var d = dt.rows({
+							selected: !0
+						});
+									
+						var idAlertSystem = d.data()[0][a[0].id];
+
+						var emailConfiguration = d.data()[0].resumeEmailAddresses;
+						
+	            		$.ajax(getEmailInfo, {
+			                data : $.param({'idAlertSystem':idAlertSystem ,'emailConfiguration':emailConfiguration}),
+			                type:'POST'
+			            })
+			            .done(function (data) {
+			            	 $('#emailInformationModal').html(data);
+			            	 $('#configureEmailsModal').modal('show');
+	    		         }) ;
 					}
 				},   
     			{extend: 'selected',text: 'Eliminar',name: 'deleteAlertSystem',
@@ -238,7 +243,8 @@
 			},
 			"columns": [
 				{ "data": "idAlertSystemMonitoriza", "visible": false},
-		        { "data": "name" }
+		        { "data": "name" },
+		        { "data": "resumeEmailAddresses", "visible": false}
 		        ]
 			});
 
@@ -306,7 +312,8 @@
 
         $('#btnAddAlertSystem').on( 'click', function () {
         	alertSystemTbl.row.add({"idAlertSystemMonitoriza" : $("#alertSystemsList option:selected").val(),
-            						"name" : $("#alertSystemsList option:selected").text()
+            						"name" : $("#alertSystemsList option:selected").text(),
+            						"resumeEmailAddresses" : ""
             						}).draw(false);
         });
 
@@ -335,14 +342,11 @@
             // Cargamos la informacion de las tablas en arrays que se mandaran al servidor
             loadTableInfoIntoArrays();
 
-            console.log('notif systems = ' + notifSystemsIdArray);
-            console.log('alert types = ' + alertsTypesIdArray);
-            console.log('applications = ' + applicationsIdArray);
-
             var formToJSON = $("#summaryForm").serializeJSON();
             formToJSON.applicationsIdArray = applicationsIdArray;
             formToJSON.alertsTypesIdArray = alertsTypesIdArray;
             formToJSON.notifSystemsIdArray = notifSystemsIdArray;
+            formToJSON.emailConfigurationArray = emailConfigurationArray;
             
             //Eliminamos los datos que no son necesarios para guardar un nuevo registro
             delete formToJSON["alertSystemsList"];
@@ -356,11 +360,13 @@
                 type:'POST',
                 success: function(data){
             		// Se oculta la capa 'cargando...'
+            		removeBackdrop();
             		hide();
             		summariesTable.row.add($(data.data)).draw(false);
                     $('#summaryModal').modal('hide');
                 },
                 error:function(data){
+                	removeBackdrop();
                 	hide();
                 	$('#errorModalSummary').remove();
                 	$('#summaryModal').append('<div id="errorModalSummary" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
@@ -398,6 +404,12 @@
             for (var i = 0 ; i < alertSystems.length ; i++) {
             	var alertSystemData = $('#alertSystemTable').DataTable().row($(alertSystems[i])).data();
             	notifSystemsIdArray.push(alertSystemData.idAlertSystemMonitoriza);
+            	var resumeEmailArray = alertSystemData.resumeEmailAddresses.split('\n');
+            	if (emailConfigurationArray.length == 0) {
+            		emailConfigurationArray[0] = resumeEmailArray;
+                } else {
+                	emailConfigurationArray[emailConfigurationArray.length] = resumeEmailArray;
+				}
             }
 
             var appAlerts = $("#alertListTable").dataTable().fnGetNodes();

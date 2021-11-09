@@ -23,7 +23,6 @@
 		</div>
 	</div>
 </div>
-<div id="modalEditUser"></div>
 
 <script th:inline="javascript">
 
@@ -43,7 +42,26 @@ $(document).ready(function() {
 	    altEditor: true,
 	    buttons: [
 		    {text: 'Agregar', name: 'add'},
-		    {extend: 'selected',text: 'Configurar alarmas',name: 'configAlarms'},
+		    {extend: 'selected',text: 'Configurar alarmas',name: 'configAlarms',
+				action: function ( e, dt, node, config ) {
+
+					for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({
+						id: o.context[0].aoColumns[e].mData           
+					});
+							  
+					var d = dt.rows({
+						selected: !0
+					});
+								
+					var idApplication = d.data()[0][a[0].id];
+
+					var appName = d.data()[0].name;
+					
+                    var actionAlertConfigurations = /*[[@{/alertconfigurations}]]*/;
+                    actionAlertConfigurations += "?applicationId=" + idApplication + "&appName=" + appName;
+                    loadIntoAjax('formMenu', actionAlertConfigurations, 'optionReplacement', 'GET', null, true); 
+                    return false;
+			}},
 		    {extend: 'selected',text: 'Editar',name: 'edit'},
 	    	{extend: 'selected',text: 'Eliminar',name: 'delete'}
 		],

@@ -31,6 +31,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.repository.AlertMailResumeConfigRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.ResumeMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.ResumeDatatableRepository;
 import es.gob.monitoriza.service.IResumeMonitorizaService;
@@ -47,6 +48,9 @@ public class ResumeMonitorizaService implements IResumeMonitorizaService {
 
 	@Autowired
 	private ResumeDatatableRepository dtRepository;
+
+	@Autowired
+	private AlertMailResumeConfigRepository mailRepository;
 
 	@Override
 	public ResumeMonitoriza getResumeMonitorizaById(final Long resumeId) {

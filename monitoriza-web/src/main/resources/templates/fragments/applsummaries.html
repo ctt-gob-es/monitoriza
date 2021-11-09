@@ -167,7 +167,6 @@ $(document).ready(function() {
 		                success: function(data){
 		                	// Se oculta la capa 'cargando...'
 		                	hide();
-		                	console.log(data.index);
 		                    summariesTable.row(data.index).remove().draw();
 		                    $('#altEditor-modal .modal-body .alert').remove();
 		                    $('#altEditor-modal').modal('hide');

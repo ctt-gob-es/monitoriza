@@ -248,7 +248,7 @@ public class ApplicationMonitoriza implements Serializable {
 	/**
 	 * Sets the value of the attribute {@link #responsibleEmail}.
 	 *
-	 * @param name
+	 * @param responsibleEmail
 	 *            The value for the attribute {@link #responsibleEmail}.
 	 */
 	public void setResponsibleEmail(final String responsibleEmail) {
@@ -269,7 +269,7 @@ public class ApplicationMonitoriza implements Serializable {
 	/**
 	 * Sets the value of the attribute {@link #responsiblePhone}.
 	 *
-	 * @param name
+	 * @param responsiblePhone
 	 *            The value for the attribute {@link #responsiblePhone}.
 	 */
 	public void setResponsiblePhone(final String responsiblePhone) {

@@ -23,46 +23,38 @@
  */
 package es.gob.monitoriza.service;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
-import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
+import java.util.List;
+
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailResumeConfig;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeSystem;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
-public interface IAlertResumeTypeService {
+public interface IAlertMailResumeConfigService {
 
 	/**
-	 * Method that obtains a alertResume by its identifier.
-	 * @param resTypeId The resume type identifier.
-	 * @return {@link AlertResumeType}
+	 * Method that obtains a AlertMailResumeConfig by its identifier.
+	 * @param mailResumeConfigId The resume type identifier.
+	 * @return {@link AlertResumeSystem}
 	 */
-	AlertResumeType getAlertResumeTypeId(Long resTypeId);
+	List<AlertMailResumeConfig> getAlertMailResumeConfigById(Long mailResumeConfigId);
 
 	/**
-	 * Method that deletes a resume type in the persistence.
-	 * @param resTypeId {@link Integer} that represents the resume type identifier to delete.
+	 * Method that gets all the relations from the persistence.
+	 * @return a {@link Iterable<AlertMailResumeConfig>} with the information o@Override
+	f all relations.
 	 */
-	void deleteAlertResumeType(Long resTypeId);
+	Iterable<AlertMailResumeConfig> getAllAlertMailResumeConfig();
 
 	/**
-	 * Method that deletes a resume type in the persistence.
-	 * @param resumeMonitoriza {@link ResumeMonitoriza} that represents the resume to delete.
+	 * Method that stores a relation in the persistence.
+	 * @param alertResumeSystem a {@link AlertMailResumeConfig} with the information of the relation.
+	 * @return {@link AlertMailResumeConfig} The relation.
 	 */
-	void deleteAlertResumeTypeByResumeMonitoriza(ResumeMonitoriza resumeMonitoriza);
+	AlertMailResumeConfig saveAlertMailResumeConfig(AlertMailResumeConfig alertResumeConfig);
 
-	/**
-	 * Method that gets all the resume types from the persistence.
-	 * @return a {@link Iterable<AlertResumeTypes>} with the information of all resume types.
-	 */
-	Iterable<AlertResumeType> getAllAlertResumeTypes();
-
-	/**
-	 * Method that stores a resume type in the persistence.
-	 * @param alertResumeType a {@link AlertResumeType} with the information of the resume type.
-	 * @return {@link AlertResumeType} The alert resume.
-	 */
-	AlertResumeType saveAlertResumeType(AlertResumeType alertResumeType);
-
+	void deleteAlertMailResumeConfig(AlertMailResumeConfig mailResumeConfigId);
 
 }

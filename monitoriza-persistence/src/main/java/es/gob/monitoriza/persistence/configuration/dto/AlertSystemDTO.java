@@ -24,6 +24,12 @@
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
+import java.io.Serializable;
+
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
+import com.fasterxml.jackson.annotation.JsonView;
+
 /**
  * <p>
  * Class that represents the backing form for adding/editing an alert system.
@@ -34,7 +40,9 @@ package es.gob.monitoriza.persistence.configuration.dto;
  * </p>
  *
  */
-public class AlertSystemDTO {
+public class AlertSystemDTO implements Serializable{
+
+	private static final long serialVersionUID = -3349913988947911986L;
 
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input in the form.
@@ -61,6 +69,12 @@ public class AlertSystemDTO {
 	 */
 	private Long port;
 
+	/**
+	 * Attribute that represents the emails configurated for the resumes
+	 */
+	private String resumeEmailAddresses;
+
+	@JsonView(DataTablesOutput.View.class)
 	public Long getIdAlertSystemMonitoriza() {
 		return this.idAlertSystemMonitoriza;
 	}
@@ -69,6 +83,7 @@ public class AlertSystemDTO {
 		this.idAlertSystemMonitoriza = idAlertSystemMonitoriza;
 	}
 
+	@JsonView(DataTablesOutput.View.class)
 	public String getName() {
 		return this.name;
 	}
@@ -99,6 +114,15 @@ public class AlertSystemDTO {
 
 	public void setPort(final Long port) {
 		this.port = port;
+	}
+
+	@JsonView(DataTablesOutput.View.class)
+	public String getResumeEmailAddresses() {
+		return this.resumeEmailAddresses;
+	}
+
+	public void setResumeEmailAddresses(final String emailAdresses) {
+		this.resumeEmailAddresses = emailAdresses;
 	}
 
 }

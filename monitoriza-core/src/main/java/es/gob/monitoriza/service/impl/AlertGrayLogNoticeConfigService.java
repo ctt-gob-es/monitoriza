@@ -23,61 +23,43 @@
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
-import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.repository.AlertResumeTypeRepository;
-import es.gob.monitoriza.service.IAlertResumeTypeService;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogNoticeConfig;
+import es.gob.monitoriza.persistence.configuration.model.repository.AlertGrayLogNoticeConfigRepository;
+import es.gob.monitoriza.service.IAlertGrayLogNoticeConfigService;
 
 /**
  * <p>Class that implements the communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
-@Service("alertResumeTypeService")
-public class AlertResumeTypeService implements IAlertResumeTypeService {
+@Service("alertGraylogNoticeConfigService")
+public class AlertGrayLogNoticeConfigService implements IAlertGrayLogNoticeConfigService {
 
 	@Autowired
-	private AlertResumeTypeRepository repository;
+	private AlertGrayLogNoticeConfigRepository repository;
 
 	@Override
-	public AlertResumeType getAlertResumeTypeId(final Long resTypeId) {
-		return this.repository.findByIdResType(resTypeId);
+	public List<AlertGraylogNoticeConfig> getAlertGraylogNoticeConfigId(final Long alertMailNoticeConfigId) {
+		return this.repository.findByNotSysConfigId(alertMailNoticeConfigId);
 	}
 
 	@Override
-	@Transactional
-	public void deleteAlertResumeType(final Long resTypeId) {
-		this.repository.deleteById(resTypeId);
+	public void deleteAlertGraylogNoticeConfig(final Long alertGraylogNoticeConfig) {
+		this.repository.deleteByNotSysConfigId(alertGraylogNoticeConfig);
 	}
 
 	@Override
-	@Transactional
-	public void deleteAlertResumeTypeByResumeMonitoriza(final ResumeMonitoriza resumeMonitoriza) {
-		this.repository.deleteByResumeMonitoriza(resumeMonitoriza);
-	}
-
-	@Override
-	public Iterable<AlertResumeType> getAllAlertResumeTypes() {
+	public Iterable<AlertGraylogNoticeConfig> getAllAlertGraylogNoticeConfigs() {
 		return this.repository.findAll();
 	}
 
 	@Override
-	public AlertResumeType saveAlertResumeType(final AlertResumeType alertResumeType) {
-
-		final AlertResumeType newResumeType = new AlertResumeType();
-
-		if (alertResumeType.getIdResType() != null) {
-			newResumeType.setIdResType(alertResumeType.getIdResType());
-		}
-
-		newResumeType.setApplicationMonitoriza(alertResumeType.getApplicationMonitoriza());
-		newResumeType.setAlertTypeMonitoriza(alertResumeType.getAlertTypeMonitoriza());
-		newResumeType.setResumeMonitoriza(alertResumeType.getResumeMonitoriza());
-
-		return this.repository.save(newResumeType);
+	public AlertGraylogNoticeConfig saveAlertGraylogNoticeConfig(final AlertGraylogNoticeConfig alertGraylogNoticeConfig) {
+		return this.repository.save(alertGraylogNoticeConfig);
 	}
 
 

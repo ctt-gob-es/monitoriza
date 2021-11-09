@@ -36,16 +36,23 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import es.gob.monitoriza.persistence.configuration.dto.AlertConfigDTO;
 import es.gob.monitoriza.persistence.configuration.dto.AlertSystemDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ApplicationDTO;
+import es.gob.monitoriza.persistence.configuration.dto.GrayLogConfigDTO;
+import es.gob.monitoriza.persistence.configuration.dto.MailResumeConfigDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TemplateDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertSeverityMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
+import es.gob.monitoriza.service.IAlertSeverityMonitorizaService;
 import es.gob.monitoriza.service.IAlertSystemMonitorizaService;
+import es.gob.monitoriza.service.IAlertTypeMonitorizaService;
 import es.gob.monitoriza.service.IApplicationMonitorizaService;
 import es.gob.monitoriza.service.IResumeMonitorizaService;
 import es.gob.monitoriza.service.ITemplateMonitorizaService;
@@ -88,6 +95,18 @@ public class ApplicationAlertController {
 	@Autowired
 	private IApplicationMonitorizaService applicationService;
 
+	/**
+	 * Attribute that represents the service object for accessing the repository for alert types.
+	 */
+	@Autowired
+	private IAlertTypeMonitorizaService alertTypeMonitorizaService;
+
+	/**
+	 * Attribute that represents the service object for accessing the repository for alert types.
+	 */
+	@Autowired
+	private IAlertSeverityMonitorizaService alertSeverityMonitorizaService;
+
 	private static final String APP_ENABLED_S = "S"; //$NON-NLS-1$
 
 	/**
@@ -114,6 +133,15 @@ public class ApplicationAlertController {
 	public String applications(final Model model) {
 
 		return "fragments/applications.html"; //$NON-NLS-1$
+	}
+
+	@RequestMapping(value = "alertconfigurations", method = RequestMethod.GET)
+	public String alertConfigurations(@RequestParam("applicationId") final Long applicationId, @RequestParam("appName") final String appName, final Model model) {
+
+		model.addAttribute("applicationId", applicationId); //$NON-NLS-1$
+		model.addAttribute("appName", appName); //$NON-NLS-1$
+
+		return "fragments/alertconfigurations.html"; //$NON-NLS-1$
 	}
 
 	@RequestMapping(value = "appltemplates", method = RequestMethod.GET)
@@ -166,6 +194,7 @@ public class ApplicationAlertController {
 		final AlertSystemMonitoriza alertSystem = this.alertSystemService.getAlertSystemMonitorizaById(notifSystemId);
 		final AlertSystemDTO alertSystemForm = new AlertSystemDTO();
 
+		alertSystemForm.setIdAlertSystemMonitoriza(alertSystem.getIdAlertSystemMonitoriza());
 		alertSystemForm.setName(alertSystem.getName());
 		alertSystemForm.setType(alertSystem.getType());
 
@@ -311,11 +340,79 @@ public class ApplicationAlertController {
 
 		model.addAttribute("alertSystemsSaved", resume.getAlertResumeSystem()); //$NON-NLS-1$
 
-		model.addAttribute("applicationsWithAlertsSaved", resume.getResumeTypes()); //$NON-NLS-1$
-
 		model.addAttribute("summaryform", resumeForm); //$NON-NLS-1$
 
 		return "modal/summaryForm.html"; //$NON-NLS-1$
+    }
+
+	@RequestMapping(value = "emailinformation", method = RequestMethod.POST)
+    public String emailInformation(@RequestParam("idAlertSystem") final Long alertSystemId, @RequestParam("emailConfiguration") final String emailConfiguration, final Model model){
+
+		final MailResumeConfigDTO mailResumeConfig = new MailResumeConfigDTO();
+		mailResumeConfig.setIdAlertSystem(alertSystemId);
+		mailResumeConfig.setEmailAddress(emailConfiguration);
+
+		model.addAttribute("emailinfoform", mailResumeConfig); //$NON-NLS-1$
+
+		return "modal/emailInformation.html"; //$NON-NLS-1$
+    }
+
+	/**
+	 * Method that maps the add new node web request to the controller and sets the backing form.
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	*/
+	@RequestMapping(value = "newalertconfig", method = RequestMethod.POST)
+    public String addAlertConfig(@RequestParam("alertConfigId") final Long alertConfigId, final Model model){
+
+		// Se cargan los sistemas de notificacion para el select correspondiente
+		List<AlertSystemMonitoriza> alertSystemsList = new ArrayList<AlertSystemMonitoriza>();
+
+		alertSystemsList = StreamSupport.stream(this.alertSystemService.getAllAlertSystemMonitoriza().spliterator(), false)
+				.collect(Collectors.toList());
+
+		model.addAttribute("alertSystemsList", alertSystemsList); //$NON-NLS-1$
+
+		// Se cargan los tipos de alerta para el select correspondiente
+		List<AlertTypeMonitoriza> alertTypesMonitorizaList = new ArrayList<AlertTypeMonitoriza>();
+
+		alertTypesMonitorizaList = StreamSupport.stream(this.alertTypeMonitorizaService.getAllAlertTypeMonitoriza().spliterator(), false)
+				.collect(Collectors.toList());
+
+		model.addAttribute("alertTypesList", alertTypesMonitorizaList); //$NON-NLS-1$
+
+		// Se cargan los tipos de criticidad para el select correspondiente
+		List<AlertSeverityMonitoriza> alertSeverityList = new ArrayList<AlertSeverityMonitoriza>();
+
+		alertSeverityList = StreamSupport.stream(this.alertSeverityMonitorizaService.getAllAlertSeverity().spliterator(), false)
+				.collect(Collectors.toList());
+
+		model.addAttribute("alertSeverityList", alertSeverityList); //$NON-NLS-1$
+
+		final AlertConfigDTO alertConfigForm = new AlertConfigDTO();
+		alertConfigForm.setAppID(alertConfigId);
+
+		model.addAttribute("alertconfigform", alertConfigForm); //$NON-NLS-1$
+
+		return "modal/alertConfigForm.html"; //$NON-NLS-1$
+    }
+
+	@RequestMapping(value = "grayloginformation", method = RequestMethod.POST)
+    public String grayLogInformation(@RequestParam("idAlertSystem") final Long alertSystemId,
+    									@RequestParam("keysList[]") final String[] keysList,
+    									@RequestParam("valuesList[]") final String[] valuesList,
+    									final Model model){
+
+		final GrayLogConfigDTO grayLogConfig = new GrayLogConfigDTO();
+		grayLogConfig.setIdAlertSystem(alertSystemId);
+		grayLogConfig.setKeysList(keysList);
+		grayLogConfig.setValuesList(valuesList);
+
+		model.addAttribute("grayloginfoform", grayLogConfig); //$NON-NLS-1$
+		model.addAttribute("keysList", keysList); //$NON-NLS-1$
+		model.addAttribute("valuesList", valuesList); //$NON-NLS-1$
+
+		return "modal/grayLogInformation.html"; //$NON-NLS-1$
     }
 
 }

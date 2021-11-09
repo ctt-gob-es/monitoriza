@@ -24,6 +24,12 @@
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
+import java.util.List;
+
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertSeverityMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitoriza;
+
 /**
  * <p>
  * Class that represents the backing form for adding/editing an alert system.
@@ -42,24 +48,29 @@ public class AlertConfigDTO {
 	private Long idAlertConfigMonitoriza;
 
 	/**
+	 * Attribute that represents the application of the alert
+	 */
+	private Long appID;
+
+	/**
 	 * Attribute that represents the alert type
 	 */
 	private Long typeID;
 
 	/**
-	 * Attribute that represents the sevirity
+	 * Attribute that represents the severity
 	 */
-	private String severity;
+	private Long severity;
 
 	/**
 	 * Attribute that represents if the alert is enabled
 	 */
-	private String enable;
+	private Boolean isEnable;
 
 	/**
 	 * Attribute that represents if allow block
 	 */
-	private String allowBlock;
+	private Boolean isAllowBlock;
 
 	/**
 	 * Attribute that represents the condition to block
@@ -69,22 +80,47 @@ public class AlertConfigDTO {
 	/**
 	 * Attribute that represents the interval to block
 	 */
-	private Long blockInterval;
+	private Long blockIntervalSeconds;
 
 	/**
 	 * Attribute that represents the period to block
 	 */
-	private Long blockPeriod;
+	private Long blockPeriodSeconds;
 
 	/**
-	 * Attribute that represents the block time
+	 * Attribute that represents the alert types for the select
 	 */
-	private String blockTime;
+	private List<AlertTypeMonitoriza> alertTypesList;
 
 	/**
-	 * Attribute that represents the last time that the alert happened
+	 * Attribute that represents the alert systems for the select
 	 */
-	private String lastTime;
+	private List<AlertSystemMonitoriza> alertSystemsList;
+
+	/**
+	 * Attribute that represents the severity list
+	 */
+	private List<AlertSeverityMonitoriza> alertSeverityList;
+
+	/**
+	 * Attribute that represents the alert systems for the select
+	 */
+	private List<String> notifSystemsIdArray;
+
+	/**
+	 * Attribute that represents the emails configurated for the alert systems
+	 */
+	private List<List<String>> emailConfigurationArray;
+
+	/**
+	 * Attribute that represents the keys for the graylog configuration
+	 */
+	private List<List<String>> keysArray;
+
+	/**
+	 * Attribute that represents the values for the graylog configuration
+	 */
+	private List<List<String>> valuesArray;
 
 	public Long getIdAlertConfigMonitoriza() {
 		return this.idAlertConfigMonitoriza;
@@ -92,6 +128,14 @@ public class AlertConfigDTO {
 
 	public void setIdAlertConfigMonitoriza(final Long idAlertConfigMonitoriza) {
 		this.idAlertConfigMonitoriza = idAlertConfigMonitoriza;
+	}
+
+	public Long getAppID() {
+		return this.appID;
+	}
+
+	public void setAppID(final Long appID) {
+		this.appID = appID;
 	}
 
 	public Long getTypeID() {
@@ -102,28 +146,28 @@ public class AlertConfigDTO {
 		this.typeID = typeID;
 	}
 
-	public String getSeverity() {
+	public Long getSeverity() {
 		return this.severity;
 	}
 
-	public void setSeverity(final String severity) {
+	public void setSeverity(final Long severity) {
 		this.severity = severity;
 	}
 
-	public String getEnable() {
-		return this.enable;
+	public Boolean getIsEnable() {
+		return this.isEnable;
 	}
 
-	public void setEnable(final String enable) {
-		this.enable = enable;
+	public void setIsEnable(final Boolean isEnable) {
+		this.isEnable = isEnable;
 	}
 
-	public String getAllowBlock() {
-		return this.allowBlock;
+	public Boolean getIsAllowBlock() {
+		return this.isAllowBlock;
 	}
 
-	public void setAllowBlock(final String allowBlock) {
-		this.allowBlock = allowBlock;
+	public void setIsAllowBlock(final Boolean isAllowBlock) {
+		this.isAllowBlock = isAllowBlock;
 	}
 
 	public Long getBlockCondition() {
@@ -134,36 +178,75 @@ public class AlertConfigDTO {
 		this.blockCondition = blockCondition;
 	}
 
-	public Long getBlockInterval() {
-		return this.blockInterval;
+	public Long getBlockIntervalSeconds() {
+		return this.blockIntervalSeconds;
 	}
 
-	public void setBlockInterval(final Long blockInterval) {
-		this.blockInterval = blockInterval;
+	public void setBlockIntervalSeconds(final Long blockIntervalSeconds) {
+		this.blockIntervalSeconds = blockIntervalSeconds;
 	}
 
-	public Long getBlockPeriod() {
-		return this.blockPeriod;
+	public Long getBlockPeriodSeconds() {
+		return this.blockPeriodSeconds;
 	}
 
-	public void setBlockPeriod(final Long blockPeriod) {
-		this.blockPeriod = blockPeriod;
+	public void setBlockPeriodSeconds(final Long blockPeriodSeconds) {
+		this.blockPeriodSeconds = blockPeriodSeconds;
 	}
 
-	public String getBlockTime() {
-		return this.blockTime;
+	public List<AlertTypeMonitoriza> getAlertTypesList() {
+		return this.alertTypesList;
 	}
 
-	public void setBlockTime(final String blockTime) {
-		this.blockTime = blockTime;
+	public void setAlertTypesList(final List<AlertTypeMonitoriza> alertTypesList) {
+		this.alertTypesList = alertTypesList;
 	}
 
-	public String getLastTime() {
-		return this.lastTime;
+	public List<AlertSystemMonitoriza> getAlertSystemsList() {
+		return this.alertSystemsList;
 	}
 
-	public void setLastTime(final String lastTime) {
-		this.lastTime = lastTime;
+	public void setAlertSystemsList(final List<AlertSystemMonitoriza> alertSystemsList) {
+		this.alertSystemsList = alertSystemsList;
 	}
 
+	public List<AlertSeverityMonitoriza> getAlertSeverityList() {
+		return this.alertSeverityList;
+	}
+
+	public void setAlertSeverityList(final List<AlertSeverityMonitoriza> alertSeverityList) {
+		this.alertSeverityList = alertSeverityList;
+	}
+
+	public List<String> getNotifSystemsIdArray() {
+		return this.notifSystemsIdArray;
+	}
+
+	public void setNotifSystemsIdArray(final List<String> notifSystemsIdArray) {
+		this.notifSystemsIdArray = notifSystemsIdArray;
+	}
+
+	public List<List<String>> getEmailConfigurationArray() {
+		return this.emailConfigurationArray;
+	}
+
+	public void setEmailConfigurationArray(final List<List<String>> emailConfigurationArray) {
+		this.emailConfigurationArray = emailConfigurationArray;
+	}
+
+	public List<List<String>> getKeysArray() {
+		return this.keysArray;
+	}
+
+	public void setKeysArray(final List<List<String>> keysArray) {
+		this.keysArray = keysArray;
+	}
+
+	public List<List<String>> getValuesArray() {
+		return this.valuesArray;
+	}
+
+	public void setValuesArray(final List<List<String>> valuesArray) {
+		this.valuesArray = valuesArray;
+	}
 }

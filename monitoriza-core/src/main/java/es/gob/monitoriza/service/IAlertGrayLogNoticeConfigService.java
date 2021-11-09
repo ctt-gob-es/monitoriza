@@ -23,46 +23,40 @@
  */
 package es.gob.monitoriza.service;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
-import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
+import java.util.List;
+
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogNoticeConfig;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
-public interface IAlertResumeTypeService {
+public interface IAlertGrayLogNoticeConfigService {
 
 	/**
-	 * Method that obtains a alertResume by its identifier.
-	 * @param resTypeId The resume type identifier.
-	 * @return {@link AlertResumeType}
+	 * Method that obtains a AlertGraylogNoticeConfig by its identifier.
+	 * @param alertMailNoticeConfigId The resume type identifier.
+	 * @return {@link AlertGraylogNoticeConfig}
 	 */
-	AlertResumeType getAlertResumeTypeId(Long resTypeId);
+	List<AlertGraylogNoticeConfig> getAlertGraylogNoticeConfigId(Long alertMailNoticeConfigId);
 
 	/**
-	 * Method that deletes a resume type in the persistence.
-	 * @param resTypeId {@link Integer} that represents the resume type identifier to delete.
+	 * Method that deletes a relation in the persistence.
+	 * @param alertGraylogNoticeConfig {@link Integer} that represents the relation identifier to delete.
 	 */
-	void deleteAlertResumeType(Long resTypeId);
+	void deleteAlertGraylogNoticeConfig(Long alertGraylogNoticeConfig);
 
 	/**
-	 * Method that deletes a resume type in the persistence.
-	 * @param resumeMonitoriza {@link ResumeMonitoriza} that represents the resume to delete.
+	 * Method that gets all the relations from the persistence.
+	 * @return a {@link Iterable<AlertGraylogNoticeConfig>} with the information of all relations.
 	 */
-	void deleteAlertResumeTypeByResumeMonitoriza(ResumeMonitoriza resumeMonitoriza);
+	Iterable<AlertGraylogNoticeConfig> getAllAlertGraylogNoticeConfigs();
 
 	/**
-	 * Method that gets all the resume types from the persistence.
-	 * @return a {@link Iterable<AlertResumeTypes>} with the information of all resume types.
+	 * Method that stores a relation in the persistence.
+	 * @param AlertGraylogNoticeConfig a {@link AlertGraylogNoticeConfig} with the information of the relation.
+	 * @return {@link AlertGraylogNoticeConfig} The relation.
 	 */
-	Iterable<AlertResumeType> getAllAlertResumeTypes();
-
-	/**
-	 * Method that stores a resume type in the persistence.
-	 * @param alertResumeType a {@link AlertResumeType} with the information of the resume type.
-	 * @return {@link AlertResumeType} The alert resume.
-	 */
-	AlertResumeType saveAlertResumeType(AlertResumeType alertResumeType);
-
+	AlertGraylogNoticeConfig saveAlertGraylogNoticeConfig(AlertGraylogNoticeConfig alertGraylogNoticeConfig);
 
 }

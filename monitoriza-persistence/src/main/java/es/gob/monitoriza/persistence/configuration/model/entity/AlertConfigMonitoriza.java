@@ -27,7 +27,9 @@ package es.gob.monitoriza.persistence.configuration.model.entity;
 import java.io.Serializable;
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -37,10 +39,12 @@ import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -80,17 +84,17 @@ public class AlertConfigMonitoriza implements Serializable {
 	/**
 	 * Attribute that represents the alert level.
 	 */
-	private String severity;
+	private AlertSeverityMonitoriza alertSeverityMonitoriza;
 
 	/**
 	 * Attribute that represents if the alert is enabled
 	 */
-	private String enable;
+	private Boolean enable;
 
 	/**
 	 * Attribute that represents if the alert allow block.
 	 */
-	private String allowBlock;
+	private Boolean allowBlock;
 
 	/**
 	 * Attribute that represents the block condition.
@@ -121,6 +125,11 @@ public class AlertConfigMonitoriza implements Serializable {
 	 * Attribute that represents the resume of the alert.
 	 */
 	private List<ResumeMonitoriza> resumesMonitoriza;
+
+	/**
+	 * Attribute that represents the systems of the alert configuration.
+	 */
+	private Set<AlertConfigSystem> alertConfigSystems;
 
 	/**
 	 * Gets the value of the attribute {@link #idAlertConfigMonitoriza}.
@@ -163,24 +172,25 @@ public class AlertConfigMonitoriza implements Serializable {
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #severity}.
+	 * Gets the value of the attribute {@link #alertSeverityMonitoriza}.
 	 *
-	 * @return the value of the attribute {@link #severity}.
+	 * @return the value of the attribute {@link #alertSeverityMonitoriza}.
 	 */
-	@Column(name = "SEVERITY", nullable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "ID_SEVERITY_TYPE", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
-	public String getSeverity() {
-		return this.severity;
+	public AlertSeverityMonitoriza getAlertSeverityMonitoriza() {
+		return this.alertSeverityMonitoriza ;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #severity}.
+	 * Sets the value of the attribute {@link #alertSeverityMonitoriza}.
 	 *
 	 * @param name
-	 *            The value for the attribute {@link #severity}.
+	 *            The value for the attribute {@link #alertSeverityMonitoriza}.
 	 */
-	public void setSeverity(final String severity) {
-		this.severity = severity;
+	public void setAlertSeverityMonitoriza(final AlertSeverityMonitoriza alertSeverityMonitoriza) {
+		this.alertSeverityMonitoriza = alertSeverityMonitoriza;
 	}
 
 	/**
@@ -189,18 +199,19 @@ public class AlertConfigMonitoriza implements Serializable {
 	 * @return the value of the attribute {@link #enable}.
 	 */
 	@Column(name = "ENABLE", nullable = false)
+	@Type(type = "yes_no")
 	@JsonView(DataTablesOutput.View.class)
-	public String getEnable() {
+	public Boolean getEnable() {
 		return this.enable;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #enable}.
 	 *
-	 * @param appKey
+	 * @param enable
 	 *            The value for the attribute {@link #enable}.
 	 */
-	public void setEnable(final String enable) {
+	public void setEnable(final Boolean enable) {
 		this.enable = enable;
 	}
 
@@ -210,18 +221,19 @@ public class AlertConfigMonitoriza implements Serializable {
 	 * @return the value of the attribute {@link #allowBlock}.
 	 */
 	@Column(name = "ALLOW_BLOCK", nullable = false)
+	@Type(type = "yes_no")
 	@JsonView(DataTablesOutput.View.class)
-	public String getAllowBlock() {
+	public Boolean getAllowBlock() {
 		return this.allowBlock;
 	}
 
 	/**
 	 * Sets the value of the attribute {@link #allowBlock}.
 	 *
-	 * @param appKey
+	 * @param allowBlock
 	 *            The value for the attribute {@link #allowBlock}.
 	 */
-	public void setAllowBlock(final String allowBlock) {
+	public void setAllowBlock(final Boolean allowBlock) {
 		this.allowBlock = allowBlock;
 	}
 
@@ -239,7 +251,7 @@ public class AlertConfigMonitoriza implements Serializable {
 	/**
 	 * Sets the value of the attribute {@link #blockCondition}.
 	 *
-	 * @param appKey
+	 * @param blockCondition
 	 *            The value for the attribute {@link #blockCondition}.
 	 */
 	public void setBlockCondition(final Long blockCondition) {
@@ -260,7 +272,7 @@ public class AlertConfigMonitoriza implements Serializable {
 	/**
 	 * Sets the value of the attribute {@link #blockInterval}.
 	 *
-	 * @param appKey
+	 * @param blockInterval
 	 *            The value for the attribute {@link #blockInterval}.
 	 */
 	public void setBlockInterval(final Long blockInterval) {
@@ -281,7 +293,7 @@ public class AlertConfigMonitoriza implements Serializable {
 	/**
 	 * Sets the value of the attribute {@link #blockPeriod}.
 	 *
-	 * @param appKey
+	 * @param blockPeriod
 	 *            The value for the attribute {@link #blockPeriod}.
 	 */
 	public void setBlockPeriod(final Long blockPeriod) {
@@ -323,7 +335,7 @@ public class AlertConfigMonitoriza implements Serializable {
 	/**
 	 * Sets the value of the attribute {@link #lastTime}.
 	 *
-	 * @param appKey
+	 * @param lastTime
 	 *            The value for the attribute {@link #lastTime}.
 	 */
 	public void setLastTime(final Date lastTime) {
@@ -342,9 +354,26 @@ public class AlertConfigMonitoriza implements Serializable {
 
 	/**
 	 * Sets the value of the attribute {@link #resumesMonitoriza}.
-	 * @param emailsDegraded The value for the attribute {@link #resumesMonitoriza}.
+	 * @param resumesMonitoriza The value for the attribute {@link #resumesMonitoriza}.
 	 */
 	public void setResumeMonitoriza(final List<ResumeMonitoriza> resumesMonitoriza) {
 		this.resumesMonitoriza = resumesMonitoriza;
+	}
+
+	/**
+	 * Gets the value of the attribute {@link #alertConfigSystems}.
+	 * @return the value of the attribute {@link #alertConfigSystems}.
+	 */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "alertConfigMonitoriza", cascade = CascadeType.ALL)
+	public Set<AlertConfigSystem> getAlertConfigSystems() {
+		return this.alertConfigSystems;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #alertConfigSystems}.
+	 * @param alertConfigSystems The value for the attribute {@link #alertConfigSystems}.
+	 */
+	public void setAlertConfigSystems(final Set<AlertConfigSystem> alertConfigSystems) {
+		this.alertConfigSystems = alertConfigSystems;
 	}
 }
