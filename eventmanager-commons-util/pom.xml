@@ -31,8 +31,8 @@
     	<!--  API de mail -->
 		<dependency>
 			<groupId>javax.mail</groupId>
-			<artifactId>javax.mail-api</artifactId>
-			<version>1.6.2</version>
+			<artifactId>mail</artifactId>
+			<version>1.4.7</version>
 		</dependency>
 		
 		<!--  Graylog -->

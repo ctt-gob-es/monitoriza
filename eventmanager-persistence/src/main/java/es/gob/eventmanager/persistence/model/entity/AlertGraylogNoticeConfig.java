@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 package es.gob.eventmanager.persistence.model.entity;
 
@@ -40,9 +40,7 @@ import javax.persistence.Table;
  * Class that maps the <i>ALERT_GRAYLOG_NOTICE_CONFIG</i> database table as a Plain Old Java Object.
  * </p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
- * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 @Entity
 @Table(name = "ALERT_GRAYLOG_NOTICE_CONFIG")
@@ -78,7 +76,7 @@ public class AlertGraylogNoticeConfig implements Serializable {
 	 */
 	@Id
 	@Column(name = "NOT_SYS_CONFIG_ID", unique = true, nullable = false)
-	public Long getNotSysConfigId() {
+	public Long getIdNotSysConfig() {
 		return this.idNotSysConfig;
 	}
 
@@ -88,7 +86,7 @@ public class AlertGraylogNoticeConfig implements Serializable {
 	 * @param resSysConfigId
 	 *            The value for the attribute {@link #idNotSysConfig}.
 	 */
-	public void setNotSysConfigId(final Long notSysConfigId) {
+	public void setIdNotSysConfig(final Long notSysConfigId) {
 		this.idNotSysConfig = notSysConfigId;
 	}
 

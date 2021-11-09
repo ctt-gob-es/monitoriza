@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 package es.gob.eventmanager.persistence.model.repository;
 
@@ -35,14 +35,19 @@ import es.gob.eventmanager.persistence.model.entity.AlertConfigMonitoriza;
 /**
  * <p>Interface that provides CRUD functionality for the AlertConfigMonitorizaRepository entity.</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
- * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 @Repository
 public interface AlertConfigMonitorizaRepository extends JpaRepository<AlertConfigMonitoriza, Long> {
 	
 	@Query("SELECT AC FROM AlertConfigMonitoriza AC, AlertTypeMonitoriza AT, ApplicationMonitoriza A WHERE AC.alertTypeMonitoriza.idTypeMonitoriza = :idAlertType AND AT.idTypeMonitoriza = :idAlertType AND AC.applicationMonitoriza.idApplicationMonitoriza = :idApplicationMonitoriza AND A.idApplicationMonitoriza = :idApplicationMonitoriza")
 	AlertConfigMonitoriza findByAlertTypeAndApp(@Param("idAlertType") final Long idAlertType, @Param("idApplicationMonitoriza") final Long idApplicationMonitoriza);
+	
+	/**
+	 * 
+	 * @param idAlertConfigMonitoriza
+	 * @return
+	 */
+	AlertConfigMonitoriza findByIdAlertConfigMonitoriza(Long idAlertConfigMonitoriza);
 	
 }

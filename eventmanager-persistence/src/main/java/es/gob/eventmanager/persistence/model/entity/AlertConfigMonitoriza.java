@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 package es.gob.eventmanager.persistence.model.entity;
 
@@ -50,9 +50,7 @@ import es.gob.eventmanager.constant.NumberConstants;
  * Class that maps the <i>ALERT_CONFIG</i> database table as a Plain Old Java Object.
  * </p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
- * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 @Entity
 @Table(name = "ALERT_CONFIG")
@@ -78,7 +76,7 @@ public class AlertConfigMonitoriza implements Serializable {
 	/**
 	 * Attribute that represents the alert level.
 	 */
-	private String severity;
+	private AlertSeverityMonitoriza alertSeverityMonitoriza;
 
 	/**
 	 * Attribute that represents if the alert is enabled
@@ -163,23 +161,24 @@ public class AlertConfigMonitoriza implements Serializable {
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #severity}.
+	 * Gets the value of the attribute {@link #alertSeverityMonitoriza}.
 	 *
-	 * @return the value of the attribute {@link #severity}.
+	 * @return the value of the attribute {@link #alertSeverityMonitoriza}.
 	 */
-	@Column(name = "SEVERITY", nullable = false)
-	public String getSeverity() {
-		return this.severity;
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "ID_SEVERITY_TYPE", nullable = false)
+	public AlertSeverityMonitoriza getAlertSeverityMonitoriza() {
+		return this.alertSeverityMonitoriza ;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #severity}.
+	 * Sets the value of the attribute {@link #alertSeverityMonitoriza}.
 	 *
 	 * @param name
-	 *            The value for the attribute {@link #severity}.
+	 *            The value for the attribute {@link #alertSeverityMonitoriza}.
 	 */
-	public void setSeverity(final String severity) {
-		this.severity = severity;
+	public void setAlertSeverityMonitoriza(final AlertSeverityMonitoriza alertSeverityMonitoriza) {
+		this.alertSeverityMonitoriza = alertSeverityMonitoriza;
 	}
 
 	/**
@@ -327,8 +326,8 @@ public class AlertConfigMonitoriza implements Serializable {
 	 * Gets the value of the attribute {@link #resumesMonitoriza}.
 	 * @return the value of the attribute {@link #resumesMonitoriza}.
 	 */
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "ALERT_RESUME_LIST", joinColumns = @JoinColumn(name = "ALERT_CONFIG_ID", referencedColumnName = "ALERT_CONFIG_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "RESUME_ID", referencedColumnName = "RESUME_ID", nullable = false))
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "ALERT_RESUME_LIST", joinColumns = @JoinColumn(name = "ALERT_CONFIG_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "RESUME_ID", nullable = false))
 	public List<ResumeMonitoriza> getResumesMonitoriza() {
 		return this.resumesMonitoriza;
 	}
@@ -345,9 +344,9 @@ public class AlertConfigMonitoriza implements Serializable {
 	 * Gets the value of the attribute {@link #systemsMonitoriza}.
 	 * @return the value of the attribute {@link #systemsMonitoriza}.
 	 */
-	@ManyToMany(fetch = FetchType.EAGER)
-	@JoinTable(name = "ALERT_CONFIG_SYSTEMS", joinColumns = @JoinColumn(name = "ALERT_CONFIG_ID", referencedColumnName = "ALERT_CONFIG_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "SYSTEM_ID", referencedColumnName = "SYSTEM_ID", nullable = false))
-	public final List<AlertSystemMonitoriza> getSystemsMonitoriza() {
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(name = "ALERT_CONFIG_SYSTEMS", joinColumns = @JoinColumn(name = "ALERT_CONFIG_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "SYSTEM_ID", nullable = false))
+	public List<AlertSystemMonitoriza> getSystemsMonitoriza() {
 		return systemsMonitoriza;
 	}
 
@@ -355,7 +354,7 @@ public class AlertConfigMonitoriza implements Serializable {
 	 * Sets the value of the attribute {@link #systemsMonitoriza}.
 	 * @param emailsDegraded The value for the attribute {@link #systemsMonitoriza}.
 	 */
-	public final void setSystemsMonitoriza(List<AlertSystemMonitoriza> systemsMonitoriza) {
+	public void setSystemsMonitoriza(List<AlertSystemMonitoriza> systemsMonitoriza) {
 		this.systemsMonitoriza = systemsMonitoriza;
 	}
 	

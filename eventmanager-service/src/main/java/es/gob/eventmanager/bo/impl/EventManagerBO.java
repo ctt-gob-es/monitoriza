@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 package es.gob.eventmanager.bo.impl;
 
@@ -38,6 +38,8 @@ import es.gob.eventmanager.persistence.model.entity.AlertAudit;
 import es.gob.eventmanager.persistence.model.entity.AlertConfigMonitoriza;
 import es.gob.eventmanager.persistence.model.entity.AlertGraylogNoticeConfig;
 import es.gob.eventmanager.persistence.model.entity.AlertMailNoticeConfig;
+import es.gob.eventmanager.persistence.model.entity.AlertSeverityMonitoriza;
+import es.gob.eventmanager.persistence.model.entity.AlertSystemMonitoriza;
 import es.gob.eventmanager.persistence.model.entity.AlertTypeMonitoriza;
 import es.gob.eventmanager.persistence.model.entity.ApplicationMonitoriza;
 import es.gob.eventmanager.persistence.model.entity.ConfServerMail;
@@ -46,6 +48,7 @@ import es.gob.eventmanager.persistence.model.repository.AlertAuditRepository;
 import es.gob.eventmanager.persistence.model.repository.AlertConfigMonitorizaRepository;
 import es.gob.eventmanager.persistence.model.repository.AlertGraylogNoticeConfigRepository;
 import es.gob.eventmanager.persistence.model.repository.AlertMailNoticeConfigRepository;
+import es.gob.eventmanager.persistence.model.repository.AlertSeverityMonitorizaRepository;
 import es.gob.eventmanager.persistence.model.repository.AlertTypeMonitorizaRepository;
 import es.gob.eventmanager.persistence.model.repository.ApplicationMonitorizaRepository;
 import es.gob.eventmanager.persistence.model.repository.ConfServerMailRepository;
@@ -54,7 +57,7 @@ import es.gob.eventmanager.persistence.model.repository.TemplateMonitorizaReposi
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 @Service("eventManagerBO")
 public class EventManagerBO implements IEventManagerBO {
@@ -82,6 +85,9 @@ public class EventManagerBO implements IEventManagerBO {
 	
 	@Autowired
 	ConfServerMailRepository configMailRepository;
+	
+	@Autowired
+	AlertSeverityMonitorizaRepository alertSeverityRepository;
 		
 	/**
 	 * {@inheritDoc}
@@ -312,12 +318,59 @@ public class EventManagerBO implements IEventManagerBO {
 			
 			list = configMailRepository.findAll();
 			
+			if (list.size() == 0) {
+				throw new EventManagerException("No existe servidor de correo configurado en el sistema");
+			}
+			
 		} catch (DataAccessException e) {
 			
 			throw new EventManagerException(e.getMessage(), e.getCause());
 		}
 		
 		return list.get(NumberConstants.NUM0);
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.eventmanager.bo.IEventManagerBO#getSeverityById(java.lang.Long)
+	 */
+	@Override
+	public AlertSeverityMonitoriza getSeverityById(Long idSeverity) throws EventManagerException {
+		
+		AlertSeverityMonitoriza severity = null;
+		
+		try {
+			
+			severity = alertSeverityRepository.findBySeverityTypeId(idSeverity);
+			
+		} catch (DataAccessException e) {
+			
+			throw new EventManagerException(e.getMessage(), e.getCause());
+		}
+		
+		return severity;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.eventmanager.bo.IEventManagerBO#loadLazyAlertSystemsInAlertConfig(es.gob.eventmanager.persistence.model.entity.AlertConfigMonitoriza)
+	 */
+	@Override
+	@Transactional
+	public void loadLazyAlertSystemsInAlertConfig(AlertConfigMonitoriza alertConfig) throws EventManagerException {
+		
+		try {
+			
+    		AlertConfigMonitoriza loadedConfig = alertConfigRepository.findByIdAlertConfigMonitoriza(alertConfig.getIdAlertConfigMonitoriza());
+    		List<AlertSystemMonitoriza> alertSystems = loadedConfig.getSystemsMonitoriza();
+    		alertSystems.size();
+    		
+    		alertConfig.setSystemsMonitoriza(alertSystems);
+    		
+		} catch (DataAccessException e) {
+    		throw new EventManagerException(e.getMessage(), e.getCause());
+    	}
 		
 	}	
 

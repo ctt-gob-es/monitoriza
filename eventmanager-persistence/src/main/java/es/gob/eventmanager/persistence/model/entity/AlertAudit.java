@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.0, 09/11/2021.
  */
 package es.gob.eventmanager.persistence.model.entity;
 
@@ -45,17 +45,17 @@ import es.gob.eventmanager.constant.NumberConstants;
  * Class that maps the <i>ALERT_AUDIT</i> database table as a Plain Old Java Object.
  * </p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 @Entity
 @Table(name = "ALERT_AUDIT")
 public class AlertAudit implements Serializable {
-
+	
 	/**
 	 * Attribute that represents . 
 	 */
-	private static final long serialVersionUID = -3354470162448097977L;
-	
+	private static final long serialVersionUID = 5093164658287043429L;
+
 	/**
 	 * Attribute that represents the object ID.
 	 */
@@ -100,7 +100,7 @@ public class AlertAudit implements Serializable {
 	@Column(name = "ALERT_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
 	@GeneratedValue(generator = "sq_alert_audit")
 	@GenericGenerator(name = "sq_alert_audit", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_AUDIT"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
-	public final Long getIdAlertAudit() {
+	public Long getIdAlertAudit() {
 		return idAlertAudit;
 	}
 
@@ -110,7 +110,7 @@ public class AlertAudit implements Serializable {
 	 * @param idAlertAudit
 	 *            The value for the attribute {@link #idAlertAudit}.
 	 */
-	public final void setIdAlertAudit(Long idAlertAudit) {
+	public void setIdAlertAudit(Long idAlertAudit) {
 		this.idAlertAudit = idAlertAudit;
 	}
 
@@ -120,7 +120,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #appName}.
 	 */
 	@Column(name = "APP_NAME", nullable = false)
-	public final String getAppName() {
+	public String getAppName() {
 		return appName;
 	}
 
@@ -130,7 +130,7 @@ public class AlertAudit implements Serializable {
 	 * @param appName
 	 *            The value for the attribute {@link #appName}.
 	 */
-	public final void setAppName(String appName) {
+	public void setAppName(String appName) {
 		this.appName = appName;
 	}
 
@@ -140,7 +140,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #alertName}.
 	 */
 	@Column(name = "ALERT_NAME", nullable = false)
-	public final String getAlertName() {
+	public String getAlertName() {
 		return alertName;
 	}
 
@@ -150,7 +150,7 @@ public class AlertAudit implements Serializable {
 	 * @param alertName
 	 *            The value for the attribute {@link #alertName}.
 	 */
-	public final void setAlertName(String alertName) {
+	public void setAlertName(String alertName) {
 		this.alertName = alertName;
 	}
 
@@ -160,7 +160,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #appTemplateName}.
 	 */
 	@Column(name = "APP_TEMPLATE_NAME", nullable = false)
-	public final String getAppTemplateName() {
+	public String getAppTemplateName() {
 		return appTemplateName;
 	}
 
@@ -170,7 +170,7 @@ public class AlertAudit implements Serializable {
 	 * @param appTemplateName
 	 *            The value for the attribute {@link #appTemplateName}.
 	 */
-	public final void setAppTemplateName(String appTemplateName) {
+	public void setAppTemplateName(String appTemplateName) {
 		this.appTemplateName = appTemplateName;
 	}
 
@@ -180,7 +180,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #node}.
 	 */
 	@Column(name = "NODE", nullable = false)
-	public final String getNode() {
+	public String getNode() {
 		return node;
 	}
 
@@ -190,7 +190,7 @@ public class AlertAudit implements Serializable {
 	 * @param node
 	 *            The value for the attribute {@link #node}.
 	 */
-	public final void setNode(String node) {
+	public void setNode(String node) {
 		this.node = node;
 	}
 
@@ -200,7 +200,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #severity}.
 	 */
 	@Column(name = "SEVERITY", nullable = false)
-	public final String getSeverity() {
+	public String getSeverity() {
 		return severity;
 	}
 
@@ -210,7 +210,7 @@ public class AlertAudit implements Serializable {
 	 * @param name
 	 *            The value for the attribute {@link #severity}.
 	 */
-	public final void setSeverity(String severity) {
+	public void setSeverity(String severity) {
 		this.severity = severity;
 	}
 
@@ -221,7 +221,7 @@ public class AlertAudit implements Serializable {
 	 */
 	@Column(name = "TIMESTAMP", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
-	public final Date getTimestamp() {
+	public Date getTimestamp() {
 		return timestamp;
 	}
 
@@ -231,7 +231,7 @@ public class AlertAudit implements Serializable {
 	 * @param timestamp
 	 *            The value for the attribute {@link #timestamp}.
 	 */
-	public final void setTimestamp(Date timestamp) {
+	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
 	

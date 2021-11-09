@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 package es.gob.eventmanager.bo;
 
@@ -31,6 +31,7 @@ import es.gob.eventmanager.persistence.model.entity.AlertAudit;
 import es.gob.eventmanager.persistence.model.entity.AlertConfigMonitoriza;
 import es.gob.eventmanager.persistence.model.entity.AlertGraylogNoticeConfig;
 import es.gob.eventmanager.persistence.model.entity.AlertMailNoticeConfig;
+import es.gob.eventmanager.persistence.model.entity.AlertSeverityMonitoriza;
 import es.gob.eventmanager.persistence.model.entity.AlertTypeMonitoriza;
 import es.gob.eventmanager.persistence.model.entity.ApplicationMonitoriza;
 import es.gob.eventmanager.persistence.model.entity.ConfServerMail;
@@ -39,7 +40,7 @@ import es.gob.eventmanager.persistence.model.entity.TemplateMonitoriza;
 /** 
  * <p>Interface for business logic.</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 public interface IEventManagerBO {
 
@@ -136,5 +137,19 @@ public interface IEventManagerBO {
 	 * @throws EventManagerException
 	 */
 	ConfServerMail getMailServerConfig() throws EventManagerException;
+	
+	/**
+	 * 
+	 * @param idSeverity
+	 * @return
+	 * @throws EventManagerException
+	 */
+	AlertSeverityMonitoriza getSeverityById(final Long idSeverity) throws EventManagerException;
+	
+	/**
+	 * 
+	 * @param template
+	 */
+	void loadLazyAlertSystemsInAlertConfig(AlertConfigMonitoriza alertConfig) throws EventManagerException;
 	
 }

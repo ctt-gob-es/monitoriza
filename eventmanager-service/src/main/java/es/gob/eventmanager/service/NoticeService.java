@@ -60,7 +60,7 @@ import es.gob.eventmanager.persistence.model.entity.TemplateMonitoriza;
 
 /**
  * Servicio para la notificaci&oacute;n de eventos.
- * @version 1.1, 04/11/2021.
+ * @version 1.2, 09/11/2021.
  */
 public class NoticeService extends HttpServlet {
 
@@ -201,7 +201,7 @@ public class NoticeService extends HttpServlet {
 
 							// se comprueba si está bloqueada y ha pasado el
 							// tiempo para el autodesbloqueo
-							if (isBlockedAlert && AlertConfigManager.checkIfUnblockAlert(config, currentDate)) {
+							if (isBlockedAlert && config.getBlockTime() != null && AlertConfigManager.checkIfUnblockAlert(config, currentDate)) {
 
 								// ha pasado el tiempo de bloqueo y hay que
 								// desbloquear.
@@ -221,6 +221,7 @@ public class NoticeService extends HttpServlet {
 
 								// se envía un email a los destinatarios y/o
 								// notificacion GrayLog, según la configuración.
+								ManagerConfigurationServices.getInstance().getEventManagerBO().loadLazyAlertSystemsInAlertConfig(config);
 								List<AlertSystemMonitoriza> alertSystems = config.getSystemsMonitoriza();
 								notifyToConfiguredSystems(config, alertSystems, alert);
 							}
@@ -396,7 +397,7 @@ public class NoticeService extends HttpServlet {
 						auditoria.setAppName(app.getName());
 						auditoria.setAppTemplateName(template.getName());
 						auditoria.setNode(event.getNode());
-						auditoria.setSeverity(config.getSeverity());
+						auditoria.setSeverity(config.getAlertSeverityMonitoriza().getName());
 						auditoria.setTimestamp(new Date());
 						
 						ManagerConfigurationServices.getInstance().getEventManagerBO().registerAlertAudit(auditoria);					

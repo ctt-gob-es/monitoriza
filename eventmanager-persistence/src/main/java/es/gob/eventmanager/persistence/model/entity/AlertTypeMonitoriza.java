@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 package es.gob.eventmanager.persistence.model.entity;
 
@@ -50,9 +50,7 @@ import es.gob.eventmanager.constant.NumberConstants;
  * Class that maps the <i>ALERT_TYPES</i> database table as a Plain Old Java Object.
  * </p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
- * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 @Entity
 @Table(name = "ALERT_TYPES")
@@ -164,7 +162,7 @@ public class AlertTypeMonitoriza implements Serializable {
 	 */
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "ALERT_TEMPLATE_TYPES", joinColumns = { @JoinColumn(name = "TYPE_ID", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "TEMPLATE_ID", nullable = false) })
-	public final List<TemplateMonitoriza> getListTemplates() {
+	public List<TemplateMonitoriza> getListTemplates() {
 		return listTemplates;
 	}
 
@@ -174,7 +172,7 @@ public class AlertTypeMonitoriza implements Serializable {
 	 * @param listTemplates
 	 *            The value for the attribute {@link #listTemplates}.
 	 */
-	public final void setListTemplates(List<TemplateMonitoriza> listTemplates) {
+	public void setListTemplates(List<TemplateMonitoriza> listTemplates) {
 		this.listTemplates = listTemplates;
 	}	
 

@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 package es.gob.eventmanager.persistence.model.entity;
 
@@ -47,9 +47,7 @@ import es.gob.eventmanager.constant.NumberConstants;
  * Class that maps the <i>ALERT_APP_TEMPLATES</i> database table as a Plain Old Java Object.
  * </p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
- * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 @Entity
 @Table(name = "ALERT_APP_TEMPLATES")
@@ -81,7 +79,6 @@ public class TemplateMonitoriza implements Serializable {
 	@Column(name = "TEMPLATE_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
 	@GeneratedValue(generator = "sq_template_monitoriza")
 	@GenericGenerator(name = "sq_template_monitoriza", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_APP_TEMPLATES"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
-	
 	public Long getIdTemplateMonitoriza() {
 		return this.idTemplateMonitoriza;
 	}
@@ -123,7 +120,7 @@ public class TemplateMonitoriza implements Serializable {
 	 */
 	@ManyToMany(fetch = FetchType.LAZY)
 	@JoinTable(name = "ALERT_TEMPLATE_TYPES", joinColumns = { @JoinColumn(name = "TEMPLATE_ID", nullable = false) }, inverseJoinColumns = { @JoinColumn(name = "TYPE_ID", nullable = false) })
-	public final List<AlertTypeMonitoriza> getListAlertTypes() {
+	public List<AlertTypeMonitoriza> getListAlertTypes() {
 		return listAlertTypes;
 	}
 
@@ -133,7 +130,7 @@ public class TemplateMonitoriza implements Serializable {
 	 * @param listAlertTypes
 	 *            The value for the attribute {@link #listAlertTypes}.
 	 */
-	public final void setListAlertTypes(List<AlertTypeMonitoriza> listAlertTypes) {
+	public void setListAlertTypes(List<AlertTypeMonitoriza> listAlertTypes) {
 		this.listAlertTypes = listAlertTypes;
 	}
 }

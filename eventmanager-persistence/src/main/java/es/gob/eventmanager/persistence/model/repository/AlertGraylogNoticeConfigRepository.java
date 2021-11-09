@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 package es.gob.eventmanager.persistence.model.repository;
 
@@ -38,17 +38,12 @@ import es.gob.eventmanager.persistence.model.entity.AlertGraylogNoticeConfigID;
 /**
  * <p>Interface that provides CRUD functionality for the AlertGraylogNoticeConfigRepository entity.</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
- * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 @Repository
 public interface AlertGraylogNoticeConfigRepository extends JpaRepository<AlertGraylogNoticeConfig, AlertGraylogNoticeConfigID> {
 
-	@Query("SELECT AG FROM AlertGraylogNoticeConfig AG, AlertConfigMonitoriza AC, AlertConfigSystem ACS"
-			+ " WHERE ACS.alertConfigMonitoriza.idAlertConfigMonitoriza = AC.idAlertConfigMonitoriza"
-			+ " AND ACS.idNotSysConfig = AG.idNotSysConfig"
-			+ " AND AC.idAlertConfigMonitoriza =: idAlertConfig")
+	@Query("SELECT AG FROM AlertGraylogNoticeConfig AG, AlertConfigMonitoriza AC, AlertConfigSystem ACS WHERE ACS.alertConfigMonitoriza.idAlertConfigMonitoriza = AC.idAlertConfigMonitoriza AND ACS.idNotSysConfig = AG.idNotSysConfig AND AC.idAlertConfigMonitoriza =:idAlertConfig")
 	List<AlertGraylogNoticeConfig> findByAlertConfig(@Param("idAlertConfig") final Long idAlertConfig);
 	
 	/**

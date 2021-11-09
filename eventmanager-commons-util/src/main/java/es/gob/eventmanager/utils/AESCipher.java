@@ -42,10 +42,11 @@ import es.gob.eventmanager.exception.CipherException;
  */
 public final class AESCipher implements Serializable {
 
+	
 	/**
 	 * Attribute that represents . 
 	 */
-	private static final long serialVersionUID = 1094502415533707370L;
+	private static final long serialVersionUID = 2935551809648651348L;
 
 	/**
 	 * Attribute that represents the key for decode the passwords.

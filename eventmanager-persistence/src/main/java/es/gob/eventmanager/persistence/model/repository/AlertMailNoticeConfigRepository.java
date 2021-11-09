@@ -18,9 +18,7 @@
  * <b>File:</b><p>es.gob.eventmanager.persistence.model.repository.AlertMailNoticeConfigRepository.java.</p>
  * <b>Description:</b><p> .</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
- * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 package es.gob.eventmanager.persistence.model.repository;
 
@@ -38,17 +36,12 @@ import es.gob.eventmanager.persistence.model.entity.AlertMailNoticeConfigID;
 /**
  * <p>Interface that provides CRUD functionality for the AlertMailNoticeConfigRepository entity.</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
- * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 @Repository
 public interface AlertMailNoticeConfigRepository extends JpaRepository<AlertMailNoticeConfig, AlertMailNoticeConfigID> {
 
-	@Query("SELECT AM FROM AlertMailNoticeConfig AM, AlertConfigMonitoriza AC, AlertConfigSystem ACS"
-			+ " WHERE ACS.alertConfigMonitoriza.idAlertConfigMonitoriza = AC.idAlertConfigMonitoriza"
-			+ " AND ACS.idNotSysConfig = AM.idNotSysConfig"
-			+ " AND AC.idAlertConfigMonitoriza =: idAlertConfig")
+	@Query("SELECT AM FROM AlertMailNoticeConfig AM, AlertConfigMonitoriza AC, AlertConfigSystem ACS WHERE ACS.alertConfigMonitoriza.idAlertConfigMonitoriza = AC.idAlertConfigMonitoriza AND ACS.idNotSysConfig = AM.idNotSysConfig AND AC.idAlertConfigMonitoriza =:idAlertConfig")
 	List<AlertMailNoticeConfig> findByAlertConfig(@Param("idAlertConfig") final Long idAlertConfig);
 	
 	/**

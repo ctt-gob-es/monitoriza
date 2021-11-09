@@ -171,9 +171,10 @@ public class EMailTimeLimitedOperation extends ATimeLimitedOperation {
 				props.put("mail.smtp.auth", confServerMail.getAuthenticationMail());
 				props.put("mail.smtp.starttls.enable", confServerMail.getTslMail());
 
-				Session session = Session.getInstance(props);
-
 				try {
+					
+					Session session = Session.getInstance(props);
+					
 					// Se crea el mensaje
 					Message msg = new MimeMessage(session);
 					msg.setFrom(new InternetAddress(confServerMail.getIssuerMail()));
@@ -212,7 +213,7 @@ public class EMailTimeLimitedOperation extends ATimeLimitedOperation {
 									decPassword = new String(AESCipher.getInstance().decryptMessage(confServerMail.getPasswordMail()));
 								}
 							}
-							
+							//decPassword = "123Pruebas321";
 							// Se intenta la conexión con el servidor de correo
 							Transport transport = session.getTransport(TRANSPORT_SMTP);
 							transport.connect(confServerMail.getHostMail(), user, decPassword);
@@ -225,8 +226,10 @@ public class EMailTimeLimitedOperation extends ATimeLimitedOperation {
 							LOGGER.error("Error creando el correo electrónico: No se ha indicado correctamente el servidor SMTP");
 						}
 					}
-				} catch (MessagingException e) {
-					sendException(e);
+				} catch (MessagingException me) {
+					sendException(me);
+				} catch (Exception e) {
+					LOGGER.error("Error al instanciar el servicio de correo", e);
 				}
 			
 		}

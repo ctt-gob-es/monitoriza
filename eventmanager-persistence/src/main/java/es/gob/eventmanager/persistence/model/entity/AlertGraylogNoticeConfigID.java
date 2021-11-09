@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 package es.gob.eventmanager.persistence.model.entity;
 
@@ -33,9 +33,7 @@ import javax.persistence.Embeddable;
  * Class that maps the <i>ALERT_GRAYLOG_NOTICE_CONFIG</i> database table PK.
  * </p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
- * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 09/11/2021.
  */
 @Embeddable
 public class AlertGraylogNoticeConfigID implements Serializable {
@@ -46,7 +44,7 @@ public class AlertGraylogNoticeConfigID implements Serializable {
 	/**
 	 * Attribute that represents the object ID.
 	 */
-	private Long notSysConfigId;
+	private Long idNotSysConfig;
 
 	/**
 	 * Attribute that represents the pkey.
@@ -55,22 +53,22 @@ public class AlertGraylogNoticeConfigID implements Serializable {
 
 
 	/**
-	 * Gets the value of the attribute {@link #notSysConfigId}.
+	 * Gets the value of the attribute {@link #idNotSysConfig}.
 	 *
-	 * @return the value of the attribute {@link #notSysConfigId}.
+	 * @return the value of the attribute {@link #idNotSysConfig}.
 	 */
-	public Long getNotSysConfigId() {
-		return this.notSysConfigId;
+	public Long getIdNotSysConfig() {
+		return this.idNotSysConfig;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #notSysConfigId}.
+	 * Sets the value of the attribute {@link #idNotSysConfig}.
 	 *
 	 * @param notSysConfigId
-	 *            The value for the attribute {@link #notSysConfigId}.
+	 *            The value for the attribute {@link #idNotSysConfig}.
 	 */
-	public void setNotSysConfigId(final Long notSysConfigId) {
-		this.notSysConfigId = notSysConfigId;
+	public void setIdNotSysConfig(final Long idNotSysConfig) {
+		this.idNotSysConfig = idNotSysConfig;
 	}
 
 	/**
@@ -94,7 +92,7 @@ public class AlertGraylogNoticeConfigID implements Serializable {
 
 	@Override
     public int hashCode() {
-        return this.notSysConfigId.hashCode();
+        return this.idNotSysConfig.hashCode();
     }
 
     @Override
@@ -109,7 +107,7 @@ public class AlertGraylogNoticeConfigID implements Serializable {
 
         final AlertGraylogNoticeConfigID other = (AlertGraylogNoticeConfigID)obj;
 
-        return this.notSysConfigId.equals(other.getNotSysConfigId());
+        return this.idNotSysConfig.equals(other.getIdNotSysConfig());
     }
 
 }
