@@ -18,8 +18,8 @@
 								<div>
 									<input type='hidden' class='primarykey' id="idAlertConfigMonitoriza" th:field="*{idAlertConfigMonitoriza}">
 									<input type='hidden' class='primarykey' id="appID" th:field="*{appID}">
-									<input type='hidden' id="blockIntervalSeconds" name="blockIntervalSeconds">
-					 				<input type='hidden' id="blockPeriodSeconds" name="blockPeriodSeconds">
+									<input type='hidden' id="blockIntervalSeconds" name="blockIntervalSeconds" th:field="*{blockIntervalSeconds}">
+					 				<input type='hidden' id="blockPeriodSeconds" name="blockPeriodSeconds" th:field="*{blockPeriodSeconds}">
 					 				
 									<div class="form-row">
 										<div class="form-group col-md-12">
@@ -55,7 +55,7 @@
 									<div class="form-row">
 										<div class="form-group col-md-4">
 											<label for="blockCondition" th:text="#{applalert.alertconfig.modal.eventlimit}"></label> 
-											<input type="text" class="form-control" id="blockCondition" name="blockCondition">
+											<input type="text" class="form-control" id="blockCondition" name="blockCondition" th:field="*{blockCondition}">
 										</div>
 										<div class="form-group col-md-4">
 											<label for="blockInterval" th:text="#{applalert.alertconfig.modal.interval}"></label> 
@@ -157,12 +157,10 @@
 		var getEmailInfo = /*[[@{/emailinformation}]]*/;
 		var getGraylogInfo = /*[[@{/grayloginformation}]]*/;
 
-		var blockCondition = /*[[*{blockCondition}]]*/;
-		var blockIntervalSeconds = /*[[*{blockIntervalSeconds}]]*/;
-		var blockPeriodSeconds = /*[[*{blockPeriodSeconds}]]*/;
+		var blockIntervalSeconds = $('#blockIntervalSeconds').val();
+		var blockPeriodSeconds = $('#blockPeriodSeconds').val();
 
 		if (blockCondition != null){
-			$('#blockCondition').val(blockCondition);
 			$('#blockInterval').val(secondsToTime(blockIntervalSeconds));
 			$('#blockPeriod').val(secondsToTime(blockPeriodSeconds));
 		}

@@ -440,9 +440,9 @@ public class ApplicationAlertController {
 		alertConfigForm.setSeverity(alertConfig.getAlertSeverityMonitoriza().getSeverityTypeId());
 		alertConfigForm.setIsAllowBlock(alertConfig.getAllowBlock());
 		if (alertConfig.getAllowBlock()) {
-			model.addAttribute("blockCondition", alertConfig.getBlockCondition()); //$NON-NLS-1$
-			model.addAttribute("blockIntervalSeconds", alertConfig.getBlockInterval()); //$NON-NLS-1$
-			model.addAttribute("blockPeriodSeconds", alertConfig.getBlockPeriod()); //$NON-NLS-1$
+			alertConfigForm.setBlockCondition(alertConfig.getBlockCondition());
+			alertConfigForm.setBlockIntervalSeconds(alertConfig.getBlockInterval());
+			alertConfigForm.setBlockPeriodSeconds(alertConfig.getBlockPeriod());
 		}
 		alertConfigForm.setIsEnable(alertConfig.getEnable());
 

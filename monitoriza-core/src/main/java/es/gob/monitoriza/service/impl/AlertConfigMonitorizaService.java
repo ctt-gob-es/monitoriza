@@ -23,8 +23,6 @@
  */
 package es.gob.monitoriza.service.impl;
 
-import java.util.Date;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -117,10 +115,6 @@ public class AlertConfigMonitorizaService implements IAlertConfigMonitorizaServi
 		alertConfig.setBlockCondition(alertConfigDTO.getBlockCondition());
 		alertConfig.setBlockInterval(alertConfigDTO.getBlockIntervalSeconds());
 		alertConfig.setBlockPeriod(alertConfigDTO.getBlockPeriodSeconds());
-
-		final Date actualDate = new Date(System.currentTimeMillis());
-		alertConfig.setBlockTime(actualDate);
-		alertConfig.setLastTime(actualDate);
 
 		return this.alertConfigMonitorizaRepository.save(alertConfig);
 	}

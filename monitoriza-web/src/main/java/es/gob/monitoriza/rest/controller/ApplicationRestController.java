@@ -65,9 +65,9 @@ import es.gob.monitoriza.service.IAlertResumeTypeService;
 import es.gob.monitoriza.service.IApplicationMonitorizaService;
 
 /**
- * <p>Class that manages the REST requests related to the Users administration and JSON communication.</p>
+ * <p>Class that manages the REST requests related to the Applications administration and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.7, 14/03/2019.
+ * @version 1.0, 09/11/2021.
  */
 @RestController
 public class ApplicationRestController {
@@ -111,17 +111,17 @@ public class ApplicationRestController {
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
-	 * Constant that represents the key Json 'errorSaveAlertSystem'.
+	 * Constant that represents the key Json 'errorSaveApplication'.
 	 */
 	private static final String KEY_JS_ERROR_APPLICATION = "errorSaveApplication"; //$NON-NLS-1$
 
 	/**
 	 * Method that maps the list templates web requests to the controller and
-	 * forwards the list of templates to the view.
+	 * forwards the list of applications to the view.
 	 *
 	 * @param input
 	 *            Holder object for datatable attributes.
-	 * @return String that represents the name of the view to forward.
+	 * @return DataTablesOutput<ApplicationMonitoriza> that represents the list of applications.
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/applicationsdatatable", method = RequestMethod.GET)
@@ -172,13 +172,13 @@ public class ApplicationRestController {
 
 	/**
 	 * Method that maps the delete user request from datatable to the controller
-	 * and performs the delete of the user identified by its id.
+	 * and performs the delete of the application identified by its id.
 	 *
-	 * @param userId
-	 *            Identifier of the user to be deleted.
+	 * @param appId
+	 *            Identifier of the application to be deleted.
 	 * @param index
 	 *            Row index of the datatable.
-	 * @return String that represents the name of the view to redirect.
+	 * @return String that represents the index to delete.
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deleteapplication", method = RequestMethod.POST)
@@ -209,9 +209,10 @@ public class ApplicationRestController {
 	}
 
 	/**
-	 * Method that maps the add new node web request to the controller and sets the backing form.
+	 * Method that returns the list of alerts for a application.
+	 * @param applicationId application identifier.
 	 * @param model Holder object for model attributes.
-	 * @return String that represents the name of the view to forward.
+	 * @return List<AlertConfigMonitoriza> that represents the list of alerts configurations.
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/alertsfromapplication", method = RequestMethod.POST)

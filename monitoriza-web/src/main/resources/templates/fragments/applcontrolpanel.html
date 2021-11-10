@@ -18,7 +18,7 @@
 					<button th:text="#{applalert.controlpanel.period.consult}" class="btn btn-primary"></button>
 				</div>
 				</div>
-				<table id="sysnotTable" class="table table-striped table-bordered" 
+				<table id="alertAuditTable" class="table table-striped table-bordered" 
 					cellspacing="0" width="100%">
 					<thead>
 						<tr>
@@ -29,7 +29,6 @@
 							<th th:text="#{table.applalert.controlpanel.alert}"></th>
 							<th th:text="#{table.applalert.controlpanel.citricity}"></th>
 							<th th:text="#{table.applalert.controlpanel.description}"></th>
-							<th th:text="#{table.applalert.controlpanel.total}"></th>
 						</tr>
 					</thead>
 				</table>
@@ -40,10 +39,9 @@
 
 <script th:inline="javascript">
 $(document).ready(function() {
-	var actionLoad = /*[[@{/loadauth}]]*/;
-	var getauths = /*[[@{/authdatatable}]]*/;
+	var getAlertAudit = /*[[@{/alertauditdatatable}]]*/;
 	
-	var tbl = $('#sysnotTable').DataTable({
+	var tbl = $('#alertAuditTable').DataTable({
 		dom: 'Bfrtip',
 	    select: 'single',
 	    responsive: true,
@@ -63,14 +61,19 @@ $(document).ready(function() {
 	            }
 	          }
 	        },
+		"ajax": {
+				"url": getAlertAudit,
+				"dataSrc" : "data",
+				"data": function (data) {
+				}
+		},
 		"columns": [
-	        { "data": "hour"},
-	        { "data": "application" },
+	        { "data": "timestamp"},
+	        { "data": "appName" },
 	        { "data": "node" },
-	        { "data": "alert" },
-	        { "data": "citricity" },
-	        { "data": "description" },
-	        { "data": "total" }
+	        { "data": "alertName" },
+	        { "data": "severity" },
+	        { "data": "description" }
 	        ]
 		});
 });	

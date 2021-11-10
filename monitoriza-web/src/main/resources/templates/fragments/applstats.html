@@ -4,7 +4,7 @@
 		<div class="col-md-12">
 				<div class="bgc-white bd bdrs-3 p-20 mB-20">
 				<h4 class="c-grey-900 mB-20" th:text="#{applalert.stats.admin.title}"></h4>
-				<form id="statsForm" name="statsForm" role="form"	th:action="@{/applAlertsStats}" method="post" >
+				<form id="statsForm" name="statsForm" role="form" th:action="@{/filterStats}" th:object="${statsform}"method="post">
 					 
 					 <input type='hidden' id="minTimeSeconds" name="minTimeSeconds">
 					 <input type='hidden' id="maxTimeSeconds" name="maxTimeSeconds">
@@ -56,6 +56,8 @@
 					cellspacing="0" width="100%">
 					<thead>
 						<tr>
+						<!-- Columna vacia para el identificador -->
+							<th></th>
 							<th th:text="#{table.stats.application}"></th>
 							<th th:text="#{table.stats.template}"></th>
 							<th th:text="#{table.stats.alarm}"></th>
@@ -73,14 +75,8 @@
 
 <script th:inline="javascript">
 $(document).ready(function() {
-	var actionSave = /*[[@{/saveauth}]]*/;
-	var actionUpdate = /*[[@{/updateauth}]]*/;
-	var actionDownload = /*[[@{/downloadCertificate}]]*/;
-	var actionDelete = /*[[@{/deleteauth}]]*/;
-	var actionLoad = /*[[@{/loadauth}]]*/;
-	var getauths = /*[[@{/authdatatable}]]*/;
-	var editTemplate = /*[[@{/editcert}]]*/;
-	var addTemplate = /*[[@{/addauth}]]*/;
+
+	var getStats = /*[[@{/alertstatisticsdatatable}]]*/;
 	
 	var tbl = $('#statsTable').DataTable({
 		dom: 'Bfrtip',
@@ -106,13 +102,23 @@ $(document).ready(function() {
 	            }
 	          }
 	        },
+		"ajax": {
+			"url": getStats,
+			"dataSrc" : "data",
+			"data": function (data) {
+				console.log(data);
+				data.formId = "statsForm";
+		     }
+		},
 		"columns": [
-	        { "data": "application" },
-	        { "data": "template" },
-	        { "data": "alarm" },
-	        { "data": "node" },
-	        { "data": "criticity" },
-	        { "data": "ocurrences" }
+			{ "data": "idAlertStatistic" ,
+          		"visible": false},
+	        { "data": "alertDIMApp.name" },
+	        { "data": "alertDIMTemplate.name" },
+	        { "data": "alertDIMType.name" },
+	        { "data": "alertDIMNode.name" },
+	        { "data": "alertDIMLevel.name" },
+	        { "data": "ocurrency" }
 	        ]
 		});
 });	

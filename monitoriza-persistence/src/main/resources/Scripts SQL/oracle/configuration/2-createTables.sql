@@ -492,6 +492,7 @@ CREATE TABLE "ALERT_AUDIT" (
 	"APP_TEMPLATE_NAME" VARCHAR(40) NOT NULL,
 	"NODE" VARCHAR(40) NOT NULL,
 	"SEVERITY" VARCHAR(8) NOT NULL,
+	"DESCRIPTION" VARCHAR(40) NOT NULL,
 	"TIMESTAMP" DATE NOT NULL
 	);
 	
@@ -503,6 +504,7 @@ COMMENT ON COLUMN "ALERT_AUDIT"."ALERT_NAME" IS 'Nombre de la alerta recibida.';
 COMMENT ON COLUMN "ALERT_AUDIT"."APP_TEMPLATE_NAME" IS 'Nombre de la plantilla de alertas en la que se basa la aplicaciÃ³n.';
 COMMENT ON COLUMN "ALERT_AUDIT"."NODE" IS 'Nombre del nodo que emitiÃ³ la alerta.';
 COMMENT ON COLUMN "ALERT_AUDIT"."SEVERITY" IS 'Nivel de criticidad de la alerta.';
+COMMENT ON COLUMN "ALERT_AUDIT"."DESCRIPTION" IS 'Descripción de la alerta.';
 COMMENT ON COLUMN "ALERT_AUDIT"."TIMESTAMP" IS 'Instance del tiempo en el que se recibiÃ³ la alerta.';
 
 -- Table ALERT_DIM_APPS
