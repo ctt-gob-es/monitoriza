@@ -100,23 +100,22 @@ public class AlertConfigMonitorizaService implements IAlertConfigMonitorizaServi
 		final AlertSeverityMonitoriza severityMonitoriza = this.alertSeverityRepository.findBySeverityTypeId(alertConfigDTO.getSeverity());
 		alertConfig.setAlertSeverityMonitoriza(severityMonitoriza);
 
-		if(alertConfigDTO.getIsEnable() != null && alertConfigDTO.getIsEnable()) {
+		if (alertConfigDTO.getIsEnable() != null && alertConfigDTO.getIsEnable()) {
 			alertConfig.setEnable(Boolean.TRUE);
 		} else {
 			alertConfig.setEnable(Boolean.FALSE);
 		}
 
-		if(alertConfigDTO.getIsAllowBlock() != null && alertConfigDTO.getIsAllowBlock()) {
+		if (alertConfigDTO.getIsAllowBlock() != null && alertConfigDTO.getIsAllowBlock()) {
 			alertConfig.setAllowBlock(Boolean.TRUE);
 		} else {
 			alertConfig.setAllowBlock(Boolean.FALSE);
 		}
 
 		alertConfig.setBlockCondition(alertConfigDTO.getBlockCondition());
-		alertConfig.setBlockInterval(alertConfigDTO.getBlockIntervalSeconds());
-		alertConfig.setBlockPeriod(alertConfigDTO.getBlockPeriodSeconds());
+		alertConfig.setBlockInterval(alertConfigDTO.getBlockInterval());
+		alertConfig.setBlockPeriod(alertConfigDTO.getBlockPeriod());
 
 		return this.alertConfigMonitorizaRepository.save(alertConfig);
 	}
-
 }

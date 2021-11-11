@@ -25,21 +25,26 @@
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
 
 
 /**
- * <p>Interface that provides CRUD functionality for the AlertStatistic entity.</p>
+ * <p>Interface that provides CRUD functionality for the AlertDIMType entity.</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>09/11/2021.</p>
  * @author Gobierno de España.
  * @version 1.0, 09/11/2021.
  */
 @Repository
-public interface AlertStatisticRepository extends JpaRepository<AlertStatistic, Long>, JpaSpecificationExecutor<AlertStatistic>{
+public interface AlertDIMTypeRepository extends JpaRepository<AlertDIMType, Long> {
 
+	/**
+	 * Method that returns a type by its id.
+	 * @param typeId Type identifier.
+	 * @return The type.
+	 */
+	AlertDIMType findByTypeID(Long typeId);
 
 }

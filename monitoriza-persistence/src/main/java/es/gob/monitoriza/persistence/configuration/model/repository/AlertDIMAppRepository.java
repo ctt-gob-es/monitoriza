@@ -25,21 +25,26 @@
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
 
 
 /**
- * <p>Interface that provides CRUD functionality for the AlertStatistic entity.</p>
+ * <p>Interface that provides CRUD functionality for the AlertDIMApp entity.</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>09/11/2021.</p>
  * @author Gobierno de España.
  * @version 1.0, 09/11/2021.
  */
 @Repository
-public interface AlertStatisticRepository extends JpaRepository<AlertStatistic, Long>, JpaSpecificationExecutor<AlertStatistic>{
+public interface AlertDIMAppRepository extends JpaRepository<AlertDIMApp, Long> {
 
+	/**
+	  * Method that obtains from the persistence a application identified by its primary key.
+	 * @param id String that represents the primary key of the application in the persistence.
+	 * @return Object that represents a application from the persistence.
+	 */
+	AlertDIMApp findByAppID(Long id);
 
 }

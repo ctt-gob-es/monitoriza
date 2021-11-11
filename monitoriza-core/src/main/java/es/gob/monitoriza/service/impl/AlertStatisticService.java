@@ -23,11 +23,26 @@
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMLevel;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
 import es.gob.monitoriza.persistence.configuration.model.repository.AlertStatisticRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.AlertStatisticDatatableRepository;
@@ -55,4 +70,39 @@ public class AlertStatisticService implements IAlertStatisticService {
 	public DataTablesOutput<AlertStatistic> findAll(final DataTablesInput input) {
 		return this.dtRepository.findAll(input);
 	}
+
+	@Override
+	public List<AlertStatistic> findByCriteria(final Date minDate, final Date maxDate, final AlertDIMApp appID, final AlertDIMTemplate templateID,
+			final AlertDIMType typeID, final AlertDIMNode nodeID, final AlertDIMLevel levelID){
+	       return this.repository.findAll(new Specification<AlertStatistic>() {
+	           @Override
+	           public Predicate toPredicate(final Root<AlertStatistic> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder) {
+	               final List<Predicate> predicates = new ArrayList<>();
+	               if (appID != null) {
+	                   predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("alertDIMApp"), appID)));
+	               }
+
+	               if (templateID != null){
+	                   predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("alertDIMTemplate"), templateID)));
+	               }
+
+	               if (typeID != null){
+	                   predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("alertDIMType"), typeID)));
+	               }
+
+	               if (nodeID != null){
+	                   predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("alertDIMNode"), nodeID)));
+	               }
+
+	               if (levelID != null){
+	                   predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("alertDIMLevel"), levelID)));
+	               }
+
+	               if(minDate != null && maxDate != null){
+	            	   predicates.add(criteriaBuilder.between(root.get("timestamp"), minDate, maxDate));
+	               }
+	               return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+	           }
+	       });
+	   }
 }

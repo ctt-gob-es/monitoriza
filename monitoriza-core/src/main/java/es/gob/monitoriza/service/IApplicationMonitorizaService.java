@@ -40,11 +40,11 @@ public interface IApplicationMonitorizaService {
 	 * @param templateId The app identifier.
 	 * @return {@link ApplicationMonitoriza}
 	 */
-	ApplicationMonitoriza getApplicationMonitorizaById(Long templateId);
+	ApplicationMonitoriza getApplicationMonitorizaById(Long appId);
 
 	/**
-	 * Method that deletes a user in the persistence.
-	 * @param templateId {@link Integer} that represents the app identifier to delete.
+	 * Method that deletes a application in the persistence.
+	 * @param appId {@link Integer} that represents the application identifier to delete.
 	 */
 	void deleteApplicationMonitoriza(Long appId);
 
@@ -63,8 +63,8 @@ public interface IApplicationMonitorizaService {
 
 	/**
 	 * Method that stores a app in the persistence.
-	 * @param templateDto a {@link ApplicationDTO} with the information of the template.
-	 * @return {@link ApplicationMonitoriza} The template.
+	 * @param appDto a {@link ApplicationDTO} with the information of the application.
+	 * @return {@link ApplicationMonitoriza} The application.
 	 */
 	ApplicationMonitoriza saveApplicationMonitoriza(ApplicationDTO appDto);
 }

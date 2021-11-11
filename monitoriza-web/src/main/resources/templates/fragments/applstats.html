@@ -4,56 +4,68 @@
 		<div class="col-md-12">
 				<div class="bgc-white bd bdrs-3 p-20 mB-20">
 				<h4 class="c-grey-900 mB-20" th:text="#{applalert.stats.admin.title}"></h4>
-				<form id="statsForm" name="statsForm" role="form" th:action="@{/filterStats}" th:object="${statsform}"method="post">
-					 
-					 <input type='hidden' id="minTimeSeconds" name="minTimeSeconds">
-					 <input type='hidden' id="maxTimeSeconds" name="maxTimeSeconds">
-
+				<form id="statsForm" name="altEditor-form" role="form" th:object="${statsform}" action="#" method="post">
 					<div class="form-row">
-						<div class="form-group col-md-2">
+						<div class="form-group col">
+							<label for="minDate" th:text="#{applalert.stats.form.mindate}"></label> 
+							<span id="minDate" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
+							<input type="date" class="form-control date-input" id="minDate" name="minDate" th:field="*{minDate}" step="1" required>
+						</div>
+						<div class="form-group col">
 							<label for="maxDate" th:text="#{applalert.stats.form.maxdate}"></label> 
 							<span id="maxDate" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
-							<input type="date" class="form-control" id="maxDate" name="maxDate" step="1" required>
+							<input type="date" class="form-control date-input" id="maxDate" name="maxDate" th:field="*{maxDate}" step="1" required>
 						</div>
-						<div class="form-group col-md-2">
-							<label for="minDate" th:text="#{applalert.stats.form.mindate}"></label> 
-							<span id="minDate" value="" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
-							<input type="date" class="form-control" id="minDate" name="minDate" step="1" required>
-						</div>
-						<div class="form-group col-md-2"><label for="application" th:text="#{applalert.stats.form.application}"></label>
-							 <select id="application" name="application" class="form-control">
-									<option selected="selected" value="" th:text="#{applalert.stats.form.application}"></option>
+						<div class="form-group col">
+							<label for="application" th:text="#{applalert.stats.form.application}"></label>
+							<select name="appID" id="appID" class="form-control" th:field="*{appID}" required>
+								<option value="-1" th:text="#{applalert.stats.form.all}" selected></option>
+								<option th:each="t: ${applicationsList}" th:value="${t.appID}" th:text="${t.name}">
+								</option>
 							</select>
 						</div>
-						<div class="form-group col-md-2">
+						<div class="form-group col">
+							<label for="template" th:text="#{applalert.stats.form.template}"></label>
+							<select name="templateID" id="templateID" class="form-control" th:field="*{templateID}" required>
+								<option value="-1" th:text="#{applalert.stats.form.all}" selected></option>
+								<option th:each="t: ${templatesList}" th:value="${t.templateID}" th:text="${t.name}">
+								</option>
+							</select>
+						</div>
+						<div class="form-group col">
 							<label for="alarm" th:text="#{applalert.stats.form.alarm}"></label>
-							<select id="alarm" name="alarm" class="form-control">
-									<option selected="selected" value="" th:text="#{applalert.stats.form.alarm}"></option>
+							<select name="typeID" id="typeID" class="form-control" th:field="*{typeID}" required>
+								<option value="-1" th:text="#{applalert.stats.form.all}" selected></option>
+								<option th:each="t: ${typesList}" th:value="${t.typeID}" th:text="${t.name}">
+								</option>
 							</select>
 						</div>
-						<div class="form-group col-md-2">
+						<div class="form-group col">
 							<label for="service" th:text="#{applalert.stats.form.node}"></label>
-							<select id="node" name="node" class="form-control">
-									<option selected="selected" value="" th:text="#{applalert.stats.form.node}"></option>
+							<select name="nodeID" id="nodeID" class="form-control" th:field="*{nodeID}" required>
+								<option value="-1" th:text="#{applalert.stats.form.allnodes}" selected></option>
+								<option th:each="t: ${nodesList}" th:value="${t.nodeID}" th:text="${t.name}">
+								</option>
 							</select>
 						</div>
-						<div class="form-group col-md-2">
+						<div class="form-group col">
 							<label for="criticity" th:text="#{applalert.stats.form.criticity}"></label>
-							<select id="criticity" name="criticity" class="form-control">
-									<option selected="selected" value="" th:text="#{applalert.stats.form.criticity}"></option>
+							<select name="levelID" id="levelID" class="form-control" th:field="*{levelID}" required>
+								<option value="-1" th:text="#{applalert.stats.form.all}" selected></option>
+								<option th:each="t: ${levelsList}" th:value="${t.levelID}" th:text="${t.name}">
+								</option>
 							</select>
 						</div>
 					</div>
 
-					<button id="consultBtn" type="submit" class="btn btn-primary"
+					<button id="filterStatsBtn" class="btn btn-primary" type="button"
 						th:text="#{applalert.stats.form.btn.consult}"></button>
 					<button id="cleanStatsBtn" class="btn btn-primary"
-						onclick="cleanForm('#statsForm');" th:text="#{applalert.stats.form.btn.clean}"></button>
+						onclick="cleanForm();" th:text="#{applalert.stats.form.btn.clean}"></button>
 				</form>
 			</div>
 			<div class="bgc-white bd bdrs-3 p-20 mB-20">
-				<table id="statsTable" class="table table-striped table-bordered" 
-					cellspacing="0" width="100%">
+				<table id="statsTable"  class="table table-striped table-bordered" cellspacing="0" width="100%">
 					<thead>
 						<tr>
 						<!-- Columna vacia para el identificador -->
@@ -71,28 +83,48 @@
 		</div>
 	</div>
 </div>
-<div id="modalEditUser"></div>
 
 <script th:inline="javascript">
+
 $(document).ready(function() {
 
+	var buttonCommon = {
+	        exportOptions: {
+	            format: {
+	                body: function ( data, row, column, node ) {
+	                    
+	                    return data;
+	                }
+	            }
+	        }
+	    };
+
+	var statsTable;
+	var filterStats = /*[[@{/filterstats}]]*/;
 	var getStats = /*[[@{/alertstatisticsdatatable}]]*/;
 	
-	var tbl = $('#statsTable').DataTable({
+	statsTable = $('#statsTable').DataTable({
 		dom: 'Bfrtip',
 	    select: 'single',
 	    responsive: true,
-	    
 	    altEditor: true,
-	    buttons: [{extend: 'selected',text: 'Copy', name: 'copy'}, {extend: 'selected',text: 'Excel',name: 'excel'}, 
-	    	{extend: 'selected',text: 'PDF',name: 'pdf'}
-			],
+		buttons: [
+            $.extend( true, {}, buttonCommon, {
+                extend: 'copyHtml5'
+            } ),
+            $.extend( true, {}, buttonCommon, {
+                extend: 'excelHtml5',
+                filename: 'informeEstadisticas'
+            } ),
+            $.extend( true, {}, buttonCommon, {
+                extend: 'pdfHtml5',
+				filename: 'informeEstadisticas'
+            } )
+        ],
 	
 	    "iTotalRecords": "totalElements",
         "iTotalDisplayRecords": "numberOfElements",
 	    
-		"processing": true,
-	    "serverSide": true,
 	    "language": {
 	        "url": "js/datatables/i18n/spanish.json",
 	        select: {
@@ -106,8 +138,7 @@ $(document).ready(function() {
 			"url": getStats,
 			"dataSrc" : "data",
 			"data": function (data) {
-				console.log(data);
-				data.formId = "statsForm";
+				//data.formId = "statsForm";
 		     }
 		},
 		"columns": [
@@ -117,10 +148,63 @@ $(document).ready(function() {
 	        { "data": "alertDIMTemplate.name" },
 	        { "data": "alertDIMType.name" },
 	        { "data": "alertDIMNode.name" },
-	        { "data": "alertDIMLevel.name" },
+	        { "data": "alertDIMLevel.name" ,
+				"render": function (data, type, row) {
+					var result;
+					
+					switch (data){
+						case "FATAL":
+							result = '<div class = "alert alert-danger text-center alert-severity">' + data + '</div>';
+						break;
+						case "ERROR":
+							result = '<div class = "alert alert-dark text-center alert-severity">' + data + '</div>';
+						break;
+						case "WARNING":
+							result = '<div class = "alert alert-warning text-center alert-severity">' + data + '</div>';
+						break;
+						case "INFO":
+							result = '<div class = "alert alert-info text-center alert-severity">' + data + '</div>';
+						break;
+					}	        	  
+					return result;
+			}},	
 	        { "data": "ocurrency" }
 	        ]
 		});
-});	
 
+	$('#filterStatsBtn').on( 'click', function () {
+
+		if ($("#minDate").val() == "" || $("#maxDate").val() == ""){
+			
+        	$('#errorModalStatistic').remove();
+        	$('#statsForm').append('<div id="errorModalStatistic" class="alert alert-danger" role="alert"><strong>Por favor, introduzca un rango de fechas correcto</strong></div>');
+
+    	} else {
+
+		    loading();
+		    
+		    $('#errorModalStatistic').remove();
+		    
+			$.ajax(filterStats, {
+		    	dataType : 'json',
+		    	contentType:'application/json',
+		        data : JSON.stringify($("#statsForm").serializeJSON()),
+		        type:'POST',
+		        success: function(data){
+		    		// Se oculta la capa 'cargando...'
+		    		hide();
+					statsTable.clear().draw();
+					statsTable.rows.add($(data.data)); 
+					statsTable.draw(); 
+		        },
+		        error:function(data){
+		        	hide();
+		        	$('#errorModalStatistic').remove();
+		        	$('#statsForm').append('<div id="errorModalStatistic" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
+		        }
+		    });
+		}
+	 });
+
+});	
 </script>

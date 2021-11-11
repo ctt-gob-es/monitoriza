@@ -23,9 +23,17 @@
  */
 package es.gob.monitoriza.service;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMLevel;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
 
 /**
@@ -46,4 +54,6 @@ public interface IAlertStatisticService {
 	 */
 	DataTablesOutput<AlertStatistic> findAll(final DataTablesInput input);
 
+	List<AlertStatistic> findByCriteria(final Date minDate, final Date maxDate, final AlertDIMApp appID, final AlertDIMTemplate templateID,
+			final AlertDIMType typeID, final AlertDIMNode nodeID, final AlertDIMLevel levelID);
 }

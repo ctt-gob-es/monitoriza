@@ -70,9 +70,9 @@ import es.gob.monitoriza.service.IAlertSystemMonitorizaService;
 import es.gob.monitoriza.service.IApplicationMonitorizaService;
 
 /**
- * <p>Class that manages the REST requests related to the Users administration and JSON communication.</p>
+ * <p>Class that manages the REST requests related to the alert configurations administration and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.7, 14/03/2019.
+ * @version 1.0, 10/11/2021.
  */
 @RestController
 public class AlertConfigRestController {
@@ -287,11 +287,13 @@ public class AlertConfigRestController {
 	private void saveGrayLogNoticeConfig(final Long alertConfSysId, final List<String> keysList, final List<String> valuesList) {
 		if (keysList != null && !keysList.isEmpty()) {
 			for (int i = 0 ; i < keysList.size() ; i++) {
-				final AlertGraylogNoticeConfig alertGrayLogNotConf = new AlertGraylogNoticeConfig();
-				alertGrayLogNotConf.setNotSysConfigId(alertConfSysId);
-				alertGrayLogNotConf.setPkey(keysList.get(i));
-				alertGrayLogNotConf.setValue(valuesList.get(i));
-				this.alertGrayLogNoticeConfigService.saveAlertGraylogNoticeConfig(alertGrayLogNotConf);
+				if (keysList.get(i) != null && !keysList.get(i).isEmpty()) {
+					final AlertGraylogNoticeConfig alertGrayLogNotConf = new AlertGraylogNoticeConfig();
+					alertGrayLogNotConf.setNotSysConfigId(alertConfSysId);
+					alertGrayLogNotConf.setPkey(keysList.get(i));
+					alertGrayLogNotConf.setValue(valuesList.get(i));
+					this.alertGrayLogNoticeConfigService.saveAlertGraylogNoticeConfig(alertGrayLogNotConf);
+				}
 			}
 		}
 	}

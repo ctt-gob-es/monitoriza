@@ -24,18 +24,38 @@
  */
 package es.gob.monitoriza.rest.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.List;
+
 import javax.validation.constraints.NotEmpty;
 
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.persistence.configuration.dto.AlertStatisticDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMLevel;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
+import es.gob.monitoriza.service.IAlertDIMAppService;
+import es.gob.monitoriza.service.IAlertDIMLevelService;
+import es.gob.monitoriza.service.IAlertDIMNodeService;
+import es.gob.monitoriza.service.IAlertDIMTemplateService;
+import es.gob.monitoriza.service.IAlertDIMTypeService;
 import es.gob.monitoriza.service.IAlertStatisticService;
 
 /**
@@ -53,11 +73,55 @@ public class AlertStatisticRestController {
 	@Autowired
 	private IAlertStatisticService alertStatisticService;
 
+
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IAlertDIMAppService alertDIMAppService;
+
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IAlertDIMTemplateService alertDIMTemplateService;
+
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IAlertDIMTypeService alertDIMTypeService;
+
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IAlertDIMNodeService alertDIMNodeService;
+
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IAlertDIMLevelService alertDIMLevelService;
+
+	/**
+	 * Attribute that represents the object that manages the log of the class.
+	 */
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+
+	/**
+	 * Attribute that represents the search of all the values of the parameter.
+	 */
+	private static final Long PARAM_ALL = (long) -1;
+
 	/**
 	 * Method that returns the alert statistics from the database
-	 *
-	 * @param input
-	 *            Holder object for datatable attributes.
+	 * @param input Holder object for datatable attributes.
 	 * @return DataTablesOutput<AlertStatistic> that represents the alert statistics data
 	 */
 	@JsonView(DataTablesOutput.View.class)
@@ -66,5 +130,51 @@ public class AlertStatisticRestController {
 		return this.alertStatisticService.findAll(input);
 	}
 
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(value = "/filterstats", method = RequestMethod.POST)
+	public @ResponseBody DataTablesOutput<AlertStatistic> filterStats(@RequestBody final AlertStatisticDTO alertStatisticForm) {
+
+		final DataTablesOutput<AlertStatistic> dtOutput = new DataTablesOutput<AlertStatistic>();
+		final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		Date minDate = null;
+		Date maxDate = null;
+		try {
+			minDate = formatter.parse(alertStatisticForm.getMinDate() + " 00:00:00");
+			maxDate = formatter.parse(alertStatisticForm.getMaxDate() + " 23:59:59");
+		} catch (final ParseException e) {
+			LOGGER.error("Error al parsear la fecha maxima o minima de las estadisticas a filtrar.");
+		}
+
+		AlertDIMApp app = null;
+		AlertDIMTemplate template = null;
+		AlertDIMType type = null;
+		AlertDIMNode node = null;
+		AlertDIMLevel level = null;
+
+		if (!PARAM_ALL.equals(alertStatisticForm.getAppID())) {
+			app = this.alertDIMAppService.getAlertDIMAppById(alertStatisticForm.getAppID());
+		}
+
+		if (!PARAM_ALL.equals(alertStatisticForm.getTemplateID())) {
+			template = this.alertDIMTemplateService.getAlertDIMTemplateById(alertStatisticForm.getTemplateID());
+		}
+
+		if (!PARAM_ALL.equals(alertStatisticForm.getTypeID())) {
+			type = this.alertDIMTypeService.getAlertDIMTypeById(alertStatisticForm.getTypeID());
+		}
+
+		if (!PARAM_ALL.equals(alertStatisticForm.getNodeID())) {
+			node = this.alertDIMNodeService.getAlertDIMNodeById(alertStatisticForm.getNodeID());
+		}
+
+		if (!PARAM_ALL.equals(alertStatisticForm.getLevelID())) {
+			level = this.alertDIMLevelService.getAlertDIMLevelById(alertStatisticForm.getLevelID());
+		}
+
+		final List<AlertStatistic> statisticsList = this.alertStatisticService.findByCriteria(minDate, maxDate, app, template, type, node, level);
+		dtOutput.setData(statisticsList);
+
+		return dtOutput;
+	}
 
 }

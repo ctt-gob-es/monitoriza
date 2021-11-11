@@ -18,9 +18,7 @@
 								<div>
 									<input type='hidden' class='primarykey' id="idAlertConfigMonitoriza" th:field="*{idAlertConfigMonitoriza}">
 									<input type='hidden' class='primarykey' id="appID" th:field="*{appID}">
-									<input type='hidden' id="blockIntervalSeconds" name="blockIntervalSeconds" th:field="*{blockIntervalSeconds}">
-					 				<input type='hidden' id="blockPeriodSeconds" name="blockPeriodSeconds" th:field="*{blockPeriodSeconds}">
-					 				
+
 									<div class="form-row">
 										<div class="form-group col-md-12">
 											<label for="alertTypesList" th:text="#{applalert.alertconfig.modal.alertsystems}"></label>
@@ -59,13 +57,11 @@
 										</div>
 										<div class="form-group col-md-4">
 											<label for="blockInterval" th:text="#{applalert.alertconfig.modal.interval}"></label> 
-											<span id="blockInterval_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
-											<input type="time" class="form-control" id="blockInterval" name="blockInterval" step="1" required="">
+											<input type="text" class="form-control" id="blockInterval" name="blockInterval" th:field="*{blockInterval}">
 										</div>
 										<div class="form-group col-md-4">
 											<label for="blockPeriod" th:text="#{applalert.alertconfig.modal.blockperiod}"></label> 
-											<span id="blockPeriod_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
-											<input type="time" class="form-control" id="blockPeriod" name="blockPeriod" step="1" required="">
+											<input type="text" class="form-control" id="blockPeriod" name="blockPeriod" th:field="*{blockPeriod}">
 										</div>
 									</div>
 								</div>
@@ -156,14 +152,6 @@
 		var getAlertConfigSystems = /*[[@{/alertconfigssystemsdt}]]*/;
 		var getEmailInfo = /*[[@{/emailinformation}]]*/;
 		var getGraylogInfo = /*[[@{/grayloginformation}]]*/;
-
-		var blockIntervalSeconds = $('#blockIntervalSeconds').val();
-		var blockPeriodSeconds = $('#blockPeriodSeconds').val();
-
-		if (blockCondition != null){
-			$('#blockInterval').val(secondsToTime(blockIntervalSeconds));
-			$('#blockPeriod').val(secondsToTime(blockPeriodSeconds));
-		}
 
 		// Instancia de las tablas para sistemas de notificacion y aplicaciones / tipos de alerta
 		var alertSystemTbl = $('#alertSystemTable').DataTable({
@@ -275,21 +263,6 @@
 
             // Cargamos la informacion de las tablas en arrays que se mandaran al servidor
             loadTableInfoIntoArrays();
-            
-            var blockInterval = checkTypeTime($('#blockInterval'));
-			var blockPeriod = checkTypeTime($('#blockPeriod'));
-
-			if (blockInterval != $('#blockInterval').val()){
-				$("#blockInterval").val(blockInterval);
-			}
-					
-			$("#blockIntervalSeconds").val(timeToSecondsOfDay(blockInterval));
-				  
-			if (blockPeriod != $('#blockPeriod').val()){
-				$("#blockPeriod").val(blockPeriod);
-			}
-						
-			$("#blockPeriodSeconds").val(timeToSecondsOfDay(blockPeriod));
 
             var formToJSON = $("#alertConfigForm").serializeJSON();
             formToJSON.notifSystemsIdArray = notifSystemsIdArray;
@@ -420,50 +393,11 @@
 		}
  	});
 
+	// Funcion para eliminar la sombra al fondo del modal cuando se cierra
 	function removeBackdrop(){
 		$('.modal-backdrop').each(function(i, obj) {
 			$(obj).remove();
 		    return false;
 		});
-	}
-
-	function checkTypeTime(id){
-		var numValue =  $(id).val();
-		if (numValue.indexOf(':') != -1){
-			var splitValue = numValue.split(':');
-			if (splitValue.length == 2){
-				numValue += ":00"
-			}
-		}
-		return numValue;
-	}
-
-	function timeToSecondsOfDay(s){
-		var numValue =  s;
-		
-		if (numValue.indexOf(':') != -1){
-			var splitValue = numValue.split(':');
-			var finalValue = 0;
-			if (splitValue.length == 2){
-				finalValue = (+splitValue[0]) * 60 * 60 + (+splitValue[1]) * 60;
-			} else if (splitValue.length == 3){
-				finalValue = (+splitValue[0]) * 60 * 60 + (+splitValue[1]) * 60 + (+splitValue[2]);
-			}
-			
-		}else{
-			finalValue = numValue;
-		}
-		
-		return finalValue;
-	}
-
-	function secondsToTime(seconds) {
-		  var hour = Math.floor(seconds / 3600);
-		  hour = (hour < 10)? '0' + hour : hour;
-		  var minute = Math.floor((seconds / 60) % 60);
-		  minute = (minute < 10)? '0' + minute : minute;
-		  var second = seconds % 60;
-		  second = (second < 10)? '0' + second : second;
-		  return hour + ':' + minute + ':' + second;
 	}
 </script>

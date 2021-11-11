@@ -1,4 +1,3 @@
-/*
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -15,31 +14,35 @@
  ******************************************************************************/
 
 /**
- * <b>File:</b><p>es.gob.eventmanager.persistence.model.repository.AlertAuditRepository.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.service.IUserMonitorizaService.java.</p>
  * <b>Description:</b><p> .</p>
- * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
+ * <b>Date:</b><p>6 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.2, 28/10/2018.
  */
-package es.gob.monitoriza.persistence.configuration.model.repository;
+package es.gob.monitoriza.service;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
-
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMLevel;
 
 /**
- * <p>Interface that provides CRUD functionality for the AlertStatistic entity.</p>
- * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>09/11/2021.</p>
- * @author Gobierno de España.
- * @version 1.0, 09/11/2021.
+ * <p>Interface that provides communication with the operations of the persistence layer.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
-@Repository
-public interface AlertStatisticRepository extends JpaRepository<AlertStatistic, Long>, JpaSpecificationExecutor<AlertStatistic>{
+public interface IAlertDIMLevelService {
 
+	/**
+	 * Method that gets all the alert audits from the persistence.
+	 * @return a {@link Iterable<AlertDIMLevel>} with the information of all alert DIM levels.
+	 */
+	List<AlertDIMLevel> getAllAlertDIMLevel();
 
+	/**
+	 * Method that gets a node by its id.
+	 * @param levelId Node identifier.
+	 * @return The node.
+	 */
+	AlertDIMLevel getAlertDIMLevelById(Long levelId);
 }

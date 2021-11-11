@@ -67,5 +67,4 @@ public class AlertAuditRestController {
 		return this.alertAuditService.findAll(input);
 	}
 
-
 }
