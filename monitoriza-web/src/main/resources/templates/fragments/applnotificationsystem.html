@@ -95,6 +95,27 @@ $(document).ready(function() {
 		    
 		    switch(accion){
 		        case 'add':
+			        
+		        	if ($('#notifSystemForm')[0].checkValidity() === false) {
+		        		// Se oculta la capa 'cargando...'
+		        		hide();
+		                event.stopPropagation();
+		                
+		                $('#notifSystemForm *').filter(':input').each(function(){
+		            	    		            	    
+		            	    if(!$(this)[0].checkValidity())
+		            	    {
+		            	  	 $("#invalid-" + $(this).attr('id')).html();
+		            	  	 $("#" + $(this).attr('id')).addClass("is-invalid");
+		            	    } else {
+		            	  	 $("#" + $(this).attr('id')).removeClass("is-invalid");
+		            	    }
+		            	    
+		            	});
+		                
+		                // Esto es necesario para forzar que se muestren mensajes de validacion de cliente
+		                $('<input type="submit">').hide().appendTo($('#notifSystemForm')).click().remove();
+		            } else {
 		            		$.ajax(saveNotifSystem, {
 				            	dataType : 'json',
 				            	contentType:'application/json',
@@ -102,8 +123,7 @@ $(document).ready(function() {
 				                type:'POST',
 				                success: function(data){
 				            		// Se oculta la capa 'cargando...'
-				            		hide();  
-				            		console.log(data);
+				            		hide();
 
 				            		systemNotificationsTable.row.add($(data.data)).draw(false);
 	    		                    
@@ -112,32 +132,54 @@ $(document).ready(function() {
 				                },
 				                error:function(data){
 				                	hide();
-				                	$('#errorModalUser').remove();
-				                	$('#userForm').append('<div id="errorModalUser" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
+				                	$('#errorModalAlertSystem').remove();
+				                	$('#notifSystemForm').append('<div id="errorModalAlertSystem" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
 				                }
 				            });
+				       }
 		            break;
 		        case 'edit':
-		        	$.ajax(saveNotifSystem, {
-		            	dataType : 'json',
-		            	contentType:'application/json',
-		            	data : JSON.stringify($("#notifSystemForm").serializeJSON()),
-		                type:'POST',
-		                success: function(data){
-		                  
-		            		// Se oculta la capa 'cargando...'
-		            		hide();
-		                    $('#systemNotificationTable').DataTable().rows().invalidate('data').draw(false);
-		                    		                    
-		                    $('#altEditor-modal .modal-body .alert').remove();
-		                    $('#altEditor-modal').modal('hide');
-
-		                },
-		                error:function(data){
-		                	hide();
-		                	//$('#nodeAfirmaForm').append('<div id="errorModalNode" class="alert alert-danger" role="alert"><strong>' + [[#{node.admin.error.sameName}]] + '</strong></div>');
-		                }
-		            });
+		        	if ($('#notifSystemForm')[0].checkValidity() === false) {
+		        		// Se oculta la capa 'cargando...'
+		        		hide();
+		                event.stopPropagation();
+		                
+		                $('#notifSystemForm *').filter(':input').each(function(){
+		            	    		            	    
+		            	    if(!$(this)[0].checkValidity())
+		            	    {
+		            	  	 $("#invalid-" + $(this).attr('id')).html();
+		            	  	 $("#" + $(this).attr('id')).addClass("is-invalid");
+		            	    } else {
+		            	  	 $("#" + $(this).attr('id')).removeClass("is-invalid");
+		            	    }
+		            	    
+		            	});
+		                
+		                // Esto es necesario para forzar que se muestren mensajes de validacion de cliente
+		                $('<input type="submit">').hide().appendTo($('#notifSystemForm')).click().remove();
+		            } else {
+			        	$.ajax(saveNotifSystem, {
+			            	dataType : 'json',
+			            	contentType:'application/json',
+			            	data : JSON.stringify($("#notifSystemForm").serializeJSON()),
+			                type:'POST',
+			                success: function(data){
+			                  
+			            		// Se oculta la capa 'cargando...'
+			            		hide();
+			                    $('#systemNotificationTable').DataTable().rows().invalidate('data').draw(false);
+			                    		                    
+			                    $('#altEditor-modal .modal-body .alert').remove();
+			                    $('#altEditor-modal').modal('hide');
+	
+			                },
+			                error:function(data){
+			                	hide();
+			                	$('#errorModalAlertSystem').remove();
+			                	$('#notifSystemForm').append('<div id="errorModalAlertSystem" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');		                }
+			            });
+			          }
 		            break;
 		        case 'delete':
 		            $.ajax(deleteNotifSystem,{

@@ -36,6 +36,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import es.gob.monitoriza.persistence.configuration.dto.AlertAuditDTO;
 import es.gob.monitoriza.persistence.configuration.dto.AlertConfigDTO;
 import es.gob.monitoriza.persistence.configuration.dto.AlertStatisticDTO;
 import es.gob.monitoriza.persistence.configuration.dto.AlertSystemDTO;
@@ -46,8 +47,8 @@ import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TemplateDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMLevel;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSeverityMonitoriza;
@@ -58,8 +59,8 @@ import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 import es.gob.monitoriza.service.IAlertConfigMonitorizaService;
 import es.gob.monitoriza.service.IAlertDIMAppService;
-import es.gob.monitoriza.service.IAlertDIMLevelService;
 import es.gob.monitoriza.service.IAlertDIMNodeService;
+import es.gob.monitoriza.service.IAlertDIMSeverityService;
 import es.gob.monitoriza.service.IAlertDIMTemplateService;
 import es.gob.monitoriza.service.IAlertDIMTypeService;
 import es.gob.monitoriza.service.IAlertSeverityMonitorizaService;
@@ -159,7 +160,7 @@ public class ApplicationAlertController {
 	 * repository.
 	 */
 	@Autowired
-	private IAlertDIMLevelService alertLevelService;
+	private IAlertDIMSeverityService alertSeverityService;
 
 	/**
 	 * Attribute that represents if the application is enabled
@@ -167,7 +168,7 @@ public class ApplicationAlertController {
 	private static final String APP_ENABLED_S = "S"; //$NON-NLS-1$
 
 	/**
-	 * Method that maps the list users web requests to the controller and forwards
+	 * Method that maps the list audits web requests to the controller and forwards
 	 * the list of alert audits to the view.
 	 * @param model
 	 *            Holder object for model attributes.
@@ -175,6 +176,8 @@ public class ApplicationAlertController {
 	 */
 	@RequestMapping(value = "applcontrolpanel", method = RequestMethod.GET)
 	public String applControlPanel(final Model model) {
+
+		model.addAttribute("auditsform", new AlertAuditDTO());
 
 		return "fragments/applcontrolpanel.html";
 	}
@@ -209,7 +212,7 @@ public class ApplicationAlertController {
 	 * Method that maps the list users web requests to the controller and forwards
 	 * the list of alert configurations to the view.
 	 * @param applicationId Application identifier.
-	 * @param appName Application name.
+	 * @param appName Application name.º
 	 * @param model
 	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
@@ -284,8 +287,8 @@ public class ApplicationAlertController {
 		model.addAttribute("nodesList", nodes);
 
 		// Se obtiene la lista de niveles
-		final List<AlertDIMLevel> levels = this.alertLevelService.getAllAlertDIMLevel();
-		model.addAttribute("levelsList", levels);
+		final List<AlertDIMSeverity> severityList = this.alertSeverityService.getAllAlertDIMSeverity();
+		model.addAttribute("severityList", severityList);
 
 		model.addAttribute("statsform", new AlertStatisticDTO());
 
@@ -366,7 +369,7 @@ public class ApplicationAlertController {
 		applicationForm.setIdApplicationMonitoriza(appId);
 		applicationForm.setName(application.getName());
 		applicationForm.setTemplateID(application.getTemplateMonitoriza().getIdTemplateMonitoriza());
-		applicationForm.setAppKey(application.getAppKey());
+		applicationForm.setCipherKey(application.getCipherKey());
 		applicationForm.setResponsibleName(application.getResponsibleName());
 		applicationForm.setResponsibleEmail(application.getResponsibleEmail());
 		applicationForm.setResponsiblePhone(application.getResponsiblePhone());

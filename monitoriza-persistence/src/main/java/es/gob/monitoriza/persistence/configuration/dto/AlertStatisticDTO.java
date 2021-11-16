@@ -27,8 +27,8 @@ package es.gob.monitoriza.persistence.configuration.dto;
 import java.util.List;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMLevel;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
 
@@ -80,9 +80,9 @@ public class AlertStatisticDTO {
 	private Long nodeID;
 
 	/**
-	 * Attribute that represents the level identifier to search.
+	 * Attribute that represents the severity identifier to search.
 	 */
-	private Long levelID;
+	private Long severityID;
 
 	/**
 	 * Attribute that represents the list of applications
@@ -107,7 +107,7 @@ public class AlertStatisticDTO {
 	/**
 	 * Attribute that represents the list of levels
 	 */
-	private List<AlertDIMLevel> levelsList;
+	private List<AlertDIMSeverity> levelsList;
 
 
 	public String getMaxDate() {
@@ -166,12 +166,12 @@ public class AlertStatisticDTO {
 		this.nodeID = nodeID;
 	}
 
-	public Long getLevelID() {
-		return this.levelID;
+	public Long getSeverityID() {
+		return this.severityID;
 	}
 
-	public void setLevelID(final Long levelID) {
-		this.levelID = levelID;
+	public void setSeverityID(final Long severityID) {
+		this.severityID = severityID;
 	}
 
 	public List<AlertDIMApp> getApplicationsList() {
@@ -206,11 +206,11 @@ public class AlertStatisticDTO {
 		this.nodesList = nodesList;
 	}
 
-	public List<AlertDIMLevel> getLevelsList() {
+	public List<AlertDIMSeverity> getLevelsList() {
 		return this.levelsList;
 	}
 
-	public void setLevelsList(final List<AlertDIMLevel> levelsList) {
+	public void setLevelsList(final List<AlertDIMSeverity> levelsList) {
 		this.levelsList = levelsList;
 	}
 

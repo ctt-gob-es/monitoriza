@@ -33,7 +33,7 @@ package es.gob.monitoriza.persistence.configuration.dto;
  * Application for monitoring services of @firma suite systems.
  * </p>
  *
- * @version 1.1, 25/01/2019.
+ * @version 1.0, 15/11/2021.
  */
 public class ApplicationDTO {
 
@@ -50,7 +50,7 @@ public class ApplicationDTO {
 	/**
 	 * Attribute that represents the application key
 	 */
-	private String appKey;
+	private String cipherKey;
 
 	/**
 	 * Attribute that represents the template id.
@@ -93,12 +93,12 @@ public class ApplicationDTO {
 		this.name = name;
 	}
 
-	public String getAppKey() {
-		return this.appKey;
+	public String getCipherKey() {
+		return this.cipherKey;
 	}
 
-	public void setAppKey(final String appKey) {
-		this.appKey = appKey;
+	public void setCipherKey(final String cipherKey) {
+		this.cipherKey = cipherKey;
 	}
 
 	public Long getTemplateID() {

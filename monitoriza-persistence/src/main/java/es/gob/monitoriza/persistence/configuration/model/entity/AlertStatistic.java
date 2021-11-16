@@ -85,9 +85,9 @@ public class AlertStatistic implements Serializable {
 	private AlertDIMNode alertDIMNode;
 
 	/**
-	 * Attribute that represents the level.
+	 * Attribute that represents the severity.
 	 */
-	private AlertDIMLevel alertDIMLevel;
+	private AlertDIMSeverity alertDIMSeverity;
 
 	/**
 	 * Attribute that represents the time instance of the alert.
@@ -212,25 +212,25 @@ public class AlertStatistic implements Serializable {
 	}
 
 	/**
-	 * Gets the value of the attribute {@link #alertDIMLevel}.
+	 * Gets the value of the attribute {@link #alertDIMSeverity}.
 	 *
-	 * @return the value of the attribute {@link #alertDIMLevel}.
+	 * @return the value of the attribute {@link #alertDIMSeverity}.
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "SEVERITY", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
-	public AlertDIMLevel getAlertDIMLevel() {
-		return this.alertDIMLevel;
+	public AlertDIMSeverity getAlertDIMSeverity() {
+		return this.alertDIMSeverity;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #alertDIMLevel}.
+	 * Sets the value of the attribute {@link #alertDIMSeverity}.
 	 *
-	 * @param alertDIMLevel
-	 *            The value for the attribute {@link #alertDIMLevel}.
+	 * @param alertDIMSeverity
+	 *            The value for the attribute {@link #alertDIMSeverity}.
 	 */
-	public void setAlertDIMLevel(final AlertDIMLevel alertDIMLevel) {
-		this.alertDIMLevel = alertDIMLevel;
+	public void setAlertDIMSeverity(final AlertDIMSeverity alertDIMSeverity) {
+		this.alertDIMSeverity = alertDIMSeverity;
 	}
 
 	/**

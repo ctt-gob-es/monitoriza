@@ -8,13 +8,13 @@
 					<div class="form-row">
 						<div class="form-group col">
 							<label for="minDate" th:text="#{applalert.stats.form.mindate}"></label> 
-							<span id="minDate" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
-							<input type="date" class="form-control date-input" id="minDate" name="minDate" th:field="*{minDate}" step="1" required>
+							<span id="minDateLogo" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
+							<input type="date" class="form-control date-input" id="minDate" name="minDate" th:field="*{minDate}" step="1">
 						</div>
 						<div class="form-group col">
 							<label for="maxDate" th:text="#{applalert.stats.form.maxdate}"></label> 
-							<span id="maxDate" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
-							<input type="date" class="form-control date-input" id="maxDate" name="maxDate" th:field="*{maxDate}" step="1" required>
+							<span id="maxDateLogo" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span> 
+							<input type="date" class="form-control date-input" id="maxDate" name="maxDate" th:field="*{maxDate}" step="1">
 						</div>
 						<div class="form-group col">
 							<label for="application" th:text="#{applalert.stats.form.application}"></label>
@@ -50,9 +50,9 @@
 						</div>
 						<div class="form-group col">
 							<label for="criticity" th:text="#{applalert.stats.form.criticity}"></label>
-							<select name="levelID" id="levelID" class="form-control" th:field="*{levelID}" required>
+							<select name="severityID" id="severityID" class="form-control" th:field="*{severityID}" required>
 								<option value="-1" th:text="#{applalert.stats.form.all}" selected></option>
-								<option th:each="t: ${levelsList}" th:value="${t.levelID}" th:text="${t.name}">
+								<option th:each="t: ${severityList}" th:value="${t.severityID}" th:text="${t.name}">
 								</option>
 							</select>
 						</div>
@@ -60,7 +60,7 @@
 
 					<button id="filterStatsBtn" class="btn btn-primary" type="button"
 						th:text="#{applalert.stats.form.btn.consult}"></button>
-					<button id="cleanStatsBtn" class="btn btn-primary"
+					<button id="cleanStatsBtn" class="btn btn-primary" type="button"
 						onclick="cleanForm();" th:text="#{applalert.stats.form.btn.clean}"></button>
 				</form>
 			</div>
@@ -92,8 +92,16 @@ $(document).ready(function() {
 	        exportOptions: {
 	            format: {
 	                body: function ( data, row, column, node ) {
-	                    
-	                    return data;
+						if (column == 5) {
+							data = data.replace('<div class = "alert alert-danger text-center alert-severity">', '');
+							data = data.replace('<div class = "alert alert-dark text-center alert-severity">', '');
+							data = data.replace('<div class = "alert alert-warning text-center alert-severity">', '');
+							data = data.replace('<div class = "alert alert-info text-center alert-severity">', '');
+							data = data.replace('</div>', '');
+							return data;
+						} else {
+							return data;
+						}
 	                }
 	            }
 	        }
@@ -138,7 +146,6 @@ $(document).ready(function() {
 			"url": getStats,
 			"dataSrc" : "data",
 			"data": function (data) {
-				//data.formId = "statsForm";
 		     }
 		},
 		"columns": [
@@ -148,7 +155,7 @@ $(document).ready(function() {
 	        { "data": "alertDIMTemplate.name" },
 	        { "data": "alertDIMType.name" },
 	        { "data": "alertDIMNode.name" },
-	        { "data": "alertDIMLevel.name" ,
+	        { "data": "alertDIMSeverity.name" ,
 				"render": function (data, type, row) {
 					var result;
 					
@@ -174,11 +181,17 @@ $(document).ready(function() {
 
 	$('#filterStatsBtn').on( 'click', function () {
 
-		if ($("#minDate").val() == "" || $("#maxDate").val() == ""){
+		if (($("#minDate").val() == "" || $("#maxDate").val() == "" ||
+			$("#minDate").val() == null || $("#maxDate").val() == null)
+			|| new Date($("#minDate").val()) > new Date($("#maxDate").val())){
 			
         	$('#errorModalStatistic').remove();
-        	$('#statsForm').append('<div id="errorModalStatistic" class="alert alert-danger" role="alert"><strong>Por favor, introduzca un rango de fechas correcto</strong></div>');
-
+        	$('#statsForm').append
+        	('<div id="errorModalStatistic" class="alert alert-danger" role="alert"><strong>' +
+        	'<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+            [[#{applalert.stats.form.dateerror}]] + 
+            '</strong></div>');
+        	
     	} else {
 
 		    loading();
@@ -200,11 +213,21 @@ $(document).ready(function() {
 		        error:function(data){
 		        	hide();
 		        	$('#errorModalStatistic').remove();
-		        	$('#statsForm').append('<div id="errorModalStatistic" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
+		        	$('#statsForm').append('<div id="errorModalStatistic" class="alert alert-danger" role="alert"><strong>' +[[#{message.error}]]+ '</strong></div>');
 		        }
 		    });
 		}
 	 });
-
 });	
+
+function cleanForm(){
+	$('#errorModalStatistic').remove();
+	$('#minDate').val(null);
+	$('#maxDate').val(null);
+	$('#appID').val("-1");
+	$('#templateID').val("-1");
+	$('#typeID').val("-1");
+	$('#nodeID').val("-1");
+	$('#severityID').val("-1");
+}
 </script>

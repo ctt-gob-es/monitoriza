@@ -24,17 +24,24 @@
  */
 package es.gob.monitoriza.rest.controller;
 
+import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
+
 import javax.validation.constraints.NotEmpty;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
+import es.gob.monitoriza.persistence.configuration.dto.AlertAuditDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertAudit;
 import es.gob.monitoriza.service.IAlertAuditService;
 
@@ -65,6 +72,33 @@ public class AlertAuditRestController {
 	@RequestMapping(path = "/alertauditdatatable", method = RequestMethod.GET)
 	public DataTablesOutput<AlertAudit> alertsAudit(@NotEmpty final DataTablesInput input) {
 		return this.alertAuditService.findAll(input);
+	}
+
+	/**
+	 * Method that returns the alert audits with the filters indicated in the form.
+	 * @param alertAuditForm Form with the data to filter.
+	 * @return List of filtered data.
+	 */
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(value = "/filteralertaudits", method = RequestMethod.POST)
+	public @ResponseBody DataTablesOutput<AlertAudit> filterAlertAudits(@RequestBody final AlertAuditDTO alertAuditForm) {
+
+		final DataTablesOutput<AlertAudit> dtOutput = new DataTablesOutput<AlertAudit>();
+
+		final Calendar calendar = Calendar.getInstance();
+		// Se restan los minutos que se han indicado en el filtro a la fecha actual
+		calendar.add(Calendar.MINUTE, alertAuditForm.getPeriod());
+
+		Date periodDate = null;
+		if (0 != alertAuditForm.getPeriod()) {
+			periodDate = calendar.getTime();
+		}
+		final Date actualDate = new Date();
+
+		final List<AlertAudit> auditsList = this.alertAuditService.findByCriteria(periodDate, actualDate);
+		dtOutput.setData(auditsList);
+
+		return dtOutput;
 	}
 
 }

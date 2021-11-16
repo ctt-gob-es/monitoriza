@@ -37,6 +37,9 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.NumberConstants;
 
@@ -51,9 +54,6 @@ import es.gob.monitoriza.constant.NumberConstants;
 @Table(name = "ALERT_AUDIT")
 public class AlertAudit implements Serializable {
 
-	/**
-	 * Attribute that represents .
-	 */
 	private static  long serialVersionUID = -3354470162448097977L;
 
 	/**
@@ -92,6 +92,11 @@ public class AlertAudit implements Serializable {
 	private Date timestamp;
 
 	/**
+	 * Attribute that represents the alert description.
+	 */
+	private String description;
+
+	/**
 	 * Gets the value of the attribute {@link #idAlertAudit}.
 	 *
 	 * @return the value of the attribute {@link #idAlertAudit}.
@@ -120,6 +125,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #appName}.
 	 */
 	@Column(name = "APP_NAME", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public String getAppName() {
 		return this.appName;
 	}
@@ -140,6 +146,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #alertName}.
 	 */
 	@Column(name = "ALERT_NAME", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public String getAlertName() {
 		return this.alertName;
 	}
@@ -160,6 +167,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #appTemplateName}.
 	 */
 	@Column(name = "APP_TEMPLATE_NAME", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public String getAppTemplateName() {
 		return this.appTemplateName;
 	}
@@ -180,6 +188,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #node}.
 	 */
 	@Column(name = "NODE", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public String getNode() {
 		return this.node;
 	}
@@ -200,6 +209,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #severity}.
 	 */
 	@Column(name = "SEVERITY", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public String getSeverity() {
 		return this.severity;
 	}
@@ -221,6 +231,7 @@ public class AlertAudit implements Serializable {
 	 */
 	@Column(name = "TIMESTAMP", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonView(DataTablesOutput.View.class)
 	public Date getTimestamp() {
 		return this.timestamp;
 	}
@@ -235,5 +246,25 @@ public class AlertAudit implements Serializable {
 		this.timestamp = timestamp;
 	}
 
+	/**
+	 * Gets the value of the attribute {@link #description}.
+	 *
+	 * @return the value of the attribute {@link #description}.
+	 */
+	@Column(name = "DESCRIPTION", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
+	public String getDescription() {
+		return this.description;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #description}.
+	 *
+	 * @param name
+	 *            The value for the attribute {@link #description}.
+	 */
+	public void setDescription(final String description) {
+		this.description = description;
+	}
 
 }

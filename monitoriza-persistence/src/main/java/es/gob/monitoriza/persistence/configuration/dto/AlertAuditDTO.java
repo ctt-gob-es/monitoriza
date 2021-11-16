@@ -15,30 +15,38 @@
  ******************************************************************************/
 
 /**
- * <b>File:</b><p>es.gob.eventmanager.persistence.model.repository.AlertAuditRepository.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.dto.AlarmDTO.java.</p>
  * <b>Description:</b><p> .</p>
- * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
+  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
+ * <b>Date:</b><p>8/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 25/01/2019.
  */
-package es.gob.monitoriza.persistence.configuration.model.repository;
-
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
-import org.springframework.stereotype.Repository;
-
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertAudit;
-
+package es.gob.monitoriza.persistence.configuration.dto;
 
 /**
- * <p>Interface that provides CRUD functionality for the AlertAuditRepository entity.</p>
- * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
- * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * <p>
+ * Class that represents the backing form for transfer information about a alert audits
+ * </p>
+ * <b>Project:</b>
+ * <p>
+ * Application for monitoring services of @firma suite systems.
+ * </p>
+ *
  */
-@Repository
-public interface AlertAuditRepository extends JpaRepository<AlertAudit, Long>, JpaSpecificationExecutor<AlertAudit> {
+public class AlertAuditDTO {
+
+	/**
+	 * Attribute that represents the period of time to filter
+	 */
+	private Integer period;
+
+	public Integer getPeriod() {
+		return this.period;
+	}
+
+	public void setPeriod(final Integer period) {
+		this.period = period;
+	}
 
 }

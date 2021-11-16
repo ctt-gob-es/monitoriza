@@ -23,9 +23,19 @@
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
+import javax.persistence.criteria.CriteriaBuilder;
+import javax.persistence.criteria.CriteriaQuery;
+import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.Root;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertAudit;
@@ -54,5 +64,21 @@ public class AlertAuditService implements IAlertAuditService {
 	@Override
 	public DataTablesOutput<AlertAudit> findAll(final DataTablesInput input) {
 		return this.dtRepository.findAll(input);
+	}
+
+	@Override
+	public List<AlertAudit> findByCriteria(final Date actualDate, final Date periodDate) {
+		return this.repository.findAll(new Specification<AlertAudit>() {
+			@Override
+			public Predicate toPredicate(final Root<AlertAudit> root, final CriteriaQuery<?> query,
+					final CriteriaBuilder criteriaBuilder) {
+				final List<Predicate> predicates = new ArrayList<>();
+
+				if (periodDate != null && actualDate != null) {
+					predicates.add(criteriaBuilder.between(root.get("timestamp"), actualDate, periodDate));
+				}
+				return criteriaBuilder.and(predicates.toArray(new Predicate[predicates.size()]));
+			}
+		});
 	}
 }

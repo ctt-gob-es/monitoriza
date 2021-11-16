@@ -46,14 +46,14 @@ import com.fasterxml.jackson.annotation.JsonView;
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.persistence.configuration.dto.AlertStatisticDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMLevel;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
 import es.gob.monitoriza.service.IAlertDIMAppService;
-import es.gob.monitoriza.service.IAlertDIMLevelService;
 import es.gob.monitoriza.service.IAlertDIMNodeService;
+import es.gob.monitoriza.service.IAlertDIMSeverityService;
 import es.gob.monitoriza.service.IAlertDIMTemplateService;
 import es.gob.monitoriza.service.IAlertDIMTypeService;
 import es.gob.monitoriza.service.IAlertStatisticService;
@@ -107,7 +107,7 @@ public class AlertStatisticRestController {
 	 * repository.
 	 */
 	@Autowired
-	private IAlertDIMLevelService alertDIMLevelService;
+	private IAlertDIMSeverityService alertDIMSeverityService;
 
 	/**
 	 * Attribute that represents the object that manages the log of the class.
@@ -130,6 +130,11 @@ public class AlertStatisticRestController {
 		return this.alertStatisticService.findAll(input);
 	}
 
+	/**
+	 * Method that returns the statistics with the filters indicated in the form.
+	 * @param alertStatisticForm Form with the data to filter.
+	 * @return List of filtered data.
+	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(value = "/filterstats", method = RequestMethod.POST)
 	public @ResponseBody DataTablesOutput<AlertStatistic> filterStats(@RequestBody final AlertStatisticDTO alertStatisticForm) {
@@ -149,7 +154,7 @@ public class AlertStatisticRestController {
 		AlertDIMTemplate template = null;
 		AlertDIMType type = null;
 		AlertDIMNode node = null;
-		AlertDIMLevel level = null;
+		AlertDIMSeverity severity = null;
 
 		if (!PARAM_ALL.equals(alertStatisticForm.getAppID())) {
 			app = this.alertDIMAppService.getAlertDIMAppById(alertStatisticForm.getAppID());
@@ -167,11 +172,11 @@ public class AlertStatisticRestController {
 			node = this.alertDIMNodeService.getAlertDIMNodeById(alertStatisticForm.getNodeID());
 		}
 
-		if (!PARAM_ALL.equals(alertStatisticForm.getLevelID())) {
-			level = this.alertDIMLevelService.getAlertDIMLevelById(alertStatisticForm.getLevelID());
+		if (!PARAM_ALL.equals(alertStatisticForm.getSeverityID())) {
+			severity = this.alertDIMSeverityService.getAlertDIMSeverityById(alertStatisticForm.getSeverityID());
 		}
 
-		final List<AlertStatistic> statisticsList = this.alertStatisticService.findByCriteria(minDate, maxDate, app, template, type, node, level);
+		final List<AlertStatistic> statisticsList = this.alertStatisticService.findByCriteria(minDate, maxDate, app, template, type, node, severity);
 		dtOutput.setData(statisticsList);
 
 		return dtOutput;

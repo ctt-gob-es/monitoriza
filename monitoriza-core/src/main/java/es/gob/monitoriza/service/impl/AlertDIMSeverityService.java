@@ -28,27 +28,27 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMLevel;
-import es.gob.monitoriza.persistence.configuration.model.repository.AlertDIMLevelRepository;
-import es.gob.monitoriza.service.IAlertDIMLevelService;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
+import es.gob.monitoriza.persistence.configuration.model.repository.AlertDIMSeverityRepository;
+import es.gob.monitoriza.service.IAlertDIMSeverityService;
 
 /**
  * <p>Class that implements the communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
-@Service("alertDIMLevelService")
-public class AlertDIMLevelService implements IAlertDIMLevelService {
+@Service("alertDIMSeverityService")
+public class AlertDIMSeverityService implements IAlertDIMSeverityService {
 
 	@Autowired
-	private AlertDIMLevelRepository repository;
+	private AlertDIMSeverityRepository repository;
 
 	@Override
-	public List<AlertDIMLevel> getAllAlertDIMLevel() {
+	public List<AlertDIMSeverity> getAllAlertDIMSeverity() {
 		return this.repository.findAll();
 	}
 
 	@Override
-	public AlertDIMLevel getAlertDIMLevelById(final Long levelId) {
-		return this.repository.findByLevelID(levelId);
+	public AlertDIMSeverity getAlertDIMSeverityById(final Long severityID) {
+		return this.repository.findBySeverityID(severityID);
 	}
 }

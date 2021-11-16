@@ -30,8 +30,8 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMLevel;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
@@ -54,6 +54,17 @@ public interface IAlertStatisticService {
 	 */
 	DataTablesOutput<AlertStatistic> findAll(final DataTablesInput input);
 
+	/**
+	 *  Method that gets all the alert statistics with the indicated filters.
+	 * @param minDate Minimum date.
+	 * @param maxDate Maximum date.
+	 * @param appID Application identifier.
+	 * @param templateID Template identifier.
+	 * @param typeID Alert type identifier.
+	 * @param nodeID Node identifier.
+	 * @param severityID Severity identifier.
+	 * @return List of statistics filtered.
+	 */
 	List<AlertStatistic> findByCriteria(final Date minDate, final Date maxDate, final AlertDIMApp appID, final AlertDIMTemplate templateID,
-			final AlertDIMType typeID, final AlertDIMNode nodeID, final AlertDIMLevel levelID);
+			final AlertDIMType typeID, final AlertDIMNode nodeID, final AlertDIMSeverity severityID);
 }

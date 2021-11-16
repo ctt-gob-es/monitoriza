@@ -41,7 +41,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>
- * Class that maps the <i>ALERT_DIM_LEVELS</i> database table as a Plain Old Java Object.
+ * Class that maps the <i>ALERT_DIM_SEVERITY</i> database table as a Plain Old Java Object.
  * </p>
  * <b>Project:</b>
  * <p>
@@ -49,15 +49,15 @@ import com.fasterxml.jackson.annotation.JsonView;
  * </p>
  */
 @Entity
-@Table(name = "ALERT_DIM_LEVELS")
-public class AlertDIMLevel implements Serializable {
+@Table(name = "ALERT_DIM_SEVERITY")
+public class AlertDIMSeverity implements Serializable {
 
 	private static final long serialVersionUID = -9169481834787361583L;
 
 	/**
 	 * Attribute that represents the object ID.
 	 */
-	private Long levelID;
+	private Long severityID;
 
 	/**
 	 * Attribute that represents the level name.
@@ -70,24 +70,24 @@ public class AlertDIMLevel implements Serializable {
 	private Set<AlertStatistic> alertStatistics;
 
 	/**
-	 * Gets the value of the attribute {@link #levelID}.
+	 * Gets the value of the attribute {@link #severityID}.
 	 *
-	 * @return the value of the attribute {@link #levelID}.
+	 * @return the value of the attribute {@link #severityID}.
 	 */
 	@Id
-	@Column(name = "LEVEL_ID", unique = true, nullable = false)
-	public Long getLevelID() {
-		return this.levelID;
+	@Column(name = "SEVERITY_ID", unique = true, nullable = false)
+	public Long getSeverityID() {
+		return this.severityID;
 	}
 
 	/**
-	 * Sets the value of the attribute {@link #levelID}.
+	 * Sets the value of the attribute {@link #severityID}.
 	 *
-	 * @param levelID
-	 *            The value for the attribute {@link #levelID}.
+	 * @param severityID
+	 *            The value for the attribute {@link #severityID}.
 	 */
-	public void setLevelID(final Long levelID) {
-		this.levelID = levelID;
+	public void setSeverityID(final Long severityID) {
+		this.severityID = severityID;
 	}
 
 	/**
@@ -95,7 +95,7 @@ public class AlertDIMLevel implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #name}.
 	 */
-	@Column(name = "LEVEL_NAME", nullable = false)
+	@Column(name = "SEVERITY_NAME", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public String getName() {
 		return this.name;

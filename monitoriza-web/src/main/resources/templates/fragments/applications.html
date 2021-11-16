@@ -95,7 +95,7 @@ $(document).ready(function() {
 		    	"visible": false},
 	        { "data": "name" },
 	        { "data": "templateMonitoriza.name" },
-	        { "data": "appKey" },
+	        { "data": "cipherKey" },
 	        { "data": "responsibleName" },
 	        { "data": "responsiblePhone" },
 	        { "data": "enabled",
@@ -118,6 +118,26 @@ $(document).ready(function() {
 		    
 		    switch(accion){
 		        case 'add':
+		        	if ($('#applicationForm')[0].checkValidity() === false) {
+		        		// Se oculta la capa 'cargando...'
+		        		hide();
+		                event.stopPropagation();
+		                
+		                $('#applicationForm *').filter(':input').each(function(){
+		            	    		            	    
+		            	    if(!$(this)[0].checkValidity())
+		            	    {
+		            	  	 $("#invalid-" + $(this).attr('id')).html();
+		            	  	 $("#" + $(this).attr('id')).addClass("is-invalid");
+		            	    } else {
+		            	  	 $("#" + $(this).attr('id')).removeClass("is-invalid");
+		            	    }
+		            	    
+		            	});
+		                
+		                // Esto es necesario para forzar que se muestren mensajes de validacion de cliente
+		                $('<input type="submit">').hide().appendTo($('#applicationForm')).click().remove();
+		            } else {
 						$.ajax(saveApplication, {
 				            	dataType : 'json',
 				            	contentType:'application/json',
@@ -137,8 +157,29 @@ $(document).ready(function() {
 				                	$('#applicationForm').append('<div id="errorModalApplication" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
 				                }
 				            });
+						}
 		            break;
 		        case 'edit':
+		        	if ($('#applicationForm')[0].checkValidity() === false) {
+		        		// Se oculta la capa 'cargando...'
+		        		hide();
+		                event.stopPropagation();
+		                
+		                $('#applicationForm *').filter(':input').each(function(){
+		            	    		            	    
+		            	    if(!$(this)[0].checkValidity())
+		            	    {
+		            	  	 $("#invalid-" + $(this).attr('id')).html();
+		            	  	 $("#" + $(this).attr('id')).addClass("is-invalid");
+		            	    } else {
+		            	  	 $("#" + $(this).attr('id')).removeClass("is-invalid");
+		            	    }
+		            	    
+		            	});
+		                
+		                // Esto es necesario para forzar que se muestren mensajes de validacion de cliente
+		                $('<input type="submit">').hide().appendTo($('#applicationForm')).click().remove();
+		            } else {
 		            	$.ajax(saveApplication, {
 			            	dataType : 'json',
 			            	contentType:'application/json',
@@ -154,6 +195,7 @@ $(document).ready(function() {
 			                	$('#applicationForm').append('<div id="errorModalApplication" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
 			                }
 			            });
+			         }
 	            	break;
 		        case 'delete':
 		            $.ajax(deleteApplication,{

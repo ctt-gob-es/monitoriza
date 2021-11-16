@@ -19,6 +19,8 @@
  */
 package es.gob.monitoriza.utilidades;
 
+import java.util.Random;
+
 import org.apache.commons.codec.binary.Hex;
 
 /**
@@ -32,7 +34,6 @@ public final class UtilsStringChar {
 	 * Constructor method for the class UtilsStringChar.java.
 	 */
 	private UtilsStringChar() {
-		super();
 	}
 
 	/**
@@ -144,7 +145,7 @@ public final class UtilsStringChar {
 	 * Constant attribute that represents the string to identify the symbol: <code>-</code>.
 	 */
 	public static final String SYMBOL_HYPHEN_STRING = String.valueOf(SYMBOL_HYPHEN);
-	
+
 	/**
 	 * Constant attribute that represents the char to identify the symbol: <code>_</code>.
 	 */
@@ -244,7 +245,7 @@ public final class UtilsStringChar {
 	 * Constant attribute that represents the token '0'.
 	 */
 	private static final char TOKEN_ZERO = '0';
-	
+
 	private static final String regExpPositiveNumberNotZero = "^[0-9]*[1-9][0-9]*$";
 
 	/**
@@ -252,7 +253,7 @@ public final class UtilsStringChar {
 	 * @param str Parameter that represents the string to process.
 	 * @return a boolean with <code>true</code> value whether the string is null or empty, or <code>false</code> value in another case.
 	 */
-	public static boolean isNullOrEmpty(String str) {
+	public static boolean isNullOrEmpty(final String str) {
 
 		if (str == null || str.isEmpty()) {
 
@@ -267,7 +268,7 @@ public final class UtilsStringChar {
 	 * @param str Parameter that represents the string to process.
 	 * @return a boolean with <code>true</code> value whether the string is null or empty, or <code>false</code> value in another case.
 	 */
-	public static boolean isNullOrEmptyTrim(String str) {
+	public static boolean isNullOrEmptyTrim(final String str) {
 
 		if (str == null || str.trim().isEmpty()) {
 
@@ -285,7 +286,7 @@ public final class UtilsStringChar {
 	 * @return a boolean that indicates whether a string contains some of the characters contained in {@link #CHARACTERS_SET_TO_VALIDATORS}
 	 * (true) or not (false).
 	 */
-	public static boolean containsSomeOfTheCharacterSet(String str) {
+	public static boolean containsSomeOfTheCharacterSet(final String str) {
 
 		return containsSomeOfTheCharacterSetInTheSet(str, UtilsStringChar.CHARACTERS_SET_TO_VALIDATORS);
 
@@ -298,7 +299,7 @@ public final class UtilsStringChar {
 	 * @return a boolean that indicates whether a string contains some of the characters contained in certain characters array
 	 * (true) or not (false).
 	 */
-	public static boolean containsSomeOfTheCharacterSetInTheSet(String str, char[ ] characterSet) {
+	public static boolean containsSomeOfTheCharacterSetInTheSet(final String str, final char[ ] characterSet) {
 
 		// Si la cadena de entrada es nula o vacía, devolvemos false.
 		if (UtilsStringChar.isNullOrEmpty(str)) {
@@ -315,7 +316,7 @@ public final class UtilsStringChar {
 		// en la cadena que se recibe como parámetro.
 		for (int index = 0; index < characterSet.length; index++) {
 
-			char actualChar = characterSet[index];
+			final char actualChar = characterSet[index];
 			if (str.indexOf(actualChar) >= 0) {
 
 				return true;
@@ -335,12 +336,12 @@ public final class UtilsStringChar {
 	 * @param separate Parameter that indicates if to separate each two bytes with {@link #SYMBOL_HYPHEN} (true) or not (false).
 	 * @return an string with hexadecimal format.
 	 */
-	public static String convertByteArrayToHex(byte[ ] data, boolean separate) {
-		char[ ] c = Hex.encodeHex(data);
+	public static String convertByteArrayToHex(final byte[ ] data, final boolean separate) {
+		final char[ ] c = Hex.encodeHex(data);
 		if (c == null || c.length == 0) {
 			return null;
 		}
-		StringBuilder resultSB = new StringBuilder();
+		final StringBuilder resultSB = new StringBuilder();
 		byte numChars = 0;
 		if (c.length % 2 != 0) {
 			resultSB.append(TOKEN_ZERO);
@@ -355,7 +356,7 @@ public final class UtilsStringChar {
 				}
 			}
 		}
-		String result = resultSB.toString();
+		final String result = resultSB.toString();
 		cleanStringBuilder(resultSB);
 		return result;
 	}
@@ -365,7 +366,7 @@ public final class UtilsStringChar {
 	 * zero and then trim it.
 	 * @param sb String builder to clean. If it is <code>null</code>, this method do nothing.
 	 */
-	public static void cleanStringBuilder(StringBuilder sb) {
+	public static void cleanStringBuilder(final StringBuilder sb) {
 
 		if (sb != null) {
 			sb.setLength(0);
@@ -382,7 +383,7 @@ public final class UtilsStringChar {
 	 * @return a empty string if the input parameter is <code>null</code>, otherwise, the same input
 	 * string after removes the blanks.
 	 */
-	public static String removeBlanksFromString(String string) {
+	public static String removeBlanksFromString(final String string) {
 
 		String result = EMPTY_STRING;
 
@@ -405,16 +406,33 @@ public final class UtilsStringChar {
 		return result;
 
 	}
-	
+
 	/**
 	 * Checks if the String parameter represents a positive number.
 	 * @param string String that represents the number.
 	 * @return true if the parameter string is a positive number
 	 */
-	public static boolean isPositiveNumber(String string) {
-		
+	public static boolean isPositiveNumber(final String string) {
+
 		return string.matches(regExpPositiveNumberNotZero);
-		
+
+	}
+
+	/**
+	 * Generates a random string with the indicated size.
+	 * @param stringSize Size of the random String to generate.
+	 * @return The random String.
+	 */
+	public static String randomString(final int stringSize) {
+	    final String charBank = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890";
+	    String result = "";
+	    final Random r = new Random();
+
+	    for (int i = 0; i < stringSize; i++) {
+	        result += charBank.charAt(r.nextInt(charBank.length()));
+	    }
+
+	    return result;
 	}
 
 }

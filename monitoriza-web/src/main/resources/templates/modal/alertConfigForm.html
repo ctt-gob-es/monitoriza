@@ -246,14 +246,33 @@
 
         $('#btnAddAlertSystem').on( 'click', function () {
         	var alertSystemArray = $('#alertSystemsList option:selected').val().split(',');
-        	alertSystemTbl.row.add({"alertSystemMonitoriza" : {
-									"idAlertSystemMonitoriza" : alertSystemArray[0], 
-									"name" :  $('#alertSystemsList option:selected').text(),
-									"type" :  alertSystemArray[1]
-									},
-									"resumeEmailAddresses" :  "",
-									"keysList" : "",
-									"valuesList" : ""}).draw(false);
+
+        	var alertSystemAdded = false;
+            var alertSystems = $("#alertSystemTable").dataTable().fnGetNodes();
+            
+            for (var i = 0 ; i < alertSystems.length ; i++) {
+            	var alertSystemData = $('#alertSystemTable').DataTable().row($(alertSystems[i])).data();
+            	if (alertSystemData.alertSystemMonitoriza.idAlertSystemMonitoriza == alertSystemArray[0]){
+					alertSystemAdded = true;
+                }
+            }
+
+            if (!alertSystemAdded) {
+	        	alertSystemTbl.row.add({"alertSystemMonitoriza" : {
+										"idAlertSystemMonitoriza" : alertSystemArray[0], 
+										"name" :  $('#alertSystemsList option:selected').text(),
+										"type" :  alertSystemArray[1]
+										},
+										"resumeEmailAddresses" :  "",
+										"keysList" : "",
+										"valuesList" : ""}).draw(false);
+            } else {
+            	$('#errorModalAlertConfig').remove();
+				$('#alertConfigForm').append
+            	('<div id="errorModalAlertConfig" class="alert alert-danger" role="alert"><strong>' +
+            	'<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+            	[[#{applalert.summaries.error.duplicatealertsystem}]] + '</strong></div>');
+            }
         });
 
 
@@ -294,7 +313,7 @@
                 	keysArray = [];
                 	valuesArray = [];
                 	$('#errorModalAlertConfig').remove();
-                	$('#alertConfigModal').append('<div id="errorModalAlertConfig" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
+                	$('#alertConfigForm').append('<div id="errorModalAlertConfig" class="alert alert-danger" role="alert"><strong>' + [[#{message.error}]] + '</strong></div>');
                 }
             });
 		});
@@ -304,11 +323,17 @@
 			$("#blockCondition").prop('disabled', false);
 			$("#blockInterval").prop('disabled', false);
 			$("#blockPeriod").prop('disabled', false);
+        	$('#blockCondition').prop('required', true);
+        	$('#blockInterval').prop('required', true);
+        	$('#blockPeriod').prop('required', true);
 		} else {
 			$("#isAllowBlock").attr('value', 'false');
 			$("#blockCondition").prop('disabled', true);
 			$("#blockInterval").prop('disabled', true);
 			$("#blockPeriod").prop('disabled', true);
+        	$('#blockCondition').prop('required', false);
+        	$('#blockInterval').prop('required', false);
+        	$('#blockPeriod').prop('required', false);
 		}
 
 		$("#isAllowBlock").change(function () {
@@ -317,11 +342,17 @@
     			$("#blockCondition").prop('disabled', false);
     			$("#blockInterval").prop('disabled', false);
     			$("#blockPeriod").prop('disabled', false);
+            	$('#blockCondition').prop('required', true);
+            	$('#blockInterval').prop('required', true);
+            	$('#blockPeriod').prop('required', true);
     		} else {
     			$(this).attr('value', 'false');
     			$("#blockCondition").prop('disabled', true);
     			$("#blockInterval").prop('disabled', true);
     			$("#blockPeriod").prop('disabled', true);
+            	$('#blockCondition').prop('required', false);
+            	$('#blockInterval').prop('required', false);
+            	$('#blockPeriod').prop('required', false);
     		}
 		});
 
@@ -339,20 +370,25 @@
     		}
 		});
 
-
+		// Funcion que carga la informacion de la tabla en la peticion JSON
 		function loadTableInfoIntoArrays(){
 			
             var alertSystems = $("#alertSystemTable").dataTable().fnGetNodes();
+            
             for (var i = 0 ; i < alertSystems.length ; i++) {
             	var alertSystemData = $('#alertSystemTable').DataTable().row($(alertSystems[i])).data();
             	notifSystemsIdArray.push(alertSystemData.alertSystemMonitoriza.idAlertSystemMonitoriza);
             	var noticeConfEmailArray;
-            	
-            	if (alertSystemData.resumeEmailAddresses != null) {
-            		noticeConfEmailArray = alertSystemData.resumeEmailAddresses.split('\n');
-                } else{
-                	noticeConfEmailArray =  [""];
-				}
+
+            	if (alertSystemData.resumeEmailAddresses == null){
+            		noticeConfEmailArray = [""];
+                } else if (alertSystemData.resumeEmailAddresses.indexOf(',') > -1) {
+                	noticeConfEmailArray = alertSystemData.resumeEmailAddresses.split(',');
+        		} else if (alertSystemData.resumeEmailAddresses.indexOf(';') > -1) {
+        			noticeConfEmailArray = alertSystemData.resumeEmailAddresses.split(';');
+        		} else if (alertSystemData.resumeEmailAddresses.indexOf('\n') > -1) {
+        			noticeConfEmailArray = alertSystemData.resumeEmailAddresses.split('\n');
+            	}
                 
             	if (emailConfigurationArray.length == 0) {
             		emailConfigurationArray[0] = noticeConfEmailArray;

@@ -23,6 +23,9 @@
  */
 package es.gob.monitoriza.service;
 
+import java.util.Date;
+import java.util.List;
+
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
@@ -45,5 +48,13 @@ public interface IAlertAuditService {
 	 * @return a {@link DataTablesOutput<AlertAudit>} with the information for the datatable.
 	 */
 	DataTablesOutput<AlertAudit> findAll(final DataTablesInput input);
+
+	/**
+	 * Method that returns the list of alert audits with the indicated period.
+	 * @param actualDate Actual date.
+	 * @param periodDate Date with the period to filter with the actual date.
+	 * @return List of alert audits filtered.
+	 */
+	List<AlertAudit> findByCriteria(final Date actualDate, final Date periodDate);
 
 }

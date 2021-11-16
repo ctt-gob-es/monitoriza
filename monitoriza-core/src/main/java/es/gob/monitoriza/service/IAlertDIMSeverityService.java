@@ -1,4 +1,3 @@
-/*
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -15,36 +14,35 @@
  ******************************************************************************/
 
 /**
- * <b>File:</b><p>es.gob.eventmanager.persistence.model.repository.AlertAuditRepository.java.</p>
+ * <b>File:</b><p>es.gob.monitoriza.service.IUserMonitorizaService.java.</p>
  * <b>Description:</b><p> .</p>
- * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
+ * <b>Date:</b><p>6 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.2, 28/10/2018.
  */
-package es.gob.monitoriza.persistence.configuration.model.repository;
+package es.gob.monitoriza.service;
 
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
+import java.util.List;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMLevel;
-
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
 
 /**
- * <p>Interface that provides CRUD functionality for the AlertDIMLevel entity.</p>
- * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>09/11/2021.</p>
- * @author Gobierno de España.
- * @version 1.0, 09/11/2021.
+ * <p>Interface that provides communication with the operations of the persistence layer.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
-@Repository
-public interface AlertDIMLevelRepository extends JpaRepository<AlertDIMLevel, Long> {
+public interface IAlertDIMSeverityService {
 
 	/**
-	 * Method that gets a level by its id.
-	 * @param levelId Level identifier.
-	 * @return The level.
+	 * Method that gets all the alert severities from the persistence.
+	 * @return a {@link Iterable<AlertDIMSeverity>} with the information of all alert DIM severities.
 	 */
-	AlertDIMLevel findByLevelID(Long levelId);
+	List<AlertDIMSeverity> getAllAlertDIMSeverity();
 
+	/**
+	 * Method that gets a node by its id.
+	 * @param severityId Severity identifier.
+	 * @return The severity.
+	 */
+	AlertDIMSeverity getAlertDIMSeverityById(Long severityId);
 }

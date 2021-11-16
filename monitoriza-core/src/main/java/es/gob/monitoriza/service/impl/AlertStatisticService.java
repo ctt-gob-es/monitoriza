@@ -39,8 +39,8 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMLevel;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
@@ -73,7 +73,7 @@ public class AlertStatisticService implements IAlertStatisticService {
 
 	@Override
 	public List<AlertStatistic> findByCriteria(final Date minDate, final Date maxDate, final AlertDIMApp appID, final AlertDIMTemplate templateID,
-			final AlertDIMType typeID, final AlertDIMNode nodeID, final AlertDIMLevel levelID){
+			final AlertDIMType typeID, final AlertDIMNode nodeID, final AlertDIMSeverity severityID){
 	       return this.repository.findAll(new Specification<AlertStatistic>() {
 	           @Override
 	           public Predicate toPredicate(final Root<AlertStatistic> root, final CriteriaQuery<?> query, final CriteriaBuilder criteriaBuilder) {
@@ -94,8 +94,8 @@ public class AlertStatisticService implements IAlertStatisticService {
 	                   predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("alertDIMNode"), nodeID)));
 	               }
 
-	               if (levelID != null){
-	                   predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("alertDIMLevel"), levelID)));
+	               if (severityID != null){
+	                   predicates.add(criteriaBuilder.and(criteriaBuilder.equal(root.get("alertDIMSeverity"), severityID)));
 	               }
 
 	               if(minDate != null && maxDate != null){

@@ -4,8 +4,7 @@
 			<div class="modal-header">
 				<h4 class="modal-title"
 					th:text="#{applalert.summaries.modal.emailconfiguration.title}"></h4>
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Cerrar" onclick="closeModal()">
+				<button type="button" class="close" aria-label="Cerrar" onclick="closeModal()">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -43,29 +42,80 @@
 		});
 	}
 
-	$(document).ready(function () {
-		
-        $('#saveEmailButton').on( 'click', function () {
-            
-            var alertSystems = $("#alertSystemTable").dataTable().fnGetNodes();
-            
-            for (var i = 0 ; i < alertSystems.length ; i++) {
-            	var alertSystemData = $('#alertSystemTable').DataTable().row($(alertSystems[i])).data();
-            	// Si los datos vienen de la parte de configuracion de alertas vendran definidos de una forma, y si
-            	// vienen desde la configuracion de resumenes vendran de otra, por lo que se comprueba la forma en la que vienen
-            	// para anadirlos a la tabla de sistemas de una forma u otra
-            	if(alertSystemData.idAlertSystemMonitoriza === undefined){
-	            	if (alertSystemData.alertSystemMonitoriza.idAlertSystemMonitoriza == $("#idAlertSystem").val()) {
-	            		$('#alertSystemTable').DataTable().row($(alertSystems[i])).data().resumeEmailAddresses = $("#emailAddress").val();
-	                }
-            	} else {
-	            	if (alertSystemData.idAlertSystemMonitoriza == $("#idAlertSystem").val()) {
-	            		$('#alertSystemTable').DataTable().row($(alertSystems[i])).data().resumeEmailAddresses = $("#emailAddress").val();
-	                }
-                }
-            }
+	// Funcion que comprueba que no se este utilizando mas de un tipo de separador entre emails
+	function checkEmailSeparators(){
 
-            closeModal();
-         });
+		var separatorCount = 0;
+
+		if ($("#emailAddress").val().indexOf('\n') > -1) {
+			separatorCount += 1;
+		}
+
+		if ($("#emailAddress").val().indexOf(',') > -1) {
+			separatorCount += 1;
+		}
+
+		if ($("#emailAddress").val().indexOf(';') > -1) {
+			separatorCount += 1;
+		}
+
+		if (separatorCount > 1) {
+			return false;
+		} else {
+			return true;
+		}
+	}
+
+	function checkEmail(email) {
+		if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3,4})+$/.test(email)){
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	$(document).ready(function () {
+
+		        $('#saveEmailButton').on( 'click', function () {
+
+		    		// Se comprueba que no se este utilizando mas de un tipo de separador
+		        	if(checkEmailSeparators()) {
+			        	// Se comprueba que los emails esten correctamente formados
+		        		if(checkEmailSeparators()) {
+				            var alertSystems = $("#alertSystemTable").dataTable().fnGetNodes();
+				            
+				            for (var i = 0 ; i < alertSystems.length ; i++) {
+				            	var alertSystemData = $('#alertSystemTable').DataTable().row($(alertSystems[i])).data();
+				            	// Si los datos vienen de la parte de configuracion de alertas vendran definidos de una forma, y si
+				            	// vienen desde la configuracion de resumenes vendran de otra, por lo que se comprueba la forma en la que vienen
+				            	// para anadirlos a la tabla de sistemas de una forma u otra
+				            	if(alertSystemData.idAlertSystemMonitoriza === undefined){
+					            	if (alertSystemData.alertSystemMonitoriza.idAlertSystemMonitoriza == $("#idAlertSystem").val()) {
+					            		$('#alertSystemTable').DataTable().row($(alertSystems[i])).data().resumeEmailAddresses = $("#emailAddress").val();
+					                }
+				            	} else {
+					            	if (alertSystemData.idAlertSystemMonitoriza == $("#idAlertSystem").val()) {
+					            		$('#alertSystemTable').DataTable().row($(alertSystems[i])).data().resumeEmailAddresses = $("#emailAddress").val();
+					                }
+				                }
+				            }
+				
+				            closeModal();
+
+		        		} else {
+		                	$('#errorEmailModal').remove();
+		        			$('#emailInfoForm').append
+		                	('<div id="errorEmailModal" class="alert alert-danger" role="alert"><strong>' +
+		                	'<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+		                	[[#{applalert.summaries.error.emailformat}]] + '</strong></div>');
+		                }
+		        	} else {
+		            	$('#errorEmailModal').remove();
+		    			$('#emailInfoForm').append
+		            	('<div id="errorEmailModal" class="alert alert-danger" role="alert"><strong>' +
+		            	'<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+		            	[[#{applalert.summaries.error.duplicateemailseparator}]] + '</strong></div>');
+		            }
+		         });
     })
 </script>
