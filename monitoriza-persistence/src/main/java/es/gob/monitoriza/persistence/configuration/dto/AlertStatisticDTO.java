@@ -85,6 +85,11 @@ public class AlertStatisticDTO {
 	private Long severityID;
 
 	/**
+	 * Attribute that represents the number of ocurrencies
+	 */
+	private Long ocurrency;
+
+	/**
 	 * Attribute that represents the list of applications
 	 */
 	private List<AlertDIMApp> applicationsList;
@@ -172,6 +177,14 @@ public class AlertStatisticDTO {
 
 	public void setSeverityID(final Long severityID) {
 		this.severityID = severityID;
+	}
+
+	public Long getOcurrency() {
+		return this.ocurrency;
+	}
+
+	public void setOcurrency(final Long ocurrency) {
+		this.ocurrency = ocurrency;
 	}
 
 	public List<AlertDIMApp> getApplicationsList() {

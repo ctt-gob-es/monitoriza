@@ -1,11 +1,12 @@
 <div class="modal" tabindex="-1" id="summaryModal" name="summaryModal">
+<div id="secondaryModalBackdrop"></div>
 	<div class="modal-dialog modal-dialog-scrollable">
 		<div class="modal-content" style="margin-left: -50%; width: 200%;">
 			<div class="modal-header">
 				<h4 class="modal-title"
 					th:text="#{applalert.summaries.modal.add.title}"></h4>
 				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Cerrar" onclick="removeBackdrop()">
+					aria-label="Cerrar">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -149,7 +150,7 @@
 				</div>-
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal"
-					th:text="#{button.close}" onclick="removeBackdrop()"></button>
+					th:text="#{button.close}"></button>
 				<button type="button" id="summaryButton" class="btn btn-primary"
 					th:text="#{applalert.summaries.modal.btn.accept}"></button>
 			</div>
@@ -477,7 +478,9 @@
         			resumeEmailArray = alertSystemData.resumeEmailAddresses.split(';');
         		} else if (alertSystemData.resumeEmailAddresses.indexOf('\n') > -1) {
         			resumeEmailArray = alertSystemData.resumeEmailAddresses.split('\n');
-            	}
+            	} else {
+            		resumeEmailArray = [alertSystemData.resumeEmailAddresses];
+                }
             	
             	if (emailConfigurationArray.length == 0) {
             		emailConfigurationArray[0] = resumeEmailArray;
@@ -493,6 +496,10 @@
             	alertsTypesIdArray.push(appAlertData.alertTypeMonitoriza.idTypeMonitoriza);
             }
 		}
+
+		$("#summaryModal").on('hidden.bs.modal', function(){
+			removeBackdrop();
+		});
 
  	});
 

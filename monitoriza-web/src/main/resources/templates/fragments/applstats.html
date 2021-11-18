@@ -68,8 +68,6 @@
 				<table id="statsTable"  class="table table-striped table-bordered" cellspacing="0" width="100%">
 					<thead>
 						<tr>
-						<!-- Columna vacia para el identificador -->
-							<th></th>
 							<th th:text="#{table.stats.application}"></th>
 							<th th:text="#{table.stats.template}"></th>
 							<th th:text="#{table.stats.alarm}"></th>
@@ -149,8 +147,6 @@ $(document).ready(function() {
 		     }
 		},
 		"columns": [
-			{ "data": "idAlertStatistic" ,
-          		"visible": false},
 	        { "data": "alertDIMApp.name" },
 	        { "data": "alertDIMTemplate.name" },
 	        { "data": "alertDIMType.name" },

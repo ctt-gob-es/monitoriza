@@ -26,15 +26,17 @@
 
 <script th:inline="javascript">
 
+var deleteApplication = /*[[@{/deleteapplication}]]*/;
+var applicationsTable;
+
 $(document).ready(function() {
 	
 	var addTemplate = /*[[@{/addapplication}]]*/;
 	var editTemplate = /*[[@{/editapplication}]]*/;
 	var getApps = /*[[@{/applicationsdatatable}]]*/;
 	var saveApplication = /*[[@{/saveapplication}]]*/;
-	var deleteApplication = /*[[@{/deleteapplication}]]*/;
 	
-	var tbl = $('#applicationsTable').DataTable({
+	applicationsTable = $('#applicationsTable').DataTable({
 		dom: 'Bfrtip',
 	    select: 'single',
 	    responsive: true,
@@ -63,7 +65,33 @@ $(document).ready(function() {
                     return false;
 			}},
 		    {extend: 'selected',text: 'Editar',name: 'edit'},
-	    	{extend: 'selected',text: 'Eliminar',name: 'delete'}
+	    	{extend: 'selected',text: 'Eliminar',name: 'deleteApp',  
+				action: function ( e, dt, node, config ) {
+					
+					for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({
+						id: o.context[0].aoColumns[e].mData           
+					});
+							  
+					var d = dt.rows({
+						selected: !0
+					});
+								
+					var idApplication = d.data()[0][a[0].id];
+					
+			           var l = "";
+			            l += "<form name='altEditor-form' role='form'>", 
+			            l += "<input type='hidden' class='primarykey' id='appDeleteID' name='appDeleteID' placeholder='appDeleteID' value='" + idApplication + "'>";
+			            l += "<p>" + [[#{applalert.applications.modal.deleteapp.confirmdelete}]] + "</p>";
+			            l += "</form>";
+			            
+			            $("#altEditor-modal").on("show.bs.modal", function() {
+			                $("#altEditor-modal").find(".modal-title").html("Eliminar"), 
+			                $("#altEditor-modal").find(".modal-body").html("<pre class='modal-pre'>" + l + "</pre>"), 
+			                $("#altEditor-modal").find(".modal-footer").html("<button type='button' data-content='remove' class='btn btn-default' data-dismiss='modal' id='closeRowBtn'>Cerrar</button><button type='button' onclick='deleteAppCall()' class='btn btn-danger' id='deleteAppBtn'>Eliminar</button>")
+			            }), 
+			            $("#altEditor-modal").modal("show"), 
+			            $("#altEditor-modal input.primarykey+div input").focus();
+			}}
 		],
 	
 	    "iTotalRecords": "totalElements",
@@ -146,7 +174,7 @@ $(document).ready(function() {
 				                success: function(data){
 				            		// Se oculta la capa 'cargando...'
 				            		hide();
-				  				  	tbl.row.add($(data.data)).draw(false);
+				            		applicationsTable.row.add($(data.data)).draw(false);
 	    		                    
 				                    $('#altEditor-modal .modal-body .alert').remove();
 				                    $('#altEditor-modal').modal('hide');
@@ -154,7 +182,7 @@ $(document).ready(function() {
 				                error:function(data){
 				                	hide();
 				                	$('#errorModalApplication').remove();
-				                	$('#applicationForm').append('<div id="errorModalApplication" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
+				                	$('#applicationForm').append('<div id="errorModalApplication" class="alert alert-danger" role="alert"><strong>' + [[#{message.error}]] + '</strong></div>');
 				                }
 				            });
 						}
@@ -188,33 +216,39 @@ $(document).ready(function() {
 			                success: function(data){
 			            		// Se oculta la capa 'cargando...'
 			            		hide();
-			            		tbl.row.add($(data.data)).draw(false);
+			            		applicationsTable.row.add($(data.data)).draw(false);
 			                    $('#altEditor-modal').modal('hide');
 			                },
 			                error:function(data){
-			                	$('#applicationForm').append('<div id="errorModalApplication" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
+			                	$('#applicationForm').append('<div id="errorModalApplication" class="alert alert-danger" role="alert"><strong>' + [[#{message.error}]] + '</strong></div>');
 			                }
 			            });
 			         }
 	            	break;
-		        case 'delete':
-		            $.ajax(deleteApplication,{
-		            	data:$.param({'id':data.idApplicationMonitoriza, 'index':rowindex}),
-		                type:'POST',
-		                success: function(data){
-		                    
-		                	// Se oculta la capa 'cargando...'
-		                	hide();
-		                    tbl.row(data.index).remove().draw();
-		                    
-		                    $('#altEditor-modal .modal-body .alert').remove();
-		                    $('#altEditor-modal').modal('hide');
-		                },
-		                error:function(){}
-		            });
-		            break;
 		    }
 		});
+
 });	
+
+// Accion al elimnar aplicacion
+function deleteAppCall() {
+	console.log('click hecho = '+$('#appDeleteID').val());
+
+	$.ajax(deleteApplication,{
+			data:$.param({'id':$('#appDeleteID').val()}),
+            type:'POST',
+            success: function(data){
+                
+            	// Se oculta la capa 'cargando...'
+            	hide();
+    			var appSelected = applicationsTable.rows({ selected: true });
+    			applicationsTable.row(appSelected).remove().draw();
+                
+                $('#altEditor-modal .modal-body .alert').remove();
+                $('#altEditor-modal').modal('hide');
+            },
+            error:function(){}
+        });
+}
 
 </script>
