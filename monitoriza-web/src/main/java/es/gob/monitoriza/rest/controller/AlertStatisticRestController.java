@@ -127,7 +127,10 @@ public class AlertStatisticRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/alertstatisticsdatatable", method = RequestMethod.GET)
 	public DataTablesOutput<AlertStatistic> alertsAudit(@NotEmpty final DataTablesInput input) {
-		return this.alertStatisticService.findAll(input);
+		final DataTablesOutput<AlertStatistic> dtOutput = new DataTablesOutput<AlertStatistic>();
+		final List<AlertStatistic> statisticsList = this.alertStatisticService.findByFilters(null, null, null, null, null, null, null);
+		dtOutput.setData(statisticsList);
+		return dtOutput;
 	}
 
 	/**
@@ -176,7 +179,7 @@ public class AlertStatisticRestController {
 			severity = this.alertDIMSeverityService.getAlertDIMSeverityById(alertStatisticForm.getSeverityID());
 		}
 
-		final List<AlertStatistic> statisticsList = this.alertStatisticService.findByCriteria(minDate, maxDate, app, template, type, node, severity);
+		final List<AlertStatistic> statisticsList = this.alertStatisticService.findByFilters(minDate, maxDate, app, template, type, node, severity);
 		dtOutput.setData(statisticsList);
 
 		return dtOutput;

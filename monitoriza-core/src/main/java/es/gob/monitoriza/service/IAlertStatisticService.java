@@ -65,6 +65,6 @@ public interface IAlertStatisticService {
 	 * @param severityID Severity identifier.
 	 * @return List of statistics filtered.
 	 */
-	List<AlertStatistic> findByCriteria(final Date minDate, final Date maxDate, final AlertDIMApp appID, final AlertDIMTemplate templateID,
+	List<AlertStatistic> findByFilters(final Date minDate, final Date maxDate, final AlertDIMApp appID, final AlertDIMTemplate templateID,
 			final AlertDIMType typeID, final AlertDIMNode nodeID, final AlertDIMSeverity severityID);
 }

@@ -4,7 +4,7 @@
 			<div class="modal-header">
 				<h4 class="modal-title"
 					th:text="#{applalert.alertconfig.modal.graylogconf.title}"></h4>
-				<button type="button" class="close" aria-label="Cerrar" onclick="closeModal()">
+				<button type="button" class="close" aria-label="Cerrar" data-dismiss="modal">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -44,7 +44,7 @@
 						</thead>
 					</table>
 					<div class="modal-footer">
-					<button type="button" class="btn btn-default" th:text="#{button.close}" onclick="closeModal()"></button>
+					<button type="button" class="btn btn-default" th:text="#{button.close}" data-dismiss="modal"></button>
 					<button type="button" id="saveGrayLogConfigButton" class="btn btn-primary" 
 					th:text="#{applalert.summaries.modal.btn.config}"></button>
 				</div>
@@ -57,6 +57,8 @@
 <script th:inline="javascript">
 
 	$(document).ready(function () {
+
+		$("#secondaryModalBackdrop").addClass("modal-backdrop show");
 
 		var keysArray = /*[[*{keysList}]]*/;
 		var valuesArray = /*[[*{valuesList}]]*/;
@@ -114,16 +116,25 @@
 		        ]
 			});
 
+		// Accion de almacenar clave y valor
         $('#saveKeyValueBtn').on( 'click', function () {
-            console.log('editing index = '+$('#editingIndex').val());
-            if ($('#editingIndex').val() != ""){
-            	grayLogConfigTbl.row($('#editingIndex').val()).remove().draw();
-            	$('#editingIndex').val("");
+
+            if ($("#confKey").val() != "" && $("#confValue").val() != ""){
+	            if ($('#editingIndex').val() != ""){
+	            	grayLogConfigTbl.row($('#editingIndex').val()).remove().draw();
+	            	$('#editingIndex').val("");
+	            }
+	        	grayLogConfigTbl.row.add({"notSysConfigId" : idAlertSystem, 
+	            						"key" : $("#confKey").val() ,
+	            						"value" : $("#confValue").val()}).draw(false);
+	        	cleanForm();
+            } else {
+	        	$('#grayLogInfoModal').remove();
+				$('#grayLogInfoForm').append
+	        	('<div id="grayLogInfoModal" class="alert alert-danger" role="alert"><strong>' +
+	        	'<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+	        	[[#{applalert.alertconfig.modal.error.graylogform}]] + '</strong></div>');
             }
-        	grayLogConfigTbl.row.add({"notSysConfigId" : idAlertSystem, 
-            						"key" : $("#confKey").val() ,
-            						"value" : $("#confValue").val()}).draw(false);
-        	cleanForm();
         });
 
         // Cargamos la informacion de claves y valores en su tabla correspondiente
@@ -158,9 +169,12 @@
 					$('#alertSystemTable').DataTable().row($(alertSystems[i])).data().valuesList = valuesArray;
 				}
             }
-
             closeModal();
         });
+
+		$("#configureGrayLogModal").on('hidden.bs.modal', function(){
+			$("#secondaryModalBackdrop").removeClass("modal-backdrop show");
+		});
     });
     
    function cleanForm(){
@@ -169,6 +183,7 @@
 	}
 
 	function closeModal(){
+		$("#secondaryModalBackdrop").removeClass("modal-backdrop show");
 		$('#configureGrayLogModal').hide();
 		$('#alertConfigModal').modal().on('shown', function(){
 			$('body').css('overflow', 'auto');

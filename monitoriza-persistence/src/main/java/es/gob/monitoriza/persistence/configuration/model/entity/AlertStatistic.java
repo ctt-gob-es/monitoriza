@@ -25,7 +25,6 @@
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -35,8 +34,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
@@ -92,7 +89,7 @@ public class AlertStatistic implements Serializable {
 	/**
 	 * Attribute that represents the time instance of the alert.
 	 */
-	private Date timestamp;
+	private Long timestamp;
 
 	/**
 	 * Attribute that represents the number of ocurrencies of the alert.
@@ -239,8 +236,7 @@ public class AlertStatistic implements Serializable {
 	 * @return the value of the attribute {@link #timestamp}.
 	 */
 	@Column(name = "TIMESTAMP", nullable = false)
-	@Temporal(TemporalType.TIMESTAMP)
-	public Date getTimestamp() {
+	public Long getTimestamp() {
 		return this.timestamp;
 	}
 
@@ -250,7 +246,7 @@ public class AlertStatistic implements Serializable {
 	 * @param timestamp
 	 *            The value for the attribute {@link #timestamp}.
 	 */
-	public void setTimestamp(final Date timestamp) {
+	public void setTimestamp(final Long timestamp) {
 		this.timestamp = timestamp;
 	}
 

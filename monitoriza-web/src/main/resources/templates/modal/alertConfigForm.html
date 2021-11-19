@@ -1,11 +1,12 @@
 <div class="modal" tabindex="-1" id="alertConfigModal" name="alertConfigModal">
+<div id="secondaryModalBackdrop"></div>
 	<div class="modal-dialog modal-dialog-scrollable">
 		<div class="modal-content" style="margin-left: -50%; width: 200%;">
 			<div class="modal-header">
 				<h4 class="modal-title"
 					th:text="#{applalert.alertconfig.modal.add.title}"></h4>
 				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Cerrar" onclick="removeBackdrop()">
+					aria-label="Cerrar">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -123,7 +124,7 @@
 				</div>-
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal"
-					th:text="#{button.close}" onclick="removeBackdrop()"></button>
+					th:text="#{button.close}"></button>
 				<button type="button" id="saveAlertConfigButton" class="btn btn-primary"
 					th:text="#{applalert.summaries.modal.btn.accept}"></button>
 			</div>
@@ -275,47 +276,67 @@
             }
         });
 
-
+        // Accion para agregar / editar alerta
         $("#saveAlertConfigButton").click(function(){
+            
+        	if ($('#alertConfigForm')[0].checkValidity() === false) {
+                event.stopPropagation();
+                
+                $('#alertConfigForm *').filter(':input').each(function(){
+            	    		            	    
+            	    if(!$(this)[0].checkValidity())
+            	    {
+            	  	 $("#invalid-" + $(this).attr('id')).html();
+            	  	 $("#" + $(this).attr('id')).addClass("is-invalid");
+            	    } else {
+            	  	 $("#" + $(this).attr('id')).removeClass("is-invalid");
+            	    }
+            	    
+            	});
+                
+                // Esto es necesario para forzar que se muestren mensajes de validacion de cliente
+                $('<input type="submit">').hide().appendTo($('#alertConfigForm')).click().remove();
+            } else {
         	
-            loading();
-
-            // Cargamos la informacion de las tablas en arrays que se mandaran al servidor
-            loadTableInfoIntoArrays();
-
-            var formToJSON = $("#alertConfigForm").serializeJSON();
-            formToJSON.notifSystemsIdArray = notifSystemsIdArray;
-            formToJSON.emailConfigurationArray = emailConfigurationArray;
-            formToJSON.keysArray = keysArray;
-            formToJSON.valuesArray = valuesArray;
-            
-            //Eliminamos los datos que no son necesarios para guardar o actualizar un nuevo registro
-            delete formToJSON["alertSystemsList"];
-            delete formToJSON["alertTypesList"];
-            delete formToJSON["alertSeverityList"];
-            
-			$.ajax(saveAlertConfig, {
-            	dataType : 'json',
-            	contentType:'application/json',
-                data : JSON.stringify(formToJSON),
-                type:'POST',
-                success: function(data){
-            		// Se oculta la capa 'cargando...'
-            		removeBackdrop();
-            		hide();
-            		alertConfigsTable.row.add($(data.data)).draw(false);
-                    $('#alertConfigModal').modal('hide');
-                },
-                error:function(data){
-                	hide();
-                	notifSystemsIdArray = [];
-                	emailConfigurationArray = [];
-                	keysArray = [];
-                	valuesArray = [];
-                	$('#errorModalAlertConfig').remove();
-                	$('#alertConfigForm').append('<div id="errorModalAlertConfig" class="alert alert-danger" role="alert"><strong>' + [[#{message.error}]] + '</strong></div>');
-                }
-            });
+	            loading();
+	
+	            // Cargamos la informacion de las tablas en arrays que se mandaran al servidor
+	            loadTableInfoIntoArrays();
+	
+	            var formToJSON = $("#alertConfigForm").serializeJSON();
+	            formToJSON.notifSystemsIdArray = notifSystemsIdArray;
+	            formToJSON.emailConfigurationArray = emailConfigurationArray;
+	            formToJSON.keysArray = keysArray;
+	            formToJSON.valuesArray = valuesArray;
+	            
+	            //Eliminamos los datos que no son necesarios para guardar o actualizar un nuevo registro
+	            delete formToJSON["alertSystemsList"];
+	            delete formToJSON["alertTypesList"];
+	            delete formToJSON["alertSeverityList"];
+	            
+				$.ajax(saveAlertConfig, {
+	            	dataType : 'json',
+	            	contentType:'application/json',
+	                data : JSON.stringify(formToJSON),
+	                type:'POST',
+	                success: function(data){
+	            		// Se oculta la capa 'cargando...'
+	            		removeBackdrop();
+	            		hide();
+	            		alertConfigsTable.row.add($(data.data)).draw(false);
+	                    $('#alertConfigModal').modal('hide');
+	                },
+	                error:function(data){
+	                	hide();
+	                	notifSystemsIdArray = [];
+	                	emailConfigurationArray = [];
+	                	keysArray = [];
+	                	valuesArray = [];
+	                	$('#errorModalAlertConfig').remove();
+	                	$('#alertConfigForm').append('<div id="errorModalAlertConfig" class="alert alert-danger" role="alert"><strong>' + [[#{message.error}]] + '</strong></div>');
+	                }
+	            });
+        	}
 		});
 
 		if ($("#isAllowBlock").is(":checked")) {
@@ -388,7 +409,9 @@
         			noticeConfEmailArray = alertSystemData.resumeEmailAddresses.split(';');
         		} else if (alertSystemData.resumeEmailAddresses.indexOf('\n') > -1) {
         			noticeConfEmailArray = alertSystemData.resumeEmailAddresses.split('\n');
-            	}
+            	} else {
+            		noticeConfEmailArray = [alertSystemData.resumeEmailAddresses];
+                }
                 
             	if (emailConfigurationArray.length == 0) {
             		emailConfigurationArray[0] = noticeConfEmailArray;
@@ -427,6 +450,10 @@
 				}
 			}
 		}
+
+		$("#alertConfigModal").on('hidden.bs.modal', function(){
+			removeBackdrop();
+		});
  	});
 
 	// Funcion para eliminar la sombra al fondo del modal cuando se cierra

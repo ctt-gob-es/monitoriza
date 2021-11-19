@@ -183,7 +183,7 @@ public class ApplicationRestController {
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deleteapplication", method = RequestMethod.POST)
 	@Transactional
-	public String deleteApplication(@RequestParam("id") final Long appId, @RequestParam("index") final String index) {
+	public void deleteApplication(@RequestParam("id") final Long appId) {
 
 		final ApplicationMonitoriza application = this.applicationService.getApplicationMonitorizaById(appId);
 
@@ -204,13 +204,11 @@ public class ApplicationRestController {
 		}
 
 		this.applicationService.deleteApplicationMonitoriza(appId);
-
-		return index;
 	}
 
 	/**
 	 * Method that returns the list of alerts for a application.
-	 * @param applicationId application identifier.
+	 * @param applicationId Application identifier.
 	 * @param model Holder object for model attributes.
 	 * @return List<AlertConfigMonitoriza> that represents the list of alerts configurations.
 	 */
