@@ -18,7 +18,7 @@
 	
 	<div class="form-group">
 		<label for="templateID" class="col-form-label" th:text="#{applalert.applications.modal.template}"></label>
-        <select name="templateID" id="templateID" th:field="*{templateID}" class="form-control">
+        <select name="templateID" id="templateID" th:field="*{templateID}" class="form-control" required >
         	<option th:each="t: ${templatesList}" th:value="${t.idTemplateMonitoriza}" th:text="${t.name}">
 			</option>
         </select>

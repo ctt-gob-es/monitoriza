@@ -232,7 +232,6 @@ $(document).ready(function() {
 
 // Accion al elimnar aplicacion
 function deleteAppCall() {
-	console.log('click hecho = '+$('#appDeleteID').val());
 
 	$.ajax(deleteApplication,{
 			data:$.param({'id':$('#appDeleteID').val()}),

@@ -19,12 +19,12 @@
 	</div>
 </div>
 
-<div class="modal" tabindex="-1" role="dialog" id="importTemplateModal">
+<div class="modal" tabindex="-1" id="importTemplateModal">
 	<div class="modal-dialog">
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" th:text="#{applalert.templates.modal.importtemplate}"></h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" onclick="closeButton('importTemplateModal')">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" >
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -43,7 +43,7 @@
 					<div style="clear:both;"/>
 					</div>
 					<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{button.close}" onclick="closeButton('importTemplateModal')"></button>
+				<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{button.close}" ></button>
 				<button type="button" id="passwordBtn" class="btn btn-primary" th:text="#{button.save}" onclick="saveNewTemplate();"></button>
 			</div>
 				</form>
@@ -59,7 +59,7 @@
 		<div class="modal-content">
 			<div class="modal-header">
 				<h4 class="modal-title" th:text="#{applalert.templates.modal.edittemplate}"></h4>
-				<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" onclick="closeButton('editTemplateModal')">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" >
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -77,7 +77,7 @@
 					<div style="clear:both;"/>
 					
 					<div class="modal-footer">
-						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{button.close}" onclick="closeButton('editTemplateModal')"></button>
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{button.close}" ></button>
 						<button type="button" id="editBtn" class="btn btn-primary" th:text="#{button.save}" onclick="saveEditTemplate();"></button>
 					</div>
 				</form>
@@ -105,7 +105,7 @@ $(document).ready(function() {
 	    altEditor: true,
 	    buttons: [{text: 'Importar',name: 'import',
 						action: function ( e, dt, node, config ) {
-							$('#importTemplateModal').show();
+							$('#importTemplateModal').modal('show');
 						  }
 					}, 
 	    		  {extend: 'selected',text: 'Exportar',name: 'export', action: function(e, dt, node, config){
@@ -144,7 +144,7 @@ $(document).ready(function() {
 						  $("#descriptionTemplate").val(description);
 
 
-						  $('#editTemplateModal').show();
+						  $('#editTemplateModal').modal('show');
 						
 						  
 	    			}}, 
@@ -246,7 +246,6 @@ function saveNewTemplate(){
 }
 
 function saveEditTemplate(){
-	console.log(idTemplateMonitoriza);
 	var editTemplate = /*[[@{/edittemplate}]]*/;
 	var actionReturn = /*[[@{/appltemplates}]]*/;
 
