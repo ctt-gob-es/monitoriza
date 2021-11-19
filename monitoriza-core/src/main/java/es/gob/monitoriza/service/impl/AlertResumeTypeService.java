@@ -23,11 +23,14 @@
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
+import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.AlertResumeTypeRepository;
 import es.gob.monitoriza.service.IAlertResumeTypeService;
@@ -78,6 +81,11 @@ public class AlertResumeTypeService implements IAlertResumeTypeService {
 		newResumeType.setResumeMonitoriza(alertResumeType.getResumeMonitoriza());
 
 		return this.repository.save(newResumeType);
+	}
+
+	@Override
+	public List<AlertResumeType> getAllAlertResumeTypeByApplicationMonitoriza(ApplicationMonitoriza appMonitoriza) {
+		return repository.findAllAlertResumeTypeByApplicationMonitoriza(appMonitoriza);
 	}
 
 

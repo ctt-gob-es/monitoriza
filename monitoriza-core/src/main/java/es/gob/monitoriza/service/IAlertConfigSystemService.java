@@ -23,8 +23,11 @@
  */
 package es.gob.monitoriza.service;
 
+import java.util.List;
+
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
+import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
@@ -63,4 +66,6 @@ public interface IAlertConfigSystemService {
 	 * @param alertConfigMonitoriza The {@link AlertConfigSystem} to delete
 	 */
 	void deleteAlertConfigSystemByAlertConfigMonitoriza(AlertConfigMonitoriza alertConfigMonitoriza);
+	
+	List<AlertConfigSystem> getAllAlertConfigSystemByAlertConfigMonitoriza(AlertConfigMonitoriza alertConfig);
 }

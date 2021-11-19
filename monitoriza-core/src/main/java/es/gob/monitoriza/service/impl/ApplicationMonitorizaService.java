@@ -23,6 +23,8 @@
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -99,6 +101,11 @@ public class ApplicationMonitorizaService implements IApplicationMonitorizaServi
 		appMonitoriza.setTemplateMonitoriza(templateMonitoriza);
 
 		return this.appMonitorizaRepository.save(appMonitoriza);
+	}
+
+	@Override
+	public List<ApplicationMonitoriza> getAllApplicationMonitorizaByTemplateMonitoriza(TemplateMonitoriza template) {
+		return appMonitorizaRepository.findAllByTemplateMonitoriza(template);
 	}
 
 

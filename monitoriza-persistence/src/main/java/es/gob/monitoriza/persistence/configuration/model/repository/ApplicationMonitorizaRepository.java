@@ -24,10 +24,13 @@
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 
 /**
  * <p>Interface that provides CRUD functionality for the ApplicationMonitoriza entity.</p>
@@ -42,5 +45,7 @@ public interface ApplicationMonitorizaRepository extends JpaRepository<Applicati
 	 * @return Object that represents a application from the persistence.
 	 */
 	ApplicationMonitoriza findByIdApplicationMonitoriza(Long id);
+	
+	List<ApplicationMonitoriza> findAllByTemplateMonitoriza(TemplateMonitoriza templateMonitoriza);
 
 }

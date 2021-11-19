@@ -23,6 +23,8 @@
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -118,4 +120,13 @@ public class AlertConfigMonitorizaService implements IAlertConfigMonitorizaServi
 
 		return this.alertConfigMonitorizaRepository.save(alertConfig);
 	}
+
+
+	@Override
+	public List<AlertConfigMonitoriza> getAllAlertConfigMonitorizaByApplicationMonitoriza(
+			ApplicationMonitoriza appMonitoriza) {
+		return alertConfigMonitorizaRepository.findAllAlertConfigMonitorizaByApplicationMonitoriza(appMonitoriza);
+	}
+
+
 }

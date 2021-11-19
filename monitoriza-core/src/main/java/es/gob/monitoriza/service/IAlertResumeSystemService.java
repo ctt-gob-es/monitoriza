@@ -23,6 +23,10 @@
  */
 package es.gob.monitoriza.service;
 
+import java.util.List;
+
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogNoticeConfig;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeSystem;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 
@@ -63,4 +67,6 @@ public interface IAlertResumeSystemService {
 	 * @param resumeMonitoriza The {@link ResumeMonitoriza} to delete
 	 */
 	void deleteAlertResumeSystemByResumeMonitoriza(ResumeMonitoriza resumeMonitoriza);
+	
+	
 }

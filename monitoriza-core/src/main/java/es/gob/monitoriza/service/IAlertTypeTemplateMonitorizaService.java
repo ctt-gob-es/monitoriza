@@ -25,42 +25,27 @@ package es.gob.monitoriza.service;
 
 import java.util.List;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailNoticeConfig;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeTemplateMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
-public interface IAlertMailNoticeConfigService {
+public interface IAlertTypeTemplateMonitorizaService {
+
+
 
 	/**
-	 * Method that obtains a AlertMailNoticeConfig by its identifier.
-	 * @param alertMailNoticeConfigId The resume type identifier.
-	 * @return {@link AlertMailNoticeConfig}
+	 * Method that stores a alert type in the persistence.
+	 * @param alertTypeMonitoriza a {@link AlertTypeMonitoriza} with the information of the alert type.
+	 * @return {@link AlertTypeMonitoriza} The alert type.
 	 */
-	List<AlertMailNoticeConfig> getAlertMailNoticeConfigId(Long alertMailNoticeConfigId);
-
-	/**
-	 * Method that deletes a relation in the persistence.
-	 * @param alertMailNoticeConfig {@link Integer} that represents the relation identifier to delete.
-	 */
-	void deleteAlertMailNoticeConfig(Long alertMailNoticeConfig);
-
-	/**
-	 * Method that gets all the relations from the persistence.
-	 * @return a {@link Iterable<AlertMailNoticeConfig>} with the information of all relations.
-	 */
-	Iterable<AlertMailNoticeConfig> getAllAlertMailNoticeConfigs();
-
-	/**
-	 * Method that stores a relation in the persistence.
-	 * @param AlertMailNoticeConfig a {@link AlertMailNoticeConfig} with the information of the relation.
-	 * @return {@link AlertMailNoticeConfig} The relation.
-	 */
-	AlertMailNoticeConfig saveAlertMailNoticeConfig(AlertMailNoticeConfig alertMailNoticeConfig);
+	AlertTypeTemplateMonitoriza saveAlertTypeTemplateMonitoriza(AlertTypeTemplateMonitoriza alertTypeTemplateMonitoriza);
 	
-	List<AlertMailNoticeConfig> getAllAlertMailNoticeConfigByAlertConfigSystem(AlertConfigSystem alertConfig);
+	void deleteAlertTypeTemplateMonitoriza(AlertTypeTemplateMonitoriza typeTemplate);
+	
+	List<AlertTypeTemplateMonitoriza> getAllAlertTypeTemplateMonitorizaByTemplateMonitoriza(TemplateMonitoriza template);
 
 }

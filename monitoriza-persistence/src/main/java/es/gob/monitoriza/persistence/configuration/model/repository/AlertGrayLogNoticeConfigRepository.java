@@ -29,6 +29,7 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogNoticeConfig;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogNoticeConfigID;
 
@@ -47,4 +48,6 @@ public interface AlertGrayLogNoticeConfigRepository extends JpaRepository<AlertG
     List<AlertGraylogNoticeConfig> findByNotSysConfigId(Long id);
 
     void deleteByNotSysConfigId(Long id);
+    
+    List<AlertGraylogNoticeConfig> findAllAlertGraylogNoticeConfigByAlertConfigSystem(AlertConfigSystem alertConfigSystem);
 }

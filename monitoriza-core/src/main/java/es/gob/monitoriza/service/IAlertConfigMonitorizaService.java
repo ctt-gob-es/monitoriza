@@ -23,11 +23,14 @@
  */
 package es.gob.monitoriza.service;
 
+import java.util.List;
+
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import es.gob.monitoriza.persistence.configuration.dto.AlertConfigDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
@@ -67,4 +70,6 @@ public interface IAlertConfigMonitorizaService {
 	 * @return {@link AlertConfigMonitoriza} The alert configuration.
 	 */
 	AlertConfigMonitoriza saveAlertConfigMonitoriza(AlertConfigDTO alertConfigDTO);
+	
+	List<AlertConfigMonitoriza> getAllAlertConfigMonitorizaByApplicationMonitoriza(ApplicationMonitoriza appMonitoriza);
 }

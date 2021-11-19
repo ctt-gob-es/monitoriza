@@ -8,6 +8,7 @@
 					cellspacing="0" width="100%">
 					<thead>
 						<tr>
+							<th></th>
 							<th th:text="#{table.templates.template}"></th>
 							<th th:text="#{table.templates.description}"></th>
 						</tr>
@@ -28,7 +29,7 @@
 				</button>
 			</div>
 			<div class="modal-body">
-				<form role="form" id="importTemplateForm" th:object="${importtemplateform}" th:action="@{/importtemplate}" method="post">
+				<form role="form" id="importTemplateForm" th:action="@{/importtemplate}" th:object="${templateform}" method="post" enctype="multipart/form-data">
 					
 					<div class="form-group">
 						<label class="col-form-label" th:text="#{applalert.templates.modal.templatefile}"></label>
@@ -36,30 +37,67 @@
 	
 					<div class="form-group">
 						<div class="custom-file" id="customFile" lang="es">
-						<input type="file" class="custom-file-input" id="file" th:field="*{file}" aria-describedby="fileHelp">
+						<input type="file" class="custom-file-input" id="file" name="file" th:field="*{file}" aria-describedby="fileHelp" accept="text/xml">
 						<label class="custom-file-label" for="file" th:text="#{applalert.templates.modal.selectfile}"></label>
 					</div>
 					<div style="clear:both;"/>
 					</div>
+					<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{button.close}" onclick="closeButton('importTemplateModal')"></button>
+				<button type="button" id="passwordBtn" class="btn btn-primary" th:text="#{button.save}" onclick="saveNewTemplate();"></button>
+			</div>
 				</form>
 
 			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{button.close}"></button>
-				<button type="submit" id="passwordBtn" class="btn btn-primary" th:text="#{button.save}"></button>
+			
+		</div>
+	</div>
+</div>
+
+<div class="modal" tabindex="-1" role="dialog" id="editTemplateModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" th:text="#{applalert.templates.modal.edittemplate}"></h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" onclick="closeButton('editTemplateModal')">
+					<span aria-hidden="true">&times;</span>
+				</button>
 			</div>
+			<div class="modal-body">
+				<form role="form" id="editTemplateForm" th:action="@{/edittemplate}" th:object="${templateform}" method="post">					
+	
+					<div class="form-group">
+						<label id="labelNameTemplate" th:text="#{applalert.template.name}"></label> 						
+						<input type="text" id="nameTemplate" class="form-control" th:field="*{template}" />
+					</div>
+					<div class="form-group">
+						<label id="labelDescriptionTemplate" th:text="#{applalert.template.description}"></label> 						
+						<input type="text" id="descriptionTemplate" class="form-control" th:field="*{description}" />
+					</div>
+					<div style="clear:both;"/>
+					
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{button.close}" onclick="closeButton('editTemplateModal')"></button>
+						<button type="button" id="editBtn" class="btn btn-primary" th:text="#{button.save}" onclick="saveEditTemplate();"></button>
+					</div>
+				</form>
+			</div>			
 		</div>
 	</div>
 </div>
 
 
+
+
 <script th:inline="javascript">
+var idTemplateMonitoriza;
 $(document).ready(function() {
 	
 	var addTemplate = /*[[@{/importtemplate}]]*/;
 	var editTemplate = /*[[@{/edittemplate}]]*/;
 	var getTemplates = /*[[@{/templatesdatatable}]]*/;
-		
+	var deleteTemplate = /*[[@{/infodeletetemplate}]]*/; 
+	var formData = JSON.stringify($("#importtemplateform").serializeJSON());	
 	var tbl = $('#templatesTable').DataTable({
 		dom: 'Bfrtip',
 	    select: 'single',
@@ -68,11 +106,80 @@ $(document).ready(function() {
 	    buttons: [{text: 'Importar',name: 'import',
 						action: function ( e, dt, node, config ) {
 							$('#importTemplateModal').show();
-						}
+						  }
 					}, 
-	    		  {extend: 'selected',text: 'Exportar',name: 'export'}, 
-	    		  {extend: 'selected',text: 'Editar', name: 'edit'}, 
-	    		  {extend: 'selected',text: 'Eliminar',name: 'delete'}],
+	    		  {extend: 'selected',text: 'Exportar',name: 'export', action: function(e, dt, node, config){
+	    			  
+	    			  for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({
+							id: o.context[0].aoColumns[e].mData,
+							title: o.context[0].aoColumns[e].sTitle                
+						  });
+						  
+						  var d = dt.rows({
+	                        selected: !0
+						  });
+							
+						  idTemplateMonitoriza = d.data()[0][a[0].id];
+
+						  download(idTemplateMonitoriza);	
+
+	    			}}, 
+	    		  {extend: 'selected',text: 'Editar', name: 'editTemplate', action: function(e, dt, node, config){
+	    			  
+	    			  for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({
+							id: o.context[0].aoColumns[e].mData,
+							title: o.context[0].aoColumns[e].sTitle                
+						  });
+						  
+						  var d = dt.rows({
+	                        selected: !0
+						  });
+							
+						  idTemplateMonitoriza = d.data()[0][a[0].id];
+						  var name = d.data()[0][a[1].id];
+						  var description = d.data()[0][a[2].id];
+						  
+
+						  $("#nameTemplate").val(name);
+						  $("#descriptionTemplate").val(description);
+
+
+						  $('#editTemplateModal').show();
+						
+						  
+	    			}}, 
+	    		  {extend: 'selected',text: 'Eliminar',name: 'deleteTemplate', action: function(e, dt, node, config){
+	    			  
+	    			  for (var o = dt, a = [], e = 0; e < o.context[0].aoColumns.length; e++) a.push({
+							id: o.context[0].aoColumns[e].mData,
+							title: o.context[0].aoColumns[e].sTitle                
+						  });
+						  
+						  var d = dt.rows({
+	                        selected: !0
+						  });
+							
+						  idTemplateMonitoriza = d.data()[0][a[0].id];
+						  console.log(idTemplateMonitoriza);
+						  var loadConfirmDelete = /*[[@{/infodeletetemplate}]]*/
+		   						$.ajax(loadConfirmDelete,{
+		   								data:$.param({'idTemplateMonitoriza':idTemplateMonitoriza}),
+		   						        type:'POST',
+		   						        success: function(data){
+		   						    		// Se oculta la capa 'cargando...'
+		   						    		hide();
+		   						    		$('#modal').html(data);
+		   									$('#deleteTemplateModal').modal('show');
+		   						        },
+		   						        error:function(data){
+		   						        	// Se oculta la capa 'cargando...'
+		   						        	hide();
+		   						        
+		   								}
+		   							});
+
+						  
+	    			}}],
 	    		  
 	    "iTotalRecords": "totalElements",
         "iTotalDisplayRecords": "numberOfElements",
@@ -90,19 +197,90 @@ $(document).ready(function() {
 	        },
 		"ajax": {
 			"url": getTemplates,
-			"dataSrc" : "data",
-			"data": function (data) {
-				// Datos a pasar al modal
-				// data.formId = "nodeForm";
-				// data.editTemplate = editTemplate;
-				//data.addTemplate = addTemplate;
-		}
+			"dataSrc" : "data"
 		},
 		"columns": [
-	        { "data": "idTemplateMonitoriza"},
-	        { "data": "name" }
+	        { "data": "idTemplateMonitoriza", visible: false},
+	        { "data": "name" },
+	        { "data": "description" }
 	        ]
 		});
-});	
+	
+	$("#file").change(
+			function() {
+				var fieldVal = $(this).val();
 
+				// Change the node's value by removing the fake path (Chrome)
+				fieldVal = fieldVal.replace("C:\\fakepath\\", "");
+				if (fieldVal != undefined || fieldVal != "") {
+					$(this).next(".custom-file-label").attr(
+							'data-content', fieldVal);
+					$(this).next(".custom-file-label").text(
+							fieldVal);
+				}
+		});
+});	
+function saveNewTemplate(){
+	
+	var addTemplate = /*[[@{/importtemplate}]]*/;
+	var actionReturn = /*[[@{/appltemplates}]]*/;
+	var formData = new FormData(document.forms["importTemplateForm"]);
+	$.ajax(addTemplate, {
+		data: formData,
+		contentType: false,
+		processData:false,
+    		type : 'POST',
+    		success: function(data){
+    			$('#importTemplateModal').modal('hide');
+    			loadIntoAjax('formMenu', actionReturn, 'optionReplacement', 'GET', null, true);
+			
+    		},
+    		error: function(data){
+    				// se oculta al capa 'cargando...'
+        		hide();
+    				
+				//se cierra modal
+        		 $('#importTemplateModal').modal('hide');
+    		}
+    });
+}
+
+function saveEditTemplate(){
+	console.log(idTemplateMonitoriza);
+	var editTemplate = /*[[@{/edittemplate}]]*/;
+	var actionReturn = /*[[@{/appltemplates}]]*/;
+
+	var formData = JSON.stringify($("#editTemplateForm").serializeJSON());
+	$.ajax({
+
+		url: editTemplate + "?idTemplateMonitoriza=" + idTemplateMonitoriza,
+		data: formData,
+		dataType: "json",
+		contentType : "application/json",
+		processData:false,
+    		type : 'POST',
+    		success: function(data){
+    			$('#editTemplateModal').modal('hide');
+    			loadIntoAjax('formMenu', actionReturn, 'optionReplacement', 'GET', null, true);
+			
+    		},
+    		error: function(data){
+    				// se oculta al capa 'cargando...'
+        		hide();
+    				
+				//se cierra modal
+        		 $('#editTemplateModal').modal('hide');
+    		}
+    });
+}
+
+function download(idTemplateMonitoriza) {
+
+	var download = /*[[@{/exporttemplate?idTemplateMonitoriza=}]]*/;
+	var idTemplateMonitoriza= idTemplateMonitoriza;
+	
+	var urlDownload = download+idTemplateMonitoriza;
+	document.location.href= urlDownload;
+	
+}
 </script>

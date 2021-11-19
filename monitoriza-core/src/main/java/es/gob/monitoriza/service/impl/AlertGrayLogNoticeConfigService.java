@@ -28,6 +28,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogNoticeConfig;
 import es.gob.monitoriza.persistence.configuration.model.repository.AlertGrayLogNoticeConfigRepository;
 import es.gob.monitoriza.service.IAlertGrayLogNoticeConfigService;
@@ -60,6 +61,11 @@ public class AlertGrayLogNoticeConfigService implements IAlertGrayLogNoticeConfi
 	@Override
 	public AlertGraylogNoticeConfig saveAlertGraylogNoticeConfig(final AlertGraylogNoticeConfig alertGraylogNoticeConfig) {
 		return this.repository.save(alertGraylogNoticeConfig);
+	}
+
+	@Override
+	public List<AlertGraylogNoticeConfig> getAllAlertGraylogNoticeConfigByAlertConfigSystem(AlertConfigSystem alertConfigSystem) {
+		return this.repository.findAllAlertGraylogNoticeConfigByAlertConfigSystem(alertConfigSystem);
 	}
 
 

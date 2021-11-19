@@ -24,10 +24,13 @@
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 
 /**
  * <p>Interface that provides CRUD functionality for the AlertConfigMonitoriza entity.</p>
@@ -42,5 +45,8 @@ public interface AlertConfigMonitorizaRepository extends JpaRepository<AlertConf
 	 * @return Object that represents a alert configuration from the persistence.
 	 */
 	AlertConfigMonitoriza findByIdAlertConfigMonitoriza(Long id);
+	
+	List<AlertConfigMonitoriza> findAllAlertConfigMonitorizaByApplicationMonitoriza(
+			ApplicationMonitoriza appMonitoriza);
 
 }

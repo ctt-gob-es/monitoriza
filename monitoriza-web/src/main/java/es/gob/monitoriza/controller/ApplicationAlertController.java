@@ -45,27 +45,44 @@ import es.gob.monitoriza.persistence.configuration.dto.GrayLogConfigDTO;
 import es.gob.monitoriza.persistence.configuration.dto.MailResumeConfigDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TemplateDTO;
+import es.gob.monitoriza.persistence.configuration.dto.TemplateDeleteDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
+
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
+
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogNoticeConfig;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailNoticeConfig;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
+
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSeverityMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeTemplateMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 import es.gob.monitoriza.service.IAlertConfigMonitorizaService;
+
 import es.gob.monitoriza.service.IAlertDIMAppService;
 import es.gob.monitoriza.service.IAlertDIMNodeService;
 import es.gob.monitoriza.service.IAlertDIMSeverityService;
 import es.gob.monitoriza.service.IAlertDIMTemplateService;
 import es.gob.monitoriza.service.IAlertDIMTypeService;
+
+import es.gob.monitoriza.service.IAlertConfigSystemService;
+import es.gob.monitoriza.service.IAlertGrayLogNoticeConfigService;
+import es.gob.monitoriza.service.IAlertMailNoticeConfigService;
+import es.gob.monitoriza.service.IAlertResumeTypeService;
+
 import es.gob.monitoriza.service.IAlertSeverityMonitorizaService;
 import es.gob.monitoriza.service.IAlertSystemMonitorizaService;
 import es.gob.monitoriza.service.IAlertTypeMonitorizaService;
+import es.gob.monitoriza.service.IAlertTypeTemplateMonitorizaService;
 import es.gob.monitoriza.service.IApplicationMonitorizaService;
 import es.gob.monitoriza.service.IResumeMonitorizaService;
 import es.gob.monitoriza.service.ITemplateMonitorizaService;
@@ -124,8 +141,29 @@ public class ApplicationAlertController {
 	/**
 	 * Attribute that represents the service object for accessing the repository for alert configurations.
 	 */
+	
+	@Autowired
+	private IAlertTypeTemplateMonitorizaService alertTypeTemplateMonitorizaService;
+	
+	@Autowired
+	private IApplicationMonitorizaService applicationMonitorizaService;
+
+	@Autowired
+	private IAlertResumeTypeService alertResumeTypeService;
+	
 	@Autowired
 	private IAlertConfigMonitorizaService alertConfigMonitorizaService;
+	
+	@Autowired
+	private IAlertConfigSystemService alertConfigSystemService;
+	
+	@Autowired
+	private IAlertMailNoticeConfigService alertMailNoticeConfigService;
+	
+	@Autowired
+	private IAlertGrayLogNoticeConfigService alertGrayLogNoticeConfigService;
+	
+	private TemplateDeleteDTO templateDeleteDTO;
 
 	/**
 	 * Attribute that represents the service object for accessing the
@@ -236,7 +274,7 @@ public class ApplicationAlertController {
 	@RequestMapping(value = "appltemplates", method = RequestMethod.GET)
 	public String applTemplates(final Model model) {
 
-		model.addAttribute("importtemplateform", new TemplateDTO());
+		model.addAttribute("templateform", new TemplateDTO());
 
 		return "fragments/appltemplates.html"; //$NON-NLS-1$
 	}
@@ -393,18 +431,7 @@ public class ApplicationAlertController {
 		return "modal/applicationForm.html"; //$NON-NLS-1$
     }
 
-	/**
-	 * Method that maps the add new node web request to the controller and sets the backing form.
-	 * @param model Holder object for model attributes.
-	 * @return String that represents the name of the view to forward.
-	 */
-	@RequestMapping(value = "importtemplate", method = RequestMethod.POST)
-    public String importTemplate(final Model model){
 
-		model.addAttribute("importtemplateform", new TemplateDTO()); //$NON-NLS-1$
-
-		return "modal/importTemplateForm.html"; //$NON-NLS-1$
-    }
 
 	/**
 	 * Method that maps the add new node web request to the controller and sets the backing form for add a new resume.
@@ -631,5 +658,21 @@ public class ApplicationAlertController {
 
 		return "modal/grayLogInformation.html"; //$NON-NLS-1$
     }
+	
+	@RequestMapping(value = "/infodeletetemplate", method = RequestMethod.POST)
+	public String infoDeleteTemplate(@RequestParam("idTemplateMonitoriza") final Long idTemplateMonitoriza, Model model) {
+		
+		TemplateDeleteDTO templateDeleteDTO = new TemplateDeleteDTO();
+		TemplateMonitoriza template = this.templateService.getTemplateMonitorizaById(idTemplateMonitoriza);
+		templateDeleteDTO.setTemplate(template);
+		List<ApplicationMonitoriza> listApplicationMonitoriza = applicationMonitorizaService.getAllApplicationMonitorizaByTemplateMonitoriza(template);
+		templateDeleteDTO.setListApplicationMonitoriza(listApplicationMonitoriza);
+		
+		model.addAttribute("templatedeleteform", templateDeleteDTO);
+
+		return "modal/deleteTemplateModal.html";
+	}
+	
+	
 
 }

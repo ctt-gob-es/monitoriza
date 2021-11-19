@@ -29,29 +29,20 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeSystem;
-import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeTemplateMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeTemplateMonitorizaID;
+import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 
 /**
- * <p>Interface that provides CRUD functionality for the AlertResumeSystem entity.</p>
+ * <p>Interface that provides CRUD functionality for the AlertTypeMonitoriza entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
 @Repository
-public interface AlertResumeSystemRepository extends JpaRepository<AlertResumeSystem, Long> {
+public interface AlertTypeTemplateMonitorizaRepository extends JpaRepository<AlertTypeTemplateMonitoriza, AlertTypeTemplateMonitorizaID> {
 
-	/**
-	  * Method that obtains from the persistence a relation identified by its primary key.
-	 * @param id String that represents the primary key of the relation in the persistence.
-	 * @return Object that represents a relation from the persistence.
-	 */
-	AlertResumeSystem findByIdResSystem(Long id);
-
-	/**
-	 * Method that delete all alert systems of a resume.
-	 * @param resumeMonitoriza ResumeMonitoriza entity
-	 */
-	void deleteByResumeMonitoriza(ResumeMonitoriza resumeMonitoriza);
+	List<AlertTypeTemplateMonitoriza> getAllAlertTypeTemplateMonitorizaByTemplateMonitoriza(TemplateMonitoriza templateMonitoriza);
 
 	
+
 }

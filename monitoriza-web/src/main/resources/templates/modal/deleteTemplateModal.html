@@ -1,0 +1,62 @@
+<div class="modal fade" tabindex="-1" role="dialog" id="deleteTemplateModal">
+	<div class="modal-dialog">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h4 class="modal-title" th:text="#{applalert.templates.modal.deletetemplate}"></h4>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Cerrar" onclick="closeButton('deleteTemplateModal')">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body">
+				<form name="altEditor-form" role="form" id="deleteTemplateForm" th:action="@{/deletetemplate}" th:object="${templatedeleteform}" method="post">					
+					<input type='hidden' id="idTemplateMonitoriza" th:field="*{template.idTemplateMonitoriza}">
+					<div class="form-group modal-pre">								
+						<div th:if="*{listApplicationMonitoriza != null && listApplicationMonitoriza.size() > 0}">
+							<p th:text="#{applalert.templates.modal.deletetemplate.deleteapp}"></p>
+							<ul>
+								<li th:each="app : *{listApplicationMonitoriza}" th:value="${app.name}" th:text="${app.name}"></li>
+							</ul>
+						</div>	
+						<div th:if="*{listApplicationMonitoriza == null || listApplicationMonitoriza.size() == 0}">
+							<p th:text="#{applalert.templates.modal.deletetemplate.deletenoapp}"></p>
+						</div>
+					</div>
+					<div style="clear:both;"/>
+					
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal" th:text="#{button.close}" onclick="closeButton('deleteTemplateModal')"></button>
+						<button type="button" id="deleteBtn" class="btn btn-danger" th:text="#{button.delete}" ></button>
+					</div>
+				</form>
+			</div>			
+		</div>
+	</div>
+</div>
+
+<script th:inline="javascript">
+
+$(document).ready(function() {
+	var deleteTemplate = /*[[@{/deletetemplate}]]*/
+	var idTemplateMonitoriza = $('#idTemplateMonitoriza').val();
+	$( "#deleteBtn" ).click(function( event ) {
+		  event.preventDefault();
+		$.ajax(deleteTemplate,{
+			data:$.param({'idTemplateMonitoriza':idTemplateMonitoriza}),
+	        type:'POST',
+	        success: function(data){
+	    		// Se oculta la capa 'cargando...'
+	    		hide();	    		
+	    		var table = $('#templatesTable').DataTable();
+	    		table.ajax.reload();
+	    		$('#deleteTemplateModal').modal('hide');
+	    		
+	        },
+	        error:function(data){
+	        	// Se oculta la capa 'cargando...'
+	        	hide();
+	        
+			}
+		});
+	});
+});
+</script>
