@@ -131,7 +131,7 @@
                 }
             }
 
-			if (!duplicateKey) {
+			if (!duplicateKey || $('#editingIndex').val() != "") {
             	if ($("#confKey").val() != "" && $("#confValue").val() != "") {
 	            	if ($('#editingIndex').val() != ""){
 	            		grayLogConfigTbl.row($('#editingIndex').val()).remove().draw();
@@ -200,6 +200,7 @@
    function cleanForm(){
 		$('#confKey').val("");
 		$('#confValue').val("");
+		$('#editingIndex').val("");
 	}
 
 	function closeModal(){
