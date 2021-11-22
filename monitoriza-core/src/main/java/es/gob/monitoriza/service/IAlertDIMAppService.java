@@ -25,7 +25,7 @@ package es.gob.monitoriza.service;
 
 import java.util.List;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApplication;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
@@ -38,11 +38,11 @@ public interface IAlertDIMAppService {
 	 * @param templateId The app identifier.
 	 * @return {@link AlertDIMApp}
 	 */
-	AlertDIMApp getAlertDIMAppById(Long appID);
+	AlertDIMApplication getAlertDIMAppById(Long appID);
 
 	/**
 	 * Method that gets all the alert audits from the persistence.
 	 * @return a {@link Iterable<AllAlertDIMApp>} with the information of all alert DIM aplications.
 	 */
-	List<AlertDIMApp> getAllAlertDIMApp();
+	List<AlertDIMApplication> getAllAlertDIMApp();
 }

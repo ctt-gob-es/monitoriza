@@ -25,15 +25,11 @@
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
@@ -69,11 +65,6 @@ public class AlertDIMType implements Serializable {
 	 */
 	private String name;
 	
-	/**
-	 * Attribute that represents the alert statistics.
-	 */
-	private Set<AlertStatistic> alertStatistics;
-
 	/**
 	 * Gets the value of the attribute {@link #idType}.
 	 *
@@ -118,23 +109,6 @@ public class AlertDIMType implements Serializable {
 	 */
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	/**
-	 * Gets the value of the attribute {@link #alertStatistics}.
-	 * @return the value of the attribute {@link #alertStatistics}.
-	 */
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "alertDIMType", cascade = CascadeType.ALL)
-	public Set<AlertStatistic> getAlertConfigSystems() {
-		return this.alertStatistics;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #alertStatistics}.
-	 * @param alertStatistics The value for the attribute {@link #alertStatistics}.
-	 */
-	public void setAlertConfigSystems(final Set<AlertStatistic> alertStatistics) {
-		this.alertStatistics = alertStatistics;
 	}
 
 }

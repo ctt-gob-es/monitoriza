@@ -29,12 +29,12 @@ import java.util.List;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApplication;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistics;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
@@ -46,13 +46,13 @@ public interface IAlertStatisticService {
 	 * Method that gets all the alert statistics from the persistence.
 	 * @return a {@link Iterable<AlertStatistic>} with the information of all alert audits.
 	 */
-	Iterable<AlertStatistic> getAllAlertStatistic();
+	Iterable<AlertStatistics> getAllAlertStatistic();
 
 	/**
 	 * Method that gets all the alert statistics from the persistence.
 	 * @return a {@link DataTablesOutput<AlertStatistic>} with the information for the datatable.
 	 */
-	DataTablesOutput<AlertStatistic> findAll(final DataTablesInput input);
+	DataTablesOutput<AlertStatistics> findAll(final DataTablesInput input);
 
 	/**
 	 *  Method that gets all the alert statistics with the indicated filters.
@@ -65,6 +65,6 @@ public interface IAlertStatisticService {
 	 * @param severityID Severity identifier.
 	 * @return List of statistics filtered.
 	 */
-	List<AlertStatistic> findByFilters(final Date minDate, final Date maxDate, final AlertDIMApp appID, final AlertDIMTemplate templateID,
+	List<AlertStatistics> findByFilters(final Date minDate, final Date maxDate, final AlertDIMApplication appID, final AlertDIMTemplate templateID,
 			final AlertDIMType typeID, final AlertDIMNode nodeID, final AlertDIMSeverity severityID);
 }

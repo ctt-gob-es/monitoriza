@@ -26,12 +26,13 @@ package es.gob.monitoriza.persistence.configuration.model.repository.datatable;
 
 import org.springframework.data.jpa.datatables.repository.DataTablesRepository;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistics;
+
 
 /**
  * <p>Interface that provides CRUD functionality for the AlertStatistic entity and DataTables.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  */
-public interface AlertStatisticDatatableRepository extends DataTablesRepository<AlertStatistic, Long> {
+public interface AlertStatisticDatatableRepository extends DataTablesRepository<AlertStatistics, Long> {
 
 }

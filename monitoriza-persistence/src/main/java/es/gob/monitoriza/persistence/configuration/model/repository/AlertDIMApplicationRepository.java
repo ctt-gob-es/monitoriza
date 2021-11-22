@@ -37,6 +37,13 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApplicat
 public interface AlertDIMApplicationRepository extends JpaRepository<AlertDIMApplication, Long> {
 	
 	/**
+	 * 
+	 * @param idApplication
+	 * @return
+	 */
+	AlertDIMApplication findByIdApplication(Long idApplication);
+	
+	/**
 	 * Method that obtains a {@link AlertDIMApplication} from persistence using name as filter
 	 * @param name String that represents the name column
 	 * @return {@link AlertDIMApplication} with matching name

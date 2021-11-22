@@ -48,7 +48,7 @@ import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TemplateDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TemplateDeleteDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApplication;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
@@ -280,7 +280,7 @@ public class ApplicationAlertController {
 	public String applStats(final Model model) {
 
 		// Se obtiene la lista de aplicaciones
-		final List<AlertDIMApp> applications = this.alertAppService.getAllAlertDIMApp();
+		final List<AlertDIMApplication> applications = this.alertAppService.getAllAlertDIMApp();
 		model.addAttribute("applicationsList", applications);
 
 		// Se obtiene la lista de tipos de alarmas

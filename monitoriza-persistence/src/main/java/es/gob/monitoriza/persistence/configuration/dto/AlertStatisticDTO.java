@@ -26,7 +26,7 @@ package es.gob.monitoriza.persistence.configuration.dto;
 
 import java.util.List;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApplication;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
@@ -92,7 +92,7 @@ public class AlertStatisticDTO {
 	/**
 	 * Attribute that represents the list of applications
 	 */
-	private List<AlertDIMApp> applicationsList;
+	private List<AlertDIMApplication> applicationsList;
 
 	/**
 	 * Attribute that represents the list of types
@@ -187,11 +187,11 @@ public class AlertStatisticDTO {
 		this.ocurrency = ocurrency;
 	}
 
-	public List<AlertDIMApp> getApplicationsList() {
+	public List<AlertDIMApplication> getApplicationsList() {
 		return this.applicationsList;
 	}
 
-	public void setApplicationsList(final List<AlertDIMApp> applicationsList) {
+	public void setApplicationsList(final List<AlertDIMApplication> applicationsList) {
 		this.applicationsList = applicationsList;
 	}
 

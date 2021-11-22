@@ -41,12 +41,12 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApplication;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistics;
 import es.gob.monitoriza.persistence.configuration.model.repository.AlertStatisticRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.AlertStatisticDatatableRepository;
 import es.gob.monitoriza.service.IAlertStatisticService;
@@ -70,24 +70,24 @@ public class AlertStatisticService implements IAlertStatisticService {
 	private Environment env;
 
 	@Override
-	public Iterable<AlertStatistic> getAllAlertStatistic() {
+	public Iterable<AlertStatistics> getAllAlertStatistic() {
 		return this.repository.findAll();
 	}
 
 	@Override
-	public DataTablesOutput<AlertStatistic> findAll(final DataTablesInput input) {
+	public DataTablesOutput<AlertStatistics> findAll(final DataTablesInput input) {
 		return this.dtRepository.findAll(input);
 	}
 
 	@Override
-	public List<AlertStatistic> findByFilters(final Date minDate, final Date maxDate, final AlertDIMApp appID, final AlertDIMTemplate templateID,
+	public List<AlertStatistics> findByFilters(final Date minDate, final Date maxDate, final AlertDIMApplication appID, final AlertDIMTemplate templateID,
 			final AlertDIMType typeID, final AlertDIMNode nodeID, final AlertDIMSeverity severityID){
 
 		Connection connection = null;
 		ResultSet rs = null;
 		Statement stmt = null;
 
-		final List<AlertStatistic> statisticsList = new ArrayList<AlertStatistic>();
+		final List<AlertStatistics> statisticsList = new ArrayList<AlertStatistics>();
 
 		try {
 			final String url = this.env.getProperty("spring.datasource.url");
@@ -105,7 +105,7 @@ public class AlertStatisticService implements IAlertStatisticService {
 				query += " AND STATS.TIMESTAMP >= " + formateadorFecha.format(minDate) + "AND STATS.TIMESTAMP <= " + formateadorFecha.format(maxDate);
 			}
 			if (appID != null) {
-				query += " AND STATS.APP_ID = " + appID.getAppID();
+				query += " AND STATS.APP_ID = " + appID.getIdApplication();
 			}
 			if (templateID != null) {
 				query += " AND STATS.TEMPLATE_ID = " + templateID.getIdTemplate();
@@ -125,35 +125,35 @@ public class AlertStatisticService implements IAlertStatisticService {
 			rs = stmt.executeQuery(query);
 
 	       while(rs.next()){
-	    	   final AlertStatistic statistic = new AlertStatistic();
+	    	   final AlertStatistics statistic = new AlertStatistics();
 	    	   statistic.setIdAlertStatistic(new Long(0));
 
-	    	   final AlertDIMApp app = new AlertDIMApp();
-	    	   app.setAppID(new Long(rs.getInt(1)));
+	    	   final AlertDIMApplication app = new AlertDIMApplication();
+	    	   app.setIdApplication(new Long(rs.getInt(1)));
 	    	   app.setName(rs.getString(2));
-	    	   statistic.setAlertDIMApp(app);
+	    	   statistic.setApplication(app);
 
 	    	   final AlertDIMType type = new AlertDIMType();
 	    	   type.setIdType(new Long(rs.getInt(3)));
 	    	   type.setName(rs.getString(4));
-	    	   statistic.setAlertDIMType(type);
+	    	   statistic.setType(type);
 
 	    	   final AlertDIMTemplate template = new AlertDIMTemplate();
 	    	   template.setIdTemplate(new Long(rs.getInt(5)));
 	    	   template.setName(rs.getString(6));
-	    	   statistic.setAlertDIMTemplate(template);
+	    	   statistic.setTemplate(template);
 
 	    	   final AlertDIMNode node = new AlertDIMNode();
 	    	   node.setIdNode(new Long(rs.getInt(7)));
 	    	   node.setName(rs.getString(8));
-	    	   statistic.setAlertDIMNode(node);
+	    	   statistic.setNode(node);
 
 	    	   final AlertDIMSeverity severity = new AlertDIMSeverity();
 	    	   severity.setIdSeverity(new Long(rs.getInt(9)));
 	    	   severity.setName(rs.getString(10));
 
-	    	   statistic.setAlertDIMSeverity(severity);
-	    	   statistic.setOcurrency(new Long(rs.getInt(11)));
+	    	   statistic.setSeverity(severity);
+	    	   statistic.setOccurrences(rs.getInt(11));
 
 	    	   statisticsList.add(statistic);
            }

@@ -37,6 +37,9 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.NumberConstants;
 
@@ -125,6 +128,7 @@ public class AlertStatistics implements Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "APP_ID", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public final AlertDIMApplication getApplication() {
 		return application;
 	}
@@ -146,6 +150,7 @@ public class AlertStatistics implements Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "NODE", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public final AlertDIMNode getNode() {
 		return node;
 	}
@@ -167,6 +172,7 @@ public class AlertStatistics implements Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "SEVERITY", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public final AlertDIMSeverity getSeverity() {
 		return severity;
 	}
@@ -188,6 +194,7 @@ public class AlertStatistics implements Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "TEMPLATE_ID", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public final AlertDIMTemplate getTemplate() {
 		return template;
 	}
@@ -209,6 +216,7 @@ public class AlertStatistics implements Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "TYPE_ID", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public final AlertDIMType getType() {
 		return type;
 	}
@@ -229,6 +237,7 @@ public class AlertStatistics implements Serializable {
 	 * @return the value of the attribute {@link #timestamp}.
 	 */
 	@Column(name = "TIMESTAMP", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public final Long getTimestamp() {
 		return timestamp;
 	}
@@ -249,6 +258,7 @@ public class AlertStatistics implements Serializable {
 	 * @return the value of the attribute {@link #occurrences}.
 	 */
 	@Column(name = "OCURRENCY", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public final Integer getOccurrences() {
 		return occurrences;
 	}

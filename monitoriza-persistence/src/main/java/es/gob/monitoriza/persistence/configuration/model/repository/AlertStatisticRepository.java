@@ -28,7 +28,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistics;
 
 
 /**
@@ -39,7 +39,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
  * @version 1.0, 09/11/2021.
  */
 @Repository
-public interface AlertStatisticRepository extends JpaRepository<AlertStatistic, Long>, JpaSpecificationExecutor<AlertStatistic>{
+public interface AlertStatisticRepository extends JpaRepository<AlertStatistics, Long>, JpaSpecificationExecutor<AlertStatistics>{
 
 
 }

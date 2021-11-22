@@ -34,6 +34,9 @@ import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.NumberConstants;
 
@@ -90,6 +93,7 @@ public class AlertDIMApplication implements Serializable {
 	 * @return the value of the attribute {@link #name}.
 	 */
 	@Column(name = "APP_NAME", nullable = false, precision = NumberConstants.NUM40)
+	@JsonView(DataTablesOutput.View.class)
 	public final String getName() {
 		return name;
 	}
@@ -102,8 +106,6 @@ public class AlertDIMApplication implements Serializable {
 	 */
 	public final void setName(String name) {
 		this.name = name;
-	}
-	
-	
+	}	
 
 }

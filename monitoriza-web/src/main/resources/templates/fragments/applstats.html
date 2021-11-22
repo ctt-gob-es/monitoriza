@@ -20,7 +20,7 @@
 							<label for="application" th:text="#{applalert.stats.form.application}"></label>
 							<select name="appID" id="appID" class="form-control" th:field="*{appID}" required>
 								<option value="-1" th:text="#{applalert.stats.form.all}" selected></option>
-								<option th:each="t: ${applicationsList}" th:value="${t.appID}" th:text="${t.name}">
+								<option th:each="t: ${applicationsList}" th:value="${t.idApplication}" th:text="${t.name}">
 								</option>
 							</select>
 						</div>
@@ -28,7 +28,7 @@
 							<label for="template" th:text="#{applalert.stats.form.template}"></label>
 							<select name="templateID" id="templateID" class="form-control" th:field="*{templateID}" required>
 								<option value="-1" th:text="#{applalert.stats.form.all}" selected></option>
-								<option th:each="t: ${templatesList}" th:value="${t.templateID}" th:text="${t.name}">
+								<option th:each="t: ${templatesList}" th:value="${t.idTemplate}" th:text="${t.name}">
 								</option>
 							</select>
 						</div>
@@ -36,7 +36,7 @@
 							<label for="alarm" th:text="#{applalert.stats.form.alarm}"></label>
 							<select name="typeID" id="typeID" class="form-control" th:field="*{typeID}" required>
 								<option value="-1" th:text="#{applalert.stats.form.all}" selected></option>
-								<option th:each="t: ${typesList}" th:value="${t.typeID}" th:text="${t.name}">
+								<option th:each="t: ${typesList}" th:value="${t.idType}" th:text="${t.name}">
 								</option>
 							</select>
 						</div>
@@ -44,7 +44,7 @@
 							<label for="service" th:text="#{applalert.stats.form.node}"></label>
 							<select name="nodeID" id="nodeID" class="form-control" th:field="*{nodeID}" required>
 								<option value="-1" th:text="#{applalert.stats.form.allnodes}" selected></option>
-								<option th:each="t: ${nodesList}" th:value="${t.nodeID}" th:text="${t.name}">
+								<option th:each="t: ${nodesList}" th:value="${t.idNode}" th:text="${t.name}">
 								</option>
 							</select>
 						</div>
@@ -52,7 +52,7 @@
 							<label for="criticity" th:text="#{applalert.stats.form.criticity}"></label>
 							<select name="severityID" id="severityID" class="form-control" th:field="*{severityID}" required>
 								<option value="-1" th:text="#{applalert.stats.form.all}" selected></option>
-								<option th:each="t: ${severityList}" th:value="${t.severityID}" th:text="${t.name}">
+								<option th:each="t: ${severityList}" th:value="${t.idSeverity}" th:text="${t.name}">
 								</option>
 							</select>
 						</div>
@@ -147,11 +147,11 @@ $(document).ready(function() {
 		     }
 		},
 		"columns": [
-	        { "data": "alertDIMApp.name" },
-	        { "data": "alertDIMTemplate.name" },
-	        { "data": "alertDIMType.name" },
-	        { "data": "alertDIMNode.name" },
-	        { "data": "alertDIMSeverity.name" ,
+	        { "data": "application.name" },
+	        { "data": "template.name" },
+	        { "data": "type.name" },
+	        { "data": "node.name" },
+	        { "data": "severity.name" ,
 				"render": function (data, type, row) {
 					var result;
 					
@@ -171,7 +171,7 @@ $(document).ready(function() {
 					}	        	  
 					return result;
 			}},	
-	        { "data": "ocurrency" }
+	        { "data": "occurrences" }
 	        ]
 		});
 

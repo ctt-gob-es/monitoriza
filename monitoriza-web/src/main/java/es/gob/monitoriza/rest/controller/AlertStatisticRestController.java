@@ -45,12 +45,12 @@ import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.persistence.configuration.dto.AlertStatisticDTO;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApplication;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistic;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistics;
 import es.gob.monitoriza.service.IAlertDIMAppService;
 import es.gob.monitoriza.service.IAlertDIMNodeService;
 import es.gob.monitoriza.service.IAlertDIMSeverityService;
@@ -122,13 +122,13 @@ public class AlertStatisticRestController {
 	/**
 	 * Method that returns the alert statistics from the database
 	 * @param input Holder object for datatable attributes.
-	 * @return DataTablesOutput<AlertStatistic> that represents the alert statistics data
+	 * @return DataTablesOutput<AlertStatistics> that represents the alert statistics data
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/alertstatisticsdatatable", method = RequestMethod.GET)
-	public DataTablesOutput<AlertStatistic> alertsAudit(@NotEmpty final DataTablesInput input) {
-		final DataTablesOutput<AlertStatistic> dtOutput = new DataTablesOutput<AlertStatistic>();
-		final List<AlertStatistic> statisticsList = this.alertStatisticService.findByFilters(null, null, null, null, null, null, null);
+	public DataTablesOutput<AlertStatistics> alertsAudit(@NotEmpty final DataTablesInput input) {
+		final DataTablesOutput<AlertStatistics> dtOutput = new DataTablesOutput<AlertStatistics>();
+		final List<AlertStatistics> statisticsList = this.alertStatisticService.findByFilters(null, null, null, null, null, null, null);
 		dtOutput.setData(statisticsList);
 		return dtOutput;
 	}
@@ -140,9 +140,9 @@ public class AlertStatisticRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(value = "/filterstats", method = RequestMethod.POST)
-	public @ResponseBody DataTablesOutput<AlertStatistic> filterStats(@RequestBody final AlertStatisticDTO alertStatisticForm) {
+	public @ResponseBody DataTablesOutput<AlertStatistics> filterStats(@RequestBody final AlertStatisticDTO alertStatisticForm) {
 
-		final DataTablesOutput<AlertStatistic> dtOutput = new DataTablesOutput<AlertStatistic>();
+		final DataTablesOutput<AlertStatistics> dtOutput = new DataTablesOutput<AlertStatistics>();
 		final SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		Date minDate = null;
 		Date maxDate = null;
@@ -153,7 +153,7 @@ public class AlertStatisticRestController {
 			LOGGER.error("Error al parsear la fecha maxima o minima de las estadisticas a filtrar.");
 		}
 
-		AlertDIMApp app = null;
+		AlertDIMApplication app = null;
 		AlertDIMTemplate template = null;
 		AlertDIMType type = null;
 		AlertDIMNode node = null;
@@ -179,7 +179,7 @@ public class AlertStatisticRestController {
 			severity = this.alertDIMSeverityService.getAlertDIMSeverityById(alertStatisticForm.getSeverityID());
 		}
 
-		final List<AlertStatistic> statisticsList = this.alertStatisticService.findByFilters(minDate, maxDate, app, template, type, node, severity);
+		final List<AlertStatistics> statisticsList = this.alertStatisticService.findByFilters(minDate, maxDate, app, template, type, node, severity);
 		dtOutput.setData(statisticsList);
 
 		return dtOutput;

@@ -28,8 +28,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
-import es.gob.monitoriza.persistence.configuration.model.repository.AlertDIMAppRepository;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApplication;
+import es.gob.monitoriza.persistence.configuration.model.repository.AlertDIMApplicationRepository;
 import es.gob.monitoriza.service.IAlertDIMAppService;
 
 /**
@@ -40,15 +40,15 @@ import es.gob.monitoriza.service.IAlertDIMAppService;
 public class AlertDIMAppService implements IAlertDIMAppService {
 
 	@Autowired
-	private AlertDIMAppRepository repository;
+	private AlertDIMApplicationRepository repository;
 
 	@Override
-	public List<AlertDIMApp> getAllAlertDIMApp() {
+	public List<AlertDIMApplication> getAllAlertDIMApp() {
 		return this.repository.findAll();
 	}
 
 	@Override
-	public AlertDIMApp getAlertDIMAppById(final Long appId) {
-		return this.repository.findByAppID(appId);
+	public AlertDIMApplication getAlertDIMAppById(final Long appId) {
+		return this.repository.findByIdApplication(appId);
 	}
 }
