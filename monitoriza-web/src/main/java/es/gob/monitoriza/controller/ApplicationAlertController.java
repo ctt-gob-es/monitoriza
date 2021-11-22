@@ -25,6 +25,7 @@
 package es.gob.monitoriza.controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -47,42 +48,26 @@ import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TemplateDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TemplateDeleteDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
-
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
-
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogNoticeConfig;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailNoticeConfig;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
-
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSeverityMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeTemplateMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 import es.gob.monitoriza.service.IAlertConfigMonitorizaService;
-
 import es.gob.monitoriza.service.IAlertDIMAppService;
 import es.gob.monitoriza.service.IAlertDIMNodeService;
 import es.gob.monitoriza.service.IAlertDIMSeverityService;
 import es.gob.monitoriza.service.IAlertDIMTemplateService;
 import es.gob.monitoriza.service.IAlertDIMTypeService;
-
-import es.gob.monitoriza.service.IAlertConfigSystemService;
-import es.gob.monitoriza.service.IAlertGrayLogNoticeConfigService;
-import es.gob.monitoriza.service.IAlertMailNoticeConfigService;
-import es.gob.monitoriza.service.IAlertResumeTypeService;
-
 import es.gob.monitoriza.service.IAlertSeverityMonitorizaService;
 import es.gob.monitoriza.service.IAlertSystemMonitorizaService;
 import es.gob.monitoriza.service.IAlertTypeMonitorizaService;
-import es.gob.monitoriza.service.IAlertTypeTemplateMonitorizaService;
 import es.gob.monitoriza.service.IApplicationMonitorizaService;
 import es.gob.monitoriza.service.IResumeMonitorizaService;
 import es.gob.monitoriza.service.ITemplateMonitorizaService;
@@ -139,31 +124,17 @@ public class ApplicationAlertController {
 	private IAlertSeverityMonitorizaService alertSeverityMonitorizaService;
 
 	/**
-	 * Attribute that represents the service object for accessing the repository for alert configurations.
+	 * Attribute that represents the service object for accessing the repository for applications.
 	 */
-	
-	@Autowired
-	private IAlertTypeTemplateMonitorizaService alertTypeTemplateMonitorizaService;
-	
 	@Autowired
 	private IApplicationMonitorizaService applicationMonitorizaService;
 
-	@Autowired
-	private IAlertResumeTypeService alertResumeTypeService;
-	
+	/**
+	 * Attribute that represents the service object for accessing the repository for alert configurations.
+	 */
 	@Autowired
 	private IAlertConfigMonitorizaService alertConfigMonitorizaService;
-	
-	@Autowired
-	private IAlertConfigSystemService alertConfigSystemService;
-	
-	@Autowired
-	private IAlertMailNoticeConfigService alertMailNoticeConfigService;
-	
-	@Autowired
-	private IAlertGrayLogNoticeConfigService alertGrayLogNoticeConfigService;
-	
-	private TemplateDeleteDTO templateDeleteDTO;
+
 
 	/**
 	 * Attribute that represents the service object for accessing the
@@ -561,6 +532,18 @@ public class ApplicationAlertController {
 		alertTypesMonitorizaList = StreamSupport.stream(this.alertTypeMonitorizaService.getAllAlertTypeMonitoriza().spliterator(), false)
 				.collect(Collectors.toList());
 
+		final ApplicationMonitoriza application = this.applicationMonitorizaService.getApplicationMonitorizaById(appId);
+
+		// Si el tipo de alerta ya se encuentra configurado para la aplicacion, se elimina de la lista
+		for (final AlertConfigMonitoriza alertConfig : application.getAlertConfigMonitoriza()) {
+			for (final Iterator<AlertTypeMonitoriza> iterator = alertTypesMonitorizaList.iterator(); iterator.hasNext(); ) {
+				final AlertTypeMonitoriza alertType= iterator.next();
+				if (alertConfig.getAlertTypeMonitoriza().getIdTypeMonitoriza().equals(alertType.getIdTypeMonitoriza())) {
+					iterator.remove();
+				}
+			}
+		}
+
 		model.addAttribute("alertTypesList", alertTypesMonitorizaList); //$NON-NLS-1$
 
 		// Se cargan los tipos de criticidad para el select correspondiente
@@ -658,21 +641,21 @@ public class ApplicationAlertController {
 
 		return "modal/grayLogInformation.html"; //$NON-NLS-1$
     }
-	
+
 	@RequestMapping(value = "/infodeletetemplate", method = RequestMethod.POST)
-	public String infoDeleteTemplate(@RequestParam("idTemplateMonitoriza") final Long idTemplateMonitoriza, Model model) {
-		
-		TemplateDeleteDTO templateDeleteDTO = new TemplateDeleteDTO();
-		TemplateMonitoriza template = this.templateService.getTemplateMonitorizaById(idTemplateMonitoriza);
+	public String infoDeleteTemplate(@RequestParam("idTemplateMonitoriza") final Long idTemplateMonitoriza, final Model model) {
+
+		final TemplateDeleteDTO templateDeleteDTO = new TemplateDeleteDTO();
+		final TemplateMonitoriza template = this.templateService.getTemplateMonitorizaById(idTemplateMonitoriza);
 		templateDeleteDTO.setTemplate(template);
-		List<ApplicationMonitoriza> listApplicationMonitoriza = applicationMonitorizaService.getAllApplicationMonitorizaByTemplateMonitoriza(template);
+		final List<ApplicationMonitoriza> listApplicationMonitoriza = this.applicationMonitorizaService.getAllApplicationMonitorizaByTemplateMonitoriza(template);
 		templateDeleteDTO.setListApplicationMonitoriza(listApplicationMonitoriza);
-		
+
 		model.addAttribute("templatedeleteform", templateDeleteDTO);
 
 		return "modal/deleteTemplateModal.html";
 	}
-	
-	
+
+
 
 }

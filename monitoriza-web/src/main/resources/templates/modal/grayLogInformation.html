@@ -119,22 +119,42 @@
 		// Accion de almacenar clave y valor
         $('#saveKeyValueBtn').on( 'click', function () {
 
-            if ($("#confKey").val() != "" && $("#confValue").val() != ""){
-	            if ($('#editingIndex').val() != ""){
-	            	grayLogConfigTbl.row($('#editingIndex').val()).remove().draw();
-	            	$('#editingIndex').val("");
-	            }
-	        	grayLogConfigTbl.row.add({"notSysConfigId" : idAlertSystem, 
+        	// Comprobamos primero que la clave no exista en la tabla
+            var keyValues = $("#grayLogConfigTable").dataTable().fnGetNodes();
+
+        	var duplicateKey = false;
+            
+            for (var i = 0 ; i < keyValues.length ; i++) {
+            	var keyValueData = $('#grayLogConfigTable').DataTable().row($(keyValues[i])).data();
+            	if ($("#confKey").val() == keyValueData.key) {
+                	duplicateKey = true;
+                }
+            }
+
+			if (!duplicateKey) {
+            	if ($("#confKey").val() != "" && $("#confValue").val() != "") {
+	            	if ($('#editingIndex').val() != ""){
+	            		grayLogConfigTbl.row($('#editingIndex').val()).remove().draw();
+	            		$('#editingIndex').val("");
+	            	}
+	        		grayLogConfigTbl.row.add({"notSysConfigId" : idAlertSystem, 
 	            						"key" : $("#confKey").val() ,
 	            						"value" : $("#confValue").val()}).draw(false);
 	        	cleanForm();
-            } else {
-	        	$('#grayLogInfoModal').remove();
+            	} else {
+	        		$('#grayLogInfoModal').remove();
+					$('#grayLogInfoForm').append
+	        		('<div id="grayLogInfoModal" class="alert alert-danger" role="alert"><strong>' +
+	        		'<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+	        		[[#{applalert.alertconfig.modal.error.emptykeyvalue}]] + '</strong></div>');
+            	}
+			} else {
+				$('#grayLogInfoModal').remove();
 				$('#grayLogInfoForm').append
-	        	('<div id="grayLogInfoModal" class="alert alert-danger" role="alert"><strong>' +
-	        	'<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
-	        	[[#{applalert.alertconfig.modal.error.graylogform}]] + '</strong></div>');
-            }
+        		('<div id="grayLogInfoModal" class="alert alert-danger" role="alert"><strong>' +
+        		'<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+        		[[#{applalert.alertconfig.modal.error.duplicatekey}]] + '</strong></div>');
+			}
         });
 
         // Cargamos la informacion de claves y valores en su tabla correspondiente

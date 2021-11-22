@@ -22,7 +22,7 @@
 
 									<div class="form-row">
 										<div class="form-group col-md-12">
-											<label for="alertTypesList" th:text="#{applalert.alertconfig.modal.alertsystems}"></label>
+											<label for="alertTypesList" th:text="#{applalert.alertconfig.modal.alert}"></label>
 											<select name="typeID" id="typeID"
 												class="form-control" th:field="*{typeID}" required>
 												<option th:each="t: ${alertTypesList}"
@@ -302,6 +302,8 @@
 	
 	            // Cargamos la informacion de las tablas en arrays que se mandaran al servidor
 	            loadTableInfoIntoArrays();
+
+	            $("#typeID").prop('disabled', false);
 	
 	            var formToJSON = $("#alertConfigForm").serializeJSON();
 	            formToJSON.notifSystemsIdArray = notifSystemsIdArray;
@@ -328,6 +330,7 @@
 	                },
 	                error:function(data){
 	                	hide();
+	    	            $("#typeID").prop('disabled', true);
 	                	notifSystemsIdArray = [];
 	                	emailConfigurationArray = [];
 	                	keysArray = [];
@@ -390,6 +393,11 @@
     			$(this).attr('value', 'false');
     		}
 		});
+
+		// Si se esta configurando una alerta ya existente, no se permite cambiar el tipo
+		if($("#idAlertConfigMonitoriza").val() != "" && $("#idAlertConfigMonitoriza").val() != null){
+			$("#typeID").prop('disabled', true);
+		}
 
 		// Funcion que carga la informacion de la tabla en la peticion JSON
 		function loadTableInfoIntoArrays(){
