@@ -23,6 +23,8 @@
  */
 package es.gob.monitoriza.service.impl;
 
+import javax.jdo.annotations.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,10 +57,12 @@ public class AlertTypeMonitorizaService implements IAlertTypeMonitorizaService {
 		return this.repository.findAll();
 	}
 
+
 	@Override
+	@Transactional
 	public AlertTypeMonitoriza saveAlertTypeMonitoriza(final AlertTypeMonitoriza alertTypeMon) {
 
-		final AlertTypeMonitoriza alertType = null;
+		//final AlertTypeMonitoriza alertType = null;
 
 		/*if (alertResumeType.getIdResType() == null) {
 			newResumeType = new AlertResumeType();
@@ -67,8 +71,9 @@ public class AlertTypeMonitorizaService implements IAlertTypeMonitorizaService {
 		newResumeType.setApplicationMonitoriza(null);
 		newResumeType.setAlertTypeMonitoriza(null);
 		newResumeType.setResumeMonitoriza(null);*/
-
-		return this.repository.save(alertType);
+		AlertTypeMonitoriza alertType = this.repository.saveAndFlush(alertTypeMon);
+		this.repository.flush();
+		return alertType;
 	}
 
 

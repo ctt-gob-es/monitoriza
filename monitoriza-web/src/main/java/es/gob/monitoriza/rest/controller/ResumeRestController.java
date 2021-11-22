@@ -264,7 +264,7 @@ public class ResumeRestController {
 	 * Method that maps the delete user request from datatable to the controller
 	 * and performs the delete of the user identified by its id.
 	 *
-	 * @param userId
+	 * @param resumeId
 	 *            Identifier of the user to be deleted.
 	 * @param index
 	 *            Row index of the datatable.

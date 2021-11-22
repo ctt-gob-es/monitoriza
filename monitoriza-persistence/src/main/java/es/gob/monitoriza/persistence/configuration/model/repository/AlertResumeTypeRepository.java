@@ -24,10 +24,13 @@
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
+import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 
 /**
@@ -49,5 +52,7 @@ public interface AlertResumeTypeRepository extends JpaRepository<AlertResumeType
 	 * @param resumeMonitoriza ResumeMonitoriza entity
 	 */
 	void deleteByResumeMonitoriza(ResumeMonitoriza resumeMonitoriza);
+	
+	List<AlertResumeType> findAllAlertResumeTypeByApplicationMonitoriza(ApplicationMonitoriza appMonitoriza);
 
 }

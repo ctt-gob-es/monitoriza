@@ -1,4 +1,3 @@
-/* 
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -28,7 +27,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
 
-
 /** 
  * <p>Interface that provides CRUD functionality for the AlertDIMTemplate entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
@@ -42,5 +40,12 @@ public interface AlertDIMTemplateRepository extends JpaRepository<AlertDIMTempla
 	 * @return {@link AlertDIMTemplate} with matching name
 	 */
 	AlertDIMTemplate findByName(final String name);
+
+	/**
+	 * Methot that obtains a template by its id.
+	 * @param idTemplate template identifier.
+	 * @return The template.
+	 */
+	AlertDIMTemplate findByIdTemplate(Long idTemplate);
 
 }

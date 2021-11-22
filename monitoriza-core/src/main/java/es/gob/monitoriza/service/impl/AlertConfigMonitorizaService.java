@@ -23,7 +23,7 @@
  */
 package es.gob.monitoriza.service.impl;
 
-import java.util.Date;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -102,27 +102,31 @@ public class AlertConfigMonitorizaService implements IAlertConfigMonitorizaServi
 		final AlertSeverityMonitoriza severityMonitoriza = this.alertSeverityRepository.findBySeverityTypeId(alertConfigDTO.getSeverity());
 		alertConfig.setAlertSeverityMonitoriza(severityMonitoriza);
 
-		if(alertConfigDTO.getIsEnable() != null && alertConfigDTO.getIsEnable()) {
+		if (alertConfigDTO.getIsEnable() != null && alertConfigDTO.getIsEnable()) {
 			alertConfig.setEnable(Boolean.TRUE);
 		} else {
 			alertConfig.setEnable(Boolean.FALSE);
 		}
 
-		if(alertConfigDTO.getIsAllowBlock() != null && alertConfigDTO.getIsAllowBlock()) {
+		if (alertConfigDTO.getIsAllowBlock() != null && alertConfigDTO.getIsAllowBlock()) {
 			alertConfig.setAllowBlock(Boolean.TRUE);
 		} else {
 			alertConfig.setAllowBlock(Boolean.FALSE);
 		}
 
 		alertConfig.setBlockCondition(alertConfigDTO.getBlockCondition());
-		alertConfig.setBlockInterval(alertConfigDTO.getBlockIntervalSeconds());
-		alertConfig.setBlockPeriod(alertConfigDTO.getBlockPeriodSeconds());
-
-		final Date actualDate = new Date(System.currentTimeMillis());
-		alertConfig.setBlockTime(actualDate);
-		alertConfig.setLastTime(actualDate);
+		alertConfig.setBlockInterval(alertConfigDTO.getBlockInterval());
+		alertConfig.setBlockPeriod(alertConfigDTO.getBlockPeriod());
 
 		return this.alertConfigMonitorizaRepository.save(alertConfig);
 	}
+
+
+	@Override
+	public List<AlertConfigMonitoriza> getAllAlertConfigMonitorizaByApplicationMonitoriza(
+			ApplicationMonitoriza appMonitoriza) {
+		return alertConfigMonitorizaRepository.findAllAlertConfigMonitorizaByApplicationMonitoriza(appMonitoriza);
+	}
+
 
 }

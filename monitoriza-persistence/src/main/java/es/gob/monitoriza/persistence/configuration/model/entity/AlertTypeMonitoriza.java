@@ -85,9 +85,9 @@ public class AlertTypeMonitoriza implements Serializable {
 	 * @return the value of the attribute {@link #idTypeMonitoriza}.
 	 */
 	@Id
-	@Column(name = "TYPE_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
 	@GeneratedValue(generator = "sq_alert_type_monitoriza")
 	@GenericGenerator(name = "sq_alert_type_monitoriza", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_TYPES"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
+	@Column(name = "TYPE_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)		
 	@JsonView(DataTablesOutput.View.class)
 	public Long getIdTypeMonitoriza() {
 		return this.idTypeMonitoriza;

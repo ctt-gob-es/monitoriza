@@ -1,11 +1,12 @@
 <div class="modal" tabindex="-1" id="alertConfigModal" name="alertConfigModal">
+<div id="secondaryModalBackdrop"></div>
 	<div class="modal-dialog modal-dialog-scrollable">
 		<div class="modal-content" style="margin-left: -50%; width: 200%;">
 			<div class="modal-header">
 				<h4 class="modal-title"
 					th:text="#{applalert.alertconfig.modal.add.title}"></h4>
 				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Cerrar" onclick="removeBackdrop()">
+					aria-label="Cerrar">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
@@ -18,14 +19,12 @@
 								<div>
 									<input type='hidden' class='primarykey' id="idAlertConfigMonitoriza" th:field="*{idAlertConfigMonitoriza}">
 									<input type='hidden' class='primarykey' id="appID" th:field="*{appID}">
-									<input type='hidden' id="blockIntervalSeconds" name="blockIntervalSeconds">
-					 				<input type='hidden' id="blockPeriodSeconds" name="blockPeriodSeconds">
-					 				
+
 									<div class="form-row">
 										<div class="form-group col-md-12">
-											<label for="alertTypesList" th:text="#{applalert.alertconfig.modal.alertsystems}"></label>
-											<select name="alertTypesList" id="alertTypesList"
-												class="form-control" th:field="*{alertTypesList}" required>
+											<label for="alertTypesList" th:text="#{applalert.alertconfig.modal.alert}"></label>
+											<select name="typeID" id="typeID"
+												class="form-control" th:field="*{typeID}" required>
 												<option th:each="t: ${alertTypesList}"
 													th:value="${t.idTypeMonitoriza}" th:text="${t.name}"></option>
 											</select>
@@ -35,8 +34,8 @@
 										<div class="form-group col-md-12">
 											<label for="severity"
 												th:text="#{table.alertconfig.criticity}"></label>
-											<select name="alertSeverityList" id="alertSeverityList"
-												class="form-control" th:field="*{alertSeverityList}" required>
+											<select name="severity" id="severity"
+												class="form-control" th:field="*{severity}" required>
 												<option th:each="t: ${alertSeverityList}"
 													th:value="${t.severityTypeId}" th:text="${t.name}"></option>
 											</select>
@@ -55,17 +54,15 @@
 									<div class="form-row">
 										<div class="form-group col-md-4">
 											<label for="blockCondition" th:text="#{applalert.alertconfig.modal.eventlimit}"></label> 
-											<input type="text" class="form-control" id="blockCondition" name="blockCondition">
+											<input type="text" class="form-control" id="blockCondition" name="blockCondition" th:field="*{blockCondition}">
 										</div>
 										<div class="form-group col-md-4">
 											<label for="blockInterval" th:text="#{applalert.alertconfig.modal.interval}"></label> 
-											<span id="blockInterval_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
-											<input type="time" class="form-control" id="blockInterval" name="blockInterval" step="1" required="">
+											<input type="text" class="form-control" id="blockInterval" name="blockInterval" th:field="*{blockInterval}">
 										</div>
 										<div class="form-group col-md-4">
 											<label for="blockPeriod" th:text="#{applalert.alertconfig.modal.blockperiod}"></label> 
-											<span id="blockPeriod_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
-											<input type="time" class="form-control" id="blockPeriod" name="blockPeriod" step="1" required="">
+											<input type="text" class="form-control" id="blockPeriod" name="blockPeriod" th:field="*{blockPeriod}">
 										</div>
 									</div>
 								</div>
@@ -127,7 +124,7 @@
 				</div>-
 			<div class="modal-footer">
 				<button type="button" class="btn btn-default" data-dismiss="modal"
-					th:text="#{button.close}" onclick="removeBackdrop()"></button>
+					th:text="#{button.close}"></button>
 				<button type="button" id="saveAlertConfigButton" class="btn btn-primary"
 					th:text="#{applalert.summaries.modal.btn.accept}"></button>
 			</div>
@@ -178,7 +175,7 @@
 						});
 									
 						var idAlertSystem = d.data()[0].alertSystemMonitoriza.idAlertSystemMonitoriza;
-
+						
 						var type = d.data()[0].alertSystemMonitoriza.type;
 
 						if (type == "email"){
@@ -206,7 +203,7 @@
 							}
 							
 		            		$.ajax(getGraylogInfo, {
-				                data : $.param({'idAlertSystem':idAlertSystem , 'keysList[]':keysList, 'valuesList[]':valuesList}),
+				                data : $.param({'idAlertSystemConf':idAlertSystem , 'keysList[]':keysList, 'valuesList[]':valuesList}),
 				                type:'POST'
 				            })
 				            .done(function (data) {
@@ -250,74 +247,99 @@
 
         $('#btnAddAlertSystem').on( 'click', function () {
         	var alertSystemArray = $('#alertSystemsList option:selected').val().split(',');
-        	alertSystemTbl.row.add({"alertSystemMonitoriza" : {
-									"idAlertSystemMonitoriza" : alertSystemArray[0], 
-									"name" :  $('#alertSystemsList option:selected').text(),
-									"type" :  alertSystemArray[1]
-									},
-									"resumeEmailAddresses" :  "",
-									"keysList" : "",
-									"valuesList" : ""}).draw(false);
+
+        	var alertSystemAdded = false;
+            var alertSystems = $("#alertSystemTable").dataTable().fnGetNodes();
+            
+            for (var i = 0 ; i < alertSystems.length ; i++) {
+            	var alertSystemData = $('#alertSystemTable').DataTable().row($(alertSystems[i])).data();
+            	if (alertSystemData.alertSystemMonitoriza.idAlertSystemMonitoriza == alertSystemArray[0]){
+					alertSystemAdded = true;
+                }
+            }
+
+            if (!alertSystemAdded) {
+	        	alertSystemTbl.row.add({"alertSystemMonitoriza" : {
+										"idAlertSystemMonitoriza" : alertSystemArray[0], 
+										"name" :  $('#alertSystemsList option:selected').text(),
+										"type" :  alertSystemArray[1]
+										},
+										"resumeEmailAddresses" :  "",
+										"keysList" : "",
+										"valuesList" : ""}).draw(false);
+            } else {
+            	$('#errorModalAlertConfig').remove();
+				$('#alertConfigForm').append
+            	('<div id="errorModalAlertConfig" class="alert alert-danger" role="alert"><strong>' +
+            	'<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+            	[[#{applalert.summaries.error.duplicatealertsystem}]] + '</strong></div>');
+            }
         });
 
-
+        // Accion para agregar / editar alerta
         $("#saveAlertConfigButton").click(function(){
+            
+        	if ($('#alertConfigForm')[0].checkValidity() === false) {
+                event.stopPropagation();
+                
+                $('#alertConfigForm *').filter(':input').each(function(){
+            	    		            	    
+            	    if(!$(this)[0].checkValidity())
+            	    {
+            	  	 $("#invalid-" + $(this).attr('id')).html();
+            	  	 $("#" + $(this).attr('id')).addClass("is-invalid");
+            	    } else {
+            	  	 $("#" + $(this).attr('id')).removeClass("is-invalid");
+            	    }
+            	    
+            	});
+                
+                // Esto es necesario para forzar que se muestren mensajes de validacion de cliente
+                $('<input type="submit">').hide().appendTo($('#alertConfigForm')).click().remove();
+            } else {
         	
-            loading();
+	            loading();
+	
+	            // Cargamos la informacion de las tablas en arrays que se mandaran al servidor
+	            loadTableInfoIntoArrays();
 
-            // Cargamos la informacion de las tablas en arrays que se mandaran al servidor
-            loadTableInfoIntoArrays();
-            
-            var blockInterval = checkTypeTime($('#blockInterval'));
-			var blockPeriod = checkTypeTime($('#blockPeriod'));
-
-			if (blockInterval != $('#blockInterval').val()){
-				$("#blockInterval").val(blockInterval);
-			}
-					
-			$("#blockIntervalSeconds").val(timeToSecondsOfDay(blockInterval));
-				  
-			if (blockPeriod != $('#blockPeriod').val()){
-				$("#blockPeriod").val(blockPeriod);
-			}
-						
-			$("#blockPeriodSeconds").val(timeToSecondsOfDay(blockPeriod));
-
-            var formToJSON = $("#alertConfigForm").serializeJSON();
-            formToJSON.severity = $("#alertSeverityList option:selected").val();
-            formToJSON.typeID = $("#alertTypesList option:selected").val();
-            formToJSON.notifSystemsIdArray = notifSystemsIdArray;
-            formToJSON.emailConfigurationArray = emailConfigurationArray;
-            formToJSON.keysArray = keysArray;
-            formToJSON.valuesArray = valuesArray;
-            
-            //Eliminamos los datos que no son necesarios para guardar o actualizar un nuevo registro
-            delete formToJSON["alertSystemsList"];
-            delete formToJSON["alertTypesList"];
-            delete formToJSON["alertSeverityList"];
-            
-			$.ajax(saveAlertConfig, {
-            	dataType : 'json',
-            	contentType:'application/json',
-                data : JSON.stringify(formToJSON),
-                type:'POST',
-                success: function(data){
-            		// Se oculta la capa 'cargando...'
-            		removeBackdrop();
-            		hide();
-            		alertConfigsTable.row.add($(data.data)).draw(false);
-                    $('#alertConfigModal').modal('hide');
-                },
-                error:function(data){
-                	hide();
-                	notifSystemsIdArray = [];
-                	emailConfigurationArray = [];
-                	keysArray = [];
-                	valuesArray = [];
-                	$('#errorModalAlertConfig').remove();
-                	$('#alertConfigModal').append('<div id="errorModalAlertConfig" class="alert alert-danger" role="alert"><strong>ERROR</strong></div>');
-                }
-            });
+	            $("#typeID").prop('disabled', false);
+	
+	            var formToJSON = $("#alertConfigForm").serializeJSON();
+	            formToJSON.notifSystemsIdArray = notifSystemsIdArray;
+	            formToJSON.emailConfigurationArray = emailConfigurationArray;
+	            formToJSON.keysArray = keysArray;
+	            formToJSON.valuesArray = valuesArray;
+	            
+	            //Eliminamos los datos que no son necesarios para guardar o actualizar un nuevo registro
+	            delete formToJSON["alertSystemsList"];
+	            delete formToJSON["alertTypesList"];
+	            delete formToJSON["alertSeverityList"];
+	            
+				$.ajax(saveAlertConfig, {
+	            	dataType : 'json',
+	            	contentType:'application/json',
+	                data : JSON.stringify(formToJSON),
+	                type:'POST',
+	                success: function(data){
+	            		// Se oculta la capa 'cargando...'
+	            		removeBackdrop();
+	            		hide();
+	            		alertConfigsTable.row.add($(data.data)).draw(false);
+	                    $('#alertConfigModal').modal('hide');
+	                },
+	                error:function(data){
+	                	hide();
+	    	            $("#typeID").prop('disabled', true);
+	                	notifSystemsIdArray = [];
+	                	emailConfigurationArray = [];
+	                	keysArray = [];
+	                	valuesArray = [];
+	                	$('#errorModalAlertConfig').remove();
+	                	$('#alertConfigForm').append('<div id="errorModalAlertConfig" class="alert alert-danger" role="alert"><strong>' + [[#{message.error}]] + '</strong></div>');
+	                }
+	            });
+        	}
 		});
 
 		if ($("#isAllowBlock").is(":checked")) {
@@ -325,11 +347,17 @@
 			$("#blockCondition").prop('disabled', false);
 			$("#blockInterval").prop('disabled', false);
 			$("#blockPeriod").prop('disabled', false);
+        	$('#blockCondition').prop('required', true);
+        	$('#blockInterval').prop('required', true);
+        	$('#blockPeriod').prop('required', true);
 		} else {
 			$("#isAllowBlock").attr('value', 'false');
 			$("#blockCondition").prop('disabled', true);
 			$("#blockInterval").prop('disabled', true);
 			$("#blockPeriod").prop('disabled', true);
+        	$('#blockCondition').prop('required', false);
+        	$('#blockInterval').prop('required', false);
+        	$('#blockPeriod').prop('required', false);
 		}
 
 		$("#isAllowBlock").change(function () {
@@ -338,11 +366,17 @@
     			$("#blockCondition").prop('disabled', false);
     			$("#blockInterval").prop('disabled', false);
     			$("#blockPeriod").prop('disabled', false);
+            	$('#blockCondition').prop('required', true);
+            	$('#blockInterval').prop('required', true);
+            	$('#blockPeriod').prop('required', true);
     		} else {
     			$(this).attr('value', 'false');
     			$("#blockCondition").prop('disabled', true);
     			$("#blockInterval").prop('disabled', true);
     			$("#blockPeriod").prop('disabled', true);
+            	$('#blockCondition').prop('required', false);
+            	$('#blockInterval').prop('required', false);
+            	$('#blockPeriod').prop('required', false);
     		}
 		});
 
@@ -360,14 +394,33 @@
     		}
 		});
 
+		// Si se esta configurando una alerta ya existente, no se permite cambiar el tipo
+		if($("#idAlertConfigMonitoriza").val() != "" && $("#idAlertConfigMonitoriza").val() != null){
+			$("#typeID").prop('disabled', true);
+		}
 
+		// Funcion que carga la informacion de la tabla en la peticion JSON
 		function loadTableInfoIntoArrays(){
 			
             var alertSystems = $("#alertSystemTable").dataTable().fnGetNodes();
+            
             for (var i = 0 ; i < alertSystems.length ; i++) {
             	var alertSystemData = $('#alertSystemTable').DataTable().row($(alertSystems[i])).data();
             	notifSystemsIdArray.push(alertSystemData.alertSystemMonitoriza.idAlertSystemMonitoriza);
-            	var noticeConfEmailArray = alertSystemData.resumeEmailAddresses.split('\n');
+            	var noticeConfEmailArray;
+
+            	if (alertSystemData.resumeEmailAddresses == null){
+            		noticeConfEmailArray = [""];
+                } else if (alertSystemData.resumeEmailAddresses.indexOf(',') > -1) {
+                	noticeConfEmailArray = alertSystemData.resumeEmailAddresses.split(',');
+        		} else if (alertSystemData.resumeEmailAddresses.indexOf(';') > -1) {
+        			noticeConfEmailArray = alertSystemData.resumeEmailAddresses.split(';');
+        		} else if (alertSystemData.resumeEmailAddresses.indexOf('\n') > -1) {
+        			noticeConfEmailArray = alertSystemData.resumeEmailAddresses.split('\n');
+            	} else {
+            		noticeConfEmailArray = [alertSystemData.resumeEmailAddresses];
+                }
+                
             	if (emailConfigurationArray.length == 0) {
             		emailConfigurationArray[0] = noticeConfEmailArray;
                 } else {
@@ -403,44 +456,19 @@
                 } else {
                 	valuesArray[valuesArray.length] = valuesListData;
 				}
-}
+			}
 		}
+
+		$("#alertConfigModal").on('hidden.bs.modal', function(){
+			removeBackdrop();
+		});
  	});
 
+	// Funcion para eliminar la sombra al fondo del modal cuando se cierra
 	function removeBackdrop(){
 		$('.modal-backdrop').each(function(i, obj) {
 			$(obj).remove();
 		    return false;
 		});
-	}
-
-	function checkTypeTime(id){
-		var numValue =  $(id).val();
-		if (numValue.indexOf(':') != -1){
-			var splitValue = numValue.split(':');
-			if (splitValue.length == 2){
-				numValue += ":00"
-			}
-		}
-		return numValue;
-	}
-
-	function timeToSecondsOfDay(s){
-		var numValue =  s;
-		
-		if (numValue.indexOf(':') != -1){
-			var splitValue = numValue.split(':');
-			var finalValue = 0;
-			if (splitValue.length == 2){
-				finalValue = (+splitValue[0]) * 60 * 60 + (+splitValue[1]) * 60;
-			} else if (splitValue.length == 3){
-				finalValue = (+splitValue[0]) * 60 * 60 + (+splitValue[1]) * 60 + (+splitValue[2]);
-			}
-			
-		}else{
-			finalValue = numValue;
-		}
-		
-		return finalValue;
 	}
 </script>

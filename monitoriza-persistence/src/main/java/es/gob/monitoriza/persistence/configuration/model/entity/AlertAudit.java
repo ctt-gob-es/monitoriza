@@ -1,4 +1,3 @@
-/* 
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,7 +13,7 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
+/**
  * <b>File:</b><p>es.gob.eventmanager.persistence.model.entity.AlertAudit.java.</p>
  * <b>Description:</b><p> .</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
@@ -50,6 +49,7 @@ import es.gob.monitoriza.constant.NumberConstants;
  * </p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * @version 1.1, 22/11/2021.
+
  */
 @Entity
 @Table(name = "ALERT_AUDIT")
@@ -64,22 +64,22 @@ public class AlertAudit implements Serializable {
 	 * Attribute that represents the object ID.
 	 */
 	private Long idAlertAudit;
-	
+
 	/**
 	 * Attribute that represents name of the {@link ApplicationMonitoriza} that sent the alert.
 	 */
 	private String appName;
-	
+
 	/**
 	 * Attribute that represents name of the alert.
 	 */
 	private String alertName;
-	
+
 	/**
 	 * Attribute that represents name of application template.
 	 */
 	private String appTemplateName;
-	
+
 	/**
 	 * Attribute that represents name of node that sent the alert.
 	 */
@@ -89,7 +89,7 @@ public class AlertAudit implements Serializable {
 	 * Attribute that represents the criticality level of the alert.
 	 */
 	private String severity;
-	
+
 	/**
 	 * Attribute that represents the time instance of the alert.
 	 */
@@ -111,7 +111,9 @@ public class AlertAudit implements Serializable {
 	@GenericGenerator(name = "sq_alert_audit", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_AUDIT"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
 	@JsonView(DataTablesOutput.View.class)
 	public Long getIdAlertAudit() {
-		return idAlertAudit;
+
+		return this.idAlertAudit;
+
 	}
 
 	/**
@@ -121,6 +123,7 @@ public class AlertAudit implements Serializable {
 	 *            The value for the attribute {@link #idAlertAudit}.
 	 */
 	public void setIdAlertAudit(Long idAlertAudit) {
+
 		this.idAlertAudit = idAlertAudit;
 	}
 
@@ -132,7 +135,9 @@ public class AlertAudit implements Serializable {
 	@Column(name = "APP_NAME", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public String getAppName() {
-		return appName;
+
+		return this.appName;
+
 	}
 
 	/**
@@ -141,7 +146,9 @@ public class AlertAudit implements Serializable {
 	 * @param appName
 	 *            The value for the attribute {@link #appName}.
 	 */
+
 	public void setAppName(String appName) {
+
 		this.appName = appName;
 	}
 
@@ -153,7 +160,9 @@ public class AlertAudit implements Serializable {
 	@Column(name = "ALERT_NAME", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public String getAlertName() {
-		return alertName;
+
+		return this.alertName;
+
 	}
 
 	/**
@@ -162,7 +171,9 @@ public class AlertAudit implements Serializable {
 	 * @param alertName
 	 *            The value for the attribute {@link #alertName}.
 	 */
-	public void setAlertName(String alertName) {
+
+	public void setAlertName(final String alertName) {
+
 		this.alertName = alertName;
 	}
 
@@ -174,7 +185,9 @@ public class AlertAudit implements Serializable {
 	@Column(name = "APP_TEMPLATE_NAME", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public String getAppTemplateName() {
-		return appTemplateName;
+
+		return this.appTemplateName;
+
 	}
 
 	/**
@@ -184,6 +197,7 @@ public class AlertAudit implements Serializable {
 	 *            The value for the attribute {@link #appTemplateName}.
 	 */
 	public void setAppTemplateName(String appTemplateName) {
+
 		this.appTemplateName = appTemplateName;
 	}
 
@@ -195,7 +209,9 @@ public class AlertAudit implements Serializable {
 	@Column(name = "NODE", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public String getNode() {
-		return node;
+
+		return this.node;
+
 	}
 
 	/**
@@ -205,6 +221,7 @@ public class AlertAudit implements Serializable {
 	 *            The value for the attribute {@link #node}.
 	 */
 	public void setNode(String node) {
+
 		this.node = node;
 	}
 
@@ -216,7 +233,9 @@ public class AlertAudit implements Serializable {
 	@Column(name = "SEVERITY", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public String getSeverity() {
-		return severity;
+
+		return this.severity;
+
 	}
 
 	/**
@@ -225,7 +244,9 @@ public class AlertAudit implements Serializable {
 	 * @param name
 	 *            The value for the attribute {@link #severity}.
 	 */
+
 	public void setSeverity(String severity) {
+
 		this.severity = severity;
 	}
 
@@ -238,7 +259,9 @@ public class AlertAudit implements Serializable {
 	@Temporal(TemporalType.TIMESTAMP)
 	@JsonView(DataTablesOutput.View.class)
 	public Date getTimestamp() {
-		return timestamp;
+
+		return this.timestamp;
+
 	}
 
 	/**
@@ -248,6 +271,7 @@ public class AlertAudit implements Serializable {
 	 *            The value for the attribute {@link #timestamp}.
 	 */
 	public void setTimestamp(Date timestamp) {
+
 		this.timestamp = timestamp;
 	}
 
@@ -258,8 +282,9 @@ public class AlertAudit implements Serializable {
 	 */
 	@Column(name = "DESCRIPTION", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
-	public final String getDescription() {
-		return description;
+	public String getDescription() {
+		return this.description;
+
 	}
 
 	/**
@@ -270,7 +295,6 @@ public class AlertAudit implements Serializable {
 	 */
 	public final void setDescription(String description) {
 		this.description = description;
-	}
-	
-	
+	}	
+
 }

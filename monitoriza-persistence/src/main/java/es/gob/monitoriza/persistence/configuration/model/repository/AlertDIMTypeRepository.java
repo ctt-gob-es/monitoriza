@@ -1,4 +1,3 @@
-/* 
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -12,7 +11,8 @@
  * You should have received a copy of the EUPL1.1 license
  * along with this program; if not, you may find it at
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
- ******************************************************************************/
+/******************************************************************************/
+
 
 /** 
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.repository.AlertDIMTypeRepository.java.</p>
@@ -28,7 +28,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
 
-
 /** 
  * <p>Interface that provides CRUD functionality for the AlertDIMType entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
@@ -42,5 +41,13 @@ public interface AlertDIMTypeRepository extends JpaRepository<AlertDIMType, Long
 	 * @return {@link AlertDIMType} with matching name
 	 */
 	AlertDIMType findByName(final String name);
+
+	/**
+	 * Method that returns a type by its id.
+	 * @param idType Type identifier.
+	 * @return The type.
+	 */
+	AlertDIMType findByIdType(Long idType);
+
 
 }

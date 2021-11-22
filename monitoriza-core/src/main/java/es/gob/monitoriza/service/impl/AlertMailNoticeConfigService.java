@@ -28,6 +28,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailNoticeConfig;
 import es.gob.monitoriza.persistence.configuration.model.repository.AlertMailNoticeConfigRepository;
 import es.gob.monitoriza.service.IAlertMailNoticeConfigService;
@@ -60,6 +62,11 @@ public class AlertMailNoticeConfigService implements IAlertMailNoticeConfigServi
 	@Override
 	public AlertMailNoticeConfig saveAlertMailNoticeConfig(final AlertMailNoticeConfig alertMailNoticeConfig) {
 		return this.repository.save(alertMailNoticeConfig);
+	}
+
+	@Override
+	public List<AlertMailNoticeConfig> getAllAlertMailNoticeConfigByAlertConfigSystem(AlertConfigSystem alertConfigSystem) {
+		return repository.findAllAlertMailNoticeConfigByAlertConfigSystem(alertConfigSystem);
 	}
 
 

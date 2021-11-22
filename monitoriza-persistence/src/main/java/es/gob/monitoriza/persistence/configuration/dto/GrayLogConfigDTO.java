@@ -40,7 +40,7 @@ public class GrayLogConfigDTO {
 	 * Attribute that represents the value of the primary key as a hidden input
 	 * in the form.
 	 */
-	private Long idAlertSystem;
+	private Long idAlertSystemConf;
 
 	/**
 	 * Attribute that represents the keys for GrayLog
@@ -52,12 +52,12 @@ public class GrayLogConfigDTO {
 	 */
 	private String[] valuesList;
 
-	public Long getIdAlertSystem() {
-		return this.idAlertSystem;
+	public Long getIdAlertSystemConf() {
+		return this.idAlertSystemConf;
 	}
 
-	public void setIdAlertSystem(final Long idAlertSystem) {
-		this.idAlertSystem = idAlertSystem;
+	public void setIdAlertSystemConf(final Long idAlertSystemConf) {
+		this.idAlertSystemConf = idAlertSystemConf;
 	}
 
 	public String[] getKeysList() {

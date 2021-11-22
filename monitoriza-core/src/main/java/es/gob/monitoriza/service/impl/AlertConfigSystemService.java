@@ -23,6 +23,8 @@
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -74,23 +76,12 @@ public class AlertConfigSystemService implements IAlertConfigSystemService {
 	@Override
 	@Transactional
 	public void deleteAlertConfigSystemByAlertConfigMonitoriza(final AlertConfigMonitoriza alertConfigMonitoriza) {
-		// TODO Auto-generated method stub
-
+		this.repository.deleteByAlertConfigMonitoriza(alertConfigMonitoriza);
 	}
 
-	/*@Override
-	public AlertResumeSystem saveAlertResumeSystem(final AlertResumeSystem alertResumeSystem) {
-
-		AlertResumeSystem newResumeSystem = null;
-
-		if (alertResumeSystem.getIdResSystem() == null) {
-			newResumeSystem = new AlertResumeSystem();
-		}
-
-		newResumeSystem.setResumeMonitoriza(alertResumeSystem.getResumeMonitoriza());
-		newResumeSystem.setAlertSystemMonitoriza(alertResumeSystem.getAlertSystemMonitoriza());
-
-		return this.repository.save(newResumeSystem);
-	}*/
+	@Override
+	public List<AlertConfigSystem> getAllAlertConfigSystemByAlertConfigMonitoriza(AlertConfigMonitoriza alertConfig) {
+		return this.repository.findAllAlertConfigSystemByAlertConfigMonitoriza(alertConfig);
+	}
 
 }

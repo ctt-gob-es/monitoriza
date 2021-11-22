@@ -36,6 +36,7 @@ import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.annotation.Validated;
@@ -53,6 +54,7 @@ import es.gob.monitoriza.constant.INotificationSystemTypes;
 import es.gob.monitoriza.i18n.IWebLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.persistence.configuration.dto.AlertConfigDTO;
+import es.gob.monitoriza.persistence.configuration.dto.AlertConfigSystemDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogNoticeConfig;
@@ -68,9 +70,9 @@ import es.gob.monitoriza.service.IAlertSystemMonitorizaService;
 import es.gob.monitoriza.service.IApplicationMonitorizaService;
 
 /**
- * <p>Class that manages the REST requests related to the Users administration and JSON communication.</p>
+ * <p>Class that manages the REST requests related to the alert configurations administration and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.7, 14/03/2019.
+ * @version 1.0, 10/11/2021.
  */
 @RestController
 public class AlertConfigRestController {
@@ -142,7 +144,7 @@ public class AlertConfigRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/alertconfigsdatatable", method = RequestMethod.POST)
-	public DataTablesOutput<AlertConfigMonitoriza> alertcConfigs(@RequestParam("applicationId") final Long appId, @NotEmpty final DataTablesInput input) {
+	public DataTablesOutput<AlertConfigMonitoriza> alertConfigs(@RequestParam("applicationId") final Long appId, @NotEmpty final DataTablesInput input) {
 		final ApplicationMonitoriza appMonit = this.applicationService.getApplicationMonitorizaById(appId);
 		final DataTablesOutput<AlertConfigMonitoriza> result = new DataTablesOutput<AlertConfigMonitoriza>();
 		if (appMonit != null && !appMonit.getAlertConfigMonitoriza().isEmpty()) {
@@ -161,12 +163,40 @@ public class AlertConfigRestController {
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/alertconfigssystemsdt", method = RequestMethod.POST)
-	public DataTablesOutput<AlertConfigSystem> alertConfigSystems(@RequestParam("alertConfigId") final Long alertConfigId, @NotEmpty final DataTablesInput input) {
+	public DataTablesOutput<AlertConfigSystemDTO> alertConfigSystems(@RequestParam("alertConfigId") final Long alertConfigId, @NotEmpty final DataTablesInput input) {
 		final AlertConfigMonitoriza alertConfig = this.alertConfigService.getAlertConfigMonitorizaById(alertConfigId);
-		final DataTablesOutput<AlertConfigSystem> result = new DataTablesOutput<AlertConfigSystem>();
+		final DataTablesOutput<AlertConfigSystemDTO> result = new DataTablesOutput<AlertConfigSystemDTO>();
+		final List<AlertConfigSystemDTO> alertConfigSystemsList = new ArrayList<AlertConfigSystemDTO>();
+
 		if (alertConfig != null && !alertConfig.getAlertConfigSystems().isEmpty()) {
-			result.setData(new ArrayList<>(alertConfig.getAlertConfigSystems()));
+
+			for (final AlertConfigSystem alertConfigSystem : alertConfig.getAlertConfigSystems()) {
+				final AlertConfigSystemDTO alertConfigSystemDTO = new AlertConfigSystemDTO();
+				alertConfigSystemDTO.setAlertSystemMonitoriza(alertConfigSystem.getAlertSystemMonitoriza());
+				if(alertConfigSystem.getAlertMailsNoticeConfig() != null && !alertConfigSystem.getAlertMailsNoticeConfig().isEmpty()) {
+					String alertMailAddresses = ""; //$NON-NLS-1$
+					for(final AlertMailNoticeConfig alertMailNoticeConfig : alertConfigSystem.getAlertMailsNoticeConfig()) {
+
+						alertMailAddresses +=  alertMailNoticeConfig.getMail() + "\n"; //$NON-NLS-1$
+					}
+					alertConfigSystemDTO.setResumeEmailAddresses(alertMailAddresses);
+				}
+
+				if(alertConfigSystem.getAlertGraylogNoticeConfigs() != null && !alertConfigSystem.getAlertGraylogNoticeConfigs().isEmpty()) {
+					final String [] keysList = new String[alertConfigSystem.getAlertGraylogNoticeConfigs().size()];
+					final String [] valuesList = new String[alertConfigSystem.getAlertGraylogNoticeConfigs().size()];
+					for(int i = 0 ; i < alertConfigSystem.getAlertGraylogNoticeConfigs().size() ; i++) {
+						keysList[i] = alertConfigSystem.getAlertGraylogNoticeConfigs().get(i).getPkey();
+						valuesList[i] = alertConfigSystem.getAlertGraylogNoticeConfigs().get(i).getValue();
+					}
+					alertConfigSystemDTO.setKeysList(keysList);
+					alertConfigSystemDTO.setValuesList(valuesList);
+				}
+
+				alertConfigSystemsList.add(alertConfigSystemDTO);
+			}
 		}
+		result.setData(alertConfigSystemsList);
 		return result;
 	}
 
@@ -230,14 +260,40 @@ public class AlertConfigRestController {
 		return dtOutput;
 	}
 
+	/**
+	 * Method that maps the delete user request from datatable to the controller
+	 * and performs the delete of the alert config identified by its id.
+	 *
+	 * @param alertConfigId
+	 *            Identifier of the alert config to be deleted.
+	 * @param index
+	 *            Row index of the datatable.
+	 * @return String that represents the name of the view to redirect.
+	*/
+	@JsonView(DataTablesOutput.View.class)
+	@RequestMapping(path = "/deletealertconfig", method = RequestMethod.POST)
+	@Transactional
+	public String deleteAlertConfig(@RequestParam("id") final Long alertConfigId, @RequestParam("index") final String index) {
+
+		final AlertConfigMonitoriza alertConfig = this.alertConfigService.getAlertConfigMonitorizaById(alertConfigId);
+
+		this.alertConfigSystemService.deleteAlertConfigSystemByAlertConfigMonitoriza(alertConfig);
+
+		this.alertConfigService.deleteAlertConfigMonitoriza(alertConfigId);
+
+		return index;
+	}
+
 	private void saveGrayLogNoticeConfig(final Long alertConfSysId, final List<String> keysList, final List<String> valuesList) {
 		if (keysList != null && !keysList.isEmpty()) {
 			for (int i = 0 ; i < keysList.size() ; i++) {
-				final AlertGraylogNoticeConfig alertGrayLogNotConf = new AlertGraylogNoticeConfig();
-				alertGrayLogNotConf.setNotSysConfigId(alertConfSysId);
-				alertGrayLogNotConf.setPkey(keysList.get(i));
-				alertGrayLogNotConf.setValue(valuesList.get(i));
-				this.alertGrayLogNoticeConfigService.saveAlertGraylogNoticeConfig(alertGrayLogNotConf);
+				if (keysList.get(i) != null && !keysList.get(i).isEmpty()) {
+					final AlertGraylogNoticeConfig alertGrayLogNotConf = new AlertGraylogNoticeConfig();
+					alertGrayLogNotConf.setNotSysConfigId(alertConfSysId);
+					alertGrayLogNotConf.setPkey(keysList.get(i));
+					alertGrayLogNotConf.setValue(valuesList.get(i));
+					this.alertGrayLogNoticeConfigService.saveAlertGraylogNoticeConfig(alertGrayLogNotConf);
+				}
 			}
 		}
 	}
@@ -245,48 +301,14 @@ public class AlertConfigRestController {
 	private void saveMailNoticeConfig(final Long alertConfSysId, final List<String> emailList) {
 		if (emailList != null && !emailList.isEmpty()) {
 			for (int i = 0 ; i < emailList.size() ; i++) {
-				final AlertMailNoticeConfig alertMailNotConf = new AlertMailNoticeConfig();
-				alertMailNotConf.setIdNotSysConfig(alertConfSysId);
-				alertMailNotConf.setMail(emailList.get(i));
-				this.alertMailNoticeConfigService.saveAlertMailNoticeConfig(alertMailNotConf);
+					if (!emailList.get(i).isEmpty()) {
+						final AlertMailNoticeConfig alertMailNotConf = new AlertMailNoticeConfig();
+						alertMailNotConf.setIdNotSysConfig(alertConfSysId);
+						alertMailNotConf.setMail(emailList.get(i));
+						this.alertMailNoticeConfigService.saveAlertMailNoticeConfig(alertMailNotConf);
+				}
 			}
 		}
 	}
-
-	/**
-	 * Method that maps the delete user request from datatable to the controller
-	 * and performs the delete of the user identified by its id.
-	 *
-	 * @param userId
-	 *            Identifier of the user to be deleted.
-	 * @param index
-	 *            Row index of the datatable.
-	 * @return String that represents the name of the view to redirect.
-
-	@JsonView(DataTablesOutput.View.class)
-	@RequestMapping(path = "/deleteapplication", method = RequestMethod.POST)
-	@Transactional
-	public String deleteApplication(@RequestParam("id") final Long appId, @RequestParam("index") final String index) {
-
-		this.applicationService.deleteApplicationMonitoriza(appId);
-
-		return index;
-	}
-
-	/**
-	 * Method that maps the add new node web request to the controller and sets the backing form.
-	 * @param model Holder object for model attributes.
-	 * @return String that represents the name of the view to forward.
-
-	@JsonView(DataTablesOutput.View.class)
-	@RequestMapping(path = "/alertsfromapplication", method = RequestMethod.POST)
-	@Transactional
-    public List<AlertConfigMonitoriza> getAlertsFromApplication(@RequestParam("id") final Long applicationId, final Model model){
-
-		final ApplicationMonitoriza application = this.applicationService.getApplicationMonitorizaById(applicationId);
-
-		return application.getAlertConfigMonitoriza();
-    }*/
-
 
 }

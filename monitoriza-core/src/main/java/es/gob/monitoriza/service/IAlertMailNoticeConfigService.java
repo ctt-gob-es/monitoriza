@@ -25,6 +25,8 @@ package es.gob.monitoriza.service;
 
 import java.util.List;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailNoticeConfig;
 
 /**
@@ -58,5 +60,7 @@ public interface IAlertMailNoticeConfigService {
 	 * @return {@link AlertMailNoticeConfig} The relation.
 	 */
 	AlertMailNoticeConfig saveAlertMailNoticeConfig(AlertMailNoticeConfig alertMailNoticeConfig);
+	
+	List<AlertMailNoticeConfig> getAllAlertMailNoticeConfigByAlertConfigSystem(AlertConfigSystem alertConfig);
 
 }

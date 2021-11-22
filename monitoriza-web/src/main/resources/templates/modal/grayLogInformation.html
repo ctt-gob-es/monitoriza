@@ -4,13 +4,12 @@
 			<div class="modal-header">
 				<h4 class="modal-title"
 					th:text="#{applalert.alertconfig.modal.graylogconf.title}"></h4>
-				<button type="button" class="close" data-dismiss="modal"
-					aria-label="Cerrar" onclick="closeModal()">
+				<button type="button" class="close" aria-label="Cerrar" data-dismiss="modal">
 					<span aria-hidden="true">&times;</span>
 				</button>
 			</div>
 		<form name="altEditor-form" role="form" id="grayLogInfoForm" th:object="${grayloginfoform}" action="#" method="post">
-			<input type='hidden' class='primarykey' id="idAlertSystem" th:field="*{idAlertSystem}">
+			<input type='hidden' class='primarykey' id="idAlertSystemConf" name="idAlertSystemConf" th:field="*{idAlertSystemConf}">
 			<input type='hidden' id="editingIndex" name="editingIndex">
 			
 			<div class="modal-body">
@@ -45,7 +44,7 @@
 						</thead>
 					</table>
 					<div class="modal-footer">
-					<button type="button" class="btn btn-default" th:text="#{button.close}" onclick="closeModal()"></button>
+					<button type="button" class="btn btn-default" th:text="#{button.close}" data-dismiss="modal"></button>
 					<button type="button" id="saveGrayLogConfigButton" class="btn btn-primary" 
 					th:text="#{applalert.summaries.modal.btn.config}"></button>
 				</div>
@@ -58,6 +57,8 @@
 <script th:inline="javascript">
 
 	$(document).ready(function () {
+
+		$("#secondaryModalBackdrop").addClass("modal-backdrop show");
 
 		var keysArray = /*[[*{keysList}]]*/;
 		var valuesArray = /*[[*{valuesList}]]*/;
@@ -83,7 +84,7 @@
 						});
 
 						var editingIndex = grayLogConfigTbl.row(d).index();
-						console.log(editingIndex);	
+						
 						var key = d.data()[0].key;
 						var value = d.data()[0].value;
 
@@ -115,16 +116,45 @@
 		        ]
 			});
 
+		// Accion de almacenar clave y valor
         $('#saveKeyValueBtn').on( 'click', function () {
-            console.log('editing index = '+$('#editingIndex').val());
-            if ($('#editingIndex').val() != ""){
-            	grayLogConfigTbl.row($('#editingIndex').val()).remove().draw();
-            	$('#editingIndex').val("");
+
+        	// Comprobamos primero que la clave no exista en la tabla
+            var keyValues = $("#grayLogConfigTable").dataTable().fnGetNodes();
+
+        	var duplicateKey = false;
+            
+            for (var i = 0 ; i < keyValues.length ; i++) {
+            	var keyValueData = $('#grayLogConfigTable').DataTable().row($(keyValues[i])).data();
+            	if ($("#confKey").val() == keyValueData.key) {
+                	duplicateKey = true;
+                }
             }
-        	grayLogConfigTbl.row.add({"notSysConfigId" : idAlertSystem, 
-            						"key" : $("#confKey").val() ,
-            						"value" : $("#confValue").val()}).draw(false);
-        	cleanForm();
+
+			if (!duplicateKey) {
+            	if ($("#confKey").val() != "" && $("#confValue").val() != "") {
+	            	if ($('#editingIndex').val() != ""){
+	            		grayLogConfigTbl.row($('#editingIndex').val()).remove().draw();
+	            		$('#editingIndex').val("");
+	            	}
+	        		grayLogConfigTbl.row.add({"notSysConfigId" : idAlertSystem, 
+	            						"key" : $("#confKey").val() ,
+	            						"value" : $("#confValue").val()}).draw(false);
+	        	cleanForm();
+            	} else {
+	        		$('#grayLogInfoModal').remove();
+					$('#grayLogInfoForm').append
+	        		('<div id="grayLogInfoModal" class="alert alert-danger" role="alert"><strong>' +
+	        		'<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+	        		[[#{applalert.alertconfig.modal.error.emptykeyvalue}]] + '</strong></div>');
+            	}
+			} else {
+				$('#grayLogInfoModal').remove();
+				$('#grayLogInfoForm').append
+        		('<div id="grayLogInfoModal" class="alert alert-danger" role="alert"><strong>' +
+        		'<a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>' +
+        		[[#{applalert.alertconfig.modal.error.duplicatekey}]] + '</strong></div>');
+			}
         });
 
         // Cargamos la informacion de claves y valores en su tabla correspondiente
@@ -154,15 +184,17 @@
             
             for (var i = 0 ; i < alertSystems.length ; i++) {
             	var alertSystemData = $('#alertSystemTable').DataTable().row($(alertSystems[i])).data();
-            	console.log($('#idAlertSystem').val());
-				if (alertSystemData.alertSystemMonitoriza.idAlertSystemMonitoriza == $('#idAlertSystem').val()) {
+				if (alertSystemData.alertSystemMonitoriza.idAlertSystemMonitoriza == $('#idAlertSystemConf').val()) {
 					$('#alertSystemTable').DataTable().row($(alertSystems[i])).data().keysList = keysArray;
 					$('#alertSystemTable').DataTable().row($(alertSystems[i])).data().valuesList = valuesArray;
 				}
             }
-
             closeModal();
         });
+
+		$("#configureGrayLogModal").on('hidden.bs.modal', function(){
+			$("#secondaryModalBackdrop").removeClass("modal-backdrop show");
+		});
     });
     
    function cleanForm(){
@@ -171,6 +203,7 @@
 	}
 
 	function closeModal(){
+		$("#secondaryModalBackdrop").removeClass("modal-backdrop show");
 		$('#configureGrayLogModal').hide();
 		$('#alertConfigModal').modal().on('shown', function(){
 			$('body').css('overflow', 'auto');

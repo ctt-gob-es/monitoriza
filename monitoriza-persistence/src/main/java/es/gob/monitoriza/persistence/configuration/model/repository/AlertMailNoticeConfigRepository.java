@@ -29,6 +29,8 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailNoticeConfig;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailNoticeConfigID;
 
@@ -47,4 +49,6 @@ public interface AlertMailNoticeConfigRepository extends JpaRepository<AlertMail
     List<AlertMailNoticeConfig> findByIdNotSysConfig(Long id);
 
     void deleteByIdNotSysConfig(Long id);
+    
+    List<AlertMailNoticeConfig> findAllAlertMailNoticeConfigByAlertConfigSystem(AlertConfigSystem alertConfigSystem);
 }

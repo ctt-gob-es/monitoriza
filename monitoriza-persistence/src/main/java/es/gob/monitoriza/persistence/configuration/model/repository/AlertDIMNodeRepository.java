@@ -1,4 +1,3 @@
-/* 
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -42,5 +41,12 @@ public interface AlertDIMNodeRepository extends JpaRepository<AlertDIMNode, Long
 	 * @return {@link AlertDIMNode} with matching name
 	 */
 	AlertDIMNode findByName(final String name);
+
+	/**
+	 * Method that gets a node by its id.
+	 * @param idNode Node identifier.
+	 * @return The node.
+	 */
+	AlertDIMNode findByIdNode(Long idNode);
 
 }

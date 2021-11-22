@@ -23,7 +23,10 @@
  */
 package es.gob.monitoriza.service;
 
+import java.util.List;
+
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
+import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 
 /**
@@ -63,6 +66,8 @@ public interface IAlertResumeTypeService {
 	 * @return {@link AlertResumeType} The alert resume.
 	 */
 	AlertResumeType saveAlertResumeType(AlertResumeType alertResumeType);
+	
+	List<AlertResumeType> getAllAlertResumeTypeByApplicationMonitoriza(ApplicationMonitoriza appMonitoriza);
 
 
 }

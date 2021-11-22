@@ -24,6 +24,8 @@
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
 
+import java.util.List;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -50,4 +52,5 @@ public interface AlertConfigSystemRepository extends JpaRepository<AlertConfigSy
 	 */
 	void deleteByAlertConfigMonitoriza(AlertConfigMonitoriza alertConfigMonitoriza);
 
+	List<AlertConfigSystem> findAllAlertConfigSystemByAlertConfigMonitoriza(AlertConfigMonitoriza alertConfig);
 }

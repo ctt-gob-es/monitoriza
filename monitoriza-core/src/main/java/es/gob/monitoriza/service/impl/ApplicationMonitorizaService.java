@@ -23,6 +23,8 @@
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -35,6 +37,7 @@ import es.gob.monitoriza.persistence.configuration.model.repository.ApplicationM
 import es.gob.monitoriza.persistence.configuration.model.repository.TemplateMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.ApplicationDatatableRepository;
 import es.gob.monitoriza.service.IApplicationMonitorizaService;
+import es.gob.monitoriza.utilidades.UtilsStringChar;
 
 /**
  * <p>Class that implements the communication with the operations of the persistence layer.</p>
@@ -88,8 +91,8 @@ public class ApplicationMonitorizaService implements IApplicationMonitorizaServi
 		} else {
 			appMonitoriza.setEnabled("N"); //$NON-NLS-1$
 		}
-		appMonitoriza.setAppKey(appDto.getAppKey());
-		appMonitoriza.setCipherKey("TODO"); //$NON-NLS-1$
+		appMonitoriza.setCipherKey(appDto.getCipherKey());
+		appMonitoriza.setAppKey(UtilsStringChar.randomString(99));
 		appMonitoriza.setResponsibleName(appDto.getResponsibleName());
 		appMonitoriza.setResponsibleEmail(appDto.getResponsibleEmail());
 		appMonitoriza.setResponsiblePhone(appDto.getResponsiblePhone());
@@ -98,6 +101,11 @@ public class ApplicationMonitorizaService implements IApplicationMonitorizaServi
 		appMonitoriza.setTemplateMonitoriza(templateMonitoriza);
 
 		return this.appMonitorizaRepository.save(appMonitoriza);
+	}
+
+	@Override
+	public List<ApplicationMonitoriza> getAllApplicationMonitorizaByTemplateMonitoriza(TemplateMonitoriza template) {
+		return appMonitorizaRepository.findAllByTemplateMonitoriza(template);
 	}
 
 

@@ -32,7 +32,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitor
 
 /**
  * <p>
- * Class that represents the backing form for adding/editing an alert system.
+ * Class that represents the backing form for adding/editing an alert configuration.
  * </p>
  * <b>Project:</b>
  * <p>
@@ -80,12 +80,12 @@ public class AlertConfigDTO {
 	/**
 	 * Attribute that represents the interval to block
 	 */
-	private Long blockIntervalSeconds;
+	private Long blockInterval;
 
 	/**
 	 * Attribute that represents the period to block
 	 */
-	private Long blockPeriodSeconds;
+	private Long blockPeriod;
 
 	/**
 	 * Attribute that represents the alert types for the select
@@ -178,20 +178,20 @@ public class AlertConfigDTO {
 		this.blockCondition = blockCondition;
 	}
 
-	public Long getBlockIntervalSeconds() {
-		return this.blockIntervalSeconds;
+	public Long getBlockInterval() {
+		return this.blockInterval;
 	}
 
-	public void setBlockIntervalSeconds(final Long blockIntervalSeconds) {
-		this.blockIntervalSeconds = blockIntervalSeconds;
+	public void setBlockInterval(final Long blockInterval) {
+		this.blockInterval = blockInterval;
 	}
 
-	public Long getBlockPeriodSeconds() {
-		return this.blockPeriodSeconds;
+	public Long getBlockPeriod() {
+		return this.blockPeriod;
 	}
 
-	public void setBlockPeriodSeconds(final Long blockPeriodSeconds) {
-		this.blockPeriodSeconds = blockPeriodSeconds;
+	public void setBlockPeriod(final Long blockPeriod) {
+		this.blockPeriod = blockPeriod;
 	}
 
 	public List<AlertTypeMonitoriza> getAlertTypesList() {

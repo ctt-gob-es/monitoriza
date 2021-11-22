@@ -1,10 +1,11 @@
-<form name="altEditor-form" role="form" id="notifSystemForm" th:object="${notifsystemform}" th:action="@{/savenotifsystem}" method="post">
+<form name="altEditor-form" role="form" id="notifSystemForm" th:object="${notifsystemform}" 
+th:action="@{/savenotifsystem}" method="post">
 					
-	<input type='hidden' class='primarykey' id="idAlertSystemMonitoriza" name="idAlertSystemMonitoriza" th:field="*{idAlertSystemMonitoriza}">
+	<input type='hidden' class='primarykey' id="idAlertSystemMonitoriza" th:field="*{idAlertSystemMonitoriza}">
 	
 	<div class="form-group">
-			<label for="name" class="col-form-label" th:text="#{table.applalert.sysnot.name}"></label>
-			<input type="text" id="name" name="name" th:field="*{name}" class="form-control"/>
+		<label for="name" class="col-form-label" th:text="#{table.applalert.sysnot.name}"></label>
+		<input type="text" id="name" name="name" th:field="*{name}" class="form-control" required />
 	</div>
 	
 	<div class="form-group">
@@ -26,7 +27,7 @@
 		<label for="host" class="col-form-label" th:text="#{applalert.sysnot.modal.address}"></label>
         <input type="text" th:field="*{host}" id="host" name="host" class="form-control" />
         <label for="port" class="col-form-label" th:text="#{applalert.sysnot.modal.port}"></label>
-        <input type="text" th:field="*{port}" id="port" class="form-control" />
+        <input type="text" th:field="*{port}" id="port" name="port" class="form-control" />
 	</div>
 	
 </form>
@@ -48,13 +49,19 @@
 	        if ($('select[name=type] option').filter(':selected').val() == "email") {
 	        	$('#emailInfo').show();
 	        	$('#graylogData').hide();
-	        	$("#typeInfoTitle").text("Configuraci\u00F3n de Correo Electr\u00F3nico");
+	        	$('#host').prop('required', false);
+	        	$('#port').prop('required', false);
+	        	$("#typeInfoTitle").text([[#{applalert.sysnot.modal.emailconf}]]);
+
 	        }else {
 	        	$('#emailInfo').hide();
 	        	$('#graylogData').show();
-	        	$("#typeInfoTitle").text("Configuraci\u00F3n de Graylog");
+	        	$('#host').prop('required', true);
+	        	$('#port').prop('required', true);
+	        	$("#typeInfoTitle").text([[#{applalert.sysnot.modal.graylogconf}]]);
 	        }
 		}
+
 	 });
 	
 </script>

@@ -1,4 +1,3 @@
-/* 
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,6 +13,7 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
+
 /** 
  * <b>File:</b><p>es.gob.monitoriza.service.IAlertAuditService.java.</p>
  * <b>Description:</b><p> .</p>
@@ -21,7 +21,7 @@
  * <b>Date:</b><p>22/11/2021.</p>
  * @author Gobierno de España.
  * @version 1.0, 22/11/2021.
- */
+ **/ 
 package es.gob.monitoriza.service;
 
 import java.util.Date;
@@ -37,7 +37,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertAudit;
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 22/11/2021.
- */
+ **/
 public interface IAlertAuditService {
 
 	/**
@@ -61,4 +61,19 @@ public interface IAlertAuditService {
 	 */
 	List<AlertAudit> findAllAlertAudit() throws DatabaseException;
 	
+
+	 /* Method that gets all the alert audits from the persistence.
+	 * @return a {@link Iterable<AlertAudit>} with the information of all alert audits.
+	 */
+	Iterable<AlertAudit> getAllAlertAudit();
+	
+
+	/**
+	 * Method that returns the list of alert audits with the indicated period.
+	 * @param actualDate Actual date.
+	 * @param periodDate Date with the period to filter with the actual date.
+	 * @return List of alert audits filtered.
+	 */
+	List<AlertAudit> findByCriteria(final Date actualDate, final Date periodDate);
+
 }

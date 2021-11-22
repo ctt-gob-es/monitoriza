@@ -64,6 +64,11 @@ public class TemplateMonitoriza implements Serializable {
 	 * Attribute that represents the template's name.
 	 */
 	private String name;
+	
+	/**
+	 * Attribute that represents the template's description.
+	 */
+	private String description;
 
 	/**
 	 * Gets the value of the attribute {@link #idTemplateMonitoriza}.
@@ -71,9 +76,9 @@ public class TemplateMonitoriza implements Serializable {
 	 * @return the value of the attribute {@link #idTemplateMonitoriza}.
 	 */
 	@Id
-	@Column(name = "TEMPLATE_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
 	@GeneratedValue(generator = "sq_template_monitoriza")
 	@GenericGenerator(name = "sq_template_monitoriza", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_APP_TEMPLATES"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
+	@Column(name = "TEMPLATE_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)	
 	@JsonView(DataTablesOutput.View.class)
 	public Long getIdTemplateMonitoriza() {
 		return this.idTemplateMonitoriza;
@@ -109,4 +114,22 @@ public class TemplateMonitoriza implements Serializable {
 	public void setName(final String name) {
 		this.name = name;
 	}
+
+	/**
+	 * @return the description
+	 */
+	@Column(name = "DESCRIPTION", nullable = false, precision = NumberConstants.NUM40)
+	@JsonView(DataTablesOutput.View.class)
+	public String getDescription() {
+		return description;
+	}
+
+	/**
+	 * @param description the description to set
+	 */
+	public void setDescription(String description) {
+		this.description = description;
+	}
+	
+	
 }

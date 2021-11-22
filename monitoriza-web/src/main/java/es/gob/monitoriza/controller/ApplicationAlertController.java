@@ -25,6 +25,7 @@
 package es.gob.monitoriza.controller;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -36,20 +37,34 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import es.gob.monitoriza.persistence.configuration.dto.AlertAuditDTO;
 import es.gob.monitoriza.persistence.configuration.dto.AlertConfigDTO;
+import es.gob.monitoriza.persistence.configuration.dto.AlertStatisticDTO;
 import es.gob.monitoriza.persistence.configuration.dto.AlertSystemDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ApplicationDTO;
 import es.gob.monitoriza.persistence.configuration.dto.GrayLogConfigDTO;
 import es.gob.monitoriza.persistence.configuration.dto.MailResumeConfigDTO;
 import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TemplateDTO;
+import es.gob.monitoriza.persistence.configuration.dto.TemplateDeleteDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApp;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNode;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMSeverity;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSeverityMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
+import es.gob.monitoriza.service.IAlertConfigMonitorizaService;
+import es.gob.monitoriza.service.IAlertDIMAppService;
+import es.gob.monitoriza.service.IAlertDIMNodeService;
+import es.gob.monitoriza.service.IAlertDIMSeverityService;
+import es.gob.monitoriza.service.IAlertDIMTemplateService;
+import es.gob.monitoriza.service.IAlertDIMTypeService;
 import es.gob.monitoriza.service.IAlertSeverityMonitorizaService;
 import es.gob.monitoriza.service.IAlertSystemMonitorizaService;
 import es.gob.monitoriza.service.IAlertTypeMonitorizaService;
@@ -66,8 +81,9 @@ import es.gob.monitoriza.service.ITemplateMonitorizaService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  *
- * @version 1.1, 28/10/2018.
+ * @version 1.0, 10/11/2021.
  */
+
 @Controller
 public class ApplicationAlertController {
 
@@ -102,17 +118,67 @@ public class ApplicationAlertController {
 	private IAlertTypeMonitorizaService alertTypeMonitorizaService;
 
 	/**
-	 * Attribute that represents the service object for accessing the repository for alert types.
+	 * Attribute that represents the service object for accessing the repository for severity types.
 	 */
 	@Autowired
 	private IAlertSeverityMonitorizaService alertSeverityMonitorizaService;
 
+	/**
+	 * Attribute that represents the service object for accessing the repository for applications.
+	 */
+	@Autowired
+	private IApplicationMonitorizaService applicationMonitorizaService;
+
+	/**
+	 * Attribute that represents the service object for accessing the repository for alert configurations.
+	 */
+	@Autowired
+	private IAlertConfigMonitorizaService alertConfigMonitorizaService;
+
+
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IAlertDIMAppService alertAppService;
+
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IAlertDIMTypeService alertTypeService;
+
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IAlertDIMTemplateService alertTemplateService;
+
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IAlertDIMNodeService alertNodeService;
+
+	/**
+	 * Attribute that represents the service object for accessing the
+	 * repository.
+	 */
+	@Autowired
+	private IAlertDIMSeverityService alertSeverityService;
+
+	/**
+	 * Attribute that represents if the application is enabled
+	 */
 	private static final String APP_ENABLED_S = "S"; //$NON-NLS-1$
 
 	/**
-	 * Method that maps the list users web requests to the controller and forwards
-	 * the list of users to the view.
-	 *
+	 * Method that maps the list audits web requests to the controller and forwards
+	 * the list of alert audits to the view.
 	 * @param model
 	 *            Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
@@ -120,21 +186,46 @@ public class ApplicationAlertController {
 	@RequestMapping(value = "applcontrolpanel", method = RequestMethod.GET)
 	public String applControlPanel(final Model model) {
 
+		model.addAttribute("auditsform", new AlertAuditDTO());
+
 		return "fragments/applcontrolpanel.html";
 	}
 
+	/**
+	 * Method that maps the list users web requests to the controller and forwards
+	 * the list of alert systems to the view.
+	 * @param model
+	 *            Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
 	@RequestMapping(value = "applnotificationsystem", method = RequestMethod.GET)
 	public String applNotificationSystem(final Model model) {
 
-		return "fragments/applnotificationsystem.html"; //$NON-NLS-1$
+		return "fragments/applnotificationsystem.html";
 	}
 
+	/**
+	 * Method that maps the list users web requests to the controller and forwards
+	 * the list of applications to the view.
+	 * @param model
+	 *            Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
 	@RequestMapping(value = "applications", method = RequestMethod.GET)
 	public String applications(final Model model) {
 
-		return "fragments/applications.html"; //$NON-NLS-1$
+		return "fragments/applications.html";
 	}
 
+	/**
+	 * Method that maps the list users web requests to the controller and forwards
+	 * the list of alert configurations to the view.
+	 * @param applicationId Application identifier.
+	 * @param appName Application name.º
+	 * @param model
+	 *            Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
 	@RequestMapping(value = "alertconfigurations", method = RequestMethod.GET)
 	public String alertConfigurations(@RequestParam("applicationId") final Long applicationId, @RequestParam("appName") final String appName, final Model model) {
 
@@ -144,14 +235,28 @@ public class ApplicationAlertController {
 		return "fragments/alertconfigurations.html"; //$NON-NLS-1$
 	}
 
+	/**
+	 * Method that maps the list users web requests to the controller and forwards
+	 * the list of templates to the view.
+	 * @param model
+	 *            Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
 	@RequestMapping(value = "appltemplates", method = RequestMethod.GET)
 	public String applTemplates(final Model model) {
 
-		model.addAttribute("importtemplateform", new TemplateDTO());
+		model.addAttribute("templateform", new TemplateDTO());
 
 		return "fragments/appltemplates.html"; //$NON-NLS-1$
 	}
 
+	/**
+	 * Method that maps the list users web requests to the controller and forwards
+	 * the list of resumes to the view.
+	 * @param model
+	 *            Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
 	@RequestMapping(value = "applsummaries", method = RequestMethod.GET)
 	public String applSummaries(final Model model) {
 
@@ -164,14 +269,43 @@ public class ApplicationAlertController {
 		return "fragments/applsummaries.html"; //$NON-NLS-1$
 	}
 
+	/**
+	 * Method that maps the list users web requests to the controller and forwards
+	 * the list of stats to the view.
+	 * @param model
+	 *            Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
 	@RequestMapping(value = "applstats", method = RequestMethod.GET)
 	public String applStats(final Model model) {
+
+		// Se obtiene la lista de aplicaciones
+		final List<AlertDIMApp> applications = this.alertAppService.getAllAlertDIMApp();
+		model.addAttribute("applicationsList", applications);
+
+		// Se obtiene la lista de tipos de alarmas
+		final List<AlertDIMType> types = this.alertTypeService.getAllAlertDIMType();
+		model.addAttribute("typesList", types);
+
+		// Se obtiene la lista de plantillas
+		final List<AlertDIMTemplate> templates = this.alertTemplateService.getAllAlertDIMTemplate();
+		model.addAttribute("templatesList", templates);
+
+		// Se obtiene la lista de nodos
+		final List<AlertDIMNode> nodes = this.alertNodeService.getAllAlertDIMNode();
+		model.addAttribute("nodesList", nodes);
+
+		// Se obtiene la lista de niveles
+		final List<AlertDIMSeverity> severityList = this.alertSeverityService.getAllAlertDIMSeverity();
+		model.addAttribute("severityList", severityList);
+
+		model.addAttribute("statsform", new AlertStatisticDTO());
 
 		return "fragments/applstats.html"; //$NON-NLS-1$
 	}
 
 	/**
-	 * Method that maps the add new node web request to the controller and sets the backing form.
+	 * Method that maps the add new node web request to the controller and sets the backing form for add a alert system.
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
@@ -184,7 +318,8 @@ public class ApplicationAlertController {
     }
 
 	/**
-	 * Method that maps the add new node web request to the controller and sets the backing form.
+	 * Method that maps the add new node web request to the controller and sets the backing form with the alert system information.
+	 * @param notifSystemId alert system identifier
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
@@ -198,7 +333,7 @@ public class ApplicationAlertController {
 		alertSystemForm.setName(alertSystem.getName());
 		alertSystemForm.setType(alertSystem.getType());
 
-		if(alertSystem.getGraylogSystemConfig() != null) {
+		if (alertSystem.getGraylogSystemConfig() != null) {
 			alertSystemForm.setHost(alertSystem.getGraylogSystemConfig().getHost());
 			alertSystemForm.setPort(alertSystem.getGraylogSystemConfig().getPort());
 		}
@@ -208,7 +343,11 @@ public class ApplicationAlertController {
 		return "modal/notifSystemForm.html"; //$NON-NLS-1$
     }
 
-
+	/**
+	 * Method that maps the add new node web request to the controller and sets the backing form for add a application.
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
 	@RequestMapping(value = "addapplication", method = RequestMethod.POST)
     public String addApplication(final Model model){
 
@@ -225,7 +364,8 @@ public class ApplicationAlertController {
     }
 
 	/**
-	 * Method that maps the add new node web request to the controller and sets the backing form.
+	 * Method that maps the add new node web request to the controller and sets the backing form with the application information
+	 * @param appId Application identifier.
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	 */
@@ -238,7 +378,7 @@ public class ApplicationAlertController {
 		applicationForm.setIdApplicationMonitoriza(appId);
 		applicationForm.setName(application.getName());
 		applicationForm.setTemplateID(application.getTemplateMonitoriza().getIdTemplateMonitoriza());
-		applicationForm.setAppKey(application.getAppKey());
+		applicationForm.setCipherKey(application.getCipherKey());
 		applicationForm.setResponsibleName(application.getResponsibleName());
 		applicationForm.setResponsibleEmail(application.getResponsibleEmail());
 		applicationForm.setResponsiblePhone(application.getResponsiblePhone());
@@ -262,14 +402,13 @@ public class ApplicationAlertController {
 		return "modal/applicationForm.html"; //$NON-NLS-1$
     }
 
-	@RequestMapping(value = "importtemplate", method = RequestMethod.POST)
-    public String importTemplate(final Model model){
 
-		model.addAttribute("importtemplateform", new TemplateDTO()); //$NON-NLS-1$
 
-		return "modal/importTemplateForm.html"; //$NON-NLS-1$
-    }
-
+	/**
+	 * Method that maps the add new node web request to the controller and sets the backing form for add a new resume.
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
 	@RequestMapping(value = "newresumeinfo", method = RequestMethod.POST)
     public String addSummary(final Model model){
 
@@ -300,6 +439,12 @@ public class ApplicationAlertController {
 		return "modal/summaryForm.html"; //$NON-NLS-1$
     }
 
+	/**
+	 * Method that maps the add new node web request to the controller and sets the backing form for edit a resume.
+	 * @param resumeId Resume identifier.
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
 	@RequestMapping(value = "editresumeinfo", method = RequestMethod.POST)
     public String editSummary(@RequestParam("id") final Long resumeId, final Model model){
 
@@ -345,6 +490,13 @@ public class ApplicationAlertController {
 		return "modal/summaryForm.html"; //$NON-NLS-1$
     }
 
+	/**
+	 * Method that maps the add new node web request to the controller and sets the backing form for add or edit a email configuration.
+	 * @param alertSystemId Alert system identifier.
+	 * @param emailConfiguration Email addresses configurated.
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	 */
 	@RequestMapping(value = "emailinformation", method = RequestMethod.POST)
     public String emailInformation(@RequestParam("idAlertSystem") final Long alertSystemId, @RequestParam("emailConfiguration") final String emailConfiguration, final Model model){
 
@@ -358,12 +510,67 @@ public class ApplicationAlertController {
     }
 
 	/**
-	 * Method that maps the add new node web request to the controller and sets the backing form.
+	 * Method that maps the add new node web request to the controller and sets the backing form for add a new alert configuration.
+	 * @param appId Application identifier.
 	 * @param model Holder object for model attributes.
 	 * @return String that represents the name of the view to forward.
 	*/
 	@RequestMapping(value = "newalertconfig", method = RequestMethod.POST)
-    public String addAlertConfig(@RequestParam("alertConfigId") final Long alertConfigId, final Model model){
+    public String addAlertConfig(@RequestParam("appId") final Long appId, final Model model){
+
+		// Se cargan los sistemas de notificacion para el select correspondiente
+		List<AlertSystemMonitoriza> alertSystemsList = new ArrayList<AlertSystemMonitoriza>();
+
+		alertSystemsList = StreamSupport.stream(this.alertSystemService.getAllAlertSystemMonitoriza().spliterator(), false)
+				.collect(Collectors.toList());
+
+		model.addAttribute("alertSystemsList", alertSystemsList); //$NON-NLS-1$
+
+		// Se cargan los tipos de alerta para el select correspondiente
+		List<AlertTypeMonitoriza> alertTypesMonitorizaList = new ArrayList<AlertTypeMonitoriza>();
+
+		alertTypesMonitorizaList = StreamSupport.stream(this.alertTypeMonitorizaService.getAllAlertTypeMonitoriza().spliterator(), false)
+				.collect(Collectors.toList());
+
+		final ApplicationMonitoriza application = this.applicationMonitorizaService.getApplicationMonitorizaById(appId);
+
+		// Si el tipo de alerta ya se encuentra configurado para la aplicacion, se elimina de la lista
+		for (final AlertConfigMonitoriza alertConfig : application.getAlertConfigMonitoriza()) {
+			for (final Iterator<AlertTypeMonitoriza> iterator = alertTypesMonitorizaList.iterator(); iterator.hasNext(); ) {
+				final AlertTypeMonitoriza alertType= iterator.next();
+				if (alertConfig.getAlertTypeMonitoriza().getIdTypeMonitoriza().equals(alertType.getIdTypeMonitoriza())) {
+					iterator.remove();
+				}
+			}
+		}
+
+		model.addAttribute("alertTypesList", alertTypesMonitorizaList); //$NON-NLS-1$
+
+		// Se cargan los tipos de criticidad para el select correspondiente
+		List<AlertSeverityMonitoriza> alertSeverityList = new ArrayList<AlertSeverityMonitoriza>();
+
+		alertSeverityList = StreamSupport.stream(this.alertSeverityMonitorizaService.getAllAlertSeverity().spliterator(), false)
+				.collect(Collectors.toList());
+
+		model.addAttribute("alertSeverityList", alertSeverityList); //$NON-NLS-1$
+
+		final AlertConfigDTO alertConfigForm = new AlertConfigDTO();
+		alertConfigForm.setAppID(appId);
+
+		model.addAttribute("alertconfigform", alertConfigForm); //$NON-NLS-1$
+
+		return "modal/alertConfigForm.html"; //$NON-NLS-1$
+    }
+
+	/**
+	 * Method that maps the add new node web request to the controller and sets the backing form for edit a alert configuration.
+	 * @param alertConfigId Alert configuration identifier.
+	 * @param appId Application identifier.
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	*/
+	@RequestMapping(value = "editalertconfig", method = RequestMethod.POST)
+    public String editAlertConfig(@RequestParam("alertConfigId") final Long alertConfigId, @RequestParam("appId") final Long appId, final Model model){
 
 		// Se cargan los sistemas de notificacion para el select correspondiente
 		List<AlertSystemMonitoriza> alertSystemsList = new ArrayList<AlertSystemMonitoriza>();
@@ -389,22 +596,42 @@ public class ApplicationAlertController {
 
 		model.addAttribute("alertSeverityList", alertSeverityList); //$NON-NLS-1$
 
+		// Se carga la informacion de la alerta
+		final AlertConfigMonitoriza alertConfig = this.alertConfigMonitorizaService.getAlertConfigMonitorizaById(alertConfigId);
 		final AlertConfigDTO alertConfigForm = new AlertConfigDTO();
-		alertConfigForm.setAppID(alertConfigId);
+		alertConfigForm.setIdAlertConfigMonitoriza(alertConfigId);
+		alertConfigForm.setAppID(appId);
+		alertConfigForm.setTypeID(alertConfig.getAlertTypeMonitoriza().getIdTypeMonitoriza());
+		alertConfigForm.setSeverity(alertConfig.getAlertSeverityMonitoriza().getSeverityTypeId());
+		alertConfigForm.setIsAllowBlock(alertConfig.getAllowBlock());
+		if (alertConfig.getAllowBlock()) {
+			alertConfigForm.setBlockCondition(alertConfig.getBlockCondition());
+			alertConfigForm.setBlockInterval(alertConfig.getBlockInterval());
+			alertConfigForm.setBlockPeriod(alertConfig.getBlockPeriod());
+		}
+		alertConfigForm.setIsEnable(alertConfig.getEnable());
 
 		model.addAttribute("alertconfigform", alertConfigForm); //$NON-NLS-1$
 
 		return "modal/alertConfigForm.html"; //$NON-NLS-1$
     }
 
+	/**
+	 * Method that maps the add new node web request to the controller and sets the backing form for add or edit a graylog configuration.
+	 * @param alertSystemId Alert system identifier.
+	 * @param keysList List of keys configurated.
+	 * @param valuesList List of values configurated.
+	 * @param model Holder object for model attributes.
+	 * @return String that represents the name of the view to forward.
+	*/
 	@RequestMapping(value = "grayloginformation", method = RequestMethod.POST)
-    public String grayLogInformation(@RequestParam("idAlertSystem") final Long alertSystemId,
+    public String grayLogInformation(@RequestParam("idAlertSystemConf") final Long alertSystemId,
     									@RequestParam("keysList[]") final String[] keysList,
     									@RequestParam("valuesList[]") final String[] valuesList,
     									final Model model){
 
 		final GrayLogConfigDTO grayLogConfig = new GrayLogConfigDTO();
-		grayLogConfig.setIdAlertSystem(alertSystemId);
+		grayLogConfig.setIdAlertSystemConf(alertSystemId);
 		grayLogConfig.setKeysList(keysList);
 		grayLogConfig.setValuesList(valuesList);
 
@@ -414,5 +641,21 @@ public class ApplicationAlertController {
 
 		return "modal/grayLogInformation.html"; //$NON-NLS-1$
     }
+
+	@RequestMapping(value = "/infodeletetemplate", method = RequestMethod.POST)
+	public String infoDeleteTemplate(@RequestParam("idTemplateMonitoriza") final Long idTemplateMonitoriza, final Model model) {
+
+		final TemplateDeleteDTO templateDeleteDTO = new TemplateDeleteDTO();
+		final TemplateMonitoriza template = this.templateService.getTemplateMonitorizaById(idTemplateMonitoriza);
+		templateDeleteDTO.setTemplate(template);
+		final List<ApplicationMonitoriza> listApplicationMonitoriza = this.applicationMonitorizaService.getAllApplicationMonitorizaByTemplateMonitoriza(template);
+		templateDeleteDTO.setListApplicationMonitoriza(listApplicationMonitoriza);
+
+		model.addAttribute("templatedeleteform", templateDeleteDTO);
+
+		return "modal/deleteTemplateModal.html";
+	}
+
+
 
 }

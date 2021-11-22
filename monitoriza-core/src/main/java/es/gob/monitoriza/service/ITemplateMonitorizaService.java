@@ -27,6 +27,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import es.gob.monitoriza.persistence.configuration.dto.TemplateDTO;
+import es.gob.monitoriza.persistence.configuration.dto.TemplateDeleteDTO;
 import es.gob.monitoriza.persistence.configuration.dto.UserEditDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.UserMonitoriza;
@@ -68,7 +69,14 @@ public interface ITemplateMonitorizaService {
 	 * @param templateDto a {@link TemplateDTO} with the information of the template.
 	 * @return {@link TemplateMonitoriza} The template.
 	 */
-	TemplateMonitoriza saveTemplateMonitoriza(TemplateDTO templateDto);
+	TemplateMonitoriza saveTemplateMonitorizaWithDTO(TemplateDTO templateDto);
+	
+	/**
+	 * Method that stores a template in the persistence.
+	 * @param templateDto a {@link TemplateMonitoriza} with the information of the template.
+	 * @return {@link TemplateMonitoriza} The template.
+	 */
+	TemplateMonitoriza saveTemplateMonitoriza(TemplateMonitoriza templateDto);
 
 	/**
 	 * Method that updates a user in the persistence.
@@ -76,4 +84,6 @@ public interface ITemplateMonitorizaService {
 	 * @return {@link UserMonitoriza} The user.
 	 */
 	TemplateMonitoriza updateUserMonitoriza(UserEditDTO userEditDto);
+
+	void deleteTemplateMonitorizaWithDTO(TemplateDeleteDTO templateDeleteDTO);
 }

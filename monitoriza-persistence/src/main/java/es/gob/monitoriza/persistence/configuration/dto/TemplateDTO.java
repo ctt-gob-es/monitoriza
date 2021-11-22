@@ -24,6 +24,12 @@
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
+import javax.validation.constraints.NotNull;
+
+import org.springframework.web.multipart.MultipartFile;
+
+import es.gob.monitoriza.persistence.configuration.dto.validation.CheckItFirst;
+
 /**
  * <p>
  * Class that represents the backing form for adding/editing an system notification.
@@ -40,7 +46,7 @@ public class TemplateDTO {
 	/**
 	 * Attribute that represents the value of the primary key as a hidden input in the form.
 	 */
-	private final Long idTemplateMonitoriza= null;
+	private Long idTemplateMonitoriza;
 
 	/**
 	 * Attribute that represents the name of the template
@@ -55,14 +61,25 @@ public class TemplateDTO {
 	/**
 	 * Attribute that represents the concatenated mail addresses for down alarms.
 	 */
-	private String file;
 
-	public String getFile() {
-		return this.file;
+	@NotNull(groups=CheckItFirst.class, message="{form.valid.keystore.file.notnull}")
+	private MultipartFile file;
+
+
+	
+
+	/**
+	 * @return the idTemplateMonitoriza
+	 */
+	public Long getIdTemplateMonitoriza() {
+		return idTemplateMonitoriza;
 	}
 
-	public void setFile(final String file) {
-		this.file = file;
+	/**
+	 * @param idTemplateMonitoriza the idTemplateMonitoriza to set
+	 */
+	public void setIdTemplateMonitoriza(Long idTemplateMonitoriza) {
+		this.idTemplateMonitoriza = idTemplateMonitoriza;
 	}
 
 	public String getDescription() {
@@ -97,6 +114,21 @@ public class TemplateDTO {
 		this.description = description;
 	}
 
+	/**
+	 * Gets the value of the attribute {@link #file}.
+	 * @return the value of the attribute {@link #file}.
+	 */	
+	public MultipartFile getFile() {
+		return file;
+	}
 
+	
+	/**
+	 * Sets the value of the attribute {@link #file}.
+	 * @param sslCertificateParam the value for the attribute {@link #file} to set.
+	 */
+	public void setFile(final MultipartFile sslCertificateParam) {
+		this.file = sslCertificateParam;
+	}
 
 }

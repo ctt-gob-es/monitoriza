@@ -23,10 +23,13 @@
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeSystem;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.AlertResumeSystemRepository;
@@ -78,5 +81,6 @@ public class AlertResumeSystemService implements IAlertResumeSystemService {
 
 		return this.repository.save(newResumeSystem);
 	}
+
 
 }

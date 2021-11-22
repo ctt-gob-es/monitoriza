@@ -1,4 +1,3 @@
-/* 
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -13,6 +12,7 @@
  * along with this program; if not, you may find it at
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
+
 
 /** 
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.repository.AlertDIMSeverityRepository.java.</p>
@@ -42,5 +42,12 @@ public interface AlertDIMSeverityRepository extends JpaRepository<AlertDIMSeveri
 	 * @return {@link AlertDIMSeverity} with matching name
 	 */
 	AlertDIMSeverity findByName(final String name);
+
+	/**
+	 * Method that gets a severity by its id.
+	 * @param idSeverity Severity identifier.
+	 * @return The severity.
+	 */
+	AlertDIMSeverity findByIdSeverity(Long idSeverity);
 
 }

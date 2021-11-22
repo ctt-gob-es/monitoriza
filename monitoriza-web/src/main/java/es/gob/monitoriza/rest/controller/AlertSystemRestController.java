@@ -89,7 +89,7 @@ public class AlertSystemRestController {
 	private static final String KEY_JS_ERROR_ALERT_SYSTEM = "errorSaveAlertSystem";
 
 	/**
-	 * Method that maps the list templates web requests to the controller and
+	 * Method that maps the list of alert systems web requests to the controller and
 	 * forwards the list of alert systems to the view.
 	 *
 	 * @param input

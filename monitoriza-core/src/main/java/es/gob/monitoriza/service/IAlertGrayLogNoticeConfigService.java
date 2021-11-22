@@ -25,7 +25,9 @@ package es.gob.monitoriza.service;
 
 import java.util.List;
 
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogNoticeConfig;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailNoticeConfig;
 
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
@@ -58,5 +60,7 @@ public interface IAlertGrayLogNoticeConfigService {
 	 * @return {@link AlertGraylogNoticeConfig} The relation.
 	 */
 	AlertGraylogNoticeConfig saveAlertGraylogNoticeConfig(AlertGraylogNoticeConfig alertGraylogNoticeConfig);
+	
+	List<AlertGraylogNoticeConfig> getAllAlertGraylogNoticeConfigByAlertConfigSystem(AlertConfigSystem alertConfigSystem);
 
 }

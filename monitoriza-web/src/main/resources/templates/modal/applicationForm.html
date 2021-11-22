@@ -4,7 +4,7 @@
 
 	<div class="form-group">
 		<div class="checkbox checkbox-circle checkbox-info peers ai-c">
-			<input type="checkbox" id="enabled" name="enabled" class="peer" th:checked="${applicationform.enabled}">
+			<input type="checkbox" id="enabled" name="enabled" class="peer" th:checked="${applicationform.enabled}" />
 			<label for="enabled" class="peers peer-greed js-sb ai-c"> 
 			<span class="peer peer-greed" th:text="#{applalert.applications.modal.enablenotifications}"></span>
 			</label>
@@ -13,35 +13,41 @@
 
 	<div class="form-group">
 			<label for="name" class="col-form-label" th:text="#{applalert.applications.modal.appname}"></label>
-			<input type="text" id="name" name="name" th:field="*{name}" class="form-control" />
+			<input type="text" id="name" name="name" th:field="*{name}" class="form-control" required />
 	</div>
 	
 	<div class="form-group">
 		<label for="templateID" class="col-form-label" th:text="#{applalert.applications.modal.template}"></label>
-        <select name="templateID" id="templateID" th:field="*{templateID}" class="form-control">
+        <select name="templateID" id="templateID" th:field="*{templateID}" class="form-control" required >
         	<option th:each="t: ${templatesList}" th:value="${t.idTemplateMonitoriza}" th:text="${t.name}">
 			</option>
         </select>
 	</div>	
 	
-	<div class="form-group">
-		<label for="appKey" class="col-form-label" th:text="#{applalert.applications.modal.appkey}"></label>
-		<input type="text" id="appKey" name="appKey" th:field="*{appKey}" class="form-control" />
+	<div class="form-row">
+		<div class="form-group col-md-9">
+			<label for="cipherKey" class="col-form-label" th:text="#{applalert.applications.modal.cipherkey}"></label>
+			<input type="text" id="cipherKey" name="cipherKey" th:field="*{cipherKey}" class="form-control" required />
+		</div>
+		<div class="form-group col-md-2 align-self-end">
+			<button id="btnGenerateRandom" type="button" class="btn" 
+			th:text="#{applalert.applications.modal.btn.generaterandom}" onclick="generateRandomKey(40)"></button>
+		</div>
 	</div>	
 	
 	<div class="form-group">
 		<label for="responsibleName" class="col-form-label" th:text="#{applalert.applications.modal.responsiblename}"></label>
-		<input type="text" id="responsibleName" name="responsibleName" th:field="*{responsibleName}" class="form-control" />
+		<input type="text" id="responsibleName" name="responsibleName" th:field="*{responsibleName}" class="form-control" required />
 	</div>	
 	
 	<div class="form-group">
 		<label for="responsibleEmail" class="col-form-label" th:text="#{applalert.applications.modal.responsibleemail}"></label>
-		<input type="email" id="responsibleEmail" name="responsibleEmail" th:field="*{responsibleEmail}" class="form-control" />
+		<input type="email" id="responsibleEmail" name="responsibleEmail" th:field="*{responsibleEmail}" class="form-control" required />
 	</div>	
 	
 	<div class="form-group">
 		<label for="responsiblePhone" class="col-form-label"  th:text="#{applalert.applications.modal.responsibletel}"></label>
-		<input type="text" id="responsiblePhone" name="responsiblePhone" th:field="*{responsiblePhone}" class="form-control" />
+		<input type="text" id="responsiblePhone" name="responsiblePhone" th:field="*{responsiblePhone}" class="form-control" required />
 	</div>	
 	
 </form>
@@ -64,4 +70,15 @@
     		}
 		});
 	});	
+
+	function generateRandomKey(size){
+	    var characters ='ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+	    var result= ' ';
+	    var charactersLength = characters.length;
+	    for ( var i = 0; i < size; i++ ) {
+	        result += characters.charAt(Math.floor(Math.random() * charactersLength));
+	    }
+
+	    $("#cipherKey").val(result);
+	}
 </script>

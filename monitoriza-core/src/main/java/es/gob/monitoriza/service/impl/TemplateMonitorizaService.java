@@ -23,16 +23,38 @@
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.Collections;
+
+import javax.jdo.annotations.Transactional;
+
+import org.apache.commons.collections.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.persistence.configuration.dto.TemplateDTO;
+import es.gob.monitoriza.persistence.configuration.dto.TemplateDeleteDTO;
 import es.gob.monitoriza.persistence.configuration.dto.UserEditDTO;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogNoticeConfig;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailNoticeConfig;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeTemplateMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.TemplateMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.TemplateDatatableRepository;
+import es.gob.monitoriza.service.IAlertConfigMonitorizaService;
+import es.gob.monitoriza.service.IAlertConfigSystemService;
+import es.gob.monitoriza.service.IAlertGrayLogNoticeConfigService;
+import es.gob.monitoriza.service.IAlertMailNoticeConfigService;
+import es.gob.monitoriza.service.IAlertResumeTypeService;
+import es.gob.monitoriza.service.IAlertTypeMonitorizaService;
+import es.gob.monitoriza.service.IAlertTypeTemplateMonitorizaService;
+import es.gob.monitoriza.service.IApplicationMonitorizaService;
 import es.gob.monitoriza.service.ITemplateMonitorizaService;
 
 /**
@@ -47,6 +69,30 @@ public class TemplateMonitorizaService implements ITemplateMonitorizaService {
 
 	@Autowired
 	private TemplateDatatableRepository dtRepository;
+	
+	@Autowired
+	private IAlertTypeMonitorizaService alertTypeMonitorizaService;
+	
+	@Autowired
+	private IAlertTypeTemplateMonitorizaService alertTypeTemplateMonitorizaService;
+	
+	@Autowired
+	private IApplicationMonitorizaService applicationMonitorizaService;
+
+	@Autowired
+	private IAlertResumeTypeService alertResumeTypeService;
+	
+	@Autowired
+	private IAlertConfigMonitorizaService alertConfigMonitorizaService;
+	
+	@Autowired
+	private IAlertConfigSystemService alertConfigSystemService;
+	
+	@Autowired
+	private IAlertMailNoticeConfigService alertMailNoticeConfigService;
+	
+	@Autowired
+	private IAlertGrayLogNoticeConfigService alertGrayLogNoticeConfigService;
 
 	@Override
 	public TemplateMonitoriza getTemplateMonitorizaById(final Long templateId) {
@@ -69,31 +115,99 @@ public class TemplateMonitorizaService implements ITemplateMonitorizaService {
 	}
 
 	@Override
-	public TemplateMonitoriza saveTemplateMonitoriza(final TemplateDTO templateDto) {
-		final TemplateMonitoriza templateMonitoriza = null;
-
-		/*if (templateDto.get != null) {
-			userMonitoriza = this.repository.findByIdTemplateMonitoriza(templateDto.getIdUserMonitoriza());
-		} else {
-			userMonitoriza = new UserMonitoriza();
+	public TemplateMonitoriza saveTemplateMonitorizaWithDTO(final TemplateDTO templateDto) {
+		TemplateMonitoriza templateMonitoriza = null;
+		
+		if(templateDto.getIdTemplateMonitoriza() !=  null){
+			templateMonitoriza = this.getTemplateMonitorizaById(templateDto.getIdTemplateMonitoriza());
+			templateMonitoriza.setDescription(templateDto.getDescription());
+			templateMonitoriza.setName(templateDto.getTemplate());
+		}else{
+			templateMonitoriza = new TemplateMonitoriza();
+			templateMonitoriza.setDescription(templateDto.getDescription());
+			templateMonitoriza.setName(templateDto.getDescription());
 		}
 
-		templateMonitoriza.setLogin(templateDto.getLogin());
-		templateMonitoriza.setAttemptsNumber(NumberConstants.NUM0);
-		templateMonitoriza.setEmail(templateDto.getEmail());
-		templateMonitoriza.setIsBlocked(Boolean.FALSE);
-		templateMonitoriza.setLastAccess(null);
-		templateMonitoriza.setLastIpAccess(null);
-		templateMonitoriza.setName(templateDto.getName());
-		templateMonitoriza.setSurnames(templateDto.getSurnames());*/
 
 		return this.repository.save(templateMonitoriza);
+	}
+	
+
+	@Override
+	@Transactional
+	public TemplateMonitoriza saveTemplateMonitoriza(TemplateMonitoriza template) {		
+		TemplateMonitoriza templateSave = this.repository.saveAndFlush(template);
+		this.repository.flush();
+
+		return templateSave;
 	}
 
 	@Override
 	public TemplateMonitoriza updateUserMonitoriza(final UserEditDTO userEditDto) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public void deleteTemplateMonitorizaWithDTO(TemplateDeleteDTO templateDeleteDTO) {
+		//ALERT_APPLICATION
+		if(CollectionUtils.isNotEmpty(templateDeleteDTO.getListApplicationMonitoriza())){
+			//ALERT_CONFIG
+			if(CollectionUtils.isNotEmpty(templateDeleteDTO.getListAllAlertConfigMonitoriza())){
+				//ALERT_CONFIG_SYSTEM
+				if(CollectionUtils.isNotEmpty(templateDeleteDTO.getListAllAlertConfigSystem())){					
+					//ALERT_GRAYLOG_NOTICE_CONFIG
+					if(CollectionUtils.isNotEmpty(templateDeleteDTO.getListAllAlertGraylogNoticeConfig())){
+						for(AlertGraylogNoticeConfig alertGraylogNoticeConfig: templateDeleteDTO.getListAllAlertGraylogNoticeConfig()){
+							alertGrayLogNoticeConfigService.deleteAlertGraylogNoticeConfig(alertGraylogNoticeConfig.getNotSysConfigId());;
+						}
+					}
+					//ALERT_MAIL_NOTICE_CONFIG
+					if(CollectionUtils.isNotEmpty(templateDeleteDTO.getListAllAlertMailNoticeConfig())){
+						for(AlertMailNoticeConfig alertMailNoticeConfig: templateDeleteDTO.getListAllAlertMailNoticeConfig()){
+							alertMailNoticeConfigService.deleteAlertMailNoticeConfig(alertMailNoticeConfig.getIdNotSysConfig());
+						}
+						
+					}					
+					
+				}
+				
+				for(AlertConfigMonitoriza alertConfigMonitoriza: templateDeleteDTO.getListAllAlertConfigMonitoriza()){
+					alertConfigSystemService.deleteAlertConfigSystemByAlertConfigMonitoriza(alertConfigMonitoriza);
+					alertConfigMonitorizaService.deleteAlertConfigMonitoriza(alertConfigMonitoriza.getIdAlertConfigMonitoriza());		
+					
+				}
+				
+			}
+			//ALERT_RESUME_TYPES
+			if(CollectionUtils.isNotEmpty(templateDeleteDTO.getListAllAlertResumeType())){
+				for(AlertResumeType alertResumeType : templateDeleteDTO.getListAllAlertResumeType()){
+					alertResumeTypeService.deleteAlertResumeType(alertResumeType.getIdResType());
+				}
+			}
+			
+			for(ApplicationMonitoriza applicationMonitoriza : templateDeleteDTO.getListApplicationMonitoriza()){
+				applicationMonitorizaService.deleteApplicationMonitoriza(applicationMonitoriza.getIdApplicationMonitoriza());
+			}
+		}
+		
+		
+		if(CollectionUtils.isNotEmpty(templateDeleteDTO.getListAlertTypeMonitoriza())){
+			//ALERT_TYPE_MONITORIZA
+			for(AlertTypeTemplateMonitoriza alertTypeTemplateMonitoriza: templateDeleteDTO.getListAlertTypeTemplateMonitoriza()){
+				alertTypeTemplateMonitorizaService.deleteAlertTypeTemplateMonitoriza(alertTypeTemplateMonitoriza);
+			}
+			
+			//ALERT_TYPE
+			for(AlertTypeMonitoriza alertTypeMonitoriza: templateDeleteDTO.getListAlertTypeMonitoriza()){
+				alertTypeMonitorizaService.deleteAlertTypeMonitoriza(alertTypeMonitoriza.getIdTypeMonitoriza());
+			}
+		}
+		
+		
+		//ALERT_APP_TEMPLATE
+		repository.delete(templateDeleteDTO.getTemplate());
+		repository.flush();
 	}
 
 

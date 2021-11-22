@@ -1,4 +1,3 @@
-/* 
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,6 +13,7 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
+
 /** 
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.entity.ALERT_DIM_TEMPLATES.java.</p>
  * <b>Description:</b><p> .</p>
@@ -25,15 +25,22 @@
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
+import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
+
+import com.fasterxml.jackson.annotation.JsonView;
 
 import es.gob.monitoriza.constant.NumberConstants;
 
@@ -63,6 +70,11 @@ public class AlertDIMSeverity implements Serializable {
 	private String name;
 
 	/**
+	 * Attribute that represents the alert statistics.
+	 */
+	private Set<AlertStatistic> alertStatistics;
+	
+	/**
 	 * Gets the value of the attribute {@link #idSeverity}.
 	 *
 	 * @return the value of the attribute {@link #idSeverity}.
@@ -90,9 +102,12 @@ public class AlertDIMSeverity implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #name}.
 	 */
-	@Column(name = "SEVERITY_NAME", nullable = false, precision = NumberConstants.NUM40)
+	@Column(name = "SEVERITY_NAME", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public String getName() {
-		return name;
+		
+		return this.name;
+
 	}
 
 	/**
@@ -104,7 +119,23 @@ public class AlertDIMSeverity implements Serializable {
 	public void setName(String name) {
 		this.name = name;
 	}
-	
-	
+
+
+	/**
+	 * Gets the value of the attribute {@link #alertStatistics}.
+	 * @return the value of the attribute {@link #alertStatistics}.
+	 */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "alertDIMNode", cascade = CascadeType.ALL)
+	public Set<AlertStatistic> getAlertConfigSystems() {
+		return this.alertStatistics;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #alertStatistics}.
+	 * @param alertStatistics The value for the attribute {@link #alertStatistics}.
+	 */
+	public void setAlertConfigSystems(final Set<AlertStatistic> alertStatistics) {
+		this.alertStatistics = alertStatistics;
+	}
 
 }
