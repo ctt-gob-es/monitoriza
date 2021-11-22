@@ -13,9 +13,9 @@
  * <b>File:</b><p>es.gob.afirma.utilidades.UtilsFecha.java.</p>
  * <b>Description:</b><p>Class that provides methods for managing dates.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>25/10/2005.</p>
+ * <b>Date:</b><p>25/10/2017.</p>
  * @author Gobierno de España.
- * @version 1.2, 13/08/2019.
+ * @version 1.3, 22/11/2021.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -26,10 +26,12 @@ import java.util.Date;
 import java.util.Locale;
 import java.util.TimeZone;
 
+import es.gob.monitoriza.constant.NumberConstants;
+
 /**
  * <p>Class that provides methods for managing dates.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * @version 1.2, 13/18/2019.
+ * @version 1.3, 22/11/2021.
  */
 public class UtilsFecha {
 
@@ -238,6 +240,46 @@ public class UtilsFecha {
 	public static final String toString(String dateFormat, Date dateParam) {
 		SimpleDateFormat simpleDateFormat = new SimpleDateFormat(dateFormat, UtilsCountryLanguage.getFirstLocaleOfCountryCode(UtilsCountryLanguage.ES_COUNTRY_CODE));
 		return simpleDateFormat.format(dateParam);
+	}
+	
+	/**
+	 * Method that adds a number of days to the system date.
+	 * @param numDias Parameter that represents the number of days to add.
+	 * @return a string that represents the date returned on format <code>yyyy-mm-dd</code>.
+	 * @throws ParseException If the method fails.
+	 */
+	public static final Date sumarDias(Date fecha, int numDias) throws ParseException {
+
+		Calendar fechaCalendar = Calendar.getInstance();
+
+		fechaCalendar.setTime(fecha);
+		fechaCalendar.add(Calendar.DATE, numDias);
+		
+		return fechaCalendar.getTime();
+	}
+	
+	public static Date getHoyComienzoDia() {
+		
+		Calendar fechaCalendar = Calendar.getInstance();
+
+		fechaCalendar.setTime(new Date());
+		fechaCalendar.set(Calendar.HOUR_OF_DAY, NumberConstants.NUM0);
+		fechaCalendar.set(Calendar.MINUTE, NumberConstants.NUM0);
+		fechaCalendar.set(Calendar.SECOND, NumberConstants.NUM0);
+		
+		return fechaCalendar.getTime();
+	}
+	
+	public static Date getHoyFinDia() {
+		
+		Calendar fechaCalendar = Calendar.getInstance();
+
+		fechaCalendar.setTime(new Date());
+		fechaCalendar.set(Calendar.HOUR_OF_DAY, NumberConstants.NUM23);
+		fechaCalendar.set(Calendar.MINUTE, NumberConstants.NUM59);
+		fechaCalendar.set(Calendar.SECOND, NumberConstants.NUM59);
+		
+		return fechaCalendar.getTime();
 	}
 
 	/**

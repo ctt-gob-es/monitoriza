@@ -28,11 +28,10 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.jdo.annotations.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.gob.monitoriza.persistence.configuration.dto.DailySpieDTO;
 import es.gob.monitoriza.persistence.configuration.exception.DatabaseException;

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>17/08/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 17/08/2021.
+ * @version 1.1, 22/11/2021.
  */
 package es.gob.monitoriza.spring.config;
 
@@ -38,6 +38,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 
 import es.gob.monitoriza.constant.NumberConstants;
+import es.gob.monitoriza.cron.AlertStatisticsJob;
 import es.gob.monitoriza.cron.SchedulerObjectInterface;
 import es.gob.monitoriza.cron.ValidCertificatesJob;
 import es.gob.monitoriza.service.IValidServiceService;
@@ -46,7 +47,7 @@ import es.gob.monitoriza.service.IValidServiceService;
  * <p>Class that configures the spring scheduled task for checking the status of the timers
  * allowing to to get the fixed rate parameter at running time.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 17/08/2021.
+ * @version 1.1, 22/11/2021.
  */
 @Configuration
 @EnableScheduling
@@ -59,11 +60,21 @@ public class SchedulingWebConfig {
 	private ValidCertificatesJob validCertificatesJob;
 	
 	/**
+	 * Attribute that represents the service object for accessing the valid certificate job. 
+	 */
+	@Autowired
+	private AlertStatisticsJob alertStatisticsJob;
+	
+	/**
 	 * Attribute that represents the service object for accessing the valid service repository.
 	 */
 	@Autowired
 	private IValidServiceService validServiceService;
+		
 	
+	/**
+	 * Attribute that represents . 
+	 */
 	private static Map<String, SchedulerObjectInterface> schduledJobsMap = new HashMap<>();
 	
 	/**
@@ -81,6 +92,7 @@ public class SchedulingWebConfig {
     @PostConstruct
     public void initScheduler() {
         schduledJobsMap.put(ValidCertificatesJob.class.getName(), validCertificatesJob);
+        schduledJobsMap.put(AlertStatisticsJob.class.getName(), alertStatisticsJob);
         startAll();
     }
 

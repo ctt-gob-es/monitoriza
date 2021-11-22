@@ -121,6 +121,7 @@ public class ConfServerMailService implements IConfServerMailService {
 						
 			try {
 				hashPwd = new String(AESCipher.getInstance().encryptMessage(pwd));
+						  
 			} catch (CipherException e) {
 				
 				LOGGER.error(Language.getResCoreMonitoriza(ICoreLogMessages.ERRORCORE015), e);

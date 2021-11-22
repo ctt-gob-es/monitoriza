@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>7/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 22/11/2021.
  */
 package es.gob.monitoriza.spring.config;
 
@@ -31,7 +31,6 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.datatables.repository.DataTablesRepositoryFactoryBean;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
 import es.gob.monitoriza.i18n.ICoreLogMessages;
@@ -47,7 +46,7 @@ import es.gob.monitoriza.utilidades.UtilsGrayLog;
 @EnableAutoConfiguration
 @ComponentScan("es.gob.monitoriza")
 @EntityScan("es.gob.monitoriza.persistence.configuration.model.entity")
-@EnableJpaRepositories(repositoryFactoryBeanClass = DataTablesRepositoryFactoryBean.class, basePackages = "es.gob.monitoriza.persistence.configuration.model.repository")
+@EnableJpaRepositories(basePackages = "es.gob.monitoriza.persistence.configuration.model.repository")
 public class ApplicationConfig {
 	
 	/**

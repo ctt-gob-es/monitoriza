@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 22/11/2021.
  */
 package es.gob.eventmanager.service;
 
@@ -43,14 +43,14 @@ import es.gob.eventmanager.persistence.model.entity.AlertConfigMonitoriza;
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 22/11/2021.
  */
 public final class AlertConfigManager {
 	
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger("EVENTMANAGER-SERVICE");
+	private static final Logger LOGGER = LoggerFactory.getLogger("eventmanager-service");
 	
 	/**
 	 * Attribute that contains the dates on which an alarm event occurs, this map will be used to count alarms.	 

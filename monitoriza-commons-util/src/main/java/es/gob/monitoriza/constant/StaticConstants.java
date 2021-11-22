@@ -20,14 +20,14 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>30 ene. 2018.</p>
  * @author Gobierno de España.
- * @version 1.6, 04/01/2019.
+ * @version 1.7, 22/11/2021.
  */
 package es.gob.monitoriza.constant;
 
 /** 
  * <p>Interface that contains the static constants for the static configuration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.6, 04/01/2019.
+ * @version 1.7, 22/11/2021.
  */
 public interface StaticConstants {
 	
@@ -241,6 +241,11 @@ public interface StaticConstants {
 	 * Attribute that represents the name for property <code>cron_dump_spie_monitoring</code>.
 	 */
 	public static final String CRON_DUMP_SPIE_MONITORING = "cron_dump_spie_monitoring";
+	
+	/**
+	 * Attribute that represents the name for property <code>cron_feed_alert_statistics</code>.
+	 */
+	public static final String CRON_FEED_ALERT_STATISTICS = "cron_feed_alert_statistics";
 	
 	/**
 	 * Attribute that represents the Padding algorithm for the AES cipher.

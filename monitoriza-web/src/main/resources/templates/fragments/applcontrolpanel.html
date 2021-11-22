@@ -1,78 +1,141 @@
-<div class="container-fluid" id="tableSysnot">
-	<h4 class="c-grey-900 mT-10 mB-30" th:text="#{applalert.admin.title}"></h4>
-	<div class="row">
-		<div class="col-md-12">
-			<div class="bgc-white bd bdrs-3 p-20 mB-20">
-				<h4 class="c-grey-900 mB-20" th:text="#{table.applalert.controlpanel.title}"></h4>
-				<label for="period" th:text="#{applalert.controlpanel.period}"></label>
-				<div class="form-row">
-				<div class="form-group col-md-2">
-					<select id="period" name="period" class="form-control">
-						<option selected="selected" value="all" th:text="#{applalert.controlpanel.period.all}"></option>
-						<option value="last10minutes" th:text="#{applalert.controlpanel.period.last10minutes}"></option>
-						<option value="lasthour" th:text="#{applalert.controlpanel.period.lasthour}"></option>
-						<option value="last3hours" th:text="#{applalert.controlpanel.period.last3hours}"></option>
-					</select>
-				</div>
-				<div class="form-group col-md-2">
-					<button th:text="#{applalert.controlpanel.period.consult}" class="btn btn-primary"></button>
-				</div>
-				</div>
-				<table id="sysnotTable" class="table table-striped table-bordered" 
-					cellspacing="0" width="100%">
-					<thead>
-						<tr>
-							<!-- Columna oculta para el identificador del aviso de sistema -->
-							<th th:text="#{table.applalert.controlpanel.hour}"></th>
-							<th th:text="#{table.applalert.controlpanel.application}"></th>
-							<th th:text="#{table.applalert.controlpanel.node}"></th>
-							<th th:text="#{table.applalert.controlpanel.alert}"></th>
-							<th th:text="#{table.applalert.controlpanel.citricity}"></th>
-							<th th:text="#{table.applalert.controlpanel.description}"></th>
-							<th th:text="#{table.applalert.controlpanel.total}"></th>
-						</tr>
-					</thead>
-				</table>
+<div class="row gap-20 masonry pos-r">
+	<div class="masonry-sizer col-md-12"></div>
+	<div class="masonry-item col-md-12">
+		<div class="bgc-white p-20">
+			<h6 class="c-grey-900" th:text="#{applalert.controlpanel.period}"></h6>
+			<div class="mT-30">
+				
+					<!-- <h4 class="c-grey-900 mB-20"
+					th:text="#{table.applalert.controlpanel.title}"></h4> -->
+					<!-- <label for="period" th:text="#{applalert.controlpanel.period}"></label> -->
+					<div class="form-row">
+						<!-- <div class="form-group col-md-2">
+						<select id="period" name="period" class="form-control">
+							<option selected="selected" value="all" th:text="#{applalert.controlpanel.period.all}"></option>
+							<option value="last10minutes" th:text="#{applalert.controlpanel.period.last10minutes}"></option>
+							<option value="lasthour" th:text="#{applalert.controlpanel.period.lasthour}"></option>
+							<option value="last3hours" th:text="#{applalert.controlpanel.period.last3hours}"></option>
+						</select>
+					</div>
+					<div class="form-group col-md-2">
+						<button th:text="#{applalert.controlpanel.period.consult}" class="btn btn-primary"></button>
+					</div> -->
+						<form id="controlAlertAuditForm" name="controlAlertAuditForm"
+							role="form" th:action="@{/queryAlertAuditTime}" method="post">
+							<div class="form-row">
+								<div class="form-group col-md-6">
+									<label for="dateRangeMin" th:text="#{form.query.spie.time.min}"></label>
+									<span id="datemin_span"
+										class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
+									<input type="datetime-local" class="form-control" id="minDate"
+										name="minDate" step="1" >
+								</div>
+								<div class="form-group col-md-6">
+									<label for="dateRangeMax" th:text="#{form.query.spie.time.max}"></label>
+									<span id="datemax_span" value=""
+										class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
+									<input type="datetime-local" class="form-control" id="maxDate"
+										name="maxDate" step="1" >
+								</div>
+							</div>
+
+							<button id="controlAlertAuditBtn" type="button"
+								class="btn btn-primary" th:text="#{button.query.spie}"></button>
+							<button id="cleanAlertAuditTimeBtn" type="button" class="btn btn-primary"
+								onclick="cleanForm('#controlAlertAuditForm');"
+								th:text="#{button.cleanForm}"></button>
+						</form>
+					</div>
+
+				
 			</div>
+		</div>
+
+
+		<div class="masonry-sizer col-md-12 bgc-white">
+			<table id="controlPanelTable"
+				class="table table-striped table-bordered" cellspacing="0"
+				width="100%">
+				<thead>
+					<tr>
+						<!-- Columna oculta para el identificador del aviso de sistema -->
+						<th></th>
+						<th th:text="#{table.applalert.controlpanel.hour}"></th>
+						<th th:text="#{table.applalert.controlpanel.application}"></th>
+						<th th:text="#{table.applalert.controlpanel.node}"></th>
+						<th th:text="#{table.applalert.controlpanel.alert}"></th>
+						<th th:text="#{table.applalert.controlpanel.citricity}"></th>
+						<th th:text="#{table.applalert.controlpanel.description}"></th>
+						<!-- <th th:text="#{table.applalert.controlpanel.total}"></th> -->
+					</tr>
+				</thead>
+			</table>
 		</div>
 	</div>
 </div>
 
+
 <script th:inline="javascript">
 $(document).ready(function() {
-	var actionLoad = /*[[@{/loadauth}]]*/;
-	var getauths = /*[[@{/authdatatable}]]*/;
 	
-	var tbl = $('#sysnotTable').DataTable({
-		dom: 'Bfrtip',
-	    select: 'single',
+	var dateMin = $("#minDate").val();
+	var dateMax = $("#maxDate").val();
+	var actionLoadTable = /*[[@{/loadAuditInfoDatatable}]]*/;
+		
+	var tblAlertAudit = $('#controlPanelTable').DataTable({
+		
 	    responsive: true,
-	    altEditor: true,
-	
+	    "order" : [ 1, 'desc' ],
 	    "iTotalRecords": "totalElements",
-        "iTotalDisplayRecords": "numberOfElements",
-	    
+        "iTotalDisplayRecords": "numberOfElements",	    
 		"processing": true,
 	    "serverSide": true,
+	    "ajax": {
+	        "url": actionLoadTable,
+	        "dataSrc" : "data",
+	        'data' : //{ 'dateMin' : dateMin, 'dateMax' : dateMax },
+	        		function (data) {
+	        			data.dateMin = $("#minDate").val();
+	        			data.dateMax = $("#maxDate").val();
+	        },
+	    },
 	    "language": {
-	        "url": "js/datatables/i18n/spanish.json",
-	        select: {
-	            rows: {
-	                _: "%d filas seleccionadas",
-	                1: "1 fila seleccionada"
-	            }
-	          }
+	        "url": "js/datatables/i18n/spanish.json"	    
 	        },
 		"columns": [
-	        { "data": "hour"},
-	        { "data": "application" },
-	        { "data": "node" },
-	        { "data": "alert" },
-	        { "data": "citricity" },
-	        { "data": "description" },
-	        { "data": "total" }
+				{ "data": "idAlertAudit",
+			      "visible": false},
+		        { "data": "timestamp",
+			      "render": function(data, type, row) {
+			               		
+			                return moment(data).format("DD-MM-YYYY HH:mm:ss");
+			    		}
+			    },
+		        { "data": "appName" },
+		        { "data": "node" },
+		        { "data": "alertName" },
+		        { "data": "severity" },
+		        { "data": "description" }
 	        ]
 		});
 });	
+
+$('#controlAlertAuditBtn').click(function(){
+	   // Reload data 
+	   $('#controlPanelTable').DataTable().ajax.reload();
+	});
+
+
+function cleanForm(f){
+	
+	$(f + ' *').filter(':input').each(function(){
+		$(this).val('');
+	});
+	$(f + ' *').filter('span').each(function(){
+		$(this).text('');
+	});
+	$(f + " select").select2().val('').change();
+	$(f).find(".alert").remove();
+}
 
 </script>

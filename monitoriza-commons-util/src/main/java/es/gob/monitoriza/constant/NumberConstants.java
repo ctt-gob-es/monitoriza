@@ -19,14 +19,14 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 22/11/2018.
  */
 package es.gob.monitoriza.constant;
 
 /**
  * <p>Interface that defines numeric constants for generalized usage.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 22/11/2018.
  */
 public interface NumberConstants {
 
@@ -41,9 +41,14 @@ public interface NumberConstants {
 	int NUM_NEG_5 = -5;
 
 	/**
+	 * Constant attribute that represents the number -2.
+	 */
+	int NUM_NEG_2 = -2;
+	
+	/**
 	 * Constant attribute that represents the number -1.
 	 */
-	int NUM_NEG_1 = -1;
+	int NUM_NEG_1 = -1;	
 
 	/**
 	 * Constant attribute that represents the number -1 (type long).

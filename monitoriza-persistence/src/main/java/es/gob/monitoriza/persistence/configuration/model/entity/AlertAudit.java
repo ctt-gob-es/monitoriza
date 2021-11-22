@@ -22,7 +22,7 @@
  * @author Gobierno de España.
  * @version 1.1, 22/11/2021.
  */
-package es.gob.eventmanager.persistence.model.entity;
+package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -37,8 +37,12 @@ import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
+import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
-import es.gob.eventmanager.constant.NumberConstants;
+import com.fasterxml.jackson.annotation.JsonView;
+
+import es.gob.monitoriza.constant.NumberConstants;
+
 
 /**
  * <p>
@@ -82,7 +86,7 @@ public class AlertAudit implements Serializable {
 	private String node;
 
 	/**
-	 * Attribute that represents the severity level of the alert.
+	 * Attribute that represents the criticality level of the alert.
 	 */
 	private String severity;
 	
@@ -92,7 +96,7 @@ public class AlertAudit implements Serializable {
 	private Date timestamp;
 	
 	/**
-	 * Attribute that represents the description of the alert.
+	 * Attribute that represents description of the alert.
 	 */
 	private String description;
 
@@ -105,6 +109,7 @@ public class AlertAudit implements Serializable {
 	@Column(name = "ALERT_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
 	@GeneratedValue(generator = "sq_alert_audit")
 	@GenericGenerator(name = "sq_alert_audit", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_AUDIT"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
+	@JsonView(DataTablesOutput.View.class)
 	public Long getIdAlertAudit() {
 		return idAlertAudit;
 	}
@@ -125,6 +130,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #appName}.
 	 */
 	@Column(name = "APP_NAME", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public String getAppName() {
 		return appName;
 	}
@@ -145,6 +151,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #alertName}.
 	 */
 	@Column(name = "ALERT_NAME", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public String getAlertName() {
 		return alertName;
 	}
@@ -165,6 +172,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #appTemplateName}.
 	 */
 	@Column(name = "APP_TEMPLATE_NAME", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public String getAppTemplateName() {
 		return appTemplateName;
 	}
@@ -185,6 +193,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #node}.
 	 */
 	@Column(name = "NODE", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public String getNode() {
 		return node;
 	}
@@ -205,6 +214,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #severity}.
 	 */
 	@Column(name = "SEVERITY", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public String getSeverity() {
 		return severity;
 	}
@@ -226,6 +236,7 @@ public class AlertAudit implements Serializable {
 	 */
 	@Column(name = "TIMESTAMP", nullable = false)
 	@Temporal(TemporalType.TIMESTAMP)
+	@JsonView(DataTablesOutput.View.class)
 	public Date getTimestamp() {
 		return timestamp;
 	}
@@ -239,13 +250,14 @@ public class AlertAudit implements Serializable {
 	public void setTimestamp(Date timestamp) {
 		this.timestamp = timestamp;
 	}
-	
+
 	/**
 	 * Gets the value of the attribute {@link #description}.
 	 *
 	 * @return the value of the attribute {@link #description}.
 	 */
 	@Column(name = "DESCRIPTION", nullable = false)
+	@JsonView(DataTablesOutput.View.class)
 	public final String getDescription() {
 		return description;
 	}
@@ -259,4 +271,6 @@ public class AlertAudit implements Serializable {
 	public final void setDescription(String description) {
 		this.description = description;
 	}
+	
+	
 }

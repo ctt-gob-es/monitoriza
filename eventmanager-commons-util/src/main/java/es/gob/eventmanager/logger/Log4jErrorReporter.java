@@ -15,25 +15,26 @@
  *  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 22/11/2021.
  */
 package es.gob.eventmanager.logger;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 
 /**
  * <p>Log4j implementation for the error logger to use in Gray Log.</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 22/11/2021.
  */
 public final class Log4jErrorReporter implements ErrorReporter {
 
 	/**
 	 * Attribute that represents the logger for this class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(Log4jErrorReporter.class);
+	private static final Logger LOGGER = LoggerFactory.getLogger(Log4jErrorReporter.class);
 
 	/**
 	 * Attribute that represents the singleton unique instance for this class.

@@ -588,4 +588,24 @@ COMMENT ON COLUMN "ALERT_STATISTICS"."SEVERITY" IS 'Nombre de nivel de criticida
 COMMENT ON COLUMN "ALERT_STATISTICS"."TIMESTAMP" IS 'Fecha (con precisiÃ³n de dÃ­a) a la que corresponde el computo.';
 COMMENT ON COLUMN "ALERT_STATISTICS"."OCURRENCY" IS 'NÃºmero de ocurrencias de esta configuraciÃ³n de alerta en la fecha indicada.';
 
+-- Table ALERT_AUDIT_CONTROL
+CREATE TABLE "ALERT_AUDIT_CONTROL" ( 
+	"ALERT_AUDIT_CONTROL_ID" NUMERIC(19) NOT NULL,
+	"EXECUTION_BEGIN" DATE,
+	"AUDIT_BEGIN" DATE,
+	"AUDIT_END" DATE,
+	"EXECUTION_END" DATE,
+	"RESULT" NUMERIC(1)
+	);
+	
+ALTER TABLE "ALERT_AUDIT_CONTROL" ADD CONSTRAINT "ALERT_AUDIT_CONTROL_ID_CONS" PRIMARY KEY ("ALERT_AUDIT_CONTROL_ID");
+
+COMMENT ON TABLE "ALERT_AUDIT_CONTROL" IS 'Tabla para controlar el estado de las ejecuciones del proceso de volcado de datos desde la auditoria a las estadisticas.';
+COMMENT ON COLUMN "ALERT_AUDIT_CONTROL"."ALERT_AUDIT_CONTROL_ID" IS 'Identificador de la tabla.';
+COMMENT ON COLUMN "ALERT_AUDIT_CONTROL"."EXECUTION_BEGIN" IS 'Fecha y hora de ejecucion del proceso';
+COMMENT ON COLUMN "ALERT_AUDIT_CONTROL"."AUDIT_BEGIN" IS 'Fecha desde donde se empiezan a procesar registros de la auditoria';
+COMMENT ON COLUMN "ALERT_AUDIT_CONTROL"."AUDIT_END" IS 'Fecha hasta donde se procesan registros de la auditoria.';
+COMMENT ON COLUMN "ALERT_AUDIT_CONTROL"."EXECUTION_END" IS 'Fecha y hora de finalizacion de la ejecucion del proceso.';
+COMMENT ON COLUMN "ALERT_AUDIT_CONTROL"."RESULT" IS 'Codigo con el resultado del proceso: 0 - OK; 1 - ERROR';
+
 COMMIT;

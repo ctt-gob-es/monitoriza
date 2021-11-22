@@ -17,7 +17,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 22/11/2021.
  */
 package es.gob.eventmanager.notifier.email;
 
@@ -55,14 +55,14 @@ import es.gob.eventmanager.utils.UtilsValidation;
  * is specified to define the e-mail and the necessary functionality is contributed to realize the sending
  * as an independent thread via SMTP server. This thread will be time limited.</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 22/11/2021.
  */
 public class EMailTimeLimitedOperation extends ATimeLimitedOperation {
 
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger("EVENTMANAGER-SERVICE");
+	private static final Logger LOGGER = LoggerFactory.getLogger("eventmanager-service");
 
 	/**
 	 * Constant attribute that represents the email transport 'smtp'.

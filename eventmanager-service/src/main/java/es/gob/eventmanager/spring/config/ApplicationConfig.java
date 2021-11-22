@@ -20,13 +20,14 @@
  * <b>Project:</b><p>Event manager system.</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 22/11/2021.
  */
 package es.gob.eventmanager.spring.config;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.log4j.Logger;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
@@ -36,7 +37,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 /** 
  * <p>Spring configuration class that sets the configuration of Spring components, entities and repositories.</p>
   * <b>Project:</b><p>Event manager system.</p>
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 22/11/2021.
  */
 @Configuration
 @EnableAutoConfiguration
@@ -48,7 +49,7 @@ public class ApplicationConfig {
 	/**
 	 * Attribute that represents the logger of this class.
 	 */
-	private static Logger logger = Logger.getLogger(ApplicationConfig.class);
+	private static Logger logger = LoggerFactory.getLogger("eventmanager-service");
 	
 	
 	/**

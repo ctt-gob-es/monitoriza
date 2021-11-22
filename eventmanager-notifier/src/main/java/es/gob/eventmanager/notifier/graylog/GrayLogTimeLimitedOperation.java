@@ -15,11 +15,13 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 22/11/2021.
  */
 package es.gob.eventmanager.notifier.graylog;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Calendar;
 
 import org.slf4j.Logger;
@@ -36,14 +38,14 @@ import es.gob.eventmanager.utils.UtilsStringChar;
 /**
  * <p>Utilities class for the use of GrayLog.</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 22/11/2021.
  */
 public class GrayLogTimeLimitedOperation extends ATimeLimitedOperation {
 
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger("EVENTMANAGER-SERVICE");
+	private static final Logger LOGGER = LoggerFactory.getLogger("eventmanager-service");
 
 	/**
 	 * Constant attribute that represents the token key 'EVENT_CODE' for a Gray Log Message Field.
@@ -54,11 +56,16 @@ public class GrayLogTimeLimitedOperation extends ATimeLimitedOperation {
 	 * Constant attribute that represents the token key 'RESOURCE_INFO' for a Gray Log Message Field.
 	 */
 	private static final String TOKEN_KEY_RESOURCE_INFO = "RESOURCE_INFO";
+	
+	/**
+	 * Constant attribute that represents the token key 'source' for a Gray Log Message Field.
+	 */
+	private static final String TOKEN_KEY_SOURCE = "source";
 
 	/**
 	 * Constant attribute that represents the token key 'MESSAGE' for a Gray Log Message Field.
 	 */
-	private static final String TOKEN_KEY_MESSAGE = "MESSAGE";
+	private static final String TOKEN_KEY_MESSAGE = "message";
 	
 	/**
 	 * Constant attribute that represents the level FATAL for the GrayLogger.
@@ -155,8 +162,24 @@ public class GrayLogTimeLimitedOperation extends ATimeLimitedOperation {
 			gm.setFullMessage(fullMessage);
 			gm.setJavaTimestamp(Calendar.getInstance().getTimeInMillis());
 			gm.setLevel(String.valueOf(2));
-			gm.addField(TOKEN_KEY_EVENT_CODE, alert.getCode());
-			gm.addField(TOKEN_KEY_RESOURCE_INFO, alert.getResource());
+			//gm.addField(TOKEN_KEY_EVENT_CODE, alert.getCode());
+			
+			// Se calcula el hostname para informar el campo "source"
+			InetAddress ip;
+			String hostname = null;
+			try {
+				
+				ip = InetAddress.getLocalHost();
+	            hostname = ip.getHostName();
+				
+			} catch (UnknownHostException e) {
+				String msg = "No ha podido obtenerse el 'hostname' del servidor actual";
+				LOGGER.warn(msg, e);
+				hostname = msg;
+	        }
+			
+			gm.addField("cod_err", alert.getCode());
+			gm.addField(TOKEN_KEY_SOURCE, alert.getResource());
 			gm.addField(TOKEN_KEY_MESSAGE, alert.getMessage());
 			gm.addFields(config.getGrayLogDeclaredFields());
 			grayLogMessageSender.sendMessage(gm);

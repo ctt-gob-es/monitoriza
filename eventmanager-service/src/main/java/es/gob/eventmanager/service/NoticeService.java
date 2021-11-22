@@ -60,7 +60,7 @@ import es.gob.eventmanager.persistence.model.entity.TemplateMonitoriza;
 
 /**
  * Servicio para la notificaci&oacute;n de eventos.
- * @version 1.2, 09/11/2021.
+ * @version 1.3, 22/11/2021.
  */
 public class NoticeService extends HttpServlet {
 
@@ -69,7 +69,7 @@ public class NoticeService extends HttpServlet {
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger("EVENTMANAGER-SERVICE");
+	private static final Logger LOGGER = LoggerFactory.getLogger("eventmanager-service");
 
 	private static final Charset CHARSET = StandardCharsets.UTF_8;
 		
@@ -399,6 +399,7 @@ public class NoticeService extends HttpServlet {
 						auditoria.setNode(event.getNode());
 						auditoria.setSeverity(config.getAlertSeverityMonitoriza().getName());
 						auditoria.setTimestamp(new Date());
+						auditoria.setDescription(alertType.getDescription());
 						
 						ManagerConfigurationServices.getInstance().getEventManagerBO().registerAlertAudit(auditoria);					
 					}
