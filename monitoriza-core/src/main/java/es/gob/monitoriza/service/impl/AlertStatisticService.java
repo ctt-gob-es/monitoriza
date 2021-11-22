@@ -108,16 +108,16 @@ public class AlertStatisticService implements IAlertStatisticService {
 				query += " AND STATS.APP_ID = " + appID.getAppID();
 			}
 			if (templateID != null) {
-				query += " AND STATS.TEMPLATE_ID = " + templateID.getTemplateID();
+				query += " AND STATS.TEMPLATE_ID = " + templateID.getIdTemplate();
 			}
 			if (typeID != null) {
-				query += " AND STATS.TYPE_ID = " + typeID.getTypeID();
+				query += " AND STATS.TYPE_ID = " + typeID.getIdType();
 			}
 			if (nodeID != null) {
-				query += " AND STATS.NODE_ID = " + nodeID.getNodeID();
+				query += " AND STATS.NODE_ID = " + nodeID.getIdNode();
 			}
 			if (severityID != null) {
-				query += " AND STATS.SEVERITY_ID = " + severityID.getSeverityID();
+				query += " AND STATS.SEVERITY_ID = " + severityID.getIdSeverity();
 			}
 
 			query += ") GROUP BY APP_ID, APP_NAME, TYPE_ID, TYPE_NAME, TEMPLATE_ID, TEMPLATE_NAME, NODE, NODE_NAME, SEVERITY, SEVERITY_NAME";
@@ -134,22 +134,22 @@ public class AlertStatisticService implements IAlertStatisticService {
 	    	   statistic.setAlertDIMApp(app);
 
 	    	   final AlertDIMType type = new AlertDIMType();
-	    	   type.setTypeID(new Long(rs.getInt(3)));
+	    	   type.setIdType(new Long(rs.getInt(3)));
 	    	   type.setName(rs.getString(4));
 	    	   statistic.setAlertDIMType(type);
 
 	    	   final AlertDIMTemplate template = new AlertDIMTemplate();
-	    	   template.setTemplateID(new Long(rs.getInt(5)));
+	    	   template.setIdTemplate(new Long(rs.getInt(5)));
 	    	   template.setName(rs.getString(6));
 	    	   statistic.setAlertDIMTemplate(template);
 
 	    	   final AlertDIMNode node = new AlertDIMNode();
-	    	   node.setNodeID(new Long(rs.getInt(7)));
+	    	   node.setIdNode(new Long(rs.getInt(7)));
 	    	   node.setName(rs.getString(8));
 	    	   statistic.setAlertDIMNode(node);
 
 	    	   final AlertDIMSeverity severity = new AlertDIMSeverity();
-	    	   severity.setSeverityID(new Long(rs.getInt(9)));
+	    	   severity.setIdSeverity(new Long(rs.getInt(9)));
 	    	   severity.setName(rs.getString(10));
 
 	    	   statistic.setAlertDIMSeverity(severity);
