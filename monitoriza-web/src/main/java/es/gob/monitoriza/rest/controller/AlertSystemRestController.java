@@ -61,7 +61,7 @@ import es.gob.monitoriza.service.IAlertSystemMonitorizaService;
 /**
  * <p>Class that manages the REST requests related to the Users administration and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.7, 14/03/2019.
+ * @version 1.0, 10/11/2021.
  */
 @RestController
 public class AlertSystemRestController {
@@ -107,7 +107,7 @@ public class AlertSystemRestController {
 	 * in the persistence.
 	 *
 	 * @param alertSystemForm
-	 *            Object that represents the backing user form.
+	 *            Object that represents the backing alert system form.
 	 * @param bindingResult
 	 *            Object that represents the form validation result.
 	 * @return {@link DataTablesOutput<UserMonitoriza>}
@@ -149,8 +149,8 @@ public class AlertSystemRestController {
 	 * Method that maps the delete user request from datatable to the controller
 	 * and performs the delete of the user identified by its id.
 	 *
-	 * @param userId
-	 *            Identifier of the user to be deleted.
+	 * @param alertSystemId
+	 *            Identifier of the alert system to be deleted.
 	 * @param index
 	 *            Row index of the datatable.
 	 * @return String that represents the name of the view to redirect.

@@ -154,7 +154,7 @@ public class AlertConfigRestController {
 	}
 
 	/**
-	 * Method that maps the list  alert configurations web requests to the controller and
+	 * Method that maps the list alert configurations web requests to the controller and
 	 * forwards the list of alert configurations to the view.
 	 *
 	 * @param input
@@ -284,6 +284,12 @@ public class AlertConfigRestController {
 		return index;
 	}
 
+	/**
+	 * Method that save a AlertGraylogNoticeConfig in the database.
+	 * @param alertConfSysId Id of the AlertConfigSystem relation.
+	 * @param keysList List of GrayLog keys.
+	 * @param valuesList List of GrayLog values.
+	 */
 	private void saveGrayLogNoticeConfig(final Long alertConfSysId, final List<String> keysList, final List<String> valuesList) {
 		if (keysList != null && !keysList.isEmpty()) {
 			for (int i = 0 ; i < keysList.size() ; i++) {
@@ -298,6 +304,11 @@ public class AlertConfigRestController {
 		}
 	}
 
+	/**
+	 * Method that save a AlertMailNoticeConfig in the database.
+	 * @param alertConfSysId Id of the AlertConfigSystem relation.
+	 * @param emailList List of mails to save.
+	 */
 	private void saveMailNoticeConfig(final Long alertConfSysId, final List<String> emailList) {
 		if (emailList != null && !emailList.isEmpty()) {
 			for (int i = 0 ; i < emailList.size() ; i++) {

@@ -421,11 +421,7 @@
             		noticeConfEmailArray = [alertSystemData.resumeEmailAddresses];
                 }
                 
-            	if (emailConfigurationArray.length == 0) {
-            		emailConfigurationArray[0] = noticeConfEmailArray;
-                } else {
-                	emailConfigurationArray[emailConfigurationArray.length] = noticeConfEmailArray;
-				}
+                emailConfigurationArray[emailConfigurationArray.length] = noticeConfEmailArray;
 
             	// Se comprueba que si el dato viene vacio, se instancie un array para evitar errores en la peticion
             	var keysListData;
@@ -436,11 +432,7 @@
                 	keysListData = alertSystemData.keysList;
                 }
             	
-            	if (keysArray.length == 0) {
-            		keysArray[0] = keysListData;
-                } else {
-                	keysArray[keysArray.length] = keysListData;
-				}
+                keysArray[keysArray.length] = keysListData;
 
             	// Se realiza el mismo proceso para la lista de valores
             	var valuesListData;
@@ -451,11 +443,8 @@
                 	valuesListData = alertSystemData.valuesList;
                 }
 
-            	if (valuesArray.length == 0) {
-            		valuesArray[0] = valuesListData;
-                } else {
-                	valuesArray[valuesArray.length] = valuesListData;
-				}
+				valuesArray[valuesArray.length] = valuesListData;
+				
 			}
 		}
 

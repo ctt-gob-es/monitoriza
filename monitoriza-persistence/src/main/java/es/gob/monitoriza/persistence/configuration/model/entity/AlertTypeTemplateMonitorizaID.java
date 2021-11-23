@@ -25,25 +25,9 @@
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
 import java.io.Serializable;
-import java.util.Set;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Embeddable;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-import javax.persistence.Table;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-
-import com.fasterxml.jackson.annotation.JsonView;
-
-import es.gob.monitoriza.constant.NumberConstants;
 
 /**
  * <p>
@@ -59,7 +43,7 @@ public class AlertTypeTemplateMonitorizaID implements Serializable {
 
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = -717975907234143514L;
 
@@ -79,10 +63,10 @@ public class AlertTypeTemplateMonitorizaID implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 		// because Hibernate JPA needs not final access methods.
-	@Column(name = "TYPE_ID", nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "TYPE_ID", nullable = false)
 	public Long getIdTypeMonitoriza() {
 		// CHECKSTYLE:ON
-		return idTypeMonitoriza;
+		return this.idTypeMonitoriza;
 	}
 
 	/**
@@ -90,10 +74,10 @@ public class AlertTypeTemplateMonitorizaID implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 		// because Hibernate JPA needs not final access methods.
-	@Column(name = "TEMPLATE_ID", nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "TEMPLATE_ID", nullable = false)
 	public Long getIdTemplateMonitoriza() {
 		// CHECKSTYLE:ON
-		return idTemplateMonitoriza;
+		return this.idTemplateMonitoriza;
 	}
 
 	/**
@@ -101,7 +85,7 @@ public class AlertTypeTemplateMonitorizaID implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 		// because Hibernate JPA needs not final access methods.
-	public void setIdTypeMonitoriza(Long idTypeMonitoriza) {
+	public void setIdTypeMonitoriza(final Long idTypeMonitoriza) {
 		// CHECKSTYLE:ON
 		this.idTypeMonitoriza = idTypeMonitoriza;
 	}
@@ -111,7 +95,7 @@ public class AlertTypeTemplateMonitorizaID implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 		// because Hibernate JPA needs not final access methods.
-	public void setIdTemplateMonitoriza(Long idTemplateMonitoriza) {
+	public void setIdTemplateMonitoriza(final Long idTemplateMonitoriza) {
 		// CHECKSTYLE:ON
 		this.idTemplateMonitoriza = idTemplateMonitoriza;
 	}

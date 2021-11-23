@@ -13,7 +13,7 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
+/**
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplates.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
@@ -37,10 +37,8 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.constant.NumberConstants;
 
-
-/** 
+/**
  * <p>Class that maps the <i>ALERT_DIM_TEMPLATES</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 22/11/2021.
@@ -50,31 +48,31 @@ import es.gob.monitoriza.constant.NumberConstants;
 public class AlertDIMTemplate implements Serializable {
 
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents .
 	 */
 	private static final long serialVersionUID = 7138914091807373559L;
-	
+
 	/**
-	 * Attribute that represents the object identifier. 
+	 * Attribute that represents the object identifier.
 	 */
 	private Long idTemplate;
-	
+
 	/**
-	 * Attribute that represents the name of the template. 
+	 * Attribute that represents the name of the template.
 	 */
 	private String name;
-	
+
 	/**
 	 * Gets the value of the attribute {@link #idTemplate}.
 	 *
 	 * @return the value of the attribute {@link #idTemplate}.
 	 */
 	@Id
-	@Column(name = "TEMPLATE_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "TEMPLATE_ID", unique = true, nullable = false)
 	@GeneratedValue(generator = "sq_alert_dim_templates")
 	@GenericGenerator(name = "sq_alert_dim_templates", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_DIM_TEMPLATES"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
 	public Long getIdTemplate() {
-		return idTemplate;
+		return this.idTemplate;
 	}
 
 	/**
@@ -83,7 +81,7 @@ public class AlertDIMTemplate implements Serializable {
 	 * @param idNode
 	 *            The value for the attribute {@link #idTemplate}.
 	 */
-	public void setIdTemplate(Long idTemplate) {
+	public void setIdTemplate(final Long idTemplate) {
 		this.idTemplate = idTemplate;
 	}
 
@@ -106,8 +104,8 @@ public class AlertDIMTemplate implements Serializable {
 	 *            The value for the attribute {@link #name}.
 	 */
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
-	}	
+	}
 
 }

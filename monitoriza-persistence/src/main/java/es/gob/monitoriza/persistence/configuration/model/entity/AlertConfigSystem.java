@@ -43,8 +43,6 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.constant.NumberConstants;
-
 /**
  * <p>
  * Class that maps the <i>ALERT_CONFIG_SYSTEMS</i> database table as a Plain Old Java Object.
@@ -85,7 +83,7 @@ public class AlertConfigSystem implements Serializable {
 	 * @return the value of the attribute {@link #idNotSysConfig}.
 	 */
 	@Id
-	@Column(name = "NOT_SYS_CONFIG_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "NOT_SYS_CONFIG_ID", unique = true, nullable = false)
 	@GeneratedValue(generator = "sq_alert_config_systems")
 	@GenericGenerator(name = "sq_alert_config_systems", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_CONFIG_SYSTEMS"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
 	@JsonView(DataTablesOutput.View.class)

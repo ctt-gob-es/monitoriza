@@ -35,7 +35,9 @@ import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitori
 /**
  * <p>Interface that provides CRUD functionality for the ApplicationMonitoriza entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.0, 15/11/2021.
  */
+
 @Repository
 public interface ApplicationMonitorizaRepository extends JpaRepository<ApplicationMonitoriza, Long> {
 
@@ -45,7 +47,12 @@ public interface ApplicationMonitorizaRepository extends JpaRepository<Applicati
 	 * @return Object that represents a application from the persistence.
 	 */
 	ApplicationMonitoriza findByIdApplicationMonitoriza(Long id);
-	
+
+	/**
+	 * Method that obtains a list of applications that belong to a template.
+	 * @param templateMonitoriza Template to find.
+	 * @return List of applications.
+	 */
 	List<ApplicationMonitoriza> findAllByTemplateMonitoriza(TemplateMonitoriza templateMonitoriza);
 
 }

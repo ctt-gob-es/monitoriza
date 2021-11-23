@@ -32,7 +32,9 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitor
 /**
  * <p>Interface that provides CRUD functionality for the AlertTypeMonitoriza entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.0, 15/11/2021.
  */
+
 @Repository
 public interface AlertTypeMonitorizaRepository extends JpaRepository<AlertTypeMonitoriza, Long> {
 

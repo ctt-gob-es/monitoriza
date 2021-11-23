@@ -1,4 +1,4 @@
-/* 
+/*
 /*******************************************************************************
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
@@ -14,7 +14,7 @@
  * http:joinup.ec.europa.eu/software/page/eupl/licence-eupl
  ******************************************************************************/
 
-/** 
+/**
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMApplicationlication.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Applicationlication for monitoring the services of @firma suite systems</p>
@@ -38,9 +38,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.constant.NumberConstants;
-
-/** 
+/**
  * <p>Class that maps the <i>ALERT_DIM_APPS</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Applicationlication for monitoring services of @firma suite systems.</p>
  * @version 1.0, 22/11/2021.
@@ -50,17 +48,17 @@ import es.gob.monitoriza.constant.NumberConstants;
 public class AlertDIMApplication implements Serializable {
 
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents .
 	 */
 	private static final long serialVersionUID = 4062463072940178974L;
-	
+
 	/**
-	 * Attribute that represents the object identifier. 
+	 * Attribute that represents the object identifier.
 	 */
 	private Long idApplication;
-	
+
 	/**
-	 * Attribute that represents the name of the application. 
+	 * Attribute that represents the name of the application.
 	 */
 	private String name;
 
@@ -70,11 +68,11 @@ public class AlertDIMApplication implements Serializable {
 	 * @return the value of the attribute {@link #idApplication}.
 	 */
 	@Id
-	@Column(name = "APP_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "APP_ID", unique = true, nullable = false)
 	@GeneratedValue(generator = "sq_alert_dim_apps")
 	@GenericGenerator(name = "sq_alert_dim_apps", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_DIM_APPS"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
 	public final Long getIdApplication() {
-		return idApplication;
+		return this.idApplication;
 	}
 
 	/**
@@ -83,7 +81,7 @@ public class AlertDIMApplication implements Serializable {
 	 * @param idApplication
 	 *            The value for the attribute {@link #idApplication}.
 	 */
-	public final void setIdApplication(Long idApplication) {
+	public final void setIdApplication(final Long idApplication) {
 		this.idApplication = idApplication;
 	}
 
@@ -92,10 +90,10 @@ public class AlertDIMApplication implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #name}.
 	 */
-	@Column(name = "APP_NAME", nullable = false, precision = NumberConstants.NUM40)
+	@Column(name = "APP_NAME", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public final String getName() {
-		return name;
+		return this.name;
 	}
 
 	/**
@@ -104,8 +102,8 @@ public class AlertDIMApplication implements Serializable {
 	 * @param name
 	 *            The value for the attribute {@link #name}.
 	 */
-	public final void setName(String name) {
+	public final void setName(final String name) {
 		this.name = name;
-	}	
+	}
 
 }

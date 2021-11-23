@@ -38,7 +38,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogSyst
  * Application for monitoring services of @firma suite systems.
  * </p>
  *
- * @version 1.3, 09/11/2018.
+ * @version 1.0, 15/11/2021.
  */
 @Repository
 public interface AlertGraylogSystemConfigRepository extends JpaRepository<AlertGraylogSystemConfig, Long> {

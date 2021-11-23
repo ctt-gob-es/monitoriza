@@ -31,6 +31,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza
 /**
  * <p>Interface that provides CRUD functionality for the ResumeMonitoriza entity and DataTables.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.0, 15/11/2021.
  */
 public interface ResumeDatatableRepository extends DataTablesRepository<ResumeMonitoriza, Long> {
 
