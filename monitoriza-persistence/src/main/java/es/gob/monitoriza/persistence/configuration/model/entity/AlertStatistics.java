@@ -51,9 +51,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Table(name = "ALERT_STATISTICS")
 public class AlertStatistics implements Serializable {
 
-	/**
-	 * Attribute that represents .
-	 */
+
 	private static final long serialVersionUID = -2495715627452487648L;
 
 	/**
@@ -62,27 +60,27 @@ public class AlertStatistics implements Serializable {
 	private Long idAlertStatistic;
 
 	/**
-	 * Attribute that represents .
+	 * Attribute that represents the application.
 	 */
 	private AlertDIMApplication application;
 
 	/**
-	 * Attribute that represents.
+	 * Attribute that represents the node.
 	 */
 	private AlertDIMNode node;
 
 	/**
-	 * Attribute that represents.
+	 * Attribute that represents the severity.
 	 */
 	private AlertDIMSeverity severity;
 
 	/**
-	 * Attribute that represents the object identifier.
+	 * Attribute that represents the template.
 	 */
 	private AlertDIMTemplate template;
 
 	/**
-	 * Attribute that represents the object identifier.
+	 * Attribute that represents the type.
 	 */
 	private AlertDIMType type;
 
@@ -92,7 +90,7 @@ public class AlertStatistics implements Serializable {
 	private Long timestamp;
 
 	/**
-	 * Attribute that represents .
+	 * Attribute that represents the ocurrences of the alert.
 	 */
 	private Integer occurrences;
 
@@ -105,7 +103,7 @@ public class AlertStatistics implements Serializable {
 	@Column(name = "STATISTIC_ID", unique = true, nullable = false)
 	@GeneratedValue(generator = "sq_alert_statistics")
 	@GenericGenerator(name = "sq_alert_statistics", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_STATISTICS"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
-	public final Long getIdAlertStatistic() {
+	public Long getIdAlertStatistic() {
 		return this.idAlertStatistic;
 	}
 
@@ -115,7 +113,7 @@ public class AlertStatistics implements Serializable {
 	 * @param idAlertStatistic
 	 *            The value for the attribute {@link #idAlertStatistic}.
 	 */
-	public final void setIdAlertStatistic(final Long idAlertStatistic) {
+	public void setIdAlertStatistic(final Long idAlertStatistic) {
 		this.idAlertStatistic = idAlertStatistic;
 	}
 
@@ -127,7 +125,7 @@ public class AlertStatistics implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "APP_ID", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
-	public final AlertDIMApplication getApplication() {
+	public AlertDIMApplication getApplication() {
 		return this.application;
 	}
 
@@ -137,7 +135,7 @@ public class AlertStatistics implements Serializable {
 	 * @param application
 	 *            The value for the attribute {@link #application}.
 	 */
-	public final void setApplication(final AlertDIMApplication application) {
+	public void setApplication(final AlertDIMApplication application) {
 		this.application = application;
 	}
 
@@ -149,7 +147,7 @@ public class AlertStatistics implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "NODE", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
-	public final AlertDIMNode getNode() {
+	public AlertDIMNode getNode() {
 		return this.node;
 	}
 
@@ -159,7 +157,7 @@ public class AlertStatistics implements Serializable {
 	 * @param node
 	 *            The value for the attribute {@link #node}.
 	 */
-	public final void setNode(final AlertDIMNode node) {
+	public void setNode(final AlertDIMNode node) {
 		this.node = node;
 	}
 
@@ -171,7 +169,7 @@ public class AlertStatistics implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "SEVERITY", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
-	public final AlertDIMSeverity getSeverity() {
+	public AlertDIMSeverity getSeverity() {
 		return this.severity;
 	}
 
@@ -181,7 +179,7 @@ public class AlertStatistics implements Serializable {
 	 * @param severity
 	 *            The value for the attribute {@link #severity}.
 	 */
-	public final void setSeverity(final AlertDIMSeverity severity) {
+	public void setSeverity(final AlertDIMSeverity severity) {
 		this.severity = severity;
 	}
 
@@ -193,7 +191,7 @@ public class AlertStatistics implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "TEMPLATE_ID", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
-	public final AlertDIMTemplate getTemplate() {
+	public AlertDIMTemplate getTemplate() {
 		return this.template;
 	}
 
@@ -203,7 +201,7 @@ public class AlertStatistics implements Serializable {
 	 * @param template
 	 *            The value for the attribute {@link #template}.
 	 */
-	public final void setTemplate(final AlertDIMTemplate template) {
+	public void setTemplate(final AlertDIMTemplate template) {
 		this.template = template;
 	}
 
@@ -215,7 +213,7 @@ public class AlertStatistics implements Serializable {
 	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "TYPE_ID", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
-	public final AlertDIMType getType() {
+	public AlertDIMType getType() {
 		return this.type;
 	}
 
@@ -225,7 +223,7 @@ public class AlertStatistics implements Serializable {
 	 * @param type
 	 *            The value for the attribute {@link #type}.
 	 */
-	public final void setType(final AlertDIMType type) {
+	public void setType(final AlertDIMType type) {
 		this.type = type;
 	}
 
@@ -236,7 +234,7 @@ public class AlertStatistics implements Serializable {
 	 */
 	@Column(name = "TIMESTAMP", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
-	public final Long getTimestamp() {
+	public Long getTimestamp() {
 		return this.timestamp;
 	}
 
@@ -246,7 +244,7 @@ public class AlertStatistics implements Serializable {
 	 * @param timestamp
 	 *            The value for the attribute {@link #timestamp}.
 	 */
-	public final void setTimestamp(final Long timestamp) {
+	public void setTimestamp(final Long timestamp) {
 		this.timestamp = timestamp;
 	}
 
@@ -257,7 +255,7 @@ public class AlertStatistics implements Serializable {
 	 */
 	@Column(name = "OCURRENCY", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
-	public final Integer getOccurrences() {
+	public Integer getOccurrences() {
 		return this.occurrences;
 	}
 
@@ -267,9 +265,8 @@ public class AlertStatistics implements Serializable {
 	 * @param occurrences
 	 *            The value for the attribute {@link #occurrences}.
 	 */
-	public final void setOccurrences(final Integer occurrences) {
+	public void setOccurrences(final Integer occurrences) {
 		this.occurrences = occurrences;
 	}
-
 
 }
