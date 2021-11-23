@@ -51,9 +51,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 @Table(name = "ALERT_STATISTICS")
 public class AlertStatistics implements Serializable {
 
-	/**
-	 * Attribute that represents .
-	 */
+
 	private static final long serialVersionUID = -2495715627452487648L;
 
 	/**
@@ -62,27 +60,27 @@ public class AlertStatistics implements Serializable {
 	private Long idAlertStatistic;
 
 	/**
-	 * Attribute that represents .
+	 * Attribute that represents the application.
 	 */
 	private AlertDIMApplication application;
 
 	/**
-	 * Attribute that represents.
+	 * Attribute that represents the node.
 	 */
 	private AlertDIMNode node;
 
 	/**
-	 * Attribute that represents.
+	 * Attribute that represents the severity.
 	 */
 	private AlertDIMSeverity severity;
 
 	/**
-	 * Attribute that represents the object identifier.
+	 * Attribute that represents the template.
 	 */
 	private AlertDIMTemplate template;
 
 	/**
-	 * Attribute that represents the object identifier.
+	 * Attribute that represents the type.
 	 */
 	private AlertDIMType type;
 
@@ -92,7 +90,7 @@ public class AlertStatistics implements Serializable {
 	private Long timestamp;
 
 	/**
-	 * Attribute that represents .
+	 * Attribute that represents the ocurrences of the alert.
 	 */
 	private Integer occurrences;
 
@@ -270,6 +268,5 @@ public class AlertStatistics implements Serializable {
 	public void setOccurrences(final Integer occurrences) {
 		this.occurrences = occurrences;
 	}
-
 
 }
