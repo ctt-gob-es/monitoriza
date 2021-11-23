@@ -96,7 +96,7 @@ public class AlertAuditControl implements Serializable {
 	@Column(name = "ALERT_AUDIT_CONTROL_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
 	@GeneratedValue(generator = "sq_alert_audit_control")
 	@GenericGenerator(name = "sq_alert_audit_control", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_AUDIT_CONTROL"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
-	public final Long getIdAlertAuditControl() {
+	public Long getIdAlertAuditControl() {
 		return idAlertAuditControl;
 	}
 
@@ -106,7 +106,7 @@ public class AlertAuditControl implements Serializable {
 	 * @param idAlertAuditControl
 	 *            The value for the attribute {@link #idAlertAuditControl}.
 	 */
-	public final void setIdAlertAuditControl(Long idAlertAuditControl) {
+	public void setIdAlertAuditControl(Long idAlertAuditControl) {
 		this.idAlertAuditControl = idAlertAuditControl;
 	}
 
@@ -117,7 +117,7 @@ public class AlertAuditControl implements Serializable {
 	 */
 	@Column(name = "EXECUTION_BEGIN")
 	@Temporal(TemporalType.TIMESTAMP)
-	public final Date getExecBegin() {
+	public Date getExecBegin() {
 		return execBegin;
 	}
 
@@ -127,7 +127,7 @@ public class AlertAuditControl implements Serializable {
 	 * @param execBegin
 	 *            The value for the attribute {@link #execBegin}.
 	 */
-	public final void setExecBegin(Date execBegin) {
+	public void setExecBegin(Date execBegin) {
 		this.execBegin = execBegin;
 	}
 
@@ -138,7 +138,7 @@ public class AlertAuditControl implements Serializable {
 	 */
 	@Column(name = "EXECUTION_END")
 	@Temporal(TemporalType.TIMESTAMP)
-	public final Date getExecEnd() {
+	public Date getExecEnd() {
 		return execEnd;
 	}
 
@@ -148,7 +148,7 @@ public class AlertAuditControl implements Serializable {
 	 * @param execEnd
 	 *            The value for the attribute {@link #execEnd}.
 	 */
-	public final void setExecEnd(Date execEnd) {
+	public void setExecEnd(Date execEnd) {
 		this.execEnd = execEnd;
 	}
 
@@ -159,7 +159,7 @@ public class AlertAuditControl implements Serializable {
 	 */
 	@Column(name = "AUDIT_BEGIN")
 	@Temporal(TemporalType.TIMESTAMP)
-	public final Date getAuditBegin() {
+	public Date getAuditBegin() {
 		return auditBegin;
 	}
 
@@ -169,7 +169,7 @@ public class AlertAuditControl implements Serializable {
 	 * @param auditBegin
 	 *            The value for the attribute {@link #auditBegin}.
 	 */
-	public final void setAuditBegin(Date auditBegin) {
+	public void setAuditBegin(Date auditBegin) {
 		this.auditBegin = auditBegin;
 	}
 
@@ -180,7 +180,7 @@ public class AlertAuditControl implements Serializable {
 	 */
 	@Column(name = "AUDIT_END")
 	@Temporal(TemporalType.TIMESTAMP)
-	public final Date getAuditEnd() {
+	public Date getAuditEnd() {
 		return auditEnd;
 	}
 
@@ -190,7 +190,7 @@ public class AlertAuditControl implements Serializable {
 	 * @param auditEnd
 	 *            The value for the attribute {@link #auditEnd}.
 	 */
-	public final void setAuditEnd(Date auditEnd) {
+	public void setAuditEnd(Date auditEnd) {
 		this.auditEnd = auditEnd;
 	}
 
@@ -200,7 +200,7 @@ public class AlertAuditControl implements Serializable {
 	 * @return the value of the attribute {@link #alertName}.
 	 */
 	@Column(name = "RESULT", precision = NumberConstants.NUM1)
-	public final Integer getResult() {
+	public Integer getResult() {
 		return result;
 	}
 
@@ -210,7 +210,7 @@ public class AlertAuditControl implements Serializable {
 	 * @param result
 	 *            The value for the attribute {@link #result}.
 	 */
-	public final void setResult(Integer result) {
+	public void setResult(Integer result) {
 		this.result = result;
 	}
 	
