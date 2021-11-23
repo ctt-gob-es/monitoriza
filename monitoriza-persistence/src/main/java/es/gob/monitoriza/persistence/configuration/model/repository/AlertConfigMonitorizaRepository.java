@@ -45,7 +45,12 @@ public interface AlertConfigMonitorizaRepository extends JpaRepository<AlertConf
 	 * @return Object that represents a alert configuration from the persistence.
 	 */
 	AlertConfigMonitoriza findByIdAlertConfigMonitoriza(Long id);
-	
+
+	/**
+	 * Method that obtains the alert configurations of a application.
+	 * @param appMonitoriza Application to find.
+	 * @return List of alerts that belong to the application.
+	 */
 	List<AlertConfigMonitoriza> findAllAlertConfigMonitorizaByApplicationMonitoriza(
 			ApplicationMonitoriza appMonitoriza);
 

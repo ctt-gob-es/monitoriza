@@ -44,8 +44,6 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.constant.NumberConstants;
-
 /**
  * <p>
  * Class that maps the <i>ALERT_SYSTEMS</i> database table as a Plain Old Java Object.
@@ -87,12 +85,17 @@ public class AlertSystemMonitoriza implements Serializable {
 	private Set<AlertResumeSystem> alertResumeSystems;
 
 	/**
+	 * Attribute that represents the alert systems configurated for a alert configuration.
+	 */
+	private Set<AlertConfigSystem> alertConfigSystems;
+
+	/**
 	 * Gets the value of the attribute {@link #idAlertSystemMonitoriza}.
 	 *
 	 * @return the value of the attribute {@link #idAlertSystemMonitoriza}.
 	 */
 	@Id
-	@Column(name = "SYSTEM_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "SYSTEM_ID", unique = true, nullable = false)
 	@GeneratedValue(generator = "sq_alert_systems_monitoriza")
 	@GenericGenerator(name = "sq_alert_systems_monitoriza", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_SYSTEMS"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
 	@JsonView(DataTablesOutput.View.class)
@@ -115,7 +118,7 @@ public class AlertSystemMonitoriza implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #name}.
 	 */
-	@Column(name = "NAME", nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "NAME", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public String getName() {
 		return this.name;
@@ -136,7 +139,7 @@ public class AlertSystemMonitoriza implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #type}.
 	 */
-	@Column(name = "TYPE", nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "TYPE", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public String getType() {
 		return this.type;
@@ -171,13 +174,39 @@ public class AlertSystemMonitoriza implements Serializable {
 		this.graylogSystemConfig = graylogSystemConfig;
 	}
 
-    @OneToMany(fetch = FetchType.LAZY, mappedBy = "alertSystemMonitoriza")
+	/**
+	 * Gets the value of the attribute {@link #alertResumeSystems}.
+	 * @return the value of the attribute {@link #alertResumeSystems}.
+	 */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "alertSystemMonitoriza", cascade = CascadeType.ALL)
 	public Set<AlertResumeSystem> getAlertResumeSystem() {
 		return this.alertResumeSystems;
 	}
 
+	/**
+	 * Sets the value of the attribute {@link #alertResumeSystems}.
+	 * @param alertResumeSystems The value for the attribute {@link #alertResumeSystems}.
+	 */
 	public void setAlertResumeSystem(final Set<AlertResumeSystem> alertResumeSystems) {
 		this.alertResumeSystems = alertResumeSystems;
+	}
+
+
+	/**
+	 * Gets the value of the attribute {@link #alertConfigSystems}.
+	 * @return the value of the attribute {@link #alertConfigSystems}.
+	 */
+    @OneToMany(fetch = FetchType.LAZY, mappedBy = "alertSystemMonitoriza", cascade = CascadeType.ALL)
+	public Set<AlertConfigSystem> getAlertConfigSystems() {
+		return this.alertConfigSystems;
+	}
+
+	/**
+	 * Sets the value of the attribute {@link #alertConfigSystems}.
+	 * @param alertConfigSystems The value for the attribute {@link #alertConfigSystems}.
+	 */
+	public void setAlertConfigSystems(final Set<AlertConfigSystem> alertConfigSystems) {
+		this.alertConfigSystems = alertConfigSystems;
 	}
 
 }

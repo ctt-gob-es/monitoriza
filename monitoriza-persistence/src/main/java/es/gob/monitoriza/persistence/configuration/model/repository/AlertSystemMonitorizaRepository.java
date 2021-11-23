@@ -32,8 +32,9 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonit
 /**
  * <p>Interface that provides CRUD functionality for the AlertSystemMonitoriza entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 7 mar. 2018.
+ * @version 1.0, 15/11/2021.
  */
+
 @Repository
 public interface AlertSystemMonitorizaRepository extends JpaRepository<AlertSystemMonitoriza, Long> {
 

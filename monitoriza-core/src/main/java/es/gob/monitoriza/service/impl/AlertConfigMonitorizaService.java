@@ -124,8 +124,8 @@ public class AlertConfigMonitorizaService implements IAlertConfigMonitorizaServi
 
 	@Override
 	public List<AlertConfigMonitoriza> getAllAlertConfigMonitorizaByApplicationMonitoriza(
-			ApplicationMonitoriza appMonitoriza) {
-		return alertConfigMonitorizaRepository.findAllAlertConfigMonitorizaByApplicationMonitoriza(appMonitoriza);
+			final ApplicationMonitoriza appMonitoriza) {
+		return this.alertConfigMonitorizaRepository.findAllAlertConfigMonitorizaByApplicationMonitoriza(appMonitoriza);
 	}
 
 

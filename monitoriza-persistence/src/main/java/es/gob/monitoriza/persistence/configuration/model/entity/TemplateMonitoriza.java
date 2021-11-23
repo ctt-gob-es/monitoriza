@@ -38,8 +38,6 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.constant.NumberConstants;
-
 /**
  * <p>
  * Class that maps the <i>ALERT_APP_TEMPLATES</i> database table as a Plain Old Java Object.
@@ -64,7 +62,7 @@ public class TemplateMonitoriza implements Serializable {
 	 * Attribute that represents the template's name.
 	 */
 	private String name;
-	
+
 	/**
 	 * Attribute that represents the template's description.
 	 */
@@ -78,7 +76,7 @@ public class TemplateMonitoriza implements Serializable {
 	@Id
 	@GeneratedValue(generator = "sq_template_monitoriza")
 	@GenericGenerator(name = "sq_template_monitoriza", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_APP_TEMPLATES"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
-	@Column(name = "TEMPLATE_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)	
+	@Column(name = "TEMPLATE_ID", unique = true, nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public Long getIdTemplateMonitoriza() {
 		return this.idTemplateMonitoriza;
@@ -99,7 +97,7 @@ public class TemplateMonitoriza implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #name}.
 	 */
-	@Column(name = "NAME", nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "NAME", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public String getName() {
 		return this.name;
@@ -118,18 +116,18 @@ public class TemplateMonitoriza implements Serializable {
 	/**
 	 * @return the description
 	 */
-	@Column(name = "DESCRIPTION", nullable = false, precision = NumberConstants.NUM40)
+	@Column(name = "DESCRIPTION", nullable = false, length = 200)
 	@JsonView(DataTablesOutput.View.class)
 	public String getDescription() {
-		return description;
+		return this.description;
 	}
 
 	/**
 	 * @param description the description to set
 	 */
-	public void setDescription(String description) {
+	public void setDescription(final String description) {
 		this.description = description;
 	}
-	
-	
+
+
 }

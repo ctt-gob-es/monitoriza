@@ -29,7 +29,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeTemplateMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeTemplateMonitorizaID;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
@@ -37,12 +36,17 @@ import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitori
 /**
  * <p>Interface that provides CRUD functionality for the AlertTypeMonitoriza entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.0, 15/11/2021.
  */
+
 @Repository
 public interface AlertTypeTemplateMonitorizaRepository extends JpaRepository<AlertTypeTemplateMonitoriza, AlertTypeTemplateMonitorizaID> {
 
+	/**
+	 * Method that obtains a list of AlertTypeTemplateMonitoriza that belongs a TemplateMonitoriza.
+	 * @param templateMonitoriza TemplateMonitoriza to find.
+	 * @return List of AlertTypeTemplateMonitoriza.
+	 */
 	List<AlertTypeTemplateMonitoriza> getAllAlertTypeTemplateMonitorizaByTemplateMonitoriza(TemplateMonitoriza templateMonitoriza);
-
-	
 
 }

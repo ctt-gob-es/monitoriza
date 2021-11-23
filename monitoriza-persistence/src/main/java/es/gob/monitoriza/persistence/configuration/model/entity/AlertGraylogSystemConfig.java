@@ -35,8 +35,6 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.constant.NumberConstants;
-
 /**
  * <p>
  * Class that maps the <i>ALERT_GRAYLOG_SYSTEM_CONFIG</i> database table as a Plain Old Java Object.
@@ -73,7 +71,7 @@ public class AlertGraylogSystemConfig implements Serializable {
 	 * @return the value of the attribute {@link #idAlertSystemMonitoriza}.
 	 */
 	@Id
-	@Column(name = "SYSTEM_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "SYSTEM_ID", unique = true, nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public Long getIdAlertGraylogSystemConfig() {
 		return this.idAlertGraylogSystemConfig;

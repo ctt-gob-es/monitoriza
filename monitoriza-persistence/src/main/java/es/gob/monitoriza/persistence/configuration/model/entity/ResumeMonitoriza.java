@@ -46,8 +46,6 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.constant.NumberConstants;
-
 /**
  * <p>
  * Class that maps the <i>ALERT_RESUMES</i> database table as a Plain Old Java Object.
@@ -117,7 +115,7 @@ public class ResumeMonitoriza implements Serializable {
 	 * @return the value of the attribute {@link #idTemplateMonitoriza}.
 	 */
 	@Id
-	@Column(name = "RESUME_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "RESUME_ID", unique = true, nullable = false)
 	@GeneratedValue(generator = "sq_resume_monitoriza")
 	@GenericGenerator(name = "sq_resume_monitoriza", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_RESUMES"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
 	@JsonView(DataTablesOutput.View.class)
@@ -140,7 +138,7 @@ public class ResumeMonitoriza implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #name}.
 	 */
-	@Column(name = "NAME", nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "NAME", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public String getName() {
 		return this.name;
@@ -161,7 +159,7 @@ public class ResumeMonitoriza implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #description}.
 	 */
-	@Column(name = "DESCRIPTION", nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "DESCRIPTION", nullable = false, length = 200)
 	@JsonView(DataTablesOutput.View.class)
 	public String getDescription() {
 		return this.description;
@@ -182,7 +180,7 @@ public class ResumeMonitoriza implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #periodicity}.
 	 */
-	@Column(name = "PERIODICITY", nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "PERIODICITY", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public Long getPeriodicity() {
 		return this.periodicity;
@@ -203,7 +201,7 @@ public class ResumeMonitoriza implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #enabled}.
 	 */
-	@Column(name = "ENABLED", nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "ENABLED", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public String getEnabled() {
 		return this.enabled;

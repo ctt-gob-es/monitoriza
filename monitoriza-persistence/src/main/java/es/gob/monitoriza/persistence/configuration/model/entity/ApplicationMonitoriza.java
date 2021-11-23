@@ -45,8 +45,6 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.constant.NumberConstants;
-
 /**
  * <p>
  * Class that maps the <i>ALERT_APPLICATIONS</i> database table as a Plain Old Java Object.
@@ -131,7 +129,7 @@ public class ApplicationMonitoriza implements Serializable {
 	 * @return the value of the attribute {@link #idApplicationMonitoriza}.
 	 */
 	@Id
-	@Column(name = "APP_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "APP_ID", unique = true, nullable = false)
 	@GeneratedValue(generator = "sq_application_monitoriza")
 	@GenericGenerator(name = "sq_application_monitoriza", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_APPLICATIONS"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
 	@JsonView(DataTablesOutput.View.class)

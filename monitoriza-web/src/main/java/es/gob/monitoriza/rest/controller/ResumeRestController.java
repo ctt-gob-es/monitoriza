@@ -74,7 +74,9 @@ import es.gob.monitoriza.service.IResumeMonitorizaService;
 /**
  * <p>Class that manages the REST requests related to the Users administration and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.0, 10/11/2021.
  */
+
 @RestController
 public class ResumeRestController {
 
@@ -110,19 +112,17 @@ public class ResumeRestController {
 	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
-	 * Constant that represents the key Json 'errorSaveAlertSystem'.
+	 * Constant that represents the key Json 'errorSaveResume'.
 	 */
 	private static final String KEY_JS_ERROR_RESUME = "errorSaveResume"; //$NON-NLS-1$
 
 	/**
-	 * Method that maps the save resume web request to the controller and saves it
+	 * Method that maps the save user web request to the controller and saves it
 	 * in the persistence.
 	 *
-	 * @param applicationForm
-	 *            Object that represents the backing user form.
-	 * @param bindingResult
-	 *            Object that represents the form validation result.
-	 * @return {@link DataTablesOutput<ApplicationMonitoriza>}
+	 * @param resumeForm Object that represents the backing resume form.
+	 * @param bindingResult Object that represents the form validation result.
+	 * @return {@link DataTablesOutput<ResumeMonitoriza>}
 	 */
 	@RequestMapping(value = "/saveresume", method = RequestMethod.POST, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
@@ -193,9 +193,8 @@ public class ResumeRestController {
 	 * Method that maps the list resumes web requests to the controller and
 	 * forwards the list of templates to the view.
 	 *
-	 * @param input
-	 *            Holder object for datatable attributes.
-	 * @return String that represents the name of the view to forward.
+	 * @param input Holder object for datatable attributes.
+	 * @return DataTablesOutput<ResumeMonitoriza> that represents the list of resumes.
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/resumesdatatable", method = RequestMethod.GET)
@@ -207,10 +206,9 @@ public class ResumeRestController {
 	 * Method that maps the list of alert systems for a resume and
 	 * forwards the list of templates to the view.
 	 *
-	 * @param input
-	 *            Holder object for datatable attributes.
+	 * @param input Holder object for datatable attributes.
 	 * @param resumeId the resume id
-	 * @return String that represents the name of the view to forward.
+	 * @return DataTablesOutput<AlertSystemDTO> the alert systems of a resume.
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/resumealertssystemsdt", method = RequestMethod.POST)
@@ -244,10 +242,9 @@ public class ResumeRestController {
 	 * Method that maps the list of applications and alert types for a resume and
 	 * forwards the list of templates to the view.
 	 *
-	 * @param input
-	 *            Holder object for datatable attributes.
+	 * @param input Holder object for datatable attributes.
 	 * @param resumeId the resume id
-	 * @return String that represents the name of the view to forward.
+	 * @return DataTablesOutput<AlertResumeType> that represents the alert resume types.
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/resumeappsalerttypessdt", method = RequestMethod.POST)
@@ -262,13 +259,11 @@ public class ResumeRestController {
 
 	/**
 	 * Method that maps the delete user request from datatable to the controller
-	 * and performs the delete of the user identified by its id.
+	 * and performs the delete of the resume identified by its id.
 	 *
-	 * @param resumeId
-	 *            Identifier of the user to be deleted.
-	 * @param index
-	 *            Row index of the datatable.
-	 * @return String that represents the name of the view to redirect.
+	 * @param resumeId Identifier of the resume to be deleted.
+	 * @param index Row index of the datatable.
+	 * @return String that represents the deleted index.
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deleteresume", method = RequestMethod.POST)
@@ -298,6 +293,11 @@ public class ResumeRestController {
 		return index;
 	}
 
+	/**
+	 * Method that save a AlertMailResumeConfig in the database.
+	 * @param emailConfigurationArray Mails to be saved.
+	 * @param alertResumeSystem AlertResumeSystem of the mails.
+	 */
 	private void saveMailResumeConfig(final List<String> emailConfigurationArray, final AlertResumeSystem alertResumeSystem) {
 		for (int i = 0; i < emailConfigurationArray.size() ; i++) {
 			if (emailConfigurationArray.get(i) != null && !emailConfigurationArray.get(i).isEmpty()) {

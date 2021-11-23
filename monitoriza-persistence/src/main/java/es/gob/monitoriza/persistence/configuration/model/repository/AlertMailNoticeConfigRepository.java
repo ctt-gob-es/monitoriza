@@ -29,7 +29,6 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertConfigSystem;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailNoticeConfig;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailNoticeConfigID;
@@ -42,13 +41,29 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailNoticeC
  * <p>
  * Application for monitoring services of @firma suite systems.
  * </p>
+ * @version 1.0, 15/11/2021.
  */
+
 @Repository
 public interface AlertMailNoticeConfigRepository extends JpaRepository<AlertMailNoticeConfig, AlertMailNoticeConfigID> {
 
+	/**
+	 * Method that obtains the alert mail list that belongs a alert system
+	 * @param id Id of the alert mails to find.
+	 * @return A list of alert mail.
+	 */
     List<AlertMailNoticeConfig> findByIdNotSysConfig(Long id);
 
+    /**
+     * Method that delete a AlertMailNoticeConfig by its id.
+     * @param id Identifier to delete.
+     */
     void deleteByIdNotSysConfig(Long id);
-    
+
+    /**
+     * Methot that find all the AlertMailNoticeConfig that belong a AlertConfigSystem.
+     * @param alertConfigSystem AlertConfigSystem to find.
+     * @return A list of AlertMailNoticeConfig.
+     */
     List<AlertMailNoticeConfig> findAllAlertMailNoticeConfigByAlertConfigSystem(AlertConfigSystem alertConfigSystem);
 }

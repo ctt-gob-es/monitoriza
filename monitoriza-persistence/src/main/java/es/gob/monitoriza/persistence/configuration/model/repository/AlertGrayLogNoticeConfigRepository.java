@@ -35,19 +35,35 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogNoti
 
 /**
  * <p>
- * Interface that provides CRUD functionality for the AlertGraylogNoticeConfigRepository entity.
+ * Interface that provides CRUD functionality for the AlertGraylogNoticeConfig entity.
  * </p>
  * <b>Project:</b>
  * <p>
  * Application for monitoring services of @firma suite systems.
  * </p>
+ * @version 1.0, 15/11/2021.
  */
+
 @Repository
 public interface AlertGrayLogNoticeConfigRepository extends JpaRepository<AlertGraylogNoticeConfig, AlertGraylogNoticeConfigID> {
 
+	/**
+	 * Method that obtains a AlertGraylogNoticeConfig by its id.
+	 * @param id Id to find.
+	 * @return The AlertGraylogNoticeConfig that corresponds to the id.
+	 */
     List<AlertGraylogNoticeConfig> findByNotSysConfigId(Long id);
 
+    /**
+     * Method that delete a AlertGraylogNoticeConfig by its id.
+     * @param id Id of the AlertGraylogNoticeConfig to delete.
+     */
     void deleteByNotSysConfigId(Long id);
-    
+
+    /**
+     * Method that find the AlertGraylogNoticeConfig that belongs to a AlertCOnfigSystem.
+     * @param alertConfigSystem AlertConfigSystem to find.
+     * @return The list of AlertGraylogNoticeConfig of the AlertConfigSystem.
+     */
     List<AlertGraylogNoticeConfig> findAllAlertGraylogNoticeConfigByAlertConfigSystem(AlertConfigSystem alertConfigSystem);
 }

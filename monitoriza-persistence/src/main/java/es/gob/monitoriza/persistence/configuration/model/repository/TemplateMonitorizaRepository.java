@@ -30,17 +30,16 @@ import org.springframework.stereotype.Repository;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 
 /**
- * <p>Interface that provides CRUD functionality for the TemplateMonitorizaRepository entity.</p>
- * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
- * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * <p>Interface that provides CRUD functionality for the TemplateMonitoriza entity.</p>
+ * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+ * @version 1.0, 15/11/2021.
  */
+
 @Repository
 public interface TemplateMonitorizaRepository extends JpaRepository<TemplateMonitoriza, Long> {
 
 	/**
-	  * Method that obtains from the persistence a user identified by its primary key.
+	  * Method that obtains from the persistence a template identified by its primary key.
 	 * @param id String that represents the primary key of the template in the persistence.
 	 * @return Object that represents a template from the persistence.
 	 */

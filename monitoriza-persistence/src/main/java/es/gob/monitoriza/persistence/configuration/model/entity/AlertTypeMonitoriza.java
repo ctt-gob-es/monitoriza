@@ -42,8 +42,6 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.constant.NumberConstants;
-
 /**
  * <p>
  * Class that maps the <i>ALERT_TYPES</i> database table as a Plain Old Java Object.
@@ -87,7 +85,7 @@ public class AlertTypeMonitoriza implements Serializable {
 	@Id
 	@GeneratedValue(generator = "sq_alert_type_monitoriza")
 	@GenericGenerator(name = "sq_alert_type_monitoriza", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_TYPES"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
-	@Column(name = "TYPE_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)		
+	@Column(name = "TYPE_ID", unique = true, nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public Long getIdTypeMonitoriza() {
 		return this.idTypeMonitoriza;
@@ -129,7 +127,7 @@ public class AlertTypeMonitoriza implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #name}.
 	 */
-	@Column(name = "DESCRIPTION", nullable = false)
+	@Column(name = "DESCRIPTION", nullable = false, length = 200)
 	@JsonView(DataTablesOutput.View.class)
 	public String getDescription() {
 		return this.description;

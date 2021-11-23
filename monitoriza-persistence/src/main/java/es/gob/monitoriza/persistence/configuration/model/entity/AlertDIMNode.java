@@ -14,7 +14,7 @@
  ******************************************************************************/
 
 
-/** 
+/**
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMNodes.java.</p>
  * <b>Description:</b><p> .</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
@@ -38,11 +38,9 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.constant.NumberConstants;
 
 
-
-/** 
+/**
  * <p>Class that maps the <i>ALERT_DIM_NODES</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.0, 22/11/2021.
@@ -52,20 +50,20 @@ import es.gob.monitoriza.constant.NumberConstants;
 public class AlertDIMNode implements Serializable {
 
 	/**
-	 * Attribute that represents . 
+	 * Attribute that represents .
 	 */
 	private static final long serialVersionUID = 9012864910265034173L;
-	
+
 	/**
-	 * Attribute that represents the object identifier. 
+	 * Attribute that represents the object identifier.
 	 */
 	private Long idNode;
-	
+
 	/**
-	 * Attribute that represents the name of the node. 
+	 * Attribute that represents the name of the node.
 	 */
-	private String name;	
-	
+	private String name;
+
 
 	/**
 	 * Gets the value of the attribute {@link #idNode}.
@@ -73,11 +71,11 @@ public class AlertDIMNode implements Serializable {
 	 * @return the value of the attribute {@link #idNode}.
 	 */
 	@Id
-	@Column(name = "NODE_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "NODE_ID", unique = true, nullable = false)
 	@GeneratedValue(generator = "sq_alert_dim_nodes")
 	@GenericGenerator(name = "sq_alert_dim_nodes", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_DIM_NODES"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
 	public Long getIdNode() {
-		return idNode;
+		return this.idNode;
 	}
 
 	/**
@@ -86,9 +84,9 @@ public class AlertDIMNode implements Serializable {
 	 * @param idNode
 	 *            The value for the attribute {@link #idNode}.
 	 */
-	public void setIdNode(Long idNode) {
+	public void setIdNode(final Long idNode) {
 		this.idNode = idNode;
-	}	
+	}
 
 	/**
 	 * Gets the value of the attribute {@link #name}.
@@ -108,7 +106,7 @@ public class AlertDIMNode implements Serializable {
 	 * @param name
 	 *            The value for the attribute {@link #name}.
 	 */
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 

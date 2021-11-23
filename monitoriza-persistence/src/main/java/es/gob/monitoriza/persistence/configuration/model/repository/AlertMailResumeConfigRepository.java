@@ -40,13 +40,22 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertMailResumeC
  * <p>
  * Application for monitoring services of @firma suite systems.
  * </p>
- *
- * @version 1.3, 09/11/2018.
+ * @version 1.0, 15/11/2021.
  */
+
 @Repository
 public interface AlertMailResumeConfigRepository extends JpaRepository<AlertMailResumeConfig, AlertMailResumeConfigID> {
 
+	/**
+	 * Method that obtains the alert mails by its resume-system id.
+	 * @param id Identifier to search.
+	 * @return A list of alert mail configuration.
+	 */
     List<AlertMailResumeConfig> findByResSysConfigId(Long id);
 
+    /**
+     * Method that delete a AlertMailResumeConfig by its id.
+     * @param id Id to delete.
+     */
     void deleteByResSysConfigId(Long id);
 }

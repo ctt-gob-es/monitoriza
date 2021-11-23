@@ -41,8 +41,6 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
 
-import es.gob.monitoriza.constant.NumberConstants;
-
 /**
  * <p>
  * Class that maps the <i>ALERT_TYPES</i> database table as a Plain Old Java Object.
@@ -84,7 +82,7 @@ public class AlertResumeType implements Serializable {
 	 * @return the value of the attribute {@link #idResType}.
 	 */
 	@Id
-	@Column(name = "RES_TYPE_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
+	@Column(name = "RES_TYPE_ID", unique = true, nullable = false)
 	@GeneratedValue(generator = "sq_alert_resume_types")
 	@GenericGenerator(name = "sq_alert_resume_types", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_RESUME_TYPES"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
 	@JsonView(DataTablesOutput.View.class)

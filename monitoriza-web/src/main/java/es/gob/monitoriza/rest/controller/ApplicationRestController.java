@@ -176,9 +176,6 @@ public class ApplicationRestController {
 	 *
 	 * @param appId
 	 *            Identifier of the application to be deleted.
-	 * @param index
-	 *            Row index of the datatable.
-	 * @return String that represents the index to delete.
 	 */
 	@JsonView(DataTablesOutput.View.class)
 	@RequestMapping(path = "/deleteapplication", method = RequestMethod.POST)

@@ -65,7 +65,7 @@
 										<div class="form-group col-md-10">
 											<label for="alertSystemsList" th:text="#{applalert.summaries.modal.notifsystem}"></label>
 											<select name="alertSystemsList" id="alertSystemsList"
-												class="form-control" th:field="*{alertSystemsList}" required>
+												class="form-control" th:field="*{alertSystemsList}">
 												<option th:each="t: ${alertSystemsList}"
 													th:value="${t.idAlertSystemMonitoriza}" th:text="${t.name}"></option>
 											</select>
@@ -482,11 +482,7 @@
             		resumeEmailArray = [alertSystemData.resumeEmailAddresses];
                 }
             	
-            	if (emailConfigurationArray.length == 0) {
-            		emailConfigurationArray[0] = resumeEmailArray;
-                } else {
-                	emailConfigurationArray[emailConfigurationArray.length] = resumeEmailArray;
-				}
+               emailConfigurationArray[emailConfigurationArray.length] = resumeEmailArray;
             }
 
             var appAlerts = $("#alertListTable").dataTable().fnGetNodes();
