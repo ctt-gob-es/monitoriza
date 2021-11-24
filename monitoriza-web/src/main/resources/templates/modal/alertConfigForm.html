@@ -54,15 +54,15 @@
 									<div class="form-row">
 										<div class="form-group col-md-4">
 											<label for="blockCondition" th:text="#{applalert.alertconfig.modal.eventlimit}"></label> 
-											<input type="text" class="form-control" id="blockCondition" name="blockCondition" th:field="*{blockCondition}">
+											<input type="text" class="form-control" id="blockCondition" name="blockCondition" th:field="*{blockCondition}" pattern="[0-9]+">
 										</div>
 										<div class="form-group col-md-4">
 											<label for="blockInterval" th:text="#{applalert.alertconfig.modal.interval}"></label> 
-											<input type="text" class="form-control" id="blockInterval" name="blockInterval" th:field="*{blockInterval}">
+											<input type="text" class="form-control" id="blockInterval" name="blockInterval" th:field="*{blockInterval}" pattern="[0-9]+">
 										</div>
 										<div class="form-group col-md-4">
 											<label for="blockPeriod" th:text="#{applalert.alertconfig.modal.blockperiod}"></label> 
-											<input type="text" class="form-control" id="blockPeriod" name="blockPeriod" th:field="*{blockPeriod}">
+											<input type="text" class="form-control" id="blockPeriod" name="blockPeriod" th:field="*{blockPeriod}" pattern="[0-9]+">
 										</div>
 									</div>
 								</div>

@@ -37,7 +37,7 @@
 	
 					<div class="form-group">
 						<div class="custom-file" id="customFile" lang="es">
-						<input type="file" class="custom-file-input" id="file" name="file" th:field="*{file}" aria-describedby="fileHelp" accept="text/xml">
+						<input type="file" class="custom-file-input" id="file" name="file" th:field="*{file}" aria-describedby="fileHelp" accept="text/xml" required />
 						<label class="custom-file-label" for="file" th:text="#{applalert.templates.modal.selectfile}"></label>
 					</div>
 					<div style="clear:both;"/>
@@ -68,11 +68,11 @@
 	
 					<div class="form-group">
 						<label id="labelNameTemplate" th:text="#{applalert.template.name}"></label> 						
-						<input type="text" id="nameTemplate" class="form-control" th:field="*{template}" />
+						<input type="text" id="nameTemplate" class="form-control" th:field="*{template}" maxlength="40" required />
 					</div>
 					<div class="form-group">
 						<label id="labelDescriptionTemplate" th:text="#{applalert.template.description}"></label> 						
-						<input type="text" id="descriptionTemplate" class="form-control" th:field="*{description}" />
+						<input type="text" id="descriptionTemplate" class="form-control" th:field="*{description}" maxlength="200" required />
 					</div>
 					<div style="clear:both;"/>
 					
@@ -219,58 +219,99 @@ $(document).ready(function() {
 							fieldVal);
 				}
 		});
+
+	$('#foo').bind('click', function() {
+		  alert('User clicked on "foo."');
+	});
 });	
 function saveNewTemplate(){
-	
-	var addTemplate = /*[[@{/importtemplate}]]*/;
-	var actionReturn = /*[[@{/appltemplates}]]*/;
-	var formData = new FormData(document.forms["importTemplateForm"]);
-	$.ajax(addTemplate, {
-		data: formData,
-		contentType: false,
-		processData:false,
-    		type : 'POST',
-    		success: function(data){
-    			$('#importTemplateModal').modal('hide');
-    			loadIntoAjax('formMenu', actionReturn, 'optionReplacement', 'GET', null, true);
-			
-    		},
-    		error: function(data){
-    				// se oculta al capa 'cargando...'
-        		hide();
-    				
-				//se cierra modal
-        		 $('#importTemplateModal').modal('hide');
-    		}
-    });
+
+	if ($('#importTemplateForm')[0].checkValidity() === false) {
+        event.stopPropagation();
+        
+        $('#importTemplateForm *').filter(':input').each(function(){
+    	    		            	    
+    	    if(!$(this)[0].checkValidity())
+    	    {
+    	  	 $("#invalid-" + $(this).attr('id')).html();
+    	  	 $("#" + $(this).attr('id')).addClass("is-invalid");
+    	    } else {
+    	  	 $("#" + $(this).attr('id')).removeClass("is-invalid");
+    	    }
+    	    
+    	});
+        
+        // Esto es necesario para forzar que se muestren mensajes de validacion de cliente
+        $('<input type="submit">').hide().appendTo($('#importTemplateForm')).click().remove();
+    } else{
+    	var addTemplate = /*[[@{/importtemplate}]]*/;
+    	var actionReturn = /*[[@{/appltemplates}]]*/;
+    	var formData = new FormData(document.forms["importTemplateForm"]);
+    	$.ajax(addTemplate, {
+    		data: formData,
+    		contentType: false,
+    		processData:false,
+        		type : 'POST',
+        		success: function(data){
+        			$('#importTemplateModal').modal('hide');
+        			loadIntoAjax('formMenu', actionReturn, 'optionReplacement', 'GET', null, true);
+    			
+        		},
+        		error: function(data){
+        				// se oculta al capa 'cargando...'
+            		hide();
+        				
+    				//se cierra modal
+            		 $('#importTemplateModal').modal('hide');
+        		}
+        });
+	}
 }
 
 function saveEditTemplate(){
-	var editTemplate = /*[[@{/edittemplate}]]*/;
-	var actionReturn = /*[[@{/appltemplates}]]*/;
+	if ($('#editTemplateForm')[0].checkValidity() === false) {
+        event.stopPropagation();
+        
+        $('#editTemplateForm *').filter(':input').each(function(){
+    	    		            	    
+    	    if(!$(this)[0].checkValidity())
+    	    {
+    	  	 $("#invalid-" + $(this).attr('id')).html();
+    	  	 $("#" + $(this).attr('id')).addClass("is-invalid");
+    	    } else {
+    	  	 $("#" + $(this).attr('id')).removeClass("is-invalid");
+    	    }
+    	    
+    	});
+        
+        // Esto es necesario para forzar que se muestren mensajes de validacion de cliente
+        $('<input type="submit">').hide().appendTo($('#editTemplateForm')).click().remove();
+    } else {
+    	var editTemplate = /*[[@{/edittemplate}]]*/;
+    	var actionReturn = /*[[@{/appltemplates}]]*/;
 
-	var formData = JSON.stringify($("#editTemplateForm").serializeJSON());
-	$.ajax({
+    	var formData = JSON.stringify($("#editTemplateForm").serializeJSON());
+    	$.ajax({
 
-		url: editTemplate + "?idTemplateMonitoriza=" + idTemplateMonitoriza,
-		data: formData,
-		dataType: "json",
-		contentType : "application/json",
-		processData:false,
-    		type : 'POST',
-    		success: function(data){
-    			$('#editTemplateModal').modal('hide');
-    			loadIntoAjax('formMenu', actionReturn, 'optionReplacement', 'GET', null, true);
-			
-    		},
-    		error: function(data){
-    				// se oculta al capa 'cargando...'
-        		hide();
-    				
-				//se cierra modal
-        		 $('#editTemplateModal').modal('hide');
-    		}
-    });
+    		url: editTemplate + "?idTemplateMonitoriza=" + idTemplateMonitoriza,
+    		data: formData,
+    		dataType: "json",
+    		contentType : "application/json",
+    		processData:false,
+        		type : 'POST',
+        		success: function(data){
+        			$('#editTemplateModal').modal('hide');
+        			loadIntoAjax('formMenu', actionReturn, 'optionReplacement', 'GET', null, true);
+        		},
+        		error: function(data){
+        			// se oculta al capa 'cargando...'
+            		hide();
+    				//se cierra modal
+            		 $('#editTemplateModal').modal('hide');
+        		}
+        });
+	}
+
 }
 
 function download(idTemplateMonitoriza) {

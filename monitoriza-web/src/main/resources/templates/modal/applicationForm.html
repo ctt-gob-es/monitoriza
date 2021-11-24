@@ -13,7 +13,7 @@
 
 	<div class="form-group">
 			<label for="name" class="col-form-label" th:text="#{applalert.applications.modal.appname}"></label>
-			<input type="text" id="name" name="name" th:field="*{name}" class="form-control" required />
+			<input type="text" id="name" name="name" th:field="*{name}" class="form-control" maxlength="40" required />
 	</div>
 	
 	<div class="form-group">
@@ -27,7 +27,7 @@
 	<div class="form-row">
 		<div class="form-group col-md-9">
 			<label for="cipherKey" class="col-form-label" th:text="#{applalert.applications.modal.cipherkey}"></label>
-			<input type="text" id="cipherKey" name="cipherKey" th:field="*{cipherKey}" class="form-control" required />
+			<input type="text" id="cipherKey" name="cipherKey" th:field="*{cipherKey}" class="form-control" maxlength="45" required />
 		</div>
 		<div class="form-group col-md-2 align-self-end">
 			<button id="btnGenerateRandom" type="button" class="btn" 
@@ -37,17 +37,17 @@
 	
 	<div class="form-group">
 		<label for="responsibleName" class="col-form-label" th:text="#{applalert.applications.modal.responsiblename}"></label>
-		<input type="text" id="responsibleName" name="responsibleName" th:field="*{responsibleName}" class="form-control" required />
+		<input type="text" id="responsibleName" name="responsibleName" th:field="*{responsibleName}" class="form-control" maxlength="45" required />
 	</div>	
 	
 	<div class="form-group">
 		<label for="responsibleEmail" class="col-form-label" th:text="#{applalert.applications.modal.responsibleemail}"></label>
-		<input type="email" id="responsibleEmail" name="responsibleEmail" th:field="*{responsibleEmail}" class="form-control" required />
+		<input type="email" id="responsibleEmail" name="responsibleEmail" th:field="*{responsibleEmail}" class="form-control" maxlength="45" required />
 	</div>	
 	
 	<div class="form-group">
 		<label for="responsiblePhone" class="col-form-label"  th:text="#{applalert.applications.modal.responsibletel}"></label>
-		<input type="text" id="responsiblePhone" name="responsiblePhone" th:field="*{responsiblePhone}" class="form-control" required />
+		<input type="text" id="responsiblePhone" name="responsiblePhone" th:field="*{responsiblePhone}" class="form-control" maxlength="24" required />
 	</div>	
 	
 </form>
