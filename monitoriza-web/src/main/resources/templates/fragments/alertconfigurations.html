@@ -38,6 +38,15 @@
 
 var alertConfigsTable;
 
+// Se crea un array con los valores de todos los checkbox en una columna, esto se crea
+// para permitir su ordenacion
+$.fn.dataTable.ext.order['dom-checkbox'] = function  ( settings, col )
+{
+    return this.api().column( col, {order:'index'} ).nodes().map( function ( td, i ) {
+        return $('input', td).prop('checked') ? '1' : '0';
+    } );
+}
+
 $(document).ready(function() {
 	
 	var getNewAlertConfig = /*[[@{/newalertconfig}]]*/;
@@ -55,8 +64,13 @@ $(document).ready(function() {
 		dom: 'Bfrtip',
 	    select: 'single',
 	    responsive: true,
-	    
 	    altEditor: true,
+	    columnDefs: [
+  	      {
+  	        targets: [4, 5],
+  	        orderDataType: 'dom-checkbox'
+  	      }
+  	    ],
 	    buttons: [
 		    {text: 'Agregar', name: 'addAlertConfig',
 				action: function ( e, dt, node, config ) {
@@ -102,12 +116,13 @@ $(document).ready(function() {
 			  }}, 
 	    	{extend: 'selected',text: 'Eliminar',name: 'delete'}
 		],
-	
+
+		"order" : [ 1, 'asc' ],
+            
 	    "iTotalRecords": "totalElements",
         "iTotalDisplayRecords": "numberOfElements",
 	    
 		"processing": true,
-	    "serverSide": true,
 	    "language": {
 	        "url": "js/datatables/i18n/spanish.json",
 	        select: {
@@ -181,7 +196,7 @@ $(document).ready(function() {
 		                success: function(data){
 		                	// Se oculta la capa 'cargando...'
 		                	hide();
-		                	alertConfigsTable.row(data.index).remove().draw();
+		                	alertConfigsTable.ajax.reload();
 		                    $('#altEditor-modal .modal-body .alert').remove();
 		                    $('#altEditor-modal').modal('hide');
 		                },
@@ -197,6 +212,14 @@ $(document).ready(function() {
  			var actionApplications = /*[[@{/applications}]]*/;
  			loadIntoAjax('formMenu', actionApplications, 'optionReplacement', 'GET', null, true); 
       	});
+    	    
+		$(':checkbox').on('change', function(e) {
+			var row = $(this).closest('tr');
+    	    var hmc = row.find(':checkbox:checked').length;
+    	    var kluj = parseInt(hmc);
+    	    row.find('td.counter').text(kluj);
+    	    table.row(row).invalidate('dom');
+		});   
 });	
 
 </script>

@@ -52,7 +52,7 @@
 										</div>
 									</div>
 									<div class="form-row">
-										<div class="form-group col-md-4">
+										<div class="form-group col-md-4 align-self-end">
 											<label for="blockCondition" th:text="#{applalert.alertconfig.modal.eventlimit}"></label> 
 											<input type="text" class="form-control" id="blockCondition" name="blockCondition" th:field="*{blockCondition}" pattern="[0-9]+">
 										</div>
@@ -326,6 +326,7 @@
 	            		removeBackdrop();
 	            		hide();
 	            		alertConfigsTable.row.add($(data.data)).draw(false);
+	            		alertConfigsTable.ajax.reload(); 
 	                    $('#alertConfigModal').modal('hide');
 	                },
 	                error:function(data){

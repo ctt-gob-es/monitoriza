@@ -107,7 +107,6 @@ $(document).ready(function() {
 
 	var statsTable;
 	var filterStats = /*[[@{/filterstats}]]*/;
-	var getStats = /*[[@{/alertstatisticsdatatable}]]*/;
 	
 	statsTable = $('#statsTable').DataTable({
 		dom: 'Bfrtip',
@@ -139,19 +138,13 @@ $(document).ready(function() {
 	                1: "1 fila seleccionada"
 	            }
 	          }
-	        },
-		"ajax": {
-			"url": getStats,
-			"dataSrc" : "data",
-			"data": function (data) {
-		     }
-		},
+	    },
 		"columns": [
 	        { "data": "application.name" },
 	        { "data": "template.name" },
 	        { "data": "type.name" },
 	        { "data": "node.name" },
-	        { "data": "severity.name" ,
+	        { "data": "severity.name" , 
 				"render": function (data, type, row) {
 					var result;
 					
@@ -214,6 +207,7 @@ $(document).ready(function() {
 		    });
 		}
 	 });
+
 });	
 
 function cleanForm(){

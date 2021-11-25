@@ -25,10 +25,9 @@
 package es.gob.monitoriza.rest.controller;
 
 import java.io.ByteArrayInputStream;
-import java.io.File;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -253,7 +252,6 @@ public class TemplateRestController {
 		      //Alarms
 		      final Element alarms = doc.createElement("alarms");
 
-
 		      final List<AlertTypeTemplateMonitoriza> listAlertTypeTemplateMonitoriza = this.alertTypeTemplateMonitorizaService.getAllAlertTypeTemplateMonitorizaByTemplateMonitoriza(template);
 
 		      for(final AlertTypeTemplateMonitoriza item : listAlertTypeTemplateMonitoriza){
@@ -273,32 +271,25 @@ public class TemplateRestController {
 
 		      rootElement.appendChild(alarms);
 
-
-
 		      //Se escribe el contenido del XML en un archivo
-		      result = transformerFactory(doc, nameTemplate);
+		      result= transformerFactory(doc, nameTemplate);
 
 		      //Se descarga el XML
-
-		      final String xml = replace(result);
-
-		      final byte[] bFile = Files.readAllBytes(new File(xml).toPath());
+		      final byte[] bFile = result.getOutputStream().toString().getBytes();
 		      final InputStream in = new ByteArrayInputStream(bFile);
 		      response.setContentLength(bFile.length);
 		      response.setHeader("Content-Disposition", "attachment; filename=" + nameTemplate+".xml");
 		      FileCopyUtils.copy(in, response.getOutputStream());
 
-
-		    } catch (final TransformerException tfe) {
-		      tfe.printStackTrace();
-		    } catch (final ParserConfigurationException e) {
-				e.printStackTrace();
-			} catch (final IOException e) {
-				e.printStackTrace();
-			}
-
-
+		} catch (final TransformerException tfe) {
+		    	  tfe.printStackTrace();
+		} catch (final ParserConfigurationException e) {
+		    	  e.printStackTrace();
+		} catch (final IOException e) {
+		    	  e.printStackTrace();
+		}
 	}
+
 
 	/**
 	 * Method that transform the doc.
@@ -309,26 +300,16 @@ public class TemplateRestController {
 	 * @throws TransformerException Error in the transformer.
 	 */
 	private StreamResult transformerFactory(final Document doc, final String nameTemplate)
-		 throws TransformerConfigurationException, TransformerException {
+			throws TransformerConfigurationException, TransformerException {
 
-		final Transformer transformer = TransformerFactory.newInstance().newTransformer();
-		final StreamResult result = new StreamResult(new File(nameTemplate+".xml"));
-		final DOMSource docDom = new DOMSource(doc);
-		transformer.transform(docDom, result);
-		return result;
+			final Transformer transformer = TransformerFactory.newInstance().newTransformer();
+			final ByteArrayOutputStream bos = new ByteArrayOutputStream();
+			final StreamResult result = new StreamResult(bos);
+			final DOMSource docDom = new DOMSource(doc);
+			transformer.transform(docDom, result);
+			return result;
 	}
 
-	/**
-	 * Method that replace characters that can be problematics in a stream result.
-	 * @param result StreamResult to replace.
-	 * @return String replaced.
-	 */
-	private String replace(final StreamResult result){
-		final String[] path = result.getSystemId().split("file:/");
-	    String xml = path[1].replace("%20", " ");
-	    xml = xml.replace("\\", "/");
-		return xml;
-	}
 
 	/**
 	 * Method that edit the template data.

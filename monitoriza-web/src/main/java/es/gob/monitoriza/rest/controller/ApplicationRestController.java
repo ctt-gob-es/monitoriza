@@ -25,6 +25,8 @@
 package es.gob.monitoriza.rest.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -215,7 +217,13 @@ public class ApplicationRestController {
     public List<AlertConfigMonitoriza> getAlertsFromApplication(@RequestParam("id") final Long applicationId, final Model model){
 
 		final ApplicationMonitoriza application = this.applicationService.getApplicationMonitorizaById(applicationId);
-
+		final List<AlertConfigMonitoriza> orderedList = application.getAlertConfigMonitoriza();
+		Collections.sort(orderedList, new Comparator<AlertConfigMonitoriza>() {
+		    @Override
+		    public int compare(final AlertConfigMonitoriza a1, final AlertConfigMonitoriza a2) {
+		        return a1.getAlertTypeMonitoriza().getName().compareTo(a2.getAlertTypeMonitoriza().getName());
+		    }
+		});
 		return application.getAlertConfigMonitoriza();
     }
 

@@ -29,7 +29,6 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import es.gob.monitoriza.persistence.configuration.dto.ApplicationDTO;
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeTemplateMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 
@@ -71,6 +70,11 @@ public interface IApplicationMonitorizaService {
 	 * @return {@link ApplicationMonitoriza} The application.
 	 */
 	ApplicationMonitoriza saveApplicationMonitoriza(ApplicationDTO appDto);
-	
+
+	/**
+	 * Method that obtains all the applications of a template.
+	 * @param template Template to find.
+	 * @return List<ApplicationMonitoriza> List of applications.
+	 */
 	List<ApplicationMonitoriza> getAllApplicationMonitorizaByTemplateMonitoriza(TemplateMonitoriza template);
 }

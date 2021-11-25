@@ -25,6 +25,8 @@
 package es.gob.monitoriza.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.Iterator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -428,9 +430,16 @@ public class ApplicationAlertController {
 
 		model.addAttribute("applicationsList", applicationsList); //$NON-NLS-1$
 
-		// Si encontramos aplicaciones cargaremos las alertas de la primera que encuentre
+		// Si se encuentran aplicaciones , se cargaran las alertas de la primera que encuentre
 		if (applicationsList.size() > 0) {
 			final List<AlertConfigMonitoriza> alertConfigList = applicationsList.get(0).getAlertConfigMonitoriza();
+			// Se ordenan alfabeticamente las alertas
+			Collections.sort(alertConfigList, new Comparator<AlertConfigMonitoriza>() {
+			    @Override
+			    public int compare(final AlertConfigMonitoriza a1, final AlertConfigMonitoriza a2) {
+			        return a1.getAlertTypeMonitoriza().getName().compareTo(a2.getAlertTypeMonitoriza().getName());
+			    }
+			});
 			model.addAttribute("alertConfigList", alertConfigList); //$NON-NLS-1$
 		}
 
@@ -467,6 +476,13 @@ public class ApplicationAlertController {
 		// Si encontramos aplicaciones cargaremos las alertas de la primera que encuentre
 		if (allApplicationsList.size() > 0) {
 			final List<AlertConfigMonitoriza> alertConfigList = allApplicationsList.get(0).getAlertConfigMonitoriza();
+			// Se ordenan alfabeticamente las alertas
+			Collections.sort(alertConfigList, new Comparator<AlertConfigMonitoriza>() {
+			    @Override
+			    public int compare(final AlertConfigMonitoriza a1, final AlertConfigMonitoriza a2) {
+			        return a1.getAlertTypeMonitoriza().getName().compareTo(a2.getAlertTypeMonitoriza().getName());
+			    }
+			});
 			model.addAttribute("alertConfigList", alertConfigList); //$NON-NLS-1$
 		}
 

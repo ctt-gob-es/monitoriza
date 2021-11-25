@@ -29,11 +29,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import javax.validation.constraints.NotEmpty;
-
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -118,20 +115,6 @@ public class AlertStatisticRestController {
 	 * Attribute that represents the search of all the values of the parameter.
 	 */
 	private static final Long PARAM_ALL = (long) -1;
-
-	/**
-	 * Method that returns the alert statistics from the database
-	 * @param input Holder object for datatable attributes.
-	 * @return DataTablesOutput<AlertStatistics> that represents the alert statistics data
-	 */
-	@JsonView(DataTablesOutput.View.class)
-	@RequestMapping(path = "/alertstatisticsdatatable", method = RequestMethod.GET)
-	public DataTablesOutput<AlertStatistics> alertsAudit(@NotEmpty final DataTablesInput input) {
-		final DataTablesOutput<AlertStatistics> dtOutput = new DataTablesOutput<AlertStatistics>();
-		final List<AlertStatistics> statisticsList = this.alertStatisticService.findByFilters(null, null, null, null, null, null, null);
-		dtOutput.setData(statisticsList);
-		return dtOutput;
-	}
 
 	/**
 	 * Method that returns the statistics with the filters indicated in the form.

@@ -25,6 +25,8 @@
 package es.gob.monitoriza.rest.controller;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -148,7 +150,15 @@ public class AlertConfigRestController {
 		final ApplicationMonitoriza appMonit = this.applicationService.getApplicationMonitorizaById(appId);
 		final DataTablesOutput<AlertConfigMonitoriza> result = new DataTablesOutput<AlertConfigMonitoriza>();
 		if (appMonit != null && !appMonit.getAlertConfigMonitoriza().isEmpty()) {
-			result.setData(new ArrayList<>(appMonit.getAlertConfigMonitoriza()));
+			final List<AlertConfigMonitoriza> alertConfigList = new ArrayList<>(appMonit.getAlertConfigMonitoriza());
+			// Se ordenan alfabeticamente las alertas
+			Collections.sort(alertConfigList, new Comparator<AlertConfigMonitoriza>() {
+				@Override
+				public int compare(final AlertConfigMonitoriza a1, final AlertConfigMonitoriza a2) {
+					return a1.getAlertSeverityMonitoriza().getSeverityTypeId().compareTo(a2.getAlertSeverityMonitoriza().getSeverityTypeId());
+				}
+			});
+			result.setData(alertConfigList);
 		}
 		return result;
 	}
