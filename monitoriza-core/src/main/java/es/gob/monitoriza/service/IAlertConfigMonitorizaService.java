@@ -70,6 +70,12 @@ public interface IAlertConfigMonitorizaService {
 	 * @return {@link AlertConfigMonitoriza} The alert configuration.
 	 */
 	AlertConfigMonitoriza saveAlertConfigMonitoriza(AlertConfigDTO alertConfigDTO);
-	
+
+	/**
+	 * Method that obtains all alert configurations for a application.
+	 * @param appMonitoriza Application to search.
+	 * @return Alert configurations list.
+	 */
 	List<AlertConfigMonitoriza> getAllAlertConfigMonitorizaByApplicationMonitoriza(ApplicationMonitoriza appMonitoriza);
+
 }

@@ -71,7 +71,7 @@ public class AlertDIMApplication implements Serializable {
 	@Column(name = "APP_ID", unique = true, nullable = false)
 	@GeneratedValue(generator = "sq_alert_dim_apps")
 	@GenericGenerator(name = "sq_alert_dim_apps", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_DIM_APPS"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
-	public final Long getIdApplication() {
+	public Long getIdApplication() {
 		return this.idApplication;
 	}
 
@@ -81,7 +81,7 @@ public class AlertDIMApplication implements Serializable {
 	 * @param idApplication
 	 *            The value for the attribute {@link #idApplication}.
 	 */
-	public final void setIdApplication(final Long idApplication) {
+	public void setIdApplication(final Long idApplication) {
 		this.idApplication = idApplication;
 	}
 
@@ -92,7 +92,7 @@ public class AlertDIMApplication implements Serializable {
 	 */
 	@Column(name = "APP_NAME", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
-	public final String getName() {
+	public String getName() {
 		return this.name;
 	}
 
@@ -102,7 +102,7 @@ public class AlertDIMApplication implements Serializable {
 	 * @param name
 	 *            The value for the attribute {@link #name}.
 	 */
-	public final void setName(final String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
