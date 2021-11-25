@@ -5,7 +5,7 @@ th:action="@{/savenotifsystem}" method="post">
 	
 	<div class="form-group">
 		<label for="name" class="col-form-label" th:text="#{table.applalert.sysnot.name}"></label>
-		<input type="text" id="name" name="name" th:field="*{name}" class="form-control" required />
+		<input type="text" id="name" name="name" th:field="*{name}" class="form-control" maxlength="30" required />
 	</div>
 	
 	<div class="form-group">
@@ -25,9 +25,9 @@ th:action="@{/savenotifsystem}" method="post">
 	
 	<div style="display:none" id="graylogData" class="form-group">
 		<label for="host" class="col-form-label" th:text="#{applalert.sysnot.modal.address}"></label>
-        <input type="text" th:field="*{host}" id="host" name="host" class="form-control" />
+        <input type="text" th:field="*{host}" id="host" name="host" class="form-control" maxlength="45"/>
         <label for="port" class="col-form-label" th:text="#{applalert.sysnot.modal.port}"></label>
-        <input type="text" th:field="*{port}" id="port" name="port" class="form-control" />
+        <input type="text" th:field="*{port}" id="port" name="port" class="form-control" pattern="[0-9]+" maxlength="19"/>
 	</div>
 	
 </form>
@@ -63,5 +63,5 @@ th:action="@{/savenotifsystem}" method="post">
 		}
 
 	 });
-	
+	 
 </script>
