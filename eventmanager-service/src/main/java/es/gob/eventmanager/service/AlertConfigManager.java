@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.1, 22/11/2021.
+ * @version 1.2, 25/11/2021.
  */
 package es.gob.eventmanager.service;
 
@@ -43,7 +43,7 @@ import es.gob.eventmanager.persistence.model.entity.AlertConfigMonitoriza;
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * @version 1.1, 22/11/2021.
+ * @version 1.2, 25/11/2021.
  */
 public final class AlertConfigManager {
 	
@@ -88,7 +88,7 @@ public final class AlertConfigManager {
 	 * @param idAlertType Alert Type identifier.
 	 * @return <code>true</code> if the alarm is blocked, otherwise <code>false</code>.
 	 */
-	public static boolean isBlockedAlert(Long idAlertConfig) {
+	public static Boolean isBlockedAlert(Long idAlertConfig) {
 		// se comprueba en el mapa de alarmas si está bloqueada o no
 		return alarmsBlocked.get(idAlertConfig);		
 

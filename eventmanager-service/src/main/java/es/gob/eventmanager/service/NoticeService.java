@@ -60,7 +60,7 @@ import es.gob.eventmanager.persistence.model.entity.TemplateMonitoriza;
 
 /**
  * Servicio para la notificaci&oacute;n de eventos.
- * @version 1.3, 22/11/2021.
+ * @version 1.4, 25/11/2021.
  */
 public class NoticeService extends HttpServlet {
 
@@ -193,8 +193,16 @@ public class NoticeService extends HttpServlet {
 
 						// Logica de envio
 						isEnabledAlert = config.getIsEnabled();
-						isBlockedAlert = AlertConfigManager.isBlockedAlert(config.getIdAlertConfigMonitoriza());
-
+						
+						if (AlertConfigManager.isBlockedAlert(config.getIdAlertConfigMonitoriza()) == null || !AlertConfigManager.isBlockedAlert(config.getIdAlertConfigMonitoriza())) {
+							
+							isBlockedAlert = false;
+							
+						} else if (AlertConfigManager.isBlockedAlert(config.getIdAlertConfigMonitoriza())) {
+							
+							isBlockedAlert = true;
+						}
+						
 						// Comprobamos si la alarma se encuentra deshabilitada,
 						// en cuyo caso no hacemos nada.
 						if (isEnabledAlert) {
@@ -399,7 +407,7 @@ public class NoticeService extends HttpServlet {
 						auditoria.setNode(event.getNode());
 						auditoria.setSeverity(config.getAlertSeverityMonitoriza().getName());
 						auditoria.setTimestamp(new Date());
-						auditoria.setDescription(alertType.getDescription());
+						auditoria.setDescription(alert.getMessage());
 						
 						ManagerConfigurationServices.getInstance().getEventManagerBO().registerAlertAudit(auditoria);					
 					}
