@@ -58,6 +58,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSeverityMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeTemplateMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
@@ -70,6 +71,7 @@ import es.gob.monitoriza.service.IAlertDIMTypeService;
 import es.gob.monitoriza.service.IAlertSeverityMonitorizaService;
 import es.gob.monitoriza.service.IAlertSystemMonitorizaService;
 import es.gob.monitoriza.service.IAlertTypeMonitorizaService;
+import es.gob.monitoriza.service.IAlertTypeTemplateMonitorizaService;
 import es.gob.monitoriza.service.IApplicationMonitorizaService;
 import es.gob.monitoriza.service.IResumeMonitorizaService;
 import es.gob.monitoriza.service.ITemplateMonitorizaService;
@@ -137,6 +139,11 @@ public class ApplicationAlertController {
 	@Autowired
 	private IAlertConfigMonitorizaService alertConfigMonitorizaService;
 
+	/**
+	 * Attribute that represents the service object for accessing the repository for alert types and templates.
+	 */
+	@Autowired
+	private IAlertTypeTemplateMonitorizaService alertTypeTemplateMonitorizaService;
 
 	/**
 	 * Attribute that represents the service object for accessing the
@@ -542,13 +549,20 @@ public class ApplicationAlertController {
 
 		model.addAttribute("alertSystemsList", alertSystemsList); //$NON-NLS-1$
 
-		// Se cargan los tipos de alerta para el select correspondiente
-		List<AlertTypeMonitoriza> alertTypesMonitorizaList = new ArrayList<AlertTypeMonitoriza>();
+		final ApplicationMonitoriza application = this.applicationMonitorizaService.getApplicationMonitorizaById(appId);
 
-		alertTypesMonitorizaList = StreamSupport.stream(this.alertTypeMonitorizaService.getAllAlertTypeMonitoriza().spliterator(), false)
+		// Se cargan los tipos de alerta que pertenecen a la plantilla de la aplicacion para el select correspondiente
+		List<AlertTypeTemplateMonitoriza> alertTypesTemplateMonitorizaList = new ArrayList<AlertTypeTemplateMonitoriza>();
+
+		alertTypesTemplateMonitorizaList = StreamSupport.stream
+				(this.alertTypeTemplateMonitorizaService.getAllAlertTypeTemplateMonitorizaByTemplateMonitoriza(application.getTemplateMonitoriza()).spliterator(), false)
 				.collect(Collectors.toList());
 
-		final ApplicationMonitoriza application = this.applicationMonitorizaService.getApplicationMonitorizaById(appId);
+		final List<AlertTypeMonitoriza> alertTypesMonitorizaList = new ArrayList<AlertTypeMonitoriza>();
+
+		for (final AlertTypeTemplateMonitoriza alertTypeTemplate : alertTypesTemplateMonitorizaList) {
+			alertTypesMonitorizaList.add(alertTypeTemplate.getAlertTypeMonitoriza());
+		}
 
 		// Si el tipo de alerta ya se encuentra configurado para la aplicacion, se elimina de la lista
 		for (final AlertConfigMonitoriza alertConfig : application.getAlertConfigMonitoriza()) {
@@ -596,14 +610,6 @@ public class ApplicationAlertController {
 
 		model.addAttribute("alertSystemsList", alertSystemsList); //$NON-NLS-1$
 
-		// Se cargan los tipos de alerta para el select correspondiente
-		List<AlertTypeMonitoriza> alertTypesMonitorizaList = new ArrayList<AlertTypeMonitoriza>();
-
-		alertTypesMonitorizaList = StreamSupport.stream(this.alertTypeMonitorizaService.getAllAlertTypeMonitoriza().spliterator(), false)
-				.collect(Collectors.toList());
-
-		model.addAttribute("alertTypesList", alertTypesMonitorizaList); //$NON-NLS-1$
-
 		// Se cargan los tipos de criticidad para el select correspondiente
 		List<AlertSeverityMonitoriza> alertSeverityList = new ArrayList<AlertSeverityMonitoriza>();
 
@@ -614,6 +620,15 @@ public class ApplicationAlertController {
 
 		// Se carga la informacion de la alerta
 		final AlertConfigMonitoriza alertConfig = this.alertConfigMonitorizaService.getAlertConfigMonitorizaById(alertConfigId);
+
+		// Se carga el tipo de alerta para el select correspondiente
+		final List<AlertTypeMonitoriza> alertTypesMonitorizaList = new ArrayList<AlertTypeMonitoriza>();
+
+		alertTypesMonitorizaList.add(alertConfig.getAlertTypeMonitoriza());
+
+		model.addAttribute("alertTypesList", alertTypesMonitorizaList); //$NON-NLS-1$
+
+		// Se cargan los datos en el formulario a mostrar
 		final AlertConfigDTO alertConfigForm = new AlertConfigDTO();
 		alertConfigForm.setIdAlertConfigMonitoriza(alertConfigId);
 		alertConfigForm.setAppID(appId);
