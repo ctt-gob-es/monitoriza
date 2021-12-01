@@ -60,7 +60,7 @@ import es.gob.eventmanager.persistence.model.entity.TemplateMonitoriza;
 
 /**
  * Servicio para la notificaci&oacute;n de eventos.
- * @version 1.4, 25/11/2021.
+ * @version 1.5, 01/12/2021.
  */
 public class NoticeService extends HttpServlet {
 
@@ -190,6 +190,10 @@ public class NoticeService extends HttpServlet {
 						// Cargamos la configuracion de la alerta segun
 						// el nombre de la aplicacion y el tipo de alerta
 						AlertConfigMonitoriza config = ManagerConfigurationServices.getInstance().getEventManagerBO().getAlertConfigByAlertTypeAndApplication(alertType.getIdTypeMonitoriza(), app.getIdApplicationMonitoriza());
+						
+						// Se actualiza el momento de ultima recepcion de alertade este tipo
+						config.setLastTime(new Date());
+						ManagerConfigurationServices.getInstance().getEventManagerBO().saveAlertConfig(config);
 
 						// Logica de envio
 						isEnabledAlert = config.getIsEnabled();
@@ -214,10 +218,10 @@ public class NoticeService extends HttpServlet {
 								// ha pasado el tiempo de bloqueo y hay que
 								// desbloquear.
 								isBlockedAlert = false;
-								AlertConfigManager.unblockAlert(config.getIdAlertConfigMonitoriza());
+								AlertConfigManager.unblockAlert(alertType.getIdTypeMonitoriza(), app.getIdApplicationMonitoriza());
 								
 								
-							} else if (config.getAllowBlock()) {
+							} else if (!isBlockedAlert && config.getAllowBlock()) {
 								// Se comprueba si se dan las condiciones para bloquear la alerta
 								// y en caso afirmativo se realiza el bloqueo, actualizando la alerta
 								// en base de datos.
@@ -303,7 +307,10 @@ public class NoticeService extends HttpServlet {
 				addresses.add(alertMailNotice.getMail());
 			}
 			
-			EMailTimeLimitedOperation emailOperation = new EMailTimeLimitedOperation(configMailServer, addresses, alert.getCode(), alert.getMessage());
+			StringBuilder subject = new StringBuilder();
+			subject.append("Alerta de aplicación [").append(alertConfig.getApplicationMonitoriza().getName()).append("]. Severidad [").append(alertConfig.getAlertSeverityMonitoriza().getName()).append("]. Código [").append(alert.getCode()).append("].");
+			
+			EMailTimeLimitedOperation emailOperation = new EMailTimeLimitedOperation(configMailServer, addresses, subject.toString(), alert.getMessage());
 			emailOperation.startOperation();
 		}
 		
