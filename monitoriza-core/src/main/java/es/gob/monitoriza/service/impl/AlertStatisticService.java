@@ -114,10 +114,10 @@ public class AlertStatisticService implements IAlertStatisticService {
 				query += " AND STATS.TYPE_ID = " + typeID.getIdType();
 			}
 			if (nodeID != null) {
-				query += " AND STATS.NODE_ID = " + nodeID.getIdNode();
+				query += " AND STATS.NODE = " + nodeID.getIdNode();
 			}
 			if (severityID != null) {
-				query += " AND STATS.SEVERITY_ID = " + severityID.getIdSeverity();
+				query += " AND STATS.SEVERITY = " + severityID.getIdSeverity();
 			}
 
 			query += ") GROUP BY APP_ID, APP_NAME, TYPE_ID, TYPE_NAME, TEMPLATE_ID, TEMPLATE_NAME, NODE, NODE_NAME, SEVERITY, SEVERITY_NAME";
