@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.2, 25/11/2021.
+ * @version 1.3, 01/12/2021.
  */
 package es.gob.eventmanager.service;
 
@@ -43,7 +43,7 @@ import es.gob.eventmanager.persistence.model.entity.AlertConfigMonitoriza;
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * @version 1.2, 25/11/2021.
+ * @version 1.3, 01/12/2021.
  */
 public final class AlertConfigManager {
 	
@@ -102,16 +102,20 @@ public final class AlertConfigManager {
 	 * @param alarmName Alarm name.
 	 * @throws AlarmsException In case of some error saving the configuration.
 	 */
-	public static void unblockAlert(Long idAlertConfig) {
+	public static void unblockAlert(Long idAlertType, Long idApplication) {
 		
 		try {
 			
-			AlertConfigMonitoriza alertConfigToUnblock = ManagerConfigurationServices.getInstance().getEventManagerBO().getAlertConfigById(idAlertConfig);
+			// Cargamos la configuracion de la alerta segun
+			// el nombre de la aplicacion y el tipo de alerta
+			AlertConfigMonitoriza alertConfigToUnblock = ManagerConfigurationServices.getInstance().getEventManagerBO().getAlertConfigByAlertTypeAndApplication(idAlertType, idApplication);			
+			
 			alertConfigToUnblock.setBlockTime(null);
+			
 			ManagerConfigurationServices.getInstance().getEventManagerBO().saveAlertConfig(alertConfigToUnblock);
 			
-			alarmsBlocked.put(idAlertConfig, false);
-			alarmsEvents.put(idAlertConfig, new TreeSet<Date>());
+			alarmsBlocked.put(alertConfigToUnblock.getIdAlertConfigMonitoriza(), false);
+			alarmsEvents.put(alertConfigToUnblock.getIdAlertConfigMonitoriza(), new TreeSet<Date>());
 			
 		} catch (EventManagerException e) {
 			LOGGER.warn(e.getMessage());
@@ -135,7 +139,8 @@ public final class AlertConfigManager {
 		// se obtiene el tiempo de bloqueo configurado
 		boolean result = false;
 		long timeBlock = 0L;
-		timeBlock = config.getBlockPeriod();
+		// Se pasa a milisegundos para trabajar con currentDate.getTime()
+		timeBlock = config.getBlockPeriod() * NumberConstants.NUM1000;
 		
 		if (timeBlock > 0) {
 			// se obtiene la fecha en el que se bloqueó la alarma
@@ -156,8 +161,9 @@ public final class AlertConfigManager {
 	 * @param config {@link AlertConfigMonitoriza} that represents the configuration parameters of this alert.
 	 * @param eventDate {@link Date} of the event.
 	 * @return <code>true</code> if the alarm has been blocked, otherwise <code>false</code>.
+	 * @throws EventManagerException 
 	 */
-	public static boolean checkBlockadeAndAlertCount(AlertConfigMonitoriza config, Date eventDate) {
+	public static boolean checkBlockadeAndAlertCount(AlertConfigMonitoriza config, Date eventDate) throws EventManagerException {
 
 		boolean result = false;
 		boolean checkBlockade = true;
@@ -168,7 +174,7 @@ public final class AlertConfigManager {
 		// Si el sistema de bloqueo para la alarma se encuentra activo...
 		boolean isActiveBlockSystem = false;
 		
-			isActiveBlockSystem = config.getAllowBlock();
+		isActiveBlockSystem = config.getAllowBlock();
 		
 		if (checkBlockade && isActiveBlockSystem) {
 
@@ -186,13 +192,14 @@ public final class AlertConfigManager {
 	 * @param alarmName Name of the alarm.
 	 * @param eventDate Event date.
 	 * @return <code>true</code> if the alarm has been blocked, otherwise <code>false</code>.
+	 * @throws EventManagerException 
 	 */
-	private static boolean checkBlockadeAndAlarmCountAux(AlertConfigMonitoriza config, Date eventDate) {
+	private static boolean checkBlockadeAndAlarmCountAux(AlertConfigMonitoriza config, Date eventDate) throws EventManagerException {
 
 		boolean result = false;
 
 		Long numAlarmsMax = config.getBlockCondition();
-		Long numMinsMax = config.getBlockInterval();
+		Long numMinsMax = config.getBlockInterval() / NumberConstants.NUM60;
 		
 		TreeSet<Date> listEvents = alarmsEvents.get(config.getIdAlertConfigMonitoriza());
 
@@ -200,6 +207,9 @@ public final class AlertConfigManager {
 			// se comprueba si desde el primer evento al último han pasado los
 			// minutos máximos configurados
 			if (hasExceededMaxMinutes(listEvents, numMinsMax)) {
+				config.setBlockTime(new Date());
+				
+				ManagerConfigurationServices.getInstance().getEventManagerBO().saveAlertConfig(config);
 				// se bloquea la alarma
 				alarmsBlocked.put(config.getIdAlertConfigMonitoriza(), true);
 				// se vacía la lista de fechas de eventos de la alarma, dejando
@@ -249,6 +259,15 @@ public final class AlertConfigManager {
 		// se eliminan del mapa, dejando solo constancia del último evento, para
 		// controlar el tiempo de bloqueo.
 		alarmsEvents.get(idAlertConfig).removeAll(subSet);
+	}
+	
+	/**
+	 * Adds the block status of a newly created alert configuration
+	 * @param config
+	 */
+	public static void addNewBlockConfig(AlertConfigMonitoriza config) {
+		
+		alarmsBlocked.put(config.getIdAlertConfigMonitoriza(), config.getBlockTime() == null ? false:true);
 	}
 
 
