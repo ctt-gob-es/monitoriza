@@ -169,7 +169,10 @@ public final class AlertConfigManager {
 		boolean checkBlockade = true;
 
 		// se añade la alarma en el mapa de eventos para el conteo
-		alarmsEvents.get(config.getIdAlertConfigMonitoriza()).add(eventDate);
+		if (alarmsEvents.get(config.getIdAlertConfigMonitoriza()) == null) {
+			alarmsEvents.put(config.getIdAlertConfigMonitoriza(), new TreeSet<Date>());
+		} 
+		alarmsEvents.get(config.getIdAlertConfigMonitoriza()).add(eventDate);				
 
 		// Si el sistema de bloqueo para la alarma se encuentra activo...
 		boolean isActiveBlockSystem = false;
