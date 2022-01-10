@@ -29,7 +29,7 @@
 		<hibernate.version>5.2.13.Final</hibernate.version>
 		<plugin.javadoc.skip>true</plugin.javadoc.skip>
 		<plugin.source.skip>true</plugin.source.skip>
-		
+						
 		<!-- Versionado de módulos propios de Monitoriz@. -->
 		<monitoriza.version.commons-util>1.0</monitoriza.version.commons-util>
 		<monitoriza.version.i18n>1.0</monitoriza.version.i18n>
@@ -109,7 +109,33 @@
 				<artifactId>log4j</artifactId>
 				<version>1.2.16</version>
 			</dependency>
-			
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-bom</artifactId>
+				<version>2.17.0</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
+			<!-- <dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+			    <artifactId>log4j-core</artifactId>
+			    <version>2.16.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+			    <artifactId>log4j-api</artifactId>
+			    <version>2.16.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+			    <artifactId>log4j-slf4j-impl</artifactId>
+			    <version>2.16.0</version>
+			</dependency>
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+			    <artifactId>log4j-jul</artifactId>
+			    <version>2.16.0</version>
+			</dependency> -->
 			<!-- Módulos del Gestor de eventos -->
 			<dependency>
 				<groupId>es.gob.eventmanager</groupId>
@@ -393,6 +419,10 @@
 					<locales>es,en</locales>
 				</configuration>
 			</plugin>
+			<plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
