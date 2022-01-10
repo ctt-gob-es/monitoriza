@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>9/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 25/01/2019.
+ * @version 1.3, 10/01/2022.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -126,7 +126,7 @@ public class AlertResumeSystem implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #alertSystemMonitoriza}.
 	 */
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "SYSTEM_ID", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
 	public AlertSystemMonitoriza getAlertSystemMonitoriza() {
@@ -143,7 +143,7 @@ public class AlertResumeSystem implements Serializable {
 		this.alertSystemMonitoriza = alertSystemMonitoriza;
 	}
 
-	@OneToMany(mappedBy = "alertResumeSystem" ,orphanRemoval = true)
+	@OneToMany(mappedBy = "alertResumeSystem" ,orphanRemoval = true, fetch = FetchType.EAGER)
 	public List<AlertMailResumeConfig> getAlertMailsResumeConfig() {
 		return this.alertMailsResumeConfig;
 	}

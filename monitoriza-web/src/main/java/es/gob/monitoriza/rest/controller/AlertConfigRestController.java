@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.7, 14/03/2019.
+ * @version 1.1, 10/01/2022.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -74,7 +74,7 @@ import es.gob.monitoriza.service.IApplicationMonitorizaService;
 /**
  * <p>Class that manages the REST requests related to the alert configurations administration and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 10/11/2021.
+ * @version 1.1, 10/01/2022.
  */
 @RestController
 public class AlertConfigRestController {
@@ -249,9 +249,9 @@ public class AlertConfigRestController {
 					alertConfigSystem.setAlertConfigMonitoriza(alertConfig);
 					alertConfigSystem.setAlertSystemMonitoriza(alertSystem);
 					alertConfigSystem = this.alertConfigSystemService.saveAlertConfigSystem(alertConfigSystem);
-					if (INotificationSystemTypes.GRAYLOG.equals(alertConfigSystem.getAlertSystemMonitoriza().getType())) {
+					if (INotificationSystemTypes.GRAYLOG.equals(alertConfigSystem.getAlertSystemMonitoriza().getType().getName().toLowerCase())) {
 						saveGrayLogNoticeConfig(alertConfigSystem.getIdNotSysConfig(), alertConfigForm.getKeysArray().get(j), alertConfigForm.getValuesArray().get(j));
-					} else if (INotificationSystemTypes.EMAIL.equals(alertConfigSystem.getAlertSystemMonitoriza().getType())) {
+					} else if (INotificationSystemTypes.EMAIL.equals(alertConfigSystem.getAlertSystemMonitoriza().getType().getName().toLowerCase())) {
 						saveMailNoticeConfig(alertConfigSystem.getIdNotSysConfig(), alertConfigForm.getEmailConfigurationArray().get(j));
 					}
 				}

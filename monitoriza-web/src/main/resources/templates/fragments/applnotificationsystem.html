@@ -65,21 +65,7 @@ $(document).ready(function() {
 			{ "data": "idAlertSystemMonitoriza",
 		    	"visible": false},
 	        { "data": "name" },
-	        { "data": "type" ,
-				"render": function (data, type, row) {
-					var type;
-					
-					switch(data){
-						case "email":
-							type = "Correo electronico";
-						break;
-						case "graylog":
-							type = "Graylog";
-						break;
-					}
-		        	return type;       	  
-		          }	
-	         }
+	        { "data": "type.name"}
 	        ]
 	        
 		}).on('crudaction', function(e, accion, idAlertSystemMonitoriza, data, rowindex){

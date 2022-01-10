@@ -20,12 +20,11 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>9/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 10/01/2022.
+ * @version 1.0, 10/01/2022.
  */
-package es.gob.monitoriza.persistence.configuration.model.entity;
+package es.gob.eventmanager.persistence.model.entity;
 
 import java.io.Serializable;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -40,14 +39,9 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Parameter;
-import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-
-import com.fasterxml.jackson.annotation.JsonView;
 
 /**
  * <p>
@@ -91,11 +85,6 @@ public class ResumeMonitoriza implements Serializable {
 	 * Attribute that represents if the resume is enabled.
 	 */
 	private String enabled;
-	
-	/**
-	 * Attribute that represents the last time this resume was sent.
-	 */
-	private Date lastSentTime;
 
 	/**
 	 * Attribute that represents the systems configurated for this resume.
@@ -116,7 +105,7 @@ public class ResumeMonitoriza implements Serializable {
 	 * Attribute that represents the alert systems configurated for a resume.
 	 */
 	private Set<AlertResumeSystem> alertResumeSystems;
-	
+
 	/**
 	 * Gets the value of the attribute {@link #idTemplateMonitoriza}.
 	 *
@@ -126,7 +115,6 @@ public class ResumeMonitoriza implements Serializable {
 	@Column(name = "RESUME_ID", unique = true, nullable = false)
 	@GeneratedValue(generator = "sq_resume_monitoriza")
 	@GenericGenerator(name = "sq_resume_monitoriza", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_RESUMES"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
-	@JsonView(DataTablesOutput.View.class)
 	public Long getIdResumeMonitoriza() {
 		return this.idResumeMonitoriza;
 	}
@@ -147,7 +135,6 @@ public class ResumeMonitoriza implements Serializable {
 	 * @return the value of the attribute {@link #name}.
 	 */
 	@Column(name = "NAME", nullable = false)
-	@JsonView(DataTablesOutput.View.class)
 	public String getName() {
 		return this.name;
 	}
@@ -168,7 +155,6 @@ public class ResumeMonitoriza implements Serializable {
 	 * @return the value of the attribute {@link #description}.
 	 */
 	@Column(name = "DESCRIPTION", nullable = false, length = 200)
-	@JsonView(DataTablesOutput.View.class)
 	public String getDescription() {
 		return this.description;
 	}
@@ -189,7 +175,6 @@ public class ResumeMonitoriza implements Serializable {
 	 * @return the value of the attribute {@link #periodicity}.
 	 */
 	@Column(name = "PERIODICITY", nullable = false)
-	@JsonView(DataTablesOutput.View.class)
 	public Long getPeriodicity() {
 		return this.periodicity;
 	}
@@ -210,7 +195,6 @@ public class ResumeMonitoriza implements Serializable {
 	 * @return the value of the attribute {@link #enabled}.
 	 */
 	@Column(name = "ENABLED", nullable = false)
-	@JsonView(DataTablesOutput.View.class)
 	public String getEnabled() {
 		return this.enabled;
 	}
@@ -260,26 +244,5 @@ public class ResumeMonitoriza implements Serializable {
 	public void setAlertResumeSystem(final Set<AlertResumeSystem> alertResumeSystems) {
 		this.alertResumeSystems = alertResumeSystems;
 	}
-
-	/**
-	 * Gets the value of the attribute {@link #lastSentTime}.
-	 *
-	 * @return the value of the attribute {@link #lastSentTime}.
-	 */
-	@Column(name = "LAST_SENT_TIME")
-	@Temporal(TemporalType.TIMESTAMP)
-	public final Date getLastSentTime() {
-		return lastSentTime;
-	}
-
-	/**
-	 * Sets the value of the attribute {@link #lastSentTime}.
-	 *
-	 * @param lastSentTime
-	 *            The value for the attribute {@link #lastSentTime}.
-	 */
-	public final void setLastSentTime(Date lastSentTime) {
-		this.lastSentTime = lastSentTime;	}
-	
 
 }

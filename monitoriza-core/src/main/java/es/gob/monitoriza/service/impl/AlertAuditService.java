@@ -19,24 +19,18 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>22/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.1, 22/11/2021.
+ * @version 1.2, 10/01/2022.
  */
 package es.gob.monitoriza.service.impl;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.persistence.configuration.exception.DatabaseException;
@@ -50,7 +44,7 @@ import es.gob.monitoriza.service.IAlertAuditService;
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 22/11/2021.
+ * @version 1.1, 10/01/2022.
  */
 @Service
 public class AlertAuditService implements IAlertAuditService {
@@ -124,9 +118,33 @@ public class AlertAuditService implements IAlertAuditService {
 	 * @see es.gob.monitoriza.service.IAlertAuditService#findByCriteria(java.util.Date, java.util.Date)
 	 */
 	@Override
-	public List<AlertAudit> findByCriteria(Date actualDate, Date periodDate) {
+	public List<AlertAudit> findByCriteria(Date actualDate, Date periodDate) throws DatabaseException {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IAlertAuditService#getAlertAuditForResume(java.util.List, java.util.Date)
+	 */
+	@Override
+	public List<AlertAudit> getAlertAuditForResume(Set<String> alertTypes, Set<String> apps, Date limit) throws DatabaseException {
+		
+		List<AlertAudit> result = null;
+		
+		try {
+			
+			if (limit != null) {
+				result = repository.getAuditAlertForResume(alertTypes, apps, limit);
+			}
+							 
+		} catch (DataAccessException e) {
+			
+			throw new DatabaseException(e, e.getMessage());
+			
+		}
+		
+		return result;
 	}
 	
 //	@Override

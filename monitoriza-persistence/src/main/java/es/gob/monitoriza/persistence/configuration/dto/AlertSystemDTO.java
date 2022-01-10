@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 10/01/2022.
  */
 package es.gob.monitoriza.persistence.configuration.dto;
 
@@ -57,7 +57,7 @@ public class AlertSystemDTO implements Serializable{
 	/**
 	 * Attribute that represents the type of the alert system
 	 */
-	private String type;
+	private Long type;
 
 	/**
 	 * Attribute that represents the host of the alert system for graylog systems
@@ -92,11 +92,11 @@ public class AlertSystemDTO implements Serializable{
 		this.name = name;
 	}
 
-	public String getType() {
+	public Long getType() {
 		return this.type;
 	}
 
-	public void setType(final String type) {
+	public void setType(final Long type) {
 		this.type = type;
 	}
 

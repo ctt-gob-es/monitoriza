@@ -1,5 +1,6 @@
 /* 
 /*******************************************************************************
+ 
  * Copyright (C) 2018 MINHAFP, Gobierno de España
  * This program is licensed and may be used, modified and redistributed under the  terms
  * of the European Public License (EUPL), either version 1.1 or (at your option)
@@ -20,7 +21,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 25/01/2019.
+ * @version 1.3, 10/01/2022.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 

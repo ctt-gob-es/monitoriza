@@ -19,9 +19,11 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>6 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 10/01/2022.
  */
 package es.gob.monitoriza.service;
+
+import java.util.List;
 
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -29,6 +31,7 @@ import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import es.gob.monitoriza.persistence.configuration.dto.AlertSystemDTO;
 import es.gob.monitoriza.persistence.configuration.dto.TemplateDTO;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemType;
 import es.gob.monitoriza.persistence.configuration.model.entity.TemplateMonitoriza;
 
 /**
@@ -69,4 +72,16 @@ public interface IAlertSystemMonitorizaService {
 	 * @return {@link TemplateMonitoriza} The template.
 	 */
 	AlertSystemMonitoriza saveAlertSystemMonitoriza(AlertSystemDTO templateDto);
+	
+	/**
+	 * Method that gets all {@link AlertSystemType} from persistence
+	 * @return List<AlertSystemType>
+	 */
+	List<AlertSystemType> getAllAlertSystemType();
+	
+	/**
+	 * Method that obtains from persistence all {@link AlertSystemMonitoriza} that can be used with 'resumes'.
+	 * @return List<AlertSystemMonitoriza>
+	 */
+	List<AlertSystemMonitoriza> getAllAlertSystemResumeEnabled();
 }

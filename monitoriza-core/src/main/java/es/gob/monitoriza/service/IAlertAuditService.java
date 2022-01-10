@@ -20,12 +20,13 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>22/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 22/11/2021.
+ * @version 1.1, 10/01/2022.
  **/ 
 package es.gob.monitoriza.service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
@@ -36,7 +37,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertAudit;
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 22/11/2021.
+ * @version 1.1, 10/01/2022.
  **/
 public interface IAlertAuditService {
 
@@ -65,8 +66,7 @@ public interface IAlertAuditService {
 	 /* Method that gets all the alert audits from the persistence.
 	 * @return a {@link Iterable<AlertAudit>} with the information of all alert audits.
 	 */
-	Iterable<AlertAudit> getAllAlertAudit();
-	
+	Iterable<AlertAudit> getAllAlertAudit();	
 
 	/**
 	 * Method that returns the list of alert audits with the indicated period.
@@ -75,5 +75,14 @@ public interface IAlertAuditService {
 	 * @return List of alert audits filtered.
 	 */
 	List<AlertAudit> findByCriteria(final Date actualDate, final Date periodDate);
+	
+	/**
+	 * 
+	 * @param alertTypes
+	 * @param apps
+	 * @param limit
+	 * @return
+	 */
+	List<AlertAudit> getAlertAuditForResume(final Set<String> alertTypes, final Set<String> apps, final Date limit) throws DatabaseException;
 
 }

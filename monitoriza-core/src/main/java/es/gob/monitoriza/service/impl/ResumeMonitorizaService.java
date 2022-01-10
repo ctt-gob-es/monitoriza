@@ -19,19 +19,24 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>6/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 30/01/2019.
+ * @version 1.4, 10/01/2022.
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.Set;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.gob.monitoriza.persistence.configuration.dto.ResumeDTO;
+import es.gob.monitoriza.persistence.configuration.exception.DatabaseException;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeSystem;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertResumeType;
 import es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.repository.AlertMailResumeConfigRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.ResumeMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.ResumeDatatableRepository;
 import es.gob.monitoriza.service.IResumeMonitorizaService;
@@ -48,9 +53,6 @@ public class ResumeMonitorizaService implements IResumeMonitorizaService {
 
 	@Autowired
 	private ResumeDatatableRepository dtRepository;
-
-	@Autowired
-	private AlertMailResumeConfigRepository mailRepository;
 
 	@Override
 	public ResumeMonitoriza getResumeMonitorizaById(final Long resumeId) {
@@ -93,6 +95,58 @@ public class ResumeMonitorizaService implements IResumeMonitorizaService {
 		}
 
 		return this.repository.save(resumeMonitoriza);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IResumeMonitorizaService#loadLazyResumeType(es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza)
+	 */
+	@Override
+	@Transactional
+	public void loadLazyListResumeType(ResumeMonitoriza resume) {
+		
+		ResumeMonitoriza loadedResume = repository.findByIdResumeMonitoriza(resume.getIdResumeMonitoriza());
+		Set<AlertResumeType> resumeTypes = loadedResume.getResumeTypes();
+		resumeTypes.size();
+		
+		resume.setResumeTypes(resumeTypes);
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IResumeMonitorizaService#loadLazyListAlertResumeSystem(es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza)
+	 */
+	@Override
+	@Transactional
+	public void loadLazyListAlertResumeSystem(ResumeMonitoriza resume) {
+		
+		ResumeMonitoriza loadedResume = repository.findByIdResumeMonitoriza(resume.getIdResumeMonitoriza());
+		Set<AlertResumeSystem> resumesystems = loadedResume.getAlertResumeSystem();
+		resumesystems.size();
+		
+		resume.setAlertResumeSystem(resumesystems);
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IResumeMonitorizaService#saveResumeMonitoriza(es.gob.monitoriza.persistence.configuration.model.entity.ResumeMonitoriza)
+	 */
+	@Override
+	public ResumeMonitoriza saveResumeMonitoriza(ResumeMonitoriza resume) throws DatabaseException {
+		
+		ResumeMonitoriza result = null;
+		
+		try {
+			
+			result = repository.save(resume);
+			 
+		} catch (DataAccessException e) {
+			
+			throw new DatabaseException(e);
+		}
+		
+		return result;
 	}
 
 

@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 10/01/2022.
  */
 package es.gob.eventmanager.persistence.model.entity;
 
@@ -34,6 +34,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -48,9 +49,8 @@ import es.gob.eventmanager.constant.NumberConstants;
  * Class that maps the <i>ALERT_SYSTEMS</i> database table as a Plain Old Java Object.
  * </p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 10/01/2022.
  */
 @Entity
 @Table(name = "ALERT_SYSTEMS")
@@ -71,7 +71,7 @@ public class AlertSystemMonitoriza implements Serializable {
 	/**
 	 * Attribute that represents the alert system type.
 	 */
-	private String type;
+	private AlertSystemType type;
 
 	/**
 	 * Attribute that represents the relation with templateMonitoriza object.
@@ -131,8 +131,9 @@ public class AlertSystemMonitoriza implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #type}.
 	 */
-	@Column(name = "TYPE", nullable = false, precision = NumberConstants.NUM19)
-	public String getType() {
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "SYSTEM_TYPE_ID", nullable = false)
+	public AlertSystemType getType() {
 		return this.type;
 	}
 
@@ -142,8 +143,8 @@ public class AlertSystemMonitoriza implements Serializable {
 	 * @param name
 	 *            The value for the attribute {@link #type}.
 	 */
-	public void setType(final String type) {
-		this.type = type;
+	public void setType(final AlertSystemType alertSystemType) {
+		this.type = alertSystemType;
 	}
 
 	/**

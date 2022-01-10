@@ -19,21 +19,27 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>6/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 30/01/2019.
+ * @version 1.4, 10/01/2022.
  */
 package es.gob.monitoriza.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import es.gob.monitoriza.persistence.configuration.dto.AlertSystemDTO;
+import es.gob.monitoriza.persistence.configuration.exception.DatabaseException;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertGraylogSystemConfig;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemType;
 import es.gob.monitoriza.persistence.configuration.model.repository.AlertGraylogSystemConfigRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.AlertSystemMonitorizaRepository;
+import es.gob.monitoriza.persistence.configuration.model.repository.AlertSystemTypeRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.AlertSystemDatatableRepository;
 import es.gob.monitoriza.service.IAlertSystemMonitorizaService;
 
@@ -46,6 +52,9 @@ public class AlertSystemMonitorizaService implements IAlertSystemMonitorizaServi
 
 	@Autowired
 	private AlertSystemMonitorizaRepository repository;
+	
+	@Autowired
+	private AlertSystemTypeRepository typeRepository;
 
 	@Autowired
 	private AlertGraylogSystemConfigRepository graylogSystemRepository;
@@ -102,7 +111,10 @@ public class AlertSystemMonitorizaService implements IAlertSystemMonitorizaServi
 		}
 
 		alertSystemMonitoriza.setName(alertSystemDto.getName());
-		alertSystemMonitoriza.setType(alertSystemDto.getType());
+		
+		AlertSystemType type = typeRepository.findByIdAlertSystemType(alertSystemDto.getType());
+		
+		alertSystemMonitoriza.setType(type);
 
 		alertSystemMonitoriza =  this.repository.save(alertSystemMonitoriza);
 
@@ -115,6 +127,38 @@ public class AlertSystemMonitorizaService implements IAlertSystemMonitorizaServi
 		}
 
 		return alertSystemMonitoriza;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IAlertSystemMonitorizaService#getAllAlertSystemType()
+	 */
+	@Override
+	public List<AlertSystemType> getAllAlertSystemType() {
+		
+		return typeRepository.findAll();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IAlertSystemMonitorizaService#getAllAlertSystemResumeEnabled()
+	 */
+	@Override
+	@Transactional
+	public List<AlertSystemMonitoriza> getAllAlertSystemResumeEnabled() throws DatabaseException {
+		
+		List<AlertSystemMonitoriza> result = null;
+		
+		try {
+			
+			result = repository.findByTypeIsResumeEnabled(Boolean.TRUE);
+			
+		} catch (DataAccessException e) {
+			
+			throw new DatabaseException(e,e.getMessage());		
+		}
+		
+		return result;
 	}
 
 

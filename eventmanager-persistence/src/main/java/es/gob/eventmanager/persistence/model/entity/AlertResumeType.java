@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
  * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 10/01/2022.
  */
 package es.gob.eventmanager.persistence.model.entity;
 
@@ -45,9 +45,8 @@ import es.gob.eventmanager.constant.NumberConstants;
  * Class that maps the <i>ALERT_RESUME_TYPES</i> database table as a Plain Old Java Object.
  * </p>
  * <b>Project:</b><p>Servicio para la notificaci&oacute;n de eventos</p>
- * <b>Date:</b><p>04/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 04/11/2021.
+ * @version 1.1, 10/01/2022.
  */
 @Entity
 @Table(name = "ALERT_RESUME_TYPES")
@@ -84,7 +83,6 @@ public class AlertResumeType implements Serializable {
 	@Column(name = "RES_TYPE_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
 	@GeneratedValue(generator = "sq_alert_resume_types")
 	@GenericGenerator(name = "sq_alert_resume_types", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_RESUME_TYPES"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
-	
 	public Long getIdResType() {
 		return this.idResType;
 	}
@@ -106,7 +104,6 @@ public class AlertResumeType implements Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "APP_ID", nullable = false)
-	
 	public ApplicationMonitoriza getApplicationMonitoriza() {
 		return this.applicationMonitoriza;
 	}
@@ -128,7 +125,6 @@ public class AlertResumeType implements Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "TYPE_ID", nullable = false)
-	
 	public AlertTypeMonitoriza getAlertTypeMonitoriza() {
 		return this.alertTypeMonitoriza;
 	}
@@ -150,7 +146,6 @@ public class AlertResumeType implements Serializable {
 	 */
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "RESUME_ID", nullable = false)
-	
 	public ResumeMonitoriza getResumeMonitoriza() {
 		return this.resumeMonitoriza;
 	}

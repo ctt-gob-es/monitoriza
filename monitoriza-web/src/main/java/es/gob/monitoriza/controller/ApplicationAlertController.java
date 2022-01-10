@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 28/10/2018.
+ * @version 1.2, 10/01/2022.
  */
 package es.gob.monitoriza.controller;
 
@@ -57,6 +57,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMTemplate
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertDIMType;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSeverityMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemType;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeTemplateMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ApplicationMonitoriza;
@@ -85,7 +86,7 @@ import es.gob.monitoriza.service.ITemplateMonitorizaService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  *
- * @version 1.0, 10/11/2021.
+ * @version 1.2, 10/01/2022.
  */
 
 @Controller
@@ -320,9 +321,12 @@ public class ApplicationAlertController {
 	 */
 	@RequestMapping(value = "addnotifsystem", method = RequestMethod.POST)
     public String addNotifSystem(final Model model){
-
+		
+		List<AlertSystemType> typesList = alertSystemService.getAllAlertSystemType();
+		
+		model.addAttribute("typesList", typesList);
 		model.addAttribute("notifsystemform", new AlertSystemDTO()); //$NON-NLS-1$
-
+		
 		return "modal/notifSystemForm.html"; //$NON-NLS-1$
     }
 
@@ -340,14 +344,17 @@ public class ApplicationAlertController {
 
 		alertSystemForm.setIdAlertSystemMonitoriza(alertSystem.getIdAlertSystemMonitoriza());
 		alertSystemForm.setName(alertSystem.getName());
-		alertSystemForm.setType(alertSystem.getType());
+		alertSystemForm.setType(alertSystem.getType().getIdAlertSystemType());
 
 		if (alertSystem.getGraylogSystemConfig() != null) {
 			alertSystemForm.setHost(alertSystem.getGraylogSystemConfig().getHost());
 			alertSystemForm.setPort(alertSystem.getGraylogSystemConfig().getPort());
 		}
 
-		model.addAttribute("notifsystemform", alertSystemForm); //$NON-NLS-1$
+		List<AlertSystemType> typesList = alertSystemService.getAllAlertSystemType();
+		
+		model.addAttribute("typesList", typesList);
+		model.addAttribute("notifsystemform", alertSystemForm);
 
 		return "modal/notifSystemForm.html"; //$NON-NLS-1$
     }
@@ -424,8 +431,9 @@ public class ApplicationAlertController {
 		// Se cargan los sistemas de notificacion para el select
 		List<AlertSystemMonitoriza> alertSystemsList = new ArrayList<AlertSystemMonitoriza>();
 
-		alertSystemsList = StreamSupport.stream(this.alertSystemService.getAllAlertSystemMonitoriza().spliterator(), false)
-				.collect(Collectors.toList());
+//		alertSystemsList = StreamSupport.stream(this.alertSystemService.getAllAlertSystemMonitoriza().spliterator(), false)
+//				.collect(Collectors.toList());
+		alertSystemsList = alertSystemService.getAllAlertSystemResumeEnabled();
 
 		model.addAttribute("alertSystemsList", alertSystemsList); //$NON-NLS-1$
 
@@ -467,8 +475,10 @@ public class ApplicationAlertController {
 		// Se cargan los sistemas de notificacion para el select
 		List<AlertSystemMonitoriza> allAlertSystemsList = new ArrayList<AlertSystemMonitoriza>();
 
-		allAlertSystemsList = StreamSupport.stream(this.alertSystemService.getAllAlertSystemMonitoriza().spliterator(), false)
-				.collect(Collectors.toList());
+//		allAlertSystemsList = StreamSupport.stream(this.alertSystemService.getAllAlertSystemMonitoriza().spliterator(), false)
+//				.collect(Collectors.toList());
+		
+		allAlertSystemsList = alertSystemService.getAllAlertSystemResumeEnabled();
 
 		model.addAttribute("alertSystemsList", allAlertSystemsList); //$NON-NLS-1$
 

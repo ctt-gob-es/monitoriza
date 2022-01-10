@@ -15,7 +15,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>25/10/2017.</p>
  * @author Gobierno de España.
- * @version 1.3, 22/11/2021.
+ * @version 1.4, 10/01/2022.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -31,7 +31,7 @@ import es.gob.monitoriza.constant.NumberConstants;
 /**
  * <p>Class that provides methods for managing dates.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * @version 1.3, 22/11/2021.
+ * @version 1.4, 10/01/2022.
  */
 public class UtilsFecha {
 
@@ -243,6 +243,22 @@ public class UtilsFecha {
 	}
 	
 	/**
+	 * Method that adds a number of hours to the system date.
+	 * @param numHoras Parameter that represents the number of hours to add.
+	 * @return a string that represents the date returned on format <code>yyyy-mm-dd</code>.
+	 * @throws ParseException If the method fails.
+	 */
+	public static final Date sumarHoras(Date fecha, int numHoras) throws ParseException {
+
+		Calendar fechaCalendar = Calendar.getInstance();
+
+		fechaCalendar.setTime(fecha);
+		fechaCalendar.add(Calendar.HOUR_OF_DAY, numHoras);
+		
+		return fechaCalendar.getTime();
+	}
+	
+	/**
 	 * Method that adds a number of days to the system date.
 	 * @param numDias Parameter that represents the number of days to add.
 	 * @return a string that represents the date returned on format <code>yyyy-mm-dd</code>.
@@ -257,7 +273,7 @@ public class UtilsFecha {
 		
 		return fechaCalendar.getTime();
 	}
-	
+			
 	public static Date getHoyComienzoDia() {
 		
 		Calendar fechaCalendar = Calendar.getInstance();

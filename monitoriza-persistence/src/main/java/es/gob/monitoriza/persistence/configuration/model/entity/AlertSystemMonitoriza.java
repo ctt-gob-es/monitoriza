@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>9/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 25/01/2019.
+ * @version 1.3, 10/01/2022.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -34,6 +34,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -72,7 +73,7 @@ public class AlertSystemMonitoriza implements Serializable {
 	/**
 	 * Attribute that represents the alert system type.
 	 */
-	private String type;
+	private AlertSystemType type;
 
 	/**
 	 * Attribute that represents the relation with templateMonitoriza object.
@@ -139,9 +140,10 @@ public class AlertSystemMonitoriza implements Serializable {
 	 *
 	 * @return the value of the attribute {@link #type}.
 	 */
-	@Column(name = "TYPE", nullable = false)
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "SYSTEM_TYPE_ID", nullable = false)
 	@JsonView(DataTablesOutput.View.class)
-	public String getType() {
+	public AlertSystemType getType() {
 		return this.type;
 	}
 
@@ -151,8 +153,8 @@ public class AlertSystemMonitoriza implements Serializable {
 	 * @param name
 	 *            The value for the attribute {@link #type}.
 	 */
-	public void setType(final String type) {
-		this.type = type;
+	public void setType(final AlertSystemType alertSystemType) {
+		this.type = alertSystemType;
 	}
 
 	/**

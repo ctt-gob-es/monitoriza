@@ -12,6 +12,7 @@
   <name>eventmanager-commons-util</name>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    
   </properties>
   <dependencies>
     		<!--  API de logs. -->

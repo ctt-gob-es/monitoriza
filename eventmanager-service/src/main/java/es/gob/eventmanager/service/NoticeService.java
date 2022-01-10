@@ -60,7 +60,7 @@ import es.gob.eventmanager.persistence.model.entity.TemplateMonitoriza;
 
 /**
  * Servicio para la notificaci&oacute;n de eventos.
- * @version 1.5, 01/12/2021.
+ * @version 1.6, 10/01/2022.
  */
 public class NoticeService extends HttpServlet {
 
@@ -191,6 +191,11 @@ public class NoticeService extends HttpServlet {
 						// el nombre de la aplicacion y el tipo de alerta
 						AlertConfigMonitoriza config = ManagerConfigurationServices.getInstance().getEventManagerBO().getAlertConfigByAlertTypeAndApplication(alertType.getIdTypeMonitoriza(), app.getIdApplicationMonitoriza());
 						
+						if (config == null) {
+							String msg = "No existe configuración asociada para la aplicación ["+ event.getSystemId() + "] y el tipo de alerta ["+ alert.getCode() + "]. No se procesará el evento.";
+							throw new EventManagerException(msg);
+						}
+						
 						// Se actualiza el momento de ultima recepcion de alertade este tipo
 						config.setLastTime(new Date());
 						ManagerConfigurationServices.getInstance().getEventManagerBO().saveAlertConfig(config);
@@ -239,6 +244,7 @@ public class NoticeService extends HttpServlet {
 							}
 
 						}
+												
 					}
 				}
 			}
@@ -256,37 +262,36 @@ public class NoticeService extends HttpServlet {
 	 * @param alertSystems
 	 */
 	private void notifyToConfiguredSystems(final AlertConfigMonitoriza alertConfig, final List<AlertSystemMonitoriza> alertSystems, final Alert alert) throws EventManagerException {
-		
+
 		AlertGraylogSystemConfig graylogConfig = null;
-		
-		for (AlertSystemMonitoriza system : alertSystems) {
-			
-			if (system.getType().equals(INotificationSystemTypes.GRAYLOG)) {
-				
+
+		for (AlertSystemMonitoriza system: alertSystems) {
+
+			if (system.getType().getName().equalsIgnoreCase(INotificationSystemTypes.GRAYLOG)) {
+
 				graylogConfig = system.getGraylogSystemConfig();
-				
+
 				try {
-    				validateGrayLogConfig(graylogConfig);
-    				notifyToGrayLog(alertConfig, graylogConfig, alert);
+					validateGrayLogConfig(graylogConfig);
+					notifyToGrayLog(alertConfig, graylogConfig, alert);
 				} catch (EventManagerException e) {
-    				LOGGER.warn("No ha sido posible realizar la notificacion de la alerta [" + alert.getCode() + "] a Graylog", e.getCause());
-    			}
+					LOGGER.warn("No ha sido posible realizar la notificacion de la alerta [" + alert.getCode() + "] a Graylog", e.getCause());
+				}
 			}
-			
-			if (system.getType().equals(INotificationSystemTypes.EMAIL)) {
-				
+
+			if (system.getType().getName().equalsIgnoreCase(INotificationSystemTypes.EMAIL)) {
+
 				try {
-    				List<AlertMailNoticeConfig> mailNoticeConfigs = ManagerConfigurationServices.getInstance().getEventManagerBO().getMailNoticesByAlertConfig(alertConfig.getIdAlertConfigMonitoriza());
-    				notifyToEMail(alertConfig, mailNoticeConfigs, alert);
+					List<AlertMailNoticeConfig> mailNoticeConfigs = ManagerConfigurationServices.getInstance().getEventManagerBO().getMailNoticesByAlertConfig(alertConfig.getIdAlertConfigMonitoriza());
+					notifyToEMail(alertConfig, mailNoticeConfigs, alert);
 				} catch (EventManagerException e) {
 					LOGGER.warn("No ha sido posible realizar la notificacion de la alerta [" + alert.getCode() + "] a las direcciones de email configuradas", e.getCause());
-    			}
-				
+				}
+
 			}
-			
-			
+
 		}
-		
+
 	}
 
 	/**
@@ -309,6 +314,9 @@ public class NoticeService extends HttpServlet {
 			
 			StringBuilder subject = new StringBuilder();
 			subject.append("Alerta de aplicación [").append(alertConfig.getApplicationMonitoriza().getName()).append("]. Severidad [").append(alertConfig.getAlertSeverityMonitoriza().getName()).append("]. Código [").append(alert.getCode()).append("].");
+			// Prueba resumen
+			//String subject = "Alertas del resumen [Dirección] producidas en la fecha [01/12/2021]";
+			//String msg = "<Este correo ha sido generado autom\u00E1ticamente desde una direcci\u00f3n que no acepta correos entrantes, por favor, no responda.>\n\n\nAplicación [tsa]: \n\n Se han producido el siguiente número de alarmas por criticidad:  \n\n [2] alarmas con criticidad [FATAL]. \n\n [2] alarmas con criticidad [ERROR] \n\n\n Desglose de alarmas: \n\n [01/12/2021 14:57:27] - [TSA_COD_001] - [ERROR] - [La configuracion estatica no es correcta: revisar fichero staticTSAConfig.properties]  \n\n [01/12/2021 14:57:27] - [TSA_COD_002] - [FATAL] - [Fallo de conexión con el servidor NTP: 10.254.205.7]  \n\n [01/12/2021 14:52:41] - [TSA_COD_001] - [ERROR] - [La configuracion estatica no es correcta: revisar fichero staticTSAConfig.properties]  \n\n [01/12/2021 14:52:41] - [TSA_COD_002] - [FATAL] - [Fallo de conexión con el servidor NTP: 10.254.205.7] \n\n\nAplicación [FIRe_DES]: \n\n Se han producido el siguiente número de alarmas por criticidad:  \n\n [3] alarmas con criticidad [ERROR] \n\n\n Desglose de alarmas: \n\n [01/12/2021 13:21:17] - [005] - [ERROR] - [No se puede conectar con un proveedor de firma en la nube: fnmt]  \n\n [01/12/2021 12:55:52] - [005] - [ERROR] - [No se puede conectar con un proveedor de firma en la nube: fnmt]  \n\n [01/12/2021 11:10:43] - [005] - [ERROR] - [No se puede conectar con un proveedor de firma en la nube: Prueba tras cambio]" ;
 			
 			EMailTimeLimitedOperation emailOperation = new EMailTimeLimitedOperation(configMailServer, addresses, subject.toString(), alert.getMessage());
 			emailOperation.startOperation();

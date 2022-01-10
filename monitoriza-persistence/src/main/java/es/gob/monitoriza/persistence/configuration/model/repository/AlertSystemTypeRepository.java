@@ -18,39 +18,31 @@
  * <b>File:</b><p>es.gob.monitoriza.persistence.configuration.model.dao.impl.UserMonitorizaRepository.java.</p>
  * <b>Description:</b><p>Interface that provides CRUD functionality for the UserMonitoriza entity.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * <b>Date:</b><p>7 mar. 2018.</p>
+ * <b>Date:</b><p>10/01/2022.</p>
  * @author Gobierno de España.
- * @version 1.1, 10/01/2022.
+ * @version 1.0, 10/01/2022.
  */
 package es.gob.monitoriza.persistence.configuration.model.repository;
-
-import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemMonitoriza;
+import es.gob.monitoriza.persistence.configuration.model.entity.AlertSystemType;
 
 /**
- * <p>Interface that provides CRUD functionality for the AlertSystemMonitoriza entity.</p>
+ * <p>Interface that provides CRUD functionality for the AlertSystemType entity.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 10/01/2022.
+ * @version 1.0, 10/01/2022.
  */
 
 @Repository
-public interface AlertSystemMonitorizaRepository extends JpaRepository<AlertSystemMonitoriza, Long> {
+public interface AlertSystemTypeRepository extends JpaRepository<AlertSystemType, Long> {
 
 	/**
 	  * Method that obtains from the persistence a user identified by its primary key.
 	 * @param id String that represents the primary key of the alert system in the persistence.
 	 * @return Object that represents a alert system from the persistence.
 	 */
-	AlertSystemMonitoriza findByIdAlertSystemMonitoriza(Long id);
-	
-	/**
-	 * Method that obtains from persistence all {@link AlertSystemMonitoriza} that can be used with 'resumes'.
-	 * @return List<AlertSystemMonitoriza>
-	 */
-	List<AlertSystemMonitoriza> findByTypeIsResumeEnabled(boolean resumeEnabled);
+	AlertSystemType findByIdAlertSystemType(Long id);
 
 }

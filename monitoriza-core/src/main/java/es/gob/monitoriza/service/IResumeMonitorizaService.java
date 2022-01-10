@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>6 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 28/10/2018.
+ * @version 1.3, 10/01/2022.
  */
 package es.gob.monitoriza.service;
 
@@ -68,4 +68,23 @@ public interface IResumeMonitorizaService {
 	 * @return {@link ResumeMonitoriza} The resume.
 	 */
 	ResumeMonitoriza saveResumeMonitoriza(ResumeDTO resumeDto);
+	
+	/**
+	 * Method that stores a resume in the persistence.
+	 * @param templateDto a {@link ResumeMonitoriza} with the information of the resume.
+	 * @return {@link ResumeMonitoriza} The resume.
+	 */
+	ResumeMonitoriza saveResumeMonitoriza(ResumeMonitoriza resume);
+	
+	/**
+	 * Method that loads the lazy attribute resumeTypes.
+	 * @param resume
+	 */
+	void loadLazyListResumeType(ResumeMonitoriza resume);
+
+	/**
+	 * Method that loads the lazy attribute resumeSystems.
+	 * @param resume
+	 */
+	void loadLazyListAlertResumeSystem(ResumeMonitoriza resume);
 }

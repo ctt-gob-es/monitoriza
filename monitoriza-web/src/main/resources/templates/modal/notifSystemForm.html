@@ -8,15 +8,23 @@ th:action="@{/savenotifsystem}" method="post">
 		<input type="text" id="name" name="name" th:field="*{name}" class="form-control" maxlength="30" required />
 	</div>
 	
-	<div class="form-group">
+	<!-- <div class="form-group">
 		<label for="type" class="col-form-label" th:text="#{table.applalert.sysnot.type}"></label>
         <select name="type" id="type" class="form-control" th:field="*{type}">
         	<option value="" selected disabled></option>
             <option value="email" th:text="#{applalert.sysnot.modal.email}"></option>
             <option value="graylog" th:text="#{applalert.sysnot.modal.graylog}"></option>
         </select>
-	</div>	
-	
+	</div> -->
+
+	<div class="form-group ">
+		<label for="template" th:text="#{applalert.stats.form.template}"></label>
+		<select name="alertSystemTypeId" id="alertSystemTypeId" class="form-control" th:field="*{type}" required>
+			<option value="" selected disabled></option>
+			<option th:each="t: ${typesList}" th:value="${t.idAlertSystemType}" th:text="${t.name}"></option>
+		</select>
+	</div>
+
 	<h6 id="typeInfoTitle" class="mT-10 mL-10 c-grey-900"></h6>
 	
 	<div class="form-group">

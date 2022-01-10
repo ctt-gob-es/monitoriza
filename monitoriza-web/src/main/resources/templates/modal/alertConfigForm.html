@@ -88,7 +88,7 @@
 											<select name="alertSystemsList" id="alertSystemsList"
 												class="form-control" th:field="*{alertSystemsList}" required>
 												<option th:each="t: ${alertSystemsList}"
-													th:value="${t.idAlertSystemMonitoriza} + ',' + ${t.type}" th:text="${t.name}"></option>
+													th:value="${t.idAlertSystemMonitoriza} + ',' + ${t.type.name}" th:text="${t.name}"></option>
 											</select>
 										</div>
 										<div class="form-group col-md-2 align-self-end">
@@ -176,9 +176,9 @@
 									
 						var idAlertSystem = d.data()[0].alertSystemMonitoriza.idAlertSystemMonitoriza;
 						
-						var type = d.data()[0].alertSystemMonitoriza.type;
+						var type = d.data()[0].alertSystemMonitoriza.type.name;
 
-						if (type == "email"){
+						if (type.toLowerCase() == "email"){
 							var emailConfiguration = d.data()[0].resumeEmailAddresses;
 							
 		            		$.ajax(getEmailInfo, {
@@ -238,7 +238,7 @@
 			"columns": [
 				{ "data": "alertSystemMonitoriza.idAlertSystemMonitoriza", "visible": false},
 		        { "data": "alertSystemMonitoriza.name" },
-		        { "data": "alertSystemMonitoriza.type", "visible": false},
+		        { "data": "alertSystemMonitoriza.type.name", "visible": false},
 		        { "data": "resumeEmailAddresses", "visible": false},
 		        { "data": "keysList", "visible": false},
 		        { "data": "valuesList", "visible": false}
@@ -246,6 +246,8 @@
 			});
 
         $('#btnAddAlertSystem').on( 'click', function () {
+        	hide();
+        
         	var alertSystemArray = $('#alertSystemsList option:selected').val().split(',');
 
         	var alertSystemAdded = false;
@@ -262,7 +264,7 @@
 	        	alertSystemTbl.row.add({"alertSystemMonitoriza" : {
 										"idAlertSystemMonitoriza" : alertSystemArray[0], 
 										"name" :  $('#alertSystemsList option:selected').text(),
-										"type" :  alertSystemArray[1]
+										"type": {"name" :  alertSystemArray[1]}
 										},
 										"resumeEmailAddresses" :  "",
 										"keysList" : "",

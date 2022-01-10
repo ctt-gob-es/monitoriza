@@ -19,14 +19,14 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 2.0, 28/03/2019.
+ * @version 2.1, 10/01/2022.
  */
 package es.gob.monitoriza.constant;
 
 /** 
  * <p>Interface that contains general constants.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 2.0, 28/03/2019.
+ * @version 2.1, 10/01/2022.
  */
 public interface GeneralConstants {
 	
@@ -39,6 +39,11 @@ public interface GeneralConstants {
 	 * Constant attribute that represents the Monitoriza Web Logger name.
 	 */
 	public static final String LOGGER_NAME_MONITORIZA_WEB_LOG = "Monitoriza-Web";
+	
+	/**
+	 * Constant attribute that represents the Monitoriza Web Logger name.
+	 */
+	public static final String LOGGER_NAME_MONITORIZA_RESUME_TASK_LOG = "Monitoriza-Resume-Task";
 	
 	/**
 	 * Constant attribute that represents HTTP secure mode.

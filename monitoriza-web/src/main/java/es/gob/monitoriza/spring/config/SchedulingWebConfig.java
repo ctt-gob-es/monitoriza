@@ -70,8 +70,7 @@ public class SchedulingWebConfig {
 	 */
 	@Autowired
 	private IValidServiceService validServiceService;
-		
-	
+			
 	/**
 	 * Attribute that represents . 
 	 */
@@ -112,7 +111,6 @@ public class SchedulingWebConfig {
 	public ValidCertificatesJob getValidCertificatesJob() {
 		return validCertificatesJob;
 	}
-
 	
 	/**
 	 * Set validCertificatesJob.
