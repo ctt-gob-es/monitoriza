@@ -24,10 +24,10 @@
 			<groupId>javax.servlet</groupId>
 			<artifactId>servlet-api</artifactId>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-		</dependency>
+		</dependency> -->
 		<!-- Constructor de HTML. Licencia Apache 2 -->
 		<!-- https://github.com/tipsy/j2html/blob/master/LICENSE -->
 		<dependency>

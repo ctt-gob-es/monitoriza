@@ -20,11 +20,11 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * <b>Date:</b><p>06/02/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 06/02/2019.
+ * @version 1.1, 11/05/2022.
  */
 package es.gob.monitoriza.spring;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
@@ -35,7 +35,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 /** 
  * <p>Spring Boot Web Security Configuration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 06/02/2019.
+ * @version 1.1, 11/05/2022.
  */
 @Configuration
 @EnableWebSecurity

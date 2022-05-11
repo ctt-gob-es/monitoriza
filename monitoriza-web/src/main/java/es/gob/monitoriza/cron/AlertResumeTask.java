@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/01/2022.</p>
  * @author Gobierno de España.
- * @version 1.0, 10/01/2022.
+ * @version 1.1, 11/05/2022.
  */
 package es.gob.monitoriza.cron;
 
@@ -35,7 +35,7 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -66,7 +66,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Task that processes configured {@link ResumeMonitoriza} and determines if it must be sent and builds formatted text with the data.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 10/01/2022.
+ * @version 1.1, 11/05/2022.
  */
 @Component
 public class AlertResumeTask {

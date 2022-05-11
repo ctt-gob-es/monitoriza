@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>6/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 30/01/2019.
+ * @version 1.4, 11/05/2022.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -50,6 +49,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlertStatistics;
 import es.gob.monitoriza.persistence.configuration.model.repository.AlertStatisticRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.AlertStatisticDatatableRepository;
 import es.gob.monitoriza.service.IAlertStatisticService;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 /**
  * <p>Class that implements the communication with the operations of the persistence layer.</p>

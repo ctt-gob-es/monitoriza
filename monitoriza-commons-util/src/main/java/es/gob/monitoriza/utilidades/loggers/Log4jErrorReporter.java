@@ -15,18 +15,18 @@
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI certificates and electronic signature.</p>
  * <b>Date:</b><p>05/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 05/09/2018.
+ * @version 1.1, 11/05/2022.
  */
 package es.gob.monitoriza.utilidades.loggers;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import biz.paluch.logging.gelf.intern.ErrorReporter;
 
 /**
  * <p>Log4j implementation for the error logger to use in Gray Log.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI certificates and electronic signature.</p>
- * @version 1.0, 05/09/2018.
+ * @version 1.1, 11/05/2022.
  */
 public final class Log4jErrorReporter implements ErrorReporter {
 

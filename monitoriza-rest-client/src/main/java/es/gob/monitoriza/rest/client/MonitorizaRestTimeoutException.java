@@ -20,11 +20,11 @@
   * <b>Project:</b><b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * <b>Date:</b><p>13/08/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 13/08/2019.
+ * @version 1.1, 11/05/2022.
  */
 package es.gob.monitoriza.rest.client;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.exception.MonitorizaRestException;
 import es.gob.monitoriza.utilidades.UtilsXml;
@@ -32,7 +32,7 @@ import es.gob.monitoriza.utilidades.UtilsXml;
 /** 
  * <p>Class that manages exceptions produced by network timeout in valet rest client.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 13/08/2019.
+ * @version 1.1, 11/05/2022.
  */
 public class MonitorizaRestTimeoutException extends MonitorizaRestException {
 

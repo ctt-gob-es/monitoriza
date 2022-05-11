@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>17/08/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 17/08/2021.
+ * @version 1.1, 11/05/2022.
  */
 package es.gob.monitoriza.cron;
 
@@ -35,7 +35,7 @@ import java.util.stream.StreamSupport;
 
 import javax.servlet.ServletContext;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.TriggerContext;
@@ -69,7 +69,7 @@ import es.gob.monitoriza.webservice.ClientManager;
 /** 
  * <p>Class that manages the scheduled job for certificate validation.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 17/08/2021.
+ * @version 1.1, 11/05/2022.
  */
 @Service
 public class ValidCertificatesJob implements SchedulerObjectInterface {

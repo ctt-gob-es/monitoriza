@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring services of Cl@ve suite systems</p>
  * <b>Date:</b><p>18/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 17/08/2021.
+ * @version 1.6, 11/05/2022.
  */
 package es.gob.monitoriza.invoker.http;
 
@@ -44,7 +44,7 @@ import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.message.BasicNameValuePair;
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.exception.InvokerException;
@@ -66,7 +66,7 @@ import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
  * Application for monitoring services of Cl@ve suite systems.
  * </p>
  * 
- * @version 1.5, 17/08/2021
+ * @version 1.6, 11/05/2022.
  */
 public class HttpInvoker extends AbstractHttpInvoker {
 	

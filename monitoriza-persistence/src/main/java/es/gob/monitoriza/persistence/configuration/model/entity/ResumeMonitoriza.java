@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>9/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 10/01/2022.
+ * @version 1.4, 11/05/2022.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -268,7 +268,7 @@ public class ResumeMonitoriza implements Serializable {
 	 */
 	@Column(name = "LAST_SENT_TIME")
 	@Temporal(TemporalType.TIMESTAMP)
-	public final Date getLastSentTime() {
+	public Date getLastSentTime() {
 		return lastSentTime;
 	}
 
@@ -278,7 +278,7 @@ public class ResumeMonitoriza implements Serializable {
 	 * @param lastSentTime
 	 *            The value for the attribute {@link #lastSentTime}.
 	 */
-	public final void setLastSentTime(Date lastSentTime) {
+	public void setLastSentTime(Date lastSentTime) {
 		this.lastSentTime = lastSentTime;	}
 	
 

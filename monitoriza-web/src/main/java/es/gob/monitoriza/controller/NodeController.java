@@ -20,11 +20,11 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>09/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 17/08/2021.
+ * @version 1.4, 11/05/2022.
  */
 package es.gob.monitoriza.controller;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -40,7 +40,7 @@ import es.gob.monitoriza.service.INodeMonitorizaService;
 /** 
  * <p>Class that manages the requests related to the Node administration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 17/08/2021
+ * @version 1.4, 11/05/2022.
  */
 @Controller
 public class NodeController {

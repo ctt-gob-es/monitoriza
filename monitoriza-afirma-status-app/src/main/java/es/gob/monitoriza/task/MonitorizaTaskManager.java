@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.6, 17/08/2021.
+ * @version 1.7, 11/05/2022.
  */
 package es.gob.monitoriza.task;
 
@@ -32,7 +32,7 @@ import java.util.TimerTask;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -60,7 +60,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that update the configuration of the scheduled services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.6, 17/08/2021.
+ * @version 1.7, 11/05/2022.
  */
 @Service("monitorizaTaskManager")
 class MonitorizaTaskManager {

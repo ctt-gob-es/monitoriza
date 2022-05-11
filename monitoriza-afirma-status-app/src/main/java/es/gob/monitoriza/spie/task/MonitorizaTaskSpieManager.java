@@ -20,14 +20,14 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>03/05/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 03/05/2019.
+ * @version 1.1, 11/05/2022.
  */
  package es.gob.monitoriza.spie.task;
 
 import java.util.Timer;
 import java.util.TimerTask;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.constant.GeneralConstants;
@@ -44,7 +44,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that update the configuration of the scheduled SPIE timer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 03/05/2019.
+ * @version 1.1, 11/05/2022.
  */
 @Service("monitorizaTaskSpieManager")
 public class MonitorizaTaskSpieManager {

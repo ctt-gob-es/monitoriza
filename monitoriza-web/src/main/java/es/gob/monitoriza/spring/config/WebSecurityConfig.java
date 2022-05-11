@@ -20,11 +20,11 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>6 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 11/05/2022.
  */
 package es.gob.monitoriza.spring.config;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -43,7 +43,7 @@ import es.gob.monitoriza.i18n.Language;
 /**
  * <p>Class that enables and configures Spring Web Security for the Monitoriz@ application.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 11/05/2022.
  */
 @Configuration
 @EnableWebSecurity

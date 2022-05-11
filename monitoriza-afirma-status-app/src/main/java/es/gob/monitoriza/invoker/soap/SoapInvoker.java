@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>04/01/2019.</p>
  * @author Gobierno de España.
- * @version 1.5, 07/09/2021.
+ * @version 1.6, 11/05/2022.
  */
 package es.gob.monitoriza.invoker.soap;
 
@@ -48,7 +48,7 @@ import javax.net.ssl.SSLSession;
 import javax.net.ssl.SSLSocketFactory;
 import javax.net.ssl.TrustManagerFactory;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.NumberConstants;
@@ -60,7 +60,7 @@ import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 /** 
  * <p>Class that performs the request of a SOAP service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.5, 07/09/2021.
+ * @version 1.6, 11/05/2022.
  */
 public final class SoapInvoker {
 

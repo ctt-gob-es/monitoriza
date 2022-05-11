@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>28 ago. 2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 17/08/2021.
+ * @version 1.4, 11/05/2022.
  */
 package es.gob.monitoriza.controller;
 
@@ -29,7 +29,7 @@ import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -60,7 +60,7 @@ import es.gob.monitoriza.utilidades.UtilsScheduler;
 /** 
  * <p>Class that maps the request for the validation service form to the controller.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 17/08/2021.
+ * @version 1.4, 11/05/2022.
  */
 @Controller
 public class ValidationServiceController {

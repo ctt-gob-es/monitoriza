@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/01/2022.</p>
  * @author Gobierno de España.
- * @version 1.0, 10/01/2022.
+ * @version 1.1, 11/05/2022.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -38,7 +38,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 /** 
  * <p>Class that maps the <i>ALERT_SYSTEMS_TYPES</i> database table as a Plain Old Java Object..</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 10/01/2022.
+ * @version 1.1, 11/05/2022.
  */
 @Entity
 @Table(name = "ALERT_SYSTEMS_TYPES")
@@ -100,7 +100,7 @@ public class AlertSystemType implements Serializable {
 	 * Sets the value of the attribute {@link #name}.
 	 * @param requestFile The value for the attribute {@link #name}.
 	 */
-	public final void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 

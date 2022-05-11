@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>23/01/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 23/01/2019.
+ * @version 1.1, 11/05/2022.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -33,7 +33,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
@@ -45,7 +45,7 @@ import es.gob.monitoriza.utilidades.loggers.Log4jErrorReporter;
 /**
  * <p>Utilities class for the use of GrayLog.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * @version 1.0, 23/01/2019.
+ * @version 1.1, 11/05/2022.
  */
 public final class UtilsGrayLog {
 

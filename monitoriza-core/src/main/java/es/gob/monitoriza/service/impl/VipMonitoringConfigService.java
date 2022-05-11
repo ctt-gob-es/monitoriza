@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19/01/2018.</p>
  * @author Gobierno de España.
- * @version 2.5, 17/08/2021
+ * @version 2.6, 11/05/2022.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -30,7 +30,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +62,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that manages the configuration of the services from database persistence for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- *  @version 2.5, 17/08/2021
+ *  @version 2.6, 11/05/2022.
  */
 @Service("vipMonitoringConfigService")
 public class VipMonitoringConfigService implements IVipMonitoringConfigService {

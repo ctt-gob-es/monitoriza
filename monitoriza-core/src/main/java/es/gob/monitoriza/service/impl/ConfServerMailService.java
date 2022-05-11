@@ -20,14 +20,14 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 30/01/2019.
+ * @version 1.6, 11/05/2022.
  */
 package es.gob.monitoriza.service.impl;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -47,7 +47,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /**
  * <p>Class that implements the communication with the operations of the persistence layer for ConfServerMail.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
-  * @version 1.5, 30/01/2019.
+  * @version 1.6, 11/05/2022.
  */
 @Service("serverMailService")
 public class ConfServerMailService implements IConfServerMailService {

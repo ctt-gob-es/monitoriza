@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19/02/2018.</p>
  * @author Gobierno de España.
- * @version 1.6, 05/03/2019.
+ * @version 1.7, 11/05/2022.
  */
 package es.gob.monitoriza.spie.thread;
 
@@ -30,7 +30,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.NumberConstants;
@@ -50,7 +50,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 /** 
  * <p>Class that manages the thread pool for processing each service in a separate thread.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.6, 05/03/2019.
+ * @version 1.7, 11/05/2022.
  */
 public class RequestLauncherSpie {
 

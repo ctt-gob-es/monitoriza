@@ -20,11 +20,11 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>05/03/2019.</p>
  * @author Gobierno de España.
- * @version 1.0, 05/03/2019.
+ * @version 1.1, 11/05/2022.
  */
 package es.gob.monitoriza.controller;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,7 +36,7 @@ import es.gob.monitoriza.constant.GeneralConstants;
 /** 
  * <p>Class that maps the request for the system notification form to the controller.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 05/03/2019.
+ * @version 1.1, 11/05/2022.
  */
 @Controller
 public class SystemNotificationController {

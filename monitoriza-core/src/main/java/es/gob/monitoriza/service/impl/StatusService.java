@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 2.1, 27/08/2019.
+ * @version 2.2, 11/05/2022.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -42,7 +42,7 @@ import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.HttpClients;
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
 import org.springframework.stereotype.Service;
@@ -80,7 +80,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
  * <p>Class that implements the communication with the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * 
- * @version 2.1, 27/08/2019.
+ * @version 2.2, 11/05/2022.
  */
 @Service("statusService")
 public class StatusService implements IStatusService {

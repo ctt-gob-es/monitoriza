@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.2, 10/01/2022.
+ * @version 1.3, 11/05/2022.
  */
 package es.gob.monitoriza.i18n;
 
@@ -46,14 +46,13 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
-import org.apache.log4j.Logger;
-
+import es.gob.monitoriza.i18n.utils.Logger;
 import es.gob.monitoriza.i18n.utils.UtilsTomcat;
 
 /** 
  * <p>Class responsible for managing the access to language resources.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.2, 10/01/2022.
+ * @version 1.3, 11/05/2022.
  */
 public final class Language {
 	

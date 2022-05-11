@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 2.4, 07/09/2021.
+ * @version 2.5, 11/05/2022.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -46,7 +46,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.alarm.AlarmManager;
 import es.gob.monitoriza.alarm.types.AlarmMail;
@@ -86,7 +86,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 2.4, 07/09/2021.
+ * @version 2.5, 11/05/2022.
  */
 public final class RequestProcessorThread implements Runnable {
 

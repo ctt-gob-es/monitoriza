@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 11/05/2022.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -43,7 +43,7 @@ import java.util.Map.Entry;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
@@ -53,7 +53,7 @@ import es.gob.monitoriza.i18n.Language;
 /** 
  * <p>Class contains static properties of Monitoriz@. This properties are immutable and they can be modified only restarting the server context.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.2, 10/10/2018.
+ * @version 1.3, 11/05/2022.
  */
 public class StaticMonitorizaConfig {
 

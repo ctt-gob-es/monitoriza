@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Platform for detection and validation of certificates recognized in European TSL.</p>
  * <b>Date:</b><p>07/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.7, 01/02/2019.
+ * @version 1.8, 11/05/2022.
  */
 package es.gob.monitoriza.rest.services;
 
@@ -33,7 +33,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.constant.INotificationOriginIds;
 import es.gob.monitoriza.constant.INotificationPriority;
@@ -54,7 +54,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /**
  * <p>Class that represents the log service registration restful service.</p>
  * <b>Project:</b><p>Platform for detection and validation of certificates recognized in European TSL.</p>
- * @version 1.0, 01/02/2019.
+ * @version 1.8, 11/05/2022.
  */
 @Path("/log")
 public class RegisterLogRestService implements ILogRestService {

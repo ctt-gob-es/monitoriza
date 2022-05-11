@@ -79,10 +79,10 @@
 			<version>4.1</version>
 			<scope>test</scope>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>es.gob.monitoriza</groupId>
 			<artifactId>monitoriza-core</artifactId>
@@ -107,6 +107,14 @@
 					<groupId>com.fasterxml.jackson</groupId>
 		    		<artifactId>jackson-annotations</artifactId>
 	    		</exclusion>
+	    		<exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.logging.log4j</groupId>
+					<artifactId>log4j-to-slf4j</artifactId>
+				</exclusion>
 			</exclusions>
 		</dependency>
 		<dependency>
@@ -127,7 +135,7 @@
 		</dependency>
 		<dependency>
 			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-springsecurity4</artifactId>
+			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
 		</dependency>
 		<!-- marked the embedded servlet container as provided -->
 		<dependency>

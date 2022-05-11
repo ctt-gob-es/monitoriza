@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>29/10/2018.</p>
  * @author Gobierno de España.
- * @version1.9, 17/08/2021.
+ * @version 1.10, 11/05/2022.
  */
 package es.gob.monitoriza.spie.thread;
 
@@ -33,7 +33,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.alarm.AlarmManager;
 import es.gob.monitoriza.alarm.types.AlarmMail;
@@ -77,7 +77,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that get the results of the SPIE services configured.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.9, 17/08/2021.
+ * @version 1.10, 11/05/2022.
  */
 public class RequestSpieThread implements Runnable {
 	

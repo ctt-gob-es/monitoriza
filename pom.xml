@@ -9,6 +9,13 @@
 	<packaging>pom</packaging>
 	<name>monitoriza-parent</name>
 	<description>monitoriz@ parent project</description>
+	
+	<!-- Se incrementa la versión de Spring para evitar vulnerabilidad cve-2018-1273 en spring-data y spring-rest -->
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>2.2.6.RELEASE</version>
+	</parent>
 
 	<properties>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -25,7 +32,8 @@
 		<java.1.8.home>C:\Program Files\Java\jdk1.8.0_131</java.1.8.home>
 		<java.version>${java.1.8.version}</java.version>
 		<!-- Se incrementa la versión de Spring para evitar vulnerabilidad cve-2018-1273 en spring-data y spring-rest -->
-		<spring.version>2.0.9.RELEASE</spring.version>
+		<!-- 2.0.9.RELEASE -->
+		<!-- <spring.version>2.6.6</spring.version> -->
 		<hibernate.version>5.2.13.Final</hibernate.version>
 		<plugin.javadoc.skip>true</plugin.javadoc.skip>
 		<plugin.source.skip>true</plugin.source.skip>
@@ -104,11 +112,11 @@
 				<artifactId>servlet-api</artifactId>
 				<version>2.5</version>
 			</dependency>
-			<dependency>
+			<!-- <dependency>
 				<groupId>log4j</groupId>
 				<artifactId>log4j</artifactId>
 				<version>1.2.16</version>
-			</dependency>
+			</dependency> -->
 			<dependency>
 				<groupId>org.apache.logging.log4j</groupId>
 				<artifactId>log4j-bom</artifactId>
@@ -116,26 +124,7 @@
 				<scope>import</scope>
 				<type>pom</type>
 			</dependency>
-			<!-- <dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-			    <artifactId>log4j-core</artifactId>
-			    <version>2.16.0</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-			    <artifactId>log4j-api</artifactId>
-			    <version>2.16.0</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-			    <artifactId>log4j-slf4j-impl</artifactId>
-			    <version>2.16.0</version>
-			</dependency>
-			<dependency>
-				<groupId>org.apache.logging.log4j</groupId>
-			    <artifactId>log4j-jul</artifactId>
-			    <version>2.16.0</version>
-			</dependency> -->
+			
 			<!-- Módulos del Gestor de eventos -->
 			<dependency>
 				<groupId>es.gob.eventmanager</groupId>
@@ -172,56 +161,11 @@
 				<artifactId>eventmanager-commons-util</artifactId>
 				<version>${eventmanager.version}</version>
 			</dependency>
-			<!-- Spring Boot 2 -->
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-web</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-data-jpa</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-security</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-thymeleaf</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-data-rest</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-validation</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>org.thymeleaf.extras</groupId>
-				<artifactId>thymeleaf-extras-springsecurity4</artifactId>
-				<version>3.0.2.RELEASE</version>
-			</dependency>
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-tomcat</artifactId>
-				<version>${spring.version}</version>
-			</dependency>
+			
 			<dependency>
 				<groupId>org.springframework</groupId>
 				<artifactId>spring-context</artifactId>
-				<version>5.0.13.RELEASE</version>
+				<version>5.2.5.RELEASE</version>
 			</dependency>	
 			<!-- Spring Boot 2 -->
 			<!-- Hibernate 5 -->
@@ -323,6 +267,14 @@
 				<artifactId>commons-beanutils</artifactId>
 				<version>1.9.4</version>
 			</dependency>
+			<!-- Sobreescritura de la versión de Log4j2 para evitar vulnerabilidad: https://nvd.nist.gov/vuln/detail/CVE-2021-44228 -->
+			<dependency>
+				<groupId>org.apache.logging.log4j</groupId>
+				<artifactId>log4j-bom</artifactId>
+				<version>2.17.0</version>
+				<scope>import</scope>
+				<type>pom</type>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -333,7 +285,16 @@
 			<version>3.8.1</version>
 			<scope>test</scope>
 		</dependency>
-
+		<dependency>
+		    <groupId>org.springframework.boot</groupId>
+ 			<artifactId>spring-boot-starter</artifactId>
+ 			<exclusions>
+     			<exclusion>
+     				<groupId>*</groupId>
+     				<artifactId>spring-boot-starter-logging</artifactId>
+     		</exclusion>
+ 		</exclusions>
+		</dependency>
 	</dependencies>
 	<build>
 		<!-- Definición de los plugins genéricos -->
@@ -419,10 +380,10 @@
 					<locales>es,en</locales>
 				</configuration>
 			</plugin>
-			<plugin>
+			<!-- <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
+            </plugin> -->
 		</plugins>
 		<pluginManagement>
 			<plugins>

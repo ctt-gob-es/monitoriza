@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>23/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 25/01/2019.
+ * @version 1.6, 11/05/2022.
  */
 package es.gob.monitoriza.alarm.mail;
 
@@ -35,7 +35,7 @@ import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.IAlarmLogMessages;
@@ -53,7 +53,7 @@ import es.gob.monitoriza.utilidades.MailUtils;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.5, 25/01/2019.
+ * @version 1.6, 11/05/2022.
  */
 public class MailService {
 

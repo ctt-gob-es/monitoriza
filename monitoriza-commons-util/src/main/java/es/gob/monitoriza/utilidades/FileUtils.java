@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>21/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.6, 30/01/2019.
+ * @version 1.7, 11/05/2022.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -48,7 +48,7 @@ import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.StaticConstants;
@@ -58,7 +58,7 @@ import es.gob.monitoriza.i18n.Language;
 /** 
  * <p>Utilities class for Files.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.6, 30/01/2019.
+ * @version 1.7, 11/05/2022.
  */
 public final class FileUtils {
 

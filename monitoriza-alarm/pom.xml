@@ -27,10 +27,10 @@
 			<artifactId>javax.mail</artifactId>
 			<version>1.5.5</version>
 		</dependency>
-		<dependency>
+		<!-- <dependency>
 			<groupId>log4j</groupId>
 			<artifactId>log4j</artifactId>
-		</dependency>
+		</dependency> -->
 		<dependency>
 			<groupId>es.gob.monitoriza</groupId>
 			<artifactId>monitoriza-commons-util</artifactId>

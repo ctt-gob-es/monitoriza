@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 18/01/2019.
+ * @version 1.3, 11/05/2022.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -29,7 +29,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.ICommonsUtilLogMessages;
@@ -38,7 +38,7 @@ import es.gob.monitoriza.i18n.Language;
 /** 
  * <p>Class that contains general utils methods.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 18/01/2019.
+ * @version 1.3, 11/05/2022.
  */
 public class GeneralUtils {
 	

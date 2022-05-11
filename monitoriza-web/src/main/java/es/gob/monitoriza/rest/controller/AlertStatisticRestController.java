@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.7, 14/03/2019.
+ * @version 1.8, 11/05/2022.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -29,7 +29,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -58,7 +58,7 @@ import es.gob.monitoriza.service.IAlertStatisticService;
 /**
  * <p>Class that manages the REST requests related to the statistics of alerts and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 09/11/2021.
+ * @version 1.8, 11/05/2022.
  */
 @RestController
 public class AlertStatisticRestController {

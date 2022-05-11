@@ -20,18 +20,18 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/02/2019.</p>
  * @author Gobierno de España.
- * @version 1.1, 13/08/2019.
+ * @version 1.2, 11/05/2022.
  */
 package es.gob.monitoriza.exception;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.utilidades.UtilsXml;
 
 /** 
  * <p>Class that manages exceptions produced by the rest service module.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 13/08/2019..
+ * @version 1.2, 11/05/2022.
  */
 public class MonitorizaRestException extends Exception {
 

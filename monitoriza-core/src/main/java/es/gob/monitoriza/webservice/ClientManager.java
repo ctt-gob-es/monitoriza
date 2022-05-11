@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>1/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 30/01/2019.
+ * @version 1.5, 11/05/2022.
  */
 package es.gob.monitoriza.webservice;
 
@@ -34,7 +34,7 @@ import javax.xml.namespace.QName;
 
 import org.apache.axis.AxisProperties;
 import org.apache.axis.client.Call;
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +55,7 @@ import es.gob.monitoriza.spring.config.ApplicationContextProvider;
 /** 
  * <p>Class ClientManager.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 30/01/2019.
+ * @version 1.5, 11/05/2022.
  */
 @Service
 public class ClientManager {

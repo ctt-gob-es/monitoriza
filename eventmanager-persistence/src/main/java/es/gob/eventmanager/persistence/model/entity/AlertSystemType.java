@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/12/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 10/01/2022.
+ * @version 1.1, 11/05/2022.
  */
 package es.gob.eventmanager.persistence.model.entity;
 
@@ -34,7 +34,7 @@ import javax.persistence.Table;
 /** 
  * <p>Class that maps the <i>ALERT_SYSTEMS_TYPES</i> database table as a Plain Old Java Object..</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 10/01/2022.
+ * @version 1.1, 11/05/2022.
  */
 @Entity
 @Table(name = "ALERT_SYSTEMS_TYPES")
@@ -68,7 +68,7 @@ public class AlertSystemType implements Serializable {
 	 */
 	@Id
 	@Column(name = "SYSTEM_TYPE_ID", unique = true, nullable = false)
-	public final Long getIdAlertSystemType() {
+	public Long getIdAlertSystemType() {
 		return idAlertSystemType;
 	}
 	
@@ -76,7 +76,7 @@ public class AlertSystemType implements Serializable {
 	 * Sets the value of the attribute {@link #idAlertSystemType}.
 	 * @param requestFile The value for the attribute {@link #idAlertSystemType}.
 	 */
-	public final void setIdAlertSystemType(Long idAlertSystemType) {
+	public void setIdAlertSystemType(Long idAlertSystemType) {
 		this.idAlertSystemType = idAlertSystemType;
 	}
 	
@@ -86,7 +86,7 @@ public class AlertSystemType implements Serializable {
 	 * @return the value of the attribute {@link #name}.
 	 */
 	@Column(name = "NAME", nullable = false)
-	public final String getName() {
+	public String getName() {
 		return name;
 	}
 
@@ -94,7 +94,7 @@ public class AlertSystemType implements Serializable {
 	 * Sets the value of the attribute {@link #name}.
 	 * @param requestFile The value for the attribute {@link #name}.
 	 */
-	public final void setName(String name) {
+	public void setName(String name) {
 		this.name = name;
 	}
 
@@ -104,7 +104,7 @@ public class AlertSystemType implements Serializable {
 	 * @return the value of the attribute {@link #isResumeEnabled}.
 	 */
 	@Column(name = "RESUME_ENABLED", nullable = false)
-	public final boolean getIsResumeEnabled() {
+	public boolean getIsResumeEnabled() {
 		return isResumeEnabled;
 	}
 
@@ -112,7 +112,7 @@ public class AlertSystemType implements Serializable {
 	 * Sets the value of the attribute {@link #isResumeEnabled}.
 	 * @param requestFile The value for the attribute {@link #isResumeEnabled}.
 	 */
-	public final void setIsResumeEnabled(boolean isResumeEnabled) {
+	public void setIsResumeEnabled(boolean isResumeEnabled) {
 		this.isResumeEnabled = isResumeEnabled;
 	}
 		

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 2.1, 17/08/2021.
+ * @version 2.2, 11/05/2022.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -36,7 +36,7 @@ import java.util.stream.StreamSupport;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotEmpty;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -80,7 +80,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /**
  * <p>Class that manages the REST requests related to the Services administration and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
-  * @version 2.1, 17/08/2021.
+  * @version 2.2, 11/05/2022.
  */
 @RestController
 public class ServiceRestController {

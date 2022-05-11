@@ -20,11 +20,11 @@
   * <b>Project:</b><p>Application for monitoring the services of Cl@ve suite systems</p>
  * <b>Date:</b><p>25/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 25/10/2018.
+ * @version 1.1, 11/05/2022.
  */
 package es.gob.monitoriza.controller;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -46,7 +46,7 @@ import es.gob.monitoriza.service.IPlatformService;
  * Application for monitoring services of Cl@ve suite systems.
  * </p>
  * 
- * @version 1.0, 25/10/2018.
+ * @version 1.1, 11/05/2022.
  */
 @Controller
 public class PlatformClaveController {

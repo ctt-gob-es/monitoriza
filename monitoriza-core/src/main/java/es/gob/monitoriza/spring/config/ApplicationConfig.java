@@ -20,13 +20,13 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>7/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 22/11/2021.
+ * @version 1.3, 11/05/2022.
  */
 package es.gob.monitoriza.spring.config;
 
 import javax.annotation.PostConstruct;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.ComponentScan;
@@ -40,7 +40,7 @@ import es.gob.monitoriza.utilidades.UtilsGrayLog;
 /** 
  * <p>Spring configuration class that sets the configuration of Spring components, entities and repositories.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.5, 25/01/2019.
+ * @version 1.3, 11/05/2022.
  */
 @Configuration
 @EnableAutoConfiguration

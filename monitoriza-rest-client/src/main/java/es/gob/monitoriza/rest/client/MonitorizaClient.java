@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/02/2019.</p>
  * @author Gobierno de España.
- * @version 1.2, 13/08/2019.
+ * @version 1.3, 11/05/2022.
  */
 package es.gob.monitoriza.rest.client;
 
@@ -34,7 +34,7 @@ import javax.ws.rs.NotFoundException;
 import javax.ws.rs.ProcessingException;
 import javax.ws.rs.core.UriBuilder;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
@@ -47,7 +47,7 @@ import es.gob.monitoriza.rest.services.INodeRestService;
 /** 
  * <p>Class that implements a client for Monitoriz@ rest services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 13/08/2019.
+ * @version 1.3, 11/05/2022.
  */
 public class MonitorizaClient {
 	

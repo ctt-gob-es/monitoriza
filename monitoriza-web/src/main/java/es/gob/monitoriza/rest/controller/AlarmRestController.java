@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>18/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 15/02/2019.
+ * @version 1.6, 11/05/2022.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -33,7 +33,7 @@ import java.util.stream.StreamSupport;
 
 import javax.validation.constraints.NotEmpty;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.datatables.mapping.DataTablesInput;
@@ -73,7 +73,7 @@ import es.gob.monitoriza.service.IMailMonitorizaService;
  * Application for monitoring services of @firma suite systems.
  * </p>
  * 
- * @version 1.5, 15/02/2019.
+ * @version 1.6, 11/05/2022.
  */
 @RestController
 public class AlarmRestController {

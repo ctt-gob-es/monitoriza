@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>24/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.7, 30/01/2019.
+ * @version 1.8, 11/05/2022.
  */
 package es.gob.monitoriza.alarm;
 
@@ -29,7 +29,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.alarm.mail.MailService;
 import es.gob.monitoriza.alarm.types.AlarmMail;
@@ -51,7 +51,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that represents the scheduler for the tasks object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.7, 30/01/2019.
+ * @version 1.8, 11/05/2022.
  */
 public class AlarmTaskScheduler {
 	

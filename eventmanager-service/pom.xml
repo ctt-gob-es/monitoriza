@@ -35,9 +35,13 @@
 			<artifactId>spring-boot-starter-web</artifactId>
 			<exclusions>
 		        <exclusion>
-		            <groupId>org.springframework.boot</groupId>
-		            <artifactId>spring-boot-starter-logging</artifactId>
-		        </exclusion>
+					<groupId>ch.qos.logback</groupId>
+					<artifactId>logback-classic</artifactId>
+				</exclusion>
+				<exclusion>
+					<groupId>org.apache.logging.log4j</groupId>
+					<artifactId>log4j-to-slf4j</artifactId>
+				</exclusion>
 	    	</exclusions>
 		</dependency>
 		<dependency>
@@ -92,8 +96,8 @@
 	</dependencies>
   
   <build>
+    <finalName>eventmanager-service</finalName>
     <plugins>
-    
       <plugin>
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.6.1</version>
@@ -102,9 +106,7 @@
           <target>${project.build.jdk}</target>
         </configuration>
       </plugin>
-
     </plugins>
-    
 	<resources>
 		<resource>
 			<directory>src/main/resources/</directory>

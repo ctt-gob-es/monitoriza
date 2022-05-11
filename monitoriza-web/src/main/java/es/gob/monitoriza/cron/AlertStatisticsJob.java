@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>22/11/2021.</p>
  * @author Gobierno de España.
- * @version 1.0, 22/11/2021.
+ * @version 1.1, 11/05/2022.
  */
 package es.gob.monitoriza.cron;
 
@@ -29,7 +29,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.concurrent.ScheduledFuture;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.Trigger;
 import org.springframework.scheduling.TriggerContext;
@@ -58,7 +58,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 /** 
  * <p>Class that define the tasks related to the Alert statistics from Event Manager.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 22/11/2021.
+ * @version 1.1, 11/05/2022.
  */
 @Component
 public class AlertStatisticsJob implements SchedulerObjectInterface {

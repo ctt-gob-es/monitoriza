@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>22/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 03/05/2019.
+ * @version 1.5, 11/05/2022.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -32,7 +32,7 @@ import java.security.KeyStoreException;
 import java.security.NoSuchAlgorithmException;
 import java.security.cert.CertificateException;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -56,7 +56,7 @@ import es.gob.monitoriza.service.ISpieMonitoringConfigService;
  * <p>Class that manages the configuration of the @firma/ts@ SPIE from database persistence
  *    for use in the status servlet.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 03/05/2019.
+ * @version 1.5, 11/05/2022.
  */
 @Service("spieMonitoringConfigService")
 public class SpieMonitoringConfigService implements ISpieMonitoringConfigService {

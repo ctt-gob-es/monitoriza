@@ -21,7 +21,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>30/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 30/01/2019.
+ * @version 1.2, 11/05/2022.
  */
 package es.gob.monitoriza.spie.status;
 
@@ -34,7 +34,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 
@@ -49,7 +49,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that gets the VIP status for the configured platforms services through servlet call</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 30/01/2019.
+ * @version 1.2, 11/05/2022.
  */
 public class SpieStatus extends HttpServlet {
 

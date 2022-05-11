@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.9, 17/08/2021.
+ * @version 1.10, 11/05/2022.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -46,7 +46,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotEmpty;
 
 import org.apache.axis.utils.ByteArray;
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.MessageSource;
@@ -103,7 +103,7 @@ import es.gob.monitoriza.webservice.ClientManager;
  * <p>Class that manages the REST requests related to the Keystore administration
  * and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.9, 17/08/2021.
+ * @version 1.10, 11/05/2022.
  */
 @RestController
 public class KeystoreRestController {

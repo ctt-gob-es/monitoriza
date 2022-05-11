@@ -16,7 +16,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>28/06/2018.</p>
  * @author Gobierno de España.
- * @version 1.6, 25/01/2019.
+ * @version 1.7, 11/05/2022.
  */
 package es.gob.monitoriza.keystore;
 
@@ -30,7 +30,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.service.IKeystoreService;
@@ -40,7 +40,7 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
  * <p>Utility class for gets path for a keystore in a file system.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.6, 25/01/2019.
+ * @version 1.7, 11/05/2022.
  */
 public final class KeystoreVersionFileManager {
 

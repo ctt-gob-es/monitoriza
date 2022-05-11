@@ -19,14 +19,13 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>6/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 30/01/2019.
+ * @version 1.4, 11/05/2022.
  */
 package es.gob.monitoriza.service.impl;
 
-import javax.jdo.annotations.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import es.gob.monitoriza.persistence.configuration.model.entity.AlertTypeMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.repository.AlertTypeMonitorizaRepository;

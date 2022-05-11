@@ -16,7 +16,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>15/02/2019.</p>
  * @author Gobierno de España.
- * @version 1.6, 15/02/2019.
+ * @version 1.7, 11/05/2022.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -35,14 +35,14 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 
 import org.apache.commons.text.StringEscapeUtils;
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.w3c.dom.Document;
 
 /**
  * <p>Class that provides methods for managing xml.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.6, 15/02/2019.
+ * @version 1.7, 11/05/2022.
  */
 public final class UtilsXml {
 

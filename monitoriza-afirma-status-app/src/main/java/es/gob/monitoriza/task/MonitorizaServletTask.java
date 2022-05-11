@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.8, 28/03/2019.
+ * @version 1.9, 11/05/2022.
  */
 package es.gob.monitoriza.task;
 
@@ -35,7 +35,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.beans.factory.annotation.Configurable;
 import org.springframework.context.ApplicationContext;
 import org.springframework.web.context.WebApplicationContext;
@@ -65,7 +65,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that initializes the timers for processing the batch of requests for each service.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.8, 28/03/2019.
+ * @version 1.9, 11/05/2022.
  */
 @Configurable
 public class MonitorizaServletTask extends HttpServlet {

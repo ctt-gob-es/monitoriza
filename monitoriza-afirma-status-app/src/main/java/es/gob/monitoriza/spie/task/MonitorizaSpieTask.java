@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>25/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 03/05/2019.
+ * @version 1.5, 11/05/2022.
  */
 package es.gob.monitoriza.spie.task;
 
@@ -31,7 +31,7 @@ import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 
-import org.apache.log4j.Logger;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.IStatusLogMessages;
@@ -51,7 +51,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that initializes the timers for processing the batch of requests for each SPIE service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 03/05/2019.
+ * @version 1.5, 11/05/2022.
  */
 public class MonitorizaSpieTask extends HttpServlet {
 
