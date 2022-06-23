@@ -54,7 +54,7 @@ th:action="@{/savenotifsystem}" method="post">
 
 	    function checkTypeSelection(){
 		    
-	        if ($('select[name=type] option').filter(':selected').val() == "email") {
+	        if ($('select[name=type] option').filter(':selected').val() == "1") {
 	        	$('#emailInfo').show();
 	        	$('#graylogData').hide();
 	        	$('#host').prop('required', false);

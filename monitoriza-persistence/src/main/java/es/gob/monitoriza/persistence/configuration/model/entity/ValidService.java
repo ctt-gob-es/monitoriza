@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>29/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 23/06/2022.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -50,7 +50,7 @@ import es.gob.monitoriza.constant.NumberConstants;
 /** 
  * <p>Class that maps the <i>VALID_SERVICE</i> database table as a Plain Old Java Object.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 25/01/2019.
+ * @version 1.2, 23/06/2022.
  */
 @Entity
 @Table(name = "VALID_SERVICE")
@@ -295,7 +295,7 @@ public class ValidService implements Serializable {
 	 */
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
-	@Column(name = "USER", nullable = true, length = NumberConstants.NUM100)
+	@Column(name = "USERNAME", nullable = true, length = NumberConstants.NUM100)
 	public String getUser() {
 		return user;
 	}
@@ -360,7 +360,7 @@ public class ValidService implements Serializable {
 	// CHECKSTYLE:OFF -- Checkstyle rule "Design for Extension" is not applied
 	// because Hibernate JPA needs not final access methods.
 	@ManyToOne(fetch = FetchType.EAGER)
-	@Fetch(FetchMode.SELECT)
+	//@Fetch(FetchMode.SELECT)
 	@JoinColumn(name = "ID_AUTH_CERTIFICATE", nullable = true)
 	@JsonIgnore
 	public SystemCertificate getValidServiceCertificate() {

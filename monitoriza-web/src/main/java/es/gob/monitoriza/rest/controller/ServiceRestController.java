@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/04/2018.</p>
  * @author Gobierno de España.
- * @version 2.2, 11/05/2022.
+ * @version 2.3, 23/06/2022.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -80,7 +80,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /**
  * <p>Class that manages the REST requests related to the Services administration and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
-  * @version 2.2, 11/05/2022.
+  * @version 2.3, 23/06/2022.
  */
 @RestController
 public class ServiceRestController {
@@ -198,8 +198,11 @@ public class ServiceRestController {
 			protocol = "https://";
 		}
 		
-		baseEndpoint.append(protocol).append(platform.getHost()).append(UtilsStringChar.SYMBOL_COLON_STRING)
-				.append(platform.getPort());
+		baseEndpoint.append(protocol).append(platform.getHost());
+		
+		if (platform.getPort() != null && !"".equals(platform.getPort())) {
+			baseEndpoint.append(UtilsStringChar.SYMBOL_COLON_STRING).append(platform.getPort());
+		}
 
 		switch (serviceType.toLowerCase()) {
 		case GeneralConstants.SOAP_SERVICE:

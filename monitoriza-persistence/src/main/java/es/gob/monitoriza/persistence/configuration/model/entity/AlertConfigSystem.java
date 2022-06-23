@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>9/04/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 25/01/2019.
+ * @version 1.3, 23/06/2022.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -42,6 +42,8 @@ import org.hibernate.annotations.Parameter;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
+
+import es.gob.monitoriza.constant.NumberConstants;
 
 /**
  * <p>
@@ -83,7 +85,7 @@ public class AlertConfigSystem implements Serializable {
 	 * @return the value of the attribute {@link #idNotSysConfig}.
 	 */
 	@Id
-	@Column(name = "NOT_SYS_CONFIG_ID", unique = true, nullable = false)
+	@Column(name = "NOT_SYS_CONFIG_ID", unique = true, nullable = false, precision = NumberConstants.NUM19)
 	@GeneratedValue(generator = "sq_alert_config_systems")
 	@GenericGenerator(name = "sq_alert_config_systems", strategy = "org.hibernate.id.enhanced.SequenceStyleGenerator", parameters = { @Parameter(name = "sequence_name", value = "SQ_ALERT_CONFIG_SYSTEMS"), @Parameter(name = "initial_value", value = "1"), @Parameter(name = "increment_size", value = "1") })
 	@JsonView(DataTablesOutput.View.class)

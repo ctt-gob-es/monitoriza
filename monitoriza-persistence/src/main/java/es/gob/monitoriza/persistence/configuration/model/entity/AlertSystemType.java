@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/01/2022.</p>
  * @author Gobierno de España.
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 23/06/2022.
  */
 package es.gob.monitoriza.persistence.configuration.model.entity;
 
@@ -31,6 +31,7 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
 import org.springframework.data.jpa.datatables.mapping.DataTablesOutput;
 
 import com.fasterxml.jackson.annotation.JsonView;
@@ -38,7 +39,7 @@ import com.fasterxml.jackson.annotation.JsonView;
 /** 
  * <p>Class that maps the <i>ALERT_SYSTEMS_TYPES</i> database table as a Plain Old Java Object..</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 23/06/2022.
  */
 @Entity
 @Table(name = "ALERT_SYSTEMS_TYPES")
@@ -110,6 +111,7 @@ public class AlertSystemType implements Serializable {
 	 * @return the value of the attribute {@link #isResumeEnabled}.
 	 */
 	@Column(name = "RESUME_ENABLED", nullable = false)
+	@Type(type = "yes_no")
 	@JsonView(DataTablesOutput.View.class)
 	public boolean getIsResumeEnabled() {
 		return isResumeEnabled;
