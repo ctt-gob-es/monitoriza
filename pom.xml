@@ -34,7 +34,7 @@
 		<!-- Se incrementa la versión de Spring para evitar vulnerabilidad cve-2018-1273 en spring-data y spring-rest -->
 		<!-- 2.0.9.RELEASE -->
 		<!-- <spring.version>2.6.6</spring.version> -->
-		<hibernate.version>5.2.13.Final</hibernate.version>
+		<hibernate.version>5.4.24.Final</hibernate.version>
 		<plugin.javadoc.skip>true</plugin.javadoc.skip>
 		<plugin.source.skip>true</plugin.source.skip>
 						
