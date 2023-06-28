@@ -81,68 +81,92 @@ public interface ICommonsUtilLogMessages {
 	/***********************/
 		
 	/**
-	 * Constant attribute that represents the name of the property <code>errorutils001</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 * Constant attribute that represents the name of the property <code>errorutils001</code> belonging to the file commonUtils/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS001 = "errorutils001";
 	
 	/**
-	 * Constant attribute that represents the name of the property <code>errorutils002</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 * Constant attribute that represents the name of the property <code>errorutils002</code> belonging to the file commonUtils/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS002 = "errorutils002";
 	
 	/**
-	 * Constant attribute that represents the name of the property <code>errorutils003</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 * Constant attribute that represents the name of the property <code>errorutils003</code> belonging to the file commonUtils/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS003 = "errorutils003";
 	
 	/**
-	 * Constant attribute that represents the name of the property <code>errorutils004</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 * Constant attribute that represents the name of the property <code>errorutils004</code> belonging to the file commonUtils/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS004 = "errorutils004";
 	
 	/**
-	 * Constant attribute that represents the name of the property <code>errorutils005</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 * Constant attribute that represents the name of the property <code>errorutils005</code> belonging to the file commonUtils/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS005 = "errorutils005";
 	
 	/**
-	 * Constant attribute that represents the name of the property <code>errorutils006</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 * Constant attribute that represents the name of the property <code>errorutils006</code> belonging to the file commonUtils/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS006 = "errorutils006";
 	
 	/**
-	 * Constant attribute that represents the name of the property <code>errorutils007</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 * Constant attribute that represents the name of the property <code>errorutils007</code> belonging to the file commonUtils/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS007 = "errorutils007";
 	
 	/**
-	 * Constant attribute that represents the name of the property <code>errorutils008</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 * Constant attribute that represents the name of the property <code>errorutils008</code> belonging to the file commonUtils/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS008 = "errorutils008";
 	
 	/**
-	 * Constant attribute that represents the name of the property <code>errorutils009</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 * Constant attribute that represents the name of the property <code>errorutils009</code> belonging to the file commonUtils/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS009 = "errorutils009";
 	
 	/**
-	 * Constant attribute that represents the name of the property <code>errorutils010</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 * Constant attribute that represents the name of the property <code>errorutils010</code> belonging to the file commonUtils/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS010 = "errorutils010";
 	
 	/**
-	 * Constant attribute that represents the name of the property <code>errorutils011</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 * Constant attribute that represents the name of the property <code>errorutils011</code> belonging to the file commonUtils/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS011 = "errorutils011";
 	
 	/**
-	 * Constant attribute that represents the name of the property <code>errorutils012</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 * Constant attribute that represents the name of the property <code>errorutils012</code> belonging to the file commonUtils/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS012 = "errorutils012";
 	
 	/**
-	 * Constant attribute that represents the name of the property <code>errorutils013</code> belonging to the file status/monitoriza_xx_YY.properties.
+	 * Constant attribute that represents the name of the property <code>errorutils013</code> belonging to the file commonUtils/monitoriza_xx_YY.properties.
 	 */
 	String ERRORUTILS013 = "errorutils013";
+	
+	/*****************************/
+	/** Mensajes de TrustStore **/ 
+	/****************************/
+	
+	 /**
+     * Constant attribute that represents the name of the property <code>UTILS.AXIS2.TRUSTSTORE001</code> belonging to the file commonUtils/general_xx_YY.properties.
+     */
+    String UTILS_AXIS2_TRUSTSTORE001 = "UTILS.AXIS2.TRUSTSTORE001";
+
+    /**
+     * Constant attribute that represents the name of the property <code>UTILS.AXIS2.TRUSTSTORE002</code> belonging to the file commonUtils/general_xx_YY.properties.
+     */
+    String UTILS_AXIS2_TRUSTSTORE002 = "UTILS.AXIS2.TRUSTSTORE002";
+
+    /**
+     * Constant attribute that represents the name of the property <code>UTILS.AXIS2.TRUSTSTORE003</code> belonging to the file commonUtils/general_xx_YY.properties.
+     */
+    String UTILS_AXIS2_TRUSTSTORE003 = "UTILS.AXIS2.TRUSTSTORE003";
+    
+    /**
+     * Constant attribute that represents the name of the property <code>UTILS.AXIS2.TRUSTSTORE004</code> belonging to the file commonUtils/general_xx_YY.properties.
+     */
+    String UTILS_AXIS2_TRUSTSTORE004 = "UTILS.AXIS2.TRUSTSTORE004";
 
 }

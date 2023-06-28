@@ -405,7 +405,7 @@ public class UserRestController {
 				
 				Long statusCertificateId = null;
 				
-				if (result == null) {
+				if ("".equals(result) || result == null) {
 					statusCertificateId = StatusCertificateEnum.UNKNOWN.getId();
 				} else {
 					statusCertificateId = UtilsCertificate.processStatusCertificate(result);
@@ -438,6 +438,8 @@ public class UserRestController {
 				// certificado
 				keystoreService.saveKeystore(keystoreUser);
 				listNewSystemCert.add(systemCertificate);
+			} else {
+				listNewSystemCert = StreamSupport.stream(certService.findCertUserByUser(idUserMonitoriza).spliterator(), false).collect(Collectors.toList());
 			}
 		} catch (Exception e) {
 			listNewSystemCert = StreamSupport.stream(certService.findCertUserByUser(idUserMonitoriza).spliterator(), false).collect(Collectors.toList());

@@ -94,7 +94,6 @@ public class EventManagerBO implements IEventManagerBO {
 	 * @see es.gob.eventmanager.bo.IEventManagerBO#getApplicationMonitorizaByName(java.lang.String)
 	 */
 	@Override
-	@Transactional
 	public ApplicationMonitoriza getApplicationMonitorizaByName(String appName) throws EventManagerException {
 		
 		ApplicationMonitoriza app = null;

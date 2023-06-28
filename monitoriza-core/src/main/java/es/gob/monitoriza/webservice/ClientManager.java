@@ -27,19 +27,29 @@ package es.gob.monitoriza.webservice;
 import java.security.KeyStore;
 import java.security.PrivateKey;
 import java.security.cert.X509Certificate;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-import javax.net.ssl.HostnameVerifier;
-import javax.net.ssl.HttpsURLConnection;
-import javax.xml.namespace.QName;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.TrustManager;
 
-import org.apache.axis.AxisProperties;
-import org.apache.axis.client.Call;
-import es.gob.monitoriza.utilidades.loggers.Logger;
+import org.apache.axiom.om.OMAbstractFactory;
+import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMFactory;
+import org.apache.axiom.om.OMNamespace;
+import org.apache.axis2.addressing.EndpointReference;
+import org.apache.axis2.client.Options;
+import org.apache.axis2.client.ServiceClient;
+import org.apache.axis2.engine.AxisConfiguration;
+import org.apache.axis2.engine.Handler;
+import org.apache.axis2.engine.Phase;
+import org.apache.axis2.java.security.TrustAllTrustManager;
+import org.apache.axis2.phaseresolver.PhaseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.constant.GeneralConstants;
-import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
 import es.gob.monitoriza.enums.AuthenticationTypeEnum;
@@ -51,6 +61,7 @@ import es.gob.monitoriza.service.IKeystoreService;
 import es.gob.monitoriza.service.impl.KeystoreService;
 import es.gob.monitoriza.service.utils.IServiceNameConstants;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 /** 
  * <p>Class ClientManager.</p>
@@ -81,23 +92,29 @@ public class ClientManager {
 	private static final String LOCAL_PART = "verify";
 	
 	/**
+     * Attribute that represents the list of handlers added to the Axis engine. 
+     */
+    private static List<String> handlerAdded = new ArrayList<String>();
+	
+	/**
 	 * Attribute that represents the service object for accessing the repository. 
 	 */
 	@Autowired
 	private IKeystoreService keystoreService;
 
-	static {
+//	static {
 		// for localhost testing only
-		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
-
-			public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession) {
-				if (hostname.equals(LOCALHOST)) {
-					return true;
-				}
-				return false;
-			}
-		});
-	}
+//		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
+//
+//			public boolean verify(String hostname, javax.net.ssl.SSLSession sslSession) {
+//				if (hostname.equals(LOCALHOST)) {
+//					return true;
+//				}
+//				return false;
+//		
+//			}
+//		});
+//	}
 
 	/**
 	 * Method that creates the service DSSCertificate.
@@ -113,20 +130,8 @@ public class ClientManager {
 		
 		String response = null;
 		
-		if (validService.getIsSecure() != null && validService.getIsSecure()) {
-			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreService.getKeystoreById(KeystoreMonitoriza.ID_TRUSTSTORE_SSL));
-			KeystoreMonitoriza ksSSL = keystoreService.getKeystoreById(KeystoreMonitoriza.ID_TRUSTSTORE_SSL);
-			
-			KeyStore ks = keystoreService.loadSslTruststore();
-			
-		    AxisSSLSocketFactory.setKeystorePass(keyStoreFacade.getKeystoreDecodedPasswordString(ksSSL.getPassword()));
-		    AxisSSLSocketFactory.setKeyStore(ks);
-		    AxisProperties.setProperty("axis.socketSecureFactory", "es.gob.monitoriza.webservice.AxisSSLSocketFactory");
-			
-		}
-		
 		ClientHandler requestHandler = null;
-		
+		Object res = null;		
 		
 		if (validService.getAuthenticationType().getIdAuthenticationType().equals(AuthenticationTypeEnum.USERPASS.getId())) {
 			requestHandler = new ClientHandler(AuthenticationTypeEnum.USERPASS.getName());
@@ -143,23 +148,157 @@ public class ClientManager {
 			requestHandler.setCertificate(certificateSOAP);
 			requestHandler.setKey(privateKeySOAP);
 		}
-		org.apache.axis.client.Service service = new org.apache.axis.client.Service();
+		
+		
+		// Creamos la factoria de objetos XML de AXIS2.
+	    OMFactory fac = OMAbstractFactory.getOMFactory();
+
+	    // Creamos el namespace de la petición.
+	    OMNamespace ns = createNamespace(fac, "DSSAfirmaVerifyCertificate");
+	    // Creamos el elemento XML raíz del SOAP body que indica la
+	    // operación a realizar.
+	    OMElement operationElem = fac.createOMElement("verify", ns);
+	    // Creamos el elemento XML que contendrá la petición SOAP completa.
+	    OMElement inputParamElem = fac.createOMElement("arg0", ns);
+	    // Añadimos la petición al parámetro de entrada principal.
+	    inputParamElem.setText((String) Arrays.deepToString((Object[]) peticion));
+	    // Incluimos el parámetro a la operación para formar el body del
+	    // SOAP
+	    // completamente.
+	    operationElem.addChild(inputParamElem);
+		
+		ServiceClient client = null;
 		
 		try {
-			Call call = (Call) service.createCall();
-			call.setTargetEndpointAddress(url);
-			call.setOperationName(new QName(NAME_SPACE_URI, LOCAL_PART));
-			call.setTimeout(NumberConstants.NUM1000000);
+			
+			Options options = new Options();
+		    
+		    options.setTo(new EndpointReference(url));
+		    // Desactivamos el chunked.
+		    options.setProperty("__CHUNKED__", "false");			
+		    client = new ServiceClient();
+		    client.setOptions(options);
+		    
+
 			if (requestHandler != null) {
-				call.setClientHandlers(requestHandler,null);
+				addHandlers(client, requestHandler);
 			}
-			response = (String) call.invoke(peticion);
-			System.out.println(response);
+			
+			client.setOptions(options);
+			OMElement result = client.sendReceive(operationElem);
+			
+			if (result != null && result.getFirstElement() != null && !result.getFirstElement().getText().isEmpty()) {
+				res = result.getFirstElement().getText();
+			}
+			
+			
 		} catch (Exception e) {
-			LOGGER.equals(e.getMessage());
+			LOGGER.error(e.getMessage());
 		}
 		LOGGER.info("getDSSCertificateServiceClient end");
-		return response;
+		return res.toString();
 	}
 	
+	/**
+     * Auxiliary method that adds the generated handlers to the 'phases' of Axis2.
+     * @param client Service client.
+     * @param requestHandler Request handler.
+     * @param responseHandler Response handler.
+     */
+    private void addHandlers(ServiceClient client, ClientHandler requestHandler) {
+
+    	// Añadimos el handler de seguridad de salida.
+    	AxisConfiguration config = client.getAxisConfiguration();
+    	List<Phase> phasesOut = config.getOutFlowPhases();
+    	for (Phase phase: phasesOut) {
+    	    if ("Security".equals(phase.getPhaseName())) {
+    		try {
+    		    addHandler(phase, requestHandler, 2);
+    		    break;
+    		} catch (PhaseException e) {
+    		    e.printStackTrace();
+    		}
+    	    }
+    	}
+    }
+
+    /**
+     * Method that removes the added handler from the axis engine.
+     * @param client Axis service client.
+     */
+    private void removeHandlers(ServiceClient client) {
+	if (client != null && !handlerAdded.isEmpty()) {
+	    AxisConfiguration config = client.getAxisConfiguration();
+
+	    // Recorremos las phases de salida.
+	    List<Phase> phasesOut = config.getOutFlowPhases();
+	    for (Phase phase: phasesOut) {
+		removeHandler(phase);
+	    }
+
+	    // Recorremos las phases de entrada.
+	    List<Phase> phasesIn = config.getInFlowPhases();
+	    for (Phase phase: phasesIn) {
+		removeHandler(phase);
+	    }
+
+	    // Reiniciamos la lista de handlers.
+	    handlerAdded = new ArrayList<String>();
+	}
+
+    }
+
+    /**
+     * Auxiliary method that removes the added handler from the given phase.
+     * @param phase Axis phase where the handlers are.
+     */
+    private void removeHandler(Phase phase) {
+	if (phase != null) {
+	    List<Handler> handlers = phase.getHandlers();
+	    for (Handler handler: handlers) {
+		if (handlerAdded.contains(handler.getName())) {
+		    handler.getHandlerDesc().setHandler(handler);
+		    phase.removeHandler(handler.getHandlerDesc());
+		}
+	    }
+	}
+    }
+
+    /**
+     * Auxiliary method that add a handler into an AXIS2 phase.
+     * @param phase AXIS2 phase.
+     * @param handler Handler to add.
+     * @param position Indicates if the handler is added in the first place of the list (0), at the end (2) or is indifferent (1).
+     * @throws PhaseException if it is not possible to add the handler to the phase.
+     */
+	private void addHandler(Phase phase, Handler handler, int position) throws PhaseException {
+		if (position == 0 && !UtilsAxis.isHandlerInPhase(phase, handler)) {
+			phase.setPhaseFirst(handler);
+			handlerAdded.add(handler.getName());
+			return;
+		}
+		if (position == 1 && !UtilsAxis.isHandlerInPhase(phase, handler)) {
+			phase.addHandler(handler);
+			handlerAdded.add(handler.getName());
+			return;
+		}
+		if (position == 2 && !UtilsAxis.isHandlerInPhase(phase, handler)) {
+			phase.setPhaseLast(handler);
+			handlerAdded.add(handler.getName());
+			return;
+		}
+	}
+	
+	/**
+     * Auxiliary method that create the specific namespace for the specific service.
+     * @param fac OM factory.
+     * @param afirmaService service name.
+     * @return the target namespace of the service.
+     */
+	private OMNamespace createNamespace(OMFactory fac, String afirmaService) {
+		OMNamespace ns = fac.createOMNamespace("http://afirmaws/services/DSSAfirmaVerifyCertificate", "ns1");
+		
+		return ns;
+	}
+
 }

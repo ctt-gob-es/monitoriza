@@ -86,5 +86,20 @@ public class GeneralUtils {
 
         return localDateTime.format(formatter);
 	}
+	
+	/**
+	 * Checks if a value is null.
+	 * @param values collection of values to validate.
+	 * @return true if any parameter is null and false if all parameters are valid (not null).
+	 */
+	public static boolean checkNullValues(Object... values) {
+		for (Object object: values) {
+			if (object == null) {
+				return true;
+			}
+		}
+
+		return false;
+	}
 
 }

@@ -31,6 +31,8 @@ import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.Type;
+
 /** 
  * <p>Class that maps the <i>ALERT_SYSTEMS_TYPES</i> database table as a Plain Old Java Object..</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
@@ -104,6 +106,7 @@ public class AlertSystemType implements Serializable {
 	 * @return the value of the attribute {@link #isResumeEnabled}.
 	 */
 	@Column(name = "RESUME_ENABLED", nullable = false)
+	@Type(type = "yes_no")
 	public boolean getIsResumeEnabled() {
 		return isResumeEnabled;
 	}

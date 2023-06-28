@@ -26,9 +26,9 @@ package es.gob.monitoriza.handler;
 
 import java.util.Properties;
 
-import org.apache.axis.AxisFault;
-import org.apache.axis.MessageContext;
-import org.apache.axis.handlers.BasicHandler;
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.context.MessageContext;
+import org.apache.axis2.handlers.AbstractHandler;
 import org.apache.ws.security.WSConstants;
 import org.apache.ws.security.WSSecurityException;
 import org.apache.ws.security.components.crypto.Crypto;
@@ -41,7 +41,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * @version 1.2, 30/01/2019.
  */
-public class AbstractCommonHandler extends BasicHandler {
+public class AbstractCommonHandler extends AbstractHandler {
 
 	/**
 	 * Class serial version.
@@ -84,7 +84,8 @@ public class AbstractCommonHandler extends BasicHandler {
 	 * {@inheritDoc}
 	 * @see org.apache.axis.Handler#invoke(org.apache.axis.MessageContext)
 	 */
-	public void invoke(MessageContext msgContext) throws AxisFault {
+	public InvocationResponse invoke(MessageContext msgContext) throws AxisFault {
+		return InvocationResponse.CONTINUE;
 	}
 
 	/**

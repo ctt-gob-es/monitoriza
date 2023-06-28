@@ -345,7 +345,7 @@ public class AlertConfigMonitoriza implements Serializable {
 	 * @return the value of the attribute {@link #systemsMonitoriza}.
 	 */
 	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinTable(name = "ALERT_CONFIG_SYSTEMS", joinColumns = @JoinColumn(name = "ALERT_CONFIG_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "SYSTEM_ID", nullable = false))
+	@JoinTable(name = "ALERT_CONFIG_SYSTEMS", joinColumns = @JoinColumn(name = "ALERT_CONFIG_ID", referencedColumnName = "ALERT_CONFIG_ID", nullable = false), inverseJoinColumns = @JoinColumn(name = "SYSTEM_ID", referencedColumnName = "SYSTEM_ID", nullable = false))
 	public List<AlertSystemMonitoriza> getSystemsMonitoriza() {
 		return systemsMonitoriza;
 	}

@@ -14,16 +14,32 @@
  ******************************************************************************/
 package es.gob.eventmanager.client;
 
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
+import java.security.KeyManagementException;
+import java.security.KeyStoreException;
+import java.security.NoSuchAlgorithmException;
 import java.util.List;
 import java.util.Properties;
+import java.util.stream.Collectors;
+import java.security.KeyStore;
+import javax.net.ssl.HostnameVerifier;
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.SSLContext;
+import javax.net.ssl.SSLSession;
+import javax.net.ssl.SSLSocketFactory;
+import javax.net.ssl.TrustManagerFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -38,6 +54,11 @@ import es.gob.eventmanager.message.EventResponse;
  * @version 1.1, 04/11/2021.
  */
 public class EventClient {
+	
+	/**
+	 * Attribute that represents the object that manages the log of the class.
+	 */
+	private static final Logger LOGGER = LoggerFactory.getLogger("eventmanager-service");
 
 	private static final String HTTP_HEADER_AUTHENTICATION = "Authentication"; //$NON-NLS-1$
 
@@ -52,6 +73,8 @@ public class EventClient {
 	private final URL url;
 
 	private final char[] pwdBase;
+	
+	private final KeyStore ssl;
 
 	/**
 	 * Construye el cliente para el env&iacute;o de alertas.
@@ -60,7 +83,7 @@ public class EventClient {
 	 * @param systemKey Clave para a autenticaci&oacute;n del sistema.
 	 * @throws NullPointerException Cuando alguno de los par&aacute;metros es nulo.
 	 */
-	public EventClient(final String systemId, final String node, final URL url, final String systemKey) {
+	public EventClient(final String systemId, final String node, final URL url, final String systemKey, final KeyStore ssl) {
 
 		if (systemId == null) {
 			throw new NullPointerException("El identificador del sistema no puede ser nulo"); //$NON-NLS-1$
@@ -79,6 +102,7 @@ public class EventClient {
 		this.node = node;
 		this.url = url;
 		this.pwdBase = systemKey.toCharArray();
+		this.ssl = ssl;
 	}
 
 	/**
@@ -156,33 +180,58 @@ public class EventClient {
 	 * @return Respuesta del sistema.
 	 * @throws IOException Cuando no se puede enviar la notificaci&oacute;n al servicio.
 	 */
-	private EventResponse send(final Event event) throws IOException {
+	private EventResponse send(final Event event) throws IOException {		
 
 		// Iniciamos la conexion
-		final HttpURLConnection conn = (HttpURLConnection) this.url.openConnection();
-		conn.setDoOutput(true);
+		//final HttpURLConnection conn = (HttpURLConnection) this.url.openConnection();
+		//conn.setDoOutput(true);
+		HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+						
+		if (httpConn instanceof HttpsURLConnection) {
 
+			try {
+
+				TrustManagerFactory tmf = TrustManagerFactory.getInstance("SunX509");
+				SSLContext ctx = SSLContext.getInstance("TLS");
+				tmf.init(ssl);
+				ctx.init(null, tmf.getTrustManagers(), null);
+				SSLSocketFactory factory = ctx.getSocketFactory();
+				((HttpsURLConnection) httpConn).setSSLSocketFactory(factory);
+
+			} catch (NoSuchAlgorithmException | KeyStoreException
+					| KeyManagementException e) {
+
+				LOGGER.error("Error creando la conexión HTTPS", e);
+
+			}
+
+			((HttpsURLConnection) httpConn).setHostnameVerifier(new NameVerifier());
+
+		}				
+		
+		httpConn.setRequestMethod("POST");
+		httpConn.setDoOutput(true);
 		// Construimos el cuerpo del mensaje
 		final byte[] message = buildJsonMessage(event);
-		conn.setRequestProperty("Content-Type", "application/json; utf-8");
-
+		httpConn.setRequestProperty("Content-Type", "application/json; utf-8");
+		
 		// Establecemos las cabeceras de seguridad
 		try {
-			setSecurityHeader(conn, event.getSystemId(), message);
+			setSecurityHeader(httpConn, event.getSystemId(), message);
 		}
 		catch (final Exception e) {
 			throw new IOException("No se han podido establecer las cabeceras de seguridad de la peticion", e); //$NON-NLS-1$
 		}
-		conn.setRequestProperty("Accept", "application/json");
+		httpConn.setRequestProperty("Accept", "application/json");
 		// Enviamos la peticion
-		try (OutputStream os = conn.getOutputStream()) {
+		try (OutputStream os = httpConn.getOutputStream()) {
 			os.write(message, 0, message.length);
 			os.flush();
 		}
 				
 		// Realizamos la peticion y obtenemos la respuesta
 		EventResponse response;
-		try (InputStream is = conn.getInputStream()) {
+		try (InputStream is = httpConn.getInputStream()) {
 			response = buildResponse(is);
 		}
 		catch (final Exception e) {
@@ -209,7 +258,7 @@ public class EventClient {
 	 * @param conn Conexi&oacute;n HTTP a la que agregar la cabecera.
 	 * @param message Mensaje que se desea enviar y en base al que se generar&aacute; la cabecera.
 	 */
-	private void setSecurityHeader(final HttpURLConnection conn, final String systemId, final byte[] message) {
+	private void setSecurityHeader(final URLConnection conn, final String systemId, final byte[] message) {
 		final String authToken = AuthTokenBuilder.buildAuthToken(systemId, this.pwdBase, message);
 		conn.setRequestProperty(HTTP_HEADER_AUTHENTICATION, HMAC_HEADER_PREFIX + authToken);
 	}
@@ -227,8 +276,27 @@ public class EventClient {
 
 		EventResponse response;
 		try (InputStreamReader reader = new InputStreamReader(is)) {
-			response = gson.fromJson(reader, EventResponse.class);
+			String respuesta = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8)).lines().collect(Collectors.joining("\n"));
+//			response = new EventResponse("ERROR");
+//			response.setDescription(respuesta);
+			response = gson.fromJson(respuesta, EventResponse.class);
 		}
 		return response;
+	}
+	
+	/**
+	 * <p>Private class that allows to verify the host of the HTTPS service.</p>
+	 * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
+	 * @version 1.0, 02/05/2018.
+	 */
+	private class NameVerifier implements HostnameVerifier {
+
+		/**
+		 * {@inheritDoc}
+		 * @see javax.net.ssl.HostnameVerifier#verify(java.lang.String, javax.net.ssl.SSLSession)
+		 */
+		public boolean verify(final String hostname, final SSLSession session) {
+			return true;
+		}
 	}
 }

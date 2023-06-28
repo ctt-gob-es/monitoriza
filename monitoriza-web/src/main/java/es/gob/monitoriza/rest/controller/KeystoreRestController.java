@@ -45,7 +45,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotEmpty;
 
-import org.apache.axis.utils.ByteArray;
+
 import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -1004,7 +1004,7 @@ public class KeystoreRestController {
 			}
 			response.setHeader(UtilsCertificate.CONTENT_DISPOSITION_DOWNLOAD_CERTIFICATE, UtilsCertificate.HEADER_DOWNLOAD_CERTIFICATE);
 			response.setContentType(UtilsCertificate.CONTENT_TYPE_DOWNLOAD_CERTIFICATE);
-			FileCopyUtils.copy(x509CertBytes != null ? x509CertBytes : new ByteArray().toByteArray(), response.getOutputStream());
+			FileCopyUtils.copy(x509CertBytes != null ? x509CertBytes : new byte[0], response.getOutputStream());
 			response.flushBuffer();
 		} catch (Exception e) {
 			LOGGER.error(Language.getFormatResWebMonitoriza(IWebLogMessages.ERRORWEB008, new Object[] {idSystemCertificate}));

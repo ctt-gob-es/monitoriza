@@ -46,8 +46,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import es.gob.monitoriza.utilidades.loggers.Logger;
-
 import es.gob.monitoriza.alarm.AlarmManager;
 import es.gob.monitoriza.alarm.types.AlarmMail;
 import es.gob.monitoriza.constant.GeneralConstants;
@@ -82,6 +80,7 @@ import es.gob.monitoriza.status.StatusUptodate;
 import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 import es.gob.monitoriza.utilidades.UtilsGrayLog;
 import es.gob.monitoriza.utilidades.UtilsStringChar;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>

@@ -85,7 +85,8 @@ public class NoticeService extends HttpServlet {
 	 */
 	@Override
 	protected void doPost(final HttpServletRequest request, final HttpServletResponse response) throws ServletException, IOException {
-
+		LOGGER.info("Inicio de registro de nuevo evento");
+		
 		// Establecemos el juego de caracteres con el que se va a leer el contenido de la peticion
 		request.setCharacterEncoding(CHARSET.displayName().toLowerCase());
 		response.setCharacterEncoding(CHARSET.displayName().toLowerCase());

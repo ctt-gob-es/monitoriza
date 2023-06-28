@@ -43,11 +43,11 @@ import es.gob.monitoriza.persistence.configuration.model.entity.AlarmMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.MailMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.ServiceMonitoriza;
 import es.gob.monitoriza.persistence.configuration.model.entity.TimerScheduled;
+import es.gob.monitoriza.persistence.configuration.model.repository.AlarmMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.MailMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.ServiceMonitorizaRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.TimerScheduledRepository;
 import es.gob.monitoriza.persistence.configuration.model.repository.datatable.MailMonitorizaDatatableRepository;
-import es.gob.monitoriza.service.IAlarmMonitorizaService;
 import es.gob.monitoriza.service.IMailMonitorizaService;
 
 
@@ -84,10 +84,11 @@ public class MailMonitorizaService implements IMailMonitorizaService {
     private TimerScheduledRepository scheduledServices; 
 	
 	/**
-	 * Attribute that represents the injected interface of alarm services. 
+	 * Attribute that represents the injected interface that provides CRUD
+	 * operations for the persistence.
 	 */
 	@Autowired
-	private IAlarmMonitorizaService alarmService;
+	private AlarmMonitorizaRepository repositoryAlarm;
 
 	/**
 	 * {@inheritDoc}
@@ -118,9 +119,7 @@ public class MailMonitorizaService implements IMailMonitorizaService {
 		}
 
 		mailMonitoriza.setEmailAddress(mailDto.getEmailAddress());
-		MailMonitoriza mail = repository.save(mailMonitoriza);
-
-		
+		MailMonitoriza mail = repository.save(mailMonitoriza);		
 
 		if (haCambiadoEmail && mailMonitoriza.getIdMail() != null) {
 			updateScheduledTimerFromMail(mailMonitoriza);
@@ -200,7 +199,7 @@ public class MailMonitorizaService implements IMailMonitorizaService {
 	private void updateScheduledTimerFromMail(final MailMonitoriza mail) {
 
 		List<AlarmMonitoriza> alarmsUsingThisMail = StreamSupport
-				.stream(alarmService.getAllAlarmMonitorizaByMail(mail).spliterator(), false)
+				.stream(getAllAlarmMonitorizaByMail(mail).spliterator(), false)
 				.collect(Collectors.toList());
 
 		List<ServiceMonitoriza> servicesUsingThisAlarm = new ArrayList<ServiceMonitoriza>();
@@ -217,6 +216,23 @@ public class MailMonitorizaService implements IMailMonitorizaService {
 			scheduledServices.save(scheduled);
 
 		}
+	}
+	
+	
+	/**
+	 * Method that gets all the timer from the persistence.
+	 * @param mail {@link MailMonitoriza} 
+	 * @return a {@link Iterable<AlarmMonitoriza>} with the information of all
+	 *         services.
+	 */
+	private Iterable<AlarmMonitoriza> getAllAlarmMonitorizaByMail(MailMonitoriza mail) {
+		
+		List<AlarmMonitoriza> degraded = StreamSupport.stream(repositoryAlarm.findByEmailsDegradedIdMail(mail.getIdMail()).spliterator(), false).collect(Collectors.toList());
+		List<AlarmMonitoriza> down = StreamSupport.stream(repositoryAlarm.findByEmailsDownIdMail(mail.getIdMail()).spliterator(), false).collect(Collectors.toList());
+		
+		degraded.addAll(down);
+				
+		return degraded.stream().distinct().collect(Collectors.toList());
 	}
 
 }

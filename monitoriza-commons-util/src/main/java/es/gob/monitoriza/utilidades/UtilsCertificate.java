@@ -74,7 +74,7 @@ public final class UtilsCertificate {
 	/**
 	 * Attribute that represents the path sign validation report.
 	 */
-	public static final String PATH_CERT_VALIDATION_REPORT = "/WEB-INF/classes/static/xml/validCertificate.xml";
+	public static final String PATH_CERT_VALIDATION_REPORT = "/WEB-INF/xml/validCertificate.xml";
 
 	/**
 	 * Attribute that represents the document builder. 

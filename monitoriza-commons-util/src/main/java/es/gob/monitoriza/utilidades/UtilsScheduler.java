@@ -26,7 +26,7 @@ package es.gob.monitoriza.utilidades;
 
 import java.io.InputStream;
 
-import org.springframework.scheduling.support.CronSequenceGenerator;
+import org.springframework.scheduling.support.CronExpression;
 
 
 /** 
@@ -51,7 +51,7 @@ public class UtilsScheduler {
 	public static Boolean validExpression(String expression) {
 		boolean result = false;
 		if (expression != null) {
-			if(CronSequenceGenerator.isValidExpression(expression)){
+			if(CronExpression.isValidExpression(expression)){
 				result = true;
 			}
 		}

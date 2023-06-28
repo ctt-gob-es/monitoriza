@@ -98,6 +98,21 @@ public class StaticMonitorizaConfig {
 	public static final String SYSTEM_KEYSTORE_PASSWORD = "system.keystore.password";
 	
 	/**
+	 * Constant attribute that represents name for property <i>"system.keystore.password."</i>.
+	 */
+	public static final String VALIDATION_AXIS2_SECURE_MODE_PROPERTY = "validation.axis2.secureMode";
+	
+	/**
+     * Constant attribute that identifies the class name of the truststore.
+     */
+    private static final String TRUSTSTORE_CLASSNAME = "javax.net.ssl.trustStore";
+    
+    /**
+     * Attribute that represents the time that the truststore was last modified.
+     */
+    private static long truststoreLastUpdate = -1;		
+	
+	/**
 	 * Constructor method for the class StaticMonitorizaProperties.java.
 	 */
 	private StaticMonitorizaConfig() {
@@ -120,8 +135,18 @@ public class StaticMonitorizaConfig {
 						LOGGER.error(Language.getFormatResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.ERRORUTILS007, new Object[ ] { System.getProperty(STATIC_MONITORIZA_SYSTEM_PROPERTY) }), e);
 					} 
 				}
+				
+				// Establecemos el nuevo valor de la propiedad que indica el
+				// almacen de confianza usado
+				// en conexiones seguras, en el caso de que existan.
+				String propertyValue = staticProperties.getProperty(VALIDATION_AXIS2_SECURE_MODE_PROPERTY);
+				if (propertyValue != null && propertyValue.trim().equalsIgnoreCase("true")) {
+				   
+				    setTruststore(staticProperties.getProperty("axis2.truststorepath"), staticProperties.getProperty("axis2.truststorepassword"));
+				}
 			}
-		}
+		}		
+		
 		return staticProperties;
 	}
 
@@ -179,4 +204,36 @@ public class StaticMonitorizaConfig {
 	public static String createAbsolutePath(String pathDir, String filename) {
 		return pathDir + File.separator + filename;
 	}
+	
+	/**
+     * Method that updates the system properties used to define the truststore for the secure connections.
+     * @param truststorePath Parameter that represents the path to the truststore.
+     * @param truststorePass Parameter that represents the password of the truststore.
+     */
+	private static void setTruststore(String truststorePath, String truststorePass) {
+		boolean isChanged;
+		File truststoreFile;
+
+		isChanged = false;
+		truststoreFile = new File(truststorePath);
+
+		if (truststorePath != null && !truststorePath.trim().equals("") && System.getProperty(TRUSTSTORE_CLASSNAME) != null && !System.getProperty(TRUSTSTORE_CLASSNAME).equals(truststorePath)) {
+			LOGGER.debug(Language.getFormatResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.UTILS_AXIS2_TRUSTSTORE001, new Object[ ] { System.getProperty(TRUSTSTORE_CLASSNAME), truststorePath }));
+			isChanged = true;
+		} else if (!GeneralUtils.checkNullValues(truststorePass, System.getProperty("javax.net.ssl.trustStorePassword")) && !truststorePass.trim().equals("") && !System.getProperty("javax.net.ssl.trustStorePassword").equals(truststorePass)) {
+			LOGGER.debug(Language.getResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.UTILS_AXIS2_TRUSTSTORE002));
+			isChanged = true;
+		} else if (truststoreLastUpdate != truststoreFile.lastModified()) {
+			LOGGER.debug(Language.getResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.UTILS_AXIS2_TRUSTSTORE003));
+			isChanged = true;
+		}
+
+		if (isChanged) {
+			LOGGER.debug(Language.getFormatResCommonsUtilsMonitoriza(ICommonsUtilLogMessages.UTILS_AXIS2_TRUSTSTORE004, new Object[ ] { truststorePath }));
+			System.setProperty(TRUSTSTORE_CLASSNAME, truststorePath);
+			System.setProperty("javax.net.ssl.trustStorePassword", truststorePass);
+			truststoreLastUpdate = truststoreFile.lastModified();
+		}
+	}
+
 }
