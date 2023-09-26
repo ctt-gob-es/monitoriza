@@ -17,7 +17,7 @@
  * <b>Project:</b><p>Library for the integration with the services of @Firma, eVisor and TS@.</p>
  * <b>Date:</b><p>04/03/2020.</p>
  * @author Gobierno de España.
- * @version 1.2, 18/04/2022.
+ * @version 1.3, 26/09/2023.
  */
 package es.gob.monitoriza.webservice;
 
@@ -43,6 +43,7 @@ import org.apache.axis2.saaj.SOAPHeaderElementImpl;
 import org.apache.axis2.saaj.TextImplEx;
 import org.w3c.dom.NamedNodeMap;
 
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.utilidades.loggers.Logger;
@@ -51,14 +52,14 @@ import es.gob.monitoriza.utilidades.loggers.Logger;
 /** 
  * <p>Utilities class that contains auxiliary method related with axis engine.</p>
  * <b>Project:</b><p>Library for the integration with the services of @Firma, eVisor and TS@.</p>
- * @version 1.2, 18/04/2022.
+ * @version 1.3, 26/09/2023.
  */
 public final class UtilsAxis {
 
     /**
      * Attribute that represents the object that manages the log of the class.
      */
-    private static final Logger LOGGER = Logger.getLogger(UtilsAxis.class);
+    private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
     /**
      * Attribute that represents the counter of numbered sequences generated at this loop.

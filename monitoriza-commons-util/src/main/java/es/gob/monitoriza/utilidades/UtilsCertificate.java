@@ -16,7 +16,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>10/05/2012.</p>
  * @author Gobierno de España.
- * @version 1.7, 11/05/2022.
+ * @version 1.8, 26/09/2023.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -40,6 +40,7 @@ import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.ICommonsUtilLogMessages;
 import es.gob.monitoriza.i18n.Language;
 
@@ -47,11 +48,11 @@ import es.gob.monitoriza.i18n.Language;
  * <p>Class that provides methods for managing certificates.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.7, 11/05/2022.
+ * @version 1.8, 26/09/2023.
  */
 public final class UtilsCertificate {
 
-	private static Logger LOGGER = Logger.getLogger(UtilsCertificate.class);
+	private static Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
 	 * Attribute that represents the UTF-8 codification chacarter.

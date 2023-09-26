@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>23/01/2019.</p>
  * @author Gobierno de España.
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 26/09/2023.
  */
 package es.gob.monitoriza.utilidades;
 
@@ -38,6 +38,7 @@ import es.gob.monitoriza.utilidades.loggers.Logger;
 import biz.paluch.logging.gelf.intern.GelfMessage;
 import biz.paluch.logging.gelf.intern.GelfSender;
 import biz.paluch.logging.gelf.intern.sender.GelfUDPSender;
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.ICommonsUtilLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.utilidades.loggers.Log4jErrorReporter;
@@ -45,14 +46,14 @@ import es.gob.monitoriza.utilidades.loggers.Log4jErrorReporter;
 /**
  * <p>Utilities class for the use of GrayLog.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 26/09/2023.
  */
 public final class UtilsGrayLog {
 
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(UtilsGrayLog.class);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
 	 * Constant attribute that represents the token key 'cod_err' for a Gray Log Message Field.

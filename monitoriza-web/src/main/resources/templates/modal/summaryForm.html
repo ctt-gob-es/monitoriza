@@ -179,6 +179,15 @@
 		var getResumeAlertSystems = /*[[@{/resumealertssystemsdt}]]*/;
 		var getResumeAppsAndAlertsTypes = /*[[@{/resumeappsalerttypessdt}]]*/;
 		var getEmailInfo = /*[[@{/emailinformation}]]*/;
+		
+		var idResumeMonitoriza;
+		if ($("#idResumeMonitoriza").val() == '' || $("#idResumeMonitoriza").val() == undefined) {
+			idResumeMonitoriza = 0;
+		} else {
+			idResumeMonitoriza = $("#idResumeMonitoriza").val()
+		}
+		
+		
 
 		// Instancia de las tablas para sistemas de notificacion y aplicaciones / tipos de alerta
 		var alertSystemTbl = $('#alertSystemTable').DataTable({
@@ -232,7 +241,7 @@
 		    },
 			"ajax": {
 				"url": getResumeAlertSystems,
-				"data" : { "resumeId" : $("#idResumeMonitoriza").val()},
+				"data" : { "resumeId" : idResumeMonitoriza},
 				"type" : "POST"
 			},
 			"columns": [
@@ -269,7 +278,7 @@
 		    },
 			"ajax": {
 				"url": getResumeAppsAndAlertsTypes,
-				"data" : { "resumeId" : $("#idResumeMonitoriza").val()},
+				"data" : { "resumeId" : idResumeMonitoriza},
 				"type" : "POST"
 			},
 			"columns": [

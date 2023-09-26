@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 2.5, 11/05/2022.
+ * @version 2.6, 26/09/2023.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -85,14 +85,14 @@ import es.gob.monitoriza.utilidades.loggers.Logger;
 /** 
  * <p>Class that performs the calculations to get the service status executing the requests in a new thread.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 2.5, 11/05/2022.
+ * @version 2.6, 26/09/2023.
  */
 public final class RequestProcessorThread implements Runnable {
 
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_STATUS_LOG);
 	
 	/**
 	 * Attribute that represents the identifier of the scheduled timer for this service thread. 

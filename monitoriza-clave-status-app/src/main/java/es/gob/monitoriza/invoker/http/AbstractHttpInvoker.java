@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring services of Cl@ve suite systems</p>
  * <b>Date:</b><p>25/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 25/01/2019.
+ * @version 1.4, 26/09/2023.
  */
 package es.gob.monitoriza.invoker.http;
 
@@ -88,14 +88,14 @@ import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
  * Application for monitoring services of Cl@ve suite systems.
  * </p>
  * 
- * @version 1.3, 25/01/2019.
+ * @version 1.4, 26/09/2023.
  */
 public abstract class AbstractHttpInvoker {
 
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	protected static final Logger LOGGER = LoggerFactory.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	protected static final Logger LOGGER = LoggerFactory.getLogger(GeneralConstants.LOGGER_NAME_STATUS_LOG);
 	/**
 	 * Attribute that represents the configuration of the SAML request.
 	 */

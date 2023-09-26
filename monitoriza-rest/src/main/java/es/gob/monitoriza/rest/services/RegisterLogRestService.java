@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Platform for detection and validation of certificates recognized in European TSL.</p>
  * <b>Date:</b><p>07/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.8, 11/05/2022.
+ * @version 1.9, 26/09/2023.
  */
 package es.gob.monitoriza.rest.services;
 
@@ -34,7 +34,7 @@ import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
 import es.gob.monitoriza.utilidades.loggers.Logger;
-
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.INotificationOriginIds;
 import es.gob.monitoriza.constant.INotificationPriority;
 import es.gob.monitoriza.constant.INotificationTypeIds;
@@ -54,7 +54,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /**
  * <p>Class that represents the log service registration restful service.</p>
  * <b>Project:</b><p>Platform for detection and validation of certificates recognized in European TSL.</p>
- * @version 1.8, 11/05/2022.
+ * @version 1.9, 26/09/2023.
  */
 @Path("/log")
 public class RegisterLogRestService implements ILogRestService {
@@ -62,7 +62,7 @@ public class RegisterLogRestService implements ILogRestService {
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(RegisterLogRestService.class);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
 	 * {@inheritDoc}

@@ -15,10 +15,11 @@
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI certificates and electronic signature.</p>
  * <b>Date:</b><p>05/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 26/09/2023.
  */
 package es.gob.monitoriza.utilidades.loggers;
 
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.utilidades.loggers.Logger;
 
 import biz.paluch.logging.gelf.intern.ErrorReporter;
@@ -26,14 +27,14 @@ import biz.paluch.logging.gelf.intern.ErrorReporter;
 /**
  * <p>Log4j implementation for the error logger to use in Gray Log.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI certificates and electronic signature.</p>
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 26/09/2023.
  */
 public final class Log4jErrorReporter implements ErrorReporter {
 
 	/**
 	 * Attribute that represents the logger for this class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(Log4jErrorReporter.class);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
 	 * Attribute that represents the singleton unique instance for this class.

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>10/01/2022.</p>
  * @author Gobierno de España.
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 26/09/2023.
  */
 package es.gob.monitoriza.cron;
 
@@ -35,10 +35,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import es.gob.monitoriza.utilidades.loggers.Logger;
+import javax.annotation.PostConstruct;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
-import org.springframework.stereotype.Component;
 
 import es.gob.monitoriza.alert.send.EMailTimeLimitedOperation;
 import es.gob.monitoriza.constant.GeneralConstants;
@@ -62,13 +64,15 @@ import es.gob.monitoriza.service.IConfServerMailService;
 import es.gob.monitoriza.service.IResumeMonitorizaService;
 import es.gob.monitoriza.utilidades.UtilsFecha;
 import es.gob.monitoriza.utilidades.UtilsStringChar;
+import es.gob.monitoriza.utilidades.loggers.Logger;
 
 /** 
  * <p>Task that processes configured {@link ResumeMonitoriza} and determines if it must be sent and builds formatted text with the data.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 26/09/2023.
  */
-@Component
+@Configuration
+@EnableScheduling
 public class AlertResumeTask {
 	
 	@Autowired
@@ -83,14 +87,16 @@ public class AlertResumeTask {
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_RESUME_TASK_LOG);
-	
+	//private static Logger LOGGER = Logger.getLogger("Monitoriza-Resume-Task");
+			
 	/**
 	 * Scheduled method that executes at fixed rate and processes the configured alert 'resumes'.
 	 * This fixed rate must be exactly 1 hour, since this is the minimum periodicity of a 'resume'.
 	 */
 	@Scheduled(fixedRate = 3600000)
 	void processAlertResumes() {
+		
+		Logger LOGGER = Logger.getLogger("Monitoriza-Resume-Task");
 		
 		LOGGER.info("Inicio de la tarea de procesado de resúmenes de alertas");
 				
@@ -116,7 +122,7 @@ public class AlertResumeTask {
 				
 				resumeService.loadLazyListResumeType(resume);
 				
-				if (resume.getResumeTypes().size() > 0) {
+				if (resume.getResumeTypes().size() > 0 && resume.getEnabled().equals("S")) {
 					
 					processResume(resume);
 					
@@ -137,7 +143,8 @@ public class AlertResumeTask {
 	 * @param resume {@link ResumeMonitoriza} to process.
 	 */
 	private void processResume(ResumeMonitoriza resume) {
-
+		
+		Logger LOGGER = Logger.getLogger("Monitoriza-Resume-Task");
 		
 		Set<String> alertTypes = resume.getResumeTypes().stream().map(resumeType -> new String(resumeType.getAlertTypeMonitoriza().getName())).collect(Collectors.toSet());
 		Set<String> apps = resume.getResumeTypes().stream().map(resumeType -> new String(resumeType.getApplicationMonitoriza().getName())).collect(Collectors.toSet());
@@ -211,6 +218,8 @@ public class AlertResumeTask {
 	 */
 	private boolean sendResumeToConfiguredSystems(Set<AlertResumeSystem> systems, String subject, String body) {
 		
+		Logger LOGGER = Logger.getLogger("Monitoriza-Resume-Task");
+		
 		LOGGER.info("Cargando la configuración de los sistemas de notificación del resumen...");
 		
 		// La configuración del servidor de correos es unica.
@@ -240,6 +249,8 @@ public class AlertResumeTask {
 	 * @param body
 	 */
 	private boolean sendResumeEMail(ConfServerMail mailConfig, List<AlertMailResumeConfig> alertMailsResumeConfig, String subject, String body) {
+		
+		Logger LOGGER = Logger.getLogger("Monitoriza-Resume-Task");
 
 		// En estos momentos, el unico sistema a contemplar es el email.
 		// Se procede a recuperar direcciones destino.
@@ -408,6 +419,8 @@ public class AlertResumeTask {
 	 * @return {@link Date} that represents the datetime limit.
 	 */
 	private Date resolveTimeLimit(ResumeMonitoriza resume) {
+		
+		Logger LOGGER = Logger.getLogger("Monitoriza-Resume-Task");
 		
 		Long lastSent = resume.getLastSentTime() == null?null:resume.getLastSentTime().getTime();
 		Date limit = null;

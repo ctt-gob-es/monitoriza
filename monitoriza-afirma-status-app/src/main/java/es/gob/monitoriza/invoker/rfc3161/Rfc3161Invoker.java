@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>29/01/2018.</p>
  * @author Gobierno de España.
- * @version 1.7, 11/05/2022.
+ * @version 1.8, 26/09/2023.
  */
 package es.gob.monitoriza.invoker.rfc3161;
 
@@ -61,14 +61,14 @@ import es.gob.monitoriza.utilidades.UtilsResource;
 /** 
  * <p>Class that manages and performs the request of a service via RFC3161.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.7, 11/05/2022.
+ * @version 1.8, 26/09/2023.
  */
 public final class Rfc3161Invoker {
 	
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_STATUS_LOG);
 	
 	/**
 	 * Constant that represents the 'SSL' protocol. 

@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>6 mar. 2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 26/09/2023.
  */
 package es.gob.monitoriza.spring.config;
 
@@ -35,7 +35,7 @@ import es.gob.monitoriza.constant.GeneralConstants;
 /**
  * <p>Class that enables and configures Spring Web Security for the Monitoriz@ application.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 26/09/2023.
  */
 @Configuration
 @EnableWebSecurity
@@ -44,7 +44,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_STATUS_LOG);
 
 	/**
 	 * {@inheritDoc}

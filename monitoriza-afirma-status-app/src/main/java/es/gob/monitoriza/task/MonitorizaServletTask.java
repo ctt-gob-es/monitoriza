@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
  * <b>Date:</b><p>22/12/2017.</p>
  * @author Gobierno de España.
- * @version 1.9, 11/05/2022.
+ * @version 1.10, 26/09/2023.
  */
 package es.gob.monitoriza.task;
 
@@ -65,7 +65,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that initializes the timers for processing the batch of requests for each service.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.9, 11/05/2022.
+ * @version 1.10, 26/09/2023.
  */
 @Configurable
 public class MonitorizaServletTask extends HttpServlet {
@@ -78,7 +78,7 @@ public class MonitorizaServletTask extends HttpServlet {
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_STATUS_LOG);
 	
 	/**
 	 * {@inheritDoc}

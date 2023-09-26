@@ -2,6 +2,15 @@
 <Configuration status="warn">
     
     <Appenders>
+    
+    	<RollingFile name="MONITORIZA-STATUS" fileName="/opt/logs/entorno/servidor/monitoriza-status.log" filePattern="/opt/logs/entorno/servidor/monitoriza-status_hourly.log.%d{HH}">
+            <PatternLayout>
+                <pattern>[%-5level] %d{yyyy-MM-dd HH:mm:ss.SSS} [%t] %c{1} - %msg%n</pattern>
+            </PatternLayout>
+            <Policies>
+                <TimeBasedTriggeringPolicy interval="1" modulate="true" />
+            </Policies>
+        </RollingFile>
         
         <RollingFile name="MONITORIZA-FILE" fileName="/opt/logs/entorno/servidor/monitoriza-server.log" filePattern="/opt/logs/entorno/servidor/monitoriza-server-%d{yyyy-MM-dd}.log">
             <PatternLayout>
@@ -35,6 +44,9 @@
 		</Console>
     </Appenders>
     <Loggers>
+    	<Logger name="Monitoriza-Status" level="debug" additivity="false">
+            <appender-ref ref="MONITORIZA-STATUS" level="debug" />
+        </Logger>
         <Logger name="Monitoriza-Server" level="debug" additivity="false">
             <appender-ref ref="MONITORIZA-FILE" level="debug" />
         </Logger>

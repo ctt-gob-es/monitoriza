@@ -15,7 +15,7 @@
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI certificates and electronic signature.</p>
  * <b>Date:</b><p>03/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.7, 11/05/2022.
+ * @version 1.8, 26/09/2023.
  */
 package es.gob.monitoriza.crypto.keystore;
 
@@ -38,7 +38,7 @@ import java.util.Collections;
 import java.util.List;
 
 import es.gob.monitoriza.utilidades.loggers.Logger;
-
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.utils.CryptographyValidationUtils;
 import es.gob.monitoriza.exception.CipherException;
@@ -50,7 +50,7 @@ import es.gob.monitoriza.utilidades.AESCipher;
 /**
  * <p>Class that manages all the operations related with JCE, JCEKS and PKCS#12 keystores.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.7, 11/05/2022.
+ * @version 1.8, 26/09/2023.
  */
 public class KeystoreFacade implements IKeystoreFacade {
 
@@ -77,7 +77,7 @@ public class KeystoreFacade implements IKeystoreFacade {
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(KeystoreFacade.class);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
 	 * Constructor method for the class KeystoreFacade.

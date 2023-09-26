@@ -21,7 +21,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>30/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.2, 11/05/2022.
+ * @version 1.3, 26/09/2023.
  */
 package es.gob.monitoriza.spie.status;
 
@@ -49,7 +49,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that gets the VIP status for the configured platforms services through servlet call</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 11/05/2022.
+ * @version 1.3, 26/09/2023.
  */
 public class SpieStatus extends HttpServlet {
 
@@ -61,7 +61,7 @@ public class SpieStatus extends HttpServlet {
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_STATUS_LOG);
 	
 	/**
 	 * {@inheritDoc}

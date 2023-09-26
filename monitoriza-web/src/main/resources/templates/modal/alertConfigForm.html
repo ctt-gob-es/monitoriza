@@ -153,6 +153,16 @@
 		var getAlertConfigSystems = /*[[@{/alertconfigssystemsdt}]]*/;
 		var getEmailInfo = /*[[@{/emailinformation}]]*/;
 		var getGraylogInfo = /*[[@{/grayloginformation}]]*/;
+		
+		var idAlertConfigMonitoriza;
+		
+		// Comprobamos si estamos en modo alta y por tanto, el parámetro idAlertConfigMonitoriza está 'undefined'
+		// Es necesario asignarle un valor 'dummy' para no provocar alert de datatable.
+		if ($("#idAlertConfigMonitoriza").val() == '' || $("#idAlertConfigMonitoriza").val() == undefined) {
+			idAlertConfigMonitoriza = 0;
+		} else {
+			idAlertConfigMonitoriza = $("#idAlertConfigMonitoriza").val();
+		}
 
 		// Instancia de las tablas para sistemas de notificacion y aplicaciones / tipos de alerta
 		var alertSystemTbl = $('#alertSystemTable').DataTable({
@@ -232,7 +242,7 @@
 		    },
 			"ajax": {
 				"url": getAlertConfigSystems,
-				"data" : { "alertConfigId" : $("#idAlertConfigMonitoriza").val()},
+				"data" : { "alertConfigId" : idAlertConfigMonitoriza},
 				"type" : "POST"
 			},
 			"columns": [

@@ -19,7 +19,7 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>04/01/2019.</p>
  * @author Gobierno de España.
- * @version 1.6, 11/05/2022.
+ * @version 1.7, 26/09/2023.
  */
 package es.gob.monitoriza.invoker.soap;
 
@@ -60,14 +60,14 @@ import es.gob.monitoriza.persistence.configuration.dto.ConfigServiceDTO;
 /** 
  * <p>Class that performs the request of a SOAP service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.6, 11/05/2022.
+ * @version 1.7, 26/09/2023.
  */
 public final class SoapInvoker {
 
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_STATUS_LOG);
 	
 	/**
 	 * Constructor method for the class OcspInvoker.java. 

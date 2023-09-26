@@ -19,7 +19,7 @@
  * <b>Project:</b><p>Application for monitoring services of Cl@ve suite systems</p>
  * <b>Date:</b><p>18/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.6, 11/05/2022.
+ * @version 1.7, 26/09/2023.
  */
 package es.gob.monitoriza.invoker.http;
 
@@ -66,14 +66,14 @@ import eu.eidas.engine.exceptions.EIDASSAMLEngineException;
  * Application for monitoring services of Cl@ve suite systems.
  * </p>
  * 
- * @version 1.6, 11/05/2022.
+ * @version 1.7, 26/09/2023.
  */
 public class HttpInvoker extends AbstractHttpInvoker {
 	
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_STATUS_LOG);
 
 	/**
 	 * Method that sends a request and get the response message.

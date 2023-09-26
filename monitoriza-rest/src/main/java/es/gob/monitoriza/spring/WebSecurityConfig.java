@@ -20,10 +20,11 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * <b>Date:</b><p>06/02/2019.</p>
  * @author Gobierno de España.
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 26/09/2023.
  */
 package es.gob.monitoriza.spring;
 
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.utilidades.loggers.Logger;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,7 +36,7 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 /** 
  * <p>Spring Boot Web Security Configuration.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 26/09/2023.
  */
 @Configuration
 @EnableWebSecurity
@@ -44,7 +45,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(WebSecurityConfig.class);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
 	 * Constructor method for the class WebSecurityConfig.java. 

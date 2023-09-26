@@ -20,19 +20,19 @@
   * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
  * <b>Date:</b><p>13/08/2019.</p>
  * @author Gobierno de España.
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 26/09/2023.
  */
 package es.gob.monitoriza.rest.client;
 
 import es.gob.monitoriza.utilidades.loggers.Logger;
-
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.exception.MonitorizaRestException;
 import es.gob.monitoriza.utilidades.UtilsXml;
 
 /** 
  * <p>Class that manages exceptions produced by network connection refused in monitoriz@ rest client.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 26/09/2023.
  */
 public class MonitorizaRestConnectionRefusedException extends MonitorizaRestException {
 
@@ -44,7 +44,7 @@ public class MonitorizaRestConnectionRefusedException extends MonitorizaRestExce
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(MonitorizaRestConnectionRefusedException.class);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
 	 * Attribute that represents the error code.

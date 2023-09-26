@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>29/10/2018.</p>
  * @author Gobierno de España.
- * @version 1.10, 11/05/2022.
+ * @version 1.11, 26/09/2023.
  */
 package es.gob.monitoriza.spie.thread;
 
@@ -77,14 +77,14 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /** 
  * <p>Class that get the results of the SPIE services configured.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.10, 11/05/2022.
+ * @version 1.11, 26/09/2023.
  */
 public class RequestSpieThread implements Runnable {
 	
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_STATUS_LOG);
 	
 	/**
 	 * Attribute that represents the system truststore. 

@@ -20,18 +20,18 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/02/2019.</p>
  * @author Gobierno de España.
- * @version 1.2, 11/05/2022.
+ * @version 1.3, 26/09/2023.
  */
 package es.gob.monitoriza.exception;
 
 import es.gob.monitoriza.utilidades.loggers.Logger;
-
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.utilidades.UtilsXml;
 
 /** 
  * <p>Class that manages exceptions produced by the rest service module.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 11/05/2022.
+ * @version 1.3, 26/09/2023.
  */
 public class MonitorizaRestException extends Exception {
 
@@ -43,7 +43,7 @@ public class MonitorizaRestException extends Exception {
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(MonitorizaRestException.class);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 	
 	/**
 	 * Attribute that represents a code associated to the error.

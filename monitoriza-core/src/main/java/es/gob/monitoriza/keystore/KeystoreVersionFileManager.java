@@ -16,7 +16,7 @@
  * certificates and electronic signature.</p>
  * <b>Date:</b><p>28/06/2018.</p>
  * @author Gobierno de España.
- * @version 1.7, 11/05/2022.
+ * @version 1.8, 26/09/2023.
  */
 package es.gob.monitoriza.keystore;
 
@@ -31,16 +31,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 import es.gob.monitoriza.utilidades.loggers.Logger;
-
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.NumberConstants;
 import es.gob.monitoriza.service.IKeystoreService;
 import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 
 /**
- * <p>Utility class for gets path for a keystore in a file system.</p>
+ * <p>Utility class for getting the path of a keystore in a file system.</p>
  * <b>Project:</b><p>Horizontal platform of validation services of multiPKI
  * certificates and electronic signature.</p>
- * @version 1.7, 11/05/2022.
+ * @version 1.8, 26/09/2023.
  */
 public final class KeystoreVersionFileManager {
 
@@ -53,7 +53,6 @@ public final class KeystoreVersionFileManager {
 	/**
 	 * Constant attribute that represents the absolute path to the keystore directory #{@link KeystoreVersionFileManager#KEYSTORE_DIR}.
 	 */
-
 	private static final String ABS_PATH_KEYSTORE_DIR = StaticMonitorizaConfig.createAbsolutePath(StaticMonitorizaConfig.getTomcatServerConfigDir(), KEYSTORE_DIR);
 
 	/**
@@ -64,7 +63,7 @@ public final class KeystoreVersionFileManager {
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(KeystoreVersionFileManager.class);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
 	 * Attribute that represents a hashtable with the relation between the identifier

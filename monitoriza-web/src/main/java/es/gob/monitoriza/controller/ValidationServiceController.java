@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>28 ago. 2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 11/05/2022.
+ * @version 1.5, 26/09/2023.
  */
 package es.gob.monitoriza.controller;
 
@@ -60,7 +60,7 @@ import es.gob.monitoriza.utilidades.UtilsScheduler;
 /** 
  * <p>Class that maps the request for the validation service form to the controller.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 11/05/2022.
+ * @version 1.5, 26/09/2023.
  */
 @Controller
 public class ValidationServiceController {
@@ -166,12 +166,22 @@ public class ValidationServiceController {
 					}
 				}
 								
+				
+				boolean extecuteJobAfterSave = false;
+				// Si todo va bien, se ejecuta el job
+				if (validServiceService.getAllValidServices() != null && validServiceService.getAllValidServices().size() > 0) {
+					validService = validServiceService.getAllValidServices().get(0);
+				}
+				
+				if (validService != null && !StringUtils.equals(validService.getCronExpression(), validServiceForm.getCronExpression()) && validServiceForm.getIsEnableValidationJob()) {
+					extecuteJobAfterSave = true;
+				}	
+				
 				validService = validServiceService.saveValidService(validServiceForm);
 				
-				// Si todo va bien, se ejecuta el job
-				if (!StringUtils.equals(validService.getCronExpression(), validServiceForm.getCronExpression()) && validServiceForm.getIsEnableValidationJob()) {
+				if (extecuteJobAfterSave) {
 					validCertificatesJob.start();
-				}				
+				}
 
 			} catch (Exception e) {
 				LOGGER.error(Language.getResWebMonitoriza(IWebLogMessages.ERRORWEB010), e.getCause());

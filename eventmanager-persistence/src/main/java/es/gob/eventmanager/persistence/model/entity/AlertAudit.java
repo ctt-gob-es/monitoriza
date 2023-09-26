@@ -246,7 +246,7 @@ public class AlertAudit implements Serializable {
 	 * @return the value of the attribute {@link #description}.
 	 */
 	@Column(name = "DESCRIPTION", nullable = false)
-	public final String getDescription() {
+	public String getDescription() {
 		return description;
 	}
 
@@ -256,7 +256,7 @@ public class AlertAudit implements Serializable {
 	 * @param description
 	 *            The value for the attribute {@link #description}.
 	 */
-	public final void setDescription(String description) {
+	public void setDescription(String description) {
 		this.description = description;
 	}
 }

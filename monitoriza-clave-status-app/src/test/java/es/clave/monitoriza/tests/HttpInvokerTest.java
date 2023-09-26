@@ -72,7 +72,7 @@ public class HttpInvokerTest {
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = LoggerFactory.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	private static final Logger LOGGER = LoggerFactory.getLogger(GeneralConstants.LOGGER_NAME_STATUS_LOG);
 
 	static {
 		String path = HttpInvokerTest.class.getClassLoader().getResource("logging.properties").getFile();

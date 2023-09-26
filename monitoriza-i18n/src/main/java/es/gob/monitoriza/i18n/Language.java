@@ -32,7 +32,7 @@
  * </p>
  * 
  * @author Gobierno de España.
- * @version 1.3, 11/05/2022.
+ * @version 1.4, 26/09/2023.
  */
 package es.gob.monitoriza.i18n;
 
@@ -52,14 +52,14 @@ import es.gob.monitoriza.i18n.utils.UtilsTomcat;
 /** 
  * <p>Class responsible for managing the access to language resources.</p>
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems.</p>
- * @version 1.3, 11/05/2022.
+ * @version 1.4, 26/09/2023.
  */
 public final class Language {
 	
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(Language.class);
+	private static final Logger LOGGER = Logger.getLogger("Monitoriza-Server");
 			
 	/**
 	 * Constructor method for the class Language.java. 

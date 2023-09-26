@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.6, 11/05/2022.
+ * @version 1.7, 26/09/2023.
  */
 package es.gob.monitoriza.service.impl;
 
@@ -63,7 +63,7 @@ import es.gob.monitoriza.utilidades.UtilsCertificate;
 /** 
  * <p>Class that implements the communication with the operations of the persistence layer for Keystore.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.6, 11/05/2022.
+ * @version 1.7, 26/09/2023.
  */
 @Service("keystoreService")
 public class KeystoreService implements IKeystoreService {
@@ -230,7 +230,7 @@ public class KeystoreService implements IKeystoreService {
 		KeyStore cer = null;
 
 		try (InputStream readStream = new ByteArrayInputStream(ks.getKeystore());) {
-			msgError = Language.getResCoreMonitoriza(IStatusLogMessages.STATUS012);
+			msgError = Language.getResMonitoriza(IStatusLogMessages.STATUS012);
 			cer = KeyStore.getInstance(ks.getKeystoreType());
 			cer.load(readStream, keyStoreFacade.getKeystoreDecodedPasswordString(ks.getPassword()).toCharArray());
 
@@ -298,6 +298,17 @@ public class KeystoreService implements IKeystoreService {
 		scheduledRepository.setAllNotUpdated();
 		
 		return listSystemCertificate;
+		
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * @see es.gob.monitoriza.service.IKeystoreService#keystoreValidService(es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza)
+	 */
+	@Override
+	public void loadKeystore(KeystoreMonitoriza keystore) {
+		
+		keystore = repository.findByIdKeystore(keystore.getIdKeystore());
 		
 	}
 	

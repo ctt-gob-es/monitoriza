@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>16/05/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 15/02/2019.
+ * @version 1.5, 26/09/2023.
  */
 package es.gob.monitoriza.service;
 
@@ -36,7 +36,7 @@ import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificat
 /**
  * <p>Interface that provides communication with the operations of the persistence layer.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 15/02/2019.
+ * @version 1.6, 26/09/2023.
  */
 public interface IKeystoreService {
 
@@ -102,5 +102,11 @@ public interface IKeystoreService {
 	 * @return List<SystemCertificate>
 	 */
 	List<SystemCertificate> saveSsl(String alias, byte[] sysCert) throws Exception;
+	
+	/**
+	 * Load a lazy {@link KeystoreMonitoriza}
+	 * @param keystore {@link KeystoreMonitoriza} to be loaded
+	 */
+	void loadKeystore(KeystoreMonitoriza keystore);
 
 }

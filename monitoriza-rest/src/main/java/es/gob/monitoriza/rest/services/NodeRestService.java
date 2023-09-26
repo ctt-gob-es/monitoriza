@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Platform for detection and validation of certificates recognized in European TSL.</p>
  * <b>Date:</b><p>07/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.4, 11/05/2022.
+ * @version 1.5, 26/09/2023.
  */
 package es.gob.monitoriza.rest.services;
 
@@ -64,7 +64,7 @@ import es.gob.monitoriza.utilidades.UtilsStringChar;
 /**
  * <p>Class that represents the node restful service.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.4, 11/05/2022.
+ * @version 1.5, 26/09/2023.
  */
 @Path("/node")
 public class NodeRestService implements INodeRestService {
@@ -72,7 +72,7 @@ public class NodeRestService implements INodeRestService {
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(NodeRestService.class);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
 	 * {@inheritDoc}

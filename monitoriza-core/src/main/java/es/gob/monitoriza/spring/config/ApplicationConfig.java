@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>7/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.3, 11/05/2022.
+ * @version 1.4, 26/09/2023.
  */
 package es.gob.monitoriza.spring.config;
 
@@ -33,6 +33,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.i18n.ICoreLogMessages;
 import es.gob.monitoriza.i18n.Language;
 import es.gob.monitoriza.utilidades.UtilsGrayLog;
@@ -40,7 +41,7 @@ import es.gob.monitoriza.utilidades.UtilsGrayLog;
 /** 
  * <p>Spring configuration class that sets the configuration of Spring components, entities and repositories.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 11/05/2022.
+ * @version 1.4, 26/09/2023.
  */
 @Configuration
 @EnableAutoConfiguration
@@ -52,7 +53,7 @@ public class ApplicationConfig {
 	/**
 	 * Attribute that represents the logger of this class.
 	 */
-	private static Logger logger = Logger.getLogger(ApplicationConfig.class);
+	private static Logger logger = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 	
 	
 	/**

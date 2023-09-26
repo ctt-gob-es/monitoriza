@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems</p>
  * <b>Date:</b><p>19/02/2018.</p>
  * @author Gobierno de España.
- * @version 1.7, 11/05/2022.
+ * @version 1.8, 26/09/2023.
  */
 package es.gob.monitoriza.status.thread;
 
@@ -47,14 +47,14 @@ import es.gob.monitoriza.utilidades.StaticMonitorizaConfig;
 /** 
  * <p>Class that manages the thread pool for processing each service in a separate thread.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.7, 11/05/2022.
+ * @version 1.8, 26/09/2023.
  */
 public class RequestLauncher {
 
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_STATUS_LOG);
 		
 	/**
 	 * Method that performs the invocation of service by service name.

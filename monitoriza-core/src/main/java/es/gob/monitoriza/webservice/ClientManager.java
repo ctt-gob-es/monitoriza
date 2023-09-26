@@ -20,19 +20,12 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>1/08/2018.</p>
  * @author Gobierno de España.
- * @version 1.5, 11/05/2022.
+ * @version 1.6, 26/09/2023.
  */
 package es.gob.monitoriza.webservice;
 
-import java.security.KeyStore;
-import java.security.PrivateKey;
-import java.security.cert.X509Certificate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManager;
 
 import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
@@ -44,20 +37,19 @@ import org.apache.axis2.client.ServiceClient;
 import org.apache.axis2.engine.AxisConfiguration;
 import org.apache.axis2.engine.Handler;
 import org.apache.axis2.engine.Phase;
-import org.apache.axis2.java.security.TrustAllTrustManager;
 import org.apache.axis2.phaseresolver.PhaseException;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import es.gob.monitoriza.constant.GeneralConstants;
+import es.gob.monitoriza.crypto.exception.CryptographyException;
 import es.gob.monitoriza.crypto.keystore.IKeystoreFacade;
 import es.gob.monitoriza.crypto.keystore.KeystoreFacade;
 import es.gob.monitoriza.enums.AuthenticationTypeEnum;
 import es.gob.monitoriza.handler.ClientHandler;
+import es.gob.monitoriza.handler.ResponseHandler;
+import es.gob.monitoriza.keystore.KeystoreVersionFileManager;
 import es.gob.monitoriza.persistence.configuration.model.entity.KeystoreMonitoriza;
-import es.gob.monitoriza.persistence.configuration.model.entity.SystemCertificate;
 import es.gob.monitoriza.persistence.configuration.model.entity.ValidService;
-import es.gob.monitoriza.service.IKeystoreService;
 import es.gob.monitoriza.service.impl.KeystoreService;
 import es.gob.monitoriza.service.utils.IServiceNameConstants;
 import es.gob.monitoriza.spring.config.ApplicationContextProvider;
@@ -66,7 +58,7 @@ import es.gob.monitoriza.utilidades.loggers.Logger;
 /** 
  * <p>Class ClientManager.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.5, 11/05/2022.
+ * @version 1.6, 26/09/2023.
  */
 @Service
 public class ClientManager {
@@ -96,12 +88,6 @@ public class ClientManager {
      */
     private static List<String> handlerAdded = new ArrayList<String>();
 	
-	/**
-	 * Attribute that represents the service object for accessing the repository. 
-	 */
-	@Autowired
-	private IKeystoreService keystoreService;
-
 //	static {
 		// for localhost testing only
 //		HttpsURLConnection.setDefaultHostnameVerifier(new HostnameVerifier() {
@@ -127,41 +113,25 @@ public class ClientManager {
 	public String getDSSCertificateServiceClientResult(String url, ValidService validService, Object[] peticion) throws Exception {
 		
 		LOGGER.info("getDSSCertificateServiceClient init");
-		
-		String response = null;
-		
+						
 		ClientHandler requestHandler = null;
+		ResponseHandler responseHandler = null;
 		Object res = null;		
 		
-		if (validService.getAuthenticationType().getIdAuthenticationType().equals(AuthenticationTypeEnum.USERPASS.getId())) {
-			requestHandler = new ClientHandler(AuthenticationTypeEnum.USERPASS.getName());
-			requestHandler.setUserAlias(validService.getUser());
-			requestHandler.setPassword(validService.getPass());
-		} else if (validService.getAuthenticationType().getIdAuthenticationType().equals(AuthenticationTypeEnum.CERTIFICATE.getId())) {
-			SystemCertificate certValidService = validService.getValidServiceCertificate();
-			KeystoreMonitoriza keystoreValidService = certValidService.getKeystore();
-			IKeystoreFacade keyStoreFacade = new KeystoreFacade(keystoreValidService);
-			KeyStore ksAuthValidServ = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.KEYSTORE_SERVICE, KeystoreService.class).loadValidServiceKeystore();
-			X509Certificate certificateSOAP = (X509Certificate) ksAuthValidServ.getCertificate(certValidService.getAlias());
-			PrivateKey privateKeySOAP = (PrivateKey) ksAuthValidServ.getKey(certValidService.getAlias(), keyStoreFacade.getKeystoreDecodedPasswordString(keystoreValidService.getPassword()).toCharArray());
-			requestHandler = new ClientHandler(AuthenticationTypeEnum.CERTIFICATE.getName());
-			requestHandler.setCertificate(certificateSOAP);
-			requestHandler.setKey(privateKeySOAP);
-		}
-		
+		requestHandler = newRequestHandler(validService);	
+		responseHandler = newResponseHandler(validService);
 		
 		// Creamos la factoria de objetos XML de AXIS2.
 	    OMFactory fac = OMAbstractFactory.getOMFactory();
-
 	    // Creamos el namespace de la petición.
 	    OMNamespace ns = createNamespace(fac, "DSSAfirmaVerifyCertificate");
 	    // Creamos el elemento XML raíz del SOAP body que indica la
 	    // operación a realizar.
-	    OMElement operationElem = fac.createOMElement("verify", ns);
+	    OMElement operationElem = fac.createOMElement(LOCAL_PART, ns);
 	    // Creamos el elemento XML que contendrá la petición SOAP completa.
 	    OMElement inputParamElem = fac.createOMElement("arg0", ns);
 	    // Añadimos la petición al parámetro de entrada principal.
-	    inputParamElem.setText((String) Arrays.deepToString((Object[]) peticion));
+	    inputParamElem.setText((String) peticion[0]);
 	    // Incluimos el parámetro a la operación para formar el body del
 	    // SOAP
 	    // completamente.
@@ -179,10 +149,7 @@ public class ClientManager {
 		    client = new ServiceClient();
 		    client.setOptions(options);
 		    
-
-			if (requestHandler != null) {
-				addHandlers(client, requestHandler);
-			}
+			addHandlers(client, requestHandler, responseHandler);
 			
 			client.setOptions(options);
 			OMElement result = client.sendReceive(operationElem);
@@ -194,29 +161,99 @@ public class ClientManager {
 			
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
+		} finally {
+			
+			removeHandlers(client);
 		}
 		LOGGER.info("getDSSCertificateServiceClient end");
 		return res.toString();
 	}
 	
+	
+/**
+ * Method that creates a new instance of {@link ResponseHandler}.
+ * @param validService Parameter that represents the mappend validation service.
+ * @return the created instance of {@link ResponseHandler}.
+*/
+private ResponseHandler newResponseHandler(ValidService validService) {
+	
+	// Accedemos al Almacén de Autorización para el servicio de validación.
+	KeystoreMonitoriza ksAuthValidServ = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.KEYSTORE_SERVICE, KeystoreService.class).getKeystoreById(KeystoreMonitoriza.ID_VALID_SERVICE_STORE);
+	String keystorePath = KeystoreVersionFileManager.getAbsolutePathForTheKeystore(KeystoreMonitoriza.ID_VALID_SERVICE_STORE);
+	String keystorePass = ksAuthValidServ.getPassword();
+	String keystoreType = ksAuthValidServ.getKeystoreType();
+	ResponseHandler respHandler = new ResponseHandler(keystorePath, keystorePass, keystoreType, validService.getUser(), validService.getPass());
+		
+	return respHandler;
+}
+
+/**
+ * Method that creates a new instance of {@link ClientHandler}.
+ * @param validService Parameter that represents the mappend validation service.
+ * @return the created instance of {@link ClientHandler}.
+ * @throws CryptographyException If the method fails at decoding the keystore password.
+*/
+private ClientHandler newRequestHandler(ValidService validService) throws CryptographyException {
+	
+	ClientHandler reqHandler = null;
+	
+	if (validService.getAuthenticationType().getIdAuthenticationType().equals(AuthenticationTypeEnum.USERPASS.getId())) {
+		reqHandler = new ClientHandler(AuthenticationTypeEnum.USERPASS.getName());
+		reqHandler.setUserAlias(validService.getUser());
+		reqHandler.setPassword(validService.getPass());
+	} else if (validService.getAuthenticationType().getIdAuthenticationType().equals(AuthenticationTypeEnum.CERTIFICATE.getId())) {
+		
+		reqHandler = new ClientHandler(AuthenticationTypeEnum.CERTIFICATE.getName());
+		// Propiedades para binarySecurityToken
+		// Accedemos al Almacén de Autorización para el servicio de validación.
+		KeystoreMonitoriza ksAuthValidServ = ApplicationContextProvider.getApplicationContext().getBean(IServiceNameConstants.KEYSTORE_SERVICE, KeystoreService.class).getKeystoreById(KeystoreMonitoriza.ID_VALID_SERVICE_STORE);
+		String keystorePath = KeystoreVersionFileManager.getAbsolutePathForTheKeystore(KeystoreMonitoriza.ID_VALID_SERVICE_STORE);
+		String keystorePass = ksAuthValidServ.getPassword();
+		String keystoreType = ksAuthValidServ.getKeystoreType();
+		IKeystoreFacade keyStoreFacade = new KeystoreFacade(ksAuthValidServ);
+		reqHandler.setUserAlias(validService.getValidServiceCertificate().getAlias());
+		reqHandler.setPassword(keyStoreFacade.getKeystoreDecodedPasswordString(ksAuthValidServ.getPassword()));
+		reqHandler.setUserKeystore(keystorePath);
+		reqHandler.setUserKeystorePass(keystorePass);
+		reqHandler.setUserKeystoreType(keystoreType);
+	}		
+	
+	return reqHandler;
+}
+
 	/**
      * Auxiliary method that adds the generated handlers to the 'phases' of Axis2.
      * @param client Service client.
      * @param requestHandler Request handler.
      * @param responseHandler Response handler.
      */
-    private void addHandlers(ServiceClient client, ClientHandler requestHandler) {
+    private void addHandlers(ServiceClient client, ClientHandler requestHandler, ResponseHandler responseHandler) {
 
     	// Añadimos el handler de seguridad de salida.
     	AxisConfiguration config = client.getAxisConfiguration();
     	List<Phase> phasesOut = config.getOutFlowPhases();
     	for (Phase phase: phasesOut) {
     	    if ("Security".equals(phase.getPhaseName())) {
-    		try {
-    		    addHandler(phase, requestHandler, 2);
-    		    break;
-    		} catch (PhaseException e) {
-    		    e.printStackTrace();
+        		try {
+        		    addHandler(phase, requestHandler, 1);
+        		    break;
+        		} catch (PhaseException e) {
+        		    e.printStackTrace();
+        		}
+    	    }
+    	}
+    	
+    	// Añadimos el handler de seguridad de entrada.
+    	if (responseHandler != null) {
+    	    List<Phase> phasesIn = config.getInFlowPhases();
+    	    for (Phase phase: phasesIn) {
+    		if ("Security".equals(phase.getPhaseName())) {
+    		    try {
+    			addHandler(phase, responseHandler, 2);
+    			break;
+    		    } catch (PhaseException e) {
+    			e.printStackTrace();
+    		    }
     		}
     	    }
     	}
@@ -227,24 +264,24 @@ public class ClientManager {
      * @param client Axis service client.
      */
     private void removeHandlers(ServiceClient client) {
-	if (client != null && !handlerAdded.isEmpty()) {
-	    AxisConfiguration config = client.getAxisConfiguration();
+		if (client != null && !handlerAdded.isEmpty()) {
+			AxisConfiguration config = client.getAxisConfiguration();
 
-	    // Recorremos las phases de salida.
-	    List<Phase> phasesOut = config.getOutFlowPhases();
-	    for (Phase phase: phasesOut) {
-		removeHandler(phase);
-	    }
+			// Recorremos las phases de salida.
+			List<Phase> phasesOut = config.getOutFlowPhases();
+			for (Phase phase: phasesOut) {
+				removeHandler(phase);
+			}
 
-	    // Recorremos las phases de entrada.
-	    List<Phase> phasesIn = config.getInFlowPhases();
-	    for (Phase phase: phasesIn) {
-		removeHandler(phase);
-	    }
+			// Recorremos las phases de entrada.
+			List<Phase> phasesIn = config.getInFlowPhases();
+			for (Phase phase: phasesIn) {
+				removeHandler(phase);
+			}
 
-	    // Reiniciamos la lista de handlers.
-	    handlerAdded = new ArrayList<String>();
-	}
+			// Reiniciamos la lista de handlers.
+			handlerAdded = new ArrayList<String>();
+		}
 
     }
 
@@ -253,15 +290,15 @@ public class ClientManager {
      * @param phase Axis phase where the handlers are.
      */
     private void removeHandler(Phase phase) {
-	if (phase != null) {
-	    List<Handler> handlers = phase.getHandlers();
-	    for (Handler handler: handlers) {
-		if (handlerAdded.contains(handler.getName())) {
-		    handler.getHandlerDesc().setHandler(handler);
-		    phase.removeHandler(handler.getHandlerDesc());
+		if (phase != null) {
+			List<Handler> handlers = phase.getHandlers();
+			for (Handler handler: handlers) {
+				if (handlerAdded.contains(handler.getName())) {
+					handler.getHandlerDesc().setHandler(handler);
+					phase.removeHandler(handler.getHandlerDesc());
+				}
+			}
 		}
-	    }
-	}
     }
 
     /**

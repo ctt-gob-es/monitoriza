@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>12/02/2019.</p>
  * @author Gobierno de España.
- * @version 1.3, 11/05/2022.
+ * @version 1.4, 26/09/2023.
  */
 package es.gob.monitoriza.rest.client;
 
@@ -39,6 +39,7 @@ import org.jboss.resteasy.client.jaxrs.ResteasyClient;
 import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
 import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
 
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.exception.IMonitorizaException;
 import es.gob.monitoriza.exception.MonitorizaRestException;
 import es.gob.monitoriza.rest.elements.NodeRestStatusResponse;
@@ -47,14 +48,14 @@ import es.gob.monitoriza.rest.services.INodeRestService;
 /** 
  * <p>Class that implements a client for Monitoriz@ rest services.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.3, 11/05/2022.
+ * @version 1.4, 26/09/2023.
  */
 public class MonitorizaClient {
 	
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(MonitorizaClient.class);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
 	 * Attribute that represents the object that manages the communication with Monitoriza rest services.

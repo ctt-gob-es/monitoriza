@@ -16,11 +16,11 @@
 
 /** 
  * <b>File:</b><p>es.gob.monitoriza.handler.ClientHandler.java.</p>
- * <b>Description:</b><p> .</p>
+ * <b>Description:</b><p>Class that handles the securization of SOAP messages for @Firma requests.</p>
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>20/09/2018.</p>
  * @author Gobierno de España.
- * @version 1.1, 30/01/2019.
+ * @version 1.3, 26/09/2023.
  */
 package es.gob.monitoriza.handler;
 
@@ -55,22 +55,16 @@ import org.apache.ws.security.message.WSSecUsernameToken;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import es.gob.monitoriza.crypto.utils.WSCryptoConfiguration;
 import es.gob.monitoriza.utilidades.UtilsStringChar;
 import es.gob.monitoriza.webservice.UtilsAxis;
 
 /** 
- * <p>Class .</p>
+ * <p>Class that handles the securization of SOAP messages for @Firma requests.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.2, 30/01/2019.
+ * @version 1.3, 26/09/2023.
  */
 public class ClientHandler extends AbstractCommonHandler {
-
-	/**
-	 * Class serial version.
-	 */
-	private static final long serialVersionUID = -4719511031384163945L;
-
+	
 	/**
 	 * Constant attribute that identifies UserNameToken authorization method.
 	 */
@@ -140,14 +134,13 @@ public class ClientHandler extends AbstractCommonHandler {
      */
     public ClientHandler(String securityOpt)  {
 	
-
-	if (securityOpt.equals(USERNAMEOPTION)) {
-	    this.securityOption = USERNAMEOPTION;
-	} else if (securityOpt.equals(CERTIFICATEOPTION)) {
-	    this.securityOption = CERTIFICATEOPTION;
-	} else if (securityOpt.equals(NONEOPTION)) {
-	    this.securityOption = NONEOPTION;
-	} 
+		if (securityOpt.equals(USERNAMEOPTION)) {
+			this.securityOption = USERNAMEOPTION;
+		} else if (securityOpt.equals(CERTIFICATEOPTION)) {
+			this.securityOption = CERTIFICATEOPTION;
+		} else if (securityOpt.equals(NONEOPTION)) {
+			this.securityOption = NONEOPTION;
+		}
 
     }
 
@@ -156,7 +149,7 @@ public class ClientHandler extends AbstractCommonHandler {
 	 * @see org.apache.axis.Handler#invoke(org.apache.axis.MessageContext)
 	 */
 	public InvocationResponse invoke(MessageContext msgContext) throws AxisFault {
-		SOAPMessage msg, secMsg;
+		SOAPMessage secMsg;
 		
 		Document doc = null;
 
@@ -249,12 +242,12 @@ public class ClientHandler extends AbstractCommonHandler {
 		    res = mf.createMessage(null, new ByteArrayInputStream(secSOAPReq.getBytes()));
 
 		} finally {
+			// Eliminamos de nuevo el provider por si se ha añadido otra
+		    // versión durante la generación de la petición.
+		    Security.removeProvider("ApacheXMLDSig");
+
 		    // Restauramos el provider ApacheXMLDSig eliminado inicialmente.
 		    if (apacheXMLDSigProvider != null) {
-			// Eliminamos de nuevo el provider por si se ha añadido otra
-			// versión
-			// durante la generación de la petición.
-			Security.removeProvider("ApacheXMLDSig");
 			// Añadimos el provider.
 			Security.insertProviderAt(apacheXMLDSigProvider, 1);
 		    }
@@ -286,15 +279,15 @@ public class ClientHandler extends AbstractCommonHandler {
 
 		// Eliminamos el provider ApacheXMLDSig de la lista de provider para que
 		// no haya conflictos con el nuestro.
-		Provider apacheXMLDSigProvider = Security.getProvider("ApacheXMLDSig");
-		Security.removeProvider("ApacheXMLDSig");
+		//Provider apacheXMLDSigProvider = Security.getProvider("ApacheXMLDSig");
+		//Security.removeProvider("ApacheXMLDSig");
 
 		try {
 		    // Inserción del tag wsse:Security y X509CertificateToken
 		    wsSecHeader = new WSSecHeader(null, false);
 		    wsSecHeader.setMustUnderstand(true);
 		    wsSecSignature = new WSSecSignature();
-		    crypto = getCryptoInstance();
+		    crypto = initializateCryptoProperties();
 		    // Indicación para que inserte el tag X509CertificateToken
 		    wsSecSignature.setKeyIdentifierType(WSConstants.BST_DIRECT_REFERENCE);
 		    wsSecSignature.setUserInfo(getUserAlias(), getPassword());
@@ -318,13 +311,13 @@ public class ClientHandler extends AbstractCommonHandler {
 
 		} finally {
 		    // Restauramos el provider ApacheXMLDSig eliminado inicialmente.
-		    if (apacheXMLDSigProvider != null) {
-			// Eliminamos de nuevo el provider por si se ha añadido otra
-			// versión durante la generación de la petición.
-			Security.removeProvider("ApacheXMLDSig");
-			// Añadimos el provider.
-			Security.insertProviderAt(apacheXMLDSigProvider, 1);
-		    }
+		    //if (apacheXMLDSigProvider != null) {
+    			// Eliminamos de nuevo el provider por si se ha añadido otra
+    			// versión durante la generación de la petición.
+    			//Security.removeProvider("ApacheXMLDSig");
+    			// Añadimos el provider.
+    			//Security.insertProviderAt(apacheXMLDSigProvider, 1);
+		    //}
 		}
 		return res;
 	}

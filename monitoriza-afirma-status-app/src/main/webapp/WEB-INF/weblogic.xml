@@ -6,7 +6,7 @@
 
     <wls:container-descriptor>
         <wls:prefer-application-packages>
-            <wls:package-name>org.apache.log4j.*</wls:package-name>
+            <!-- <wls:package-name>org.apache.log4j.*</wls:package-name> -->
             <wls:package-name>org.springframework.*</wls:package-name>
         </wls:prefer-application-packages>
     </wls:container-descriptor>

@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>8 oct. 2018.</p>
  * @author Gobierno de España.
- * @version 1.0, 8 oct. 2018.
+ * @version 1.1, 26/09/2023.
  */
 package es.gob.monitoriza.spring.config;
 
@@ -35,7 +35,7 @@ import es.gob.monitoriza.service.IKeystoreService;
 /** 
  * <p>Class .</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.0, 8 oct. 2018.
+ * @version 1.1, 26/09/2023.
  */
 @Component
 public class StaticContextInitializer {
@@ -49,5 +49,9 @@ public class StaticContextInitializer {
     @PostConstruct
     public void init() {
     	KeystoreVersionFileManager.setKeystoreService(keystoreService);
+    	
+    	// Forzamos que los ficheros temporales que representan a los keystores,
+    	// se limpien.
+    	KeystoreVersionFileManager.forceToClearTempsFilesAndReloadKeystores();
     }
 }

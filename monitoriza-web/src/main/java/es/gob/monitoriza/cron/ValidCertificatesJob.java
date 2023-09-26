@@ -20,7 +20,7 @@
   * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>17/08/2021.</p>
  * @author Gobierno de España.
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 26/09/2023.
  */
 package es.gob.monitoriza.cron;
 
@@ -43,6 +43,7 @@ import org.springframework.scheduling.concurrent.ConcurrentTaskScheduler;
 import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Service;
 
+import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.GrayLogErrorCodes;
 import es.gob.monitoriza.constant.INotificationOriginIds;
 import es.gob.monitoriza.constant.INotificationPriority;
@@ -69,7 +70,7 @@ import es.gob.monitoriza.webservice.ClientManager;
 /** 
  * <p>Class that manages the scheduled job for certificate validation.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.1, 11/05/2022.
+ * @version 1.2, 26/09/2023.
  */
 @Service
 public class ValidCertificatesJob implements SchedulerObjectInterface {
@@ -77,7 +78,7 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
 	/**
 	 * Attribute that represents the object that manages the log of the class.
 	 */
-	private static final Logger LOGGER = Logger.getLogger(ValidCertificatesJob.class);
+	private static final Logger LOGGER = Logger.getLogger(GeneralConstants.LOGGER_NAME_MONITORIZA_LOG);
 
 	/**
 	 * Attribute that represents the service object for accessing the
@@ -237,6 +238,7 @@ public class ValidCertificatesJob implements SchedulerObjectInterface {
 								String result = clientManager.getDSSCertificateServiceClientResult(endpoint, validService, peticion);
 								Long statusCertificateId = UtilsCertificate.processStatusCertificate(result);
 								systemCertificate.setStatusCertificate(statusCertService.getStatusCertificateById(statusCertificateId));
+								sysCertService.saveSystemCertificate(systemCertificate);
 							}
 						}
 					}

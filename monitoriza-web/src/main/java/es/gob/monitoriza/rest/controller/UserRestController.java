@@ -20,7 +20,7 @@
  * <b>Project:</b><p>Application for monitoring the services of @firma suite systems</p>
  * <b>Date:</b><p>21/03/2018.</p>
  * @author Gobierno de España.
- * @version 1.8, 11/05/2022.
+ * @version 1.9, 26/09/2023.
  */
 package es.gob.monitoriza.rest.controller;
 
@@ -84,7 +84,7 @@ import es.gob.monitoriza.webservice.ClientManager;
 /**
  * <p>Class that manages the REST requests related to the Users administration and JSON communication.</p>
  * <b>Project:</b><p>Application for monitoring services of @firma suite systems.</p>
- * @version 1.8, 11/05/2022.
+ * @version 1.9, 26/09/2023.
  */
 @RestController
 public class UserRestController {
@@ -358,6 +358,7 @@ public class UserRestController {
 	 */
 	@RequestMapping(value = "/savecertuser/{idUserMonitoriza}", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 	@JsonView(DataTablesOutput.View.class)
+	@Transactional
 	public @ResponseBody DataTablesOutput<SystemCertificate> savecertuser(@RequestParam(FIELD_FILE) final MultipartFile file, @PathVariable(FIELD_ID_USER) final Long idUserMonitoriza) throws Exception {
 		DataTablesOutput<SystemCertificate> dtOutput = null;
 		List<SystemCertificate> listNewSystemCert = new ArrayList<SystemCertificate>();
