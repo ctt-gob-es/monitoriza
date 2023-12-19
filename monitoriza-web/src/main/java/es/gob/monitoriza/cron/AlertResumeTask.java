@@ -35,15 +35,12 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
-import javax.annotation.PostConstruct;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
 import es.gob.monitoriza.alert.send.EMailTimeLimitedOperation;
-import es.gob.monitoriza.constant.GeneralConstants;
 import es.gob.monitoriza.constant.INotificationSystemTypes;
 import es.gob.monitoriza.constant.IResumeConstants;
 import es.gob.monitoriza.constant.NumberConstants;

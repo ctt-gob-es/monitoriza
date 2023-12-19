@@ -314,7 +314,21 @@ $(document).ready(function() {
 				                	var errores = JSON.parse(data.error);
 				  				  	
 				  				  	if (data.error != null){
-										$('#userForm').append('<div id="errorModalUser2" class="alert alert-danger" role="alert"><strong>'+ errores["password_span"] +'</strong></div>');
+										//$('#userForm').append('<div id="errorModalUser2" class="alert alert-danger" role="alert"><strong>'+ errores["password_span"] +'</strong></div>');
+									  if (data.error != null) {
+				      				  	cleanSpan();
+				      				  	var errores = JSON.parse(data.error);
+				      				  
+				      				  	jQuery.each(errores, function(i, val) {
+				      					  
+				      				  	$('#userForm *').filter('span').each(function(){
+				      						if (i == $(this).attr('id')){
+				      							$("#" + i).text(val);
+				      						}
+				      					});
+				      				  });	
+				      				  
+				      			  }
 				  				  	}else{
 					  				  	tbl.row.add($(data.data)).draw(false);
 		    		                    
@@ -421,7 +435,9 @@ $(document).ready(function() {
 	
 	$( "#editBtn" ).click(function( event ) {
 		  event.preventDefault();
-			
+		  $('#errorModalEdit').remove();
+		  cleanSpan();
+		  var tbl = $('#userTable').DataTable();	
 		  var formData = JSON.stringify($("#userFormEdit").serializeJSON());
 		  var url = /*[[@{/saveuseredit}]]*/;
 		  
@@ -432,16 +448,32 @@ $(document).ready(function() {
 			  url: url,
 			  data: formData,
 			  success: function(data){
-				hide();
+				  hide();
+				  var errores = JSON.parse(data.error);
+				  cleanSpan();
+				  	if (data.error != null){
+				  		cleanSpan();
+	      				  var errores = JSON.parse(data.error);
+	      				  
+	      				  jQuery.each(errores, function(i, val) {
+	      					  
+	      				  	$('#userFormEdit *').filter('span').each(function(){
+	      						if (i == $(this).attr('id')){
+	      							$("#" + i).text(val);
+	      						}
+	      					});
+	      				  });
+				  	}else{
 				
+				  		cleanSpan();
 				tbl.row.add($(data.data)).draw(false);
 				
 				if ($('#errorModalEdit').length > 0){
 					$('#errorModalEdit').remove();
 				}
 				
-				$('#modalEditAdmin').modal('hide');
-				
+				closeModalButton('modalEdit');
+				}
 			  },
 			  error:function(){
 				  hide();
@@ -452,6 +484,13 @@ $(document).ready(function() {
 			  contentType : "application/json"
 		});
 	});
-});	
+
+});
+
+function cleanSpan(){
+	  $('#userFormEdit *').filter('span.badge').each(function(){
+			$(this).text("");				
+	 });
+}
 
 </script>

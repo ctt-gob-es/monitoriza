@@ -116,7 +116,7 @@ public class ClientManager {
 						
 		ClientHandler requestHandler = null;
 		ResponseHandler responseHandler = null;
-		Object res = null;		
+		String res = null;		
 		
 		requestHandler = newRequestHandler(validService);	
 		responseHandler = newResponseHandler(validService);
@@ -142,7 +142,7 @@ public class ClientManager {
 		try {
 			
 			Options options = new Options();
-		    
+		    LOGGER.info("Estableciendo el endpoint del Servicio de Validación a: " + url);
 		    options.setTo(new EndpointReference(url));
 		    // Desactivamos el chunked.
 		    options.setProperty("__CHUNKED__", "false");			
@@ -156,8 +156,10 @@ public class ClientManager {
 			
 			if (result != null && result.getFirstElement() != null && !result.getFirstElement().getText().isEmpty()) {
 				res = result.getFirstElement().getText();
+			} else {
+				
+				LOGGER.info("El Servicio de Validación ha obtenido una respuesta nula o vacía.");
 			}
-			
 			
 		} catch (Exception e) {
 			LOGGER.error(e.getMessage());
@@ -166,7 +168,7 @@ public class ClientManager {
 			removeHandlers(client);
 		}
 		LOGGER.info("getDSSCertificateServiceClient end");
-		return res.toString();
+		return res;
 	}
 	
 	
@@ -216,7 +218,11 @@ private ClientHandler newRequestHandler(ValidService validService) throws Crypto
 		reqHandler.setUserKeystore(keystorePath);
 		reqHandler.setUserKeystorePass(keystorePass);
 		reqHandler.setUserKeystoreType(keystoreType);
-	}		
+		
+	} else if (validService.getAuthenticationType().getIdAuthenticationType().equals(AuthenticationTypeEnum.NOAUTHENTICATION.getId())) {
+		
+		reqHandler = new ClientHandler(AuthenticationTypeEnum.NOAUTHENTICATION.getName());
+	}
 	
 	return reqHandler;
 }

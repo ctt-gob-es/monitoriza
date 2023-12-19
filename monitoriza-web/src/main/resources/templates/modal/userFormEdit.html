@@ -19,8 +19,8 @@
 								    var messageName = /*[[#{form.user.name.pattern}]]*/ 'default';
 								/*]]>*/
 							</script>
-							<input onblur="validate(this,messageName);" type="text" id="nameEdit" th:field="*{nameEdit}" style="overflow:hidden" class="form-control" required pattern=".{3,15}" />
-							<div id="invalid-name" class="invalid-feedback" ></div>
+							<input type="text" id="nameEdit" th:field="*{nameEdit}" style="overflow:hidden" class="form-control" required />
+							<span id="nameEdit_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 						
 						<div style="clear:both;"/>
 					</div>
@@ -33,8 +33,8 @@
 								    var messageSurname = /*[[#{form.user.surnames.pattern}]]*/ 'default';
 								/*]]>*/
 							</script>
-							<input onblur="validate(this,messageSurname);" type="text" id="surnamesEdit" th:field="*{surnamesEdit}" style="overflow:hidden" class="form-control" required pattern=".{3,30}"/>
-							<div id="invalid-surnames" class="invalid-feedback" ></div>
+							<input type="text" id="surnamesEdit" th:field="*{surnamesEdit}" style="overflow:hidden" class="form-control" required />
+							<span id="surnamesEdit_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 						
 						<div style="clear:both;"/>
 					</div>
@@ -47,8 +47,8 @@
 								    var messageLogin = /*[[#{form.user.login.pattern}]]*/ 'default';
 								/*]]>*/
 							</script>
-							<input onblur="validate(this,messageLogin);" type="text" id="loginEdit" th:field="*{loginEdit}" style="overflow:hidden" class="form-control" required pattern=".{5,30}"/>
-							<div id="invalid-login" class="invalid-feedback" ></div>
+							<input type="text" id="loginEdit" th:field="*{loginEdit}" style="overflow:hidden" class="form-control" required />
+							<span id="loginEdit_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 						
 						<div style="clear:both;"/>
 					</div>
@@ -61,8 +61,8 @@
 								    var messageEmail = /*[[#{form.user.email.pattern}]]*/ 'default';
 								/*]]>*/
 							</script>
-							<input onblur="validate(this,messageEmail);" type="email" id="emailEdit" th:field="*{emailEdit}" style="overflow:hidden" class="form-control" required/>
-							<div id="invalid-email" class="invalid-feedback" ></div>
+							<input type="email" id="emailEdit" th:field="*{emailEdit}" style="overflow:hidden" class="form-control" required/>
+							<span id="email_span" class="badge bgc-red-50 c-red-700 p-10 lh-0 tt-c badge-pill"></span>
 						
 						<div style="clear:both;"/>
 					</div>
@@ -79,9 +79,11 @@
 <script th:inline="javascript">
 	$( "#editBtnModal" ).click(function( event ) {
 		  event.preventDefault();
-			
+		  $('#errorModalEdit').remove();
+		  cleanSpan();
+		  var tbl = $('#userTable').DataTable();	
 		  var formData = JSON.stringify($("#userFormEdit").serializeJSON());
-		  var url = /*[[@{/menueditsave}]]*/;
+		  var url = /*[[@{/saveuseredit}]]*/;
 		  
 		  loading();
 		  
@@ -90,24 +92,46 @@
 			  url: url,
 			  data: formData,
 			  success: function(data){
-				hide();
+				  hide();
+				  var errores = JSON.parse(data.error);
+				  cleanSpan();
+				  	if (data.error != null){
+				  		cleanSpan();
+	      				  var errores = JSON.parse(data.error);
+	      				  
+	      				  jQuery.each(errores, function(i, val) {
+	      					  
+	      				  	$('#userFormEdit *').filter('span').each(function(){
+	      						if (i == $(this).attr('id')){
+	      							$("#" + i).text(val);
+	      						}
+	      					});
+	      				  });
+				  	}else{
+				
+				  		cleanSpan();
+				tbl.row.add($(data.data)).draw(false);
 				
 				if ($('#errorModalEdit').length > 0){
 					$('#errorModalEdit').remove();
 				}
 				
-				$('#modalEdit').modal('hide');
-				$('#modalEdit').remove();
-				
+				closeModalButton('modalEdit');
+				}
 			  },
 			  error:function(){
 				  hide();
-				  if (!$('#errorModalEdit').length > 0){
-				  	$('#userFormEdit').append('<div id="errorModalEdit" class="alert alert-danger" role="alert"><strong>Error inesperado, int\u00E9ntelo mas tarde!</strong></div>');
-				  }
+				  $('#errorModalEdit').remove();
+				  $('#userFormEdit').append('<div id="errorModalEdit" class="alert alert-danger" role="alert"><strong>' + [[#{message.error}]] + '</strong></div>');
 			  },
 			  dataType: "json",
 			  contentType : "application/json"
 		});
 	});
+	
+	function cleanSpan(){
+		  $('#userFormEdit *').filter('span.badge').each(function(){
+				$(this).text("");				
+		 });
+	}
 </script>
