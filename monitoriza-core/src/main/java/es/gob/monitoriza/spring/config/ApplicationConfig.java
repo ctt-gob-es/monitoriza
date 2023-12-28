@@ -44,10 +44,6 @@ import es.gob.monitoriza.utilidades.UtilsGrayLog;
  * @version 1.4, 26/09/2023.
  */
 @Configuration
-@EnableAutoConfiguration
-@ComponentScan("es.gob.monitoriza")
-@EntityScan("es.gob.monitoriza.persistence.configuration.model.entity")
-@EnableJpaRepositories(basePackages = "es.gob.monitoriza.persistence.configuration.model.repository")
 public class ApplicationConfig {
 	
 	/**
